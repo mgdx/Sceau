@@ -63,7 +63,6 @@ import io.github.mgdx.sceau.core.trust.TrustSource
 import io.github.mgdx.sceau.trust.TrustStoreRepository
 import io.github.mgdx.sceau.ui.result.Countries
 import io.github.mgdx.sceau.ui.result.SceauIcons
-import io.github.mgdx.sceau.ui.result.countryLabel
 import io.github.mgdx.sceau.ui.result.currentLocale
 import io.github.mgdx.sceau.ui.result.rememberDateFormatter
 import io.github.mgdx.sceau.ui.result.toUtcDate
@@ -373,11 +372,16 @@ private fun CountryHeader(
     expanded: Boolean,
     onToggle: () -> Unit,
 ) {
+    // Nom localisé déjà résolu hors du thread principal par groupByCountry : pas de
+    // Locale.getDisplayCountry à chaque composition d'un en-tête.
+    val name = group.displayName
+    val flag = Countries.flagEmoji(group.alpha2)
     val label =
-        if (group.alpha2.isEmpty()) {
-            stringResource(R.string.trust_country_unknown)
-        } else {
-            countryLabel(Countries.fromAlpha2(group.alpha2))
+        when {
+            group.alpha2.isEmpty() -> stringResource(R.string.trust_country_unknown)
+            name == null -> group.alpha2
+            flag != null -> "$flag $name"
+            else -> name
         }
     Surface(color = MaterialTheme.colorScheme.surfaceContainer, modifier = Modifier.fillMaxWidth()) {
         Row(
