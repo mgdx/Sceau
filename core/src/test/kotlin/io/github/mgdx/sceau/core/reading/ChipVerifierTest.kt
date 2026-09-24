@@ -1,0 +1,129 @@
+package io.github.mgdx.sceau.core.reading
+
+import io.github.mgdx.sceau.core.SceauException
+import io.github.mgdx.sceau.core.reading.ScriptedTransport.Companion.raise
+import io.github.mgdx.sceau.core.reading.ScriptedTransport.Companion.respond
+import io.github.mgdx.sceau.core.reading.TestFixtures.AID_SELECT
+import io.github.mgdx.sceau.core.report.CheckDetail
+import io.github.mgdx.sceau.core.report.CheckId
+import io.github.mgdx.sceau.core.report.CheckStatus
+import org.bouncycastle.jce.provider.BouncyCastleProvider
+import org.jmrtd.lds.ChipAuthenticationInfo
+import org.jmrtd.lds.ChipAuthenticationPublicKeyInfo
+import org.jmrtd.lds.SecurityInfo
+import org.jmrtd.lds.icao.DG14File
+import org.jmrtd.lds.icao.DG15File
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertSame
+import org.junit.Assert.assertTrue
+import org.junit.Assert.fail
+import org.junit.Test
+import java.security.KeyPairGenerator
+import java.security.SecureRandom
+import java.security.spec.ECGenParameterSpec
+
+/**
+ * Étape VERIFY_CHIP hors vérification cryptographique de la réponse AA (lot B) : états
+ * « non disponible », refus de la puce, perte de connexion, challenge AA.
+ */
+class ChipVerifierTest {
+    /** Tirage déterministe pour observer le challenge dans l'APDU émise. */
+    private val fixedRandom =
+        object : SecureRandom() {
+            override fun nextBytes(bytes: ByteArray) = bytes.fill(0x42)
+        }
+
+    private fun verifier(transport: ScriptedTransport): ChipVerifier {
+        Crypto.ensureInstalled()
+        val chip = Chip(transport)
+        chip.service.open()
+        chip.service.sendSelectApplet(false)
+        return ChipVerifier(chip, fixedRandom)
+    }
+
+    private val dg14 by lazy {
+        val keyPair =
+            KeyPairGenerator
+                .getInstance("EC", BouncyCastleProvider.PROVIDER_NAME)
+                .apply {
+                    initialize(ECGenParameterSpec("brainpoolP256r1"))
+                }.generateKeyPair()
+        DG14File(
+            listOf<SecurityInfo>(
+                ChipAuthenticationPublicKeyInfo(keyPair.public),
+                ChipAuthenticationInfo(SecurityInfo.ID_CA_ECDH_AES_CBC_CMAC_128, 1),
+            ),
+        ).encoded
+    }
+
+    private val dg15 by lazy {
+        val keyPair = KeyPairGenerator.getInstance("RSA").apply { initialize(1024) }.generateKeyPair()
+        DG15File(keyPair.public).encoded
+    }
+
+    @Test
+    fun sansDg14NiDg15_NonDisponibles() {
+        val transport = ScriptedTransport(respond(AID_SELECT, "9000"))
+        val verifier = verifier(transport)
+        assertEquals(CheckStatus.NOT_AVAILABLE, verifier.chipAuthentication(null).status)
+        assertEquals(CheckStatus.NOT_AVAILABLE, verifier.activeAuthentication(null, null).status)
+        assertEquals(1, transport.sent.size)
+    }
+
+    @Test
+    fun dg14SansCleCa_NonDisponible() {
+        val transport = ScriptedTransport(respond(AID_SELECT, "9000"))
+        val onlyAa = DG14File(emptyList()).encoded
+        assertEquals(CheckStatus.NOT_AVAILABLE, verifier(transport).chipAuthentication(onlyAa).status)
+    }
+
+    @Test
+    fun dg15Illisible_AlgorithmeNonPrisEnCharge() {
+        val transport = ScriptedTransport(respond(AID_SELECT, "9000"))
+        val check = verifier(transport).activeAuthentication(TestFixtures.opaqueDataGroup(15), null)
+        assertEquals(CheckId.ACTIVE_AUTHENTICATION, check.id)
+        assertEquals(CheckStatus.UNSUPPORTED_ALGORITHM, check.status)
+    }
+
+    @Test
+    fun caRefuseeParLaPuce_Echec() {
+        val transport = ScriptedTransport(respond(AID_SELECT, "9000"), respond("0022", "6A80"))
+        val check = verifier(transport).chipAuthentication(dg14)
+        assertEquals(CheckId.CHIP_AUTHENTICATION, check.id)
+        assertEquals(CheckStatus.FAILED, check.status)
+        assertTrue((check.detail as CheckDetail.Error).code.startsWith("VERIFY_CHIP-CA-"))
+    }
+
+    @Test
+    fun documentRetirePendantCa_ConnectionLostInchangee() {
+        val lost = SceauException.ConnectionLost()
+        val transport = ScriptedTransport(respond(AID_SELECT, "9000"), raise("0022", lost))
+        try {
+            verifier(transport).chipAuthentication(dg14)
+            fail("ConnectionLost attendue")
+        } catch (e: SceauException.ConnectionLost) {
+            assertSame(lost, e)
+        }
+    }
+
+    @Test
+    fun aaRefuseeParLaPuce_EchecEtChallengeDeHuitOctets() {
+        val transport = ScriptedTransport(respond(AID_SELECT, "9000"), respond("00880000", "6982"))
+        val check = verifier(transport).activeAuthentication(dg15, null)
+        assertEquals(CheckStatus.FAILED, check.status)
+        // INTERNAL AUTHENTICATE, Lc = 8, challenge tiré du SecureRandom fourni.
+        assertTrue(transport.sent.last().startsWith("0088000008" + "42".repeat(8)))
+    }
+
+    @Test
+    fun documentRetirePendantAa_ConnectionLostInchangee() {
+        val lost = SceauException.ConnectionLost()
+        val transport = ScriptedTransport(respond(AID_SELECT, "9000"), raise("00880000", lost))
+        try {
+            verifier(transport).activeAuthentication(dg15, null)
+            fail("ConnectionLost attendue")
+        } catch (e: SceauException.ConnectionLost) {
+            assertSame(lost, e)
+        }
+    }
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <!--
+        TrulyRandom vise le PRNG mal initialisé d'Android 4.3 et antérieurs (API 18). Sceau vise
+        minSdk 26 : le SecureRandom par défaut, qui tire le nonce d'Active Authentication
+        (SPEC §8), y est sûr. Détecteur sur bytecode : @Suppress (rétention SOURCE) ne s'y
+        applique pas, d'où cette configuration limitée au paquet de lecture.
+    -->
+    <issue id="TrulyRandom" severity="ignore" />
+</lint>
