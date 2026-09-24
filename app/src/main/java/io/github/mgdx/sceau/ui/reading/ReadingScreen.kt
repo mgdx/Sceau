@@ -52,6 +52,7 @@ import io.github.mgdx.sceau.R
 import io.github.mgdx.sceau.core.Step
 import io.github.mgdx.sceau.session.ReadState
 import io.github.mgdx.sceau.session.SessionViewModel
+import io.github.mgdx.sceau.ui.common.SceauIcons
 import io.github.mgdx.sceau.ui.common.SecureWindow
 
 /** Écran de lecture (SPEC §5.2). */

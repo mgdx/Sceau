@@ -40,7 +40,7 @@ import androidx.core.net.toUri
 import io.github.mgdx.sceau.R
 import io.github.mgdx.sceau.core.trust.MasterListInfo
 import io.github.mgdx.sceau.trust.TrustStoreRepository
-import io.github.mgdx.sceau.ui.result.SceauIcons
+import io.github.mgdx.sceau.ui.common.SceauIcons
 import io.github.mgdx.sceau.ui.result.rememberDateFormatter
 import io.github.mgdx.sceau.ui.result.toUtcDate
 import kotlinx.coroutines.CancellationException

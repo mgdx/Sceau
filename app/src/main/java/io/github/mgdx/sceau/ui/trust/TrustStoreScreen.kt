@@ -61,8 +61,8 @@ import io.github.mgdx.sceau.core.trust.InvalidMasterListException
 import io.github.mgdx.sceau.core.trust.MasterListInfo
 import io.github.mgdx.sceau.core.trust.TrustSource
 import io.github.mgdx.sceau.trust.TrustStoreRepository
+import io.github.mgdx.sceau.ui.common.SceauIcons
 import io.github.mgdx.sceau.ui.result.Countries
-import io.github.mgdx.sceau.ui.result.SceauIcons
 import io.github.mgdx.sceau.ui.result.currentLocale
 import io.github.mgdx.sceau.ui.result.rememberDateFormatter
 import io.github.mgdx.sceau.ui.result.toUtcDate
