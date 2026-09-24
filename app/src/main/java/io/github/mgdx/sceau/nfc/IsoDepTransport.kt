@@ -24,6 +24,13 @@ class IsoDepTransport(
     @Volatile
     private var timeout: Int = timeoutMillis
 
+    /**
+     * Délai réellement appliqué par le service NFC, relu après chaque affectation : il peut
+     * borner la valeur demandée. Sert à classer un échec en délai dépassé ou en perte.
+     */
+    @Volatile
+    private var effectiveTimeout: Int = timeoutMillis
+
     /** Positionné par [close] : seule une fermeture demandée donne une perte de connexion. */
     @Volatile
     private var closed = false
@@ -42,13 +49,12 @@ class IsoDepTransport(
             timeout = value
             // IsoDep remet le délai à sa valeur par défaut à la connexion : il est aussi
             // réappliqué dans ensureConnected().
-            if (isoDep.isConnected) isoDep.timeout = value
+            if (isoDep.isConnected) applyTimeout() else effectiveTimeout = value
         }
 
     override fun transceive(apdu: ByteArray): ByteArray {
         // Lecture annulée : ne jamais rouvrir la connexion.
         if (closed) throw SceauException.ConnectionLost(detail = commandDetail(apdu))
-        val timeoutAtStart = timeout
         val start = System.nanoTime()
         return try {
             ensureConnected()
@@ -62,7 +68,8 @@ class IsoDepTransport(
                 closed = closed,
                 apdu = apdu,
                 elapsedMillis = (System.nanoTime() - start) / NANOS_PER_MILLI,
-                timeoutMillis = timeoutAtStart,
+                // Délai effectif, lu après ensureConnected() qui l'a éventuellement réappliqué.
+                timeoutMillis = effectiveTimeout,
                 cause = e,
             )
         } catch (e: SecurityException) {
@@ -92,7 +99,7 @@ class IsoDepTransport(
         }
         try {
             isoDep.connect()
-            isoDep.timeout = timeout
+            applyTimeout()
         } catch (e: IOException) {
             throw SceauException.ConnectionLost(e, RECONNECT_DETAIL)
         } catch (e: SecurityException) {
@@ -115,8 +122,21 @@ class IsoDepTransport(
     private fun ensureConnected() {
         if (!isoDep.isConnected) {
             isoDep.connect()
-            isoDep.timeout = timeout
+            applyTimeout()
         }
+    }
+
+    /** Applique le délai demandé à la liaison connectée, puis relit celui que le système a retenu. */
+    private fun applyTimeout() {
+        val requested = timeout
+        isoDep.timeout = requested
+        val readBack =
+            try {
+                isoDep.timeout
+            } catch (e: RuntimeException) {
+                0
+            }
+        effectiveTimeout = effectiveTimeout(requested, readBack)
     }
 
     /** `IsoDep.isConnected` interroge le service NFC : il ne doit pas masquer l'erreur d'origine. */
@@ -190,6 +210,16 @@ class IsoDepTransport(
                 isTimeoutMessage(message) -> SceauException.Timeout(cause, commandDetail(apdu))
                 else -> SceauException.Unexpected(technicalDetail(IO_PREFIX + ioMessageCode(message), apdu), cause)
             }
+
+        /**
+         * Délai effectif d'après la relecture d'`IsoDep.getTimeout()` : [readBack] s'il est
+         * positif (le système a pu borner [requested], par exemple sous 60 s), sinon [requested]
+         * (`getTimeout()` renvoie 0 si le service NFC est injoignable).
+         */
+        internal fun effectiveTimeout(
+            requested: Int,
+            readBack: Int,
+        ): Int = if (readBack > 0) readBack else requested
 
         /** Vrai si [elapsedMillis] atteint au moins 90 % de [timeoutMillis]. */
         internal fun isTimeoutElapsed(
