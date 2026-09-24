@@ -34,8 +34,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -55,6 +57,7 @@ import io.github.mgdx.sceau.session.ReadState
 import io.github.mgdx.sceau.session.SessionViewModel
 import io.github.mgdx.sceau.ui.common.SceauIcons
 import io.github.mgdx.sceau.ui.common.SecureWindow
+import kotlinx.coroutines.delay
 
 /** Écran de lecture (SPEC §5.2). */
 @OptIn(ExperimentalMaterial3Api::class)
@@ -125,12 +128,37 @@ private fun ProgressContent(
     ) {
         Step.entries.forEach { step -> StepRow(step = step, status = stepStatus(state, step)) }
     }
+    SlowChipMessage(state)
     Spacer(Modifier.height(24.dp))
     OutlinedButton(
         onClick = onCancel,
         modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
     ) {
         Text(stringResource(R.string.reading_cancel))
+    }
+}
+
+/** Message affiché si l'ouverture du canal sécurisé dure (voir [SlowChipHint]). */
+@Composable
+private fun SlowChipMessage(state: ReadState) {
+    val timed = SlowChipHint.isTimed(state)
+    var shown by remember { mutableStateOf(false) }
+    LaunchedEffect(timed) {
+        shown = false
+        if (timed) {
+            delay(SlowChipHint.DELAY_MILLIS)
+            shown = true
+        }
+    }
+    if (shown) {
+        Spacer(Modifier.height(16.dp))
+        Text(
+            text = stringResource(R.string.reading_slow_chip),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth().semantics { liveRegion = LiveRegionMode.Polite },
+        )
     }
 }
 

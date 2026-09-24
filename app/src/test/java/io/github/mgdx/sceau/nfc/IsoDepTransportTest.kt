@@ -108,6 +108,18 @@ class IsoDepTransportTest {
     }
 
     @Test
+    fun `effective timeout is the value read back from IsoDep, or the requested one if unavailable`() {
+        assertEquals(60_000, IsoDepTransport.effectiveTimeout(60_000, 60_000))
+        // Délai borné par le système : c'est lui qui classe un échec en délai dépassé.
+        assertEquals(30_000, IsoDepTransport.effectiveTimeout(60_000, 30_000))
+        assertEquals(60_000, IsoDepTransport.effectiveTimeout(60_000, 0))
+        assertTrue(classify("Transceive failed", tagLost = true, elapsedMillis = 27_000, timeoutMillis = 30_000) is SceauException.Timeout)
+        assertTrue(
+            classify("Transceive failed", tagLost = true, elapsedMillis = 27_000, timeoutMillis = 60_000) is SceauException.ConnectionLost,
+        )
+    }
+
+    @Test
     fun `technical detail survives an empty apdu`() {
         assertEquals("STATE-INSNA-L0", IsoDepTransport.technicalDetail("STATE", ByteArray(0)))
         assertEquals("IO-OTHER-INS84-L10", IsoDepTransport.technicalDetail("IO-OTHER", ByteArray(5).also { it[1] = 0x84.toByte() }))

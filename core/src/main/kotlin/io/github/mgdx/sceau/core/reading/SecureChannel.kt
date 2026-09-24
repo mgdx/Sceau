@@ -24,15 +24,21 @@ import java.util.Locale
  *    PACE, sous messagerie sécurisée), en essayant chaque `PACEInfo` annoncé dans l'ordre ;
  *    la sélection de l'applet qui suit détecte alors l'absence d'application ICAO.
  * 4. Si PACE échoue avec une clé MRZ pour une autre raison qu'un refus explicite de la clé
- *    (SW 63xx), c'est-à-dire délai, perte de liaison, SW inattendu ou erreur de JMRTD, la liaison
- *    est réinitialisée ([CardTransport.reconnect]) puis BAC est mené (sélection en clair de
- *    l'applet puis BAC) : les documents qui annoncent PACE restent tenus d'accepter BAC jusqu'à
- *    la fin de la transition ICAO, et certaines puces ou certains lecteurs NFC ne mènent pas
- *    PACE à terme (passeport français en ISO 14443-B resté muet au premier GENERAL
- *    AUTHENTICATE). Le délai de réponse est abaissé à [PACE_TIMEOUT_MILLIS] pendant PACE pour
- *    ne pas faire attendre l'utilisateur avant le repli.
+ *    (SW 63xx) ou qu'un délai dépassé, c'est-à-dire perte de liaison, SW inattendu ou erreur de
+ *    JMRTD, la liaison est réinitialisée ([CardTransport.reconnect]) puis BAC est mené
+ *    (sélection en clair de l'applet puis BAC) : les documents qui annoncent PACE restent tenus
+ *    d'accepter BAC jusqu'à la fin de la transition ICAO.
  *    Avec un CAN, aucun repli possible : l'erreur du transport ressort telle quelle, un refus ou
  *    un échec de PACE donne [SceauException.AccessDenied].
+ * 5. Pendant l'authentification (PACE, puis BAC), le délai de réponse est porté à
+ *    [AUTHENTICATION_TIMEOUT_MILLIS], puis rétabli pour la suite. Après des essais ratés, une
+ *    puce peut imposer un délai croissant avant de répondre à la première commande
+ *    d'authentification (contre-mesure anti-force brute, observée sur un passeport français
+ *    muet au premier GENERAL AUTHENTICATE comme à l'EXTERNAL AUTHENTICATE de BAC) :
+ *    l'interrompre plus tôt ne la laisse jamais répondre et peut aggraver la pénalité. Un délai
+ *    dépassé pendant PACE arrête donc la lecture, même avec une clé MRZ
+ *    ([SceauException.Timeout] avec diagnostic) : relancer BAC sur une puce en pénalité ne
+ *    ferait qu'ajouter un essai interrompu.
  */
 internal class SecureChannel(
     private val chip: Chip,
@@ -51,7 +57,7 @@ internal class SecureChannel(
     /** Étape SECURE_CHANNEL. Renvoie le protocole établi. */
     fun establish(paceInfos: List<PACEInfo>): ChannelProtocol {
         if (paceInfos.isNotEmpty()) {
-            if (tryPace(paceInfos)) {
+            if (withAuthenticationTimeout { tryPace(paceInfos) }) {
                 selectApplet(secure = true)
                 return ChannelProtocol.PACE
             }
@@ -62,8 +68,20 @@ internal class SecureChannel(
         } else if (key is AccessKey.Can) {
             throw SceauException.CanWithoutPace()
         }
-        doBac(key as AccessKey.Mrz)
+        withAuthenticationTimeout { doBac(key as AccessKey.Mrz) }
         return ChannelProtocol.BAC
+    }
+
+    /** Exécute [block] avec le délai de réponse [AUTHENTICATION_TIMEOUT_MILLIS], puis rétablit le délai. */
+    private inline fun <T> withAuthenticationTimeout(block: () -> T): T {
+        val transport = chip.transport
+        val savedTimeout = transport.timeoutMillis
+        transport.timeoutMillis = maxOf(savedTimeout, AUTHENTICATION_TIMEOUT_MILLIS)
+        try {
+            return block()
+        } finally {
+            transport.timeoutMillis = savedTimeout
+        }
     }
 
     private fun readPaceInfos(): List<PACEInfo> {
@@ -79,9 +97,9 @@ internal class SecureChannel(
 
     /**
      * Vrai si PACE a abouti avec l'un des `PACEInfo` annoncés, faux s'il a échoué sans refus de
-     * la clé. Lève [SceauException.AccessDenied] si la puce refuse la clé (SW 63xx) ; avec un
-     * CAN, relance aussi l'erreur du transport. Avec une clé MRZ, une erreur du transport
-     * arrête les essais (la liaison est à réinitialiser) et renvoie faux.
+     * la clé. Lève [SceauException.AccessDenied] si la puce refuse la clé (SW 63xx), et relance
+     * un délai dépassé ainsi que, avec un CAN, toute erreur du transport. Avec une clé MRZ, une
+     * perte de liaison arrête les essais (la liaison est à réinitialiser) et renvoie faux.
      */
     private fun tryPace(paceInfos: List<PACEInfo>): Boolean {
         val paceKey =
@@ -89,35 +107,28 @@ internal class SecureChannel(
                 is AccessKey.Can -> PACEKeySpec.createCANKey(key.value)
                 is AccessKey.Mrz -> PACEKeySpec.createMRZKey(bacKey(key))
             }
-        val transport = chip.transport
-        val savedTimeout = transport.timeoutMillis
-        // Sans repli possible (CAN), aucune raison d'écourter l'attente.
-        if (key is AccessKey.Mrz) transport.timeoutMillis = minOf(savedTimeout, PACE_TIMEOUT_MILLIS)
-        try {
-            for (info in paceInfos) {
-                val parameterId = info.parameterId ?: continue
-                val parameters =
-                    try {
-                        PACEInfo.toParameterSpec(parameterId)
-                    } catch (e: Exception) {
-                        // Paramètres propriétaires (PACEDomainParameterInfo) : non pris en charge.
-                        continue
-                    }
+        for (info in paceInfos) {
+            val parameterId = info.parameterId ?: continue
+            val parameters =
                 try {
-                    service.doPACE(paceKey, info.objectIdentifier, parameters, parameterId)
-                    return true
+                    PACEInfo.toParameterSpec(parameterId)
                 } catch (e: Exception) {
-                    if (chip.cardService.transportFailure != null) {
-                        if (key is AccessKey.Can) chip.rethrowTransportFailure()
-                        return false
-                    }
-                    if (e.isKeyRefused()) throw SceauException.AccessDenied()
+                    // Paramètres propriétaires (PACEDomainParameterInfo) : non pris en charge.
+                    continue
                 }
+            try {
+                service.doPACE(paceKey, info.objectIdentifier, parameters, parameterId)
+                return true
+            } catch (e: Exception) {
+                chip.cardService.transportFailure?.let { failure ->
+                    // Délai dépassé : puce muette ou en pénalité, un nouvel essai n'y changerait rien.
+                    if (key is AccessKey.Can || failure is SceauException.Timeout) throw failure
+                    return false
+                }
+                if (e.isKeyRefused()) throw SceauException.AccessDenied()
             }
-            return false
-        } finally {
-            transport.timeoutMillis = savedTimeout
         }
+        return false
     }
 
     /** Refus explicite de la clé par la puce : SW 63xx (ICAO 9303-11, BSI TR-03110). */
@@ -147,8 +158,11 @@ internal class SecureChannel(
         private const val SW1_MASK = 0xFF00
         private const val SW1_AUTHENTICATION_FAILED = 0x6300
 
-        /** Délai de réponse pendant PACE avec une clé MRZ, avant le repli sur BAC. */
-        const val PACE_TIMEOUT_MILLIS = 5_000
+        /**
+         * Délai de réponse pendant l'authentification (PACE, BAC) : assez long pour qu'une puce
+         * qui fait patienter après des essais ratés finisse par répondre.
+         */
+        const val AUTHENTICATION_TIMEOUT_MILLIS = 60_000
 
         fun bacKey(mrz: AccessKey.Mrz): BACKey = BACKey(mrz.documentNumber, yymmdd(mrz.dateOfBirth), yymmdd(mrz.dateOfExpiry))
 

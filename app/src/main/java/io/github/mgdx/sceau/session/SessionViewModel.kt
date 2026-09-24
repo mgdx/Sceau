@@ -86,7 +86,7 @@ class SessionViewModel(
 
     /**
      * Fermeture des transports : `IsoDep.close()` attend la fin de l'APDU en cours (jusqu'au délai
-     * de 10 s), elle ne doit jamais s'exécuter sur le thread principal. Ce scope n'est jamais
+     * de 10 s, 60 s pendant l'authentification), elle ne doit jamais s'exécuter sur le thread principal. Ce scope n'est jamais
      * annulé, pour que la fermeture ait lieu même après l'annulation de la lecture ou `onCleared`.
      */
     private val closeScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)

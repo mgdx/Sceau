@@ -11,7 +11,8 @@
     <string name="reading_step_in_progress">in progress</string>
     <string name="reading_step_done">done</string>
     <string name="reading_error_title">Reading interrupted</string>
-    <string name="reading_error_access_denied">The CAN or MRZ data is incorrect. Check it and try again.</string>
+    <string name="reading_slow_chip">The document’s chip is making you wait, often after failed attempts. Keep it still: this can take up to a minute.</string>
+    <string name="reading_error_access_denied">The CAN or MRZ data is incorrect. Check the number you entered and the dates, then try again. Each failed attempt can lengthen the delay the chip imposes before responding.</string>
     <string name="reading_error_connection_lost">The document was moved away too soon. Keep it still against the phone until reading is complete.</string>
     <string name="reading_error_not_icao">This document doesn’t comply with ICAO 9303, so its chip can’t be read.</string>
     <string name="reading_error_timeout">Timed out: the chip didn’t respond in time. Try again, keeping the document still.</string>

@@ -13,6 +13,7 @@ import io.github.mgdx.sceau.core.reading.TestFixtures.FID_CARD_ACCESS
 import io.github.mgdx.sceau.core.report.ChannelProtocol
 import io.github.mgdx.sceau.core.report.CheckDetail
 import io.github.mgdx.sceau.core.report.CheckId
+import io.github.mgdx.sceau.testchip.PaceSettings
 import io.github.mgdx.sceau.testchip.SimulatedChip
 import io.github.mgdx.sceau.testchip.TestKeyType
 import io.github.mgdx.sceau.testchip.TestPki
@@ -33,9 +34,9 @@ import java.security.KeyPairGenerator
 import java.time.LocalDate
 
 /**
- * Repli de PACE sur BAC (passeport français en ISO 14443-B resté muet au premier GENERAL
- * AUTHENTICATE de PACE) : réinitialisation de la liaison puis BAC avec une clé MRZ, jamais
- * après un refus explicite de la clé, jamais avec un CAN.
+ * Repli de PACE sur BAC : réinitialisation de la liaison puis BAC avec une clé MRZ, jamais
+ * après un refus explicite de la clé ni un délai dépassé, jamais avec un CAN. Délai de réponse
+ * long pendant l'authentification (puce qui fait patienter après des essais ratés).
  */
 class PaceFallbackTest {
     /** EF.CardAccess d'un passeport français : PACE ECDH-GM AES-128 sur brainpoolP256r1. */
@@ -103,12 +104,12 @@ class PaceFallbackTest {
     }
 
     @Test
-    fun mrzDelaiAuPremierGeneralAuthenticate_ReconnexionPuisBac() =
+    fun mrzSwInattenduAuPremierGeneralAuthenticate_ReconnexionPuisBac() =
         runTest {
             val pki = TestPki(TestKeyType.RSA)
             val document = pki.document()
             val chip = SimulatedChip(document)
-            val passport = ScriptedTransport(*paceStart(), raise(GA_STEP_1, SceauException.Timeout(detail = "INS86-L10")))
+            val passport = ScriptedTransport(*paceStart(), respond(GA_STEP_1, "6A80"))
             val transport = ReconnectingTransport(passport, chip)
             val key = AccessKey.Mrz(DOCUMENT_NUMBER, DATE_OF_BIRTH, document.dateOfExpiry)
 
@@ -119,11 +120,58 @@ class PaceFallbackTest {
             assertTrue("BAC mené après la reconnexion", chip.bacCompleted)
             assertEquals(CheckDetail.SecureChannel(ChannelProtocol.BAC), report.check(CheckId.SECURE_CHANNEL).detail)
             assertEquals(DOCUMENT_NUMBER, report.document.dg1.documentNumber)
-            // Délai abaissé pendant PACE seulement, rétabli pour BAC et la lecture.
-            assertEquals(SecureChannel.PACE_TIMEOUT_MILLIS, transport.timeoutOf(GA_STEP_1))
+            // Délai long pendant l'authentification (PACE puis BAC), délai normal ailleurs.
+            val auth = SecureChannel.AUTHENTICATION_TIMEOUT_MILLIS
+            assertEquals(60_000, auth)
+            assertEquals(INITIAL_TIMEOUT, transport.timeoutOf("00A4"))
+            assertEquals(auth, transport.timeoutOf(MSE_SET_AT))
+            assertEquals(auth, transport.timeoutOf(GA_STEP_1))
             assertEquals(INITIAL_TIMEOUT, transport.timeoutOf(AID_SELECT))
+            assertEquals(auth, transport.timeoutOf(GET_CHALLENGE))
+            assertEquals(auth, transport.timeoutOf(EXTERNAL_AUTHENTICATE))
+            assertEquals(INITIAL_TIMEOUT, transport.sent.last().second)
             assertEquals(INITIAL_TIMEOUT, transport.timeoutMillis)
             assertTrue(transport.closed)
+        }
+
+    @Test
+    fun mrzDelaiAuPremierGeneralAuthenticate_TimeoutSansRepli() =
+        runTest {
+            val timeout = SceauException.Timeout(detail = "INS86-L10")
+            val passport = ScriptedTransport(*paceStart(), raise(GA_STEP_1, timeout))
+            val transport = ReconnectingTransport(passport)
+            val key = AccessKey.Mrz(DOCUMENT_NUMBER, DATE_OF_BIRTH, LocalDate.of(2030, 12, 31))
+
+            val error = expect<SceauException.Timeout>(transport, key)
+
+            // Puce en pénalité : ni reconnexion ni BAC, qui ne feraient qu'ajouter un essai.
+            assertEquals("TIMEOUT-SECURE_CHANNEL-INS86-L10", error.code)
+            assertSame(timeout, error.cause)
+            assertEquals(0, transport.reconnects)
+            assertTrue(passport.exhausted)
+            assertFalse(transport.sent.any { it.first.startsWith(AID_SELECT) })
+            assertEquals(SecureChannel.AUTHENTICATION_TIMEOUT_MILLIS, transport.timeoutOf(GA_STEP_1))
+            assertEquals(INITIAL_TIMEOUT, transport.timeoutMillis)
+        }
+
+    @Test
+    fun mrzPaceReussi_DelaiLongPendantPaceSeulement() =
+        runTest {
+            val pki = TestPki(TestKeyType.RSA)
+            val document = pki.document()
+            val chip = SimulatedChip(document, PaceSettings(can = "123456"))
+            val transport = ReconnectingTransport(chip)
+            val key = AccessKey.Mrz(DOCUMENT_NUMBER, DATE_OF_BIRTH, document.dateOfExpiry)
+
+            val report = readAndVerify(transport, key, pki.trustStore(pki.oldCsca)) {}
+
+            assertEquals(CheckDetail.SecureChannel(ChannelProtocol.PACE), report.check(CheckId.SECURE_CHANNEL).detail)
+            assertEquals(0, transport.reconnects)
+            val auth = SecureChannel.AUTHENTICATION_TIMEOUT_MILLIS
+            assertTrue(transport.sent.filter { it.first.startsWith("1086") || it.first.startsWith("0086") }.all { it.second == auth })
+            assertEquals(INITIAL_TIMEOUT, transport.timeoutOf("00A4"))
+            assertEquals(INITIAL_TIMEOUT, transport.sent.last().second)
+            assertEquals(INITIAL_TIMEOUT, transport.timeoutMillis)
         }
 
     @Test
@@ -177,8 +225,8 @@ class PaceFallbackTest {
             assertSame(timeout, error.cause)
             assertEquals(0, transport.reconnects)
             assertTrue(passport.exhausted)
-            // Sans repli possible, le délai n'est pas écourté.
-            assertEquals(INITIAL_TIMEOUT, transport.timeoutOf(GA_STEP_1))
+            assertEquals(SecureChannel.AUTHENTICATION_TIMEOUT_MILLIS, transport.timeoutOf(GA_STEP_1))
+            assertEquals(INITIAL_TIMEOUT, transport.timeoutMillis)
         }
 
     @Test
@@ -198,6 +246,8 @@ class PaceFallbackTest {
     private companion object {
         const val INITIAL_TIMEOUT = 10_000
         const val MSE_SET_AT = "0022C1A4"
+        const val GET_CHALLENGE = "00840000"
+        const val EXTERNAL_AUTHENTICATE = "00820000"
 
         /** GENERAL AUTHENTICATE étape 1 : CLA 10 (chaînage), 7C 00, Le 00 courte. */
         const val GA_STEP_1 = "10860000027C0000"
