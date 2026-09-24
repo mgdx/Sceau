@@ -1,0 +1,3 @@
+[submodule "app/src/main/cpp/openjpeg"]
+	path = app/src/main/cpp/openjpeg
+	url = https://github.com/uclouvain/openjpeg.git

@@ -17,3 +17,9 @@
 # BouncyCastle référence JNDI (javax.naming) pour les magasins LDAP et DANE, absents
 # d'Android et jamais utilisés par Sceau.
 -dontwarn javax.naming.**
+
+# Décodeur JPEG 2000 natif (libsceau_jp2.so) : la fonction JNI est liée par le nom de la classe
+# et de la méthode native, qui ne doivent pas être renommés.
+-keepclasseswithmembernames,includedescriptorclasses class io.github.mgdx.sceau.jp2.Jpeg2000Decoder {
+    native <methods>;
+}
