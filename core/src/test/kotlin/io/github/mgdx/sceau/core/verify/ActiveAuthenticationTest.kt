@@ -3,11 +3,11 @@ package io.github.mgdx.sceau.core.verify
 import io.github.mgdx.sceau.core.report.CheckDetail
 import io.github.mgdx.sceau.core.report.CheckId
 import io.github.mgdx.sceau.core.report.CheckStatus
-import io.github.mgdx.sceau.core.testing.AaKeyType
-import io.github.mgdx.sceau.core.testing.TestActiveAuthentication
-import io.github.mgdx.sceau.core.testing.TestCrypto
-import io.github.mgdx.sceau.core.testing.TestDocument
-import io.github.mgdx.sceau.core.testing.TestPki
+import io.github.mgdx.sceau.testchip.AaKeyType
+import io.github.mgdx.sceau.testchip.TestActiveAuthentication
+import io.github.mgdx.sceau.testchip.TestCrypto
+import io.github.mgdx.sceau.testchip.TestDocument
+import io.github.mgdx.sceau.testchip.TestPki
 import org.jmrtd.lds.icao.DG15File
 import org.junit.Assert.assertEquals
 import org.junit.Test

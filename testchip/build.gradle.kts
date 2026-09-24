@@ -1,3 +1,5 @@
+// Puce ICAO 9303 simulée et PKI factice : sert aux tests de `:core` et, plus tard, au mode
+// démo de l'APK de debug. Ne doit jamais être une dépendance de production (voir README.md).
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.android.lint)
@@ -16,11 +18,13 @@ lint {
     abortOnError = true
     // Voir app/build.gradle.kts : contrôles de fraîcheur des versions, dépendants du réseau.
     disable += setOf("AndroidGradlePluginVersion", "GradleDependency", "NewerVersionAvailable")
+    // L'aléa de la PKI factice est volontairement déterministe (SHA1PRNG à graine fixe, voir
+    // TestCrypto.seededRandom) : tests reproductibles. Ce module ne fabrique que des clés de test.
+    disable += "TrulyRandom"
 }
 
 configurations.configureEach {
-    // BouncyCastle n'est fourni que par les artefacts jdk18on : les anciennes variantes
-    // jdk15on / jdk15to18 dupliqueraient les classes.
+    // Mêmes exclusions que `:core` : BouncyCastle n'est fourni que par les artefacts jdk18on.
     exclude(group = "org.bouncycastle", module = "bcprov-jdk15on")
     exclude(group = "org.bouncycastle", module = "bcpkix-jdk15on")
     exclude(group = "org.bouncycastle", module = "bcutil-jdk15on")
@@ -28,15 +32,13 @@ configurations.configureEach {
 }
 
 dependencies {
+    implementation(project(":core"))
     implementation(libs.jmrtd)
     implementation(libs.scuba.smartcards)
     implementation(libs.bouncycastle.bcprov)
     implementation(libs.bouncycastle.bcpkix)
-    implementation(libs.kotlinx.coroutines.core)
 
-    testImplementation(project(":testchip"))
     testImplementation(libs.junit)
-    testImplementation(libs.kotlinx.coroutines.test)
 }
 
 ktlint {

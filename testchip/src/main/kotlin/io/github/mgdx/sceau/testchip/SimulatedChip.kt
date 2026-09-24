@@ -1,10 +1,8 @@
-package io.github.mgdx.sceau.core.reading.sim
+package io.github.mgdx.sceau.testchip
 
 import io.github.mgdx.sceau.core.CardTransport
 import io.github.mgdx.sceau.core.SceauException
-import io.github.mgdx.sceau.core.reading.sim.SimCrypto.Algorithm
-import io.github.mgdx.sceau.core.testing.TestCrypto
-import io.github.mgdx.sceau.core.testing.TestDocument
+import io.github.mgdx.sceau.testchip.SimCrypto.Algorithm
 import org.bouncycastle.asn1.ASN1ObjectIdentifier
 import org.bouncycastle.jce.interfaces.ECPrivateKey
 import org.jmrtd.lds.LDSFileUtil
@@ -20,9 +18,13 @@ import java.security.PrivateKey
  * vérifie le MAC de chaque commande et chiffre ses réponses (voir [SimCrypto] et
  * [ChipSecureMessaging], écrits d'après ICAO 9303-11 sans le code de JMRTD).
  *
- * - Pas d'EF.CardAccess (6A82) : Sceau doit choisir BAC. Applet ICAO `A0 00 00 02 47 10 01`.
+ * - Sans [pace], pas d'EF.CardAccess (6A82) : Sceau doit choisir BAC. Avec [pace], EF.CardAccess
+ *   (011C) est lisible en clair au niveau MF et annonce un `PACEInfo` ; PACE (voir [ChipPace])
+ *   ouvre une messagerie sécurisée AES, sous laquelle l'applet est ensuite sélectionnée.
+ *   Applet ICAO `A0 00 00 02 47 10 01`.
  * - BAC (ICAO 9303-11 §4.3) : GET CHALLENGE, EXTERNAL/MUTUAL AUTHENTICATE ; une clé MRZ fausse
- *   donne 6300. Puis messagerie sécurisée 3DES avec SSC = RND.ICC[4..8] ‖ RND.IFD[4..8].
+ *   donne 6300. Puis messagerie sécurisée 3DES avec SSC = RND.ICC[4..8] ‖ RND.IFD[4..8]. BAC
+ *   reste accepté quand PACE est annoncé, comme l'exige ICAO pendant la transition.
  * - Fichiers : EF.COM (construit à partir de [comDataGroups]), EF.SOD, et les DG de
  *   [document]. Toute sélection de DG3 ou DG4 lève une [AssertionError], qui traverse Sceau
  *   et JMRTD (ils n'attrapent que des `Exception`) et fait échouer le test.
@@ -36,8 +38,10 @@ import java.security.PrivateKey
  * Une commande sécurisée invalide (MAC faux) ou une commande en clair pendant la session
  * reçoit 6988 en clair et clôt la session, comme une vraie puce.
  */
-internal class SimulatedChip(
+class SimulatedChip(
     private val document: TestDocument,
+    /** PACE annoncé dans EF.CardAccess ; null : pas d'EF.CardAccess, BAC seul. */
+    pace: PaceSettings? = null,
     /** DG annoncés dans EF.COM ; par défaut, ceux du document. */
     comDataGroups: Collection<Int> = document.dataGroups.keys,
     /** Clé privée de Chip Authentication ; par défaut celle de DG14. */
@@ -68,6 +72,12 @@ internal class SimulatedChip(
     var bacCompleted: Boolean = false
         private set
 
+    /** Mot de passe (CAN ou MRZ) de la dernière PACE réussie, null si PACE n'a pas abouti. */
+    val paceCompletedWith: PacePassword? get() = chipPace?.completedWith
+
+    /** Compteur d'essais PACE (63Cx) ; null sans PACE. */
+    val paceRetries: Int? get() = chipPace?.retries
+
     /** Vrai si une Chip Authentication a abouti, et avec quel chiffrement. */
     var caAlgorithm: Algorithm? = null
         private set
@@ -80,11 +90,16 @@ internal class SimulatedChip(
     private val challenges = mutableListOf<ByteArray>()
     private val files: Map<Int, ByteArray>
     private val bacSeed: ByteArray
+    private val cardAccess: ByteArray? = pace?.cardAccess
+    private val chipPace: ChipPace?
 
     private var appletSelected = false
     private var rndIcc: ByteArray? = null
     private var session: ChipSecureMessaging? = null
     private var currentFile: ByteArray? = null
+
+    /** Le fichier courant est EF.CardAccess, lisible sans messagerie sécurisée. */
+    private var currentFileIsPublic = false
     private var pendingCaOid: String? = null
 
     init {
@@ -95,6 +110,8 @@ internal class SimulatedChip(
         // La puce dérive sa clé BAC de sa propre MRZ, pas de ce que saisit le lecteur.
         val mrz = DG1File(document.dataGroups.getValue(1).inputStream()).mrzInfo
         bacSeed = SimCrypto.bacKeySeed(mrz.documentNumber, mrz.dateOfBirth, mrz.dateOfExpiry)
+        chipPace =
+            pace?.let { ChipPace(it, SimCrypto.mrzPassword(mrz.documentNumber, mrz.dateOfBirth, mrz.dateOfExpiry), random) }
     }
 
     override fun transceive(apdu: ByteArray): ByteArray {
@@ -142,6 +159,7 @@ internal class SimulatedChip(
     private fun abortSession(): ByteArray {
         session = null
         currentFile = null
+        currentFileIsPublic = false
         return sw(SW_SM_OBJECTS_INCORRECT)
     }
 
@@ -164,12 +182,14 @@ internal class SimulatedChip(
                 if (!command.data.contentEquals(ICAO_AID)) return status(SW_FILE_NOT_FOUND)
                 appletSelected = true
                 currentFile = null
+                currentFileIsPublic = false
                 status(SW_OK)
             }
 
             P1_SELECT_MF -> {
                 appletSelected = false
                 currentFile = null
+                currentFileIsPublic = false
                 status(SW_OK)
             }
 
@@ -194,8 +214,15 @@ internal class SimulatedChip(
         secured: Boolean,
     ): Reply {
         currentFile = null
-        // EF.CardAccess absent : pas de PACE, Sceau doit se rabattre sur BAC.
-        if (!appletSelected) return status(SW_FILE_NOT_FOUND)
+        currentFileIsPublic = false
+        if (!appletSelected) {
+            // Au niveau MF, seul EF.CardAccess existe, et seulement si PACE est annoncé ;
+            // absent, Sceau doit se rabattre sur BAC.
+            val access = cardAccess?.takeIf { fid == FID_CARD_ACCESS } ?: return status(SW_FILE_NOT_FOUND)
+            currentFile = access
+            currentFileIsPublic = true
+            return status(SW_OK)
+        }
         val content = files[fid] ?: return status(SW_FILE_NOT_FOUND)
         // Les fichiers de l'applet ne sont accessibles qu'après BAC, sous messagerie sécurisée.
         if (!secured) return status(SW_SECURITY_STATUS)
@@ -206,7 +233,7 @@ internal class SimulatedChip(
     private fun readBinary(command: PlainCommand): Reply {
         if (command.p1 and P1_SFI != 0) return status(SW_WRONG_P1P2)
         val content = currentFile ?: return status(SW_NO_CURRENT_EF)
-        if (!command.secured) return status(SW_SECURITY_STATUS)
+        if (!command.secured && !currentFileIsPublic) return status(SW_SECURITY_STATUS)
         val offset = (command.p1 shl Byte.SIZE_BITS) or command.p2
         if (offset > content.size) return status(SW_WRONG_P1P2)
         val length = if (command.ne == 0) SHORT_MAX_NE else command.ne
@@ -256,16 +283,29 @@ internal class SimulatedChip(
         return Reply(eIcc + mIcc, SW_OK, next)
     }
 
-    /** MSE:Set KAT (CA 3DES) ou MSE:Set AT pour l'authentification interne (CA AES). */
+    /**
+     * MSE:Set AT pour l'authentification mutuelle (PACE, en clair), MSE:Set KAT (CA 3DES) ou
+     * MSE:Set AT pour l'authentification interne (CA AES).
+     */
     private fun manageSecurityEnvironment(command: PlainCommand): Reply {
-        if (!command.secured) return status(SW_SECURITY_STATUS)
+        val p1p2 = (command.p1 shl Byte.SIZE_BITS) or command.p2
+        val pace = chipPace
+        if (p1p2 == MSE_SET_AT_MUTUAL_AUTH) {
+            if (pace == null || command.secured) return status(SW_WRONG_P1P2)
+        } else if (!command.secured) {
+            return status(SW_SECURITY_STATUS)
+        }
         val objects =
             try {
                 Tlv.parseAll(command.data).associateBy { it.tag }
             } catch (e: SecureMessagingError) {
                 return status(SW_WRONG_DATA)
             }
-        return when ((command.p1 shl Byte.SIZE_BITS) or command.p2) {
+        return when (p1p2) {
+            MSE_SET_AT_MUTUAL_AUTH -> {
+                status(checkNotNull(pace).setAuthenticationTemplate(objects))
+            }
+
             MSE_SET_KAT -> {
                 val publicKey = objects[TAG_EPHEMERAL_KEY]?.value ?: return status(SW_WRONG_DATA)
                 val secret = sharedSecret(publicKey) ?: return status(SW_WRONG_DATA)
@@ -287,8 +327,18 @@ internal class SimulatedChip(
         }
     }
 
-    /** GENERAL AUTHENTICATE de la CA AES : 7C { 80 clé éphémère } → 7C { }. */
+    /** GENERAL AUTHENTICATE : PACE en clair (voir [ChipPace]), ou CA AES sous messagerie sécurisée. */
     private fun generalAuthenticate(command: PlainCommand): Reply {
+        val pace = chipPace
+        if (!command.secured && pace != null && pace.inProgress) {
+            val outcome = pace.generalAuthenticate(command.data, last = !command.chained)
+            return Reply(outcome.data, outcome.sw, outcome.session)
+        }
+        return caGeneralAuthenticate(command)
+    }
+
+    /** GENERAL AUTHENTICATE de la CA AES : 7C { 80 clé éphémère } → 7C { }. */
+    private fun caGeneralAuthenticate(command: PlainCommand): Reply {
         val oid = pendingCaOid
         if (!command.secured || oid == null) return status(SW_CONDITIONS)
         pendingCaOid = null
@@ -361,7 +411,15 @@ internal class SimulatedChip(
                     }
                 }
             }
-        return PlainCommand(apdu[1].toInt() and 0xFF, apdu[2].toInt() and 0xFF, apdu[3].toInt() and 0xFF, data, ne, secured = false)
+        return PlainCommand(
+            apdu[1].toInt() and 0xFF,
+            apdu[2].toInt() and 0xFF,
+            apdu[3].toInt() and 0xFF,
+            data,
+            ne,
+            secured = false,
+            chained = apdu[0].toInt() and CLA_CHAINING != 0,
+        )
     }
 
     private fun status(sw: Int) = Reply(ByteArray(0), sw)
@@ -372,6 +430,7 @@ internal class SimulatedChip(
 
     companion object {
         const val DEFAULT_SEED = 9303L
+        const val FID_CARD_ACCESS = 0x011C
         const val FID_COM = 0x011E
         const val FID_SOD = 0x011D
         const val FID_DG_BASE = 0x0100
@@ -386,6 +445,7 @@ internal class SimulatedChip(
 
         private const val HEADER = 4
         private const val CLA_SM = 0x0C
+        private const val CLA_CHAINING = 0x10
         private const val INS_SELECT = 0xA4
         private const val INS_READ_BINARY = 0xB0
         private const val INS_GET_CHALLENGE = 0x84
@@ -400,6 +460,7 @@ internal class SimulatedChip(
         private const val P1_SFI = 0x80
         private const val MSE_SET_KAT = 0x41A6
         private const val MSE_SET_AT_INTERNAL_AUTH = 0x41A4
+        private const val MSE_SET_AT_MUTUAL_AUTH = 0xC1A4
         private const val TAG_EPHEMERAL_KEY = 0x91
         private const val TAG_MECHANISM = 0x80
         private const val TAG_DYNAMIC_AUTH = 0x7C

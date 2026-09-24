@@ -1,4 +1,4 @@
-package io.github.mgdx.sceau.core.testing
+package io.github.mgdx.sceau.testchip
 
 import org.bouncycastle.asn1.ASN1Encodable
 import org.bouncycastle.asn1.ASN1EncodableVector
