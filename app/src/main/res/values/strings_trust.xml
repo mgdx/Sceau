@@ -1,4 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="trust_title">Magasin de confiance</string>
+    <string name="trust_back">Retour</string>
+    <string name="trust_intro">Certificats racines (CSCA) des pays émetteurs, utilisés pour vérifier la signature des documents. Aucune donnée personnelle ne transite par cet écran.</string>
+    <plurals name="trust_summary">
+        <item quantity="one">%1$d certificat, %2$d pays</item>
+        <item quantity="other">%1$d certificats, %2$d pays</item>
+    </plurals>
+    <string name="trust_loading">Chargement du magasin de confiance…</string>
+    <string name="trust_load_error">Impossible de charger le magasin de confiance.</string>
+    <string name="trust_retry">Réessayer</string>
+    <string name="trust_empty">Aucun certificat dans le magasin de confiance.</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">Pays non indiqué</string>
+    <plurals name="trust_country_count">
+        <item quantity="one">%1$d certificat</item>
+        <item quantity="other">%1$d certificats</item>
+    </plurals>
+    <string name="trust_country_expand">Afficher les certificats</string>
+    <string name="trust_country_collapse">Masquer les certificats</string>
+    <string name="trust_validity">Valide du %1$s au %2$s</string>
+    <string name="trust_fingerprint">Empreinte SHA-256</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">Importé</string>
+    <string name="trust_link_certificate">Certificat de lien</string>
+
+    <!-- Import -->
+    <string name="trust_import">Importer une Master List</string>
+    <string name="trust_busy">Veuillez patienter…</string>
+    <string name="trust_import_confirm_title">Importer cette Master List ?</string>
+    <string name="trust_import_confirm_text">Sa signature est valide. Vérifiez que l’empreinte du signataire correspond à celle publiée par l’autorité émettrice avant de l’importer.</string>
+    <string name="trust_import_signer">Signataire</string>
+    <string name="trust_import_signer_fingerprint">Empreinte SHA-256 du signataire</string>
+    <string name="trust_import_signing_date">Date de signature</string>
+    <string name="trust_import_signing_date_unknown">Non indiquée</string>
+    <string name="trust_import_certificate_count">Nombre de certificats</string>
+    <string name="trust_import_confirm">Importer</string>
+    <string name="trust_cancel">Annuler</string>
+    <plurals name="trust_import_done">
+        <item quantity="one">Master List importée : %1$d certificat.</item>
+        <item quantity="other">Master List importée : %1$d certificats.</item>
+    </plurals>
+    <string name="trust_import_invalid">Ce fichier n’est pas une Master List valide : format illisible ou signature incorrecte (%1$s).</string>
+    <string name="trust_import_too_large">Fichier refusé : il dépasse 20 Mo.</string>
+    <string name="trust_import_read_error">Impossible de lire ce fichier.</string>
+    <string name="trust_import_write_error">Impossible d’enregistrer la Master List.</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">Supprimer les certificats importés</string>
+    <string name="trust_delete_confirm_title">Supprimer les certificats importés ?</string>
+    <string name="trust_delete_confirm_text">Les Master Lists importées seront supprimées. Les certificats embarqués dans l’application sont conservés.</string>
+    <string name="trust_delete_confirm">Supprimer</string>
+    <string name="trust_delete_done">Certificats importés supprimés.</string>
+    <string name="trust_delete_error">Impossible de supprimer les certificats importés.</string>
 </resources>

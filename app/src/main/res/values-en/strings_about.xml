@@ -1,4 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="about_title">About</string>
+    <string name="about_back">Back</string>
+    <string name="about_tagline">Offline reading and verification of the chip in ICAO 9303 identity documents.</string>
+    <string name="about_version">Version %1$s</string>
+    <string name="about_version_unknown">Unknown version</string>
+
+    <string name="about_section_license">License and source code</string>
+    <string name="about_license">Free software released under the GNU GPL version 3 or later.</string>
+    <string name="about_open_repository">View source code</string>
+    <string name="about_no_browser">No app can open this link.</string>
+
+    <string name="about_section_trust">Built-in trust store</string>
+    <string name="about_trust_ants_only">French CSCAs from ANTS (passports and identity cards).</string>
+    <string name="about_trust_ants_and_bsi">French CSCAs from ANTS and the German Master List from the BSI.</string>
+    <string name="about_trust_master_list_date">Master List signed on %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">Master List signing date not specified.</string>
+    <string name="about_trust_bsi_notice">The BSI (German Federal Office for Information Security) Master List is redistributed unmodified, without the cooperation or endorsement of the BSI.</string>
+    <string name="about_trust_loading">Loading…</string>
+    <string name="about_trust_error">Couldn’t load the trust store.</string>
+
+    <string name="about_section_limits">Limitations</string>
+    <string name="about_limit_unknown_issuer">A document whose issuing country is not in the trust store gets the “Unknown issuer” verdict, not “Failed”. Importing a more recent Master List may fix this.</string>
+    <string name="about_limit_revocation">Revocation lists are not checked: they require network access, which Sceau never uses.</string>
+
+    <string name="about_section_usage">Terms of use</string>
+    <string name="about_usage_holder">Reading assumes the holder presents their own document and consents.</string>
+    <string name="about_usage_biometrics">The photo becomes biometric data under the GDPR if it is used for automated face comparison. Sceau does no such comparison and must not be used for it without a specific legal basis.</string>
+    <string name="about_usage_privacy">No data read is stored or sent: everything is wiped from memory when you leave the result or send the app to the background.</string>
 </resources>

@@ -1,4 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="result_title">Result</string>
+    <string name="result_clear">Clear</string>
+
+    <!-- Verdict -->
+    <string name="result_verdict_authentic">Authentic</string>
+    <string name="result_verdict_authentic_explanation">The issuer’s signature is valid and the chip proved it is not a copy.</string>
+    <string name="result_verdict_chip_unverified">Valid signature, chip not verified</string>
+    <string name="result_verdict_chip_unverified_explanation">The data was signed by the issuer, but the chip cannot prove it is the original: it could be a clone.</string>
+    <string name="result_verdict_unknown_issuer">Unknown issuer</string>
+    <string name="result_verdict_unknown_issuer_explanation">The issuer’s certificate is not in the trust store. The data is shown, but nothing is guaranteed. Importing a more recent Master List may allow this document to be verified.</string>
+    <string name="result_verdict_failed">Failed</string>
+    <string name="result_verdict_failed_explanation">At least one check failed: this document must not be considered authentic.</string>
+
+    <!-- Photo -->
+    <string name="result_photo_description">Holder’s photo</string>
+    <string name="result_photo_unavailable">Photo missing or unreadable</string>
+    <string name="result_photo_fullscreen">Show the photo full screen</string>
+    <string name="result_photo_close">Close</string>
+    <string name="result_image_front">Front image</string>
+    <string name="result_image_rear">Back image</string>
+    <string name="result_image_unavailable">Unreadable image</string>
+
+    <!-- Identité -->
+    <string name="result_section_identity">Identity</string>
+    <string name="result_expired">Document expired</string>
+    <string name="result_field_surname">Surname</string>
+    <string name="result_field_given_names">Given names</string>
+    <string name="result_field_sex">Sex</string>
+    <string name="result_field_birth_date">Date of birth</string>
+    <string name="result_field_nationality">Nationality</string>
+    <string name="result_field_document_type">Document type</string>
+    <string name="result_field_document_number">Document number</string>
+    <string name="result_field_issuing_state">Issuing state</string>
+    <string name="result_field_expiry_date">Expiry date</string>
+    <string name="result_sex_male">Male</string>
+    <string name="result_sex_female">Female</string>
+    <string name="result_sex_unspecified">Unspecified</string>
+    <string name="result_document_passport">Passport</string>
+    <string name="result_document_identity_card">Identity card</string>
+    <string name="result_document_other">Other travel document</string>
+    <string name="result_value_with_code">%1$s (%2$s)</string>
+    <string name="result_unknown_value">Unknown</string>
+
+    <!-- Pays spéciaux ICAO -->
+    <string name="result_country_united_nations">United Nations</string>
+    <string name="result_country_un_agency">United Nations specialized agency</string>
+    <string name="result_country_un_kosovo">Kosovo (UNMIK)</string>
+    <string name="result_country_stateless">Stateless person</string>
+    <string name="result_country_refugee">Refugee (1951 Convention)</string>
+    <string name="result_country_refugee_other">Refugee</string>
+    <string name="result_country_unspecified">Unspecified nationality</string>
+
+    <!-- Données complémentaires -->
+    <string name="result_section_additional">Additional data</string>
+    <string name="result_field_full_name">Full name</string>
+    <string name="result_field_other_names">Other names</string>
+    <string name="result_field_personal_number">Personal number</string>
+    <string name="result_field_full_birth_date">Full date of birth</string>
+    <string name="result_field_place_of_birth">Place of birth</string>
+    <string name="result_field_address">Address</string>
+    <string name="result_field_telephone">Telephone</string>
+    <string name="result_field_profession">Profession</string>
+    <string name="result_field_title">Title</string>
+    <string name="result_field_personal_summary">Personal summary</string>
+    <string name="result_field_other_td_numbers">Other valid travel documents</string>
+    <string name="result_field_custody">Custody information</string>
+    <string name="result_field_issuing_authority">Issuing authority</string>
+    <string name="result_field_issue_date">Date of issue</string>
+    <string name="result_field_other_persons">Other persons named</string>
+    <string name="result_field_endorsements">Endorsements and observations</string>
+    <string name="result_field_tax_exit">Tax or exit requirements</string>
+    <string name="result_field_personalization_time">Personalization date</string>
+    <string name="result_field_personalization_device">Personalization system serial number</string>
+
+    <!-- Vérifications -->
+    <string name="result_section_checks">Checks</string>
+    <string name="result_check_secure_channel">Secure channel established</string>
+    <string name="result_check_sod_signature">SOD signature valid</string>
+    <string name="result_check_chain">Certificate chain</string>
+    <string name="result_check_ds_validity">DS certificate validity</string>
+    <string name="result_check_dg_hashes">Data group hashes</string>
+    <string name="result_check_chip_authentication">Chip Authentication (DG14)</string>
+    <string name="result_check_active_authentication">Active Authentication (DG15)</string>
+    <string name="result_status_ok">Passed</string>
+    <string name="result_status_failed">Failed</string>
+    <string name="result_status_not_available">Not available</string>
+    <string name="result_status_unsupported">Unsupported algorithm</string>
+    <string name="result_check_expand">Show details</string>
+    <string name="result_check_collapse">Hide details</string>
+
+    <!-- Détail des vérifications -->
+    <string name="result_detail_protocol">Protocol: %1$s</string>
+    <string name="result_detail_algorithm">Signature algorithm: %1$s</string>
+    <string name="result_detail_csca">CSCA: %1$s</string>
+    <string name="result_detail_csca_none">No CSCA in the trust store matches.</string>
+    <string name="result_detail_country">Country: %1$s</string>
+    <string name="result_detail_source">Source: %1$s</string>
+    <string name="result_detail_source_ants">ANTS certificates</string>
+    <string name="result_detail_source_embedded">built-in Master List</string>
+    <string name="result_detail_source_imported">imported Master List</string>
+    <string name="result_detail_ds_subject">DS certificate: %1$s</string>
+    <string name="result_detail_links">Link certificates traversed:</string>
+    <string name="result_detail_link_item">• %1$s</string>
+    <string name="result_detail_links_none">No link certificate traversed.</string>
+    <string name="result_detail_ds_missing">The DS certificate is neither in the SOD nor in the trust store.</string>
+    <string name="result_detail_ds_period">DS validity period: %1$s to %2$s</string>
+    <string name="result_detail_issuance">Date of issue: %1$s (%2$s)</string>
+    <string name="result_detail_issuance_no_source">Date of issue: %1$s</string>
+    <string name="result_detail_issuance_unknown">Date of issue unknown.</string>
+    <string name="result_detail_issuance_dg12">read from DG12</string>
+    <string name="result_detail_issuance_sod">SOD signing date</string>
+    <string name="result_detail_issuance_estimated">estimated</string>
+    <string name="result_detail_digest_algorithm">Hash algorithm: %1$s</string>
+    <string name="result_detail_dg_checked">Data groups checked: %1$s</string>
+    <string name="result_detail_dg_checked_none">No data group checked.</string>
+    <string name="result_detail_dg_mismatched">Mismatched hashes: %1$s</string>
+    <string name="result_detail_dg_all_match">All hashes match.</string>
+    <string name="result_detail_unsupported">Unsupported algorithm: %1$s</string>
+    <string name="result_detail_error">Technical error: %1$s</string>
+    <string name="result_detail_no_dg14">The document has no DG14: the chip does not offer this check.</string>
+    <string name="result_detail_no_dg15">The document has no DG15: the chip does not offer this check.</string>
+    <string name="result_detail_not_reached">Step not performed.</string>
+    <string name="result_detail_none">No further details.</string>
 </resources>

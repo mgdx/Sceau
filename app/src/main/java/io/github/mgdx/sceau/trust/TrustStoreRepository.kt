@@ -3,6 +3,14 @@ package io.github.mgdx.sceau.trust
 import android.content.Context
 import io.github.mgdx.sceau.core.trust.MasterList
 import io.github.mgdx.sceau.core.trust.TrustStore
+import io.github.mgdx.sceau.core.trust.TrustStores
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 /**
  * Accès au magasin de confiance depuis l'app. Singleton applicatif (voir SceauApplication).
@@ -12,15 +20,80 @@ import io.github.mgdx.sceau.core.trust.TrustStore
 class TrustStoreRepository(
     private val context: Context,
 ) {
+    private val mutex = Mutex()
+
+    /** Magasin fusionné en mémoire ; null tant qu'il n'est pas chargé ou après un import. */
+    private var cached: TrustStore? = null
+
+    private val directory: File get() = File(context.filesDir, IMPORT_DIRECTORY)
+
     /** Magasin fusionné, chargé une fois puis mis en cache en mémoire jusqu'au prochain import. */
-    suspend fun get(): TrustStore = TODO("lot E")
+    suspend fun get(): TrustStore =
+        withContext(Dispatchers.IO) {
+            mutex.withLock {
+                cached ?: TrustStores.load(readImported()).also { cached = it }
+            }
+        }
 
     /** Parse et vérifie une Master List sans l'importer (pour afficher l'empreinte du signataire). */
-    suspend fun preview(bytes: ByteArray): MasterList = TODO("lot E")
+    suspend fun preview(bytes: ByteArray): MasterList = withContext(Dispatchers.IO) { TrustStores.parseMasterList(bytes) }
 
     /** Importe une Master List déjà prévisualisée et confirmée ; invalide le cache. */
-    suspend fun import(bytes: ByteArray): Unit = TODO("lot E")
+    suspend fun import(bytes: ByteArray): Unit =
+        withContext(Dispatchers.IO) {
+            // Revérifiée ici : l'appelant ne doit pas pouvoir écrire une liste invalide.
+            TrustStores.parseMasterList(bytes)
+            mutex.withLock {
+                val dir = directory
+                if (!dir.isDirectory && !dir.mkdirs()) throw IOException("TRUST_DIR")
+                val target = File(dir, importFileName(bytes))
+                if (!target.exists()) writeAtomically(dir, target, bytes)
+                cached = null
+            }
+        }
 
     /** Supprime toutes les Master Lists importées ; invalide le cache. */
-    suspend fun clearImported(): Unit = TODO("lot E")
+    suspend fun clearImported(): Unit =
+        withContext(Dispatchers.IO) {
+            mutex.withLock {
+                directory.listFiles()?.forEach { file ->
+                    if (file.isFile && !file.delete()) throw IOException("TRUST_DELETE")
+                }
+                cached = null
+            }
+        }
+
+    private fun readImported(): List<ByteArray> =
+        directory
+            .listFiles { file -> file.isFile && file.name.endsWith(IMPORT_EXTENSION) }
+            .orEmpty()
+            .sortedBy { it.name }
+            .map { it.readBytes() }
+
+    /** Écrit dans un fichier temporaire du même dossier, synchronise, puis renomme. */
+    private fun writeAtomically(
+        dir: File,
+        target: File,
+        bytes: ByteArray,
+    ) {
+        val temp = File.createTempFile("import-", TEMP_EXTENSION, dir)
+        try {
+            FileOutputStream(temp).use { out ->
+                out.write(bytes)
+                out.fd.sync()
+            }
+            if (!temp.renameTo(target)) throw IOException("TRUST_RENAME")
+        } finally {
+            if (temp.exists()) temp.delete()
+        }
+    }
+
+    companion object {
+        private const val IMPORT_DIRECTORY = "trust"
+        private const val IMPORT_EXTENSION = ".ml"
+        private const val TEMP_EXTENSION = ".tmp"
+
+        /** Nom de fichier d'une Master List importée : SHA-256 du contenu en hexadécimal, suffixé `.ml`. */
+        fun importFileName(bytes: ByteArray): String = sha256Hex(bytes) + IMPORT_EXTENSION
+    }
 }

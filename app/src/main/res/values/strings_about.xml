@@ -1,4 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="about_title">À propos</string>
+    <string name="about_back">Retour</string>
+    <string name="about_tagline">Lecture et vérification hors ligne de la puce des documents d’identité ICAO 9303.</string>
+    <string name="about_version">Version %1$s</string>
+    <string name="about_version_unknown">Version inconnue</string>
+
+    <string name="about_section_license">Licence et code source</string>
+    <string name="about_license">Logiciel libre distribué sous licence GNU GPL version 3 ou ultérieure.</string>
+    <string name="about_repository_url" translatable="false">https://github.com/mgdx/Sceau</string>
+    <string name="about_open_repository">Voir le code source</string>
+    <string name="about_no_browser">Aucune application ne peut ouvrir ce lien.</string>
+
+    <string name="about_section_trust">Magasin de confiance embarqué</string>
+    <string name="about_trust_ants_only">CSCA français de l’ANTS (passeports et cartes d’identité).</string>
+    <string name="about_trust_ants_and_bsi">CSCA français de l’ANTS et Master List allemande du BSI.</string>
+    <string name="about_trust_master_list_date">Master List signée le %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">Date de signature de la Master List non indiquée.</string>
+    <string name="about_trust_bsi_notice">La Master List du BSI (Office fédéral allemand de la sécurité des technologies de l’information) est redistribuée sans modification, sans coopération ni approbation du BSI.</string>
+    <string name="about_trust_loading">Chargement…</string>
+    <string name="about_trust_error">Impossible de charger le magasin de confiance.</string>
+
+    <string name="about_section_limits">Limites</string>
+    <string name="about_limit_unknown_issuer">Un document dont le pays émetteur ne figure pas dans le magasin de confiance donne le verdict « Émetteur inconnu », pas « Échec ». Importer une Master List plus récente peut y remédier.</string>
+    <string name="about_limit_revocation">Les listes de révocation ne sont pas consultées : elles nécessitent le réseau, que Sceau n’utilise jamais.</string>
+
+    <string name="about_section_usage">Cadre d’usage</string>
+    <string name="about_usage_holder">La lecture suppose que le titulaire présente lui-même son document et y consent.</string>
+    <string name="about_usage_biometrics">La photo devient une donnée biométrique au sens du RGPD si elle sert à une comparaison automatisée des visages. Sceau ne fait pas de telle comparaison et ne doit pas être utilisé pour cela sans base légale dédiée.</string>
+    <string name="about_usage_privacy">Aucune donnée lue n’est conservée ni envoyée : tout est effacé de la mémoire en quittant le résultat ou en passant l’application en arrière-plan.</string>
 </resources>
