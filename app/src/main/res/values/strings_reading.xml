@@ -1,4 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="reading_title">Lecture</string>
+    <string name="reading_title">Lecture du document</string>
+    <string name="reading_prompt">Posez le document contre le dos du téléphone et ne le retirez pas</string>
+    <string name="reading_step_connect">Connexion à la puce</string>
+    <string name="reading_step_secure_channel">Ouverture du canal sécurisé (PACE ou BAC)</string>
+    <string name="reading_step_read_data">Lecture des données</string>
+    <string name="reading_step_verify_signature">Vérification de la signature</string>
+    <string name="reading_step_verify_chip">Vérification de la puce</string>
+    <string name="reading_step_pending">en attente</string>
+    <string name="reading_step_in_progress">en cours</string>
+    <string name="reading_step_done">terminée</string>
+    <string name="reading_error_title">Lecture interrompue</string>
+    <string name="reading_error_access_denied">Le CAN ou les données de la MRZ sont incorrects. Vérifiez-les et réessayez.</string>
+    <string name="reading_error_connection_lost">Le document a été retiré trop tôt. Gardez-le immobile contre le téléphone jusqu’à la fin de la lecture.</string>
+    <string name="reading_error_not_icao">Ce document n’est pas conforme à la norme ICAO 9303\u00A0: sa puce ne peut pas être lue.</string>
+    <string name="reading_error_timeout">Délai dépassé\u00A0: la puce n’a pas répondu à temps. Réessayez en gardant le document immobile.</string>
+    <string name="reading_error_can_without_pace">Ce document ne se lit pas avec un CAN. Utilisez l’onglet Passeport et saisissez les données de la MRZ.</string>
+    <string name="reading_error_unexpected">Une erreur inattendue s’est produite.</string>
+    <string name="reading_error_code">Code d’erreur\u00A0: %1$s</string>
+    <string name="reading_retry">Réessayer</string>
+    <string name="reading_cancel">Annuler</string>
 </resources>

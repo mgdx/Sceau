@@ -1,4 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="home_title">Accueil</string>
+    <string name="home_menu_more">Plus d’options</string>
+    <string name="home_menu_trust_store">Magasin de confiance</string>
+    <string name="home_menu_about">À propos</string>
+    <string name="home_tab_id_card">Carte d’identité</string>
+    <string name="home_tab_passport">Passeport</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">Numéro à 6 chiffres imprimé au recto de la carte</string>
+    <string name="home_document_number_label">Numéro du document</string>
+    <string name="home_document_number_supporting">Tel qu’imprimé sur la page d’identité, 9 caractères au plus</string>
+    <string name="home_date_of_birth_label">Date de naissance</string>
+    <string name="home_date_of_birth_choose">Choisir la date de naissance</string>
+    <string name="home_date_of_expiry_label">Date d’expiration</string>
+    <string name="home_date_of_expiry_choose">Choisir la date d’expiration</string>
+    <string name="home_date_confirm">OK</string>
+    <string name="home_date_cancel">Annuler</string>
+    <string name="home_holder_notice">Le document doit être présenté par son titulaire.</string>
+    <string name="home_read">Lire</string>
+    <string name="home_nfc_disabled">Le NFC est désactivé. Activez-le pour lire la puce du document.</string>
+    <string name="home_nfc_settings">Ouvrir les réglages NFC</string>
+    <string name="home_nfc_absent">Ce téléphone n’a pas de NFC\u00A0: il ne peut pas lire la puce des documents d’identité.</string>
 </resources>
