@@ -12,6 +12,8 @@ internal class PlainCommand(
     /** Longueur attendue Ne (0 : pas de Le). */
     val ne: Int,
     val secured: Boolean,
+    /** Chaînage de commandes (CLA b5), utilisé par les étapes de PACE. */
+    val chained: Boolean = false,
 )
 
 /** La commande sécurisée est invalide (MAC faux, objet manquant) : la puce clôt la session. */

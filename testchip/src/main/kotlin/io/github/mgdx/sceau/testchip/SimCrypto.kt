@@ -63,10 +63,20 @@ object SimCrypto {
         documentNumber: String,
         dateOfBirth: String,
         dateOfExpiry: String,
+    ): ByteArray = mrzPassword(documentNumber, dateOfBirth, dateOfExpiry).copyOf(DESEDE_KEY_SEED)
+
+    /**
+     * Mot de passe PACE dérivé de la MRZ, f(π) (ICAO 9303-11 §9.7.3) : SHA-1 des champs MRZ et
+     * de leurs chiffres de contrôle, sur 20 octets (non tronqué, contrairement à BAC).
+     */
+    fun mrzPassword(
+        documentNumber: String,
+        dateOfBirth: String,
+        dateOfExpiry: String,
     ): ByteArray {
         val number = documentNumber.padEnd(MRZ_DOCUMENT_NUMBER_LENGTH, '<')
         val info = number + checkDigit(number) + dateOfBirth + checkDigit(dateOfBirth) + dateOfExpiry + checkDigit(dateOfExpiry)
-        return MessageDigest.getInstance("SHA-1").digest(info.toByteArray(Charsets.US_ASCII)).copyOf(DESEDE_KEY_SEED)
+        return MessageDigest.getInstance("SHA-1").digest(info.toByteArray(Charsets.US_ASCII))
     }
 
     /** Chiffre de contrôle MRZ (ICAO 9303-3 §4.9) : pondération 7-3-1, modulo 10. */
@@ -130,6 +140,17 @@ object SimCrypto {
             }
         mac.init(KeyParameter(key))
         mac.update(paddedData, 0, paddedData.size)
+        return ByteArray(mac.macSize).also { mac.doFinal(it, 0) }
+    }
+
+    /** AES-CMAC tronqué à 8 octets, sans remplissage préalable (jetons d'authentification PACE). */
+    fun cmac(
+        key: ByteArray,
+        data: ByteArray,
+    ): ByteArray {
+        val mac = CMac(AESEngine.newInstance(), MAC_LENGTH * Byte.SIZE_BITS)
+        mac.init(KeyParameter(key))
+        mac.update(data, 0, data.size)
         return ByteArray(mac.macSize).also { mac.doFinal(it, 0) }
     }
 

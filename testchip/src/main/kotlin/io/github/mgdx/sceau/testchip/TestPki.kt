@@ -100,11 +100,13 @@ class TestPki(
     val name: String = "Sceau Test",
     val country: String = "FR",
     seed: Long = SEEDS.incrementAndGet(),
+    /** Nom commun (CN) des CSCA, ancien et nouveau. */
+    cscaCommonName: String = "CSCA $name",
 ) {
     val random: SecureRandom = TestCrypto.seededRandom(seed)
     private val serials = AtomicLong(1000)
 
-    val cscaSubject: X500Name = X500Name("C=$country,O=$name,CN=CSCA $name")
+    val cscaSubject: X500Name = X500Name("C=$country,O=$name,CN=$cscaCommonName")
 
     val oldCsca: TestCredential by lazy { selfSigned(generateKeyPair(keyType), CSCA_NOT_BEFORE, CSCA_NOT_AFTER) }
 
