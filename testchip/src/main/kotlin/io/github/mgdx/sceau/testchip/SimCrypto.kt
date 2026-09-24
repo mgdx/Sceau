@@ -113,7 +113,12 @@ object SimCrypto {
         return cipher.doFinal(data)
     }
 
-    /** AES-ECB d'un bloc : vecteur d'initialisation de la messagerie sécurisée AES, E(KSenc, SSC). */
+    /**
+     * AES-ECB d'un bloc : vecteur d'initialisation de la messagerie sécurisée AES, E(KSenc, SSC).
+     * ECB est imposé par ICAO 9303-11 pour ce seul bloc (lint GetInstance, vu par le lint de
+     * `:app` depuis que le mode démo de debug dépend de ce module).
+     */
+    @Suppress("GetInstance")
     fun aesBlock(
         key: ByteArray,
         block: ByteArray,

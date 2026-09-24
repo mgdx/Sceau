@@ -13,6 +13,8 @@ import io.github.mgdx.sceau.core.SceauException
 import io.github.mgdx.sceau.core.Step
 import io.github.mgdx.sceau.core.readAndVerify
 import io.github.mgdx.sceau.core.report.VerificationReport
+import io.github.mgdx.sceau.core.trust.TrustStore
+import io.github.mgdx.sceau.demo.DemoCard
 import io.github.mgdx.sceau.trust.TrustStoreRepository
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -43,8 +45,10 @@ sealed interface ReadState {
         val code: String,
     ) : ReadState
 
+    /** [isDemo] : rapport d'un document simulé du mode démo (APK de debug), jamais d'un vrai. */
     class Done(
         val report: VerificationReport,
+        val isDemo: Boolean = false,
     ) : ReadState
 }
 
@@ -132,16 +136,40 @@ class SessionViewModel(
             closeInBackground(transport)
             return
         }
+        launchRead(transport, key, isDemo = false) { repository.get() }
+    }
+
+    /**
+     * Lit la CNIe simulée du mode démo (APK de debug uniquement) comme un document réel, avec sa
+     * clé et son magasin de test. Ce magasin ne sert qu'à cette lecture : il ne remplace jamais
+     * le magasin réel. La clé saisie est oubliée, pour qu'un vrai document présenté ensuite ne
+     * soit jamais lu avec la clé ou le magasin de la démo. Mêmes règles d'effacement.
+     */
+    fun startDemo(card: DemoCard) {
+        abortRead()
+        (_state.value as? ReadState.Done)?.report?.wipe()
+        key = null
+        _state.value = ReadState.Reading(Step.CONNECT)
+        launchRead(card.transport, card.key, isDemo = true) { card.trustStore }
+    }
+
+    /** Lance la lecture de [transport] ; l'état doit déjà être Reading. */
+    private fun launchRead(
+        transport: CardTransport,
+        key: AccessKey,
+        isDemo: Boolean,
+        trustStore: suspend () -> TrustStore,
+    ) {
         val token = Any()
         currentRead = token
         this.transport = transport
         val launched =
             viewModelScope.launch {
                 try {
-                    val trustStore = repository.get()
+                    val store = trustStore()
                     val report =
                         withContext(Dispatchers.IO) {
-                            readAndVerify(transport, key, trustStore) { step ->
+                            readAndVerify(transport, key, store) { step ->
                                 if (currentRead === token) {
                                     _state.update { if (it is ReadState.Reading) ReadState.Reading(step) else it }
                                 }
@@ -151,7 +179,7 @@ class SessionViewModel(
                         currentRead = null
                         this@SessionViewModel.key = null
                         form = AccessForm(tab = form.tab)
-                        _state.value = ReadState.Done(report)
+                        _state.value = ReadState.Done(report, isDemo)
                     } else {
                         report.wipe()
                     }

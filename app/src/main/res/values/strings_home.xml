@@ -23,4 +23,5 @@
     <string name="home_nfc_disabled">Le NFC est désactivé. Activez-le pour lire la puce du document.</string>
     <string name="home_nfc_settings">Ouvrir les réglages NFC</string>
     <string name="home_nfc_absent">Ce téléphone n’a pas de NFC\u00A0: il ne peut pas lire la puce des documents d’identité.</string>
+    <string name="home_menu_demo">Simuler une CNIe (démo)</string>
 </resources>

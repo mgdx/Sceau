@@ -123,4 +123,5 @@
     <string name="result_detail_no_dg15">The document has no DG15: the chip does not offer this check.</string>
     <string name="result_detail_not_reached">Step not performed.</string>
     <string name="result_detail_none">No further details.</string>
+    <string name="result_demo_banner">Simulated document — demo</string>
 </resources>

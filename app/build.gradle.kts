@@ -104,6 +104,8 @@ dependencies {
 
     testImplementation(libs.junit)
     debugImplementation(libs.androidx.compose.ui.tooling)
+    // Mode démo (CNIe simulée) : APK de debug uniquement, jamais en release.
+    debugImplementation(project(":testchip"))
 }
 
 ktlint {

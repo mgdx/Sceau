@@ -123,4 +123,5 @@
     <string name="result_detail_no_dg15">Le document ne contient pas de DG15 : la puce ne propose pas cette vérification.</string>
     <string name="result_detail_not_reached">Étape non réalisée.</string>
     <string name="result_detail_none">Aucun détail supplémentaire.</string>
+    <string name="result_demo_banner">Document simulé — démonstration</string>
 </resources>
