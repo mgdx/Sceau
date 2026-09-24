@@ -15,14 +15,15 @@ import io.github.mgdx.sceau.core.readAndVerify
 import io.github.mgdx.sceau.core.report.VerificationReport
 import io.github.mgdx.sceau.trust.TrustStoreRepository
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.time.LocalDate
 
 /** État de la lecture, partagé entre les écrans Lecture et Résultat. */
 sealed interface ReadState {
@@ -79,6 +80,13 @@ class SessionViewModel(
 
     private var job: Job? = null
 
+    /**
+     * Fermeture des transports : `IsoDep.close()` attend la fin de l'APDU en cours (jusqu'au délai
+     * de 10 s), elle ne doit jamais s'exécuter sur le thread principal. Ce scope n'est jamais
+     * annulé, pour que la fermeture ait lieu même après l'annulation de la lecture ou `onCleared`.
+     */
+    private val closeScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
     fun selectTab(tab: DocumentTab) {
         form = form.copy(tab = tab)
     }
@@ -91,12 +99,14 @@ class SessionViewModel(
         form = form.copy(documentNumber = AccessForm.normalizeDocumentNumber(input))
     }
 
-    fun onDateOfBirthChange(date: LocalDate?) {
-        form = form.copy(dateOfBirth = date)
+    /** Saisie clavier de la date de naissance : seuls les chiffres sont gardés. */
+    fun onDateOfBirthChange(input: String) {
+        form = form.copy(dateOfBirthDigits = AccessForm.filterDateDigits(input))
     }
 
-    fun onDateOfExpiryChange(date: LocalDate?) {
-        form = form.copy(dateOfExpiry = date)
+    /** Saisie clavier de la date d'expiration : seuls les chiffres sont gardés. */
+    fun onDateOfExpiryChange(input: String) {
+        form = form.copy(dateOfExpiryDigits = AccessForm.filterDateDigits(input))
     }
 
     /** Mémorise la clé pour la prochaine lecture et passe en WaitingForCard. */
@@ -119,7 +129,7 @@ class SessionViewModel(
             !_state.compareAndSet(current, ReadState.Reading(Step.CONNECT))
         ) {
             // Lecture déjà en cours, ou aucune clé : on ignore ce document.
-            transport.close()
+            closeInBackground(transport)
             return
         }
         val token = Any()
@@ -157,7 +167,7 @@ class SessionViewModel(
             }
         job = launched
         launched.invokeOnCompletion {
-            transport.close()
+            closeInBackground(transport)
             if (this.transport === transport) this.transport = null
         }
     }
@@ -206,8 +216,13 @@ class SessionViewModel(
         currentRead = null
         job?.cancel()
         job = null
-        transport?.close()
+        transport?.let(::closeInBackground)
         transport = null
+    }
+
+    /** Ferme [transport] hors du thread principal, sans attendre (voir [closeScope]). */
+    private fun closeInBackground(transport: CardTransport) {
+        closeScope.launch { transport.close() }
     }
 
     internal companion object {

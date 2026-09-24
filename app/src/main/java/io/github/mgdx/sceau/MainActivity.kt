@@ -64,7 +64,13 @@ class MainActivity : ComponentActivity() {
         const val READER_FLAGS =
             NfcAdapter.FLAG_READER_NFC_A or NfcAdapter.FLAG_READER_NFC_B or NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK
 
-        /** Espacement des tests de présence : assez long pour ne pas gêner les calculs PACE. */
-        const val PRESENCE_CHECK_DELAY_MILLIS = 1_000
+        /**
+         * Espacement des tests de présence du service NFC pendant qu'un tag est connecté. Sur
+         * certaines puces NXP, un test de présence intercalé pendant les calculs PACE d'une puce
+         * lente peut faire échouer l'échange en cours : 2 s les espace davantage (1 s
+         * auparavant), sans retarder notablement la détection d'un document retiré entre deux
+         * lectures. À ajuster d'après les essais sur appareil réel.
+         */
+        const val PRESENCE_CHECK_DELAY_MILLIS = 2_000
     }
 }

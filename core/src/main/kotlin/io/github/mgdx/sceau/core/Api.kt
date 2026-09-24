@@ -89,9 +89,12 @@ sealed class SceauException(
         cause: Throwable? = null,
     ) : SceauException("TIMEOUT", cause)
 
-    /** Erreur inattendue. [code] = "UNEXPECTED-" + court identifiant technique (classe d'exception, SW). */
+    /**
+     * Erreur inattendue. [code] = "UNEXPECTED-" + [detail], court identifiant technique (étape,
+     * classe d'exception, SW, ou code d'E/S du transport avec INS et longueur de l'APDU).
+     */
     class Unexpected(
-        detail: String,
+        val detail: String,
         cause: Throwable? = null,
     ) : SceauException("UNEXPECTED-$detail", cause)
 }
