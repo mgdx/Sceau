@@ -1,5 +1,6 @@
 package io.github.mgdx.sceau.core
 
+import io.github.mgdx.sceau.core.reading.ReadingSession
 import io.github.mgdx.sceau.core.report.VerificationReport
 import io.github.mgdx.sceau.core.trust.TrustStore
 import java.time.LocalDate
@@ -105,4 +106,4 @@ suspend fun readAndVerify(
     key: AccessKey,
     trustStore: TrustStore,
     progress: (Step) -> Unit,
-): VerificationReport = TODO("lot C")
+): VerificationReport = ReadingSession(transport, key, trustStore, progress).run()
