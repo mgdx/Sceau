@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -269,8 +270,10 @@ private fun ErrorContent(
         textAlign = TextAlign.Center,
         modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
     )
-    if (ReadingErrors.showsCode(code)) {
-        Spacer(Modifier.height(8.dp))
+    // Code technique complet, pour toutes les erreurs : seul moyen de diagnostic, aucun journal
+    // n'étant tenu (SPEC §8). Sélectionnable pour être recopié.
+    Spacer(Modifier.height(8.dp))
+    SelectionContainer {
         Text(
             text = stringResource(R.string.reading_error_code, code),
             style = MaterialTheme.typography.bodySmall,

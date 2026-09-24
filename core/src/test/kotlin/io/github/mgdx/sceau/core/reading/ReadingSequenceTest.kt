@@ -148,6 +148,63 @@ class ReadingSequenceTest {
         }
 
     @Test
+    fun erreurTransportPendantPaceAvecCan_CodeTechniqueAvecEtape() =
+        runTest {
+            val io = SceauException.Unexpected("IO-TRANSCEIVE_FAILED-INS86-L60")
+            val transport =
+                ScriptedTransport(
+                    *file(FID_CARD_ACCESS, cardAccess),
+                    respond("0022C1A4", "9000"),
+                    raise("10860000", io),
+                )
+            val error = expect<SceauException.Unexpected>(transport, can)
+            assertEquals("UNEXPECTED-SECURE_CHANNEL-IO-TRANSCEIVE_FAILED-INS86-L60", error.code)
+            assertSame(io, error.cause)
+            assertTrue(transport.exhausted)
+        }
+
+    @Test
+    fun erreurTransportPendantPaceAvecMrz_NiAccessDeniedNiRepliBac() =
+        runTest {
+            val io = SceauException.Unexpected("IO-TRANSCEIVE_FAILED-INS86-L60")
+            val transport =
+                ScriptedTransport(
+                    *file(FID_CARD_ACCESS, cardAccess),
+                    respond("0022C1A4", "9000"),
+                    raise("10860000", io),
+                )
+            val error = expect<SceauException.Unexpected>(transport, mrz)
+            assertEquals("UNEXPECTED-SECURE_CHANNEL-IO-TRANSCEIVE_FAILED-INS86-L60", error.code)
+            assertTrue(transport.exhausted)
+            assertFalse(transport.sent.any { it.startsWith(AID_SELECT) })
+        }
+
+    @Test
+    fun erreurTransportPendantBac_CodeTechniqueAvecEtape() =
+        runTest {
+            val io = SceauException.Unexpected("IO-TRANSCEIVE_FAILED-INS82-L50")
+            val transport =
+                ScriptedTransport(
+                    missingFile(FID_CARD_ACCESS),
+                    respond(AID_SELECT, "9000"),
+                    respond(GET_CHALLENGE, "01020304050607089000"),
+                    raise(EXTERNAL_AUTHENTICATE, io),
+                )
+            val error = expect<SceauException.Unexpected>(transport, mrz)
+            assertEquals("UNEXPECTED-SECURE_CHANNEL-IO-TRANSCEIVE_FAILED-INS82-L50", error.code)
+            assertTrue(transport.exhausted)
+        }
+
+    @Test
+    fun erreurTransportPendantSelectionApplet_CodeTechniqueAvecEtape() =
+        runTest {
+            val io = SceauException.Unexpected("IO-OTHER-INSA4-L20")
+            val transport = ScriptedTransport(missingFile(FID_CARD_ACCESS), raise(AID_SELECT, io))
+            val error = expect<SceauException.Unexpected>(transport, mrz)
+            assertEquals("UNEXPECTED-CONNECT-IO-OTHER-INSA4-L20", error.code)
+        }
+
+    @Test
     fun erreurInattendue_CodeTechniqueSansDonneePersonnelle() =
         runTest {
             val transport = ScriptedTransport(missingFile(FID_CARD_ACCESS), respond(AID_SELECT, "6F00"))

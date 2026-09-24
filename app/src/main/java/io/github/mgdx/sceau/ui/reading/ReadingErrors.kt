@@ -16,9 +16,6 @@ internal object ReadingErrors {
             "CAN_WITHOUT_PACE" -> R.string.reading_error_can_without_pace
             else -> R.string.reading_error_unexpected
         }
-
-    /** Le code technique n'est affiché que pour les erreurs inattendues (SPEC §5.2). */
-    fun showsCode(code: String): Boolean = messageFor(code) == R.string.reading_error_unexpected
 }
 
 @StringRes

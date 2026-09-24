@@ -24,9 +24,10 @@ import kotlin.coroutines.cancellation.CancellationException
  * Orchestration de `readAndVerify` (SPEC §6.1). Une instance par lecture.
  *
  * Erreurs : les [SceauException] traversent telles quelles (celle du transport en priorité,
- * même si JMRTD l'a enveloppée ou avalée), [CancellationException] aussi ; toute autre
- * exception devient [SceauException.Unexpected] avec un identifiant technique (étape, classe,
- * SW), sans cause attachée, car les messages de JMRTD contiennent des APDU en clair.
+ * même si JMRTD l'a enveloppée ou avalée, avec l'étape en tête du code si c'est une erreur
+ * technique), [CancellationException] aussi ; toute autre exception devient
+ * [SceauException.Unexpected] avec un identifiant technique (étape, classe, SW), sans cause
+ * attachée, car les messages de JMRTD contiennent des APDU en clair.
  * Les données déjà lues sont remises à zéro si la lecture échoue.
  *
  * Le nonce d'Active Authentication est tiré de [random], un `SecureRandom` (SPEC §8).
@@ -53,10 +54,11 @@ internal class ReadingSession(
                 throw e
             } catch (e: Exception) {
                 document?.wipe()
-                throw chip.cardService.transportFailure
-                    ?: e as? SceauException
-                    ?: e.findTransportFailure()
-                    ?: SceauException.Unexpected(technicalCode(currentStep.name, e))
+                val failure =
+                    chip.cardService.transportFailure
+                        ?: e as? SceauException
+                        ?: e.findTransportFailure()
+                throw failure?.withStep(currentStep) ?: SceauException.Unexpected(technicalCode(currentStep.name, e))
             } finally {
                 try {
                     chip.close()
@@ -65,6 +67,14 @@ internal class ReadingSession(
                 }
             }
         }
+
+    /**
+     * Une erreur technique du transport (`UNEXPECTED-IO-…`) ne dit pas à quelle étape elle
+     * s'est produite : l'étape est ajoutée en tête de son identifiant. Les codes stables
+     * (`CONNECTION_LOST`, `TIMEOUT`, `ACCESS_DENIED`…) sont renvoyés tels quels.
+     */
+    private fun SceauException.withStep(step: Step): SceauException =
+        if (this is SceauException.Unexpected) SceauException.Unexpected("${step.name}-$detail", this) else this
 
     private fun CoroutineScope.step(step: Step) {
         ensureActive()
