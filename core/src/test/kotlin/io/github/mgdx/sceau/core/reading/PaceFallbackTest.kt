@@ -10,12 +10,12 @@ import io.github.mgdx.sceau.core.reading.ScriptedTransport.Companion.respond
 import io.github.mgdx.sceau.core.reading.ScriptedTransport.Companion.toHex
 import io.github.mgdx.sceau.core.reading.TestFixtures.AID_SELECT
 import io.github.mgdx.sceau.core.reading.TestFixtures.FID_CARD_ACCESS
-import io.github.mgdx.sceau.core.reading.sim.SimulatedChip
 import io.github.mgdx.sceau.core.report.ChannelProtocol
 import io.github.mgdx.sceau.core.report.CheckDetail
 import io.github.mgdx.sceau.core.report.CheckId
-import io.github.mgdx.sceau.core.testing.TestKeyType
-import io.github.mgdx.sceau.core.testing.TestPki
+import io.github.mgdx.sceau.testchip.SimulatedChip
+import io.github.mgdx.sceau.testchip.TestKeyType
+import io.github.mgdx.sceau.testchip.TestPki
 import kotlinx.coroutines.test.runTest
 import org.bouncycastle.jce.ECNamedCurveTable
 import org.bouncycastle.jce.interfaces.ECPublicKey
