@@ -1,0 +1,40 @@
+Sceau lit par NFC la puce des documents d'identité conformes à la norme ICAO 9303 et vérifie qu'ils sont authentiques. Il fonctionne entièrement hors ligne : aucune permission réseau, rien n'est conservé, rien n'est envoyé.
+
+<b>Documents pris en charge</b>
+<ul>
+<li>Carte nationale d'identité française (format carte bancaire, depuis 2021), avec le CAN à 6 chiffres imprimé sur la carte</li>
+<li>Cartes d'identité européennes, avec le CAN ou la MRZ</li>
+<li>Passeports biométriques de tous pays, avec le numéro de document et les dates de naissance et d'expiration</li>
+</ul>
+
+<b>Ce que Sceau affiche</b>
+<ul>
+<li>La photo stockée dans la puce</li>
+<li>L'identité : nom, prénoms, sexe, date de naissance, nationalité, numéro de document, État émetteur, date d'expiration</li>
+<li>Les données complémentaires quand la puce les contient (lieu de naissance, adresse, autorité et date de délivrance…)</li>
+</ul>
+
+<b>Ce que Sceau vérifie</b>
+<ul>
+<li>La signature des données par l'État émetteur, jusqu'à un certificat racine connu, et l'intégrité de chaque groupe de données (Passive Authentication)</li>
+<li>Que la puce n'est pas un clone, quand le document le permet (Chip Authentication, Active Authentication)</li>
+</ul>
+Le résultat est un verdict clair (Authentique, Signature valide mais puce non vérifiée, Émetteur inconnu, Échec) accompagné d'une liste de contrôle détaillée.
+
+<b>Magasin de confiance</b>
+Sceau embarque les certificats CSCA français de l'ANTS et la Master List allemande du BSI, qui couvre notamment les pays de l'Union européenne, de l'EEE, la Suisse et le Royaume-Uni. Pour un document dont l'émetteur n'y figure pas, le verdict est « Émetteur inconnu » ; vous pouvez importer une Master List publiée par un autre État. Les listes de révocation ne sont pas consultées. Sceau n'est affilié à aucun de ces organismes.
+
+<b>Vie privée</b>
+<ul>
+<li>Seule permission : NFC</li>
+<li>Aucune donnée lue n'est enregistrée ; la mémoire est effacée en quittant le résultat ou en passant en arrière-plan</li>
+<li>Captures d'écran bloquées pendant la lecture et sur le résultat</li>
+<li>Aucune publicité, aucun traceur, aucun service Google</li>
+</ul>
+
+<b>Cadre d'usage</b>
+Sceau est fait pour vérifier son propre document, ou un document que son titulaire présente lui-même. La photo est une donnée biométrique au sens du RGPD si elle sert à une comparaison automatisée : Sceau ne fait pas cette comparaison.
+
+Sceau ne lit ni les empreintes digitales ni l'iris, et ne lit pas la MRZ par la caméra.
+
+Logiciel libre sous licence GPLv3.
