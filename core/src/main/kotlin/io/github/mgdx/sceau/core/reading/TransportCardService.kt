@@ -27,6 +27,11 @@ internal class TransportCardService(
     @Volatile
     private var opened = false
 
+    /** Oublie l'erreur du transport, une fois la liaison réinitialisée (repli de PACE sur BAC). */
+    fun clearTransportFailure() {
+        transportFailure = null
+    }
+
     override fun open() {
         opened = true
     }

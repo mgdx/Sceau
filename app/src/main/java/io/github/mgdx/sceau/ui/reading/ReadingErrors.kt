@@ -6,9 +6,13 @@ import io.github.mgdx.sceau.core.Step
 
 /** Correspondance entre les codes de `SceauException` et les messages de l'écran de lecture. */
 internal object ReadingErrors {
+    /**
+     * `TIMEOUT` et `CONNECTION_LOST` peuvent porter un suffixe de diagnostic
+     * (`TIMEOUT-SECURE_CHANNEL-INS86-L10`) : seul le code de base choisit le message.
+     */
     @StringRes
     fun messageFor(code: String): Int =
-        when (code) {
+        when (code.substringBefore(DETAIL_SEPARATOR)) {
             "ACCESS_DENIED" -> R.string.reading_error_access_denied
             "CONNECTION_LOST" -> R.string.reading_error_connection_lost
             "NOT_ICAO" -> R.string.reading_error_not_icao
@@ -16,6 +20,8 @@ internal object ReadingErrors {
             "CAN_WITHOUT_PACE" -> R.string.reading_error_can_without_pace
             else -> R.string.reading_error_unexpected
         }
+
+    private const val DETAIL_SEPARATOR = '-'
 }
 
 @StringRes

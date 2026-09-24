@@ -15,7 +15,7 @@ import java.util.Locale
  * - MAC des réponses en messagerie sécurisée toujours vérifié.
  */
 internal class Chip(
-    transport: CardTransport,
+    val transport: CardTransport,
 ) {
     val cardService = TransportCardService(transport)
 
@@ -37,6 +37,16 @@ internal class Chip(
     /** Relance l'erreur du transport (document retiré, délai) si elle s'est produite. */
     fun rethrowTransportFailure() {
         cardService.transportFailure?.let { throw it }
+    }
+
+    /**
+     * Réinitialise la liaison ([CardTransport.reconnect]) et oublie l'erreur de transport qui l'a
+     * motivée : la puce repart de zéro, sans messagerie sécurisée ni applet sélectionnée.
+     */
+    fun reconnect() {
+        // D'abord oubliée : un échec de la reconnexion elle-même doit ressortir tel quel.
+        cardService.clearTransportFailure()
+        transport.reconnect()
     }
 
     /** Lit un fichier entier (EF.CardAccess au niveau MF, ou un fichier de l'applet ICAO). */
