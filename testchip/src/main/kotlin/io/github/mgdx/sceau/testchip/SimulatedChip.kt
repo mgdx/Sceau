@@ -1,10 +1,8 @@
-package io.github.mgdx.sceau.core.reading.sim
+package io.github.mgdx.sceau.testchip
 
 import io.github.mgdx.sceau.core.CardTransport
 import io.github.mgdx.sceau.core.SceauException
-import io.github.mgdx.sceau.core.reading.sim.SimCrypto.Algorithm
-import io.github.mgdx.sceau.core.testing.TestCrypto
-import io.github.mgdx.sceau.core.testing.TestDocument
+import io.github.mgdx.sceau.testchip.SimCrypto.Algorithm
 import org.bouncycastle.asn1.ASN1ObjectIdentifier
 import org.bouncycastle.jce.interfaces.ECPrivateKey
 import org.jmrtd.lds.LDSFileUtil
@@ -36,7 +34,7 @@ import java.security.PrivateKey
  * Une commande sécurisée invalide (MAC faux) ou une commande en clair pendant la session
  * reçoit 6988 en clair et clôt la session, comme une vraie puce.
  */
-internal class SimulatedChip(
+class SimulatedChip(
     private val document: TestDocument,
     /** DG annoncés dans EF.COM ; par défaut, ceux du document. */
     comDataGroups: Collection<Int> = document.dataGroups.keys,

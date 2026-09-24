@@ -1,4 +1,4 @@
-package io.github.mgdx.sceau.core.testing
+package io.github.mgdx.sceau.testchip
 
 import io.github.mgdx.sceau.core.trust.MasterListInfo
 import io.github.mgdx.sceau.core.trust.TrustAnchor

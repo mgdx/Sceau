@@ -1,6 +1,6 @@
-package io.github.mgdx.sceau.core.reading.sim
+package io.github.mgdx.sceau.testchip
 
-import io.github.mgdx.sceau.core.reading.sim.SimCrypto.Algorithm
+import io.github.mgdx.sceau.testchip.SimCrypto.Algorithm
 import java.io.ByteArrayOutputStream
 
 /** Commande APDU en clair, telle que la puce la traite (après déballage éventuel). */

@@ -1,6 +1,5 @@
-package io.github.mgdx.sceau.core.reading.sim
+package io.github.mgdx.sceau.testchip
 
-import io.github.mgdx.sceau.core.testing.TestCrypto
 import org.bouncycastle.crypto.engines.AESEngine
 import org.bouncycastle.crypto.engines.DESEngine
 import org.bouncycastle.crypto.macs.CMac
@@ -16,7 +15,7 @@ import javax.crypto.spec.SecretKeySpec
  * BSI TR-03110 partie 3 (§A.2.3), sans passer par le code de JMRTD utilisé par Sceau : seuls
  * les moteurs de chiffrement de BouncyCastle sont réutilisés.
  */
-internal object SimCrypto {
+object SimCrypto {
     /** Chiffrement de la messagerie sécurisée : 3DES (BAC, CA 3DES) ou AES (CA AES). */
     enum class Algorithm(
         val blockSize: Int,
