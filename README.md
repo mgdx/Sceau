@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/images/sceau-logo.svg" alt="Logo de Sceau" width="128" height="128">
+</p>
+
 # Sceau
 
 Sceau est une application Android libre qui lit par NFC la puce des documents d'identité conformes à la norme ICAO 9303 (carte nationale d'identité électronique française, cartes d'identité européennes, passeports biométriques), affiche les données et la photo qu'elle contient, et vérifie cryptographiquement que le document est authentique et que la puce n'est pas un clone.

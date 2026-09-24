@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="Sceau">
+  <title>Sceau</title>
+  <rect x="14" y="40" width="160" height="112" rx="18" fill="#1b2a41"/>
+  <circle cx="56" cy="84" r="14" fill="#f4f1ea"/>
+  <path d="M 32 122 C 32 106 44 98 56 98 C 68 98 80 106 80 122 Z" fill="#f4f1ea"/>
+  <path d="M 100 78 H 150 M 100 96 H 150 M 100 114 H 126" fill="none" stroke="#f4f1ea" stroke-width="8" stroke-linecap="round" stroke-opacity="0.7"/>
+  <path d="M 150 108 C 164 108 176 114 182 124 C 190 136 190 152 182 164 C 176 174 164 182 150 182 C 136 182 124 174 118 164 C 110 152 110 136 118 124 C 124 114 136 108 150 108 Z" fill="#1f7a4d" stroke="#ffffff" stroke-width="8"/>
+  <path d="M 132 148 L 145 161 L 168 134" fill="none" stroke="#ffffff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

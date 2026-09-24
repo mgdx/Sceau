@@ -12,26 +12,86 @@ import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme =
     darkColorScheme(
-        primary = Purple80,
-        secondary = PurpleGrey80,
-        tertiary = Pink80,
+        primary = DarkPrimary,
+        onPrimary = DarkOnPrimary,
+        primaryContainer = DarkPrimaryContainer,
+        onPrimaryContainer = DarkOnPrimaryContainer,
+        inversePrimary = DarkInversePrimary,
+        secondary = DarkSecondary,
+        onSecondary = DarkOnSecondary,
+        secondaryContainer = DarkSecondaryContainer,
+        onSecondaryContainer = DarkOnSecondaryContainer,
+        tertiary = DarkTertiary,
+        onTertiary = DarkOnTertiary,
+        tertiaryContainer = DarkTertiaryContainer,
+        onTertiaryContainer = DarkOnTertiaryContainer,
+        background = DarkBackground,
+        onBackground = DarkOnBackground,
+        surface = DarkBackground,
+        onSurface = DarkOnBackground,
+        surfaceVariant = DarkSurfaceVariant,
+        onSurfaceVariant = DarkOnSurfaceVariant,
+        surfaceTint = DarkPrimary,
+        inverseSurface = DarkInverseSurface,
+        inverseOnSurface = DarkInverseOnSurface,
+        outline = DarkOutline,
+        outlineVariant = DarkOutlineVariant,
+        surfaceBright = DarkSurfaceBright,
+        surfaceDim = DarkBackground,
+        surfaceContainerLowest = DarkSurfaceContainerLowest,
+        surfaceContainerLow = DarkSurfaceContainerLow,
+        surfaceContainer = DarkSurfaceContainer,
+        surfaceContainerHigh = DarkSurfaceContainerHigh,
+        surfaceContainerHighest = DarkSurfaceContainerHighest,
     )
 
 private val LightColorScheme =
     lightColorScheme(
-        primary = Purple40,
-        secondary = PurpleGrey40,
-        tertiary = Pink40,
+        primary = LightPrimary,
+        onPrimary = LightOnPrimary,
+        primaryContainer = LightPrimaryContainer,
+        onPrimaryContainer = LightOnPrimaryContainer,
+        inversePrimary = LightInversePrimary,
+        secondary = LightSecondary,
+        onSecondary = LightOnSecondary,
+        secondaryContainer = LightSecondaryContainer,
+        onSecondaryContainer = LightOnSecondaryContainer,
+        tertiary = LightTertiary,
+        onTertiary = LightOnTertiary,
+        tertiaryContainer = LightTertiaryContainer,
+        onTertiaryContainer = LightOnTertiaryContainer,
+        background = LightBackground,
+        onBackground = LightOnBackground,
+        surface = LightBackground,
+        onSurface = LightOnBackground,
+        surfaceVariant = LightSurfaceVariant,
+        onSurfaceVariant = LightOnSurfaceVariant,
+        surfaceTint = LightPrimary,
+        inverseSurface = LightInverseSurface,
+        inverseOnSurface = LightInverseOnSurface,
+        outline = LightOutline,
+        outlineVariant = LightOutlineVariant,
+        surfaceBright = LightBackground,
+        surfaceDim = LightSurfaceDim,
+        surfaceContainerLowest = LightSurfaceContainerLowest,
+        surfaceContainerLow = LightSurfaceContainerLow,
+        surfaceContainer = LightSurfaceContainer,
+        surfaceContainerHigh = LightSurfaceContainerHigh,
+        surfaceContainerHighest = LightSurfaceContainerHighest,
     )
 
 /**
- * Thème Material 3 de Sceau : mode sombre suivant le système, couleurs dynamiques
- * sur Android 12+ et palette statique en repli.
+ * Thème Material 3 de Sceau : mode sombre suivant le système et palette de marque
+ * (marine, ivoire, vert du logo).
+ *
+ * Les couleurs dynamiques d'Android 12+ sont désactivées par défaut : une application
+ * de vérification d'identité doit garder une apparence stable et reconnaissable, et une
+ * primaire tirée du fond d'écran (rouge, vert…) brouillerait la lecture des verdicts.
  */
 @Composable
 fun SceauTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit,
 ) {
     val colorScheme =
