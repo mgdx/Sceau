@@ -6,6 +6,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.time.Instant
 import javax.security.auth.x500.X500Principal
 
 class TrustStoreTest {
@@ -31,6 +32,24 @@ class TrustStoreTest {
             assertEquals("FR", it.country)
             assertTrue(it.isSelfSigned)
         }
+    }
+
+    @Test
+    fun loadsEmbeddedGermanMasterList() {
+        val store = TrustStores.load()
+        val info = store.embeddedMasterList
+
+        assertNotNull(info)
+        assertEquals(Instant.parse("2026-05-28T06:28:45Z"), info!!.signingTime)
+        assertEquals(588, info.certificateCount)
+        assertTrue(info.signerSubject.contains("CN=CSCA Master List Signer"))
+        val embedded = store.anchors.filter { it.source == TrustSource.EMBEDDED_MASTER_LIST }
+        // 588 certificats, dont 3 déjà fournis par l'ANTS (qui garde la priorité).
+        assertEquals(585, embedded.size)
+        assertEquals(590, store.anchors.size)
+        val countries = embedded.map { it.country }.toSet()
+        listOf("DE", "IT", "ES", "BE", "NL", "AT", "PL", "LU").forEach { assertTrue("CSCA $it attendu", it in countries) }
+        assertTrue(store.findBySubject(X500Principal("CN=csca-germany, OU=bsi, O=bund, C=DE")).isNotEmpty())
     }
 
     @Test

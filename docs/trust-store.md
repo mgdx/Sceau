@@ -19,6 +19,7 @@ colonne. Ne change ni l'ordre ni le nombre de colonnes sans adapter le test.
 | `ants-csca-2020.der` | Passeport (CSCA) | `C=FR, O=Gouv, CN=CSCA-FRANCE` | 2020-05-26 → 2035-08-26 | SHA-1 `32b98cdbd85255c07503bfd96049038b241bfffe` | `28df42a7a0ed1b20f994cc96999060619e095b09764159703438ec60b88ee856` |
 | `ants-csca-2025.der` | Passeport (CSCA) | `C=FR, O=Gouv, CN=CSCA-FRANCE` | 2025-02-19 → 2040-05-19 | SHA-1 `59c8be053778295654ed32672a8045ef41405b44` | `d628b5100ddcbed8f3e5fa05e53b6b80bebb1e6264a12583319ef955c91d9349` |
 | `ants-csca-eid-2021.der` | e-ID, CNIe (CSCA) | `C=FR, O=Gouv, CN=eID-FRANCE` | 2021-02-15 → 2036-05-15 | SHA-256 `b33ea63b9be01082d98071a29111757c72257eba80d7205d21fa35436c29fe7c` | `b33ea63b9be01082d98071a29111757c72257eba80d7205d21fa35436c29fe7c` |
+| `de-bsi-master-list.ml` | Master List CSCA (BSI, Allemagne) | signataire `C=DE, O=bund, OU=bsi, serialNumber=0039, CN=CSCA Master List Signer` | signée le 2026-05-28 ; signataire valide 2024-10-17 → 2028-10-17 | aucune pour le fichier (voir « Master List embarquée ») | `e036f8c989193b38cf19493bb2c957bfa2385b35a680bf03300515cad7526dd0` |
 
 Les cinq certificats sont des CSCA racines auto-signés (RSA 4096, `sha256WithRSAEncryption`).
 Les archives de l'ANTS ne contiennent aucun certificat de lien. Le CSCA passeport 2010 est
@@ -39,16 +40,16 @@ ils sont copiés sans conversion et seulement renommés.
 | `ants-csca-2020.der` | `CSCA-FRANCE_2020.zip` | `CSCA-FRANCE_2020.crt`, empreinte dans `CSCA-FRANCE_2020_fingerprint.txt` | page CSCA de l'ANTS | 2026-09-25 |
 | `ants-csca-2025.der` | `csca-france_2025.zip` | `CSCA-FRANCE_2025.crt`, empreinte dans `CSCA-FRANCE_2025_fingerprint.txt` | page CSCA de l'ANTS | 2026-09-25 |
 | `ants-csca-eid-2021.der` | `Certificat_CSCA_PROD_EID.zip` | `eID-FRANCE.crt` (un `eID-FRANCE.pem` identique l'accompagne), empreinte dans `Fingerprint_SHA256.txt` | page CSCA e-ID de l'ANTS | 2026-09-25 |
+| `de-bsi-master-list.ml` | `GermanMasterList.zip` | `DE_ML_2026-05-28-08-28-45.ml`, redistribué inchangé | <https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/ElekAusweise/CSCA/GermanMasterList.html> | 2026-09-25 |
 
-Les archives ont été téléchargées par le mainteneur. Pages d'origine, telles que les référence
-un moteur de recherche :
+Les archives ont été téléchargées par le mainteneur depuis les pages officielles de l'ANTS
+(URL confirmées par le mainteneur le 2026-09-25) :
 
 - page CSCA (passeports) : <https://ants.gouv.fr/csca> ;
-- page CSCA e-ID (cartes d'identité) : <https://ants.gouv.fr/eid>.
+- page CSCA e-ID (cartes d'identité) : <https://ants.gouv.fr/home/csca-e-id>.
 
-**À confirmer par le mainteneur** : le site de l'ANTS protège ses pages par un filtre anti-robot,
-leur contenu n'a donc pas pu être relu automatiquement. Ni ces URL, ni les liens exacts des
-archives n'ont été vérifiés.
+Le site de l'ANTS filtre les robots : la mise à jour se fait à la main depuis ces pages, en
+comparant les empreintes publiées dans chaque archive à celles recalculées.
 
 ## Master List
 
@@ -59,8 +60,28 @@ signataire doit être émis par un certificat dont l'empreinte est épinglée da
 certificats portent la source `EMBEDDED_MASTER_LIST`. En cas de doublon, l'ordre de priorité
 est ANTS, puis Master List embarquée, puis Master List importée.
 
-**État actuel : aucune Master List n'est embarquée.** L'ajout de la German Master List du BSI
-est prévu, mais le fichier n'a pas encore été versé au dépôt.
+### Master List embarquée : German Master List du BSI
+
+`de-bsi-master-list.ml` est la German Master List publiée par le BSI (Bundesamt für Sicherheit
+in der Informationstechnik). Ce n'est pas la Master List de l'ICAO que cite la SPEC (§7.1),
+d'où le nom du fichier.
+
+- Page : <https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/ElekAusweise/CSCA/GermanMasterList.html>
+- Archive : <https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/ElekAusweise/CSCA/GermanMasterList.zip?__blob=publicationFile&v=108>,
+  SHA-256 constatée de l'archive `ac294f59876129ce682350bead0f7025373bf2d833bbd879bb536201226b612c`.
+- Fichier : `DE_ML_2026-05-28-08-28-45.ml` extrait de l'archive, 902 359 octets, signé le
+  2026-05-28, redistribué **inchangé** et seulement renommé. Le BSI ne publie pas d'empreinte
+  pour le fichier : l'intégrité repose sur la signature CMS et sur l'ancrage du signataire
+  décrit ci-dessous.
+- Contenu : 588 certificats CSCA et certificats de lien de 112 émetteurs, tous lisibles par
+  BouncyCastle, dont 160 clés EC à paramètres de courbe explicites et un numéro de série
+  négatif. Les 3 certificats français déjà fournis par l'ANTS gardent la source `ANTS`.
+- Téléchargé le 2026-09-25.
+
+Conditions de réutilisation fixées par le BSI : usage, y compris commercial, autorisé ; pas
+d'usage publicitaire ; ne rien laisser croire d'une coopération avec le BSI ou d'une
+approbation de sa part. Sceau redistribue le fichier sans modification, le cite comme source
+et ne revendique aucun lien avec le BSI.
 
 ### Ancrage du signataire
 
