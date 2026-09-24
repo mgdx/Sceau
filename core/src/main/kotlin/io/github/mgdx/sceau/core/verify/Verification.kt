@@ -2,6 +2,8 @@ package io.github.mgdx.sceau.core.verify
 
 import io.github.mgdx.sceau.core.report.ChainInfo
 import io.github.mgdx.sceau.core.report.Check
+import io.github.mgdx.sceau.core.report.CheckId
+import io.github.mgdx.sceau.core.report.CheckStatus
 import io.github.mgdx.sceau.core.report.Verdict
 import io.github.mgdx.sceau.core.trust.TrustStore
 import java.security.PublicKey
@@ -37,7 +39,7 @@ object PassiveAuthentication {
         dateOfIssue: LocalDate?,
         dateOfExpiry: LocalDate?,
         documentCode: String,
-    ): PassiveAuthResult = TODO("lot B")
+    ): PassiveAuthResult = PassiveAuthenticator(trustStore).verify(sod, dataGroups, dateOfIssue, dateOfExpiry, documentCode)
 }
 
 object ActiveAuthentication {
@@ -53,10 +55,48 @@ object ActiveAuthentication {
         digestAlgorithm: String?,
         challenge: ByteArray,
         response: ByteArray,
-    ): Check = TODO("lot B")
+    ): Check = ActiveAuthenticator.verify(publicKey, digestAlgorithm, challenge, response)
 }
 
 object Verdicts {
-    /** Calcule le verdict global à partir des sept lignes de la liste de contrôle (SPEC §5.3). */
-    fun compute(checks: List<Check>): Verdict = TODO("lot B")
+    /**
+     * Calcule le verdict global à partir des sept lignes de la liste de contrôle (SPEC §5.3).
+     *
+     * Table de décision, appliquée dans l'ordre (la première règle qui s'applique gagne) :
+     *
+     * | # | Condition                                                                 | Verdict                           |
+     * |---|---------------------------------------------------------------------------|-----------------------------------|
+     * | 1 | une ligne quelconque FAILED ou UNSUPPORTED_ALGORITHM                      | [Verdict.FAILED]                  |
+     * | 2 | CERTIFICATE_CHAIN NOT_AVAILABLE                                           | [Verdict.UNKNOWN_ISSUER]          |
+     * | 3 | PA complète (a), et CHIP_AUTHENTICATION OK ou ACTIVE_AUTHENTICATION OK       | [Verdict.AUTHENTIC]               |
+     * | 4 | PA complète (a), CHIP_AUTHENTICATION et ACTIVE_AUTHENTICATION NOT_AVAILABLE  | [Verdict.SIGNATURE_VALID_CHIP_UNVERIFIED] |
+     * | 5 | tout autre cas (ligne manquante, SOD_SIGNATURE NOT_AVAILABLE…)            | [Verdict.FAILED], par prudence    |
+     *
+     * (a) PA complète : SECURE_CHANNEL, SOD_SIGNATURE, CERTIFICATE_CHAIN et DG_HASHES OK,
+     * DS_VALIDITY OK ou NOT_AVAILABLE (date de délivrance inconnue ou seulement estimée).
+     *
+     * Une ligne CA ou AA NOT_AVAILABLE aux côtés de l'autre OK donne AUTHENTIC (règle 3) :
+     * un seul des deux challenges suffit.
+     */
+    fun compute(checks: List<Check>): Verdict {
+        if (checks.any { it.status == CheckStatus.FAILED || it.status == CheckStatus.UNSUPPORTED_ALGORITHM }) {
+            return Verdict.FAILED
+        }
+        val status = checks.associate { it.id to it.status }
+        if (status[CheckId.CERTIFICATE_CHAIN] == CheckStatus.NOT_AVAILABLE) return Verdict.UNKNOWN_ISSUER
+
+        val passiveAuthOk =
+            listOf(CheckId.SECURE_CHANNEL, CheckId.SOD_SIGNATURE, CheckId.CERTIFICATE_CHAIN, CheckId.DG_HASHES)
+                .all { status[it] == CheckStatus.OK } &&
+                status[CheckId.DS_VALIDITY] in setOf(CheckStatus.OK, CheckStatus.NOT_AVAILABLE)
+        if (!passiveAuthOk) return Verdict.FAILED
+
+        val ca = status[CheckId.CHIP_AUTHENTICATION]
+        val aa = status[CheckId.ACTIVE_AUTHENTICATION]
+        return when {
+            ca == CheckStatus.OK || aa == CheckStatus.OK -> Verdict.AUTHENTIC
+            ca == CheckStatus.NOT_AVAILABLE && aa == CheckStatus.NOT_AVAILABLE -> Verdict.SIGNATURE_VALID_CHIP_UNVERIFIED
+            else -> Verdict.FAILED
+        }
+    }
 }
