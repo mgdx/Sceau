@@ -1,0 +1,1 @@
+Reads and verifies the chip of ID cards and passports, fully offline

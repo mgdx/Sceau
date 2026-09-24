@@ -1,0 +1,40 @@
+Sceau reads the chip of ICAO 9303 identity documents over NFC and checks that they are genuine. It works entirely offline: no network permission, nothing is kept, nothing is sent.
+
+<b>Supported documents</b>
+<ul>
+<li>French national identity card (credit card format, since 2021), using the 6-digit CAN printed on the card</li>
+<li>European identity cards, using the CAN or the MRZ</li>
+<li>Biometric passports from any country, using the document number, date of birth and expiry date</li>
+</ul>
+
+<b>What Sceau shows</b>
+<ul>
+<li>The photo stored in the chip</li>
+<li>Identity: surname, given names, sex, date of birth, nationality, document number, issuing state, expiry date</li>
+<li>Additional data when the chip holds it (place of birth, address, issuing authority and date of issue…)</li>
+</ul>
+
+<b>What Sceau verifies</b>
+<ul>
+<li>The issuing state's signature over the data, up to a known root certificate, and the integrity of each data group (Passive Authentication)</li>
+<li>That the chip is not a clone, when the document supports it (Chip Authentication, Active Authentication)</li>
+</ul>
+The result is a clear verdict (Genuine, Valid signature but chip not verified, Unknown issuer, Failed) with a detailed checklist.
+
+<b>Trust store</b>
+Sceau ships the French CSCA certificates published by ANTS and the German Master List published by BSI, which covers the European Union, the EEA, Switzerland and the United Kingdom among others. For a document whose issuer is not included, the verdict is "Unknown issuer"; you can import a Master List published by another state. Revocation lists are not checked. Sceau is not affiliated with any of these organisations.
+
+<b>Privacy</b>
+<ul>
+<li>Only permission: NFC</li>
+<li>No data read from the chip is saved; memory is wiped when leaving the result or when the app goes to the background</li>
+<li>Screenshots are blocked while reading and on the result screen</li>
+<li>No ads, no trackers, no Google services</li>
+</ul>
+
+<b>Intended use</b>
+Sceau is meant for checking your own document, or a document presented by its holder. Under the GDPR, the photo is biometric data when used for automated comparison: Sceau does not perform such comparison.
+
+Sceau does not read fingerprints or iris data, and does not scan the MRZ with the camera.
+
+Free software under the GPLv3 licence.

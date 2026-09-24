@@ -1,0 +1,90 @@
+# Contribuer à Sceau
+
+Merci de votre intérêt. Sceau manipule des données d'identité : les règles ci-dessous ne sont pas des préférences de style, elles conditionnent l'acceptation d'une contribution. Elles reprennent SPEC §2 (contraintes générales), §3 (dépendances) et §8 (vie privée).
+
+Avant de commencer, lisez [`SPEC.md`](SPEC.md) (source de vérité), [`docs/architecture.md`](docs/architecture.md) et [`docs/protocol.md`](docs/protocol.md). Toute modification qui s'écarte de la SPEC doit être consignée et justifiée dans [`docs/decisions.md`](docs/decisions.md).
+
+## Règles
+
+### Qualité
+
+- **Zéro avertissement** sur `test`, `lint` et `ktlintCheck`. Les avertissements Kotlin sont traités en erreurs (`allWarningsAsErrors`), lint en `warningsAsErrors`. Un seul avertissement fait échouer la CI.
+- Ne désactivez pas une règle lint ou ktlint pour faire passer une build. Une exception, si elle est inévitable, est ciblée au plus près (un fichier, un jar), commentée dans le fichier de configuration et consignée dans `docs/decisions.md`.
+- Tout changement de comportement de `:core` s'accompagne d'un test JVM. Les cas de SPEC §9.1 doivent rester couverts.
+
+### Architecture
+
+- **`:core` est du Kotlin pur** : aucun import `android.*`, aucune dépendance Android. Il doit se compiler et se tester sur la JVM.
+- L'API publique de `:core` n'expose aucun type de JMRTD ni de BouncyCastle.
+- **Aucun algorithme codé en dur** : on accepte ce que déclarent les certificats et le SOD ; un algorithme inconnu donne `UNSUPPORTED_ALGORITHM`, jamais un échec silencieux (SPEC §6.2).
+- Une étape non disponible (`NOT_AVAILABLE`) reste distincte d'une étape échouée (`FAILED`).
+
+### Interface
+
+- **Aucune chaîne codée en dur.** Toutes les chaînes sont dans `app/src/main/res/values/strings_<écran>.xml` (français) avec leur traduction dans `values-en/` (décision D5). Une chaîne ajoutée sans traduction anglaise est incomplète.
+- Compose et Material 3 ; le thème suit le mode sombre du système.
+
+### Vie privée et sécurité
+
+- **Aucune donnée lue** (DG1, photo, DG11, DG12) ni clé d'accès (CAN, MRZ) n'est écrite sur disque, en cache, en base, en préférences ou dans les journaux, en debug comme en release. Pas de `Log.d` de contenu, pas de `rememberSaveable` ni de `SavedStateHandle` pour ces données.
+- Aucune donnée personnelle dans les messages d'exception ni dans les codes d'erreur. Les classes de modèle ne sont pas des `data class` et masquent leur `toString()`.
+- Les écrans qui affichent des données lues posent `FLAG_SECURE` (`SecureWindow()`).
+- Les tableaux d'octets lus sont remis à zéro (`wipe()`) à la sortie du résultat et en arrière-plan.
+- Tout aléa cryptographique vient de `SecureRandom`.
+- **Aucune permission réseau.** Le manifeste ne demande que `android.permission.NFC`.
+- Aucune télémétrie, aucun rapport de plantage, aucune bibliothèque d'analyse ou de publicité.
+
+### Dépendances
+
+- Dépendances imposées : JMRTD, scuba-sc-android, BouncyCastle `jdk18on` (jamais SpongyCastle), un décodeur JPEG 2000 pur Java, Compose, Material 3, Navigation Compose.
+- **Toute nouvelle dépendance**, y compris une transitive notable, est justifiée dans [`docs/dependencies.md`](docs/dependencies.md) : version, licence, rôle, compatibilité F-Droid, dans le même commit que son ajout.
+- **Aucun service Google** (Play Services, Firebase, ML Kit…), **aucun blob binaire** non reconstructible, aucune bibliothèque native sans justification (elle imposerait de réintroduire les APK par architecture, décision D2).
+- Dépôts autorisés : Maven Central et Google Maven.
+- Versions dans `gradle/libs.versions.toml`. Une montée de version est un commit à part.
+
+### Magasin de confiance
+
+Les fichiers de `core/src/main/resources/trust/` ne se modifient qu'en suivant la procédure de [`docs/trust-store.md`](docs/trust-store.md) : source officielle, empreinte publiée, mise à jour des empreintes attendues par le test. Un fichier embarqué est toujours redistribué sans modification.
+
+## Commandes
+
+```bash
+./gradlew :core:test                                                   # tests JVM du cœur
+./gradlew :core:test --tests "io.github.mgdx.sceau.core.SomeTest"       # un seul test
+./gradlew :app:assembleDebug                                            # APK de debug
+./gradlew :app:assembleRelease                                          # APK release (R8), non signé
+./gradlew lint ktlintCheck                                              # lint et style
+./gradlew ktlintFormat                                                  # reformate selon .editorconfig
+./gradlew check                                                         # tout ce qui bloque la CI
+./gradlew :app:dependencies --configuration releaseRuntimeClasspath     # audit des dépendances
+```
+
+La CI (`.github/workflows/ci.yml`) exécute `./gradlew check :app:assembleDebug`. Lancez `./gradlew check` avant de proposer une contribution.
+
+Toolchain : JDK 17 pour la compilation, JDK 25 pour le démon Gradle.
+
+## Commits
+
+Format : `type(portée): description`, en français, au présent, sans point final. Un commit = un changement cohérent.
+
+| Type | Usage |
+|---|---|
+| `feat` | nouvelle fonctionnalité |
+| `fix` | correction de bogue |
+| `docs` | documentation seule |
+| `test` | ajout ou correction de tests |
+| `refactor` | restructuration sans changement de comportement |
+| `chore` | build, dépendances, CI, outillage |
+
+Portées usuelles : `core`, `app`, `trust`, `reading`, `result`, `home`, `about`, `socle`, `ci`. Exemple : `fix(core): distinguer DG15 absent d'un échec d'Active Authentication`.
+
+Le corps du message explique le pourquoi, et cite le cas échéant la section de la SPEC ou la décision de `docs/decisions.md` concernée.
+
+## Proposer une contribution
+
+1. Créez une branche depuis `main`.
+2. Faites vos changements en respectant les règles ci-dessus, avec les tests et la documentation correspondants (`docs/`, et `fastlane/metadata/` si une fonctionnalité visible change).
+3. Vérifiez `./gradlew check`.
+4. Ouvrez une demande de fusion décrivant le changement, sa justification et la façon dont il a été vérifié (tests, et cas de [`docs/test-plan.md`](docs/test-plan.md) exécutés sur appareil le cas échéant).
+
+En contribuant, vous acceptez que votre contribution soit distribuée sous licence GPLv3.

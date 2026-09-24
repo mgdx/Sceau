@@ -1,0 +1,6 @@
+Première version.
+• Lecture NFC de la CNIe française, des cartes d'identité européennes et des passeports biométriques (PACE ou BAC)
+• Affichage de la photo, de l'identité et des données complémentaires
+• Vérification Passive, Chip et Active Authentication, avec verdict et liste de contrôle
+• Magasin de confiance : CSCA français de l'ANTS, Master List allemande du BSI, import d'une Master List
+• Hors ligne, aucune donnée conservée, interface en français et en anglais
