@@ -4,25 +4,28 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## État du dépôt
 
-Sceau est encore au stade de la spécification : seul `SPEC.md` existe. Ni les modules Gradle, ni le code, ni les `docs/` n'ont été créés. `SPEC.md` est la source de vérité : lis-le en entier avant toute implémentation. Tout écart doit être consigné et justifié dans `docs/decisions.md`. Les jalons (section 11) fixent l'ordre de travail : Socle, Lecture, Vérification, Finitions, Publication.
+Le socle (jalon 1) est en place : modules Gradle `:core` (Kotlin JVM, package `io.github.mgdx.sceau.core`) et `:app` (package `io.github.mgdx.sceau`), dépendances, ktlint, lint, CI GitHub Actions, manifeste, navigation et écrans stub. Les contrats d'interface (`core/src/main/kotlin/**`, `SessionViewModel`, `TrustStoreRepository`, signatures des écrans dans `app/.../ui/`) sont figés ; leurs corps `TODO("lot X")` sont remplis par les lots suivants. Les chaînes sont réparties par écran (`res/values*/strings_<écran>.xml`) pour limiter les conflits. Les `docs/` restent à écrire. `SPEC.md` est la source de vérité : lis-le en entier avant toute implémentation. Tout écart doit être consigné et justifié dans `docs/decisions.md`. Les jalons (section 11) fixent l'ordre de travail : Socle, Lecture, Vérification, Finitions, Publication.
 
 ## Ce qu'est Sceau
 
 Application Android libre (GPLv3, visée F-Droid) qui lit par NFC la puce des documents ICAO 9303 (CNIe française, cartes d'identité UE, passeports), affiche DG1/DG2/DG11/DG12 et vérifie l'authenticité : Passive Authentication contre un magasin CSCA embarqué, puis Chip Authentication (DG14) et Active Authentication (DG15). Entièrement hors ligne, sans aucune persistance des données lues.
 
-## Commandes (à créer au jalon Socle, puis à tenir à jour ici)
+## Commandes
 
-Projet Gradle Kotlin, deux modules `:core` et `:app`.
+Projet Gradle Kotlin (AGP 9, Kotlin intégré), deux modules `:core` et `:app`. Toolchain JVM 17 ; le démon Gradle tourne sur JDK 25 (`gradle/gradle-daemon-jvm.properties`). Versions dans `gradle/libs.versions.toml`.
 
 ```bash
-./gradlew :core:test                                   # tests JVM du cœur
-./gradlew :core:test --tests "fr.sceau.core.SomeTest"   # un seul test (adapter le package)
-./gradlew :app:assembleDebug                            # APK de debug
-./gradlew lint ktlintCheck                              # zéro avertissement exigé
-./gradlew check                                         # tout ce qui bloque la CI
+./gradlew :core:test                                                   # tests JVM du cœur
+./gradlew :core:test --tests "io.github.mgdx.sceau.core.SomeTest"       # un seul test
+./gradlew :app:assembleDebug                                            # APK de debug
+./gradlew :app:assembleRelease                                          # APK release (R8), non signé
+./gradlew lint ktlintCheck                                              # zéro avertissement exigé
+./gradlew ktlintFormat                                                  # reformate selon .editorconfig
+./gradlew check                                                         # tout ce qui bloque la CI
+./gradlew :app:dependencies --configuration releaseRuntimeClasspath     # audit des dépendances
 ```
 
-Règle CI : un seul avertissement sur `test`, `lint` ou `ktlintCheck` fait échouer la build. Objectif : APK par architecture (splits ABI) de moins de 8 Mo, Master List comprise.
+Règle CI (`.github/workflows/ci.yml` : `./gradlew check :app:assembleDebug`) : avertissements Kotlin traités en erreurs (`allWarningsAsErrors`), lint en `warningsAsErrors`, ktlint bloquant. Les règles lint désactivées sont listées et justifiées dans les `build.gradle.kts` et `app/lint.xml`. Règles R8 dans `app/src/main/keepRules/rules.keep`. Pas de splits ABI : l'app est pur Java/Kotlin, un seul APK universel, objectif de moins de 8 Mo, Master List comprise.
 
 ## Architecture
 

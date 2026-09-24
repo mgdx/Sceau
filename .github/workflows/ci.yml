@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Validation du Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v6
+
+      # JDK 17 : toolchain de compilation des modules.
+      # JDK 25 : JVM du démon Gradle (gradle/gradle-daemon-jvm.properties). Le dernier de la
+      # liste devient JAVA_HOME.
+      - name: JDK 17 et 25
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: |
+            17
+            25
+
+      - uses: gradle/actions/setup-gradle@v6
+
+      - name: Vérifications (tests, lint, ktlint) et APK de debug
+        run: ./gradlew check :app:assembleDebug

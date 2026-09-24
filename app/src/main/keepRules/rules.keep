@@ -1,12 +1,19 @@
-# Add project specific R8 rules here.
-# AGP will combine all keep rule files in src/main/keepRules to pass to R8
-#
-# For more details, see
-#   https://d.android.com/r/tools/r8/keep-rules
+# Règles R8 de Sceau. AGP combine tous les fichiers de src/main/keepRules.
+# Voir https://d.android.com/r/tools/r8/keep-rules
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# BouncyCastle : le fournisseur JCA enregistre ses implémentations (Cipher, Signature,
+# KeyAgreement, CertificateFactory…) par nom de classe sous forme de chaîne et les instancie
+# par réflexion. Sans ces règles, R8 les retire et Signature.getInstance(…, "BC") échoue.
+-keep class org.bouncycastle.jcajce.provider.** { *; }
+-keep class org.bouncycastle.jce.provider.** { *; }
+
+# JMRTD, SCUBA et cert-cvc (dépendance de JMRTD pour les certificats CV) : conservés en
+# entier, car ils s'appuient eux aussi sur des noms d'algorithmes et de fournisseurs JCA
+# résolus à l'exécution. Leur taille est modeste.
+-keep class org.jmrtd.** { *; }
+-keep class net.sf.scuba.** { *; }
+-keep class org.ejbca.cvc.** { *; }
+
+# BouncyCastle référence JNDI (javax.naming) pour les magasins LDAP et DANE, absents
+# d'Android et jamais utilisés par Sceau.
+-dontwarn javax.naming.**
