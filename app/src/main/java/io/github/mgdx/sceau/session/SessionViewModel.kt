@@ -24,7 +24,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.time.LocalDate
 
 /** État de la lecture, partagé entre les écrans Lecture et Résultat. */
 sealed interface ReadState {
@@ -100,12 +99,14 @@ class SessionViewModel(
         form = form.copy(documentNumber = AccessForm.normalizeDocumentNumber(input))
     }
 
-    fun onDateOfBirthChange(date: LocalDate?) {
-        form = form.copy(dateOfBirth = date)
+    /** Saisie clavier de la date de naissance : seuls les chiffres sont gardés. */
+    fun onDateOfBirthChange(input: String) {
+        form = form.copy(dateOfBirthDigits = AccessForm.filterDateDigits(input))
     }
 
-    fun onDateOfExpiryChange(date: LocalDate?) {
-        form = form.copy(dateOfExpiry = date)
+    /** Saisie clavier de la date d'expiration : seuls les chiffres sont gardés. */
+    fun onDateOfExpiryChange(input: String) {
+        form = form.copy(dateOfExpiryDigits = AccessForm.filterDateDigits(input))
     }
 
     /** Mémorise la clé pour la prochaine lecture et passe en WaitingForCard. */
