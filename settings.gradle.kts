@@ -24,4 +24,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Sceau"
 include(":app")
+include(":core")
  
