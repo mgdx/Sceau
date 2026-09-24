@@ -44,13 +44,15 @@ Seuls les artefacts BouncyCastle `jdk18on` sont admis : les variantes `jdk15on` 
 
 `androidx.compose.ui:ui-tooling` n'est présent qu'en `debugImplementation` : il n'entre pas dans l'APK release.
 
-### À confirmer : décodeur JPEG 2000
+### Code natif compilé depuis les sources : décodeur JPEG 2000
 
-| Artefact | Version | Licence | Rôle | F-Droid |
+| Composant | Version | Licence | Rôle | F-Droid |
 |---|---|---|---|---|
-| `edu.ucar:jj2000` (envisagé) | 5.2 | licence JJ2000, de type BSD : **à confirmer** | Décodage des portraits JPEG 2000 (DG2, DG12), `Images.decodeJpeg2000` | pur Java, sans JNI, Maven Central : **à confirmer** |
+| OpenJPEG (bibliothèque `openjp2` seule) | 2.5.4 (tag `v2.5.4`, commit `6c4a29b0`) | BSD-2-Clause | Décodage des portraits JPEG 2000 (DG2, DG12), via `Jpeg2000Decoder` et `libsceau_jp2.so` | oui : sous-module git `app/src/main/cpp/openjpeg` pointant sur le dépôt officiel `github.com/uclouvain/openjpeg`, compilé depuis les sources par CMake et le NDK à chaque build, lié statiquement ; aucun binaire précompilé dans le dépôt |
 
-SPEC §3 retient le fork JMRTD de jj2000, qui n'est pas publié sur Maven Central. L'artefact `edu.ucar:jj2000`, issu de la même base de code, est en cours d'évaluation (décision D3). Cette ligne sera confirmée ou remplacée après fusion de l'implémentation de la lecture, avec vérification du texte de licence.
+Ce composant n'est pas une dépendance Maven : il n'apparaît pas dans la sortie de `./gradlew :app:dependencies`. Il remplace jj2000, écarté car sa licence d'origine restreint le champ d'usage (non libre, incompatible GPLv3 et F-Droid) : voir la décision D3. Outils de compilation correspondants : NDK `28.2.13676358` et CMake `4.1.2` (section 4).
+
+Montée de version : se placer dans le sous-module, `git fetch --tags && git checkout vX.Y.Z`, committer le nouveau pointeur, relancer `app/src/main/cpp/test/run-host-tests.sh` et mettre à jour ce tableau et la décision D3.
 
 ## 2. Dépendances transitives notables
 
@@ -90,3 +92,5 @@ Provenance et empreintes : `docs/trust-store.md`.
 | JUnit (tests uniquement) | 4.13.2 | EPL 1.0 |
 | kotlinx-coroutines-test (tests uniquement) | 1.11.0 | Apache 2.0 |
 | Plugin `org.gradle.toolchains.foojay-resolver-convention` | 1.0.0 | Apache 2.0 |
+| Android NDK (compilation de `libsceau_jp2.so`) | 28.2.13676358 | Apache 2.0 (Clang/LLVM : Apache 2.0 avec exception LLVM) |
+| CMake (compilation native) | 4.1.2 | BSD-3-Clause |

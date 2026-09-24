@@ -28,7 +28,7 @@ Règles :
 ```
 core/src/main/kotlin/io/github/mgdx/sceau/core/
   Api.kt                   readAndVerify, CardTransport, AccessKey, Step, SceauException
-  model/                   DocumentData, Dg1Data, Dg11Data, Dg12Data, EncodedImage, ArgbImage, Images
+  model/                   DocumentData, Dg1Data, Dg11Data, Dg12Data, EncodedImage, ArgbImage
   report/                  VerificationReport, Verdict, Check, CheckId, CheckStatus, CheckDetail, ChainInfo
   trust/                   TrustStore, TrustAnchor, TrustSource, TrustStores, MasterList, MasterListInfo
   verify/                  PassiveAuthentication, ActiveAuthentication, Verdicts
@@ -41,9 +41,26 @@ app/src/main/java/io/github/mgdx/sceau/
   ui/                      SceauNavHost, Routes, écrans home/, reading/, result/, trust/, about/
   ui/common/SecureWindow   FLAG_SECURE compté par fenêtre
   ui/theme/                thème Material 3, mode sombre suivant le système
+  jp2/Jpeg2000Decoder      décodage JPEG 2000 (JNI vers libsceau_jp2.so)
+
+app/src/main/cpp/
+  CMakeLists.txt           construit libsceau_jp2.so (OpenJPEG statique + code de Sceau)
+  jp2_decode.c/.h          cœur de décodage en mémoire, sans JNI, testé sur l'hôte
+  jp2_jni.c                pont JNI
+  openjpeg/                sous-module git, OpenJPEG v2.5.4 (BSD-2-Clause)
+  test/                    harnais de test hôte (ASan/UBSan), hors APK : run-host-tests.sh
 ```
 
 Les chaînes sont réparties par écran dans `res/values*/strings_<écran>.xml` (décision D5).
+
+### Décodage des images
+
+Le décodage vit dans `:app`, jamais dans `:core` (qui reste sans JNI). `ui/result/ImageDecoding.kt` choisit le décodeur selon le format annoncé et la signature des octets :
+
+- JPEG : `BitmapFactory` d'Android ;
+- JPEG 2000 (fichier JP2 ou flux J2K brut) : `Jpeg2000Decoder.decode(bytes): Bitmap?`, qui appelle `libsceau_jp2.so`, chargée à la première utilisation. La bibliothèque lie statiquement OpenJPEG, compilé depuis le sous-module `app/src/main/cpp/openjpeg` (décision D3), et décode depuis la mémoire. Elle renvoie null, sans exception ni trace, pour tout flux invalide, tronqué ou annonçant plus de 4096 pixels de côté.
+
+Le code natif est compilé pour `armeabi-v7a`, `arm64-v8a`, `x86` et `x86_64`, d'où un APK par architecture plus un APK universel (décision D2). Le cœur `jp2_decode.c` se teste sur l'hôte : `app/src/main/cpp/test/run-host-tests.sh` (images synthétiques encodées par `opj_compress`, flux tronqués, altérés et démesurés, sous ASan et UBSan).
 
 ## 2. API publique de `:core`
 
@@ -78,7 +95,8 @@ suspend fun readAndVerify(transport: CardTransport, key: AccessKey, trustStore: 
 | `PassiveAuthentication.verify(…)` | Chaîne DS → CSCA, signature du SOD, empreintes, validité du DS. N'accède pas à la puce. |
 | `ActiveAuthentication.verifyResponse(…)` | Vérifie la réponse au challenge AA avec la clé de DG15. |
 | `Verdicts.compute(checks)` | Verdict global (table de décision dans `docs/protocol.md` §6). |
-| `Images.decodeJpeg2000(bytes)` | Décode un portrait JPEG 2000 en pixels ARGB, en pur Java (jj2000). Le JPEG classique est décodé côté app. |
+
+`:core` ne décode aucune image : il transmet les octets du portrait et des images de DG12 (`EncodedImage`, avec leur format) à `:app`, qui les décode (section 1, « Décodage des images »).
 
 ### Magasin de confiance
 
@@ -111,7 +129,7 @@ Résultat  affiche verdict, photo, DG1, DG11/DG12, liste de contrôle
 2. **Détection NFC** : `MainActivity` (lancement `singleTop`) reçoit le tag `IsoDep` pendant que la session est en `WaitingForCard` ou `Error`, l'enveloppe dans un `CardTransport` et appelle `onCardDetected(transport)`.
 3. **Lecture** (`ReadingScreen`) : `readAndVerify` s'exécute dans une coroutine du `ViewModel`. Chaque appel de `progress` fait passer l'état en `Reading(step)` ; l'écran coche les étapes terminées. Une `SceauException` donne `Error(code)`, affiché avec un message en français et « Réessayer » (`retry()`, même clé).
 4. **Magasin de confiance** : `TrustStoreRepository.get()` fournit le `TrustStore` fusionné, chargé une fois puis gardé en mémoire jusqu'au prochain import ou effacement des imports.
-5. **Résultat** (`ResultScreen`) : sur `Done(report)`, la navigation remplace l'écran de lecture par l'écran de résultat (`popUpTo(READING) inclusive`). L'écran met en forme le rapport ; le portrait JPEG 2000 est décodé par `Images.decodeJpeg2000`, le JPEG par le décodeur Android. Aucune donnée n'est copiée hors du rapport au-delà de ce qu'exige l'affichage.
+5. **Résultat** (`ResultScreen`) : sur `Done(report)`, la navigation remplace l'écran de lecture par l'écran de résultat (`popUpTo(READING) inclusive`). L'écran met en forme le rapport ; le portrait JPEG 2000 est décodé par `Jpeg2000Decoder` (OpenJPEG natif), le JPEG par le décodeur Android. Aucune donnée n'est copiée hors du rapport au-delà de ce qu'exige l'affichage.
 6. **Magasin de confiance, écran dédié** (`TrustStoreScreen`) : liste des CSCA, import d'une Master List via `ACTION_OPEN_DOCUMENT` → `preview(bytes)` (signature vérifiée, empreinte du signataire montrée) → confirmation → `import(bytes)`. Les Master Lists importées sont stockées telles quelles dans `filesDir/trust/` : ce sont des certificats publics, pas des données personnelles. « Supprimer les certificats importés » appelle `clearImported()`.
 
 ## 4. Cycle de vie des données sensibles
@@ -125,7 +143,7 @@ Données sensibles : la clé d'accès (CAN ou MRZ) et le contenu de `Verificatio
 | Saisie CAN / MRZ | état Compose de l'écran d'accueil (`remember`, jamais `rememberSaveable`) | tant que l'écran est composé |
 | `AccessKey` | `SessionViewModel` (portée d'activité) | de `prepare(key)` à `clear()` ; conservée après une erreur pour « Réessayer » |
 | `VerificationReport` | `SessionViewModel`, état `ReadState.Done` | de la fin de la lecture à `clear()` |
-| Images décodées (bitmap, `ArgbImage`) | écran de résultat | tant que l'écran est composé ; `ArgbImage.wipe()` disponible |
+| Images décodées (bitmap) | écran de résultat | tant que l'écran est composé ; effacées par `wipeAndRecycle()`. Les tampons intermédiaires du décodage JPEG 2000 (copie native du flux, échantillons, tableau ARGB natif et Java) sont remis à zéro dès le bitmap construit |
 | Master Lists importées | `filesDir/trust/` | jusqu'à « Supprimer les certificats importés » (données publiques) |
 
 Rien d'autre : aucune base, aucun fichier, aucun cache, aucun log, aucune préférence ne contient de donnée lue ni de clé. Le `SavedStateHandle` et le `Bundle` d'état de l'activité n'en contiennent pas non plus : après la mort du processus, l'application redémarre sur l'accueil, vide. La sauvegarde Android est désactivée (`allowBackup="false"`, et règles de sauvegarde et de transfert qui excluent tous les domaines).
