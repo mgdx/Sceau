@@ -29,22 +29,25 @@ Format : date, contexte, décision, justification, écart à la SPEC concerné.
 - **Tests** : le test « empreintes des fichiers embarqués conformes à `docs/trust-store.md` » porte sur les 5 certificats ANTS et sur `de-bsi-master-list.ml`. Le test « Master List à signature CMS invalide rejetée » s'applique au chargement de la liste embarquée comme à l'import.
 - **Écarts à la SPEC** : §7.1 (Master List du BSI au lieu de celle de l'ICAO ; fichier `de-bsi-master-list.ml` au lieu de `icao-master-list.ml`) ; §7.2 (ancrage supplémentaire du signataire de la liste embarquée sur un CSCA allemand épinglé, plus strict que la SPEC).
 
-## D2. Pas de splits ABI : un APK universel
+## D2. Splits ABI : un APK par architecture, plus un APK universel
 
-- **Date** : 2026-09-25.
-- **Contexte** : SPEC §2 et §10 demandent des APK par architecture, de moins de 8 Mo chacun.
-- **Décision** : un seul APK universel, sans splits ABI.
-- **Justification** : l'application est entièrement en Java/Kotlin et n'embarque aucune bibliothèque native (jj2000 est pur Java, voir D3). Des APK par ABI seraient identiques octet pour octet, hormis le nom. L'APK release pèse environ 2,2 Mo sans Master List, soit environ 2,7 Mo avec la liste BSI (D1), bien en dessous de l'objectif de 8 Mo.
-- **Écart à la SPEC** : §2 (« APK par architecture ») et §10 (« APK par architecture publiés sur les releases GitHub »). Si une bibliothèque native devenait nécessaire (par exemple openjpeg à la place de jj2000, SPEC §3), les splits ABI seraient réintroduits.
+- **Date** : 2026-09-25 (révisée le même jour à la suite de la décision D3).
+- **Contexte** : SPEC §2 et §10 demandent des APK par architecture, de moins de 8 Mo chacun. Une première version de cette décision retenait un APK universel unique, tant que l'application restait en pur Java/Kotlin.
+- **Décision** : les splits ABI sont activés dans `app/build.gradle.kts` pour `armeabi-v7a`, `arm64-v8a`, `x86` et `x86_64`, avec en plus un APK universel (`isUniversalApk = true`).
+- **Justification** : le décodeur JPEG 2000 est désormais natif (OpenJPEG en JNI, décision D3). Chaque APK par ABI n'embarque que la `libsceau_jp2.so` de son architecture (170 à 255 Ko) ; l'APK universel les contient toutes, pour les canaux qui ne distinguent pas les architectures. Tailles des APK release non signés, Master List BSI comprise : environ 3,7 Mo par ABI, 4,4 Mo pour l'universel, sous l'objectif de 8 Mo. La bibliothèque est alignée sur des pages de 16 Ko (Android 15+), et stockée non compressée et alignée dans l'APK.
+- **Écart à la SPEC** : aucun : conforme à §2 (« APK par architecture ») et §10. L'APK universel est un complément.
 
-## D3. Décodeur JPEG 2000 : jj2000 publié sur Maven Central
+## D3. Décodeur JPEG 2000 : OpenJPEG en JNI, compilé depuis les sources
 
-- **Date** : 2026-09-25.
-- **Contexte** : SPEC §3 retient « jj2000 (fork JMRTD) ». Ce fork n'est pas publié sur Maven Central, et le dépôt n'accepte que `google()` et `mavenCentral()` (reproductibilité et compatibilité F-Droid).
-- **Décision** : l'implémentation de la lecture évalue `edu.ucar:jj2000:5.2`, publié sur Maven Central, issu de la même base de code JJ2000, pur Java, sans JNI.
-- **Justification** : même code d'origine que le fork JMRTD, disponible depuis un dépôt standard, pas de binaire natif.
-- **Statut** : **à confirmer après fusion du lot lecture** : choix définitif de l'artefact, et vérification de sa licence (licence JJ2000, de type BSD) et de sa compatibilité F-Droid. `docs/dependencies.md` sera mis à jour en conséquence.
-- **Écart à la SPEC** : §3 (artefact différent du fork JMRTD, même base de code).
+- **Date** : 2026-09-25 (décision de l'utilisateur).
+- **Contexte** : SPEC §3 retient jj2000 (fork JMRTD), « pur Java, pas de JNI », et cite openjpeg comme remplaçant possible. La licence d'origine de jj2000 n'est pas libre : elle précise que « No license under any patent, copyright or other intellectual property rights is granted for non JPEG 2000 Standard conforming products », restriction de champ d'usage que Debian a jugée non libre (le module y a été retiré pour cette raison). Elle est incompatible avec la GPLv3 de Sceau et avec la politique d'inclusion de F-Droid. Par ailleurs, le fork JMRTD n'est pas publié sur Maven Central.
+- **Décision** : le portrait JPEG 2000 (DG2, et les images de DG12) est décodé par **OpenJPEG** (BSD-2-Clause), en JNI, dans le module `:app` :
+  - sources d'OpenJPEG en sous-module git `app/src/main/cpp/openjpeg`, épinglé sur le tag `v2.5.4` (dernière version stable publiée à la date de la décision) ; seule la bibliothèque `openjp2` est compilée (sans codecs, outils ni tests), en statique, puis liée dans `libsceau_jp2.so` par CMake via le NDK. Aucun binaire précompilé dans le dépôt ;
+  - API Kotlin `io.github.mgdx.sceau.jp2.Jpeg2000Decoder.decode(bytes): Bitmap?` ; cœur de décodage en mémoire dans `app/src/main/cpp/jp2_decode.c`, séparé du pont JNI (`jp2_jni.c`) et testé sur l'hôte sous AddressSanitizer et UndefinedBehaviorSanitizer (`app/src/main/cpp/test/run-host-tests.sh`) ;
+  - `:core` reste en Kotlin pur sans JNI : l'ancien `Images.decodeJpeg2000` est supprimé ; `:core` transmet les octets du portrait (`EncodedImage`) et `:app` les décode.
+- **Justification** : OpenJPEG est l'implémentation de référence du JPEG 2000, sous licence libre compatible GPLv3, maintenue, présente dans F-Droid comme dans les distributions. La compiler depuis les sources satisfait l'exigence F-Droid de reconstructibilité. Le décodage d'une donnée potentiellement hostile est borné : dimensions limitées à 4096 × 4096 (vérifiées dès la lecture de l'en-tête), flux limité à 16 Mo, 1 à 4 composantes de 16 bits au plus, mode strict d'OpenJPEG (flux tronqué refusé), gestionnaires de messages silencieux (aucune trace, SPEC §8), tampons natifs intermédiaires (copie du flux, échantillons décodés, pixels ARGB) remis à zéro avant libération. Compilation durcie : `-fstack-protector-strong`, `_FORTIFY_SOURCE=2`, `-fvisibility=hidden` (seule la fonction JNI est exportée), RELRO complet.
+- **Limite connue** : les tampons internes d'OpenJPEG (blocs de code, tuiles en cours de décodage, tampon de lecture du flux) sont libérés par la bibliothèque sans remise à zéro, OpenJPEG n'offrant pas d'allocateur personnalisable. Ils restent en mémoire du processus, ne sont ni écrits sur disque ni journalisés.
+- **Écart à la SPEC** : §3 (OpenJPEG au lieu de jj2000 ; code natif en JNI, alors que la SPEC demandait « pas de JNI »). Conséquence : splits ABI activés (D2).
 
 ## D4. Nom de paquet `io.github.mgdx.sceau`
 

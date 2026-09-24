@@ -18,6 +18,26 @@ android {
         versionName = "1.0"
     }
 
+    // Décodeur JPEG 2000 natif : OpenJPEG compilé depuis les sources du sous-module
+    // app/src/main/cpp/openjpeg (décision D3). Drapeaux de compilation dans CMakeLists.txt.
+    ndkVersion = "28.2.13676358"
+    externalNativeBuild {
+        cmake {
+            path = file("src/main/cpp/CMakeLists.txt")
+            version = "4.1.2"
+        }
+    }
+
+    // Un APK par architecture, plus un APK universel (SPEC §2, décision D2).
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+            isUniversalApk = true
+        }
+    }
+
     buildTypes {
         release {
             optimization {

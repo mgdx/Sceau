@@ -36,9 +36,9 @@ Avant de commencer, lisez [`SPEC.md`](SPEC.md) (source de vérité), [`docs/arch
 
 ### Dépendances
 
-- Dépendances imposées : JMRTD, scuba-sc-android, BouncyCastle `jdk18on` (jamais SpongyCastle), un décodeur JPEG 2000 pur Java, Compose, Material 3, Navigation Compose.
+- Dépendances imposées : JMRTD, scuba-sc-android, BouncyCastle `jdk18on` (jamais SpongyCastle), OpenJPEG pour le JPEG 2000 (code natif compilé depuis les sources, décision D3), Compose, Material 3, Navigation Compose.
 - **Toute nouvelle dépendance**, y compris une transitive notable, est justifiée dans [`docs/dependencies.md`](docs/dependencies.md) : version, licence, rôle, compatibilité F-Droid, dans le même commit que son ajout.
-- **Aucun service Google** (Play Services, Firebase, ML Kit…), **aucun blob binaire** non reconstructible, aucune bibliothèque native sans justification (elle imposerait de réintroduire les APK par architecture, décision D2).
+- **Aucun service Google** (Play Services, Firebase, ML Kit…), **aucun blob binaire** non reconstructible, aucune bibliothèque native sans justification. Le seul code natif, OpenJPEG, est compilé depuis les sources d'un sous-module git (décisions D2 et D3).
 - Dépôts autorisés : Maven Central et Google Maven.
 - Versions dans `gradle/libs.versions.toml`. Une montée de version est un commit à part.
 
@@ -47,6 +47,8 @@ Avant de commencer, lisez [`SPEC.md`](SPEC.md) (source de vérité), [`docs/arch
 Les fichiers de `core/src/main/resources/trust/` ne se modifient qu'en suivant la procédure de [`docs/trust-store.md`](docs/trust-store.md) : source officielle, empreinte publiée, mise à jour des empreintes attendues par le test. Un fichier embarqué est toujours redistribué sans modification.
 
 ## Commandes
+
+Les sources d'OpenJPEG sont un sous-module git : clonez avec `git clone --recurse-submodules`, ou, dans un clone existant, lancez une fois `git submodule update --init`. La compilation native demande le NDK `28.2.13676358` et CMake `4.1.2` (installables par le SDK Manager ou `sdkmanager "ndk;28.2.13676358" "cmake;4.1.2"`).
 
 ```bash
 ./gradlew :core:test                                                   # tests JVM du cœur
@@ -57,7 +59,10 @@ Les fichiers de `core/src/main/resources/trust/` ne se modifient qu'en suivant l
 ./gradlew ktlintFormat                                                  # reformate selon .editorconfig
 ./gradlew check                                                         # tout ce qui bloque la CI
 ./gradlew :app:dependencies --configuration releaseRuntimeClasspath     # audit des dépendances
+app/src/main/cpp/test/run-host-tests.sh                                 # tests hôte du décodeur JPEG 2000 (ASan, UBSan)
 ```
+
+Tout changement de `app/src/main/cpp/` (code C ou version d'OpenJPEG) passe par `run-host-tests.sh`, qui demande `cmake` et un compilateur C hôte avec AddressSanitizer. Le code C de Sceau est compilé avec `-Wall -Wextra -Wconversion -Werror`.
 
 La CI (`.github/workflows/ci.yml`) exécute `./gradlew check :app:assembleDebug`. Lancez `./gradlew check` avant de proposer une contribution.
 

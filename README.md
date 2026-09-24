@@ -69,11 +69,18 @@ Configuration requise : Android 8.0 ou plus récent, avec NFC. L'application s'i
 
 ## Compilation
 
-Prérequis : JDK 17 (compilation des modules) et JDK 25 (démon Gradle, voir `gradle/gradle-daemon-jvm.properties`), SDK Android.
+Prérequis : JDK 17 (compilation des modules) et JDK 25 (démon Gradle, voir `gradle/gradle-daemon-jvm.properties`), SDK Android, NDK `28.2.13676358` et CMake `4.1.2` (décodeur JPEG 2000 natif).
+
+Le décodeur JPEG 2000 s'appuie sur [OpenJPEG](https://github.com/uclouvain/openjpeg), compilé depuis ses sources, présentes en sous-module git. Récupérez-les avant la première compilation :
+
+```bash
+git clone --recurse-submodules <url-du-dépôt>   # ou, dans un clone existant :
+git submodule update --init
+```
 
 ```bash
 ./gradlew :app:assembleDebug      # APK de debug : app/build/outputs/apk/debug/
-./gradlew :app:assembleRelease    # APK release (R8), non signé
+./gradlew :app:assembleRelease    # APK release (R8), non signé, un par architecture + universel
 ./gradlew :core:test              # tests JVM du cœur
 ./gradlew check                   # tests, lint et ktlint, comme la CI
 ```
