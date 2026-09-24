@@ -149,8 +149,10 @@ class SessionViewModel(
                     throw e
                 } catch (e: SceauException) {
                     finishWithError(token, e.code)
-                } catch (e: Exception) {
-                    finishWithError(token, UNEXPECTED_PREFIX + (e.javaClass.simpleName.ifEmpty { "Exception" }))
+                } catch (e: Throwable) {
+                    // Tout le reste, y compris les Error (NotImplementedError, OutOfMemoryError au
+                    // décodage d'une image) : une lecture ne doit jamais faire planter l'app.
+                    finishWithError(token, UNEXPECTED_PREFIX + (e.javaClass.simpleName.ifEmpty { "Throwable" }))
                 }
             }
         job = launched
@@ -176,6 +178,16 @@ class SessionViewModel(
         _state.value = ReadState.Idle
     }
 
+    /**
+     * Mise en arrière-plan de l'application (hors changement de configuration). Une lecture en
+     * cours est interrompue et un rapport est effacé (SPEC §8) ; la saisie et la clé, qui ne
+     * vivent qu'en mémoire, sont gardées pour que l'utilisateur puisse passer par les réglages
+     * NFC sans tout ressaisir (SPEC §5.1).
+     */
+    fun onBackground() {
+        if (shouldClearOnBackground(_state.value)) clear()
+    }
+
     override fun onCleared() {
         clear()
     }
@@ -198,7 +210,10 @@ class SessionViewModel(
         transport = null
     }
 
-    private companion object {
-        const val UNEXPECTED_PREFIX = "UNEXPECTED-"
+    internal companion object {
+        private const val UNEXPECTED_PREFIX = "UNEXPECTED-"
+
+        /** Vrai si la mise en arrière-plan doit tout effacer : lecture en cours ou données lues. */
+        fun shouldClearOnBackground(state: ReadState): Boolean = state is ReadState.Reading || state is ReadState.Done
     }
 }

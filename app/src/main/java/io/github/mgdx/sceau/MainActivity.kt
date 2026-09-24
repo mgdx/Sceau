@@ -47,8 +47,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onStop() {
         super.onStop()
-        // Mise en arrière-plan : on efface la clé, la saisie et les données lues (SPEC §8).
-        if (!isChangingConfigurations) session.clear()
+        // Mise en arrière-plan : lecture interrompue et données lues effacées (SPEC §8).
+        if (!isChangingConfigurations) session.onBackground()
     }
 
     /** Appelé sur le thread du lecteur NFC. */
