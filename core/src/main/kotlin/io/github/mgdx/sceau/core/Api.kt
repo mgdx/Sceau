@@ -22,6 +22,14 @@ interface CardTransport {
      */
     fun transceive(apdu: ByteArray): ByteArray
 
+    /**
+     * Réinitialise la liaison avec le document resté sur le lecteur (coupure puis reprise de la
+     * session ISO 14443) : la puce repart de zéro, sans canal sécurisé ni application
+     * sélectionnée. Sert au repli de PACE sur BAC. Lève [SceauException.ConnectionLost] si le
+     * document n'est plus là ou si le transport a été fermé. Par défaut, ne fait rien.
+     */
+    fun reconnect() {}
+
     fun close()
 }
 
@@ -79,15 +87,21 @@ sealed class SceauException(
     /** Un CAN a été fourni mais EF.CardAccess n'annonce pas PACE. */
     class CanWithoutPace : SceauException("CAN_WITHOUT_PACE")
 
-    /** Le document a été retiré (TagLostException ou équivalent). */
+    /**
+     * Le document a été retiré (TagLostException ou équivalent). [detail], facultatif, est un
+     * suffixe de diagnostic sans donnée personnelle (étape, INS et longueur de l'APDU) :
+     * [code] vaut alors `CONNECTION_LOST-<detail>`.
+     */
     class ConnectionLost(
         cause: Throwable? = null,
-    ) : SceauException("CONNECTION_LOST", cause)
+        val detail: String? = null,
+    ) : SceauException(withDetail("CONNECTION_LOST", detail), cause)
 
-    /** Délai dépassé. */
+    /** Délai dépassé. [code] vaut `TIMEOUT-<detail>` si [detail] est donné (voir [ConnectionLost]). */
     class Timeout(
         cause: Throwable? = null,
-    ) : SceauException("TIMEOUT", cause)
+        val detail: String? = null,
+    ) : SceauException(withDetail("TIMEOUT", detail), cause)
 
     /**
      * Erreur inattendue. [code] = "UNEXPECTED-" + [detail], court identifiant technique (étape,
@@ -98,6 +112,11 @@ sealed class SceauException(
         cause: Throwable? = null,
     ) : SceauException("UNEXPECTED-$detail", cause)
 }
+
+private fun withDetail(
+    code: String,
+    detail: String?,
+): String = if (detail == null) code else "$code-$detail"
 
 /**
  * Point d'entrée unique de `:core` (SPEC §6). Bloquant côté E/S : s'exécute sur

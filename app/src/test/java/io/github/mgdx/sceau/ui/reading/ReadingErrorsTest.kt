@@ -15,6 +15,13 @@ class ReadingErrorsTest {
     }
 
     @Test
+    fun `codes with a diagnostic suffix keep their message`() {
+        assertEquals(R.string.reading_error_timeout, ReadingErrors.messageFor("TIMEOUT-SECURE_CHANNEL-INS86-L10"))
+        assertEquals(R.string.reading_error_connection_lost, ReadingErrors.messageFor("CONNECTION_LOST-READ_DATA-INSB0-L20"))
+        assertEquals(R.string.reading_error_connection_lost, ReadingErrors.messageFor("CONNECTION_LOST-SECURE_CHANNEL-RECONNECT"))
+    }
+
+    @Test
     fun `unknown codes are unexpected`() {
         assertEquals(R.string.reading_error_unexpected, ReadingErrors.messageFor("UNEXPECTED-IOException"))
         assertEquals(
@@ -22,5 +29,6 @@ class ReadingErrorsTest {
             ReadingErrors.messageFor("UNEXPECTED-SECURE_CHANNEL-IO-TRANSCEIVE_FAILED-INS86-L60"),
         )
         assertEquals(R.string.reading_error_unexpected, ReadingErrors.messageFor("SOMETHING_NEW"))
+        assertEquals(R.string.reading_error_unexpected, ReadingErrors.messageFor("TIMEOUTS"))
     }
 }

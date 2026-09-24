@@ -12,9 +12,10 @@ import java.util.Locale
  * Le délai par défaut est long : PACE sur la CNIe demande plusieurs secondes de calcul
  * côté puce.
  *
- * Erreurs : seule une vraie perte du document (ou une fermeture demandée) donne
- * [SceauException.ConnectionLost]. Toute autre erreur d'E/S devient une erreur technique dont
- * l'identifiant (code d'E/S, INS, longueur de l'APDU) permet le diagnostic sans journal.
+ * Erreurs : un échec survenu après 90 % du délai est un [SceauException.Timeout] ; seule une
+ * vraie perte du document (ou une fermeture demandée) donne [SceauException.ConnectionLost].
+ * Toute autre erreur d'E/S devient une erreur technique. Chaque identifiant porte l'INS et la
+ * longueur de l'APDU en cours, pour le diagnostic sans journal.
  */
 class IsoDepTransport(
     private val isoDep: IsoDep,
@@ -46,32 +47,58 @@ class IsoDepTransport(
 
     override fun transceive(apdu: ByteArray): ByteArray {
         // Lecture annulée : ne jamais rouvrir la connexion.
-        if (closed) throw SceauException.ConnectionLost()
+        if (closed) throw SceauException.ConnectionLost(detail = commandDetail(apdu))
+        val timeoutAtStart = timeout
+        val start = System.nanoTime()
         return try {
             ensureConnected()
             isoDep.transceive(apdu)
-        } catch (e: TagLostException) {
-            throw SceauException.ConnectionLost(e)
         } catch (e: IOException) {
+            // TagLostException compris : après un délai dépassé, IsoDep signale souvent une perte.
             throw classifyIoFailure(
                 message = e.message,
-                tagLost = e.cause is TagLostException,
+                tagLost = e is TagLostException || e.cause is TagLostException,
                 connected = isConnectedQuietly(),
                 closed = closed,
                 apdu = apdu,
+                elapsedMillis = (System.nanoTime() - start) / NANOS_PER_MILLI,
+                timeoutMillis = timeoutAtStart,
                 cause = e,
             )
         } catch (e: SecurityException) {
             // « Tag is out of date » : le document a été retiré puis un autre présenté.
-            throw SceauException.ConnectionLost(e)
+            throw SceauException.ConnectionLost(e, commandDetail(apdu))
         } catch (e: IllegalStateException) {
             // Transport fermé pendant la lecture : perte de connexion seulement si la fermeture
             // a été demandée (lecture annulée) ; sinon, c'est une anomalie à diagnostiquer.
             throw if (closed) {
-                SceauException.ConnectionLost(e)
+                SceauException.ConnectionLost(e, commandDetail(apdu))
             } else {
                 SceauException.Unexpected(technicalDetail(STATE_PREFIX, apdu), e)
             }
+        }
+    }
+
+    /**
+     * Coupe puis rétablit la liaison avec le même document (`IsoDep.close()` réinitialise la
+     * puce côté service NFC), délai réappliqué. Ne marque pas le transport comme fermé.
+     */
+    override fun reconnect() {
+        if (closed) throw SceauException.ConnectionLost(detail = RECONNECT_DETAIL)
+        try {
+            isoDep.close()
+        } catch (e: IOException) {
+            // Déjà déconnecté : on se reconnecte quand même.
+        }
+        try {
+            isoDep.connect()
+            isoDep.timeout = timeout
+        } catch (e: IOException) {
+            throw SceauException.ConnectionLost(e, RECONNECT_DETAIL)
+        } catch (e: SecurityException) {
+            throw SceauException.ConnectionLost(e, RECONNECT_DETAIL)
+        } catch (e: IllegalStateException) {
+            throw SceauException.ConnectionLost(e, RECONNECT_DETAIL)
         }
     }
 
@@ -109,6 +136,12 @@ class IsoDepTransport(
         private const val IO_PREFIX = "IO-"
         private const val STATE_PREFIX = "STATE"
         private const val LENGTH_ROUNDING = 10
+        private const val RECONNECT_DETAIL = "RECONNECT"
+        private const val NANOS_PER_MILLI = 1_000_000L
+
+        /** Part du délai (9/10) au-delà de laquelle un échec est un délai dépassé. */
+        private const val TIMEOUT_RATIO_NUMERATOR = 9
+        private const val TIMEOUT_RATIO_DENOMINATOR = 10
 
         /**
          * Messages connus des `IOException` d'`android.nfc` (liste fermée) et leur code court.
@@ -134,9 +167,11 @@ class IsoDepTransport(
             if (message == null) "NO_MESSAGE" else IO_MESSAGE_CODES[message.trim()] ?: "OTHER"
 
         /**
-         * Classe une `IOException` d'`IsoDep` : document retiré ou transport fermé → perte de
-         * connexion ; délai → [SceauException.Timeout] ; sinon erreur technique
-         * `IO-<code>-INS<xx>-L<n>`.
+         * Classe une `IOException` d'`IsoDep` : transport fermé → perte de connexion ; échec
+         * survenu après au moins 90 % du délai → [SceauException.Timeout], même si
+         * IsoDep signale ensuite une perte (il réinitialise la liaison après un délai dépassé) ;
+         * document retiré → perte de connexion ; message de délai → délai ; sinon erreur
+         * technique `IO-<code>-INS<xx>-L<n>`. Délai et perte portent le diagnostic `INS<xx>-L<n>`.
          */
         internal fun classifyIoFailure(
             message: String?,
@@ -144,25 +179,38 @@ class IsoDepTransport(
             connected: Boolean,
             closed: Boolean,
             apdu: ByteArray,
+            elapsedMillis: Long = 0,
+            timeoutMillis: Int = DEFAULT_TIMEOUT_MILLIS,
             cause: Throwable? = null,
         ): SceauException =
             when {
-                closed || tagLost || !connected -> SceauException.ConnectionLost(cause)
-                isTimeoutMessage(message) -> SceauException.Timeout(cause)
+                closed -> SceauException.ConnectionLost(cause, commandDetail(apdu))
+                isTimeoutElapsed(elapsedMillis, timeoutMillis) -> SceauException.Timeout(cause, commandDetail(apdu))
+                tagLost || !connected -> SceauException.ConnectionLost(cause, commandDetail(apdu))
+                isTimeoutMessage(message) -> SceauException.Timeout(cause, commandDetail(apdu))
                 else -> SceauException.Unexpected(technicalDetail(IO_PREFIX + ioMessageCode(message), apdu), cause)
             }
 
-        /**
-         * `<prefix>-INS<xx>-L<n>` : octet INS de la commande en hexadécimal et longueur de
-         * l'APDU arrondie à la dizaine. Ni l'un ni l'autre n'est une donnée personnelle.
-         */
+        /** Vrai si [elapsedMillis] atteint au moins 90 % de [timeoutMillis]. */
+        internal fun isTimeoutElapsed(
+            elapsedMillis: Long,
+            timeoutMillis: Int,
+        ): Boolean = timeoutMillis > 0 && elapsedMillis * TIMEOUT_RATIO_DENOMINATOR >= timeoutMillis.toLong() * TIMEOUT_RATIO_NUMERATOR
+
+        /** `<prefix>-INS<xx>-L<n>` (voir [commandDetail]). */
         internal fun technicalDetail(
             prefix: String,
             apdu: ByteArray,
-        ): String {
+        ): String = "$prefix-${commandDetail(apdu)}"
+
+        /**
+         * `INS<xx>-L<n>` : octet INS de la commande en hexadécimal et longueur de l'APDU arrondie
+         * à la dizaine. Ni l'un ni l'autre n'est une donnée personnelle.
+         */
+        internal fun commandDetail(apdu: ByteArray): String {
             val ins = if (apdu.size >= 2) String.format(Locale.ROOT, "%02X", apdu[1].toInt() and 0xFF) else "NA"
             val length = (apdu.size + LENGTH_ROUNDING / 2) / LENGTH_ROUNDING * LENGTH_ROUNDING
-            return "$prefix-INS$ins-L$length"
+            return "INS$ins-L$length"
         }
     }
 }

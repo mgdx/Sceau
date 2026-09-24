@@ -164,19 +164,21 @@ class ReadingSequenceTest {
         }
 
     @Test
-    fun erreurTransportPendantPaceAvecMrz_NiAccessDeniedNiRepliBac() =
+    fun erreurTransportPendantPaceAvecMrz_RepliSurBac() =
         runTest {
+            // Liaison réinitialisée (sans effet sur ce transport), puis BAC ; ici refusé.
             val io = SceauException.Unexpected("IO-TRANSCEIVE_FAILED-INS86-L60")
             val transport =
                 ScriptedTransport(
                     *file(FID_CARD_ACCESS, cardAccess),
                     respond("0022C1A4", "9000"),
                     raise("10860000", io),
+                    respond(AID_SELECT, "9000"),
+                    respond(GET_CHALLENGE, "01020304050607089000"),
+                    ScriptedTransport.Exchange(EXTERNAL_AUTHENTICATE, repeatable = true) { "6300".hexToBytes() },
                 )
-            val error = expect<SceauException.Unexpected>(transport, mrz)
-            assertEquals("UNEXPECTED-SECURE_CHANNEL-IO-TRANSCEIVE_FAILED-INS86-L60", error.code)
+            expect<SceauException.AccessDenied>(transport, mrz)
             assertTrue(transport.exhausted)
-            assertFalse(transport.sent.any { it.startsWith(AID_SELECT) })
         }
 
     @Test
