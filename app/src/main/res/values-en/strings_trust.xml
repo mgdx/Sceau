@@ -1,4 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="trust_title">Trust store</string>
+    <string name="trust_back">Back</string>
+    <string name="trust_intro">Root certificates (CSCA) of issuing countries, used to verify document signatures. No personal data goes through this screen.</string>
+    <plurals name="trust_summary">
+        <item quantity="one">%1$d certificate, %2$d countries</item>
+        <item quantity="other">%1$d certificates, %2$d countries</item>
+    </plurals>
+    <string name="trust_loading">Loading the trust store…</string>
+    <string name="trust_load_error">Couldn’t load the trust store.</string>
+    <string name="trust_retry">Retry</string>
+    <string name="trust_empty">The trust store contains no certificates.</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">Country not specified</string>
+    <plurals name="trust_country_count">
+        <item quantity="one">%1$d certificate</item>
+        <item quantity="other">%1$d certificates</item>
+    </plurals>
+    <string name="trust_country_expand">Show certificates</string>
+    <string name="trust_country_collapse">Hide certificates</string>
+    <string name="trust_validity">Valid from %1$s to %2$s</string>
+    <string name="trust_fingerprint">SHA-256 fingerprint</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">Imported</string>
+    <string name="trust_link_certificate">Link certificate</string>
+
+    <!-- Import -->
+    <string name="trust_import">Import a Master List</string>
+    <string name="trust_busy">Please wait…</string>
+    <string name="trust_import_confirm_title">Import this Master List?</string>
+    <string name="trust_import_confirm_text">Its signature is valid. Before importing, check that the signer’s fingerprint matches the one published by the issuing authority.</string>
+    <string name="trust_import_signer">Signer</string>
+    <string name="trust_import_signer_fingerprint">Signer’s SHA-256 fingerprint</string>
+    <string name="trust_import_signing_date">Signing date</string>
+    <string name="trust_import_signing_date_unknown">Not specified</string>
+    <string name="trust_import_certificate_count">Number of certificates</string>
+    <string name="trust_import_confirm">Import</string>
+    <string name="trust_cancel">Cancel</string>
+    <plurals name="trust_import_done">
+        <item quantity="one">Master List imported: %1$d certificate.</item>
+        <item quantity="other">Master List imported: %1$d certificates.</item>
+    </plurals>
+    <string name="trust_import_invalid">This file isn’t a valid Master List: unreadable format or invalid signature (%1$s).</string>
+    <string name="trust_import_too_large">File rejected: it is larger than 20 MB.</string>
+    <string name="trust_import_read_error">Couldn’t read this file.</string>
+    <string name="trust_import_write_error">Couldn’t save the Master List.</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">Delete imported certificates</string>
+    <string name="trust_delete_confirm_title">Delete imported certificates?</string>
+    <string name="trust_delete_confirm_text">Imported Master Lists will be deleted. The certificates built into the app are kept.</string>
+    <string name="trust_delete_confirm">Delete</string>
+    <string name="trust_delete_done">Imported certificates deleted.</string>
+    <string name="trust_delete_error">Couldn’t delete the imported certificates.</string>
 </resources>
