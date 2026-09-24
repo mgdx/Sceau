@@ -20,18 +20,18 @@ class TrustAnchor(
     val source: TrustSource,
 ) {
     /** Code pays ISO 3166-1 alpha-2 (attribut C du sujet), en majuscules. */
-    val country: String get() = TODO("lot A")
+    val country: String by lazy { TrustCrypto.country(certificate) }
 
     val subject: String get() = certificate.subjectX500Principal.name
 
     /** Empreinte SHA-256 de l'encodage DER, hexadécimal minuscule sans séparateur. */
-    val sha256: String get() = TODO("lot A")
+    val sha256: String by lazy { TrustCrypto.sha256Hex(certificate.encoded) }
 
     val notBefore: Instant get() = certificate.notBefore.toInstant()
     val notAfter: Instant get() = certificate.notAfter.toInstant()
 
     /** Vrai pour un certificat auto-signé (CSCA racine), faux pour un certificat de lien. */
-    val isSelfSigned: Boolean get() = TODO("lot A")
+    val isSelfSigned: Boolean by lazy { TrustCrypto.isSelfSigned(certificate) }
 }
 
 /** Magasin de confiance fusionné (ANTS + Master List embarquée + imports), en lecture seule. */
@@ -73,12 +73,12 @@ object TrustStores {
      * Parse une Master List CMS (`.ml`, `.der`, `.p7b`) et vérifie sa signature avec le
      * certificat signataire embarqué. Lève [InvalidMasterListException] si invalide.
      */
-    fun parseMasterList(bytes: ByteArray): MasterList = TODO("lot A")
+    fun parseMasterList(bytes: ByteArray): MasterList = MasterListParser.parse(bytes).masterList
 
     /**
      * Charge le magasin embarqué (ressources `trust/` du classpath) et le fusionne avec
      * les Master Lists importées, fournies en octets bruts par l'app. Une Master List
      * embarquée invalide lève [InvalidMasterListException] ; un import invalide est ignoré.
      */
-    fun load(importedMasterLists: List<ByteArray> = emptyList()): TrustStore = TODO("lot A")
+    fun load(importedMasterLists: List<ByteArray> = emptyList()): TrustStore = TrustStoreLoader.load(importedMasterLists)
 }
