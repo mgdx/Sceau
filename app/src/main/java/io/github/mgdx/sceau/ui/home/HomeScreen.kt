@@ -36,6 +36,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -46,6 +47,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import io.github.mgdx.sceau.R
+import io.github.mgdx.sceau.demo.DemoMode
 import io.github.mgdx.sceau.nfc.NfcAvailability
 import io.github.mgdx.sceau.nfc.rememberNfcAvailability
 import io.github.mgdx.sceau.session.AccessForm
@@ -55,6 +57,10 @@ import io.github.mgdx.sceau.session.DatePart
 import io.github.mgdx.sceau.session.DocumentTab
 import io.github.mgdx.sceau.session.SessionViewModel
 import io.github.mgdx.sceau.ui.common.SceauIcons
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Écran d'accueil (SPEC §5.1). La saisie vit dans le [SessionViewModel] : aucun
@@ -72,12 +78,19 @@ fun HomeScreen(
     val form = session.form
     val locale = LocalConfiguration.current.locales[0]
     val dateOrder = remember(locale) { DateOrder.forLocale(locale) }
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.app_name)) },
-                actions = { OverflowMenu(onOpenTrustStore = onOpenTrustStore, onOpenAbout = onOpenAbout) },
+                actions = {
+                    OverflowMenu(
+                        onOpenTrustStore = onOpenTrustStore,
+                        onOpenAbout = onOpenAbout,
+                        onStartDemo = { startDemo(session, scope, onRead) },
+                    )
+                },
             )
         },
     ) { padding ->
@@ -133,10 +146,27 @@ fun HomeScreen(
     }
 }
 
+/**
+ * Mode démo (APK de debug uniquement) : la CNIe simulée est fabriquée hors du thread principal
+ * (génération de clés), puis lue par le même chemin qu'un vrai document.
+ */
+private fun startDemo(
+    session: SessionViewModel,
+    scope: CoroutineScope,
+    onRead: () -> Unit,
+) {
+    scope.launch {
+        val card = withContext(Dispatchers.Default) { DemoMode.newSimulatedCnie() } ?: return@launch
+        session.startDemo(card)
+        onRead()
+    }
+}
+
 @Composable
 private fun OverflowMenu(
     onOpenTrustStore: () -> Unit,
     onOpenAbout: () -> Unit,
+    onStartDemo: () -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
     Box {
@@ -158,6 +188,15 @@ private fun OverflowMenu(
                     onOpenAbout()
                 },
             )
+            if (DemoMode.isAvailable) {
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.home_menu_demo)) },
+                    onClick = {
+                        expanded = false
+                        onStartDemo()
+                    },
+                )
+            }
         }
     }
 }

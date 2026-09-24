@@ -23,4 +23,5 @@
     <string name="home_nfc_disabled">NFC is turned off. Turn it on to read the document’s chip.</string>
     <string name="home_nfc_settings">Open NFC settings</string>
     <string name="home_nfc_absent">This phone has no NFC, so it can’t read the chip of identity documents.</string>
+    <string name="home_menu_demo">Simulate a French ID card (demo)</string>
 </resources>

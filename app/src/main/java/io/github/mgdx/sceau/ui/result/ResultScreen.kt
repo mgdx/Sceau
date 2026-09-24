@@ -84,7 +84,8 @@ fun ResultScreen(
 ) {
     SecureWindow()
     val state by session.state.collectAsState()
-    val report = (state as? ReadState.Done)?.report
+    val done = state as? ReadState.Done
+    val report = done?.report
 
     // Évite de quitter l'écran deux fois (Effacer, puis passage de l'état à Idle).
     var left by remember { mutableStateOf(false) }
@@ -123,6 +124,7 @@ fun ResultScreen(
     ) { padding ->
         ResultContent(
             report = report,
+            isDemo = done?.isDemo == true,
             onClear = clearAndLeave,
             modifier = Modifier.padding(padding),
         )
@@ -132,6 +134,7 @@ fun ResultScreen(
 @Composable
 private fun ResultContent(
     report: VerificationReport,
+    isDemo: Boolean,
     onClear: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -145,6 +148,7 @@ private fun ResultContent(
                 .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
+        if (isDemo) DemoBanner()
         VerdictCard(report.verdict)
         PortraitSection(document.portrait)
         IdentitySection(document.dg1, formatDate)
@@ -162,6 +166,23 @@ private fun ResultContent(
 }
 
 // --- Verdict ---------------------------------------------------------------------------
+
+/** Rapport d'un document simulé (mode démo de l'APK de debug) : jamais confondu avec un vrai. */
+@Composable
+private fun DemoBanner() {
+    Surface(
+        color = MaterialTheme.colorScheme.tertiaryContainer,
+        contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+        shape = MaterialTheme.shapes.small,
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Text(
+            text = stringResource(R.string.result_demo_banner),
+            style = MaterialTheme.typography.labelLarge,
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+        )
+    }
+}
 
 @Composable
 private fun VerdictCard(verdict: Verdict) {
