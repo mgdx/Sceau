@@ -63,7 +63,7 @@ import io.github.mgdx.sceau.nfc.rememberNfcAvailability
 import io.github.mgdx.sceau.session.AccessForm
 import io.github.mgdx.sceau.session.DocumentTab
 import io.github.mgdx.sceau.session.SessionViewModel
-import io.github.mgdx.sceau.ui.reading.SceauIcons
+import io.github.mgdx.sceau.ui.common.SceauIcons
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter

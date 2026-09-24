@@ -66,6 +66,7 @@ import io.github.mgdx.sceau.core.report.Verdict
 import io.github.mgdx.sceau.core.report.VerificationReport
 import io.github.mgdx.sceau.session.ReadState
 import io.github.mgdx.sceau.session.SessionViewModel
+import io.github.mgdx.sceau.ui.common.SceauIcons
 import io.github.mgdx.sceau.ui.common.SecureWindow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
