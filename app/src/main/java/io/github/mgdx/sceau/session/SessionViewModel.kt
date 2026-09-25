@@ -228,6 +228,37 @@ class SessionViewModel(
         key = null
         form = AccessForm()
         _state.value = ReadState.Idle
+        closeDisposables()
+    }
+
+    /** Ressources d'affichage du rapport courant (bitmaps de l'écran Résultat), fermées par [clear]. */
+    private val disposables = mutableListOf<AutoCloseable>()
+
+    /**
+     * Confie [resource] (tirée de [report]) à la session, pour que [clear] la ferme directement,
+     * sans attendre une recomposition (audit V13). Si [report] n'est plus le rapport affiché,
+     * [resource] est fermée aussitôt et la méthode renvoie false.
+     */
+    fun registerDisposable(
+        report: VerificationReport,
+        resource: AutoCloseable,
+    ): Boolean {
+        val accepted =
+            synchronized(disposables) {
+                ((_state.value as? ReadState.Done)?.report === report).also { if (it) disposables += resource }
+            }
+        if (!accepted) resource.close()
+        return accepted
+    }
+
+    /** Retire [resource] de la session sans la fermer (l'appelant s'en charge). */
+    fun unregisterDisposable(resource: AutoCloseable) {
+        synchronized(disposables) { disposables.remove(resource) }
+    }
+
+    private fun closeDisposables() {
+        val toClose = synchronized(disposables) { disposables.toList().also { disposables.clear() } }
+        toClose.forEach { it.close() }
     }
 
     /**

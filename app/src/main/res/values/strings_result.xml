@@ -12,6 +12,7 @@
     <string name="result_verdict_unknown_issuer_explanation">Le certificat de l’émetteur ne figure pas dans le magasin de confiance. Les données sont affichées, mais rien n’est garanti. Importer une Master List plus récente peut permettre de vérifier ce document.</string>
     <string name="result_verdict_failed">Échec</string>
     <string name="result_verdict_failed_explanation">Au moins une vérification a échoué : ce document ne doit pas être considéré comme authentique.</string>
+    <string name="result_verdict_imported_anchor">Vérifié grâce à un certificat que vous avez importé</string>
 
     <!-- Photo -->
     <string name="result_photo_description">Photo du titulaire</string>
@@ -96,6 +97,7 @@
     <string name="result_detail_csca">CSCA : %1$s</string>
     <string name="result_detail_csca_none">Aucun CSCA du magasin ne correspond.</string>
     <string name="result_detail_country">Pays : %1$s</string>
+    <string name="result_detail_country_mismatch">Pays incohérents : autorité de certification %1$s, certificat du signataire %2$s, document %3$s</string>
     <string name="result_detail_source">Source : %1$s</string>
     <string name="result_detail_source_ants">certificats de l’ANTS</string>
     <string name="result_detail_source_embedded">Master List embarquée</string>
@@ -117,6 +119,7 @@
     <string name="result_detail_dg_checked_none">Aucun groupe de données contrôlé.</string>
     <string name="result_detail_dg_mismatched">Empreintes non conformes : %1$s</string>
     <string name="result_detail_dg_all_match">Toutes les empreintes sont conformes.</string>
+    <string name="result_detail_dg_missing">Groupes de données annoncés mais non fournis par la puce : %1$s</string>
     <string name="result_detail_unsupported">Algorithme non pris en charge : %1$s</string>
     <string name="result_detail_error">Erreur technique : %1$s</string>
     <string name="result_detail_no_dg14">Le document ne contient pas de DG14 : la puce ne propose pas cette vérification.</string>

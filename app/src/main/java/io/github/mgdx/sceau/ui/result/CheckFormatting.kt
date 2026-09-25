@@ -117,8 +117,7 @@ object CheckFormatting {
                 }
 
                 is CheckDetail.CountryMismatch -> {
-                    // Mise en forme à écrire par le lot de correction de l'écran Résultat (audit V3).
-                    emptyList()
+                    listOf(countryMismatchLine(detail, countryLabel))
                 }
 
                 is CheckDetail.UnsupportedAlgorithm -> {
@@ -161,6 +160,36 @@ object CheckFormatting {
             }
         }
 
+    /**
+     * « Pays incohérents : autorité de certification <pays>, certificat du signataire <pays>,
+     * document <code> » (audit V3). Le code du document est le code ICAO brut de DG1.
+     */
+    private fun countryMismatchLine(
+        detail: CheckDetail.CountryMismatch,
+        countryLabel: (String) -> String,
+    ): UiText {
+        val unknown = text(R.string.result_unknown_value)
+        val document =
+            detail.issuingState
+                ?.replace("<", "")
+                ?.trim()
+                ?.ifEmpty { null }
+        return text(
+            R.string.result_detail_country_mismatch,
+            detail.cscaCountry?.let(countryLabel) ?: unknown,
+            detail.dsCountry?.let(countryLabel) ?: unknown,
+            document ?: unknown,
+        )
+    }
+
+    /** Codes pays alpha-2 dont le détail de [check] a besoin du libellé. */
+    fun countryCodes(check: Check): List<String> =
+        when (val detail = check.detail) {
+            is CheckDetail.Chain -> listOfNotNull(detail.chain.cscaCountry)
+            is CheckDetail.CountryMismatch -> listOfNotNull(detail.cscaCountry, detail.dsCountry)
+            else -> emptyList()
+        }.distinct()
+
     private fun dsValidityLines(
         detail: CheckDetail.DsValidity,
         formatDate: (LocalDate) -> String,
@@ -192,13 +221,23 @@ object CheckFormatting {
             }
             if (detail.mismatched.isNotEmpty()) {
                 add(text(R.string.result_detail_dg_mismatched, dataGroupList(detail.mismatched)))
-            } else if (detail.checked.isNotEmpty()) {
+            } else if (detail.checked.isNotEmpty() && detail.missing.isEmpty()) {
                 add(text(R.string.result_detail_dg_all_match))
+            }
+            // DG signés dans le SOD mais retenus par la puce (audit V1).
+            if (detail.missing.isNotEmpty()) {
+                add(text(R.string.result_detail_dg_missing, dataGroupList(detail.missing)))
             }
         }
 
     /** « DG1, DG2, DG14 » : numéros triés, sans doublon. */
     fun dataGroupList(numbers: List<Int>): String = numbers.distinct().sorted().joinToString(", ") { "DG$it" }
+
+    /**
+     * Vrai si la chaîne remonte à un CSCA importé par l'utilisateur : la carte du verdict
+     * le signale sans qu'il faille déplier le détail (audit V6).
+     */
+    fun isImportedAnchor(chain: ChainInfo?): Boolean = chain?.cscaSource == TrustSource.IMPORTED_MASTER_LIST
 
     @StringRes
     fun sourceLabel(source: TrustSource): Int =

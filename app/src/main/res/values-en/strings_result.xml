@@ -12,6 +12,7 @@
     <string name="result_verdict_unknown_issuer_explanation">The issuer’s certificate is not in the trust store. The data is shown, but nothing is guaranteed. Importing a more recent Master List may allow this document to be verified.</string>
     <string name="result_verdict_failed">Failed</string>
     <string name="result_verdict_failed_explanation">At least one check failed: this document must not be considered authentic.</string>
+    <string name="result_verdict_imported_anchor">Verified using a certificate you imported</string>
 
     <!-- Photo -->
     <string name="result_photo_description">Holder’s photo</string>
@@ -96,6 +97,7 @@
     <string name="result_detail_csca">CSCA: %1$s</string>
     <string name="result_detail_csca_none">No CSCA in the trust store matches.</string>
     <string name="result_detail_country">Country: %1$s</string>
+    <string name="result_detail_country_mismatch">Inconsistent countries: certification authority %1$s, signer certificate %2$s, document %3$s</string>
     <string name="result_detail_source">Source: %1$s</string>
     <string name="result_detail_source_ants">ANTS certificates</string>
     <string name="result_detail_source_embedded">built-in Master List</string>
@@ -117,6 +119,7 @@
     <string name="result_detail_dg_checked_none">No data group checked.</string>
     <string name="result_detail_dg_mismatched">Mismatched hashes: %1$s</string>
     <string name="result_detail_dg_all_match">All hashes match.</string>
+    <string name="result_detail_dg_missing">Data groups declared but not provided by the chip: %1$s</string>
     <string name="result_detail_unsupported">Unsupported algorithm: %1$s</string>
     <string name="result_detail_error">Technical error: %1$s</string>
     <string name="result_detail_no_dg14">The document has no DG14: the chip does not offer this check.</string>

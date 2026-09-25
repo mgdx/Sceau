@@ -46,10 +46,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.boundsInWindow
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -60,7 +63,6 @@ import io.github.mgdx.sceau.core.model.DocumentData
 import io.github.mgdx.sceau.core.model.EncodedImage
 import io.github.mgdx.sceau.core.model.Sex
 import io.github.mgdx.sceau.core.report.Check
-import io.github.mgdx.sceau.core.report.CheckDetail
 import io.github.mgdx.sceau.core.report.CheckStatus
 import io.github.mgdx.sceau.core.report.Verdict
 import io.github.mgdx.sceau.core.report.VerificationReport
@@ -69,8 +71,14 @@ import io.github.mgdx.sceau.session.SessionViewModel
 import io.github.mgdx.sceau.ui.common.SceauIcons
 import io.github.mgdx.sceau.ui.common.SecureWindow
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
+
+/** Lignes au plus pour une valeur de champ ou une ligne de détail (audit V12). */
+private const val FIELD_MAX_LINES = 10
+private const val DETAIL_MAX_LINES = 8
 
 /**
  * Écran de résultat (SPEC §5.3). Les données affichées ne vivent que dans la session :
@@ -125,6 +133,7 @@ fun ResultScreen(
         ResultContent(
             report = report,
             isDemo = done?.isDemo == true,
+            bitmapOwner = remember(session, report) { BitmapOwner(session, report) },
             onClear = clearAndLeave,
             modifier = Modifier.padding(padding),
         )
@@ -135,6 +144,7 @@ fun ResultScreen(
 private fun ResultContent(
     report: VerificationReport,
     isDemo: Boolean,
+    bitmapOwner: BitmapOwner,
     onClear: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -149,10 +159,10 @@ private fun ResultContent(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         if (isDemo) DemoBanner()
-        VerdictCard(report.verdict)
-        PortraitSection(document.portrait)
+        VerdictCard(report.verdict, importedAnchor = CheckFormatting.isImportedAnchor(report.chain))
+        PortraitSection(document.portrait, bitmapOwner)
         IdentitySection(document.dg1, formatDate)
-        AdditionalSection(document, formatDate)
+        AdditionalSection(document, formatDate, bitmapOwner)
         ChecksSection(report.checks, formatDate)
         Button(
             onClick = onClear,
@@ -185,7 +195,10 @@ private fun DemoBanner() {
 }
 
 @Composable
-private fun VerdictCard(verdict: Verdict) {
+private fun VerdictCard(
+    verdict: Verdict,
+    importedAnchor: Boolean,
+) {
     val palette = VerdictColors.palette(verdict, isDarkPalette())
     val (icon, title, explanation) =
         when (verdict) {
@@ -227,6 +240,27 @@ private fun VerdictCard(verdict: Verdict) {
                 )
             }
             Text(text = stringResource(explanation), style = MaterialTheme.typography.bodyMedium)
+            if (importedAnchor) ImportedAnchorNotice()
+        }
+    }
+}
+
+/** Mention d'avertissement : la chaîne s'appuie sur un certificat importé (audit V6). */
+@Composable
+private fun ImportedAnchorNotice() {
+    Surface(
+        color = MaterialTheme.colorScheme.errorContainer,
+        contentColor = MaterialTheme.colorScheme.onErrorContainer,
+        shape = MaterialTheme.shapes.small,
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
+            Icon(SceauIcons.Warning, contentDescription = null)
+            Spacer(Modifier.width(12.dp))
+            Text(
+                text = stringResource(R.string.result_verdict_imported_anchor),
+                style = MaterialTheme.typography.titleSmall,
+            )
         }
     }
 }
@@ -243,41 +277,103 @@ private sealed interface ImageLoad {
     ) : ImageLoad
 }
 
+/** Bitmap affiché, confié à la session : fermer l'efface puis le libère. */
+private class DecodedBitmap(
+    val bitmap: Bitmap,
+) : AutoCloseable {
+    override fun close() = bitmap.wipeAndRecycle()
+}
+
 /** Porte le bitmap décodé pour pouvoir l'effacer à la sortie de la composition. */
 private class BitmapHolder {
-    var bitmap: Bitmap? = null
+    var decoded: DecodedBitmap? = null
 }
 
 /**
- * Décode [image] hors du thread principal, en mémoire uniquement. Le bitmap est effacé
- * puis libéré quand l'image quitte la composition.
+ * Session et rapport auxquels les bitmaps décodés sont confiés (audit V13) : l'effacement de
+ * la session (bouton, retour, arrière-plan) les efface aussitôt, sans attendre une recomposition.
+ */
+private class BitmapOwner(
+    private val session: SessionViewModel,
+    private val report: VerificationReport,
+) {
+    /** Faux si le rapport n'est plus affiché : [bitmap] a alors déjà été effacé. */
+    fun adopt(bitmap: DecodedBitmap): Boolean = session.registerDisposable(report, bitmap)
+
+    fun release(bitmap: DecodedBitmap) = session.unregisterDisposable(bitmap)
+}
+
+/**
+ * Un seul décodage d'image à la fois dans tout le processus (audit V4) : DG2 et les deux
+ * images de DG12 ne cumulent jamais leur mémoire de décodage.
+ */
+private val decodeMutex = Mutex()
+
+/** État du décodage et modificateur à poser sur l'emplacement de l'image. */
+private class DecodedImage(
+    val load: ImageLoad,
+    /** Déclenche le décodage dès que l'emplacement apparaît au moins en partie à l'écran. */
+    val trigger: Modifier,
+)
+
+/**
+ * Décode [image] hors du thread principal, en mémoire uniquement, une fois son emplacement
+ * affiché et après les décodages déjà en cours. Le bitmap est effacé puis libéré quand
+ * l'image quitte la composition, quand la session est effacée, ou aussitôt décodé si
+ * l'écran est parti ou la session effacée entre-temps.
  */
 @Composable
-private fun rememberDecodedImage(image: EncodedImage?): ImageLoad {
+private fun rememberDecodedImage(
+    image: EncodedImage?,
+    owner: BitmapOwner,
+): DecodedImage {
     val holder = remember(image) { BitmapHolder() }
     var load by remember(image) { mutableStateOf(if (image == null) ImageLoad.Failed else ImageLoad.Loading) }
-    LaunchedEffect(image) {
-        if (image == null) return@LaunchedEffect
-        val bitmap = withContext(Dispatchers.Default) { decodeToBitmap(image) }
-        if (bitmap == null) {
-            load = ImageLoad.Failed
-        } else {
-            holder.bitmap = bitmap
-            load = ImageLoad.Loaded(bitmap.asImageBitmap())
+    var shown by remember(image) { mutableStateOf(false) }
+    val trigger =
+        Modifier.onGloballyPositioned { coordinates ->
+            // Bornes rognées par le conteneur défilant : vides tant que l'image est hors écran.
+            if (!shown && !coordinates.boundsInWindow().isEmpty) shown = true
+        }
+    LaunchedEffect(image, shown) {
+        if (image == null || !shown) return@LaunchedEffect
+        // Affecté dans le bloc même : un bitmap produit pendant l'annulation n'est pas perdu.
+        var bitmap: Bitmap? = null
+        var kept = false
+        try {
+            decodeMutex.withLock { withContext(Dispatchers.Default) { bitmap = decodeToBitmap(image) } }
+            val decoded = bitmap?.let(::DecodedBitmap)
+            if (decoded != null && owner.adopt(decoded)) {
+                kept = true
+                holder.decoded = decoded
+                load = ImageLoad.Loaded(decoded.bitmap.asImageBitmap())
+            } else {
+                load = ImageLoad.Failed
+            }
+        } finally {
+            // Coroutine annulée (écran quitté) ou session effacée pendant le décodage.
+            if (!kept) bitmap?.wipeAndRecycle()
         }
     }
     DisposableEffect(holder) {
         onDispose {
-            holder.bitmap?.wipeAndRecycle()
-            holder.bitmap = null
+            holder.decoded?.let {
+                owner.release(it)
+                it.close()
+            }
+            holder.decoded = null
         }
     }
-    return load
+    return DecodedImage(load, trigger)
 }
 
 @Composable
-private fun PortraitSection(portrait: EncodedImage?) {
-    val load = rememberDecodedImage(portrait)
+private fun PortraitSection(
+    portrait: EncodedImage?,
+    bitmapOwner: BitmapOwner,
+) {
+    val decoded = rememberDecodedImage(portrait, bitmapOwner)
+    val load = decoded.load
     var fullScreen by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -288,7 +384,7 @@ private fun PortraitSection(portrait: EncodedImage?) {
             load = load,
             description = stringResource(R.string.result_photo_description),
             unavailable = stringResource(R.string.result_photo_unavailable),
-            modifier = Modifier.width(200.dp).height(260.dp),
+            modifier = Modifier.width(200.dp).height(260.dp).then(decoded.trigger),
         )
         if (load is ImageLoad.Loaded) {
             OutlinedButton(onClick = { fullScreen = true }) {
@@ -462,6 +558,7 @@ private fun ExpiredBanner() {
 private fun AdditionalSection(
     document: DocumentData,
     formatDate: (LocalDate) -> String,
+    bitmapOwner: BitmapOwner,
 ) {
     val dg11 = document.dg11
     val dg12 = document.dg12
@@ -472,8 +569,8 @@ private fun AdditionalSection(
     if (fields.isEmpty() && front == null && rear == null) return
     SectionCard(title = stringResource(R.string.result_section_additional)) {
         fields.forEach { FieldRow(it.label, it.value) }
-        if (front != null) DocumentImage(front, R.string.result_image_front)
-        if (rear != null) DocumentImage(rear, R.string.result_image_rear)
+        if (front != null) DocumentImage(front, R.string.result_image_front, bitmapOwner)
+        if (rear != null) DocumentImage(rear, R.string.result_image_rear, bitmapOwner)
     }
 }
 
@@ -481,8 +578,9 @@ private fun AdditionalSection(
 private fun DocumentImage(
     image: EncodedImage,
     label: Int,
+    bitmapOwner: BitmapOwner,
 ) {
-    val load = rememberDecodedImage(image)
+    val decoded = rememberDecodedImage(image, bitmapOwner)
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(
             text = stringResource(label),
@@ -490,10 +588,10 @@ private fun DocumentImage(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         ImageBox(
-            load = load,
+            load = decoded.load,
             description = stringResource(label),
             unavailable = stringResource(R.string.result_image_unavailable),
-            modifier = Modifier.fillMaxWidth().height(200.dp),
+            modifier = Modifier.fillMaxWidth().height(200.dp).then(decoded.trigger),
         )
     }
 }
@@ -566,15 +664,20 @@ private fun CheckRow(
             )
         }
         if (expanded) {
-            val chainCountry = (check.detail as? CheckDetail.Chain)?.chain?.cscaCountry
-            val chainCountryLabel = chainCountry?.let { countryLabel(Countries.fromAlpha2(it)) }
-            val lines = CheckFormatting.detailLines(check, formatDate) { chainCountryLabel ?: it }.map { it.resolve() }
+            val countryLabels = CheckFormatting.countryCodes(check).associateWith { countryLabel(Countries.fromAlpha2(it)) }
+            val lines = CheckFormatting.detailLines(check, formatDate) { countryLabels[it] ?: it }.map { it.resolve() }
             Column(
                 modifier = Modifier.padding(start = 36.dp, bottom = 12.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 lines.forEach {
-                    Text(text = it, style = MaterialTheme.typography.bodyMedium)
+                    // Sujets de certificats et codes venus de la puce : assainis (audit V12).
+                    Text(
+                        text = displaySafe(it),
+                        style = MaterialTheme.typography.bodyMedium,
+                        maxLines = DETAIL_MAX_LINES,
+                        overflow = TextOverflow.Ellipsis,
+                    )
                 }
             }
         }
@@ -615,6 +718,12 @@ private fun FieldRow(
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        Text(text = value, style = MaterialTheme.typography.bodyLarge)
+        // Valeurs venues de la puce (DG1, DG11, DG12, code pays inconnu) : assainies (audit V12).
+        Text(
+            text = displaySafe(value),
+            style = MaterialTheme.typography.bodyLarge,
+            maxLines = FIELD_MAX_LINES,
+            overflow = TextOverflow.Ellipsis,
+        )
     }
 }
