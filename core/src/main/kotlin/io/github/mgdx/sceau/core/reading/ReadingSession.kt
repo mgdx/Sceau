@@ -28,7 +28,8 @@ import kotlin.coroutines.cancellation.CancellationException
  * technique), [CancellationException] aussi ; toute autre exception devient
  * [SceauException.Unexpected] avec un identifiant technique (étape, classe, SW), sans cause
  * attachée, car les messages de JMRTD contiennent des APDU en clair.
- * Les données déjà lues sont remises à zéro si la lecture échoue.
+ * Les données déjà lues sont remises à zéro si la lecture échoue, y compris sur une `Error`
+ * (relancée telle quelle).
  *
  * Le nonce d'Active Authentication est tiré de [random], un `SecureRandom` (SPEC §8).
  */
@@ -42,6 +43,14 @@ internal class ReadingSession(
     private var currentStep = Step.CONNECT
     private var document: DocumentData? = null
 
+    /** DG bruts lus, effacés en cas d'échec même si leur analyse n'a pas abouti. */
+    private var rawDataGroups: Map<Int, ByteArray>? = null
+
+    private fun wipeRead() {
+        rawDataGroups?.values?.forEach { it.fill(0) }
+        document?.wipe()
+    }
+
     suspend fun run(): VerificationReport =
         withContext(Dispatchers.IO) {
             Crypto.ensureInstalled()
@@ -49,11 +58,11 @@ internal class ReadingSession(
             val chip = Chip(transport)
             try {
                 execute(chip)
-            } catch (e: CancellationException) {
-                document?.wipe()
-                throw e
-            } catch (e: Exception) {
-                document?.wipe()
+            } catch (e: Throwable) {
+                // Effacement sur toute erreur, `Error` comprises (OutOfMemoryError…) ;
+                // CancellationException est relancée telle quelle, après effacement.
+                wipeRead()
+                if (e !is Exception || e is CancellationException) throw e
                 val failure =
                     chip.cardService.transportFailure
                         ?: e as? SceauException
@@ -101,6 +110,7 @@ internal class ReadingSession(
 
         step(Step.READ_DATA)
         val content = DocumentReader(chip).read()
+        rawDataGroups = content.dataGroups
         val data = DataGroupParsers.document(content.dataGroups)
         document = data
 

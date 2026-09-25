@@ -49,6 +49,11 @@ class SimulatedChip(
     /** Réponse à INTERNAL AUTHENTICATE ; par défaut signée avec la clé de DG15. */
     private val aaResponder: ((ByteArray) -> ByteArray)? = document.aaKeyPair?.let { { challenge -> document.aaResponse(challenge) } },
     seed: Long = DEFAULT_SEED,
+    /**
+     * Fichiers de l'applet servis par une puce hostile, par FID : leur en-tête annonce une
+     * longueur démesurée (voir [OversizedFile]). Ils remplacent le fichier du même FID.
+     */
+    private val oversizedFiles: Map<Int, OversizedFile> = emptyMap(),
 ) : CardTransport {
     override val maxTransceiveLength: Int = MAX_TRANSCEIVE
     override var timeoutMillis: Int = DEFAULT_TIMEOUT
@@ -97,6 +102,7 @@ class SimulatedChip(
     private var rndIcc: ByteArray? = null
     private var session: ChipSecureMessaging? = null
     private var currentFile: ByteArray? = null
+    private var currentOversized: OversizedFile? = null
 
     /** Le fichier courant est EF.CardAccess, lisible sans messagerie sécurisée. */
     private var currentFileIsPublic = false
@@ -159,6 +165,7 @@ class SimulatedChip(
     private fun abortSession(): ByteArray {
         session = null
         currentFile = null
+        currentOversized = null
         currentFileIsPublic = false
         return sw(SW_SM_OBJECTS_INCORRECT)
     }
@@ -182,6 +189,7 @@ class SimulatedChip(
                 if (!command.data.contentEquals(ICAO_AID)) return status(SW_FILE_NOT_FOUND)
                 appletSelected = true
                 currentFile = null
+                currentOversized = null
                 currentFileIsPublic = false
                 status(SW_OK)
             }
@@ -189,6 +197,7 @@ class SimulatedChip(
             P1_SELECT_MF -> {
                 appletSelected = false
                 currentFile = null
+                currentOversized = null
                 currentFileIsPublic = false
                 status(SW_OK)
             }
@@ -214,6 +223,7 @@ class SimulatedChip(
         secured: Boolean,
     ): Reply {
         currentFile = null
+        currentOversized = null
         currentFileIsPublic = false
         if (!appletSelected) {
             // Au niveau MF, seul EF.CardAccess existe, et seulement si PACE est annoncé ;
@@ -221,6 +231,11 @@ class SimulatedChip(
             val access = cardAccess?.takeIf { fid == FID_CARD_ACCESS } ?: return status(SW_FILE_NOT_FOUND)
             currentFile = access
             currentFileIsPublic = true
+            return status(SW_OK)
+        }
+        oversizedFiles[fid]?.let { oversized ->
+            if (!secured) return status(SW_SECURITY_STATUS)
+            currentOversized = oversized
             return status(SW_OK)
         }
         val content = files[fid] ?: return status(SW_FILE_NOT_FOUND)
@@ -232,6 +247,11 @@ class SimulatedChip(
 
     private fun readBinary(command: PlainCommand): Reply {
         if (command.p1 and P1_SFI != 0) return status(SW_WRONG_P1P2)
+        currentOversized?.let { oversized ->
+            if (!command.secured) return status(SW_SECURITY_STATUS)
+            val offset = (command.p1 shl Byte.SIZE_BITS) or command.p2
+            return Reply(oversized.read(offset, if (command.ne == 0) SHORT_MAX_NE else command.ne), SW_OK)
+        }
         val content = currentFile ?: return status(SW_NO_CURRENT_EF)
         if (!command.secured && !currentFileIsPublic) return status(SW_SECURITY_STATUS)
         val offset = (command.p1 shl Byte.SIZE_BITS) or command.p2
