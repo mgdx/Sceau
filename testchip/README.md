@@ -3,9 +3,12 @@
 Module Kotlin JVM pur, **jamais embarqué en production**. Il sert :
 
 - aux tests de `:core` (`testImplementation(project(":testchip"))`) ;
-- plus tard, au mode démo de l'APK **debug uniquement** (`debugImplementation`, non branché).
+- au mode démo de l'APK **debug uniquement** (`debugImplementation(project(":testchip"))` dans
+  `app/build.gradle.kts`) : menu de l'accueil → « Simuler une CNIe (démo) », branché par
+  `app/src/debug/java/…/demo/DemoMode.kt` ; la version `app/src/release/` de `DemoMode` est vide.
 
-`:core` (main) ne dépend pas de ce module.
+`:core` (main) ne dépend pas de ce module, et `./gradlew :app:dependencies --configuration
+releaseRuntimeClasspath` ne le mentionne pas (décision D17).
 
 ## Contenu
 
