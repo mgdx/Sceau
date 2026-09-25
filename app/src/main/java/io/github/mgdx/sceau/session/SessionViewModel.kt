@@ -82,6 +82,7 @@ class SessionViewModel(
     @Volatile
     private var transport: CardTransport? = null
 
+    /** Lu et écrit uniquement sur le thread principal ([launchRead], [abortRead]). */
     private var job: Job? = null
 
     /**
@@ -124,19 +125,30 @@ class SessionViewModel(
     /**
      * Appelé par l'activité quand un tag IsoDep est détecté en WaitingForCard ou Error.
      * Peut être appelé depuis le thread du lecteur NFC.
+     *
+     * Le démarrage est posté sur le thread principal, où s'exécutent aussi [clear], [prepare]
+     * et [startDemo] : un effacement ne peut plus s'intercaler entre la vérification de l'état
+     * et l'enregistrement de la lecture (audit V16).
      */
     fun onCardDetected(transport: CardTransport) {
-        val current = _state.value
-        val key = key
-        if (key == null ||
-            (current != ReadState.WaitingForCard && current !is ReadState.Error) ||
-            !_state.compareAndSet(current, ReadState.Reading(Step.CONNECT))
-        ) {
+        if (!canStartRead(_state.value, key)) {
             // Lecture déjà en cours, ou aucune clé : on ignore ce document.
             closeInBackground(transport)
             return
         }
-        launchRead(transport, key, isDemo = false) { repository.get() }
+        val start =
+            viewModelScope.launch(Dispatchers.Main.immediate) {
+                val key = key
+                if (key == null || !canStartRead(_state.value, key)) {
+                    // Effacée ou déjà démarrée entre-temps (autre détection du même document).
+                    closeInBackground(transport)
+                    return@launch
+                }
+                _state.value = ReadState.Reading(Step.CONNECT)
+                launchRead(transport, key, isDemo = false) { repository.get() }
+            }
+        // Démarrage jamais exécuté (ViewModel détruit entre-temps) : le transport est fermé ici.
+        start.invokeOnCompletion { cause -> if (cause != null) closeInBackground(transport) }
     }
 
     /**
@@ -153,7 +165,7 @@ class SessionViewModel(
         launchRead(card.transport, card.key, isDemo = true) { card.trustStore }
     }
 
-    /** Lance la lecture de [transport] ; l'état doit déjà être Reading. */
+    /** Lance la lecture de [transport] ; l'état doit déjà être Reading. Thread principal uniquement. */
     private fun launchRead(
         transport: CardTransport,
         key: AccessKey,
@@ -175,7 +187,9 @@ class SessionViewModel(
                                 }
                             }
                         }
-                    if (currentRead === token) {
+                    // Publié seulement si la lecture n'a été ni abandonnée ni effacée ; sinon le
+                    // rapport, qu'aucun écran n'effacerait, l'est ici.
+                    if (currentRead === token && _state.value is ReadState.Reading) {
                         currentRead = null
                         this@SessionViewModel.key = null
                         form = AccessForm(tab = form.tab)
@@ -258,5 +272,11 @@ class SessionViewModel(
 
         /** Vrai si la mise en arrière-plan doit tout effacer : lecture en cours ou données lues. */
         fun shouldClearOnBackground(state: ReadState): Boolean = state is ReadState.Reading || state is ReadState.Done
+
+        /** Vrai si un document détecté peut lancer une lecture : clé présente, en attente ou après une erreur. */
+        fun canStartRead(
+            state: ReadState,
+            key: AccessKey?,
+        ): Boolean = key != null && (state == ReadState.WaitingForCard || state is ReadState.Error)
     }
 }
