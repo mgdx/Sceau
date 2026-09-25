@@ -12,6 +12,7 @@ import io.github.mgdx.sceau.nfc.IsoDepTransport
 import io.github.mgdx.sceau.session.ReadState
 import io.github.mgdx.sceau.session.SessionViewModel
 import io.github.mgdx.sceau.ui.SceauNavHost
+import io.github.mgdx.sceau.ui.common.secureForLifetime
 import io.github.mgdx.sceau.ui.theme.SceauTheme
 
 class MainActivity : ComponentActivity() {
@@ -21,6 +22,10 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // FLAG_SECURE sur toute l'activité, avant le premier dessin : l'accueil affiche le CAN
+        // et la MRZ saisis, que ni l'aperçu du multitâche (écrit sur disque par le système) ni
+        // une capture ne doivent contenir (audit V7). Aucun écran n'a besoin d'être capturé.
+        secureForLifetime(window)
         enableEdgeToEdge()
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
         val trustStoreRepository = (application as SceauApplication).trustStoreRepository

@@ -10,7 +10,7 @@ import java.util.WeakHashMap
 /**
  * Pose `FLAG_SECURE` sur la fenêtre de l'activité tant que ce composable est dans la
  * composition (pas de capture d'écran, pas d'aperçu dans le multitâche, SPEC §8), puis le
- * retire à la sortie.
+ * retire à la sortie, sauf si la fenêtre est protégée en permanence ([secureForLifetime]).
  *
  * Les demandes sont comptées par fenêtre : pendant une transition Lecture → Résultat, les
  * deux écrans sont brièvement composés ensemble et la sortie du premier ne doit pas lever
@@ -23,6 +23,16 @@ fun SecureWindow() {
         SecureWindowCounter.acquire(window)
         onDispose { SecureWindowCounter.release(window) }
     }
+}
+
+/**
+ * Pose `FLAG_SECURE` sur [window] pour toute sa durée de vie : une demande jamais rendue, que
+ * la sortie d'un écran [SecureWindow] ne peut donc pas lever. À appeler dans `onCreate`, avant
+ * le premier dessin, pour que l'aperçu du multitâche ne capture jamais la saisie de l'accueil
+ * (audit V7). Thread principal uniquement.
+ */
+fun secureForLifetime(window: Window) {
+    SecureWindowCounter.acquire(window)
 }
 
 /** Compteur de demandes par fenêtre. Accédé uniquement depuis le thread principal. */
