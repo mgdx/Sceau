@@ -10,6 +10,7 @@
 #define _POSIX_C_SOURCE 200112L
 
 #include "jp2_alloc.h"
+#include "jp2_decode.h" /* sceau_jp2_secure_zero */
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -95,11 +96,17 @@ static void *budget_alloc(size_t size, int zero) {
 }
 
 static void budget_free(void *ptr) {
+    size_t size;
     size_t cost;
     if (ptr == NULL) {
         return;
     }
-    cost = block_size(ptr) + BLOCK_HEADER + BLOCK_OVERHEAD;
+    size = block_size(ptr);
+    /* Les blocs d'OpenJPEG contiennent des morceaux de la photo (flux compressé, coefficients,
+     * échantillons) : effacés avant libération, par une écriture que l'optimiseur ne peut pas
+     * supprimer. Vaut aussi pour l'ancien bloc d'une réallocation (budget_realloc). */
+    sceau_jp2_secure_zero(ptr, size);
+    cost = size + BLOCK_HEADER + BLOCK_OVERHEAD;
     budget.used = cost <= budget.used ? budget.used - cost : 0u;
     free((uint8_t *) ptr - BLOCK_HEADER);
 }
