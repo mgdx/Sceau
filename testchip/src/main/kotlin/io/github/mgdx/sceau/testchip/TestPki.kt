@@ -170,6 +170,40 @@ class TestPki(
             signatureAlgorithm = signatureAlgorithm,
         )
 
+    /**
+     * Certificat émis par [issuer] (CA ou non), avec des extensions choisies, pour les contrôles
+     * de profil : [basicConstraintsCa] et [keyUsage] null omettent l'extension correspondante.
+     */
+    fun issueCustom(
+        issuer: TestCredential,
+        commonName: String,
+        basicConstraintsCa: Boolean?,
+        keyUsage: Int?,
+        subjectKeyType: TestKeyType = keyType,
+    ): TestCredential {
+        val keys = generateKeyPair(subjectKeyType)
+        val spki = subjectPublicKeyInfo(keys, subjectKeyType)
+        val builder =
+            X509v3CertificateBuilder(
+                X500Name.getInstance(issuer.certificate.subjectX500Principal.encoded),
+                nextSerial(),
+                TestCrypto.date(DS_NOT_BEFORE),
+                TestCrypto.date(DS_NOT_AFTER),
+                X500Name("C=$country,O=$name,CN=$commonName"),
+                spki,
+            )
+        val utils = JcaX509ExtensionUtils()
+        builder.addExtension(Extension.subjectKeyIdentifier, false, utils.createSubjectKeyIdentifier(spki))
+        builder.addExtension(
+            Extension.authorityKeyIdentifier,
+            false,
+            utils.createAuthorityKeyIdentifier(issuer.holder.subjectPublicKeyInfo),
+        )
+        basicConstraintsCa?.let { builder.addExtension(Extension.basicConstraints, true, BasicConstraints(it)) }
+        keyUsage?.let { builder.addExtension(Extension.keyUsage, true, KeyUsage(it)) }
+        return TestCredential(sign(builder, issuer.privateKey, issuer.keyType), keys, subjectKeyType)
+    }
+
     /** Magasin de test contenant [credentials], tous de la provenance [source]. */
     fun trustStore(
         vararg credentials: TestCredential,

@@ -13,6 +13,7 @@ import org.bouncycastle.asn1.cms.CMSAttributes
 import org.bouncycastle.asn1.cms.Time
 import org.bouncycastle.asn1.icao.ICAOObjectIdentifiers
 import org.bouncycastle.asn1.icao.LDSSecurityObject
+import org.bouncycastle.asn1.x509.KeyUsage
 import org.bouncycastle.cert.X509CertificateHolder
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter
 import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder
@@ -224,11 +225,21 @@ internal class PassiveAuthenticator(
                 val info = chainInfo(ds, outcome.root, outcome.links)
                 // Audit V3 : une chaîne valide vers le CSCA d'un autre pays ne prouve rien.
                 val dsCountry = Crypto.country(ds.holder.subject)
-                if (IcaoCountries.consistent(info.cscaCountry, dsCountry, issuingState)) {
-                    Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.OK, CheckDetail.Chain(info)) to info
-                } else {
-                    val mismatch = CheckDetail.CountryMismatch(info.cscaCountry, dsCountry, issuingState)
-                    Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.FAILED, mismatch) to info
+                when {
+                    // Audit V8 : un certificat dont le keyUsage exclut la signature numérique
+                    // n'est pas un DS, quelle que soit sa chaîne.
+                    !mayBeDocumentSigner(ds.holder) -> {
+                        Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.FAILED, CheckDetail.Error(ERROR_DS_KEY_USAGE)) to info
+                    }
+
+                    IcaoCountries.consistent(info.cscaCountry, dsCountry, issuingState) -> {
+                        Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.OK, CheckDetail.Chain(info)) to info
+                    }
+
+                    else -> {
+                        val mismatch = CheckDetail.CountryMismatch(info.cscaCountry, dsCountry, issuingState)
+                        Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.FAILED, mismatch) to info
+                    }
                 }
             }
 
@@ -251,6 +262,12 @@ internal class PassiveAuthenticator(
                 Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.NOT_AVAILABLE, CheckDetail.Chain(info)) to info
             }
         }
+
+    /** keyUsage du DS, s'il est présent, avec digitalSignature (ICAO 9303-12) ; absent : toléré. */
+    private fun mayBeDocumentSigner(holder: X509CertificateHolder): Boolean =
+        runCatching {
+            KeyUsage.fromExtensions(holder.extensions)?.hasUsages(KeyUsage.digitalSignature) ?: true
+        }.getOrDefault(false)
 
     private fun chainInfo(
         ds: DsCertificate,
@@ -391,6 +408,7 @@ internal class PassiveAuthenticator(
     private companion object {
         const val ERROR_SOD_MALFORMED = "SOD_MALFORMED"
         const val ERROR_UNEXPECTED = "PA_UNEXPECTED"
+        const val ERROR_DS_KEY_USAGE = "DS_KEY_USAGE"
         const val USUAL_VALIDITY_YEARS = 10L
         const val HEX = 16
 

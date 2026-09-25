@@ -3,6 +3,8 @@ package io.github.mgdx.sceau.core.verify
 import io.github.mgdx.sceau.core.trust.TrustAnchor
 import io.github.mgdx.sceau.core.trust.TrustStore
 import org.bouncycastle.asn1.x509.AuthorityKeyIdentifier
+import org.bouncycastle.asn1.x509.BasicConstraints
+import org.bouncycastle.asn1.x509.KeyUsage
 import org.bouncycastle.asn1.x509.SubjectKeyIdentifier
 import org.bouncycastle.cert.X509CertificateHolder
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter
@@ -34,8 +36,19 @@ internal sealed interface ChainOutcome {
  * Construit la chaîne d'un certificat vers un CSCA auto-signé du magasin, en traversant
  * les certificats de lien (sujet du nouveau CSCA, signés par l'ancienne clé).
  *
- * Seules les signatures comptent : la validité calendaire des CSCA et des liens n'est pas
- * exigée, un document restant valide jusqu'à dix ans après l'expiration de son CSCA.
+ * La validité calendaire des CSCA et des liens n'est pas exigée, un document restant valide
+ * jusqu'à dix ans après l'expiration de son CSCA.
+ *
+ * Profil des émetteurs (audit V8) : un certificat du magasin n'est retenu comme émetteur que
+ * s'il peut signer des certificats ([canIssueCertificates]) : `basicConstraints` avec cA=TRUE
+ * et `keyUsage` avec keyCertSign, **quand ces extensions sont présentes**. Leur absence est
+ * tolérée : mesuré sur les 590 ancres embarquées (ANTS et Master List BSI), tous les CSCA
+ * auto-signés sont conformes ; seuls des certificats de lien ne le sont pas (un sans
+ * `basicConstraints`, un sans `keyUsage`, sept avec cA=FALSE — Cameroun, Italie, Portugal,
+ * Turquie ×2, Luxembourg ×2). Ces sept liens sont écartés, sans effet : chacun a pour clé et
+ * SKI ceux d'un CSCA auto-signé conforme du magasin, qui ancre la chaîne directement. Un DS
+ * (keyUsage digitalSignature seul, sans keyCertSign) glissé dans une Master List importée ne
+ * peut donc plus servir d'émetteur.
  */
 internal class CertificateChains(
     private val store: TrustStore,
@@ -106,7 +119,9 @@ internal class CertificateChains(
                 val ski = subjectKeyId(anchor)
                 aki == null || ski == null || ski.contentEquals(aki)
             }
-        return (byKeyId + bySubject).distinctBy { Crypto.fingerprint(it.certificate) }
+        return (byKeyId + bySubject)
+            .distinctBy { Crypto.fingerprint(it.certificate) }
+            .filter { canIssueCertificates(JcaX509CertificateHolder(it.certificate)) }
     }
 
     private fun subjectKeyId(anchor: TrustAnchor): ByteArray? =
@@ -151,8 +166,16 @@ internal class CertificateChains(
             is ChainOutcome.Found -> 3
         }
 
-    private companion object {
+    companion object {
         /** Profondeur maximale de liens traversés : largement au-delà des chaînes réelles. */
-        const val MAX_DEPTH = 8
+        private const val MAX_DEPTH = 8
+
+        /** Vrai si [holder] peut émettre des certificats (voir la règle de la classe, audit V8). */
+        fun canIssueCertificates(holder: X509CertificateHolder): Boolean =
+            runCatching {
+                val basicConstraints = BasicConstraints.fromExtensions(holder.extensions)
+                val keyUsage = KeyUsage.fromExtensions(holder.extensions)
+                (basicConstraints == null || basicConstraints.isCA) && (keyUsage == null || keyUsage.hasUsages(KeyUsage.keyCertSign))
+            }.getOrDefault(false)
     }
 }
