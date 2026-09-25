@@ -189,6 +189,26 @@ class CheckFormattingTest {
     }
 
     @Test
+    fun `pays incoherents`() {
+        val check =
+            Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.FAILED, CheckDetail.CountryMismatch("DE", "FR", "FRA"))
+        assertEquals(
+            listOf(UiText(R.string.result_detail_country_mismatch, listOf("pays:DE", "pays:FR", "FRA"))),
+            lines(check),
+        )
+        assertEquals(listOf("DE", "FR"), CheckFormatting.countryCodes(check))
+    }
+
+    @Test
+    fun `pays incoherents avec attributs manquants`() {
+        val unknown = UiText(R.string.result_unknown_value)
+        val result = lines(Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.FAILED, CheckDetail.CountryMismatch(null, "FR", "D<<")))
+        assertEquals(listOf(UiText(R.string.result_detail_country_mismatch, listOf(unknown, "pays:FR", "D"))), result)
+        val none = lines(Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.FAILED, CheckDetail.CountryMismatch(null, null, "<<<")))
+        assertEquals(listOf(UiText(R.string.result_detail_country_mismatch, listOf(unknown, unknown, unknown))), none)
+    }
+
+    @Test
     fun `ancre importee signalee sur la carte du verdict`() {
         fun chain(source: TrustSource?) =
             ChainInfo("CN=DS", "01", Instant.EPOCH, Instant.EPOCH, "SHA256withRSA", "CN=CSCA", "FR", "00", source, emptyList())

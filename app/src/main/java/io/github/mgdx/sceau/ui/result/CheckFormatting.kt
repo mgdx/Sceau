@@ -117,8 +117,7 @@ object CheckFormatting {
                 }
 
                 is CheckDetail.CountryMismatch -> {
-                    // Mise en forme à écrire par le lot de correction de l'écran Résultat (audit V3).
-                    emptyList()
+                    listOf(countryMismatchLine(detail, countryLabel))
                 }
 
                 is CheckDetail.UnsupportedAlgorithm -> {
@@ -160,6 +159,36 @@ object CheckFormatting {
                 chain.linkCertificates.forEach { add(text(R.string.result_detail_link_item, it)) }
             }
         }
+
+    /**
+     * « Pays incohérents : autorité de certification <pays>, certificat du signataire <pays>,
+     * document <code> » (audit V3). Le code du document est le code ICAO brut de DG1.
+     */
+    private fun countryMismatchLine(
+        detail: CheckDetail.CountryMismatch,
+        countryLabel: (String) -> String,
+    ): UiText {
+        val unknown = text(R.string.result_unknown_value)
+        val document =
+            detail.issuingState
+                ?.replace("<", "")
+                ?.trim()
+                ?.ifEmpty { null }
+        return text(
+            R.string.result_detail_country_mismatch,
+            detail.cscaCountry?.let(countryLabel) ?: unknown,
+            detail.dsCountry?.let(countryLabel) ?: unknown,
+            document ?: unknown,
+        )
+    }
+
+    /** Codes pays alpha-2 dont le détail de [check] a besoin du libellé. */
+    fun countryCodes(check: Check): List<String> =
+        when (val detail = check.detail) {
+            is CheckDetail.Chain -> listOfNotNull(detail.chain.cscaCountry)
+            is CheckDetail.CountryMismatch -> listOfNotNull(detail.cscaCountry, detail.dsCountry)
+            else -> emptyList()
+        }.distinct()
 
     private fun dsValidityLines(
         detail: CheckDetail.DsValidity,

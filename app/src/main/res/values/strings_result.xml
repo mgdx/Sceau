@@ -97,6 +97,7 @@
     <string name="result_detail_csca">CSCA : %1$s</string>
     <string name="result_detail_csca_none">Aucun CSCA du magasin ne correspond.</string>
     <string name="result_detail_country">Pays : %1$s</string>
+    <string name="result_detail_country_mismatch">Pays incohérents : autorité de certification %1$s, certificat du signataire %2$s, document %3$s</string>
     <string name="result_detail_source">Source : %1$s</string>
     <string name="result_detail_source_ants">certificats de l’ANTS</string>
     <string name="result_detail_source_embedded">Master List embarquée</string>

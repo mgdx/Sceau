@@ -63,7 +63,6 @@ import io.github.mgdx.sceau.core.model.DocumentData
 import io.github.mgdx.sceau.core.model.EncodedImage
 import io.github.mgdx.sceau.core.model.Sex
 import io.github.mgdx.sceau.core.report.Check
-import io.github.mgdx.sceau.core.report.CheckDetail
 import io.github.mgdx.sceau.core.report.CheckStatus
 import io.github.mgdx.sceau.core.report.Verdict
 import io.github.mgdx.sceau.core.report.VerificationReport
@@ -665,9 +664,8 @@ private fun CheckRow(
             )
         }
         if (expanded) {
-            val chainCountry = (check.detail as? CheckDetail.Chain)?.chain?.cscaCountry
-            val chainCountryLabel = chainCountry?.let { countryLabel(Countries.fromAlpha2(it)) }
-            val lines = CheckFormatting.detailLines(check, formatDate) { chainCountryLabel ?: it }.map { it.resolve() }
+            val countryLabels = CheckFormatting.countryCodes(check).associateWith { countryLabel(Countries.fromAlpha2(it)) }
+            val lines = CheckFormatting.detailLines(check, formatDate) { countryLabels[it] ?: it }.map { it.resolve() }
             Column(
                 modifier = Modifier.padding(start = 36.dp, bottom = 12.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp),

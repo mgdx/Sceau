@@ -97,6 +97,7 @@
     <string name="result_detail_csca">CSCA: %1$s</string>
     <string name="result_detail_csca_none">No CSCA in the trust store matches.</string>
     <string name="result_detail_country">Country: %1$s</string>
+    <string name="result_detail_country_mismatch">Inconsistent countries: certification authority %1$s, signer certificate %2$s, document %3$s</string>
     <string name="result_detail_source">Source: %1$s</string>
     <string name="result_detail_source_ants">ANTS certificates</string>
     <string name="result_detail_source_embedded">built-in Master List</string>
