@@ -40,9 +40,12 @@ internal object Crypto {
 
     /** Code pays (attribut C du sujet) en majuscules, ou null s'il est absent. */
     fun country(certificate: X509Certificate): String? =
+        runCatching { country(X500Name.getInstance(certificate.subjectX500Principal.encoded)) }.getOrNull()
+
+    /** Code pays (attribut C) d'un nom X.500 en majuscules, ou null s'il est absent. */
+    fun country(name: X500Name): String? =
         runCatching {
-            X500Name
-                .getInstance(certificate.subjectX500Principal.encoded)
+            name
                 .getRDNs(BCStyle.C)
                 .firstOrNull()
                 ?.first

@@ -89,6 +89,7 @@ internal class PassiveAuthenticator(
         dateOfIssue: LocalDate?,
         dateOfExpiry: LocalDate?,
         documentCode: String,
+        issuingState: String? = null,
     ): PassiveAuthResult {
         val parsed =
             try {
@@ -97,7 +98,7 @@ internal class PassiveAuthenticator(
                 return malformed(ERROR_SOD_MALFORMED)
             }
         return try {
-            verifyParsed(parsed, dataGroups, dateOfIssue, dateOfExpiry, documentCode)
+            verifyParsed(parsed, dataGroups, dateOfIssue, dateOfExpiry, documentCode, issuingState)
         } catch (e: Exception) {
             malformed(ERROR_UNEXPECTED)
         }
@@ -109,6 +110,7 @@ internal class PassiveAuthenticator(
         dateOfIssue: LocalDate?,
         dateOfExpiry: LocalDate?,
         documentCode: String,
+        issuingState: String?,
     ): PassiveAuthResult {
         val hashes = guarded(CheckId.DG_HASHES) { checkHashes(parsed.securityObject, dataGroups) }
         val ds =
@@ -126,7 +128,7 @@ internal class PassiveAuthenticator(
         var chainInfo: ChainInfo? = null
         val chain =
             guarded(CheckId.CERTIFICATE_CHAIN) {
-                val (check, info) = checkChain(ds)
+                val (check, info) = checkChain(ds, issuingState)
                 chainInfo = info
                 check
             }
@@ -198,11 +200,21 @@ internal class PassiveAuthenticator(
 
     // --- Chaîne DS → CSCA --------------------------------------------------------------
 
-    private fun checkChain(ds: DsCertificate): Pair<Check, ChainInfo> =
+    private fun checkChain(
+        ds: DsCertificate,
+        issuingState: String?,
+    ): Pair<Check, ChainInfo> =
         when (val outcome = CertificateChains(trustStore).build(ds.holder)) {
             is ChainOutcome.Found -> {
                 val info = chainInfo(ds, outcome.root, outcome.links)
-                Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.OK, CheckDetail.Chain(info)) to info
+                // Audit V3 : une chaîne valide vers le CSCA d'un autre pays ne prouve rien.
+                val dsCountry = Crypto.country(ds.holder.subject)
+                if (IcaoCountries.consistent(info.cscaCountry, dsCountry, issuingState)) {
+                    Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.OK, CheckDetail.Chain(info)) to info
+                } else {
+                    val mismatch = CheckDetail.CountryMismatch(info.cscaCountry, dsCountry, issuingState)
+                    Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.FAILED, mismatch) to info
+                }
             }
 
             is ChainOutcome.BadSignature -> {

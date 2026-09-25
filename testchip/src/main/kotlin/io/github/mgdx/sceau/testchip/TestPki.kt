@@ -151,9 +151,11 @@ class TestPki(
         serial: BigInteger = nextSerial(),
         dsKeyType: TestKeyType = keyType,
         commonName: String = "DS $name",
+        /** Pays (attribut C) du DS ; par défaut celui de la PKI. */
+        dsCountry: String = country,
     ): TestCredential =
         issue(
-            subject = X500Name("C=$country,O=$name,CN=$commonName"),
+            subject = X500Name("C=$dsCountry,O=$name,CN=$commonName"),
             subjectKeys = generateKeyPair(dsKeyType),
             issuer = csca(signedBy),
             notBefore = notBefore,

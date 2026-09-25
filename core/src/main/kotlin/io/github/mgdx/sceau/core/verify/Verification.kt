@@ -31,6 +31,9 @@ object PassiveAuthentication {
      * @param dateOfIssue date de délivrance lue dans DG12, si disponible
      * @param dateOfExpiry date d'expiration lue dans DG1, pour l'estimation
      * @param documentCode code de document DG1 ("P", "ID"…), pour choisir la durée usuelle
+     * @param issuingState État émetteur lu dans DG1 (code ICAO à trois lettres, "FRA", "D<<"…) :
+     *   il doit correspondre au pays du CSCA et du DS (voir [IcaoCountries]), sinon la chaîne
+     *   est en échec avec `CheckDetail.CountryMismatch`. Null : seuls le CSCA et le DS sont comparés.
      */
     fun verify(
         sod: ByteArray,
@@ -39,7 +42,8 @@ object PassiveAuthentication {
         dateOfIssue: LocalDate?,
         dateOfExpiry: LocalDate?,
         documentCode: String,
-    ): PassiveAuthResult = PassiveAuthenticator(trustStore).verify(sod, dataGroups, dateOfIssue, dateOfExpiry, documentCode)
+        issuingState: String? = null,
+    ): PassiveAuthResult = PassiveAuthenticator(trustStore).verify(sod, dataGroups, dateOfIssue, dateOfExpiry, documentCode, issuingState)
 }
 
 object ActiveAuthentication {

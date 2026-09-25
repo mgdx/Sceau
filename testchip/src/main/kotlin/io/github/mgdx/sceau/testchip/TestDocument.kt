@@ -82,9 +82,12 @@ class TestDocument(
         var dateOfExpiry: LocalDate = DEFAULT_DATE_OF_EXPIRY
         var documentCode: String = "P"
 
+        /** État émetteur de DG1 (code ICAO à trois lettres) ; par défaut le pays fictif des spécimens. */
+        var issuingState: String = TestDataGroups.SPECIMEN_STATE
+
         fun build(): TestDocument {
             val groups = sortedMapOf<Int, ByteArray>()
-            groups[1] = TestDataGroups.dg1(documentCode, dateOfExpiry)
+            groups[1] = TestDataGroups.dg1(documentCode, dateOfExpiry, issuingState)
             groups[2] = TestDataGroups.dg2(pki)
             val caKeys = if (chipAuthentication) pki.generateEc(TestPki.CURVE) else null
             val aaKeys =
@@ -120,11 +123,12 @@ object TestDataGroups {
     fun dg1(
         documentCode: String = "P",
         dateOfExpiry: LocalDate = TestDocument.DEFAULT_DATE_OF_EXPIRY,
+        issuingState: String = SPECIMEN_STATE,
     ): ByteArray {
         val mrz =
             MRZInfo.createTD3MRZInfo(
                 documentCode,
-                "UTO",
+                issuingState,
                 "ERIKSSON",
                 "ANNA MARIA",
                 "L898902C3",
@@ -142,6 +146,9 @@ object TestDataGroups {
         val payload = ByteArray(DG2_PAYLOAD).also { pki.random.nextBytes(it) }
         return TestSod.tlv(DG2_TAG, payload)
     }
+
+    /** Pays fictif des spécimens ICAO 9303 (Utopia). */
+    const val SPECIMEN_STATE = "UTO"
 
     private const val DG2_TAG = 0x75
     private const val DG2_PAYLOAD = 512

@@ -113,6 +113,7 @@ internal class ReadingSession(
                 dateOfIssue = data.dg12?.dateOfIssue,
                 dateOfExpiry = data.dg1.dateOfExpiry,
                 documentCode = data.dg1.documentCode,
+                issuingState = data.dg1.issuingState,
             )
 
         step(Step.VERIFY_CHIP)

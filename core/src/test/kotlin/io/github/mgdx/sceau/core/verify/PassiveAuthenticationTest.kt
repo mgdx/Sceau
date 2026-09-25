@@ -45,6 +45,7 @@ class PassiveAuthenticationTest(
         dateOfIssue: LocalDate? = document.dateOfIssue,
         dateOfExpiry: LocalDate? = document.dateOfExpiry,
         sod: ByteArray = document.sod,
+        issuingState: String? = null,
     ): PassiveAuthResult =
         PassiveAuthentication.verify(
             sod = sod,
@@ -53,6 +54,7 @@ class PassiveAuthenticationTest(
             dateOfIssue = dateOfIssue,
             dateOfExpiry = dateOfExpiry,
             documentCode = document.documentCode,
+            issuingState = issuingState,
         )
 
     private fun PassiveAuthResult.statuses() =
@@ -175,6 +177,50 @@ class PassiveAuthenticationTest(
 
         assertEquals(CheckStatus.OK, result.dataGroupHashes.status)
         assertEquals(emptyList<Int>(), (result.dataGroupHashes.detail as CheckDetail.DataGroupHashes).missing)
+    }
+
+    @Test
+    fun `Etat emetteur coherent avec le CSCA - chaine OK`() {
+        val document = pki.document { issuingState = "FRA" }
+        val result = verify(document, issuingState = "FRA")
+
+        assertEquals(List(4) { CheckStatus.OK }, result.statuses())
+        assertTrue(result.certificateChain.detail is CheckDetail.Chain)
+    }
+
+    @Test
+    fun `Etat emetteur d un autre pays que le CSCA - chaine en echec`() {
+        val result = verify(pki.document { issuingState = "DEU" }, issuingState = "DEU")
+
+        assertEquals(CheckStatus.FAILED, result.certificateChain.status)
+        assertEquals(CheckDetail.CountryMismatch("FR", "FR", "DEU"), result.certificateChain.detail)
+        assertEquals("FR", result.chain!!.cscaCountry)
+        assertEquals(CheckStatus.OK, result.sodSignature.status)
+        assertEquals(Verdict.FAILED, Verdicts.compute(VerifyTestSupport.checks(result, ca = CheckStatus.OK)))
+    }
+
+    @Test
+    fun `Etat emetteur inconnu d ICAO - chaine en echec`() {
+        val result = verify(pki.document(), issuingState = "UTO")
+
+        assertEquals(CheckStatus.FAILED, result.certificateChain.status)
+        assertEquals(CheckDetail.CountryMismatch("FR", "FR", "UTO"), result.certificateChain.detail)
+    }
+
+    @Test
+    fun `organisation internationale - seuls CSCA et DS compares`() {
+        val result = verify(pki.document { issuingState = "UNO" }, issuingState = "UNO")
+
+        assertEquals(CheckStatus.OK, result.certificateChain.status)
+    }
+
+    @Test
+    fun `DS d un autre pays que son CSCA - chaine en echec`() {
+        val ds = pki.issueDs(dsCountry = "DE")
+        val result = verify(pki.document { this.ds = ds }, issuingState = null)
+
+        assertEquals(CheckStatus.FAILED, result.certificateChain.status)
+        assertEquals(CheckDetail.CountryMismatch("FR", "DE", null), result.certificateChain.detail)
     }
 
     @Test
