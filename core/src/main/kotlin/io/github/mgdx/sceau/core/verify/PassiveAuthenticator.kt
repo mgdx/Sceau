@@ -11,6 +11,7 @@ import io.github.mgdx.sceau.core.trust.TrustStore
 import org.bouncycastle.asn1.ASN1Primitive
 import org.bouncycastle.asn1.cms.CMSAttributes
 import org.bouncycastle.asn1.cms.Time
+import org.bouncycastle.asn1.icao.ICAOObjectIdentifiers
 import org.bouncycastle.asn1.icao.LDSSecurityObject
 import org.bouncycastle.cert.X509CertificateHolder
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter
@@ -40,6 +41,11 @@ internal class ParsedSod(
         fun parse(sod: ByteArray): ParsedSod {
             val contentInfo = if (sod.isNotEmpty() && sod[0].toInt() and 0xFF == SEQUENCE_TAG) sod else Tlv.value(sod, SOD_TAG)
             val signedData = CMSSignedData(contentInfo)
+            // Audit V10 : le contenu signé doit être déclaré comme LDSSecurityObject, et non comme
+            // un autre objet signé par le même DS qui se décoderait par hasard.
+            if (signedData.signedContentTypeOID != ICAOObjectIdentifiers.id_icao_ldsSecurityObject.id) {
+                throw IllegalArgumentException("SOD_CONTENT_TYPE")
+            }
             val signer = signedData.signerInfos.signers.singleOrNull() ?: throw IllegalArgumentException("SOD_SIGNER_COUNT")
             val content = signedData.signedContent?.content as? ByteArray ?: throw IllegalArgumentException("SOD_NO_CONTENT")
             val securityObject = LDSSecurityObject.getInstance(ASN1Primitive.fromByteArray(content))

@@ -383,6 +383,15 @@ class PassiveAuthenticationTest(
     }
 
     @Test
+    fun `type de contenu du SOD autre que ldsSecurityObject - SOD rejete`() {
+        // Même LDSSecurityObject, correctement signé par le DS, mais déclaré en id-data.
+        val result = verify(pki.document { sod = SodOptions(contentTypeOid = "1.2.840.113549.1.7.1") })
+
+        assertEquals(List(4) { CheckStatus.FAILED }, result.statuses())
+        assertEquals(CheckDetail.Error("SOD_MALFORMED"), result.sodSignature.detail)
+    }
+
+    @Test
     fun `source du CSCA reportee dans la chaine`() {
         val store = TestTrustStore.of(listOf(pki.oldCsca.certificate), TrustSource.IMPORTED_MASTER_LIST)
         val result = verify(pki.document(), store = store)

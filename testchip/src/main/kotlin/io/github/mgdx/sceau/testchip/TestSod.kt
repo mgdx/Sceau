@@ -48,6 +48,8 @@ data class SodOptions(
     val declaredDigestOid: String? = null,
     /** Empreintes supplémentaires signées, pour des DG non lus (DG3…). */
     val extraHashes: Map<Int, ByteArray> = emptyMap(),
+    /** Type de contenu encapsulé (eContentType) ; par défaut id-icao-ldsSecurityObject. */
+    val contentTypeOid: String? = null,
 )
 
 /** Fabrique d'EF.SOD : LDSSecurityObject signé en CMS par le DS, encapsulé sous le tag 0x77. */
@@ -83,7 +85,7 @@ object TestSod {
         if (options.embedDs) generator.addCertificate(ds.holder)
         val content =
             CMSProcessableByteArray(
-                ICAOObjectIdentifiers.id_icao_ldsSecurityObject,
+                options.contentTypeOid?.let(::ASN1ObjectIdentifier) ?: ICAOObjectIdentifiers.id_icao_ldsSecurityObject,
                 securityObject.getEncoded(ASN1Encoding.DER),
             )
         var contentInfo = generator.generate(content, true).toASN1Structure()
