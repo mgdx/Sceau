@@ -11,13 +11,20 @@
  *   expect-fail FICHIER               le décodage doit échouer proprement
  *   truncate FICHIER PAS              décode chaque préfixe (tous les PAS octets)
  *   fuzz FICHIER N GRAINE             décode N variantes aux octets altérés
- *   patch-siz ENTREE SORTIE L H       réécrit les dimensions annoncées (SIZ et ihdr)
+ *   patch-siz ENTREE SORTIE L H [TL TH]
+ *                                     réécrit les dimensions annoncées (SIZ et ihdr) et,
+ *                                     si TL et TH sont donnés, celles des tuiles (SIZ)
+ *   budget FICHIER refuse|decode [L H] bombe de décompression : le pic d'allocation d'OpenJPEG
+ *                                     reste sous le budget ; « refuse » exige un refus,
+ *                                     « decode » un décodage réduit à L x H au plus, « any »
+ *                                     accepte les deux (flux dont les données sont incohérentes)
  */
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "jp2_alloc.h"
 #include "jp2_decode.h"
 
 typedef struct {
@@ -85,6 +92,37 @@ static int write_ppm(const char *path, const rgb_image *image) {
     fprintf(file, "P6\n%u %u\n255\n", image->width, image->height);
     ok = fwrite(image->rgb, 1, size, file) == size;
     return fclose(file) == 0 && ok;
+}
+
+/*
+ * Dégradé RGB de full_width x full_height, échantillonné un point sur step : step = 2 donne la
+ * référence d'une image décodée à demi-résolution (le filtre passe-bas de la transformée en
+ * ondelettes conserve un dégradé linéaire aux points pairs).
+ */
+static int write_gradient(const char *path, uint32_t full_width, uint32_t full_height, uint32_t step) {
+    rgb_image image;
+    uint32_t x;
+    uint32_t y;
+    int ok;
+    image.width = (full_width + step - 1u) / step;
+    image.height = (full_height + step - 1u) / step;
+    image.rgb = (uint8_t *) malloc((size_t) image.width * image.height * 3u);
+    if (image.rgb == NULL) {
+        return 0;
+    }
+    for (y = 0; y < image.height; y++) {
+        for (x = 0; x < image.width; x++) {
+            uint8_t *p = &image.rgb[((size_t) y * image.width + x) * 3u];
+            const uint32_t fx = x * step;
+            const uint32_t fy = y * step;
+            p[0] = (uint8_t) (fx * 255u / (full_width - 1u));
+            p[1] = (uint8_t) (fy * 255u / (full_height - 1u));
+            p[2] = (uint8_t) ((fx + fy) * 255u / (full_width + full_height - 2u));
+        }
+    }
+    ok = write_ppm(path, &image);
+    free(image.rgb);
+    return ok;
 }
 
 static int gen(const char *dir) {
@@ -196,6 +234,28 @@ static int gen(const char *dir) {
         free(image.rgb);
         free(yuv);
     }
+
+    /* Grande image légitime (plus de 2048 pixels de large) : décodée à demi-résolution. */
+    snprintf(path, sizeof(path), "%s/big.ppm", dir);
+    if (!write_gradient(path, 2500u, 1700u, 1u)) {
+        return fail("écriture big.ppm");
+    }
+    snprintf(path, sizeof(path), "%s/big-half.ppm", dir);
+    if (!write_gradient(path, 2500u, 1700u, 2u)) {
+        return fail("écriture big-half.ppm");
+    }
+
+    /* Petite image RGBA 16 bits brute (plans gros-boutiens), base d'une bombe à 4 composantes. */
+    snprintf(path, sizeof(path), "%s/rgba16.raw", dir);
+    file = fopen(path, "wb");
+    if (file == NULL) {
+        return fail("écriture rgba16.raw");
+    }
+    for (y = 0; y < 4u * 64u * 64u; y++) {
+        fputc((int) ((y >> 4) & 0xFFu), file);
+        fputc((int) (y & 0xFFu), file);
+    }
+    fclose(file);
     return 0;
 }
 
@@ -429,7 +489,8 @@ static void put_be32(uint8_t *p, uint32_t value) {
     p[3] = (uint8_t) value;
 }
 
-static int patch_siz(const char *in, const char *out, uint32_t width, uint32_t height) {
+static int patch_siz(const char *in, const char *out, uint32_t width, uint32_t height, uint32_t tile_width,
+                     uint32_t tile_height) {
     size_t length;
     uint8_t *data = read_file(in, &length);
     size_t i;
@@ -448,6 +509,11 @@ static int patch_siz(const char *in, const char *out, uint32_t width, uint32_t h
         if (data[i] == 0xFF && data[i + 1u] == 0x4F && data[i + 2u] == 0xFF && data[i + 3u] == 0x51) {
             put_be32(&data[i + 8u], width);
             put_be32(&data[i + 12u], height);
+            /* Puis XTsiz(4) YTsiz(4). */
+            if (tile_width != 0u && tile_height != 0u && i + 32u <= length) {
+                put_be32(&data[i + 24u], tile_width);
+                put_be32(&data[i + 28u], tile_height);
+            }
             patched = 1;
             break;
         }
@@ -455,6 +521,44 @@ static int patch_siz(const char *in, const char *out, uint32_t width, uint32_t h
     ok = patched && write_file(out, data, length);
     free(data);
     return ok ? 0 : fail("marqueur SIZ introuvable");
+}
+
+static int budget(const char *path, const char *mode, uint32_t max_width, uint32_t max_height) {
+    size_t length;
+    uint8_t *data = read_file(path, &length);
+    sceau_jp2_image decoded;
+    sceau_jp2_status status;
+    size_t peak;
+    const char *name = strrchr(path, '/') ? strrchr(path, '/') + 1 : path;
+    if (data == NULL) {
+        return fail("lecture");
+    }
+    status = sceau_jp2_decode(data, length, &decoded);
+    peak = sceau_jp2_alloc_peak();
+    free(data);
+    printf("%-28s statut %d  %ux%u  pic OpenJPEG %.1f Mo (budget %u Mo)\n", name, (int) status,
+           decoded.width, decoded.height, (double) peak / (1024.0 * 1024.0),
+           SCEAU_JP2_MEMORY_BUDGET / (1024u * 1024u));
+    if (peak > SCEAU_JP2_MEMORY_BUDGET) {
+        sceau_jp2_image_free(&decoded);
+        return fail("budget mémoire dépassé");
+    }
+    if (strcmp(mode, "refuse") == 0 && status == SCEAU_JP2_OK) {
+        sceau_jp2_image_free(&decoded);
+        fprintf(stderr, "ÉCHEC : %s décodé alors qu'il devait être refusé\n", name);
+        return 1;
+    }
+    if (strcmp(mode, "decode") == 0 &&
+        (status != SCEAU_JP2_OK || decoded.width > max_width || decoded.height > max_height)) {
+        sceau_jp2_image_free(&decoded);
+        fprintf(stderr, "ÉCHEC : %s non décodé ou non réduit à %ux%u\n", name, max_width, max_height);
+        return 1;
+    }
+    if (status != SCEAU_JP2_OK && (decoded.argb != NULL || decoded.width != 0 || decoded.height != 0)) {
+        return fail("sortie non remise à zéro après échec");
+    }
+    sceau_jp2_image_free(&decoded);
+    return 0;
 }
 
 int main(int argc, char **argv) {
@@ -473,9 +577,15 @@ int main(int argc, char **argv) {
     if (argc == 5 && strcmp(argv[1], "fuzz") == 0) {
         return fuzz(argv[2], (unsigned) strtoul(argv[3], NULL, 10), (uint32_t) strtoul(argv[4], NULL, 10));
     }
-    if (argc == 6 && strcmp(argv[1], "patch-siz") == 0) {
+    if ((argc == 6 || argc == 8) && strcmp(argv[1], "patch-siz") == 0) {
         return patch_siz(argv[2], argv[3], (uint32_t) strtoul(argv[4], NULL, 10),
-                         (uint32_t) strtoul(argv[5], NULL, 10));
+                         (uint32_t) strtoul(argv[5], NULL, 10),
+                         argc == 8 ? (uint32_t) strtoul(argv[6], NULL, 10) : 0u,
+                         argc == 8 ? (uint32_t) strtoul(argv[7], NULL, 10) : 0u);
+    }
+    if ((argc == 4 || argc == 6) && strcmp(argv[1], "budget") == 0) {
+        return budget(argv[2], argv[3], argc == 6 ? (uint32_t) strtoul(argv[4], NULL, 10) : 0u,
+                      argc == 6 ? (uint32_t) strtoul(argv[5], NULL, 10) : 0u);
     }
     fprintf(stderr, "usage : voir l'en-tête de jp2_host_test.c\n");
     return 2;

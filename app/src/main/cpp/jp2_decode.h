@@ -12,8 +12,24 @@
 #include <stddef.h>
 #include <stdint.h>
 
-/* Dimensions maximales acceptées (largeur et hauteur, chacune). */
+/* Dimensions maximales annoncées par l'en-tête (largeur et hauteur, chacune). */
 #define SCEAU_JP2_MAX_DIMENSION 4096u
+
+/*
+ * Dimensions maximales de l'image décodée (largeur et hauteur, chacune) : un portrait (DG2)
+ * ou une image de DG12 plus grande est décodée à une résolution réduite de moitié autant de
+ * fois que nécessaire (opj_set_decoded_resolution_factor), au lieu d'être refusée.
+ */
+#define SCEAU_JP2_MAX_OUTPUT_DIMENSION 2048u
+
+/*
+ * Budget mémoire d'OpenJPEG pour un décodage, en octets. Estimé avant opj_decode à partir de
+ * l'en-tête (échantillons, tuiles, blocs de code, résolutions, couches) pour choisir la
+ * réduction de résolution ou refuser le flux, puis imposé à chaque allocation (jp2_alloc.c).
+ * Avec les pixels ARGB de sortie (au plus 2048 x 2048 x 4 = 16 Mo, recopiés une fois dans le
+ * Bitmap), un décodage reste sous 96 Mo tout compris. Voir docs/decisions.md (D3).
+ */
+#define SCEAU_JP2_MEMORY_BUDGET (64u * 1024u * 1024u)
 
 /* Taille maximale du flux compressé accepté, en octets. */
 #define SCEAU_JP2_MAX_INPUT_SIZE (16u * 1024u * 1024u)
@@ -23,7 +39,7 @@ typedef enum {
     SCEAU_JP2_ERR_ARGUMENT = 1,
     SCEAU_JP2_ERR_FORMAT = 2,     /* signature ni JP2 ni J2K */
     SCEAU_JP2_ERR_HEADER = 3,     /* en-tête illisible */
-    SCEAU_JP2_ERR_TOO_LARGE = 4,  /* dimensions ou taille hors limites */
+    SCEAU_JP2_ERR_TOO_LARGE = 4,  /* dimensions, taille ou budget mémoire hors limites */
     SCEAU_JP2_ERR_DECODE = 5,     /* flux corrompu ou tronqué */
     SCEAU_JP2_ERR_UNSUPPORTED = 6,/* composantes ou précision non gérées */
     SCEAU_JP2_ERR_MEMORY = 7
@@ -44,6 +60,21 @@ sceau_jp2_status sceau_jp2_decode(const uint8_t *data, size_t length, sceau_jp2_
 
 /* Remet les pixels à zéro, libère le tampon et remet la structure à zéro. */
 void sceau_jp2_image_free(sceau_jp2_image *image);
+
+/*
+ * Décodage en deux temps, sans tampon ARGB complet côté natif : sceau_jp2_decode_image décode
+ * le flux et donne les dimensions de sortie, sceau_jp2_decoded_row convertit une ligne en ARGB
+ * (0 <= y < height, row de width éléments), sceau_jp2_decoded_free efface et libère le tout.
+ * En cas d'échec, *out vaut NULL et les dimensions 0.
+ */
+typedef struct sceau_jp2_decoded sceau_jp2_decoded;
+
+sceau_jp2_status sceau_jp2_decode_image(const uint8_t *data, size_t length, sceau_jp2_decoded **out,
+                                        uint32_t *width, uint32_t *height);
+
+void sceau_jp2_decoded_row(const sceau_jp2_decoded *decoded, uint32_t y, uint32_t *row);
+
+void sceau_jp2_decoded_free(sceau_jp2_decoded *decoded);
 
 /* Remise à zéro qui ne peut pas être supprimée par l'optimiseur. */
 void sceau_jp2_secure_zero(void *buffer, size_t length);

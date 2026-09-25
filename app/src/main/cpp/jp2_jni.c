@@ -12,15 +12,21 @@
 /*
  * private external fun nativeDecode(data: ByteArray, dimensions: IntArray): IntArray?
  * Renvoie les pixels ARGB, et écrit largeur et hauteur dans dimensions[0] et dimensions[1].
+ * Les pixels sont convertis ligne par ligne directement dans le tableau Java renvoyé : aucun
+ * tampon ARGB complet n'est alloué côté natif.
  */
 JNIEXPORT jintArray JNICALL
 Java_io_github_mgdx_sceau_jp2_Jpeg2000Decoder_nativeDecode(JNIEnv *env, jobject thiz, jbyteArray data,
                                                           jintArray dimensions) {
     jsize length;
     uint8_t *input;
-    sceau_jp2_image image;
+    sceau_jp2_decoded *decoded = NULL;
     sceau_jp2_status status;
     jintArray result = NULL;
+    uint32_t *row = NULL;
+    uint32_t width;
+    uint32_t height;
+    uint32_t y;
     jint size[2];
 
     (void) thiz;
@@ -46,20 +52,26 @@ Java_io_github_mgdx_sceau_jp2_Jpeg2000Decoder_nativeDecode(JNIEnv *env, jobject 
         return NULL;
     }
 
-    status = sceau_jp2_decode(input, (size_t) length, &image);
+    status = sceau_jp2_decode_image(input, (size_t) length, &decoded, &width, &height);
     sceau_jp2_secure_zero(input, (size_t) length);
     free(input);
     if (status != SCEAU_JP2_OK) {
         return NULL;
     }
 
-    /* width et height sont bornés par SCEAU_JP2_MAX_DIMENSION : le produit tient dans un jsize. */
-    result = (*env)->NewIntArray(env, (jsize) (image.width * image.height));
+    /* width et height sont bornés par SCEAU_JP2_MAX_OUTPUT_DIMENSION : le produit tient dans
+     * un jsize. */
+    row = (uint32_t *) malloc((size_t) width * sizeof(uint32_t));
+    if (row != NULL) {
+        result = (*env)->NewIntArray(env, (jsize) (width * height));
+    }
     if (result != NULL) {
-        (*env)->SetIntArrayRegion(env, result, 0, (jsize) (image.width * image.height),
-                                  (const jint *) image.argb);
-        size[0] = (jint) image.width;
-        size[1] = (jint) image.height;
+        for (y = 0; y < height && !(*env)->ExceptionCheck(env); y++) {
+            sceau_jp2_decoded_row(decoded, y, row);
+            (*env)->SetIntArrayRegion(env, result, (jsize) (y * width), (jsize) width, (const jint *) row);
+        }
+        size[0] = (jint) width;
+        size[1] = (jint) height;
         (*env)->SetIntArrayRegion(env, dimensions, 0, 2, size);
     }
     if ((*env)->ExceptionCheck(env)) {
@@ -67,6 +79,10 @@ Java_io_github_mgdx_sceau_jp2_Jpeg2000Decoder_nativeDecode(JNIEnv *env, jobject 
         (*env)->ExceptionClear(env);
         result = NULL;
     }
-    sceau_jp2_image_free(&image);
+    if (row != NULL) {
+        sceau_jp2_secure_zero(row, (size_t) width * sizeof(uint32_t));
+        free(row);
+    }
+    sceau_jp2_decoded_free(decoded);
     return result;
 }

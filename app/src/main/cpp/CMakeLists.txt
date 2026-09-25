@@ -28,6 +28,12 @@ if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/openjpeg/CMakeLists.txt")
 endif()
 add_subdirectory(openjpeg EXCLUDE_FROM_ALL)
 
+# Allocateur plafonné : opj_malloc.c est retiré d'openjp2 et remplacé par jp2_alloc.c, lié dans
+# libsceau_jp2.so, qui impose le budget mémoire de chaque décodage (bombe de décompression).
+get_target_property(SCEAU_OPJ_SOURCES openjp2 SOURCES)
+list(FILTER SCEAU_OPJ_SOURCES EXCLUDE REGEX "/opj_malloc\\.c$")
+set_property(TARGET openjp2 PROPERTY SOURCES ${SCEAU_OPJ_SOURCES})
+
 # OPJ_STATIC : l'API OpenJPEG est déclarée « hidden » au lieu d'être exportée par le .so.
 target_compile_definitions(openjp2 PUBLIC OPJ_STATIC)
 # Code tiers : ses avertissements ne sont pas les nôtres et ne doivent pas polluer la build.
@@ -42,7 +48,7 @@ if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif()
 target_compile_options(openjp2 PRIVATE ${SCEAU_HARDENING_FLAGS})
 
-add_library(sceau_jp2 SHARED jp2_decode.c jp2_jni.c)
+add_library(sceau_jp2 SHARED jp2_decode.c jp2_alloc.c jp2_jni.c)
 target_compile_options(sceau_jp2 PRIVATE
     -std=c11 -Wall -Wextra -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes
     -Werror ${SCEAU_HARDENING_FLAGS})

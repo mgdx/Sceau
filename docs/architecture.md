@@ -62,7 +62,7 @@ app/src/main/cpp/
   CMakeLists.txt           construit libsceau_jp2.so (OpenJPEG statique + code de Sceau)
   jp2_decode.c/.h          cœur de décodage en mémoire, sans JNI, testé sur l'hôte
   jp2_jni.c                pont JNI
-  openjpeg/                sous-module git, OpenJPEG v2.5.4 (BSD-2-Clause)
+  openjpeg/                sous-module git, OpenJPEG master 8314119b, v2.5.4-29 (BSD-2-Clause, D3)
   test/                    harnais de test hôte (ASan/UBSan), hors APK : run-host-tests.sh
 ```
 

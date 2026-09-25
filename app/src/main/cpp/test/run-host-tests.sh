@@ -4,7 +4,8 @@
 # Construit, hors du dépôt, OpenJPEG et opj_compress depuis le sous-module, puis le harnais
 # jp2_host_test sous AddressSanitizer et UndefinedBehaviorSanitizer. Encode des images
 # synthétiques, les décode avec le cœur de Sceau et compare les pixels ; soumet ensuite des
-# flux tronqués, altérés et aux dimensions excessives, qui doivent être refusés sans plantage.
+# flux tronqués, altérés et aux dimensions excessives, qui doivent être refusés sans plantage, et
+# des bombes de décompression, dont le pic d'allocation doit rester sous le budget mémoire.
 #
 # Usage : app/src/main/cpp/test/run-host-tests.sh [DOSSIER_DE_BUILD]
 # Prérequis : cmake, un compilateur C avec -fsanitize=address,undefined, sous-module initialisé
@@ -87,6 +88,34 @@ for f in empty.bin jpeg-header.bin random.bin jp2-signature-only.bin j2k-signatu
     huge-60000.j2k huge-60000.jp2 wide-4097.j2k huge-untiled.j2k; do
     run expect-fail "$data/$f"
 done
+
+echo "== Grande image légitime : décodée à résolution réduite"
+encode -i "$data/big.ppm" -o "$data/big.j2k"
+encode -i "$data/big.ppm" -o "$data/big.jp2"
+run check "$data/big.j2k" "$data/big-half.ppm" 3 1
+run check "$data/big.jp2" "$data/big-half.ppm" 3 1
+run budget "$data/big.j2k" decode 2048 2048
+
+echo "== Bombes de décompression : budget mémoire d'OpenJPEG tenu"
+# Petits flux aux paramètres hostiles, dont l'en-tête annonce ensuite 4096 x 4096 :
+# blocs de code de 4 x 4, précincts de 4 x 4 (blocs effectifs de 2 x 2), 16384 tuiles de
+# 32 x 32, 4 composantes de 16 bits. Tous sont générés ici, aucun binaire n'est versionné.
+encode -i "$data/rgb.ppm" -o "$data/cb4-small.j2k" -b 4,4
+encode -i "$data/rgb.ppm" -o "$data/cb4-small.jp2" -b 4,4
+encode -i "$data/rgb.ppm" -o "$data/precincts-small.j2k" -c "[4,4],[4,4],[4,4],[4,4],[4,4],[4,4]"
+encode -i "$data/rgb.ppm" -o "$data/tiles-small.j2k" -t 32,32
+encode -i "$data/rgba16.raw" -o "$data/rgba16-small.j2k" -F 64,64,4,16,u
+run patch-siz "$data/cb4-small.j2k" "$data/bomb-cb4.j2k" 4096 4096 4096 4096
+run patch-siz "$data/cb4-small.jp2" "$data/bomb-cb4.jp2" 4096 4096 4096 4096
+run patch-siz "$data/precincts-small.j2k" "$data/bomb-precincts.j2k" 4096 4096 4096 4096
+run patch-siz "$data/tiles-small.j2k" "$data/bomb-tiles.j2k" 4096 4096
+run patch-siz "$data/rgba16-small.j2k" "$data/bomb-rgba16.j2k" 4096 4096 4096 4096
+run budget "$data/bomb-cb4.j2k" refuse
+run budget "$data/bomb-cb4.jp2" refuse
+run budget "$data/bomb-precincts.j2k" refuse
+run budget "$data/bomb-tiles.j2k" refuse
+# Réduite à 1024 x 1024 avant décodage ; ses données, prévues pour 64 x 64, peuvent échouer.
+run budget "$data/bomb-rgba16.j2k" any
 
 echo "== Flux tronqués et altérés : aucun plantage attendu"
 run truncate "$data/rgb-lossless.jp2" 7
