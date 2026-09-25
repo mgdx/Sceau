@@ -160,7 +160,7 @@ private fun ResultContent(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         if (isDemo) DemoBanner()
-        VerdictCard(report.verdict)
+        VerdictCard(report.verdict, importedAnchor = CheckFormatting.isImportedAnchor(report.chain))
         PortraitSection(document.portrait, bitmapOwner)
         IdentitySection(document.dg1, formatDate)
         AdditionalSection(document, formatDate, bitmapOwner)
@@ -196,7 +196,10 @@ private fun DemoBanner() {
 }
 
 @Composable
-private fun VerdictCard(verdict: Verdict) {
+private fun VerdictCard(
+    verdict: Verdict,
+    importedAnchor: Boolean,
+) {
     val palette = VerdictColors.palette(verdict, isDarkPalette())
     val (icon, title, explanation) =
         when (verdict) {
@@ -238,6 +241,27 @@ private fun VerdictCard(verdict: Verdict) {
                 )
             }
             Text(text = stringResource(explanation), style = MaterialTheme.typography.bodyMedium)
+            if (importedAnchor) ImportedAnchorNotice()
+        }
+    }
+}
+
+/** Mention d'avertissement : la chaîne s'appuie sur un certificat importé (audit V6). */
+@Composable
+private fun ImportedAnchorNotice() {
+    Surface(
+        color = MaterialTheme.colorScheme.errorContainer,
+        contentColor = MaterialTheme.colorScheme.onErrorContainer,
+        shape = MaterialTheme.shapes.small,
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
+            Icon(SceauIcons.Warning, contentDescription = null)
+            Spacer(Modifier.width(12.dp))
+            Text(
+                text = stringResource(R.string.result_verdict_imported_anchor),
+                style = MaterialTheme.typography.titleSmall,
+            )
         }
     }
 }

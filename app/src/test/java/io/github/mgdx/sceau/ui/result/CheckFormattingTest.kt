@@ -10,6 +10,7 @@ import io.github.mgdx.sceau.core.report.CheckStatus
 import io.github.mgdx.sceau.core.report.IssuanceDateSource
 import io.github.mgdx.sceau.core.trust.TrustSource
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.time.Instant
@@ -170,5 +171,16 @@ class CheckFormattingTest {
         assertEquals(DocumentKind.IDENTITY_CARD, DocumentKind.fromMrzCode("C<"))
         assertEquals(DocumentKind.OTHER, DocumentKind.fromMrzCode("V"))
         assertEquals(DocumentKind.OTHER, DocumentKind.fromMrzCode(""))
+    }
+
+    @Test
+    fun `ancre importee signalee sur la carte du verdict`() {
+        fun chain(source: TrustSource?) =
+            ChainInfo("CN=DS", "01", Instant.EPOCH, Instant.EPOCH, "SHA256withRSA", "CN=CSCA", "FR", "00", source, emptyList())
+        assertTrue(CheckFormatting.isImportedAnchor(chain(TrustSource.IMPORTED_MASTER_LIST)))
+        assertFalse(CheckFormatting.isImportedAnchor(chain(TrustSource.ANTS)))
+        assertFalse(CheckFormatting.isImportedAnchor(chain(TrustSource.EMBEDDED_MASTER_LIST)))
+        assertFalse(CheckFormatting.isImportedAnchor(chain(null)))
+        assertFalse(CheckFormatting.isImportedAnchor(null))
     }
 }

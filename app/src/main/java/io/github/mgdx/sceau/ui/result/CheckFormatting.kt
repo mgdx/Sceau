@@ -200,6 +200,12 @@ object CheckFormatting {
     /** « DG1, DG2, DG14 » : numéros triés, sans doublon. */
     fun dataGroupList(numbers: List<Int>): String = numbers.distinct().sorted().joinToString(", ") { "DG$it" }
 
+    /**
+     * Vrai si la chaîne remonte à un CSCA importé par l'utilisateur : la carte du verdict
+     * le signale sans qu'il faille déplier le détail (audit V6).
+     */
+    fun isImportedAnchor(chain: ChainInfo?): Boolean = chain?.cscaSource == TrustSource.IMPORTED_MASTER_LIST
+
     @StringRes
     fun sourceLabel(source: TrustSource): Int =
         when (source) {

@@ -12,6 +12,7 @@
     <string name="result_verdict_unknown_issuer_explanation">The issuer’s certificate is not in the trust store. The data is shown, but nothing is guaranteed. Importing a more recent Master List may allow this document to be verified.</string>
     <string name="result_verdict_failed">Failed</string>
     <string name="result_verdict_failed_explanation">At least one check failed: this document must not be considered authentic.</string>
+    <string name="result_verdict_imported_anchor">Verified using a certificate you imported</string>
 
     <!-- Photo -->
     <string name="result_photo_description">Holder’s photo</string>

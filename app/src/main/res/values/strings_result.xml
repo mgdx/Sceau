@@ -12,6 +12,7 @@
     <string name="result_verdict_unknown_issuer_explanation">Le certificat de l’émetteur ne figure pas dans le magasin de confiance. Les données sont affichées, mais rien n’est garanti. Importer une Master List plus récente peut permettre de vérifier ce document.</string>
     <string name="result_verdict_failed">Échec</string>
     <string name="result_verdict_failed_explanation">Au moins une vérification a échoué : ce document ne doit pas être considéré comme authentique.</string>
+    <string name="result_verdict_imported_anchor">Vérifié grâce à un certificat que vous avez importé</string>
 
     <!-- Photo -->
     <string name="result_photo_description">Photo du titulaire</string>
