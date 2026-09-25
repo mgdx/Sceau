@@ -118,6 +118,7 @@
     <string name="result_detail_dg_checked_none">Aucun groupe de données contrôlé.</string>
     <string name="result_detail_dg_mismatched">Empreintes non conformes : %1$s</string>
     <string name="result_detail_dg_all_match">Toutes les empreintes sont conformes.</string>
+    <string name="result_detail_dg_missing">Groupes de données annoncés mais non fournis par la puce : %1$s</string>
     <string name="result_detail_unsupported">Algorithme non pris en charge : %1$s</string>
     <string name="result_detail_error">Erreur technique : %1$s</string>
     <string name="result_detail_no_dg14">Le document ne contient pas de DG14 : la puce ne propose pas cette vérification.</string>

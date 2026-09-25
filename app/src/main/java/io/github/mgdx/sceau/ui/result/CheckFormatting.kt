@@ -192,8 +192,12 @@ object CheckFormatting {
             }
             if (detail.mismatched.isNotEmpty()) {
                 add(text(R.string.result_detail_dg_mismatched, dataGroupList(detail.mismatched)))
-            } else if (detail.checked.isNotEmpty()) {
+            } else if (detail.checked.isNotEmpty() && detail.missing.isEmpty()) {
                 add(text(R.string.result_detail_dg_all_match))
+            }
+            // DG signés dans le SOD mais retenus par la puce (audit V1).
+            if (detail.missing.isNotEmpty()) {
+                add(text(R.string.result_detail_dg_missing, dataGroupList(detail.missing)))
             }
         }
 

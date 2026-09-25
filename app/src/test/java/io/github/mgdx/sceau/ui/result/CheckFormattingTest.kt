@@ -174,6 +174,21 @@ class CheckFormattingTest {
     }
 
     @Test
+    fun `groupes de donnees annonces mais non fournis par la puce`() {
+        val detail =
+            CheckDetail.DataGroupHashes("SHA-256", checked = listOf(1, 2), mismatched = emptyList(), missing = listOf(15, 14))
+        val result = lines(Check(CheckId.DG_HASHES, CheckStatus.FAILED, detail))
+        assertEquals(
+            listOf(
+                UiText(R.string.result_detail_digest_algorithm, listOf("SHA-256")),
+                UiText(R.string.result_detail_dg_checked, listOf("DG1, DG2")),
+                UiText(R.string.result_detail_dg_missing, listOf("DG14, DG15")),
+            ),
+            result,
+        )
+    }
+
+    @Test
     fun `ancre importee signalee sur la carte du verdict`() {
         fun chain(source: TrustSource?) =
             ChainInfo("CN=DS", "01", Instant.EPOCH, Instant.EPOCH, "SHA256withRSA", "CN=CSCA", "FR", "00", source, emptyList())
