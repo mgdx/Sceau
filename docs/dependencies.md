@@ -48,7 +48,7 @@ Seuls les artefacts BouncyCastle `jdk18on` sont admis : les variantes `jdk15on` 
 
 | Composant | Version | Licence | Rôle | F-Droid |
 |---|---|---|---|---|
-| OpenJPEG (bibliothèque `openjp2` seule) | 2.5.4 (tag `v2.5.4`, commit `6c4a29b0`) | BSD-2-Clause | Décodage des portraits JPEG 2000 (DG2, DG12), via `Jpeg2000Decoder` et `libsceau_jp2.so` | oui : sous-module git `app/src/main/cpp/openjpeg` pointant sur le dépôt officiel `github.com/uclouvain/openjpeg`, compilé depuis les sources par CMake et le NDK à chaque build, lié statiquement ; aucun binaire précompilé dans le dépôt |
+| OpenJPEG (bibliothèque `openjp2` seule) | 2.5.4+ (`master`, commit `8314119b`, `v2.5.4-29` : correctifs de sécurité postérieurs au tag, voir D3) | BSD-2-Clause | Décodage des portraits JPEG 2000 (DG2, DG12), via `Jpeg2000Decoder` et `libsceau_jp2.so` | oui : sous-module git `app/src/main/cpp/openjpeg` pointant sur le dépôt officiel `github.com/uclouvain/openjpeg`, compilé depuis les sources par CMake et le NDK à chaque build, lié statiquement ; aucun binaire précompilé dans le dépôt |
 
 Ce composant n'est pas une dépendance Maven : il n'apparaît pas dans la sortie de `./gradlew :app:dependencies`. Il remplace jj2000, écarté car sa licence d'origine restreint le champ d'usage (non libre, incompatible GPLv3 et F-Droid) : voir la décision D3. Outils de compilation correspondants : NDK `28.2.13676358` et CMake `4.1.2` (section 4).
 
