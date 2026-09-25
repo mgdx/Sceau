@@ -5,6 +5,7 @@ import io.github.mgdx.sceau.core.trust.TrustStore
 import org.bouncycastle.asn1.x509.AuthorityKeyIdentifier
 import org.bouncycastle.asn1.x509.SubjectKeyIdentifier
 import org.bouncycastle.cert.X509CertificateHolder
+import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter
 import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder
 import org.bouncycastle.operator.jcajce.JcaContentVerifierProviderBuilder
 
@@ -70,7 +71,17 @@ internal class CertificateChains(
             }
         }
 
-        verified.firstOrNull { isSelfSigned(it.second) }?.let { return ChainOutcome.Found(emptyList(), it.first) }
+        for ((candidate, holder) in verified) {
+            if (holder.subject != holder.issuer) continue
+            when (val self = verifySignature(holder, holder)) {
+                SignatureCheck.Valid -> return ChainOutcome.Found(emptyList(), candidate)
+
+                SignatureCheck.Invalid -> Unit
+
+                // CSCA auto-signé avec un algorithme refusé (audit V9) : échec, pas « émetteur inconnu ».
+                is SignatureCheck.Unsupported -> failure = worst(failure, ChainOutcome.Unsupported(self.algorithm))
+            }
+        }
         if (depth >= MAX_DEPTH) return failure
 
         for ((link, holder) in verified) {
@@ -103,14 +114,19 @@ internal class CertificateChains(
             SubjectKeyIdentifier.fromExtensions(JcaX509CertificateHolder(anchor.certificate).extensions)?.keyIdentifier
         }.getOrNull()
 
-    private fun isSelfSigned(holder: X509CertificateHolder): Boolean =
-        holder.subject == holder.issuer && verifySignature(holder, holder) == SignatureCheck.Valid
-
     private fun verifySignature(
         certificate: X509CertificateHolder,
         issuer: X509CertificateHolder,
-    ): SignatureCheck =
-        try {
+    ): SignatureCheck {
+        // Audit V9 : hachage cassé (MD5, RIPEMD-128…) ou clé RSA de moins de 1024 bits refusés.
+        if (Crypto.isWeakAlgorithm(certificate.signatureAlgorithm)) {
+            return SignatureCheck.Unsupported(Crypto.algorithmName(certificate.signatureAlgorithm.algorithm))
+        }
+        val weakKey =
+            runCatching { Crypto.weakKey(JcaX509CertificateConverter().setProvider(Crypto.provider).getCertificate(issuer).publicKey) }
+                .getOrNull()
+        if (weakKey != null) return SignatureCheck.Unsupported(weakKey)
+        return try {
             val verifierProvider = JcaContentVerifierProviderBuilder().setProvider(Crypto.provider).build(issuer)
             if (certificate.isSignatureValid(verifierProvider)) SignatureCheck.Valid else SignatureCheck.Invalid
         } catch (e: Exception) {
@@ -120,6 +136,7 @@ internal class CertificateChains(
                 SignatureCheck.Invalid
             }
         }
+    }
 
     private fun worst(
         a: ChainOutcome,

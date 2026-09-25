@@ -180,10 +180,19 @@ internal class PassiveAuthenticator(
         ds: DsCertificate,
     ): Check {
         val algorithm = signatureAlgorithmName(signer)
+        // Audit V9 : hachage cassé (MD5, RIPEMD-128…) refusé, dans l'empreinte comme dans la signature.
+        if (Crypto.isWeakAlgorithm(signer.digestAlgorithmID) ||
+            Crypto.isWeakAlgorithm(signer.toASN1Structure().digestEncryptionAlgorithm)
+        ) {
+            return Check(CheckId.SOD_SIGNATURE, CheckStatus.UNSUPPORTED_ALGORITHM, CheckDetail.UnsupportedAlgorithm(algorithm))
+        }
         return try {
             // Vérifieur construit sur la clé seule : BouncyCastle refuserait sinon la signature d'un
             // DS expiré au signingTime, ce qui relève de la ligne DS_VALIDITY et non de celle-ci.
             val publicKey = JcaX509CertificateConverter().setProvider(Crypto.provider).getCertificate(ds.holder).publicKey
+            Crypto.weakKey(publicKey)?.let { weak ->
+                return Check(CheckId.SOD_SIGNATURE, CheckStatus.UNSUPPORTED_ALGORITHM, CheckDetail.UnsupportedAlgorithm(weak))
+            }
             val verifier = JcaSimpleSignerInfoVerifierBuilder().setProvider(Crypto.provider).build(publicKey)
             val valid = signer.verify(verifier)
             Check(CheckId.SOD_SIGNATURE, if (valid) CheckStatus.OK else CheckStatus.FAILED, CheckDetail.Signature(algorithm))
@@ -272,6 +281,9 @@ internal class PassiveAuthenticator(
     ): Check {
         val algorithmId = securityObject.digestAlgorithmIdentifier
         val algorithm = Crypto.algorithmName(algorithmId.algorithm)
+        if (Crypto.isWeakAlgorithm(algorithmId)) {
+            return Check(CheckId.DG_HASHES, CheckStatus.UNSUPPORTED_ALGORITHM, CheckDetail.UnsupportedAlgorithm(algorithm))
+        }
         val calculators = JcaDigestCalculatorProviderBuilder().setProvider(Crypto.provider).build()
         try {
             calculators.get(algorithmId)

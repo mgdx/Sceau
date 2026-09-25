@@ -7,7 +7,6 @@ import io.github.mgdx.sceau.core.report.CheckStatus
 import org.bouncycastle.asn1.ASN1Integer
 import org.bouncycastle.asn1.DERSequence
 import org.bouncycastle.crypto.Digest
-import org.bouncycastle.crypto.digests.RIPEMD128Digest
 import org.bouncycastle.crypto.digests.RIPEMD160Digest
 import org.bouncycastle.crypto.digests.SHA1Digest
 import org.bouncycastle.crypto.digests.SHA224Digest
@@ -40,7 +39,10 @@ internal object ActiveAuthenticator {
     private const val HEADER_SCHEME_1 = 0x40
     private const val BYTE_BITS = 8
 
-    /** Trailer explicite ISO/IEC 10118-3 → fonction de hachage (ISO/IEC 9796-2). */
+    /**
+     * Trailer explicite ISO/IEC 10118-3 → fonction de hachage (ISO/IEC 9796-2). RIPEMD-128 n'y
+     * figure pas : fonction cassée, refusée comme algorithme non pris en charge (audit V9).
+     */
     private val TRAILER_DIGESTS: Map<Int, () -> Digest> =
         mapOf(
             ISOTrailers.TRAILER_SHA1 to { SHA1Digest() },
@@ -51,7 +53,6 @@ internal object ActiveAuthenticator {
             ISOTrailers.TRAILER_SHA512_224 to { SHA512tDigest(224) },
             ISOTrailers.TRAILER_SHA512_256 to { SHA512tDigest(256) },
             ISOTrailers.TRAILER_RIPEMD160 to { RIPEMD160Digest() },
-            ISOTrailers.TRAILER_RIPEMD128 to { RIPEMD128Digest() },
             ISOTrailers.TRAILER_WHIRLPOOL to { WhirlpoolDigest() },
         )
 
@@ -64,7 +65,12 @@ internal object ActiveAuthenticator {
         try {
             when {
                 publicKey is RSAPublicKey -> {
-                    verifyRsa(publicKey, challenge, response)
+                    // Audit V9 : clé RSA de moins de 1024 bits refusée.
+                    Crypto.weakKey(publicKey)?.let(::unsupported) ?: verifyRsa(publicKey, challenge, response)
+                }
+
+                digestAlgorithm != null && Crypto.isWeakDigestName(digestAlgorithm) -> {
+                    unsupported(digestAlgorithm)
                 }
 
                 publicKey is ECPublicKey || publicKey.algorithm in setOf("EC", "ECDSA") -> {

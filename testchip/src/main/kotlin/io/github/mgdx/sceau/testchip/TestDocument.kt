@@ -78,6 +78,9 @@ class TestDocument(
 
         /** Algorithme de hachage ECDSA déclaré dans DG14 pour une AA EC (null : pas d'ActiveAuthenticationInfo). */
         var aaDigestAlgorithm: String? = "SHA-256"
+
+        /** Taille de la clé RSA d'Active Authentication (DG15). */
+        var aaRsaBits: Int = AA_RSA_BITS
         var dateOfIssue: LocalDate? = DEFAULT_DATE_OF_ISSUE
         var dateOfExpiry: LocalDate = DEFAULT_DATE_OF_EXPIRY
         var documentCode: String = "P"
@@ -92,7 +95,7 @@ class TestDocument(
             val caKeys = if (chipAuthentication) pki.generateEc(TestPki.CURVE) else null
             val aaKeys =
                 when (activeAuthentication) {
-                    AaKeyType.RSA -> pki.generateRsa(AA_RSA_BITS)
+                    AaKeyType.RSA -> pki.generateRsa(aaRsaBits)
                     AaKeyType.EC -> pki.generateEc(TestPki.CURVE)
                     null -> null
                 }

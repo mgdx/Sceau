@@ -153,16 +153,21 @@ class TestPki(
         commonName: String = "DS $name",
         /** Pays (attribut C) du DS ; par défaut celui de la PKI. */
         dsCountry: String = country,
+        /** Paire de clés du DS ; par défaut une nouvelle paire de type [dsKeyType]. */
+        dsKeyPair: KeyPair? = null,
+        /** Algorithme de signature du certificat par le CSCA ; par défaut celui de son type de clé. */
+        signatureAlgorithm: String? = null,
     ): TestCredential =
         issue(
             subject = X500Name("C=$dsCountry,O=$name,CN=$commonName"),
-            subjectKeys = generateKeyPair(dsKeyType),
+            subjectKeys = dsKeyPair ?: generateKeyPair(dsKeyType),
             issuer = csca(signedBy),
             notBefore = notBefore,
             notAfter = notAfter,
             serial = serial,
             ca = false,
             subjectKeyType = dsKeyType,
+            signatureAlgorithm = signatureAlgorithm,
         )
 
     /** Magasin de test contenant [credentials], tous de la provenance [source]. */
@@ -229,6 +234,7 @@ class TestPki(
         serial: BigInteger,
         ca: Boolean,
         subjectKeyType: TestKeyType = keyType,
+        signatureAlgorithm: String? = null,
     ): TestCredential {
         val spki = subjectPublicKeyInfo(subjectKeys, subjectKeyType)
         val issuerSpki = issuer.holder.subjectPublicKeyInfo
@@ -242,7 +248,7 @@ class TestPki(
                 spki,
             )
         addExtensions(builder, spki, issuerSpki, ca)
-        return TestCredential(sign(builder, issuer.privateKey, issuer.keyType), subjectKeys, subjectKeyType)
+        return TestCredential(sign(builder, issuer.privateKey, issuer.keyType, signatureAlgorithm), subjectKeys, subjectKeyType)
     }
 
     private fun addExtensions(
@@ -266,8 +272,10 @@ class TestPki(
         builder: X509v3CertificateBuilder,
         signerKey: PrivateKey,
         signerType: TestKeyType,
+        signatureAlgorithm: String? = null,
     ): X509Certificate {
-        val signer = JcaContentSignerBuilder(signerType.signatureAlgorithm).setProvider(TestCrypto.provider).build(signerKey)
+        val algorithm = signatureAlgorithm ?: signerType.signatureAlgorithm
+        val signer = JcaContentSignerBuilder(algorithm).setProvider(TestCrypto.provider).build(signerKey)
         return JcaX509CertificateConverter().setProvider(TestCrypto.provider).getCertificate(builder.build(signer))
     }
 
