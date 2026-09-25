@@ -129,6 +129,7 @@ fun ResultScreen(
         ResultContent(
             report = report,
             isDemo = done?.isDemo == true,
+            bitmapOwner = remember(session, report) { BitmapOwner(session, report) },
             onClear = clearAndLeave,
             modifier = Modifier.padding(padding),
         )
@@ -139,6 +140,7 @@ fun ResultScreen(
 private fun ResultContent(
     report: VerificationReport,
     isDemo: Boolean,
+    bitmapOwner: BitmapOwner,
     onClear: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -154,9 +156,9 @@ private fun ResultContent(
     ) {
         if (isDemo) DemoBanner()
         VerdictCard(report.verdict)
-        PortraitSection(document.portrait)
+        PortraitSection(document.portrait, bitmapOwner)
         IdentitySection(document.dg1, formatDate)
-        AdditionalSection(document, formatDate)
+        AdditionalSection(document, formatDate, bitmapOwner)
         ChecksSection(report.checks, formatDate)
         Button(
             onClick = onClear,
@@ -247,9 +249,30 @@ private sealed interface ImageLoad {
     ) : ImageLoad
 }
 
+/** Bitmap affiché, confié à la session : fermer l'efface puis le libère. */
+private class DecodedBitmap(
+    val bitmap: Bitmap,
+) : AutoCloseable {
+    override fun close() = bitmap.wipeAndRecycle()
+}
+
 /** Porte le bitmap décodé pour pouvoir l'effacer à la sortie de la composition. */
 private class BitmapHolder {
-    var bitmap: Bitmap? = null
+    var decoded: DecodedBitmap? = null
+}
+
+/**
+ * Session et rapport auxquels les bitmaps décodés sont confiés (audit V13) : l'effacement de
+ * la session (bouton, retour, arrière-plan) les efface aussitôt, sans attendre une recomposition.
+ */
+private class BitmapOwner(
+    private val session: SessionViewModel,
+    private val report: VerificationReport,
+) {
+    /** Faux si le rapport n'est plus affiché : [bitmap] a alors déjà été effacé. */
+    fun adopt(bitmap: DecodedBitmap): Boolean = session.registerDisposable(report, bitmap)
+
+    fun release(bitmap: DecodedBitmap) = session.unregisterDisposable(bitmap)
 }
 
 /**
@@ -268,10 +291,14 @@ private class DecodedImage(
 /**
  * Décode [image] hors du thread principal, en mémoire uniquement, une fois son emplacement
  * affiché et après les décodages déjà en cours. Le bitmap est effacé puis libéré quand
- * l'image quitte la composition.
+ * l'image quitte la composition, quand la session est effacée, ou aussitôt décodé si
+ * l'écran est parti ou la session effacée entre-temps.
  */
 @Composable
-private fun rememberDecodedImage(image: EncodedImage?): DecodedImage {
+private fun rememberDecodedImage(
+    image: EncodedImage?,
+    owner: BitmapOwner,
+): DecodedImage {
     val holder = remember(image) { BitmapHolder() }
     var load by remember(image) { mutableStateOf(if (image == null) ImageLoad.Failed else ImageLoad.Loading) }
     var shown by remember(image) { mutableStateOf(false) }
@@ -282,26 +309,42 @@ private fun rememberDecodedImage(image: EncodedImage?): DecodedImage {
         }
     LaunchedEffect(image, shown) {
         if (image == null || !shown) return@LaunchedEffect
-        val bitmap = decodeMutex.withLock { withContext(Dispatchers.Default) { decodeToBitmap(image) } }
-        if (bitmap == null) {
-            load = ImageLoad.Failed
-        } else {
-            holder.bitmap = bitmap
-            load = ImageLoad.Loaded(bitmap.asImageBitmap())
+        // Affecté dans le bloc même : un bitmap produit pendant l'annulation n'est pas perdu.
+        var bitmap: Bitmap? = null
+        var kept = false
+        try {
+            decodeMutex.withLock { withContext(Dispatchers.Default) { bitmap = decodeToBitmap(image) } }
+            val decoded = bitmap?.let(::DecodedBitmap)
+            if (decoded != null && owner.adopt(decoded)) {
+                kept = true
+                holder.decoded = decoded
+                load = ImageLoad.Loaded(decoded.bitmap.asImageBitmap())
+            } else {
+                load = ImageLoad.Failed
+            }
+        } finally {
+            // Coroutine annulée (écran quitté) ou session effacée pendant le décodage.
+            if (!kept) bitmap?.wipeAndRecycle()
         }
     }
     DisposableEffect(holder) {
         onDispose {
-            holder.bitmap?.wipeAndRecycle()
-            holder.bitmap = null
+            holder.decoded?.let {
+                owner.release(it)
+                it.close()
+            }
+            holder.decoded = null
         }
     }
     return DecodedImage(load, trigger)
 }
 
 @Composable
-private fun PortraitSection(portrait: EncodedImage?) {
-    val decoded = rememberDecodedImage(portrait)
+private fun PortraitSection(
+    portrait: EncodedImage?,
+    bitmapOwner: BitmapOwner,
+) {
+    val decoded = rememberDecodedImage(portrait, bitmapOwner)
     val load = decoded.load
     var fullScreen by remember { mutableStateOf(false) }
     Column(
@@ -487,6 +530,7 @@ private fun ExpiredBanner() {
 private fun AdditionalSection(
     document: DocumentData,
     formatDate: (LocalDate) -> String,
+    bitmapOwner: BitmapOwner,
 ) {
     val dg11 = document.dg11
     val dg12 = document.dg12
@@ -497,8 +541,8 @@ private fun AdditionalSection(
     if (fields.isEmpty() && front == null && rear == null) return
     SectionCard(title = stringResource(R.string.result_section_additional)) {
         fields.forEach { FieldRow(it.label, it.value) }
-        if (front != null) DocumentImage(front, R.string.result_image_front)
-        if (rear != null) DocumentImage(rear, R.string.result_image_rear)
+        if (front != null) DocumentImage(front, R.string.result_image_front, bitmapOwner)
+        if (rear != null) DocumentImage(rear, R.string.result_image_rear, bitmapOwner)
     }
 }
 
@@ -506,8 +550,9 @@ private fun AdditionalSection(
 private fun DocumentImage(
     image: EncodedImage,
     label: Int,
+    bitmapOwner: BitmapOwner,
 ) {
-    val decoded = rememberDecodedImage(image)
+    val decoded = rememberDecodedImage(image, bitmapOwner)
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(
             text = stringResource(label),
