@@ -49,6 +49,11 @@ class SimulatedChip(
     /** Réponse à INTERNAL AUTHENTICATE ; par défaut signée avec la clé de DG15. */
     private val aaResponder: ((ByteArray) -> ByteArray)? = document.aaKeyPair?.let { { challenge -> document.aaResponse(challenge) } },
     seed: Long = DEFAULT_SEED,
+    /**
+     * DG que la puce refuse de fournir (6A82 à la sélection) bien qu'ils soient dans le SOD :
+     * clone qui retient DG14/DG15 pour échapper à la CA et à l'AA.
+     */
+    withheldDataGroups: Collection<Int> = emptySet(),
 ) : CardTransport {
     override val maxTransceiveLength: Int = MAX_TRANSCEIVE
     override var timeoutMillis: Int = DEFAULT_TIMEOUT
@@ -105,7 +110,9 @@ class SimulatedChip(
     init {
         val tags = comDataGroups.sorted().map(LDSFileUtil::lookupTagByDataGroupNumber).toIntArray()
         val lds = mutableMapOf(FID_COM to COMFile(LDS_VERSION, UNICODE_VERSION, tags).encoded, FID_SOD to document.sod)
-        document.dataGroups.forEach { (number, bytes) -> lds[LDSFileUtil.lookupFIDByDataGroupNumber(number).toInt()] = bytes }
+        document.dataGroups
+            .filterKeys { it !in withheldDataGroups }
+            .forEach { (number, bytes) -> lds[LDSFileUtil.lookupFIDByDataGroupNumber(number).toInt()] = bytes }
         files = lds
         // La puce dérive sa clé BAC de sa propre MRZ, pas de ce que saisit le lecteur.
         val mrz = DG1File(document.dataGroups.getValue(1).inputStream()).mrzInfo

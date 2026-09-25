@@ -117,9 +117,9 @@ internal class ReadingSession(
 
         step(Step.VERIFY_CHIP)
         val verifier = ChipVerifier(chip, random)
-        val ca = verifier.chipAuthentication(content.dataGroups[14])
+        val ca = verifier.chipAuthentication(content.dataGroups[14], signedInSod = 14 in content.signedDataGroups)
         ensureActive()
-        val aa = verifier.activeAuthentication(content.dataGroups[15], content.dataGroups[14])
+        val aa = verifier.activeAuthentication(content.dataGroups[15], content.dataGroups[14], signedInSod = 15 in content.signedDataGroups)
 
         val checks = listOf(secureChannel, pa.sodSignature, pa.certificateChain, pa.dsValidity, pa.dataGroupHashes, ca, aa)
         return VerificationReport(

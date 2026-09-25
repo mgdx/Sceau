@@ -77,6 +77,11 @@ object Verdicts {
      *
      * Une ligne CA ou AA NOT_AVAILABLE aux côtés de l'autre OK donne AUTHENTIC (règle 3) :
      * un seul des deux challenges suffit.
+     *
+     * CA (resp. AA) ne vaut NOT_AVAILABLE que si DG14 (resp. DG15) est absent du SOD. Un DG
+     * annoncé par le SOD mais non fourni par la puce met DG_HASHES (détail
+     * `DataGroupHashes.missing`) et la ligne CA ou AA à FAILED : la règle 4 ne s'applique
+     * donc qu'à un document dont le SOD, signé, ne contient ni DG14 ni DG15 (audit V1).
      */
     fun compute(checks: List<Check>): Verdict {
         if (checks.any { it.status == CheckStatus.FAILED || it.status == CheckStatus.UNSUPPORTED_ALGORITHM }) {

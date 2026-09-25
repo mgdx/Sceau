@@ -263,6 +263,9 @@ internal class PassiveAuthenticator(
 
         val expected = securityObject.datagroupHash.associate { it.dataGroupNumber to it.dataGroupHashValue.octets }
         val checked = dataGroups.keys.sorted()
+        // Le SOD, signé, fait foi : un DG qu'il annonce parmi ceux que Sceau lit doit avoir été
+        // fourni par la puce (audit V1 : un clone ne doit pas pouvoir retenir DG2, DG14 ou DG15).
+        val missing = expected.keys.filter { it in READ_DATA_GROUPS && it !in dataGroups }.sorted()
         val mismatched =
             checked.filter { number ->
                 val reference = expected[number] ?: return@filter true
@@ -272,11 +275,11 @@ internal class PassiveAuthenticator(
             }
         val status =
             when {
+                mismatched.isNotEmpty() || missing.isNotEmpty() -> CheckStatus.FAILED
                 checked.isEmpty() -> CheckStatus.NOT_AVAILABLE
-                mismatched.isEmpty() -> CheckStatus.OK
-                else -> CheckStatus.FAILED
+                else -> CheckStatus.OK
             }
-        return Check(CheckId.DG_HASHES, status, CheckDetail.DataGroupHashes(algorithm, checked, mismatched))
+        return Check(CheckId.DG_HASHES, status, CheckDetail.DataGroupHashes(algorithm, checked, mismatched, missing))
     }
 
     // --- Validité du DS à la date de délivrance ------------------------------------------
@@ -360,5 +363,8 @@ internal class PassiveAuthenticator(
         const val ERROR_UNEXPECTED = "PA_UNEXPECTED"
         const val USUAL_VALIDITY_YEARS = 10L
         const val HEX = 16
+
+        /** DG que Sceau demande à la puce (voir DocumentReader) : jamais DG3 ni DG4. */
+        val READ_DATA_GROUPS = setOf(1, 2, 11, 12, 14, 15)
     }
 }

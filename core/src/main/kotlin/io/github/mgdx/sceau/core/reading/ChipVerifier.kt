@@ -20,6 +20,10 @@ import java.security.SecureRandom
  * Étape VERIFY_CHIP (SPEC §6.1, étapes 6 et 7) : Chip Authentication si DG14 annonce une clé,
  * puis Active Authentication si DG15 est présent.
  *
+ * Une ligne n'est « non disponible » que si le DG correspondant est absent du SOD : un DG14
+ * ou un DG15 que le SOD annonce mais que la puce n'a pas fourni est un échec (audit V1), sans
+ * quoi un clone qui les retient passerait pour une puce sans CA ni AA.
+ *
  * Une perte de connexion pendant l'une ou l'autre est relancée (la lecture échoue) ; toute
  * autre erreur de la puce est consignée dans la ligne de contrôle correspondante.
  */
@@ -35,8 +39,11 @@ internal class ChipVerifier(
      * L'échange ne prouve rien tant que la puce n'a pas répondu sous le nouveau canal : une
      * lecture courte de DG1 le confirme (le MAC de la réponse est vérifié).
      */
-    fun chipAuthentication(dg14Bytes: ByteArray?): Check {
-        if (dg14Bytes == null) return check(CheckId.CHIP_AUTHENTICATION, CheckStatus.NOT_AVAILABLE)
+    fun chipAuthentication(
+        dg14Bytes: ByteArray?,
+        signedInSod: Boolean,
+    ): Check {
+        if (dg14Bytes == null) return missing(CheckId.CHIP_AUTHENTICATION, signedInSod, "CA-DG14Missing")
         val dg14 =
             try {
                 DG14File(dg14Bytes.inputStream())
@@ -72,8 +79,9 @@ internal class ChipVerifier(
     fun activeAuthentication(
         dg15Bytes: ByteArray?,
         dg14Bytes: ByteArray?,
+        signedInSod: Boolean,
     ): Check {
-        if (dg15Bytes == null) return check(CheckId.ACTIVE_AUTHENTICATION, CheckStatus.NOT_AVAILABLE)
+        if (dg15Bytes == null) return missing(CheckId.ACTIVE_AUTHENTICATION, signedInSod, "AA-DG15Missing")
         val publicKey =
             try {
                 DG15File(dg15Bytes.inputStream()).publicKey
@@ -158,6 +166,17 @@ internal class ChipVerifier(
         status: CheckStatus,
         detail: CheckDetail = CheckDetail.None,
     ) = Check(id, status, detail)
+
+    /** DG absent : non disponible s'il n'est pas dans le SOD, échec s'il y est (puce qui le retient). */
+    private fun missing(
+        id: CheckId,
+        signedInSod: Boolean,
+        tag: String,
+    ) = if (signedInSod) {
+        check(id, CheckStatus.FAILED, CheckDetail.Error("${Step.VERIFY_CHIP.name}-$tag"))
+    } else {
+        check(id, CheckStatus.NOT_AVAILABLE)
+    }
 
     private fun unsupported(
         id: CheckId,

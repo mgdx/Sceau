@@ -37,8 +37,11 @@ import java.time.LocalDate
  * Authentication réellement exécutés, documents et PKI générés par la fabrique de test.
  */
 class ReadAndVerifyEndToEndTest {
-    private val rsaPki by lazy { TestPki(TestKeyType.RSA) }
-    private val ecPki by lazy { TestPki(TestKeyType.EC) }
+    // Graines fixes : le compteur global de TestPki dépend de l'ordre des tests, et une réponse AA
+    // signée par une mauvaise clé RSA peut, pour environ une graine sur mille, porter un trailer
+    // ISO 9796-2 inconnu (UNSUPPORTED_ALGORITHM au lieu de FAILED).
+    private val rsaPki by lazy { TestPki(TestKeyType.RSA, seed = RSA_SEED) }
+    private val ecPki by lazy { TestPki(TestKeyType.EC, seed = EC_SEED) }
 
     /** Clé MRZ du DG1 factice (numéro L898902C3, né le 12/08/1974). */
     private fun mrzOf(document: TestDocument) = AccessKey.Mrz(DOCUMENT_NUMBER, DATE_OF_BIRTH, document.dateOfExpiry)
@@ -200,6 +203,55 @@ class ReadAndVerifyEndToEndTest {
         assertFalse(0x010E in chip.selectedFids)
         assertFalse(0x010F in chip.selectedFids)
     }
+
+    // --- Clone qui retient des DG signés (audit V1) ---
+
+    @Test
+    fun cloneRetenantDg14EtDg15_EchecEtNonPuceNonVerifiee() =
+        runTest {
+            // Copie d'un vrai document : SOD, DG1, DG2 rejoués ; DG14 et DG15 refusés (6A82) et
+            // retirés d'EF.COM, qui n'est pas signé. Le SOD prouve pourtant qu'ils existent.
+            val document = rsaPki.document()
+            val chip = SimulatedChip(document, comDataGroups = listOf(1, 2), withheldDataGroups = listOf(14, 15))
+
+            val report = read(chip, rsaPki.store(), mrzOf(document))
+
+            assertEquals(Verdict.FAILED, report.verdict)
+            assertStatuses(
+                report,
+                CheckId.SOD_SIGNATURE to CheckStatus.OK,
+                CheckId.CERTIFICATE_CHAIN to CheckStatus.OK,
+                CheckId.DG_HASHES to CheckStatus.FAILED,
+                CheckId.CHIP_AUTHENTICATION to CheckStatus.FAILED,
+                CheckId.ACTIVE_AUTHENTICATION to CheckStatus.FAILED,
+            )
+            assertEquals(listOf(1, 2), hashes(report).checked)
+            assertEquals(emptyList<Int>(), hashes(report).mismatched)
+            assertEquals(listOf(14, 15), hashes(report).missing)
+            // Les DG annoncés par le SOD ont bien été demandés, malgré EF.COM.
+            assertTrue(0x010E in chip.selectedFids)
+            assertTrue(0x010F in chip.selectedFids)
+            assertTrue(chip.aaChallenges.isEmpty())
+        }
+
+    @Test
+    fun cloneRetenantDg2_Echec() =
+        runTest {
+            val document = ecPki.document()
+            val chip = SimulatedChip(document, withheldDataGroups = listOf(2))
+
+            val report = read(chip, ecPki.store(), mrzOf(document))
+
+            assertEquals(Verdict.FAILED, report.verdict)
+            assertStatuses(
+                report,
+                CheckId.DG_HASHES to CheckStatus.FAILED,
+                CheckId.CHIP_AUTHENTICATION to CheckStatus.OK,
+                CheckId.ACTIVE_AUTHENTICATION to CheckStatus.OK,
+            )
+            assertEquals(listOf(2), hashes(report).missing)
+            assertEquals(null, report.document.portrait)
+        }
 
     @Test
     fun dg2ModifieRsa_EchecSurEmpreinte() = runTest { modifiedDg2(rsaPki) }
@@ -385,5 +437,7 @@ class ReadAndVerifyEndToEndTest {
         private const val DOCUMENT_NUMBER = "L898902C3"
         private val DATE_OF_BIRTH: LocalDate = LocalDate.of(1974, 8, 12)
         private const val APDUS_BEFORE_REMOVAL = 4
+        private const val RSA_SEED = 20_260_901L
+        private const val EC_SEED = 20_260_902L
     }
 }

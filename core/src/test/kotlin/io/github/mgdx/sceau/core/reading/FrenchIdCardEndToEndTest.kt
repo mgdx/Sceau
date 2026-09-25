@@ -133,6 +133,30 @@ class FrenchIdCardEndToEndTest {
         }
 
     @Test
+    fun cloneRetenantDg2Dg14Dg15_Echec() =
+        runTest {
+            // Clone d'une CNIe : SOD, DG1, DG11, DG12 rejoués ; photo, DG14 et DG15 retenus et
+            // absents d'EF.COM. Sans la correction V1, le verdict serait « puce non vérifiée ».
+            val chip =
+                SimulatedChip(
+                    card.document,
+                    card.pace,
+                    comDataGroups = listOf(1, 11, 12),
+                    withheldDataGroups = listOf(2, 14, 15),
+                )
+
+            val report = read(chip, checkNotNull(card.canKey))
+
+            assertEquals(Verdict.FAILED, report.verdict)
+            assertEquals(CheckStatus.OK, report.check(CheckId.SOD_SIGNATURE).status)
+            assertEquals(CheckStatus.FAILED, report.check(CheckId.DG_HASHES).status)
+            assertEquals(listOf(2, 14, 15), hashes(report).missing)
+            assertEquals(CheckStatus.FAILED, report.check(CheckId.CHIP_AUTHENTICATION).status)
+            assertEquals(CheckStatus.FAILED, report.check(CheckId.ACTIVE_AUTHENTICATION).status)
+            assertNull(report.document.portrait)
+        }
+
+    @Test
     fun canFaux_AccessDenied() =
         runTest {
             val chip = card.chip()

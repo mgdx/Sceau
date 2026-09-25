@@ -156,6 +156,28 @@ class PassiveAuthenticationTest(
     }
 
     @Test
+    fun `DG du SOD non fournis par la puce - echec, DG manquants signales`() {
+        val document = pki.document()
+        val result = verify(document.withDataGroups(document.dataGroups - setOf(2, 14, 15)))
+
+        val detail = result.dataGroupHashes.detail as CheckDetail.DataGroupHashes
+        assertEquals(CheckStatus.FAILED, result.dataGroupHashes.status)
+        assertEquals(listOf(1), detail.checked)
+        assertEquals(emptyList<Int>(), detail.mismatched)
+        assertEquals(listOf(2, 14, 15), detail.missing)
+        assertEquals(Verdict.FAILED, Verdicts.compute(VerifyTestSupport.checks(result)))
+    }
+
+    @Test
+    fun `DG3 et DG4 du SOD jamais lus - pas des DG manquants`() {
+        val document = pki.document { sod = SodOptions(extraHashes = mapOf(3 to ByteArray(32), 4 to ByteArray(32))) }
+        val result = verify(document)
+
+        assertEquals(CheckStatus.OK, result.dataGroupHashes.status)
+        assertEquals(emptyList<Int>(), (result.dataGroupHashes.detail as CheckDetail.DataGroupHashes).missing)
+    }
+
+    @Test
     fun `DS expire avant la date de delivrance DG12 - echec sur la validite`() {
         val ds = pki.issueDs(notBefore = LocalDate.of(2015, 1, 1), notAfter = LocalDate.of(2019, 1, 1))
         val result = verify(pki.document { this.ds = ds })
