@@ -12,14 +12,19 @@ set(OPJ_USE_THREAD OFF CACHE BOOL "" FORCE)
 add_subdirectory("${SCEAU_CPP_DIR}/openjpeg" openjpeg EXCLUDE_FROM_ALL)
 target_compile_definitions(openjp2 PUBLIC OPJ_STATIC)
 target_compile_options(openjp2 PRIVATE -w)
+# Comme pour l'APK : l'allocateur plafonné de Sceau remplace opj_malloc.c.
+get_target_property(SCEAU_OPJ_SOURCES openjp2 SOURCES)
+list(FILTER SCEAU_OPJ_SOURCES EXCLUDE REGEX "/opj_malloc\\.c$")
+set_property(TARGET openjp2 PROPERTY SOURCES ${SCEAU_OPJ_SOURCES})
 
-add_executable(jp2_host_test jp2_host_test.c "${SCEAU_CPP_DIR}/jp2_decode.c")
+add_executable(jp2_host_test jp2_host_test.c "${SCEAU_CPP_DIR}/jp2_decode.c"
+    "${SCEAU_CPP_DIR}/jp2_alloc.c")
 target_include_directories(jp2_host_test PRIVATE
     "${SCEAU_CPP_DIR}"
     "${SCEAU_CPP_DIR}/openjpeg/src/lib/openjp2"
     "${CMAKE_CURRENT_BINARY_DIR}/openjpeg/src/lib/openjp2")
 # Mêmes exigences d'avertissements que pour l'APK, sur le cœur de décodage.
-set_source_files_properties("${SCEAU_CPP_DIR}/jp2_decode.c" PROPERTIES COMPILE_OPTIONS
+set_source_files_properties("${SCEAU_CPP_DIR}/jp2_decode.c" "${SCEAU_CPP_DIR}/jp2_alloc.c" PROPERTIES COMPILE_OPTIONS
     "-std=c11;-Wall;-Wextra;-Wconversion;-Wsign-conversion;-Wshadow;-Wstrict-prototypes;-Werror")
 target_compile_options(jp2_host_test PRIVATE -Wall -Wextra)
 target_link_libraries(jp2_host_test PRIVATE openjp2)
