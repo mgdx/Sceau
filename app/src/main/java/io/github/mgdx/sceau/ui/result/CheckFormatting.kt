@@ -116,6 +116,11 @@ object CheckFormatting {
                     hashLines(detail)
                 }
 
+                is CheckDetail.CountryMismatch -> {
+                    // Mise en forme à écrire par le lot de correction de l'écran Résultat (audit V3).
+                    emptyList()
+                }
+
                 is CheckDetail.UnsupportedAlgorithm -> {
                     listOf(text(R.string.result_detail_unsupported, detail.algorithm))
                 }
