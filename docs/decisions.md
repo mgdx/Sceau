@@ -1,5 +1,7 @@
 # Décisions et écarts par rapport à SPEC.md
 
+> Les décisions D1 à D19 sont intégrées à SPEC.md depuis le 2026-09-25.
+
 `SPEC.md` est la source de vérité. Toute décision qui s'en écarte, ou qui tranche un point que la SPEC laisse ouvert, est consignée ici avec sa justification. Une entrée par décision, la plus récente en bas.
 
 Format : date, contexte, décision, justification, écart à la SPEC concerné.
@@ -197,3 +199,11 @@ Format : date, contexte, décision, justification, écart à la SPEC concerné.
 - **Décision** : `SceauTheme` utilise toujours la palette du logo (marine, ivoire, vert), en clair comme en sombre (`dynamicColor = false` par défaut, jamais activé). Le mode sombre suit le système.
 - **Justification** : une application de vérification doit garder une apparence stable et reconnaissable ; une couleur primaire rouge ou verte tirée du fond d'écran brouillerait la lecture des verdicts, qui reposent sur des couleurs propres à chacun (contraste vérifié par `VerdictColorsTest`).
 - **Écart à la SPEC** : aucun (§2 : Material 3, mode sombre suivant le système).
+
+## D19. Rapport de vérification non sérialisé
+
+- **Date** : 2026-09-25 (mise à jour de la SPEC décidée par l'utilisateur).
+- **Contexte** : SPEC §6.2 prévoyait un `VerificationReport` « sérialisable pour les tests uniquement (jamais persisté par l'appli) ».
+- **Décision** : le rapport n'implémente aucune sérialisation. La mention « sérialisable pour les tests » est retirée de SPEC §6.2.
+- **Justification** : les tests de `:core` et de `:app` construisent leurs cas avec la PKI factice et la puce simulée de `:testchip` (D17) et vérifient le rapport en mémoire ; aucun n'a eu besoin de le sérialiser. Ne pas offrir de sérialisation supprime aussi un chemin par lequel des données lues pourraient être écrites (SPEC §8).
+- **Écart à la SPEC** : aucun désormais (SPEC §6.2 mise à jour le 2026-09-25).
