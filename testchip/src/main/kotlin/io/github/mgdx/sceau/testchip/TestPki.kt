@@ -180,8 +180,10 @@ class TestPki(
         basicConstraintsCa: Boolean?,
         keyUsage: Int?,
         subjectKeyType: TestKeyType = keyType,
+        /** Paire de clés du sujet ; par défaut une nouvelle paire (certificats croisés : la réutiliser). */
+        keyPair: KeyPair? = null,
     ): TestCredential {
-        val keys = generateKeyPair(subjectKeyType)
+        val keys = keyPair ?: generateKeyPair(subjectKeyType)
         val spki = subjectPublicKeyInfo(keys, subjectKeyType)
         val builder =
             X509v3CertificateBuilder(

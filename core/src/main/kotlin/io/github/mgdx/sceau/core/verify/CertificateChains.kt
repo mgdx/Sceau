@@ -30,6 +30,9 @@ internal sealed interface ChainOutcome {
 
     /** Aucun certificat du magasin ne correspond : émetteur inconnu. */
     data object NotFound : ChainOutcome
+
+    /** Recherche abandonnée, budget de vérifications épuisé : magasin hostile (audit V15). */
+    data object BudgetExceeded : ChainOutcome
 }
 
 /**
@@ -49,6 +52,14 @@ internal sealed interface ChainOutcome {
  * SKI ceux d'un CSCA auto-signé conforme du magasin, qui ancre la chaîne directement. Un DS
  * (keyUsage digitalSignature seul, sans keyCertSign) glissé dans une Master List importée ne
  * peut donc plus servir d'émetteur.
+ *
+ * Coût borné (audit V15) : chaque certificat du magasin est exploré au plus une fois par
+ * recherche (ensemble global, et non par chemin), et au-delà de [MAX_SIGNATURE_CHECKS]
+ * vérifications de signature la recherche s'arrête sur [ChainOutcome.BudgetExceeded]. Des
+ * certificats croisés partageant un AKI (Master List importée hostile) coûtaient sinon
+ * jusqu'à k^8 vérifications. Une chaîne réelle en demande quelques-unes.
+ *
+ * Une instance par recherche : [build] n'est pas réentrant.
  */
 internal class CertificateChains(
     private val store: TrustStore,
@@ -63,14 +74,30 @@ internal class CertificateChains(
         ) : SignatureCheck
     }
 
-    fun build(certificate: X509CertificateHolder): ChainOutcome = search(certificate, depth = 0, visited = emptySet())
+    /** Empreintes des certificats du magasin déjà explorés pendant la recherche en cours. */
+    private val explored = mutableSetOf<String>()
+    private var signatureChecks = 0
+
+    /** Levée quand le budget de vérifications est épuisé ; ne sort jamais de [build]. */
+    private class BudgetExhausted : RuntimeException() {
+        override fun fillInStackTrace(): Throwable = this
+    }
+
+    fun build(certificate: X509CertificateHolder): ChainOutcome {
+        explored.clear()
+        signatureChecks = 0
+        return try {
+            search(certificate, depth = 0)
+        } catch (e: BudgetExhausted) {
+            ChainOutcome.BudgetExceeded
+        }
+    }
 
     private fun search(
         certificate: X509CertificateHolder,
         depth: Int,
-        visited: Set<String>,
     ): ChainOutcome {
-        val candidates = issuerCandidates(certificate).filter { Crypto.fingerprint(it.certificate) !in visited }
+        val candidates = issuerCandidates(certificate).filter { Crypto.fingerprint(it.certificate) !in explored }
         if (candidates.isEmpty()) return ChainOutcome.NotFound
 
         var failure: ChainOutcome = ChainOutcome.NotFound
@@ -98,7 +125,9 @@ internal class CertificateChains(
         if (depth >= MAX_DEPTH) return failure
 
         for ((link, holder) in verified) {
-            when (val next = search(holder, depth + 1, visited + Crypto.fingerprint(link.certificate))) {
+            // Déjà exploré (par ce chemin ou un autre) : son issue est connue, inutile d'y revenir.
+            if (!explored.add(Crypto.fingerprint(link.certificate))) continue
+            when (val next = search(holder, depth + 1)) {
                 is ChainOutcome.Found -> return ChainOutcome.Found(listOf(link) + next.links, next.root)
                 else -> failure = worst(failure, next)
             }
@@ -133,6 +162,7 @@ internal class CertificateChains(
         certificate: X509CertificateHolder,
         issuer: X509CertificateHolder,
     ): SignatureCheck {
+        if (++signatureChecks > MAX_SIGNATURE_CHECKS) throw BudgetExhausted()
         // Audit V9 : hachage cassé (MD5, RIPEMD-128…) ou clé RSA de moins de 1024 bits refusés.
         if (Crypto.isWeakAlgorithm(certificate.signatureAlgorithm)) {
             return SignatureCheck.Unsupported(Crypto.algorithmName(certificate.signatureAlgorithm.algorithm))
@@ -164,11 +194,15 @@ internal class CertificateChains(
             is ChainOutcome.Unsupported -> 1
             is ChainOutcome.BadSignature -> 2
             is ChainOutcome.Found -> 3
+            ChainOutcome.BudgetExceeded -> 4
         }
 
     companion object {
         /** Profondeur maximale de liens traversés : largement au-delà des chaînes réelles. */
         private const val MAX_DEPTH = 8
+
+        /** Vérifications de signature par recherche : une chaîne réelle en demande quelques-unes. */
+        const val MAX_SIGNATURE_CHECKS = 64
 
         /** Vrai si [holder] peut émettre des certificats (voir la règle de la classe, audit V8). */
         fun canIssueCertificates(holder: X509CertificateHolder): Boolean =

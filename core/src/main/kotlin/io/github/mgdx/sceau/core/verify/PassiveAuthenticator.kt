@@ -261,6 +261,11 @@ internal class PassiveAuthenticator(
                 val info = chainInfo(ds, null, emptyList())
                 Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.NOT_AVAILABLE, CheckDetail.Chain(info)) to info
             }
+
+            ChainOutcome.BudgetExceeded -> {
+                val info = chainInfo(ds, null, emptyList())
+                Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.FAILED, CheckDetail.Error(ERROR_CHAIN_BUDGET)) to info
+            }
         }
 
     /** keyUsage du DS, s'il est présent, avec digitalSignature (ICAO 9303-12) ; absent : toléré. */
@@ -409,6 +414,7 @@ internal class PassiveAuthenticator(
         const val ERROR_SOD_MALFORMED = "SOD_MALFORMED"
         const val ERROR_UNEXPECTED = "PA_UNEXPECTED"
         const val ERROR_DS_KEY_USAGE = "DS_KEY_USAGE"
+        const val ERROR_CHAIN_BUDGET = "CHAIN_BUDGET"
         const val USUAL_VALIDITY_YEARS = 10L
         const val HEX = 16
 
