@@ -103,3 +103,97 @@ Format : date, contexte, décision, justification, écart à la SPEC concerné.
 - **Décision** : ces dépendances sont déclarées en `implementation` dans `core/build.gradle.kts`, pas en `api`.
 - **Justification** : l'API publique de `:core` (`readAndVerify`, `CardTransport`, `AccessKey`, `VerificationReport`, `TrustStore`…) n'expose aucun type de JMRTD ni de BouncyCastle, seulement des types Kotlin et `java.security` / `java.time`. `:app` ne doit pas dépendre des détails de mise en œuvre de `:core`. Seul `scuba-sc-android`, nécessaire au pont `IsoDep`, est déclaré directement dans `:app`.
 - **Écart à la SPEC** : aucun.
+
+## D10. Dates du passeport saisies au clavier
+
+- **Date** : 2026-09-25 (retour de l'utilisateur sur téléphone).
+- **Contexte** : SPEC §5.1 prévoit un sélecteur de date pour la date de naissance et la date d'expiration (onglet Passeport). À l'essai, le sélecteur s'ouvrait en calendrier, peu pratique pour recopier une date de naissance ou une expiration lointaine.
+- **Décision** : les deux dates se saisissent au clavier numérique (`KeyboardType.NumberPassword`), en huit chiffres (jour et mois sur deux, année sur quatre). Les séparateurs `/` s'affichent au fil de la frappe (`DateDigitsTransformation`) sans être stockés. L'ordre des champs suit le format de date court de la locale (`DateOrder.forLocale`) : JJ/MM/AAAA en français, MM/JJ/AAAA en anglais américain ; jour, mois, année par défaut. Validation (`AccessForm`) : date réelle, naissance au plus tard aujourd'hui, expiration à partir de 1990 ; l'erreur s'affiche sous le champ et « Lire » reste inactif tant qu'une date est invalide. Les chiffres vivent dans le `SessionViewModel`, jamais dans un `Bundle`.
+- **Justification** : saisie plus rapide que le calendrier pour des dates recopiées depuis le document ; le clavier de type mot de passe numérique évite que le clavier du système apprenne ou suggère ces dates.
+- **Écart à la SPEC** : §5.1 (champs numériques formatés au lieu d'un sélecteur de date).
+
+## D11. Code technique affiché pour toutes les erreurs de lecture
+
+- **Date** : 2026-09-25.
+- **Contexte** : SPEC §5.2 prévoit un identifiant technique « en petit » pour la seule erreur inattendue. Sur appareil réel, des erreurs présentées comme « délai dépassé » ou « document retiré » avaient d'autres causes ; or aucun journal n'est permis (SPEC §8), en debug comme en release : le code affiché est le seul moyen de diagnostic.
+- **Décision** : l'écran de lecture affiche, sous le message en français, le code complet de la `SceauException` pour **toutes** les erreurs. Le message est choisi sur le code de base (`ReadingErrors.messageFor`, texte avant le premier `-`). Les codes `TIMEOUT`, `CONNECTION_LOST` et `UNEXPECTED` portent un suffixe de diagnostic fait uniquement d'éléments sans donnée personnelle : étape (`SECURE_CHANNEL`…), octet INS de la commande en cours (`INS86`), longueur de l'APDU arrondie à la dizaine (`L10`), sous-type d'erreur d'E/S pris dans une liste fermée de messages d'`android.nfc` (`IO-TRANSCEIVE_FAILED`, `IO-TOO_LONG`, `IO-SERVICE_DIED`, sinon `IO-OTHER` ou `IO-NO_MESSAGE` ; le message brut n'est jamais repris), classe d'exception et mot d'état SW. Exemple : `TIMEOUT-SECURE_CHANNEL-INS86-L10`. Liste complète dans `docs/protocol.md` §5.
+- **Justification** : diagnostiquer sur appareil sans rien écrire dans les journaux ; le suffixe ne contient ni donnée lue, ni clé, ni octets d'APDU.
+- **Écart à la SPEC** : §5.2 (identifiant technique affiché pour toutes les erreurs, pas seulement l'erreur inattendue).
+
+## D12. Délai de réponse de 60 s pendant l'authentification
+
+- **Date** : 2026-09-25.
+- **Contexte** : un vrai passeport français, après plusieurs tentatives ratées, restait muet à la première commande d'authentification (premier GENERAL AUTHENTICATE de PACE, puis EXTERNAL AUTHENTICATE de BAC) sur Fairphone 3 et Fairphone 5 : la lecture échouait en délai dépassé (`TIMEOUT-SECURE_CHANNEL-INS82-L50`). Sans limite courte, il a mis 23,3 s à répondre au premier GENERAL AUTHENTICATE de PACE : c'est la contre-mesure anti-force brute des puces, qui imposent un délai croissant après des essais ratés.
+- **Décision** :
+  - pendant PACE et BAC, le délai de réponse du transport est porté à 60 s (`SecureChannel.AUTHENTICATION_TIMEOUT_MILLIS`), puis rétabli à sa valeur précédente (10 s, `IsoDepTransport.DEFAULT_TIMEOUT_MILLIS`) pour la lecture ;
+  - `IsoDepTransport` relit `IsoDep.getTimeout()` après chaque affectation et classe un échec en délai dépassé d'après le délai effectivement retenu par le système (échec survenu après 90 % de ce délai) ;
+  - après 5 s dans l'étape « Ouverture du canal sécurisé », l'écran de lecture affiche un message d'attente (la puce fait patienter, jusqu'à une minute) ; le message « CAN ou MRZ incorrects » prévient qu'un essai raté peut allonger ce délai ;
+  - un délai dépassé pendant PACE arrête la lecture (`TIMEOUT-…`), sans repli sur BAC (décision D13).
+- **Justification** : couper plus tôt ne laisse jamais la puce répondre, et chaque essai interrompu peut aggraver la pénalité. Relancer BAC sur une puce en pénalité ajouterait un essai interrompu.
+- **Écart à la SPEC** : aucun ; précise §5.2 (« Délai dépassé ») et §6.1 étape 2.
+
+## D13. Repli de PACE sur BAC pour une clé MRZ
+
+- **Date** : 2026-09-25.
+- **Contexte** : SPEC §6.1 étape 2 prévoit PACE si EF.CardAccess l'annonce, BAC sinon. Un passeport français réel (ISO 14443-B, Fairphone 3) annonçait PACE mais ne répondait pas à son premier GENERAL AUTHENTICATE, puis perdait la liaison. ICAO 9303 impose encore aux documents qui annoncent PACE d'accepter BAC pendant la transition.
+- **Décision** : avec une clé MRZ, si PACE échoue autrement que par un refus de la clé (SW `63xx`) ou un délai dépassé, c'est-à-dire sur un SW inattendu, une erreur de JMRTD ou une perte de liaison, la liaison est réinitialisée par `CardTransport.reconnect()` (méthode ajoutée à l'interface, vide par défaut ; `IsoDepTransport` l'implémente par `close()` puis `connect()`, délai réappliqué), l'applet ICAO est sélectionnée en clair, puis BAC est mené. Avec un CAN, aucun repli : BAC ne sait pas utiliser un CAN, l'erreur ressort telle quelle (refus ou échec de PACE : `ACCESS_DENIED`). Une reconnexion impossible donne `CONNECTION_LOST-SECURE_CHANNEL-RECONNECT`. Tests : `PaceFallbackTest`.
+- **Justification** : lire les documents dont la mise en œuvre de PACE est défaillante, sans multiplier les essais de clé (un refus explicite arrête tout) ni relancer une puce en pénalité (D12).
+- **Écart à la SPEC** : §6.1 étape 2 (BAC tenté après l'échec d'un PACE annoncé) ; §6 (`CardTransport` gagne une méthode, `readAndVerify` inchangée).
+
+## D14. Lecture de la puce : APDU courtes, DG2 facultatif, journaux et exceptions de JMRTD
+
+- **Date** : 2026-09-25.
+- **Contexte** : points de mise en œuvre de la lecture (`core/src/main/kotlin/…/reading/`) que la SPEC ne tranche pas, ou qu'elle ne permet de respecter qu'en partie.
+- **Décision** :
+  - **APDU courtes** : la longueur maximale transmise à JMRTD est celle du transport, plafonnée à 256 (`Chip`) ; aucune APDU étendue n'est émise, beaucoup de puces les refusant. Lecture par blocs de 223 octets, sans SFI (SELECT puis READ BINARY), MAC des réponses toujours vérifié ;
+  - **DG2 manquant toléré** : DG2 est toujours demandé, mais une puce qui ne le fournit pas n'interrompt pas la lecture : la photo est absente et la ligne « Empreintes » ne porte que sur les DG lus. DG1 et EF.SOD restent obligatoires ; EF.COM est facultatif (le SOD indique alors les DG présents) ;
+  - **journaux de JMRTD et SCUBA coupés** : leurs loggers `java.util.logging` (`org.jmrtd`, `net.sf.scuba`) sont mis au niveau `OFF` au début de chaque lecture (`LibraryLogging`), car ils écrivent des APDU en clair ;
+  - **exceptions sans cause attachée** : les messages des exceptions de JMRTD contiennent des APDU en hexadécimal, donc potentiellement des données lues. Aucune exception de JMRTD n'est propagée ni attachée comme cause à une `SceauException` ; seul un identifiant technique est construit (étape, étiquette, classe, SW : `technicalCode`) ;
+  - **tampons non effaçables** : JMRTD (flux de lecture des fichiers, objets de la LDS, messagerie sécurisée) et OpenJPEG (décision D3) gardent des copies intermédiaires des données dans des tampons internes qu'ils libèrent sans remise à zéro. Sceau remet à zéro ses propres tableaux (`DocumentData.wipe()`, tampons natifs de `jp2_decode.c`) mais ne peut pas atteindre ceux-là.
+- **Justification** : compatibilité la plus large ; SPEC §8 (aucune donnée lue dans un journal ni une exception). La limite sur les tampons découle des bibliothèques retenues (SPEC §3, D3) ; ces copies restent dans la mémoire du processus, ne sont ni écrites sur disque ni journalisées.
+- **Écart à la SPEC** : §6.1 étape 4 (DG2 absent toléré) ; limite de §8 (remise à zéro de DG1, DG2, DG11 et DG12 garantie pour les seuls tableaux de Sceau).
+
+## D15. Passive et Active Authentication : points laissés ouverts par la SPEC
+
+- **Date** : 2026-09-25.
+- **Contexte** : SPEC §6.1 étapes 5 et 7 ; décision D6.
+- **Décision** :
+  - **DS absent du SOD** : il est cherché dans le magasin par (émetteur, numéro de série) parmi les ancres, ou par identifiant de clé (SKI) si le `SignerIdentifier` est de cette forme. Introuvable : lignes « Signature du SOD » et « Chaîne de certification » `NOT_AVAILABLE` avec le détail `DsCertificateMissing`, « Validité du DS » `NOT_AVAILABLE`, d'où le verdict « Émetteur inconnu » ;
+  - **durée usuelle d'estimation** : 10 ans pour tous les documents, quel que soit le code de DG1 (passeports et CNIe depuis 2021 pour un adulte). Une date de délivrance **estimée** qui tombe dans la période du DS donne `OK` ; hors de la période, `NOT_AVAILABLE`, jamais `FAILED` (D6) ;
+  - **validité calendaire des CSCA et des certificats de lien non vérifiée** : seules leurs signatures comptent dans la chaîne (`CertificateChains`), un document restant valide jusqu'à dix ans après l'expiration de son CSCA. La période du DS, elle, est vérifiée à la date de délivrance. Les émetteurs candidats sont cherchés par Authority Key Identifier puis par nom (un candidat de même nom mais de SKI différent est écarté), à travers 8 liens au plus, jusqu'à un CSCA auto-signé du magasin ;
+  - **AA sur clé EC sans algorithme de hachage annoncé** (DG14 sans `ActiveAuthenticationInfo`, cas hors norme rencontré en pratique) : ECDSA est essayé successivement avec SHA-1, SHA-224, SHA-256, SHA-384 et SHA-512 ; le premier qui vérifie donne `OK`. Clé RSA : ISO/IEC 9796-2 schéma 1, hachage désigné par le trailer (implicite : SHA-1).
+- **Justification** : ne jamais déclarer faux un document authentique sur une estimation ou sur l'expiration normale d'un CSCA ; accepter les puces réelles qui s'écartent de la norme sans affaiblir la vérification (la signature reste vérifiée avec la clé de DG15, elle-même couverte par le SOD).
+- **Écart à la SPEC** : aucun ; précise §6.1 étapes 5 et 7.
+
+## D16. Magasin de confiance : index, CSCA expiré, auto-signature, préchargement
+
+- **Date** : 2026-09-25.
+- **Contexte** : SPEC §7.1 et §7.2 ; décision D1.
+- **Décision** :
+  - **`trust/index.txt`** énumère les fichiers de `core/src/main/resources/trust/` (un nom par ligne) : lister un répertoire du classpath n'est pas fiable dans un APK. `TrustStoreFingerprintTest` vérifie que l'index, le répertoire et `docs/trust-store.md` listent les mêmes fichiers ;
+  - le **CSCA passeport ANTS 2010**, expiré en mars 2026, est conservé : il a signé des DS dont les passeports, valables dix ans, circulent encore (voir D15, validité des CSCA non vérifiée) ;
+  - **`TrustAnchor.isSelfSigned`** se déduit des identifiants de clé : sujet égal à l'émetteur et AKI égal au SKI, ou AKI absent et SKI présent ; la signature n'est vérifiée qu'en repli, quand ces extensions ne permettent pas de conclure. Vérifier la signature des 590 ancres (dont 160 clés EC à paramètres explicites) prenait environ 35 s sur Fairphone 3 à l'ouverture de l'écran Magasin de confiance ; le résultat est identique sur les 590 ancres, en moins d'une seconde. La construction de la chaîne DS → CSCA vérifie toujours chaque signature (D15) ;
+  - **préchargement** : `SceauApplication` charge le magasin en arrière-plan au démarrage du processus, pour que ni la première lecture ni l'écran Magasin de confiance n'attendent. Une erreur de préchargement est ignorée : l'accès suivant retente le chargement et la signale.
+- **Justification** : fiabilité du chargement dans un APK ; vérification des documents encore valides ; performances sur un téléphone ancien.
+- **Écart à la SPEC** : aucun ; précise §7.1 et §7.2.
+
+## D17. Module `:testchip` et mode démo réservé à l'APK de debug
+
+- **Date** : 2026-09-25.
+- **Contexte** : SPEC §2 prévoit deux modules (`:core`, `:app`) et §9.1 une fabrique de test. Cette fabrique, un simulateur de puce et un document spécimen servent aux tests de `:core` comme à la démonstration de l'interface sans document réel.
+- **Décision** :
+  - module Kotlin JVM **`:testchip`** (paquet `io.github.mgdx.sceau.testchip`) : PKI factice (CSCA ancien et nouveau, lien, DS, SOD, en RSA et EC), puce simulée à état (`SimulatedChip` : EF.CardAccess, BAC, PACE à mapping générique ECDH, messagerie sécurisée 3DES et AES, Chip Authentication, Active Authentication) écrite sans le code protocolaire de JMRTD, et CNIe spécimen (`SimulatedDocuments.frenchIdCard()` : identité SPECIMEN / MARIANNE, CAN 123456, portrait JPEG 2000 synthétique). `:core` l'utilise en `testImplementation` seulement ; son code principal n'en dépend pas. Voir `testchip/README.md` ;
+  - **mode démo** : entrée « Simuler une CNIe (démo) » du menu de l'accueil, dans l'APK de debug seulement. `:testchip` y est en `debugImplementation` ; l'objet `DemoMode` existe en deux versions : `app/src/debug/` lit la CNIe simulée, `app/src/release/` est vide (`isAvailable = false`, l'entrée de menu n'est pas affichée). La lecture démo suit le même chemin que celle d'un document réel (`SessionViewModel.launchRead`), avec les mêmes règles d'effacement, et l'écran de résultat affiche le bandeau « Document simulé — démonstration » ;
+  - **magasin de test distinct** : la démo vérifie la CNIe simulée avec le magasin de test du document (`TestTrustStore`, CSCA `CSCA-TEST-FRANCE` généré à la volée) ; ce magasin ne sert qu'à cette lecture et ne remplace ni ne complète jamais le magasin réel. La clé saisie est oubliée au lancement de la démo, pour qu'un vrai document présenté ensuite ne soit jamais lu avec la clé ou le magasin de la démo ;
+  - **preuve que rien n'entre dans le release** : `./gradlew :app:dependencies --configuration releaseRuntimeClasspath` ne contient pas `project :testchip` (présent dans `debugRuntimeClasspath`, vérifié le 2026-09-25), et la version release de `DemoMode` ne référence aucune classe de `:testchip` ; `DemoModeTest` (tests unitaires de la variante debug) lit la CNIe simulée de bout en bout ;
+  - lint : `TrulyRandom` désactivé dans `:testchip` (aléa à graine fixe, voulu pour des clés reproductibles) ; `@Suppress("GetInstance")` sur `SimCrypto.aesBlock` (chiffrement AES d'un seul bloc imposé par ICAO 9303-11), signalé par le lint de `:app` qui analyse ses dépendances.
+- **Justification** : tester `:core` contre une mise en œuvre indépendante de la puce ; permettre une démonstration et des essais d'interface sans document d'identité réel, sans qu'aucune clé ni aucun certificat de test n'atteigne l'APK distribué.
+- **Écart à la SPEC** : §2 (troisième module) ; §5 (entrée de menu hors SPEC, APK de debug uniquement).
+
+## D18. Couleurs dynamiques désactivées
+
+- **Date** : 2026-09-25.
+- **Contexte** : Material 3 propose sur Android 12+ des couleurs tirées du fond d'écran (couleurs dynamiques).
+- **Décision** : `SceauTheme` utilise toujours la palette du logo (marine, ivoire, vert), en clair comme en sombre (`dynamicColor = false` par défaut, jamais activé). Le mode sombre suit le système.
+- **Justification** : une application de vérification doit garder une apparence stable et reconnaissable ; une couleur primaire rouge ou verte tirée du fond d'écran brouillerait la lecture des verdicts, qui reposent sur des couleurs propres à chacun (contraste vérifié par `VerdictColorsTest`).
+- **Écart à la SPEC** : aucun (§2 : Material 3, mode sombre suivant le système).

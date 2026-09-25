@@ -18,6 +18,7 @@ Avant de commencer, lisez [`SPEC.md`](SPEC.md) (source de vérité), [`docs/arch
 - L'API publique de `:core` n'expose aucun type de JMRTD ni de BouncyCastle.
 - **Aucun algorithme codé en dur** : on accepte ce que déclarent les certificats et le SOD ; un algorithme inconnu donne `UNSUPPORTED_ALGORITHM`, jamais un échec silencieux (SPEC §6.2).
 - Une étape non disponible (`NOT_AVAILABLE`) reste distincte d'une étape échouée (`FAILED`).
+- **`:testchip` n'entre jamais dans l'APK release** : il reste en `testImplementation` de `:core` et en `debugImplementation` de `:app`. Tout ce qui s'en sert dans `:app` passe par le jeu de sources `debug`, avec une version vide dans `release` (décision D17).
 
 ### Interface
 
@@ -26,8 +27,9 @@ Avant de commencer, lisez [`SPEC.md`](SPEC.md) (source de vérité), [`docs/arch
 
 ### Vie privée et sécurité
 
-- **Aucune donnée lue** (DG1, photo, DG11, DG12) ni clé d'accès (CAN, MRZ) n'est écrite sur disque, en cache, en base, en préférences ou dans les journaux, en debug comme en release. Pas de `Log.d` de contenu, pas de `rememberSaveable` ni de `SavedStateHandle` pour ces données.
-- Aucune donnée personnelle dans les messages d'exception ni dans les codes d'erreur. Les classes de modèle ne sont pas des `data class` et masquent leur `toString()`.
+- **Aucune donnée lue** (DG1, photo, DG11, DG12) ni clé d'accès (CAN, MRZ) n'est écrite sur disque, en cache, en base, en préférences ou dans les journaux, en debug comme en release. Pas de `rememberSaveable` ni de `SavedStateHandle` pour ces données.
+- **Aucun journal, même temporaire pour déboguer** : ni `Log`, ni `println`, ni `printStackTrace`. Pour diagnostiquer sur appareil, enrichissez plutôt le code d'erreur affiché, avec des éléments sans donnée personnelle (étape, INS, longueur arrondie, sous-type d'une liste fermée : décision D11).
+- Aucune donnée personnelle dans les messages d'exception ni dans les codes d'erreur. N'attachez jamais une exception de JMRTD comme cause : ses messages contiennent des APDU en hexadécimal (décision D14). Les classes de modèle ne sont pas des `data class` et masquent leur `toString()`.
 - Les écrans qui affichent des données lues posent `FLAG_SECURE` (`SecureWindow()`).
 - Les tableaux d'octets lus sont remis à zéro (`wipe()`) à la sortie du résultat et en arrière-plan.
 - Tout aléa cryptographique vient de `SecureRandom`.
@@ -53,7 +55,9 @@ Les sources d'OpenJPEG sont un sous-module git : clonez avec `git clone --recurs
 ```bash
 ./gradlew :core:test                                                   # tests JVM du cœur
 ./gradlew :core:test --tests "io.github.mgdx.sceau.core.SomeTest"       # un seul test
-./gradlew :app:assembleDebug                                            # APK de debug
+./gradlew :testchip:test                                               # tests de la puce simulée
+./gradlew :app:testDebugUnitTest                                        # tests JVM de l'app (dont le mode démo)
+./gradlew :app:assembleDebug                                            # APK de debug (mode démo inclus)
 ./gradlew :app:assembleRelease                                          # APK release (R8), non signé
 ./gradlew lint ktlintCheck                                              # lint et style
 ./gradlew ktlintFormat                                                  # reformate selon .editorconfig
@@ -64,7 +68,7 @@ app/src/main/cpp/test/run-host-tests.sh                                 # tests 
 
 Tout changement de `app/src/main/cpp/` (code C ou version d'OpenJPEG) passe par `run-host-tests.sh`, qui demande `cmake` et un compilateur C hôte avec AddressSanitizer. Le code C de Sceau est compilé avec `-Wall -Wextra -Wconversion -Werror`.
 
-La CI (`.github/workflows/ci.yml`) exécute `./gradlew check :app:assembleDebug`. Lancez `./gradlew check` avant de proposer une contribution.
+La CI (`.github/workflows/ci.yml`) récupère le sous-module OpenJPEG puis exécute `./gradlew check :app:assembleDebug`. Lancez `./gradlew check` avant de proposer une contribution.
 
 Toolchain : JDK 17 pour la compilation, JDK 25 pour le démon Gradle.
 
@@ -81,7 +85,7 @@ Format : `type(portée): description`, en français, au présent, sans point fin
 | `refactor` | restructuration sans changement de comportement |
 | `chore` | build, dépendances, CI, outillage |
 
-Portées usuelles : `core`, `app`, `trust`, `reading`, `result`, `home`, `about`, `socle`, `ci`. Exemple : `fix(core): distinguer DG15 absent d'un échec d'Active Authentication`.
+Portées usuelles : `core`, `app`, `trust`, `reading`, `result`, `home`, `about`, `nfc`, `jp2`, `sim` (`:testchip`), `debug` (mode démo), `socle`, `ci`. Exemple : `fix(core): distinguer DG15 absent d'un échec d'Active Authentication`.
 
 Le corps du message explique le pourquoi, et cite le cas échéant la section de la SPEC ou la décision de `docs/decisions.md` concernée.
 

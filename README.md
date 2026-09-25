@@ -10,7 +10,7 @@ Sceau fonctionne entièrement hors ligne : il ne demande aucune permission rése
 
 ## Fonctionnalités
 
-- **Lecture NFC** avec le CAN (6 chiffres imprimés sur la carte d'identité) ou la MRZ (numéro de document, date de naissance, date d'expiration), par PACE ou BAC selon ce que la puce annonce.
+- **Lecture NFC** avec le CAN (6 chiffres imprimés sur la carte d'identité) ou la MRZ (numéro de document, date de naissance, date d'expiration), par PACE ou BAC selon ce que la puce annonce. Une puce qui fait patienter après des essais ratés est attendue jusqu'à une minute.
 - **Affichage** de la photo, de l'identité (nom, prénoms, sexe, date de naissance, nationalité, type et numéro de document, État émetteur, date d'expiration) et, si la puce les contient, des données complémentaires (DG11, DG12).
 - **Vérification de l'authenticité** :
   - *Passive Authentication* : la signature des données par l'État émetteur est vérifiée jusqu'à un certificat racine (CSCA) connu, et chaque groupe de données est comparé à son empreinte signée ;
@@ -80,12 +80,12 @@ git submodule update --init
 
 ```bash
 ./gradlew :app:assembleDebug      # APK de debug : app/build/outputs/apk/debug/
-./gradlew :app:assembleRelease    # APK release (R8), non signé, un par architecture + universel
+./gradlew :app:assembleRelease    # APK release (R8), non signés, un par architecture + universel
 ./gradlew :core:test              # tests JVM du cœur
 ./gradlew check                   # tests, lint et ktlint, comme la CI
 ```
 
-Le projet compte deux modules : `:core`, en Kotlin pur, qui lit et vérifie la puce, et `:app`, qui porte l'interface Android. Voir [`CONTRIBUTING.md`](CONTRIBUTING.md) et [`docs/`](docs/).
+Le projet compte trois modules : `:core`, en Kotlin pur, qui lit et vérifie la puce ; `:app`, qui porte l'interface Android ; `:testchip`, une puce ICAO simulée et une PKI factice qui servent aux tests et, dans l'APK de debug seulement, à un mode démo (menu de l'accueil → « Simuler une CNIe (démo) ») qui lit une carte spécimen sans document réel. Rien de `:testchip` n'entre dans l'APK release. Voir [`CONTRIBUTING.md`](CONTRIBUTING.md) et [`docs/`](docs/).
 
 ## Documentation
 
@@ -101,4 +101,4 @@ Le projet compte deux modules : `:core`, en Kotlin pur, qui lit et vérifie la p
 
 ## Licence
 
-Sceau est distribué sous licence GNU GPL version 3 : voir [`LICENSE`](LICENSE). Les bibliothèques utilisées et leurs licences (LGPL, MIT, Apache 2.0) sont listées dans [`docs/dependencies.md`](docs/dependencies.md).
+Sceau est distribué sous licence GNU GPL version 3 : voir [`LICENSE`](LICENSE). Les bibliothèques utilisées et leurs licences (LGPL 2.1 ou ultérieure, MIT, BSD-2-Clause, Apache 2.0) sont listées dans [`docs/dependencies.md`](docs/dependencies.md).
