@@ -100,17 +100,19 @@ Pour chaque cas : cocher OK ou KO, et en cas de KO noter l'écart, les étapes e
 
 - **Préconditions** : onglet « Passeport ».
 - **Étapes** :
-  1. Saisir le numéro de document (vérifier les majuscules forcées), la date de naissance et la date d'expiration au sélecteur de date.
+  1. Saisir le numéro de document (vérifier les majuscules forcées), puis la date de naissance et la date d'expiration au clavier numérique (décision D10) : les `/` apparaissent au fil de la frappe, dans l'ordre JJ/MM/AAAA en français (MM/JJ/AAAA en anglais américain). Essayer une date inexistante (31/02), une naissance future et une expiration avant 1990 : message sous le champ, « Lire » inactif.
   2. Toucher « Lire », poser le passeport ouvert sur la page de la puce (ou la couverture selon le modèle).
-- **Attendu** : lecture complète ; canal PACE si annoncé, sinon BAC ; verdict **Authentique** pour un passeport français récent (chaîne vers un CSCA passeport de l'ANTS, certificats de lien le cas échéant) ; même contenu que TP-04.
+- **Attendu** : lecture complète ; canal PACE si annoncé, sinon BAC (ou BAC après repli, décision D13) ; verdict **Authentique** pour un passeport français récent (chaîne vers un CSCA passeport de l'ANTS, certificats de lien le cas échéant) ; même contenu que TP-04.
 - **Résultat** : ☐ OK ☐ KO — Notes :
 
 ## C. Erreurs de lecture
 
+Pour toutes les erreurs, l'écran affiche sous le message le code technique complet en petit (décision D11), par exemple `TIMEOUT-SECURE_CHANNEL-INS86-L10` : le noter tel quel dans le compte rendu, il ne contient aucune donnée personnelle.
+
 ### TP-06 CAN faux
 
 - **Étapes** : saisir un CAN à 6 chiffres erroné, lire la CNIe.
-- **Attendu** : message « CAN ou MRZ incorrects » (code `ACCESS_DENIED`) et bouton « Réessayer » ; aucune donnée affichée. Revenir à l'accueil, corriger le CAN : la lecture aboutit.
+- **Attendu** : message « CAN ou MRZ incorrects » (code `ACCESS_DENIED` affiché) et bouton « Réessayer » ; aucune donnée affichée. Revenir à l'accueil, corriger le CAN : la lecture aboutit. Ne pas enchaîner plus de deux essais faux : la puce peut ensuite imposer un délai (TP-23), voire bloquer le CAN.
 - **Résultat** : ☐ OK ☐ KO — Notes :
 
 ### TP-07 MRZ fausse
@@ -122,7 +124,7 @@ Pour chaque cas : cocher OK ou KO, et en cas de KO noter l'écart, les étapes e
 ### TP-08 Retrait du document pendant la lecture
 
 - **Étapes** : lancer une lecture et retirer le document pendant « Lecture des données » (la photo DG2 est la lecture la plus longue).
-- **Attendu** : message « Document retiré trop tôt » (code `CONNECTION_LOST`) et « Réessayer » ; reposer le document puis « Réessayer » : la lecture aboutit sans ressaisir la clé. Aucun plantage.
+- **Attendu** : message « Document retiré trop tôt » (code `CONNECTION_LOST-READ_DATA-INS…-L…`) et « Réessayer » ; reposer le document puis « Réessayer » : la lecture aboutit sans ressaisir la clé. Aucun plantage, aucun gel de l'interface en quittant l'écran.
 - **Résultat** : ☐ OK ☐ KO — Notes :
 
 ### TP-09 Document expiré
@@ -134,8 +136,18 @@ Pour chaque cas : cocher OK ou KO, et en cas de KO noter l'écart, les étapes e
 ### TP-20 Carte non ICAO
 
 - **Étapes** : saisir un CAN quelconque, poser une carte bancaire ou de transport sans contact.
-- **Attendu** : message « Document sans application ICAO » (code `NOT_ICAO`), aucune autre tentative, bouton « Réessayer ».
+- **Attendu** : message « document non conforme à la norme ICAO 9303 » (code `NOT_ICAO`), aucune autre tentative, bouton « Réessayer ».
 - **Résultat** : ☐ OK ☐ KO — Notes :
+
+### TP-23 Passeport après des tentatives ratées : attente jusqu'à 60 s
+
+- **Préconditions** : passeport (de préférence français) ; accepter que la puce impose ensuite un délai pendant quelque temps.
+- **Étapes** :
+  1. Faire deux lectures avec une date de naissance erronée (TP-07) : noter le code affiché.
+  2. Corriger la MRZ, toucher « Lire », poser le passeport et le garder immobile.
+  3. Chronométrer l'étape « Ouverture du canal sécurisé ».
+- **Attendu** : si la puce fait patienter, un message d'attente (« La puce du document fait patienter… jusqu'à une minute ») apparaît après 5 s dans cette étape ; la lecture aboutit sans intervention si la puce répond en moins de 60 s (23,3 s constatées sur un passeport français, décision D12). Si elle ne répond pas en 60 s : message « Délai dépassé » avec un code `TIMEOUT-SECURE_CHANNEL-INS…-L…`, sans nouvel essai automatique par BAC. Noter la durée observée et le code.
+- **Résultat** : ☐ OK ☐ KO ☐ Non testé — Notes :
 
 ## D. Cycle de vie et effacement
 
@@ -205,10 +217,12 @@ Pour chaque cas : cocher OK ou KO, et en cas de KO noter l'écart, les étapes e
 
 - **Préconditions** : Master List italienne ou suédoise copiée sur le téléphone (`adb push … /sdcard/Download/`).
 - **Étapes** :
-  1. Menu → « Magasin de confiance » : noter le nombre de CSCA par pays (ANTS, Master List embarquée du BSI).
+  1. Menu → « Magasin de confiance » : la liste s'affiche en moins de quelques secondes (magasin préchargé au démarrage, décision D16) ; noter le nombre de CSCA par pays (ANTS, Master List embarquée du BSI).
   2. « Importer une Master List », choisir le fichier dans le sélecteur du système.
-  3. Comparer l'empreinte SHA-256 du signataire affichée à celle publiée par l'autorité émettrice, puis confirmer.
-- **Attendu** : l'empreinte du signataire est affichée avant tout import ; après confirmation, les nouveaux CSCA apparaissent, marqués « importé » ; les CSCA embarqués sont inchangés.
+  3. Comparer l'empreinte SHA-256 du signataire affichée (avec son sujet, la date de signature et le nombre de certificats) à celle publiée par l'autorité émettrice, puis confirmer.
+  4. Réimporter le même fichier.
+  5. Tuer l'application (`adb shell am kill io.github.mgdx.sceau` après `KEYCODE_HOME`), la relancer, rouvrir le magasin.
+- **Attendu** : l'empreinte du signataire est affichée avant tout import, et « Annuler » n'importe rien ; après confirmation, message « Master List importée : N certificats », les nouveaux CSCA apparaissent, marqués « Importé » ; les CSCA embarqués sont inchangés (un certificat déjà présent garde sa source ANTS ou Master List). Le second import ne crée pas de doublon. Les CSCA importés sont toujours là après redémarrage (un fichier dans `files/trust/`).
 - **Résultat** : ☐ OK ☐ KO — Notes :
 
 ### TP-18 Import d'une Master List invalide
@@ -216,7 +230,8 @@ Pour chaque cas : cocher OK ou KO, et en cas de KO noter l'écart, les étapes e
 - **Étapes** :
   1. Créer une copie altérée : `cp it.ml bad.ml && printf '\x00' | dd of=bad.ml bs=1 seek=2000 conv=notrunc`, la pousser sur le téléphone et tenter l'import.
   2. Tenter l'import d'un fichier qui n'est pas une Master List (une image ou un texte renommé en `.ml`).
-- **Attendu** : dans les deux cas, message d'erreur clair, rien n'est importé, la liste des CSCA est inchangée, aucun plantage.
+  3. Tenter l'import d'un fichier de plus de 20 Mo.
+- **Attendu** : étapes 1 et 2 : message « Ce fichier n'est pas une Master List valide… » suivi d'un code de rejet (`BAD_SIGNATURE`, `NOT_CMS`…, voir `docs/trust-store.md`), aucune demande de confirmation ; étape 3 : « Fichier refusé : il dépasse 20 Mo ». Dans tous les cas, rien n'est importé, la liste des CSCA est inchangée, aucun plantage.
 - **Résultat** : ☐ OK ☐ KO — Notes :
 
 ### TP-19 Document étranger avant et après import
@@ -235,6 +250,20 @@ Pour chaque cas : cocher OK ou KO, et en cas de KO noter l'écart, les étapes e
 
 - **Étapes** : passer le téléphone en anglais (Paramètres → Langues), parcourir l'accueil, une lecture avec erreur (TP-06), un résultat, le magasin de confiance et « À propos ».
 - **Attendu** : tous les textes en anglais, aucun reste de français, aucune troncature.
+- **Résultat** : ☐ OK ☐ KO — Notes :
+
+## H. Mode démo (APK de debug)
+
+### TP-24 CNIe simulée
+
+- **Préconditions** : APK de **debug** installé (`app-debug.apk`), aucun document sur le téléphone.
+- **Étapes** :
+  1. Accueil → menu → « Simuler une CNIe (démo) ».
+  2. Observer l'écran de lecture puis le résultat.
+  3. Toucher « Effacer ». Puis relancer la démo et passer en arrière-plan (`KEYCODE_HOME`) sur le résultat, revenir.
+  4. Menu → « Magasin de confiance ».
+  5. Installer l'APK **release** (`./gradlew :app:assembleRelease`, APK signé par le testeur) et ouvrir le menu de l'accueil.
+- **Attendu** : étape 2 : les 5 étapes se cochent sans document ; résultat avec le bandeau « Document simulé — démonstration », verdict **Authentique**, portrait synthétique (silhouette, aucune photo de personne), identité SPECIMEN / MARIANNE, canal PACE, chaîne vers `CSCA-TEST-FRANCE`. Étape 3 : mêmes effacements qu'une lecture réelle (TP-13, TP-15). Étape 4 : aucun certificat de test dans le magasin réel. Étape 5 : l'entrée « Simuler une CNIe (démo) » n'existe pas dans l'APK release (décision D17).
 - **Résultat** : ☐ OK ☐ KO — Notes :
 
 ---
@@ -265,5 +294,7 @@ Pour chaque cas : cocher OK ou KO, et en cas de KO noter l'écart, les étapes e
 | TP-20 | Carte non ICAO | |
 | TP-21 | Journaux et disque | |
 | TP-22 | Interface en anglais | |
+| TP-23 | Passeport après tentatives ratées (attente jusqu'à 60 s) | |
+| TP-24 | Mode démo (debug) et absence en release | |
 
 Appareil : ………… Android : ………… Version de Sceau : ………… Date : ………… Testeur : …………
