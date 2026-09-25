@@ -157,10 +157,18 @@ internal object DataGroupParsers {
         return parts.joinToString(", ").ifEmpty { null }
     }
 
+    /**
+     * Résultat de [block], ou null s'il échoue. Une longueur interne forgée (en-tête d'image de
+     * DG2…) fait allouer à JMRTD un tableau démesuré : `OutOfMemoryError` et
+     * `NegativeArraySizeException` rendent donc aussi le DG absent (audit V11) ; les autres
+     * `Error` traversent.
+     */
     private inline fun <T> orNull(block: () -> T): T? =
         try {
             block()
         } catch (e: Exception) {
+            null
+        } catch (e: OutOfMemoryError) {
             null
         }
 

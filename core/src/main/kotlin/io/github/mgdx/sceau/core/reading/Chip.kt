@@ -1,8 +1,12 @@
 package io.github.mgdx.sceau.core.reading
 
 import io.github.mgdx.sceau.core.CardTransport
+import io.github.mgdx.sceau.core.SceauException
+import net.sf.scuba.smartcards.CardFileInputStream
+import org.jmrtd.DefaultFileSystem
 import org.jmrtd.PassportService
 import org.jmrtd.lds.LDSFileUtil
+import org.jmrtd.protocol.ReadBinaryAPDUSender
 import java.util.Locale
 
 /**
@@ -13,6 +17,9 @@ import java.util.Locale
  * - Lecture par blocs de [BLOCK_SIZE] octets (223, valeur éprouvée de JMRTD).
  * - SFI désactivé : SELECT puis READ BINARY, pris en charge par toutes les puces.
  * - MAC des réponses en messagerie sécurisée toujours vérifié.
+ * - Taille de chaque fichier plafonnée avant lecture ([FileSizeLimits], audit V11) : les
+ *   fichiers sont lus par des `DefaultFileSystem` propres, au-dessus du même émetteur de
+ *   messagerie sécurisée que [service], dont l'émetteur de READ BINARY contrôle l'en-tête.
  */
 internal class Chip(
     val transport: CardTransport,
@@ -49,8 +56,36 @@ internal class Chip(
         transport.reconnect()
     }
 
-    /** Lit un fichier entier (EF.CardAccess au niveau MF, ou un fichier de l'applet ICAO). */
-    fun readFile(fid: Short): ByteArray = service.getInputStream(fid, BLOCK_SIZE).use { it.readBytes() }
+    private val boundedSender = BoundedReadBinarySender(ReadBinaryAPDUSender(service.secureMessagingAPDUSender))
+
+    /** EF.CardAccess, au niveau MF : toujours en clair, comme le système de fichiers racine de JMRTD. */
+    private val rootFileSystem = DefaultFileSystem(boundedSender, false)
+
+    /** Fichiers de l'applet ICAO, sous la messagerie sécurisée courante de [service]. */
+    private val appletFileSystem = DefaultFileSystem(boundedSender, false)
+
+    /**
+     * Lit un fichier entier (EF.CardAccess au niveau MF, ou un fichier de l'applet ICAO). Un
+     * fichier dont l'en-tête annonce plus que son plafond lève [SceauException.Unexpected]
+     * (`<fichier>-TOO_LARGE`) sans être lu.
+     */
+    fun readFile(fid: Short): ByteArray {
+        val fileSystem =
+            if (fid == PassportService.EF_CARD_ACCESS) {
+                rootFileSystem
+            } else {
+                appletFileSystem.also { fs -> service.wrapper.let { if (fs.wrapper !== it) fs.setWrapper(it) } }
+            }
+        return try {
+            fileSystem.selectFile(fid)
+            CardFileInputStream(BLOCK_SIZE, fileSystem).use { it.readBytes() }
+        } catch (e: Exception) {
+            if (e.causeChain().any { it is FileTooLargeException }) {
+                throw SceauException.Unexpected("${FileSizeLimits.nameOf(fid)}-TOO_LARGE")
+            }
+            throw e
+        }
+    }
 
     /** Lit un fichier ; null s'il est absent ou illisible. Une erreur de transport est relancée. */
     fun readOptionalFile(fid: Short): ByteArray? =
