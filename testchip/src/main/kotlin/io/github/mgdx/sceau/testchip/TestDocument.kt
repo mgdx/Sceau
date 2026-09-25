@@ -78,18 +78,24 @@ class TestDocument(
 
         /** Algorithme de hachage ECDSA déclaré dans DG14 pour une AA EC (null : pas d'ActiveAuthenticationInfo). */
         var aaDigestAlgorithm: String? = "SHA-256"
+
+        /** Taille de la clé RSA d'Active Authentication (DG15). */
+        var aaRsaBits: Int = AA_RSA_BITS
         var dateOfIssue: LocalDate? = DEFAULT_DATE_OF_ISSUE
         var dateOfExpiry: LocalDate = DEFAULT_DATE_OF_EXPIRY
         var documentCode: String = "P"
 
+        /** État émetteur de DG1 (code ICAO à trois lettres) ; par défaut le pays fictif des spécimens. */
+        var issuingState: String = TestDataGroups.SPECIMEN_STATE
+
         fun build(): TestDocument {
             val groups = sortedMapOf<Int, ByteArray>()
-            groups[1] = TestDataGroups.dg1(documentCode, dateOfExpiry)
+            groups[1] = TestDataGroups.dg1(documentCode, dateOfExpiry, issuingState)
             groups[2] = TestDataGroups.dg2(pki)
             val caKeys = if (chipAuthentication) pki.generateEc(TestPki.CURVE) else null
             val aaKeys =
                 when (activeAuthentication) {
-                    AaKeyType.RSA -> pki.generateRsa(AA_RSA_BITS)
+                    AaKeyType.RSA -> pki.generateRsa(aaRsaBits)
                     AaKeyType.EC -> pki.generateEc(TestPki.CURVE)
                     null -> null
                 }
@@ -120,11 +126,12 @@ object TestDataGroups {
     fun dg1(
         documentCode: String = "P",
         dateOfExpiry: LocalDate = TestDocument.DEFAULT_DATE_OF_EXPIRY,
+        issuingState: String = SPECIMEN_STATE,
     ): ByteArray {
         val mrz =
             MRZInfo.createTD3MRZInfo(
                 documentCode,
-                "UTO",
+                issuingState,
                 "ERIKSSON",
                 "ANNA MARIA",
                 "L898902C3",
@@ -142,6 +149,9 @@ object TestDataGroups {
         val payload = ByteArray(DG2_PAYLOAD).also { pki.random.nextBytes(it) }
         return TestSod.tlv(DG2_TAG, payload)
     }
+
+    /** Pays fictif des spécimens ICAO 9303 (Utopia). */
+    const val SPECIMEN_STATE = "UTO"
 
     private const val DG2_TAG = 0x75
     private const val DG2_PAYLOAD = 512

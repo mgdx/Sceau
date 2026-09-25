@@ -31,6 +31,9 @@ object PassiveAuthentication {
      * @param dateOfIssue date de délivrance lue dans DG12, si disponible
      * @param dateOfExpiry date d'expiration lue dans DG1, pour l'estimation
      * @param documentCode code de document DG1 ("P", "ID"…), pour choisir la durée usuelle
+     * @param issuingState État émetteur lu dans DG1 (code ICAO à trois lettres, "FRA", "D<<"…) :
+     *   il doit correspondre au pays du CSCA et du DS (voir [IcaoCountries]), sinon la chaîne
+     *   est en échec avec `CheckDetail.CountryMismatch`. Null : seuls le CSCA et le DS sont comparés.
      */
     fun verify(
         sod: ByteArray,
@@ -39,7 +42,8 @@ object PassiveAuthentication {
         dateOfIssue: LocalDate?,
         dateOfExpiry: LocalDate?,
         documentCode: String,
-    ): PassiveAuthResult = PassiveAuthenticator(trustStore).verify(sod, dataGroups, dateOfIssue, dateOfExpiry, documentCode)
+        issuingState: String? = null,
+    ): PassiveAuthResult = PassiveAuthenticator(trustStore).verify(sod, dataGroups, dateOfIssue, dateOfExpiry, documentCode, issuingState)
 }
 
 object ActiveAuthentication {
@@ -77,6 +81,11 @@ object Verdicts {
      *
      * Une ligne CA ou AA NOT_AVAILABLE aux côtés de l'autre OK donne AUTHENTIC (règle 3) :
      * un seul des deux challenges suffit.
+     *
+     * CA (resp. AA) ne vaut NOT_AVAILABLE que si DG14 (resp. DG15) est absent du SOD. Un DG
+     * annoncé par le SOD mais non fourni par la puce met DG_HASHES (détail
+     * `DataGroupHashes.missing`) et la ligne CA ou AA à FAILED : la règle 4 ne s'applique
+     * donc qu'à un document dont le SOD, signé, ne contient ni DG14 ni DG15 (audit V1).
      */
     fun compute(checks: List<Check>): Verdict {
         if (checks.any { it.status == CheckStatus.FAILED || it.status == CheckStatus.UNSUPPORTED_ALGORITHM }) {

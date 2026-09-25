@@ -45,6 +45,7 @@ class PassiveAuthenticationTest(
         dateOfIssue: LocalDate? = document.dateOfIssue,
         dateOfExpiry: LocalDate? = document.dateOfExpiry,
         sod: ByteArray = document.sod,
+        issuingState: String? = null,
     ): PassiveAuthResult =
         PassiveAuthentication.verify(
             sod = sod,
@@ -53,6 +54,7 @@ class PassiveAuthenticationTest(
             dateOfIssue = dateOfIssue,
             dateOfExpiry = dateOfExpiry,
             documentCode = document.documentCode,
+            issuingState = issuingState,
         )
 
     private fun PassiveAuthResult.statuses() =
@@ -153,6 +155,72 @@ class PassiveAuthenticationTest(
         assertEquals(listOf(1, 2, 11, 14, 15), detail.checked)
         assertEquals(listOf(11), detail.mismatched)
         assertEquals(CheckStatus.FAILED, result.dataGroupHashes.status)
+    }
+
+    @Test
+    fun `DG du SOD non fournis par la puce - echec, DG manquants signales`() {
+        val document = pki.document()
+        val result = verify(document.withDataGroups(document.dataGroups - setOf(2, 14, 15)))
+
+        val detail = result.dataGroupHashes.detail as CheckDetail.DataGroupHashes
+        assertEquals(CheckStatus.FAILED, result.dataGroupHashes.status)
+        assertEquals(listOf(1), detail.checked)
+        assertEquals(emptyList<Int>(), detail.mismatched)
+        assertEquals(listOf(2, 14, 15), detail.missing)
+        assertEquals(Verdict.FAILED, Verdicts.compute(VerifyTestSupport.checks(result)))
+    }
+
+    @Test
+    fun `DG3 et DG4 du SOD jamais lus - pas des DG manquants`() {
+        val document = pki.document { sod = SodOptions(extraHashes = mapOf(3 to ByteArray(32), 4 to ByteArray(32))) }
+        val result = verify(document)
+
+        assertEquals(CheckStatus.OK, result.dataGroupHashes.status)
+        assertEquals(emptyList<Int>(), (result.dataGroupHashes.detail as CheckDetail.DataGroupHashes).missing)
+    }
+
+    @Test
+    fun `Etat emetteur coherent avec le CSCA - chaine OK`() {
+        val document = pki.document { issuingState = "FRA" }
+        val result = verify(document, issuingState = "FRA")
+
+        assertEquals(List(4) { CheckStatus.OK }, result.statuses())
+        assertTrue(result.certificateChain.detail is CheckDetail.Chain)
+    }
+
+    @Test
+    fun `Etat emetteur d un autre pays que le CSCA - chaine en echec`() {
+        val result = verify(pki.document { issuingState = "DEU" }, issuingState = "DEU")
+
+        assertEquals(CheckStatus.FAILED, result.certificateChain.status)
+        assertEquals(CheckDetail.CountryMismatch("FR", "FR", "DEU"), result.certificateChain.detail)
+        assertEquals("FR", result.chain!!.cscaCountry)
+        assertEquals(CheckStatus.OK, result.sodSignature.status)
+        assertEquals(Verdict.FAILED, Verdicts.compute(VerifyTestSupport.checks(result, ca = CheckStatus.OK)))
+    }
+
+    @Test
+    fun `Etat emetteur inconnu d ICAO - chaine en echec`() {
+        val result = verify(pki.document(), issuingState = "UTO")
+
+        assertEquals(CheckStatus.FAILED, result.certificateChain.status)
+        assertEquals(CheckDetail.CountryMismatch("FR", "FR", "UTO"), result.certificateChain.detail)
+    }
+
+    @Test
+    fun `organisation internationale - seuls CSCA et DS compares`() {
+        val result = verify(pki.document { issuingState = "UNO" }, issuingState = "UNO")
+
+        assertEquals(CheckStatus.OK, result.certificateChain.status)
+    }
+
+    @Test
+    fun `DS d un autre pays que son CSCA - chaine en echec`() {
+        val ds = pki.issueDs(dsCountry = "DE")
+        val result = verify(pki.document { this.ds = ds }, issuingState = null)
+
+        assertEquals(CheckStatus.FAILED, result.certificateChain.status)
+        assertEquals(CheckDetail.CountryMismatch("FR", "DE", null), result.certificateChain.detail)
     }
 
     @Test
@@ -312,6 +380,15 @@ class PassiveAuthenticationTest(
             assertEquals(List(4) { CheckStatus.FAILED }, result.statuses())
             assertTrue(result.sodSignature.detail is CheckDetail.Error)
         }
+    }
+
+    @Test
+    fun `type de contenu du SOD autre que ldsSecurityObject - SOD rejete`() {
+        // Même LDSSecurityObject, correctement signé par le DS, mais déclaré en id-data.
+        val result = verify(pki.document { sod = SodOptions(contentTypeOid = "1.2.840.113549.1.7.1") })
+
+        assertEquals(List(4) { CheckStatus.FAILED }, result.statuses())
+        assertEquals(CheckDetail.Error("SOD_MALFORMED"), result.sodSignature.detail)
     }
 
     @Test

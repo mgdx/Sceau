@@ -73,6 +73,7 @@ class DocumentReaderTest {
         val content = read(transport)
 
         assertEquals(listOf(1, 2, 15, 12), content.dataGroups.keys.toList())
+        assertEquals("seul le SOD fait foi", setOf(1, 2, 3, 4, 12, 15), content.signedDataGroups)
         assertFalse(transport.selectedFiles().any { it == fid(3) || it == fid(4) })
         assertTrue(transport.exhausted)
     }

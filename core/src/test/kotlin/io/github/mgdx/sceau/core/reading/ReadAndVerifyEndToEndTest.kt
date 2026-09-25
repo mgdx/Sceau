@@ -11,6 +11,7 @@ import io.github.mgdx.sceau.core.report.CheckId
 import io.github.mgdx.sceau.core.report.CheckStatus
 import io.github.mgdx.sceau.core.report.Verdict
 import io.github.mgdx.sceau.core.report.VerificationReport
+import io.github.mgdx.sceau.core.trust.TrustSource
 import io.github.mgdx.sceau.core.trust.TrustStore
 import io.github.mgdx.sceau.testchip.AaKeyType
 import io.github.mgdx.sceau.testchip.SimCrypto
@@ -19,6 +20,7 @@ import io.github.mgdx.sceau.testchip.SodOptions
 import io.github.mgdx.sceau.testchip.TestDocument
 import io.github.mgdx.sceau.testchip.TestKeyType
 import io.github.mgdx.sceau.testchip.TestPki
+import io.github.mgdx.sceau.testchip.TestTrustStore
 import io.github.mgdx.sceau.testchip.resigned
 import io.github.mgdx.sceau.testchip.withChipAaKey
 import io.github.mgdx.sceau.testchip.withChipAuthenticationProtocol
@@ -37,13 +39,23 @@ import java.time.LocalDate
  * Authentication réellement exécutés, documents et PKI générés par la fabrique de test.
  */
 class ReadAndVerifyEndToEndTest {
-    private val rsaPki by lazy { TestPki(TestKeyType.RSA) }
-    private val ecPki by lazy { TestPki(TestKeyType.EC) }
+    // Graines fixes : le compteur global de TestPki dépend de l'ordre des tests, et une réponse AA
+    // signée par une mauvaise clé RSA peut, pour environ une graine sur mille, porter un trailer
+    // ISO 9796-2 inconnu (UNSUPPORTED_ALGORITHM au lieu de FAILED).
+    private val rsaPki by lazy { TestPki(TestKeyType.RSA, seed = RSA_SEED) }
+    private val ecPki by lazy { TestPki(TestKeyType.EC, seed = EC_SEED) }
 
     /** Clé MRZ du DG1 factice (numéro L898902C3, né le 12/08/1974). */
     private fun mrzOf(document: TestDocument) = AccessKey.Mrz(DOCUMENT_NUMBER, DATE_OF_BIRTH, document.dateOfExpiry)
 
     private fun TestPki.store(): TrustStore = trustStore(oldCsca)
+
+    /** Document de la PKI de test (C=FR) : État émetteur FRA, cohérent avec le CSCA (audit V3). */
+    private fun TestPki.doc(configure: TestDocument.Builder.() -> Unit = {}): TestDocument =
+        document {
+            issuingState = "FRA"
+            configure()
+        }
 
     private suspend fun read(
         chip: SimulatedChip,
@@ -98,7 +110,7 @@ class ReadAndVerifyEndToEndTest {
     @Test
     fun nominalRsa_BacCa3desAaRsa_Authentique() =
         runTest {
-            val document = rsaPki.document()
+            val document = rsaPki.doc()
             val chip = SimulatedChip(document)
             val steps = mutableListOf<Step>()
 
@@ -119,7 +131,7 @@ class ReadAndVerifyEndToEndTest {
 
             val dg1 = report.document.dg1
             assertEquals("P", dg1.documentCode)
-            assertEquals("UTO", dg1.issuingState)
+            assertEquals("FRA", dg1.issuingState)
             assertEquals(DOCUMENT_NUMBER, dg1.documentNumber)
             assertEquals("ERIKSSON", dg1.primaryIdentifier)
             assertEquals(listOf("ANNA", "MARIA"), dg1.secondaryIdentifiers)
@@ -132,7 +144,7 @@ class ReadAndVerifyEndToEndTest {
     @Test
     fun nominalEc_CaAesAaEcdsa_Authentique() =
         runTest {
-            val document = ecPki.document { activeAuthentication = AaKeyType.EC }.withChipAuthenticationProtocol()
+            val document = ecPki.doc { activeAuthentication = AaKeyType.EC }.withChipAuthenticationProtocol()
             val chip = SimulatedChip(document)
             val steps = mutableListOf<Step>()
 
@@ -149,7 +161,7 @@ class ReadAndVerifyEndToEndTest {
     @Test
     fun aaSeuleSansDg14_Authentique() =
         runTest {
-            val document = rsaPki.document { chipAuthentication = false }
+            val document = rsaPki.doc { chipAuthentication = false }
             val chip = SimulatedChip(document)
 
             val report = read(chip, rsaPki.store(), mrzOf(document))
@@ -173,7 +185,7 @@ class ReadAndVerifyEndToEndTest {
 
     private suspend fun withoutChipKeys(pki: TestPki) {
         val document =
-            pki.document {
+            pki.doc {
                 chipAuthentication = false
                 activeAuthentication = null
             }
@@ -201,6 +213,93 @@ class ReadAndVerifyEndToEndTest {
         assertFalse(0x010F in chip.selectedFids)
     }
 
+    // --- Clone qui retient des DG signés (audit V1) ---
+
+    @Test
+    fun cloneRetenantDg14EtDg15_EchecEtNonPuceNonVerifiee() =
+        runTest {
+            // Copie d'un vrai document : SOD, DG1, DG2 rejoués ; DG14 et DG15 refusés (6A82) et
+            // retirés d'EF.COM, qui n'est pas signé. Le SOD prouve pourtant qu'ils existent.
+            val document = rsaPki.doc()
+            val chip = SimulatedChip(document, comDataGroups = listOf(1, 2), withheldDataGroups = listOf(14, 15))
+
+            val report = read(chip, rsaPki.store(), mrzOf(document))
+
+            assertEquals(Verdict.FAILED, report.verdict)
+            assertStatuses(
+                report,
+                CheckId.SOD_SIGNATURE to CheckStatus.OK,
+                CheckId.CERTIFICATE_CHAIN to CheckStatus.OK,
+                CheckId.DG_HASHES to CheckStatus.FAILED,
+                CheckId.CHIP_AUTHENTICATION to CheckStatus.FAILED,
+                CheckId.ACTIVE_AUTHENTICATION to CheckStatus.FAILED,
+            )
+            assertEquals(listOf(1, 2), hashes(report).checked)
+            assertEquals(emptyList<Int>(), hashes(report).mismatched)
+            assertEquals(listOf(14, 15), hashes(report).missing)
+            // Les DG annoncés par le SOD ont bien été demandés, malgré EF.COM.
+            assertTrue(0x010E in chip.selectedFids)
+            assertTrue(0x010F in chip.selectedFids)
+            assertTrue(chip.aaChallenges.isEmpty())
+        }
+
+    @Test
+    fun cloneRetenantDg2_Echec() =
+        runTest {
+            val document = ecPki.doc()
+            val chip = SimulatedChip(document, withheldDataGroups = listOf(2))
+
+            val report = read(chip, ecPki.store(), mrzOf(document))
+
+            assertEquals(Verdict.FAILED, report.verdict)
+            assertStatuses(
+                report,
+                CheckId.DG_HASHES to CheckStatus.FAILED,
+                CheckId.CHIP_AUTHENTICATION to CheckStatus.OK,
+                CheckId.ACTIVE_AUTHENTICATION to CheckStatus.OK,
+            )
+            assertEquals(listOf(2), hashes(report).missing)
+            assertEquals(null, report.document.portrait)
+        }
+
+    // --- Pays incohérents (audit V3) ---
+
+    @Test
+    fun documentFraSigneParLeCscaDUnAutrePays_Echec() =
+        runTest {
+            // Détenteur de la clé d'un CSCA quelconque du magasin (ici « DE ») : il signe un DS et
+            // un SOD pour un document « FRA », avec ses propres clés CA et AA.
+            val foreign = TestPki(TestKeyType.RSA, name = "Autre Etat", country = "DE", seed = RSA_SEED + 1)
+            val document = foreign.doc { issuingState = "FRA" }
+            val store = TestTrustStore.of(listOf(rsaPki.oldCsca.certificate, foreign.oldCsca.certificate), TrustSource.ANTS)
+
+            val report = read(SimulatedChip(document), store, mrzOf(document))
+
+            assertEquals(Verdict.FAILED, report.verdict)
+            assertStatuses(
+                report,
+                CheckId.SOD_SIGNATURE to CheckStatus.OK,
+                CheckId.CERTIFICATE_CHAIN to CheckStatus.FAILED,
+                CheckId.DG_HASHES to CheckStatus.OK,
+                CheckId.CHIP_AUTHENTICATION to CheckStatus.OK,
+                CheckId.ACTIVE_AUTHENTICATION to CheckStatus.OK,
+            )
+            assertEquals(CheckDetail.CountryMismatch("DE", "DE", "FRA"), report.check(CheckId.CERTIFICATE_CHAIN).detail)
+            assertEquals("DE", report.chain?.cscaCountry)
+        }
+
+    @Test
+    fun documentDeuSigneParSonCsca_Authentique() =
+        runTest {
+            val german = TestPki(TestKeyType.RSA, name = "Autre Etat", country = "DE", seed = RSA_SEED + 1)
+            val document = german.doc { issuingState = "D" }
+
+            val report = read(SimulatedChip(document), german.store(), mrzOf(document))
+
+            assertEquals(Verdict.AUTHENTIC, report.verdict)
+            assertAllOk(report)
+        }
+
     @Test
     fun dg2ModifieRsa_EchecSurEmpreinte() = runTest { modifiedDg2(rsaPki) }
 
@@ -208,7 +307,7 @@ class ReadAndVerifyEndToEndTest {
     fun dg2ModifieEc_EchecSurEmpreinte() = runTest { modifiedDg2(ecPki) }
 
     private suspend fun modifiedDg2(pki: TestPki) {
-        val document = pki.document().withModifiedDataGroup(2)
+        val document = pki.doc().withModifiedDataGroup(2)
         val report = read(SimulatedChip(document), pki.store(), mrzOf(document))
 
         assertEquals(Verdict.FAILED, report.verdict)
@@ -233,7 +332,7 @@ class ReadAndVerifyEndToEndTest {
         pki: TestPki,
         keyType: TestKeyType,
     ) {
-        val document = pki.document()
+        val document = pki.doc()
         val otherCountry = TestPki(keyType, name = "Autre Pays", country = "UT")
         val report = read(SimulatedChip(document), otherCountry.store(), mrzOf(document))
 
@@ -251,7 +350,7 @@ class ReadAndVerifyEndToEndTest {
     @Test
     fun aaSigneeAvecMauvaiseCleRsa_Echec() =
         runTest {
-            val document = rsaPki.document { chipAuthentication = false }
+            val document = rsaPki.doc { chipAuthentication = false }
             wrongAaKey(rsaPki, document.withChipAaKey(rsaPki.generateRsa(TestDocument.AA_RSA_BITS)))
         }
 
@@ -259,7 +358,7 @@ class ReadAndVerifyEndToEndTest {
     fun aaSigneeAvecMauvaiseCleEc_Echec() =
         runTest {
             val document =
-                ecPki.document {
+                ecPki.doc {
                     chipAuthentication = false
                     activeAuthentication = AaKeyType.EC
                 }
@@ -287,7 +386,7 @@ class ReadAndVerifyEndToEndTest {
     fun caAvecMauvaiseCleDePuce_Echec() =
         runTest {
             // Puce clonée : DG14 recopié, mais la clé privée CA n'est pas celle de DG14.
-            val document = rsaPki.document { activeAuthentication = null }
+            val document = rsaPki.doc { activeAuthentication = null }
             val chip = SimulatedChip(document, caPrivateKey = rsaPki.generateEc(TestPki.CURVE).private)
 
             val report = read(chip, rsaPki.store(), mrzOf(document))
@@ -306,7 +405,7 @@ class ReadAndVerifyEndToEndTest {
     @Test
     fun mrzFausse_AccessDenied() =
         runTest {
-            val document = rsaPki.document()
+            val document = rsaPki.doc()
             val chip = SimulatedChip(document)
             val steps = mutableListOf<Step>()
             val wrongKey = AccessKey.Mrz(DOCUMENT_NUMBER, DATE_OF_BIRTH.plusDays(1), document.dateOfExpiry)
@@ -322,7 +421,7 @@ class ReadAndVerifyEndToEndTest {
     @Test
     fun documentRetirePendantLecture_ConnectionLost() =
         runTest {
-            val document = rsaPki.document()
+            val document = rsaPki.doc()
             val chip = SimulatedChip(document)
             val steps = mutableListOf<Step>()
             val key = mrzOf(document)
@@ -351,7 +450,7 @@ class ReadAndVerifyEndToEndTest {
     @Test
     fun dg3Dg4AnnoncesDansComEtSod_JamaisDemandes() =
         runTest {
-            val base = rsaPki.document()
+            val base = rsaPki.doc()
             val fakeHash = ByteArray(32) { 0x33 }
             val document = base.resigned(options = SodOptions(extraHashes = mapOf(3 to fakeHash, 4 to fakeHash)))
             val chip = SimulatedChip(document, comDataGroups = listOf(1, 2, 3, 4, 14, 15))
@@ -367,7 +466,7 @@ class ReadAndVerifyEndToEndTest {
     @Test
     fun wipe_RemetAZeroLesOctetsBrutsDesDg() =
         runTest {
-            val document = rsaPki.document()
+            val document = rsaPki.doc()
             val report = read(SimulatedChip(document), rsaPki.store(), mrzOf(document))
             val raw = report.document.rawDataGroups
             assertEquals(setOf(1, 2, 14, 15), raw.keys)
@@ -385,5 +484,7 @@ class ReadAndVerifyEndToEndTest {
         private const val DOCUMENT_NUMBER = "L898902C3"
         private val DATE_OF_BIRTH: LocalDate = LocalDate.of(1974, 8, 12)
         private const val APDUS_BEFORE_REMOVAL = 4
+        private const val RSA_SEED = 20_260_901L
+        private const val EC_SEED = 20_260_902L
     }
 }

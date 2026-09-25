@@ -11,7 +11,9 @@ import io.github.mgdx.sceau.core.trust.TrustStore
 import org.bouncycastle.asn1.ASN1Primitive
 import org.bouncycastle.asn1.cms.CMSAttributes
 import org.bouncycastle.asn1.cms.Time
+import org.bouncycastle.asn1.icao.ICAOObjectIdentifiers
 import org.bouncycastle.asn1.icao.LDSSecurityObject
+import org.bouncycastle.asn1.x509.KeyUsage
 import org.bouncycastle.cert.X509CertificateHolder
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter
 import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder
@@ -40,6 +42,11 @@ internal class ParsedSod(
         fun parse(sod: ByteArray): ParsedSod {
             val contentInfo = if (sod.isNotEmpty() && sod[0].toInt() and 0xFF == SEQUENCE_TAG) sod else Tlv.value(sod, SOD_TAG)
             val signedData = CMSSignedData(contentInfo)
+            // Audit V10 : le contenu signé doit être déclaré comme LDSSecurityObject, et non comme
+            // un autre objet signé par le même DS qui se décoderait par hasard.
+            if (signedData.signedContentTypeOID != ICAOObjectIdentifiers.id_icao_ldsSecurityObject.id) {
+                throw IllegalArgumentException("SOD_CONTENT_TYPE")
+            }
             val signer = signedData.signerInfos.signers.singleOrNull() ?: throw IllegalArgumentException("SOD_SIGNER_COUNT")
             val content = signedData.signedContent?.content as? ByteArray ?: throw IllegalArgumentException("SOD_NO_CONTENT")
             val securityObject = LDSSecurityObject.getInstance(ASN1Primitive.fromByteArray(content))
@@ -89,6 +96,7 @@ internal class PassiveAuthenticator(
         dateOfIssue: LocalDate?,
         dateOfExpiry: LocalDate?,
         documentCode: String,
+        issuingState: String? = null,
     ): PassiveAuthResult {
         val parsed =
             try {
@@ -97,7 +105,7 @@ internal class PassiveAuthenticator(
                 return malformed(ERROR_SOD_MALFORMED)
             }
         return try {
-            verifyParsed(parsed, dataGroups, dateOfIssue, dateOfExpiry, documentCode)
+            verifyParsed(parsed, dataGroups, dateOfIssue, dateOfExpiry, documentCode, issuingState)
         } catch (e: Exception) {
             malformed(ERROR_UNEXPECTED)
         }
@@ -109,6 +117,7 @@ internal class PassiveAuthenticator(
         dateOfIssue: LocalDate?,
         dateOfExpiry: LocalDate?,
         documentCode: String,
+        issuingState: String?,
     ): PassiveAuthResult {
         val hashes = guarded(CheckId.DG_HASHES) { checkHashes(parsed.securityObject, dataGroups) }
         val ds =
@@ -126,7 +135,7 @@ internal class PassiveAuthenticator(
         var chainInfo: ChainInfo? = null
         val chain =
             guarded(CheckId.CERTIFICATE_CHAIN) {
-                val (check, info) = checkChain(ds)
+                val (check, info) = checkChain(ds, issuingState)
                 chainInfo = info
                 check
             }
@@ -172,10 +181,19 @@ internal class PassiveAuthenticator(
         ds: DsCertificate,
     ): Check {
         val algorithm = signatureAlgorithmName(signer)
+        // Audit V9 : hachage cassé (MD5, RIPEMD-128…) refusé, dans l'empreinte comme dans la signature.
+        if (Crypto.isWeakAlgorithm(signer.digestAlgorithmID) ||
+            Crypto.isWeakAlgorithm(signer.toASN1Structure().digestEncryptionAlgorithm)
+        ) {
+            return Check(CheckId.SOD_SIGNATURE, CheckStatus.UNSUPPORTED_ALGORITHM, CheckDetail.UnsupportedAlgorithm(algorithm))
+        }
         return try {
             // Vérifieur construit sur la clé seule : BouncyCastle refuserait sinon la signature d'un
             // DS expiré au signingTime, ce qui relève de la ligne DS_VALIDITY et non de celle-ci.
             val publicKey = JcaX509CertificateConverter().setProvider(Crypto.provider).getCertificate(ds.holder).publicKey
+            Crypto.weakKey(publicKey)?.let { weak ->
+                return Check(CheckId.SOD_SIGNATURE, CheckStatus.UNSUPPORTED_ALGORITHM, CheckDetail.UnsupportedAlgorithm(weak))
+            }
             val verifier = JcaSimpleSignerInfoVerifierBuilder().setProvider(Crypto.provider).build(publicKey)
             val valid = signer.verify(verifier)
             Check(CheckId.SOD_SIGNATURE, if (valid) CheckStatus.OK else CheckStatus.FAILED, CheckDetail.Signature(algorithm))
@@ -198,11 +216,31 @@ internal class PassiveAuthenticator(
 
     // --- Chaîne DS → CSCA --------------------------------------------------------------
 
-    private fun checkChain(ds: DsCertificate): Pair<Check, ChainInfo> =
+    private fun checkChain(
+        ds: DsCertificate,
+        issuingState: String?,
+    ): Pair<Check, ChainInfo> =
         when (val outcome = CertificateChains(trustStore).build(ds.holder)) {
             is ChainOutcome.Found -> {
                 val info = chainInfo(ds, outcome.root, outcome.links)
-                Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.OK, CheckDetail.Chain(info)) to info
+                // Audit V3 : une chaîne valide vers le CSCA d'un autre pays ne prouve rien.
+                val dsCountry = Crypto.country(ds.holder.subject)
+                when {
+                    // Audit V8 : un certificat dont le keyUsage exclut la signature numérique
+                    // n'est pas un DS, quelle que soit sa chaîne.
+                    !mayBeDocumentSigner(ds.holder) -> {
+                        Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.FAILED, CheckDetail.Error(ERROR_DS_KEY_USAGE)) to info
+                    }
+
+                    IcaoCountries.consistent(info.cscaCountry, dsCountry, issuingState) -> {
+                        Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.OK, CheckDetail.Chain(info)) to info
+                    }
+
+                    else -> {
+                        val mismatch = CheckDetail.CountryMismatch(info.cscaCountry, dsCountry, issuingState)
+                        Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.FAILED, mismatch) to info
+                    }
+                }
             }
 
             is ChainOutcome.BadSignature -> {
@@ -223,7 +261,18 @@ internal class PassiveAuthenticator(
                 val info = chainInfo(ds, null, emptyList())
                 Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.NOT_AVAILABLE, CheckDetail.Chain(info)) to info
             }
+
+            ChainOutcome.BudgetExceeded -> {
+                val info = chainInfo(ds, null, emptyList())
+                Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.FAILED, CheckDetail.Error(ERROR_CHAIN_BUDGET)) to info
+            }
         }
+
+    /** keyUsage du DS, s'il est présent, avec digitalSignature (ICAO 9303-12) ; absent : toléré. */
+    private fun mayBeDocumentSigner(holder: X509CertificateHolder): Boolean =
+        runCatching {
+            KeyUsage.fromExtensions(holder.extensions)?.hasUsages(KeyUsage.digitalSignature) ?: true
+        }.getOrDefault(false)
 
     private fun chainInfo(
         ds: DsCertificate,
@@ -254,6 +303,9 @@ internal class PassiveAuthenticator(
     ): Check {
         val algorithmId = securityObject.digestAlgorithmIdentifier
         val algorithm = Crypto.algorithmName(algorithmId.algorithm)
+        if (Crypto.isWeakAlgorithm(algorithmId)) {
+            return Check(CheckId.DG_HASHES, CheckStatus.UNSUPPORTED_ALGORITHM, CheckDetail.UnsupportedAlgorithm(algorithm))
+        }
         val calculators = JcaDigestCalculatorProviderBuilder().setProvider(Crypto.provider).build()
         try {
             calculators.get(algorithmId)
@@ -263,6 +315,9 @@ internal class PassiveAuthenticator(
 
         val expected = securityObject.datagroupHash.associate { it.dataGroupNumber to it.dataGroupHashValue.octets }
         val checked = dataGroups.keys.sorted()
+        // Le SOD, signé, fait foi : un DG qu'il annonce parmi ceux que Sceau lit doit avoir été
+        // fourni par la puce (audit V1 : un clone ne doit pas pouvoir retenir DG2, DG14 ou DG15).
+        val missing = expected.keys.filter { it in READ_DATA_GROUPS && it !in dataGroups }.sorted()
         val mismatched =
             checked.filter { number ->
                 val reference = expected[number] ?: return@filter true
@@ -272,11 +327,11 @@ internal class PassiveAuthenticator(
             }
         val status =
             when {
+                mismatched.isNotEmpty() || missing.isNotEmpty() -> CheckStatus.FAILED
                 checked.isEmpty() -> CheckStatus.NOT_AVAILABLE
-                mismatched.isEmpty() -> CheckStatus.OK
-                else -> CheckStatus.FAILED
+                else -> CheckStatus.OK
             }
-        return Check(CheckId.DG_HASHES, status, CheckDetail.DataGroupHashes(algorithm, checked, mismatched))
+        return Check(CheckId.DG_HASHES, status, CheckDetail.DataGroupHashes(algorithm, checked, mismatched, missing))
     }
 
     // --- Validité du DS à la date de délivrance ------------------------------------------
@@ -358,7 +413,12 @@ internal class PassiveAuthenticator(
     private companion object {
         const val ERROR_SOD_MALFORMED = "SOD_MALFORMED"
         const val ERROR_UNEXPECTED = "PA_UNEXPECTED"
+        const val ERROR_DS_KEY_USAGE = "DS_KEY_USAGE"
+        const val ERROR_CHAIN_BUDGET = "CHAIN_BUDGET"
         const val USUAL_VALIDITY_YEARS = 10L
         const val HEX = 16
+
+        /** DG que Sceau demande à la puce (voir DocumentReader) : jamais DG3 ni DG4. */
+        val READ_DATA_GROUPS = setOf(1, 2, 11, 12, 14, 15)
     }
 }

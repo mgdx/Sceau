@@ -65,22 +65,38 @@ class ChipVerifierTest {
     fun sansDg14NiDg15_NonDisponibles() {
         val transport = ScriptedTransport(respond(AID_SELECT, "9000"))
         val verifier = verifier(transport)
-        assertEquals(CheckStatus.NOT_AVAILABLE, verifier.chipAuthentication(null).status)
-        assertEquals(CheckStatus.NOT_AVAILABLE, verifier.activeAuthentication(null, null).status)
+        assertEquals(CheckStatus.NOT_AVAILABLE, verifier.chipAuthentication(null, signedInSod = false).status)
+        assertEquals(CheckStatus.NOT_AVAILABLE, verifier.activeAuthentication(null, null, signedInSod = false).status)
         assertEquals(1, transport.sent.size)
+    }
+
+    @Test
+    fun dg14EtDg15AnnoncesDansLeSodMaisNonFournis_Echec() {
+        // Audit V1 : un clone qui retient DG14/DG15 ne doit pas passer pour une puce sans CA ni AA.
+        val transport = ScriptedTransport(respond(AID_SELECT, "9000"))
+        val verifier = verifier(transport)
+
+        val ca = verifier.chipAuthentication(null, signedInSod = true)
+        val aa = verifier.activeAuthentication(null, null, signedInSod = true)
+
+        assertEquals(CheckStatus.FAILED, ca.status)
+        assertEquals(CheckDetail.Error("VERIFY_CHIP-CA-DG14Missing"), ca.detail)
+        assertEquals(CheckStatus.FAILED, aa.status)
+        assertEquals(CheckDetail.Error("VERIFY_CHIP-AA-DG15Missing"), aa.detail)
+        assertEquals("aucune commande envoyée à la puce", 1, transport.sent.size)
     }
 
     @Test
     fun dg14SansCleCa_NonDisponible() {
         val transport = ScriptedTransport(respond(AID_SELECT, "9000"))
         val onlyAa = DG14File(emptyList()).encoded
-        assertEquals(CheckStatus.NOT_AVAILABLE, verifier(transport).chipAuthentication(onlyAa).status)
+        assertEquals(CheckStatus.NOT_AVAILABLE, verifier(transport).chipAuthentication(onlyAa, signedInSod = true).status)
     }
 
     @Test
     fun dg15Illisible_AlgorithmeNonPrisEnCharge() {
         val transport = ScriptedTransport(respond(AID_SELECT, "9000"))
-        val check = verifier(transport).activeAuthentication(TestFixtures.opaqueDataGroup(15), null)
+        val check = verifier(transport).activeAuthentication(TestFixtures.opaqueDataGroup(15), null, signedInSod = true)
         assertEquals(CheckId.ACTIVE_AUTHENTICATION, check.id)
         assertEquals(CheckStatus.UNSUPPORTED_ALGORITHM, check.status)
     }
@@ -88,7 +104,7 @@ class ChipVerifierTest {
     @Test
     fun caRefuseeParLaPuce_Echec() {
         val transport = ScriptedTransport(respond(AID_SELECT, "9000"), respond("0022", "6A80"))
-        val check = verifier(transport).chipAuthentication(dg14)
+        val check = verifier(transport).chipAuthentication(dg14, signedInSod = true)
         assertEquals(CheckId.CHIP_AUTHENTICATION, check.id)
         assertEquals(CheckStatus.FAILED, check.status)
         assertTrue((check.detail as CheckDetail.Error).code.startsWith("VERIFY_CHIP-CA-"))
@@ -99,7 +115,7 @@ class ChipVerifierTest {
         val lost = SceauException.ConnectionLost()
         val transport = ScriptedTransport(respond(AID_SELECT, "9000"), raise("0022", lost))
         try {
-            verifier(transport).chipAuthentication(dg14)
+            verifier(transport).chipAuthentication(dg14, signedInSod = true)
             fail("ConnectionLost attendue")
         } catch (e: SceauException.ConnectionLost) {
             assertSame(lost, e)
@@ -109,7 +125,7 @@ class ChipVerifierTest {
     @Test
     fun aaRefuseeParLaPuce_EchecEtChallengeDeHuitOctets() {
         val transport = ScriptedTransport(respond(AID_SELECT, "9000"), respond("00880000", "6982"))
-        val check = verifier(transport).activeAuthentication(dg15, null)
+        val check = verifier(transport).activeAuthentication(dg15, null, signedInSod = true)
         assertEquals(CheckStatus.FAILED, check.status)
         // INTERNAL AUTHENTICATE, Lc = 8, challenge tiré du SecureRandom fourni.
         assertTrue(transport.sent.last().startsWith("0088000008" + "42".repeat(8)))
@@ -120,7 +136,7 @@ class ChipVerifierTest {
         val lost = SceauException.ConnectionLost()
         val transport = ScriptedTransport(respond(AID_SELECT, "9000"), raise("00880000", lost))
         try {
-            verifier(transport).activeAuthentication(dg15, null)
+            verifier(transport).activeAuthentication(dg15, null, signedInSod = true)
             fail("ConnectionLost attendue")
         } catch (e: SceauException.ConnectionLost) {
             assertSame(lost, e)
