@@ -4,6 +4,7 @@ import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.nfc.tech.IsoDep
 import android.os.Bundle
+import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -26,6 +27,12 @@ class MainActivity : ComponentActivity() {
         // et la MRZ saisis, que ni l'aperçu du multitâche (écrit sur disque par le système) ni
         // une capture ne doivent contenir (audit V7). Aucun écran n'a besoin d'être capturé.
         secureForLifetime(window)
+        // Aucun champ de l'appli ne doit être proposé à un service d'autofill (gestionnaire de
+        // mots de passe synchronisé) : CAN, numéro de document et dates (audit V14). Compose
+        // force IMPORTANT_FOR_AUTOFILL_YES sur sa propre vue ; l'exclusion est donc posée sur
+        // la vue racine, dont View.isImportantForAutofill() tient compte pour tous ses
+        // descendants, nœuds virtuels de la composition compris.
+        window.decorView.importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_NO_EXCLUDE_DESCENDANTS
         enableEdgeToEdge()
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
         val trustStoreRepository = (application as SceauApplication).trustStoreRepository
