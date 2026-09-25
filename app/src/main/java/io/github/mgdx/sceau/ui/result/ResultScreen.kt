@@ -52,6 +52,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -75,6 +76,10 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
+
+/** Lignes au plus pour une valeur de champ ou une ligne de détail (audit V12). */
+private const val FIELD_MAX_LINES = 10
+private const val DETAIL_MAX_LINES = 8
 
 /**
  * Écran de résultat (SPEC §5.3). Les données affichées ne vivent que dans la session :
@@ -644,7 +649,13 @@ private fun CheckRow(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 lines.forEach {
-                    Text(text = it, style = MaterialTheme.typography.bodyMedium)
+                    // Sujets de certificats et codes venus de la puce : assainis (audit V12).
+                    Text(
+                        text = displaySafe(it),
+                        style = MaterialTheme.typography.bodyMedium,
+                        maxLines = DETAIL_MAX_LINES,
+                        overflow = TextOverflow.Ellipsis,
+                    )
                 }
             }
         }
@@ -685,6 +696,12 @@ private fun FieldRow(
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        Text(text = value, style = MaterialTheme.typography.bodyLarge)
+        // Valeurs venues de la puce (DG1, DG11, DG12, code pays inconnu) : assainies (audit V12).
+        Text(
+            text = displaySafe(value),
+            style = MaterialTheme.typography.bodyLarge,
+            maxLines = FIELD_MAX_LINES,
+            overflow = TextOverflow.Ellipsis,
+        )
     }
 }
