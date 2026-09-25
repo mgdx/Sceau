@@ -46,6 +46,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.boundsInWindow
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
@@ -69,6 +71,8 @@ import io.github.mgdx.sceau.session.SessionViewModel
 import io.github.mgdx.sceau.ui.common.SceauIcons
 import io.github.mgdx.sceau.ui.common.SecureWindow
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
 
@@ -249,16 +253,36 @@ private class BitmapHolder {
 }
 
 /**
- * Décode [image] hors du thread principal, en mémoire uniquement. Le bitmap est effacé
- * puis libéré quand l'image quitte la composition.
+ * Un seul décodage d'image à la fois dans tout le processus (audit V4) : DG2 et les deux
+ * images de DG12 ne cumulent jamais leur mémoire de décodage.
+ */
+private val decodeMutex = Mutex()
+
+/** État du décodage et modificateur à poser sur l'emplacement de l'image. */
+private class DecodedImage(
+    val load: ImageLoad,
+    /** Déclenche le décodage dès que l'emplacement apparaît au moins en partie à l'écran. */
+    val trigger: Modifier,
+)
+
+/**
+ * Décode [image] hors du thread principal, en mémoire uniquement, une fois son emplacement
+ * affiché et après les décodages déjà en cours. Le bitmap est effacé puis libéré quand
+ * l'image quitte la composition.
  */
 @Composable
-private fun rememberDecodedImage(image: EncodedImage?): ImageLoad {
+private fun rememberDecodedImage(image: EncodedImage?): DecodedImage {
     val holder = remember(image) { BitmapHolder() }
     var load by remember(image) { mutableStateOf(if (image == null) ImageLoad.Failed else ImageLoad.Loading) }
-    LaunchedEffect(image) {
-        if (image == null) return@LaunchedEffect
-        val bitmap = withContext(Dispatchers.Default) { decodeToBitmap(image) }
+    var shown by remember(image) { mutableStateOf(false) }
+    val trigger =
+        Modifier.onGloballyPositioned { coordinates ->
+            // Bornes rognées par le conteneur défilant : vides tant que l'image est hors écran.
+            if (!shown && !coordinates.boundsInWindow().isEmpty) shown = true
+        }
+    LaunchedEffect(image, shown) {
+        if (image == null || !shown) return@LaunchedEffect
+        val bitmap = decodeMutex.withLock { withContext(Dispatchers.Default) { decodeToBitmap(image) } }
         if (bitmap == null) {
             load = ImageLoad.Failed
         } else {
@@ -272,12 +296,13 @@ private fun rememberDecodedImage(image: EncodedImage?): ImageLoad {
             holder.bitmap = null
         }
     }
-    return load
+    return DecodedImage(load, trigger)
 }
 
 @Composable
 private fun PortraitSection(portrait: EncodedImage?) {
-    val load = rememberDecodedImage(portrait)
+    val decoded = rememberDecodedImage(portrait)
+    val load = decoded.load
     var fullScreen by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -288,7 +313,7 @@ private fun PortraitSection(portrait: EncodedImage?) {
             load = load,
             description = stringResource(R.string.result_photo_description),
             unavailable = stringResource(R.string.result_photo_unavailable),
-            modifier = Modifier.width(200.dp).height(260.dp),
+            modifier = Modifier.width(200.dp).height(260.dp).then(decoded.trigger),
         )
         if (load is ImageLoad.Loaded) {
             OutlinedButton(onClick = { fullScreen = true }) {
@@ -482,7 +507,7 @@ private fun DocumentImage(
     image: EncodedImage,
     label: Int,
 ) {
-    val load = rememberDecodedImage(image)
+    val decoded = rememberDecodedImage(image)
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(
             text = stringResource(label),
@@ -490,10 +515,10 @@ private fun DocumentImage(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         ImageBox(
-            load = load,
+            load = decoded.load,
             description = stringResource(label),
             unavailable = stringResource(R.string.result_image_unavailable),
-            modifier = Modifier.fillMaxWidth().height(200.dp),
+            modifier = Modifier.fillMaxWidth().height(200.dp).then(decoded.trigger),
         )
     }
 }
