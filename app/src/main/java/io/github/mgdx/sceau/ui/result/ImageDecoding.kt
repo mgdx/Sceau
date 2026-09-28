@@ -1,23 +1,31 @@
 package io.github.mgdx.sceau.ui.result
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.core.graphics.scale
 import io.github.mgdx.sceau.core.model.EncodedImage
 import io.github.mgdx.sceau.core.model.ImageFormat
-import io.github.mgdx.sceau.jp2.Jpeg2000Decoder
+import io.github.mgdx.sceau.jp2.IsolatedJpeg2000Decoder
+import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * Décode une image de la puce en un [Bitmap] mutable, uniquement en mémoire (aucun cache).
  * À appeler hors du thread principal. Renvoie null si l'image est illisible ou démesurée :
- * l'écran affiche alors un emplacement vide, jamais de plantage.
+ * l'écran affiche alors un emplacement vide, jamais de plantage. Le JPEG 2000 est décodé dans
+ * un processus isolé (D23), le JPEG par le décodeur d'Android.
  */
-fun decodeToBitmap(image: EncodedImage): Bitmap? =
+suspend fun decodeToBitmap(
+    context: Context,
+    image: EncodedImage,
+): Bitmap? =
     try {
         when (resolveImageFormat(image.format, image.bytes)) {
-            ImageFormat.JPEG2000 -> Jpeg2000Decoder.decode(image.bytes)?.let(::limitSide)
+            ImageFormat.JPEG2000 -> IsolatedJpeg2000Decoder.decode(context, image.bytes)?.let(::limitSide)
             ImageFormat.JPEG, ImageFormat.UNKNOWN -> decodeWithPlatform(image.bytes)
         }
+    } catch (e: CancellationException) {
+        throw e
     } catch (_: Exception) {
         null
     } catch (_: OutOfMemoryError) {

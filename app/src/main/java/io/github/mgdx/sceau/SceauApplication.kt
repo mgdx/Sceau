@@ -1,6 +1,7 @@
 package io.github.mgdx.sceau
 
 import android.app.Application
+import io.github.mgdx.sceau.jp2.isIsolatedProcess
 import io.github.mgdx.sceau.trust.TrustStoreRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,6 +17,8 @@ class SceauApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        // Processus isolé du décodeur JPEG 2000 (D23) : rien à y précharger.
+        if (isIsolatedProcess()) return
         // Préchargement du magasin de confiance (plusieurs secondes sur un téléphone ancien),
         // pour que ni la première lecture ni l'écran Magasin de confiance n'attendent. Une
         // erreur est ignorée : le prochain get() retentera le chargement et la signalera.

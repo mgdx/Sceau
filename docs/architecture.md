@@ -53,7 +53,10 @@ app/src/main/java/io/github/mgdx/sceau/
   ui/                      SceauNavHost, Routes, écrans home/, reading/, result/, trust/, about/
   ui/common/SecureWindow   FLAG_SECURE compté par fenêtre
   ui/theme/                thème Material 3, palette du logo, mode sombre suivant le système
-  jp2/Jpeg2000Decoder      décodage JPEG 2000 (JNI vers libsceau_jp2.so)
+  jp2/Jpeg2000Decoder      décodage JPEG 2000 (JNI vers libsceau_jp2.so), appelé dans le seul processus isolé
+  jp2/Jpeg2000Service      service isolatedProcess qui décode (D23)
+  jp2/IsolatedJpeg2000Decoder  client du service, appelé par l'écran de résultat
+  jp2/Jpeg2000Protocol     protocole binder par morceaux, testé sur JVM
 
 app/src/debug/java/…/demo/DemoMode.kt     mode démo : CNIe simulée de :testchip
 app/src/release/java/…/demo/DemoMode.kt   version vide (isAvailable = false)
@@ -73,7 +76,9 @@ Les chaînes sont réparties par écran dans `res/values*/strings_<écran>.xml` 
 Le décodage vit dans `:app`, jamais dans `:core` (qui reste sans JNI). `ui/result/ImageDecoding.kt` choisit le décodeur selon le format annoncé et la signature des octets :
 
 - JPEG : `BitmapFactory` d'Android ;
-- JPEG 2000 (fichier JP2 ou flux J2K brut) : `Jpeg2000Decoder.decode(bytes): Bitmap?`, qui appelle `libsceau_jp2.so`, chargée à la première utilisation. La bibliothèque lie statiquement OpenJPEG, compilé depuis le sous-module `app/src/main/cpp/openjpeg` (décision D3), et décode depuis la mémoire. Elle renvoie null, sans exception ni trace, pour tout flux invalide, tronqué ou annonçant plus de 4096 pixels de côté.
+- JPEG 2000 (fichier JP2 ou flux J2K brut) : `IsolatedJpeg2000Decoder.decode(context, bytes): Bitmap?` (fonction `suspend`), qui confie le flux au service `Jpeg2000Service`, déclaré `android:isolatedProcess="true"` et non exporté, dans le processus `:jp2` (décision D23). Ce processus, sous un UID isolé, n'a aucune permission ni accès aux fichiers de l'app ; c'est le seul où `libsceau_jp2.so` est chargée et où `Jpeg2000Decoder.decode(bytes)` est appelé. La bibliothèque lie statiquement OpenJPEG, compilé depuis le sous-module `app/src/main/cpp/openjpeg` (décision D3), et décode depuis la mémoire ; elle renvoie null, sans exception ni trace, pour tout flux invalide, tronqué ou annonçant plus de 4096 pixels de côté.
+
+  Chaque décodage lie le service (donc démarre un processus isolé neuf), envoie le flux par transactions binder de 256 Kio, reçoit largeur et hauteur puis les pixels ARGB par morceaux de 64 Ki pixels, et se détache ; le service efface ses tampons et termine son processus dans `onDestroy`. Rien ne passe par un fichier. Les décodages sont sérialisés. Processus isolé mort (bombe, bug natif), délai de 10 s dépassé (démarrage et transferts compris), service indisponible ou réponse hors protocole (dimensions au-delà de 2048 × 2048, morceau hors séquence) : null, l'image n'est pas affichée. `SceauApplication`, créée aussi dans le processus isolé, n'y précharge rien (`isIsolatedProcess()`).
 
 Le code natif est compilé pour `armeabi-v7a`, `arm64-v8a`, `x86` et `x86_64`, d'où un APK par architecture plus un APK universel (décision D2). Le cœur `jp2_decode.c` se teste sur l'hôte : `app/src/main/cpp/test/run-host-tests.sh` (images synthétiques encodées par `opj_compress`, flux tronqués, altérés et démesurés, sous ASan et UBSan).
 
@@ -144,7 +149,7 @@ Résultat  affiche verdict, photo, DG1, DG11/DG12, liste de contrôle
 2. **Détection NFC** : `MainActivity` (lancement `singleTop`) active le mode lecteur NFC (`enableReaderMode`, NFC-A et NFC-B, tests de présence toutes les 2 s) entre `onResume` et `onPause`. Elle reçoit le tag `IsoDep` pendant que la session est en `WaitingForCard` ou `Error`, l'enveloppe dans un `IsoDepTransport` et appelle `onCardDetected(transport)`.
 3. **Lecture** (`ReadingScreen`) : `readAndVerify` s'exécute dans une coroutine du `ViewModel`, sur `Dispatchers.IO`. Chaque appel de `progress` fait passer l'état en `Reading(step)` ; l'écran coche les étapes terminées et affiche un message d'attente si l'ouverture du canal sécurisé dure plus de 5 s (décision D12). Une `SceauException` donne `Error(code)`, affiché avec un message en français, le code technique en petit (décision D11) et « Réessayer » (`retry()`, même clé). Le transport est toujours fermé hors du thread principal (`IsoDep.close()` attend la fin de l'APDU en cours).
 4. **Magasin de confiance** : `TrustStoreRepository.get()` fournit le `TrustStore` fusionné, chargé une fois puis gardé en mémoire jusqu'au prochain import ou effacement des imports. `SceauApplication` le précharge en arrière-plan au démarrage du processus (décision D16).
-5. **Résultat** (`ResultScreen`) : sur `Done(report)`, la navigation remplace l'écran de lecture par l'écran de résultat (`popUpTo(READING) inclusive`). L'écran met en forme le rapport ; le portrait JPEG 2000 est décodé par `Jpeg2000Decoder` (OpenJPEG natif), le JPEG par le décodeur Android. Aucune donnée n'est copiée hors du rapport au-delà de ce qu'exige l'affichage.
+5. **Résultat** (`ResultScreen`) : sur `Done(report)`, la navigation remplace l'écran de lecture par l'écran de résultat (`popUpTo(READING) inclusive`). L'écran met en forme le rapport ; le portrait JPEG 2000 est décodé par OpenJPEG dans le processus isolé de `Jpeg2000Service` (décision D23), le JPEG par le décodeur Android. Aucune donnée n'est copiée hors du rapport au-delà de ce qu'exige l'affichage.
 6. **Magasin de confiance, écran dédié** (`TrustStoreScreen`) : liste des CSCA, import d'une Master List via `ACTION_OPEN_DOCUMENT` → `preview(bytes)` (signature vérifiée, empreinte du signataire montrée) → confirmation → `import(bytes)`. Les Master Lists importées sont stockées telles quelles dans `filesDir/trust/` : ce sont des certificats publics, pas des données personnelles. « Supprimer les certificats importés » appelle `clearImported()`.
 7. **Mode démo** (APK de debug seulement, décision D17) : l'entrée « Simuler une CNIe (démo) » du menu de l'accueil construit, hors du thread principal, une CNIe simulée de `:testchip` (`DemoMode.newSimulatedCnie()`), puis `SessionViewModel.startDemo(card)` la lit par le même chemin qu'un document réel (`launchRead`), avec sa clé CAN et son magasin de test, qui ne sert qu'à cette lecture. La clé saisie est oubliée. Le résultat porte le bandeau « Document simulé — démonstration » (`ReadState.Done.isDemo`). Dans l'APK release, `DemoMode.isAvailable` vaut `false` et l'entrée n'existe pas.
 
@@ -159,7 +164,7 @@ Données sensibles : la clé d'accès (CAN ou MRZ) et le contenu de `Verificatio
 | Saisie CAN / MRZ | `SessionViewModel.form` (`AccessForm`, en mémoire, jamais dans un `Bundle` ni un `SavedStateHandle` ; `toString()` masqué) | de la frappe à la fin d'une lecture réussie (formulaire vidé, onglet gardé) ou à `clear()` |
 | `AccessKey` | `SessionViewModel` (portée d'activité) | de `prepare(key)` à la fin d'une lecture réussie ou à `clear()` ; conservée après une erreur pour « Réessayer » |
 | `VerificationReport` | `SessionViewModel`, état `ReadState.Done` | de la fin de la lecture à `clear()` |
-| Images décodées (bitmap) | écran de résultat | tant que l'écran est composé ; effacées par `wipeAndRecycle()`. Les tampons intermédiaires du décodage JPEG 2000 (copie native du flux, échantillons, tableau ARGB natif et Java) sont remis à zéro dès le bitmap construit |
+| Images décodées (bitmap) | écran de résultat | tant que l'écran est composé ; effacées par `wipeAndRecycle()`. Les tampons intermédiaires du décodage JPEG 2000 (copie native du flux, échantillons, tableau ARGB natif et Java, flux et pixels reçus ou envoyés par binder, des deux côtés) sont remis à zéro dès le bitmap construit ; le processus isolé est terminé après chaque image (D23) |
 | Master Lists importées | `filesDir/trust/` | jusqu'à « Supprimer les certificats importés » (données publiques) |
 
 Rien d'autre : aucune base, aucun fichier, aucun cache, aucun log, aucune préférence ne contient de donnée lue ni de clé. Le `SavedStateHandle` et le `Bundle` d'état de l'activité n'en contiennent pas non plus : après la mort du processus, l'application redémarre sur l'accueil, vide. La sauvegarde Android est désactivée (`allowBackup="false"`, et règles de sauvegarde et de transfert qui excluent tous les domaines).
@@ -181,7 +186,7 @@ Une mise en arrière-plan depuis l'accueil (en `Idle`, `WaitingForCard` ou `Erro
 Limites assumées :
 
 - Kotlin/JVM ne permet pas d'effacer les `String` (nom, numéro, CAN) ni de garantir qu'aucune copie n'a été faite par le ramasse-miettes. La remise à zéro porte sur les tableaux d'octets, qui contiennent la photo et les DG bruts ; les chaînes deviennent inaccessibles dès que la session est vidée.
-- JMRTD et OpenJPEG gardent des copies intermédiaires dans des tampons internes qu'ils libèrent sans remise à zéro (décisions D3 et D14). Elles restent dans la mémoire du processus et ne sont ni écrites ni journalisées.
+- JMRTD et OpenJPEG gardent des copies intermédiaires dans des tampons internes qu'ils libèrent sans remise à zéro (décisions D3 et D14). Elles restent en mémoire et ne sont ni écrites ni journalisées ; celles d'OpenJPEG disparaissent avec le processus isolé, terminé après chaque image (D23). Les tampons des `Parcel` binder qui transportent le flux et les pixels sont libérés sans remise à zéro (l'API publique ne le permet pas).
 
 ### Journaux
 
