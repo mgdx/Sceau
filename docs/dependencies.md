@@ -74,7 +74,7 @@ Montée de version : se placer dans le sous-module, `git fetch --tags && git che
 | Artefact | Version | Licence | Tiré par | Remarque |
 |---|---|---|---|---|
 | `org.bouncycastle:bcutil-jdk18on` | 1.86 | Licence Bouncy Castle (MIT) | bcpkix, JMRTD | Structures ASN.1 communes |
-| `org.ejbca.cvc:cert-cvc` | 1.4.13 | LGPL 2.1 (POM : « LGPL license, Version 2.1 ») | JMRTD | Certificats à vérification de carte (CV), utilisés par JMRTD pour Terminal Authentication, que Sceau n'exécute pas. Conservé par les règles R8 car JMRTD le référence. |
+| `org.ejbca.cvc:cert-cvc` | 1.4.13 | LGPL 2.1 (POM : « LGPL license, Version 2.1 ») | JMRTD | Certificats à vérification de carte (CV), utilisés par JMRTD pour Terminal Authentication, que Sceau n'exécute pas. Retiré de l'APK par R8 : Sceau n'atteint aucun de ses chemins (D24). |
 | `com.google.guava:listenablefuture` | 1.0 | Apache 2.0 (en-tête des sources ; le POM hérite de `guava-parent`) | AndroidX (`concurrent-futures`) | Artefact vide de Guava contenant la seule interface `ListenableFuture`. Libre, n'est pas un service Google. |
 | `org.jetbrains.kotlinx:kotlinx-serialization-core` | 1.7.3 | Apache 2.0 | Navigation, Lifecycle | Sérialisation des routes et états de navigation. Aucune donnée lue n'est sérialisée. |
 | `androidx.profileinstaller:profileinstaller` | 1.4.0 | Apache 2.0 | Compose | Profils de compilation ART, local à l'appareil, aucun réseau |
