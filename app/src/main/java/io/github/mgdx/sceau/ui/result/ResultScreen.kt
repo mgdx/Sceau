@@ -48,6 +48,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
@@ -327,6 +328,7 @@ private fun rememberDecodedImage(
     image: EncodedImage?,
     owner: BitmapOwner,
 ): DecodedImage {
+    val context = LocalContext.current.applicationContext
     val holder = remember(image) { BitmapHolder() }
     var load by remember(image) { mutableStateOf(if (image == null) ImageLoad.Failed else ImageLoad.Loading) }
     var shown by remember(image) { mutableStateOf(false) }
@@ -341,7 +343,7 @@ private fun rememberDecodedImage(
         var bitmap: Bitmap? = null
         var kept = false
         try {
-            decodeMutex.withLock { withContext(Dispatchers.Default) { bitmap = decodeToBitmap(image) } }
+            decodeMutex.withLock { withContext(Dispatchers.Default) { bitmap = decodeToBitmap(context, image) } }
             val decoded = bitmap?.let(::DecodedBitmap)
             if (decoded != null && owner.adopt(decoded)) {
                 kept = true
