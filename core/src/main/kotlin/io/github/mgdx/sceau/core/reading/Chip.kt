@@ -20,6 +20,8 @@ import java.util.Locale
  * - Taille de chaque fichier plafonnée avant lecture ([FileSizeLimits], audit V11) : les
  *   fichiers sont lus par des `DefaultFileSystem` propres, au-dessus du même émetteur de
  *   messagerie sécurisée que [service], dont l'émetteur de READ BINARY contrôle l'en-tête.
+ * - [reconnect] repart d'un état JMRTD neuf (service, messagerie sécurisée, systèmes de
+ *   fichiers et leur cache) : rien de la liaison précédente n'est réutilisé.
  */
 internal class Chip(
     val transport: CardTransport,
@@ -31,15 +33,31 @@ internal class Chip(
             .coerceAtMost(PassportService.NORMAL_MAX_TRANCEIVE_LENGTH)
             .coerceAtLeast(MIN_TRANSCEIVE_LENGTH)
 
-    val service =
-        PassportService(
-            cardService,
-            maxTransceiveLength,
-            maxTransceiveLength,
-            BLOCK_SIZE,
-            false,
-            true,
-        )
+    /** État JMRTD d'une liaison, remplacé à chaque [reconnect]. */
+    private inner class Link {
+        val service =
+            PassportService(
+                cardService,
+                maxTransceiveLength,
+                maxTransceiveLength,
+                BLOCK_SIZE,
+                false,
+                true,
+            )
+
+        private val boundedSender = BoundedReadBinarySender(ReadBinaryAPDUSender(service.secureMessagingAPDUSender))
+
+        /** EF.CardAccess, au niveau MF : toujours en clair, comme le système de fichiers racine de JMRTD. */
+        val rootFileSystem = DefaultFileSystem(boundedSender, false)
+
+        /** Fichiers de l'applet ICAO, sous la messagerie sécurisée courante de [service]. */
+        val appletFileSystem = DefaultFileSystem(boundedSender, false)
+    }
+
+    private var link = Link()
+
+    /** Service JMRTD de la liaison courante (remplacé par [reconnect]). */
+    val service: PassportService get() = link.service
 
     /** Relance l'erreur du transport (document retiré, délai) si elle s'est produite. */
     fun rethrowTransportFailure() {
@@ -48,21 +66,16 @@ internal class Chip(
 
     /**
      * Réinitialise la liaison ([CardTransport.reconnect]) et oublie l'erreur de transport qui l'a
-     * motivée : la puce repart de zéro, sans messagerie sécurisée ni applet sélectionnée.
+     * motivée : la puce repart de zéro, sans messagerie sécurisée ni applet sélectionnée, et
+     * Sceau aussi (nouvel état JMRTD, sans clé de session ni cache de fichiers de la liaison
+     * précédente).
      */
     fun reconnect() {
         // D'abord oubliée : un échec de la reconnexion elle-même doit ressortir tel quel.
         cardService.clearTransportFailure()
         transport.reconnect()
+        link = Link().also { it.service.open() }
     }
-
-    private val boundedSender = BoundedReadBinarySender(ReadBinaryAPDUSender(service.secureMessagingAPDUSender))
-
-    /** EF.CardAccess, au niveau MF : toujours en clair, comme le système de fichiers racine de JMRTD. */
-    private val rootFileSystem = DefaultFileSystem(boundedSender, false)
-
-    /** Fichiers de l'applet ICAO, sous la messagerie sécurisée courante de [service]. */
-    private val appletFileSystem = DefaultFileSystem(boundedSender, false)
 
     /**
      * Lit un fichier entier (EF.CardAccess au niveau MF, ou un fichier de l'applet ICAO). Un
@@ -70,11 +83,12 @@ internal class Chip(
      * (`<fichier>-TOO_LARGE`) sans être lu.
      */
     fun readFile(fid: Short): ByteArray {
+        val current = link
         val fileSystem =
             if (fid == PassportService.EF_CARD_ACCESS) {
-                rootFileSystem
+                current.rootFileSystem
             } else {
-                appletFileSystem.also { fs -> service.wrapper.let { if (fs.wrapper !== it) fs.setWrapper(it) } }
+                current.appletFileSystem.also { fs -> current.service.wrapper.let { if (fs.wrapper !== it) fs.setWrapper(it) } }
             }
         return try {
             fileSystem.selectFile(fid)
@@ -97,7 +111,7 @@ internal class Chip(
         }
 
     fun close() {
-        service.close()
+        link.service.close()
     }
 
     companion object {

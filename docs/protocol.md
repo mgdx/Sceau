@@ -32,6 +32,17 @@ Avant chaque lecture, les journaux `java.util.logging` de JMRTD et de SCUBA sont
 
 L'ordre réel des échanges suit ICAO 9303 partie 11 : EF.CardAccess est un fichier du MF, lu **avant** toute sélection d'application, et PACE s'exécute au niveau du MF, avant la sélection de l'application eMRTD. La SPEC énumère les étapes dans l'ordre logique (reconnaître un document ICAO, puis ouvrir le canal) ; le résultat observable est le même (`NotIcaoDocument` si l'application ICAO est absente). Mise en œuvre : `SecureChannel` (`core/src/main/kotlin/…/reading/`).
 
+Séquence complète (décision D20) :
+
+1. EF.CardAccess, puis PACE ou BAC (§2.1, §2.2) ;
+2. EF.COM, EF.SOD (§2.3), puis DG14 s'il est annoncé dans EF.COM ou dans le SOD ;
+3. Chip Authentication si DG14 annonce une clé (§2.6) ;
+4. DG1, DG2, puis DG15, DG11, DG12 s'ils sont annoncés (§2.4), sous la messagerie sécurisée de la Chip Authentication si elle a réussi ;
+5. Passive Authentication (§2.5), qui vérifie aussi l'empreinte de DG14 ;
+6. Active Authentication si DG15 est présent (§2.7).
+
+La Chip Authentication précède la lecture des données, et non la Passive Authentication comme l'énumère SPEC §6.1 : ainsi DG1, DG2, DG11, DG12 et DG15 sont lus sous des clés de session que seule la puce qui détient la clé privée de DG14 peut dériver, ce qui les lie à cette puce (ICAO 9303-11 §6.2, procédure d'inspection).
+
 ### 2.1 EF.CardAccess, puis sélection de l'application ICAO
 
 1. Lecture de **EF.CardAccess** (FID `01 1C`, fichier du MF, partie 10), en clair. S'il est présent et contient des `PACEInfo`, PACE est annoncé. Absent ou illisible : pas de PACE.
@@ -74,7 +85,7 @@ Réponse `6A82` (fichier introuvable) à la sélection : `SceauException.NotIcao
 | DG14 | `01 0E` | `6E` | Informations de sécurité (Chip Authentication, algorithme AA) | si annoncé |
 | DG15 | `01 0F` | `6F` | Clé publique d'Active Authentication | si annoncé |
 
-Ordre de lecture : DG1, DG2, puis DG14, DG15, DG11, DG12 s'ils sont annoncés dans EF.COM **ou** dans le SOD. DG3 et DG4 sont protégés par Terminal Authentication (Extended Access Control), qui exige des certificats délivrés par les États : ils sont hors périmètre (SPEC §1) et ne sont jamais demandés (`DocumentReader.OPTIONAL_DATA_GROUPS` ne contient que 14, 15, 11 et 12 ; les tests de bout en bout échouent si la puce simulée reçoit une demande de DG3 ou DG4).
+Ordre de lecture (décision D20) : DG14 d'abord, s'il est annoncé dans EF.COM **ou** dans le SOD, puis la Chip Authentication (§2.6), puis DG1, DG2, et DG15, DG11, DG12 s'ils sont annoncés. DG3 et DG4 sont protégés par Terminal Authentication (Extended Access Control), qui exige des certificats délivrés par les États : ils sont hors périmètre (SPEC §1) et ne sont jamais demandés (`DocumentReader` ne demande que DG14, `SECURITY_DATA_GROUP`, puis DG1, DG2 et `OPTIONAL_DATA_GROUPS` = 15, 11, 12 ; les tests de bout en bout échouent si la puce simulée reçoit une demande de DG3 ou DG4).
 
 Un échec de lecture de DG1 donne `UNEXPECTED-READ_DATA-DG1-…`. Un DG facultatif (DG2 compris) absent ou illisible est simplement omis : une puce sans DG2 est lue sans photo (décision D14). Une erreur de transport (document retiré, délai) interrompt toujours la lecture.
 
@@ -99,10 +110,14 @@ Les listes de révocation (CRL) ne sont pas consultées en v1 : elles nécessite
 
 ### 2.6 Chip Authentication (partie 11)
 
-- Exécutée si DG14 est présent et annonce Chip Authentication (`ChipAuthenticationInfo`, `ChipAuthenticationPublicKeyInfo`).
-- Accord de clé (DH ou ECDH) entre une clé éphémère du terminal et la clé statique de la puce publiée dans DG14 ; la messagerie sécurisée est alors renouvelée avec les clés dérivées, et toutes les commandes suivantes passent par ce nouveau canal.
-- Une puce clonée ne possède pas la clé privée : le canal renouvelé ne peut pas s'établir. L'échange seul ne prouve rien tant que la puce n'a pas répondu sous le nouveau canal : une lecture courte de DG1 le confirme (MAC de la réponse vérifié). Comme DG14 est couvert par le SOD, sa clé publique est elle-même authentifiée par la Passive Authentication.
-- Résultat : ligne `CHIP_AUTHENTICATION` (`OK`, `FAILED`, `UNSUPPORTED_ALGORITHM`, ou `NOT_AVAILABLE` sans DG14).
+- Exécutée si DG14 est présent et annonce Chip Authentication (`ChipAuthenticationInfo`, `ChipAuthenticationPublicKeyInfo`), **après la lecture de DG14 et avant celle des autres DG** (décision D20), pendant l'étape `READ_DATA`.
+- Accord de clé (DH ou ECDH) entre une clé éphémère du terminal et la clé statique de la puce publiée dans DG14 ; la messagerie sécurisée est alors renouvelée avec les clés dérivées, et toutes les commandes suivantes (lecture de DG1, DG2, DG15, DG11, DG12, puis AA) passent par ce nouveau canal.
+- Une puce clonée ne possède pas la clé privée : le canal renouvelé ne peut pas s'établir. L'échange seul ne prouve rien tant que la puce n'a pas répondu sous le nouveau canal : une confirmation explicite (SELECT de DG1 puis READ BINARY d'un octet, MAC des réponses vérifié) le vérifie avant toute lecture de données. Elle est gardée, bien que la lecture de DG1 qui suit passe elle aussi par le nouveau canal, pour que la ligne CA soit juste : un échec de la confirmation est un échec de la CA (et le signal qu'il faut rétablir le canal), non une erreur de lecture de DG1 qui interromprait toute la lecture.
+- Comme DG14 est couvert par le SOD, sa clé publique est elle-même authentifiée par la Passive Authentication : un DG14 falsifié met la ligne des empreintes en échec.
+- **CA en échec** : la ligne `CHIP_AUTHENTICATION` vaut `FAILED` (donc le verdict « Échec »), et la lecture continue pour afficher les données :
+  - si la puce refuse l'échange (SW d'erreur au MSE ou au GENERAL AUTHENTICATE), JMRTD garde l'ancienne messagerie ; la même confirmation vérifie que la puce y répond encore, et les DG sont lus sous l'ancien canal ;
+  - si la puce ne répond plus sous la messagerie courante (confirmation ratée après le changement de clés, ou puce qui a clos la session), la liaison est réinitialisée (`CardTransport.reconnect()`), un état JMRTD neuf est créé, puis le canal est rétabli avec la même clé, dans la même lecture (EF.CardAccess, PACE ou BAC, repli PACE → BAC compris : `SecureChannel.reestablish`), et les DG sont lus sous ce canal. La clé n'est pas conservée au-delà de la lecture. Une erreur à ce rétablissement interrompt la lecture comme au premier établissement (`CONNECTION_LOST-READ_DATA-RECONNECT`, `ACCESS_DENIED`, `TIMEOUT-READ_DATA-…`).
+- Résultat : ligne `CHIP_AUTHENTICATION` (`OK`, `FAILED`, `UNSUPPORTED_ALGORITHM`, ou `NOT_AVAILABLE` sans DG14). Les codes d'erreur de la CA commencent par `READ_DATA-CA` (`READ_DATA-CA-DG14Missing`, `READ_DATA-CA_CONFIRM-…`).
 
 ### 2.7 Active Authentication (partie 11)
 
@@ -133,9 +148,9 @@ Les listes de révocation (CRL) ne sont pas consultées en v1 : elles nécessite
 |---|---|---|
 | `CONNECT` | Connexion à la puce | 2.1 lecture de EF.CardAccess ; sélection de l'application ICAO en clair si PACE n'est pas annoncé |
 | `SECURE_CHANNEL` | Ouverture du canal sécurisé (PACE ou BAC) | 2.2 PACE puis sélection de l'application sous messagerie sécurisée, ou BAC (repli compris) |
-| `READ_DATA` | Lecture des données | 2.3 EF.COM, EF.SOD ; 2.4 groupes de données |
+| `READ_DATA` | Lecture des données | 2.3 EF.COM, EF.SOD ; DG14 ; 2.6 Chip Authentication ; 2.4 autres groupes de données |
 | `VERIFY_SIGNATURE` | Vérification de la signature | 2.5 Passive Authentication |
-| `VERIFY_CHIP` | Vérification de la puce | 2.6 Chip Authentication, 2.7 Active Authentication |
+| `VERIFY_CHIP` | Vérification de la puce | 2.7 Active Authentication (la CA est déjà faite, D20) |
 
 ## 5. Erreurs : correspondance avec `SceauException`
 

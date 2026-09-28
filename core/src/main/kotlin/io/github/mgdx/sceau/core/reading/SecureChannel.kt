@@ -72,6 +72,18 @@ internal class SecureChannel(
         return ChannelProtocol.BAC
     }
 
+    /**
+     * Rétablit un canal sécurisé sur une liaison neuve, avec la même clé, dans la même lecture :
+     * après une Chip Authentication ratée, la puce a pu clore la messagerie sécurisée (MAC
+     * invalide sous les nouvelles clés). Reconnexion, puis [connect] et [establish] comme au
+     * début de la lecture, repli PACE → BAC compris. Les erreurs ressortent comme au premier
+     * établissement (clé refusée, délai, reconnexion impossible).
+     */
+    fun reestablish(): ChannelProtocol {
+        chip.reconnect()
+        return establish(connect())
+    }
+
     /** Exécute [block] avec le délai de réponse [AUTHENTICATION_TIMEOUT_MILLIS], puis rétablit le délai. */
     private inline fun <T> withAuthenticationTimeout(block: () -> T): T {
         val transport = chip.transport

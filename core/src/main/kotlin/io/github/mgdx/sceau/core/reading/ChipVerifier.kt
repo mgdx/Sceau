@@ -16,9 +16,21 @@ import org.jmrtd.lds.icao.DG15File
 import java.security.GeneralSecurityException
 import java.security.SecureRandom
 
+/** Résultat de la Chip Authentication : sa ligne de contrôle, et l'état du canal pour la suite. */
+internal class ChipAuthenticationOutcome(
+    val check: Check,
+    /**
+     * Faux si la puce ne répond plus sous la messagerie sécurisée courante (CA ratée après le
+     * changement de clés, ou puce qui a clos la session) : le canal est à rétablir avant de lire
+     * les DG.
+     */
+    val channelUsable: Boolean,
+)
+
 /**
- * Étape VERIFY_CHIP (SPEC §6.1, étapes 6 et 7) : Chip Authentication si DG14 annonce une clé,
- * puis Active Authentication si DG15 est présent.
+ * Chip Authentication (SPEC §6.1 étape 6, menée pendant READ_DATA selon la décision D20) si
+ * DG14 annonce une clé, puis, à l'étape VERIFY_CHIP (étape 7), Active Authentication si DG15
+ * est présent.
  *
  * Une ligne n'est « non disponible » que si le DG correspondant est absent du SOD : un DG14
  * ou un DG15 que le SOD annonce mais que la puce n'a pas fourni est un échec (audit V1), sans
@@ -34,28 +46,37 @@ internal class ChipVerifier(
     private val service get() = chip.service
 
     /**
-     * Chip Authentication. Après succès, JMRTD remplace la messagerie sécurisée par celle
-     * dérivée de la clé de DG14 : toute commande ultérieure (dont l'AA) passe par ce canal.
+     * Chip Authentication, avant la lecture de DG1, DG2, DG15, DG11 et DG12 (décision D20).
+     * Après succès, JMRTD remplace la messagerie sécurisée par celle dérivée de la clé de DG14 :
+     * toute commande ultérieure (lecture des DG, AA) passe par ce canal.
+     *
      * L'échange ne prouve rien tant que la puce n'a pas répondu sous le nouveau canal : une
-     * lecture courte de DG1 le confirme (le MAC de la réponse est vérifié).
+     * lecture courte de DG1 le confirme (le MAC de la réponse est vérifié), avant toute lecture
+     * de données. Cette confirmation explicite, et non la lecture de DG1 qui suit, décide de la
+     * ligne CA : un échec y est un échec de la CA, et non une erreur de lecture qui
+     * interromprait la lecture ; il indique aussi que le canal est à rétablir
+     * ([ChipAuthenticationOutcome.channelUsable]).
+     *
+     * Si la puce refuse l'échange lui-même, JMRTD garde l'ancienne messagerie ; la même
+     * confirmation vérifie alors que la puce y répond encore.
      */
     fun chipAuthentication(
         dg14Bytes: ByteArray?,
         signedInSod: Boolean,
-    ): Check {
-        if (dg14Bytes == null) return missing(CheckId.CHIP_AUTHENTICATION, signedInSod, "CA-DG14Missing")
+    ): ChipAuthenticationOutcome {
+        if (dg14Bytes == null) return unchanged(missing(CheckId.CHIP_AUTHENTICATION, CA_STEP, signedInSod, "CA-DG14Missing"))
         val dg14 =
             try {
                 DG14File(dg14Bytes.inputStream())
             } catch (e: Exception) {
-                return unsupported(CheckId.CHIP_AUTHENTICATION, "DG14")
+                return unchanged(unsupported(CheckId.CHIP_AUTHENTICATION, "DG14"))
             }
         val publicKeyInfo =
             dg14.securityInfos
                 .orEmpty()
                 .filterIsInstance<ChipAuthenticationPublicKeyInfo>()
                 .firstOrNull()
-                ?: return check(CheckId.CHIP_AUTHENTICATION, CheckStatus.NOT_AVAILABLE)
+                ?: return unchanged(check(CheckId.CHIP_AUTHENTICATION, CheckStatus.NOT_AVAILABLE))
         val keyId = publicKeyInfo.keyId
         val caInfo =
             dg14.securityInfos.orEmpty().filterIsInstance<ChipAuthenticationInfo>().let { infos ->
@@ -67,13 +88,19 @@ internal class ChipVerifier(
             service.doEACCA(keyId, protocolOid, publicKeyInfo.objectIdentifier, publicKeyInfo.subjectPublicKey)
         } catch (e: Exception) {
             chip.rethrowTransportFailure()
-            if (isUnsupportedAlgorithm(e)) {
-                return unsupported(CheckId.CHIP_AUTHENTICATION, protocolOid ?: publicKeyInfo.objectIdentifier ?: "CA")
-            }
-            return failed(CheckId.CHIP_AUTHENTICATION, "CA", e)
+            val check =
+                if (isUnsupportedAlgorithm(e)) {
+                    unsupported(CheckId.CHIP_AUTHENTICATION, protocolOid ?: publicKeyInfo.objectIdentifier ?: "CA")
+                } else {
+                    failed(CheckId.CHIP_AUTHENTICATION, CA_STEP, "CA", e)
+                }
+            return ChipAuthenticationOutcome(check, channelUsable = confirmChannel("CA_CONFIRM_OLD") == null)
         }
-        return confirmNewChannel()
+        val failure = confirmChannel("CA_CONFIRM") ?: return unchanged(check(CheckId.CHIP_AUTHENTICATION, CheckStatus.OK))
+        return ChipAuthenticationOutcome(check(CheckId.CHIP_AUTHENTICATION, CheckStatus.FAILED, failure), channelUsable = false)
     }
+
+    private fun unchanged(check: Check) = ChipAuthenticationOutcome(check, channelUsable = true)
 
     /** Active Authentication : challenge de 8 octets tiré de [random], réponse vérifiée par le lot B. */
     fun activeAuthentication(
@@ -81,7 +108,7 @@ internal class ChipVerifier(
         dg14Bytes: ByteArray?,
         signedInSod: Boolean,
     ): Check {
-        if (dg15Bytes == null) return missing(CheckId.ACTIVE_AUTHENTICATION, signedInSod, "AA-DG15Missing")
+        if (dg15Bytes == null) return missing(CheckId.ACTIVE_AUTHENTICATION, Step.VERIFY_CHIP, signedInSod, "AA-DG15Missing")
         val publicKey =
             try {
                 DG15File(dg15Bytes.inputStream()).publicKey
@@ -96,7 +123,7 @@ internal class ChipVerifier(
                 service.doAA(publicKey, digestAlgorithm, signatureAlgorithm?.mnemonic, challenge).response
             } catch (e: Exception) {
                 chip.rethrowTransportFailure()
-                return failed(CheckId.ACTIVE_AUTHENTICATION, "AA", e)
+                return failed(CheckId.ACTIVE_AUTHENTICATION, Step.VERIFY_CHIP, "AA", e)
             }
         // JMRTD renvoie les données reçues quel que soit le SW : une réponse vide est un refus.
         if (response == null || response.isEmpty()) {
@@ -105,7 +132,12 @@ internal class ChipVerifier(
         return ActiveAuthentication.verifyResponse(publicKey, digestAlgorithm, challenge, response)
     }
 
-    private fun confirmNewChannel(): Check {
+    /**
+     * Vérifie que la puce répond sous la messagerie sécurisée courante : SELECT de DG1 puis
+     * READ BINARY d'un octet, réponses au MAC vérifié. Null si elle répond, sinon le détail de
+     * l'échec (étiquette [tag]). Une erreur du transport est relancée.
+     */
+    private fun confirmChannel(tag: String): CheckDetail.Error? {
         val commands =
             listOf(
                 CommandAPDU(0x00, INS_SELECT, 0x02, 0x0C, fidBytes(Chip.fidOf(1)), 0),
@@ -117,13 +149,11 @@ internal class ChipVerifier(
                     service.secureMessagingAPDUSender.transmit(service.wrapper, command).sw and 0xFFFF
                 } catch (e: Exception) {
                     chip.rethrowTransportFailure()
-                    return failed(CheckId.CHIP_AUTHENTICATION, "CA_CONFIRM", e)
+                    return CheckDetail.Error(technicalCode(CA_STEP.name, StepFailure(tag, e)))
                 }
-            if (sw != SW_OK) {
-                return check(CheckId.CHIP_AUTHENTICATION, CheckStatus.FAILED, CheckDetail.Error(technicalCodeForSw("CA_CONFIRM", sw)))
-            }
+            if (sw != SW_OK) return CheckDetail.Error(technicalCodeForSw(CA_STEP, tag, sw))
         }
-        return check(CheckId.CHIP_AUTHENTICATION, CheckStatus.OK)
+        return null
     }
 
     private class AaAlgorithm(
@@ -170,10 +200,11 @@ internal class ChipVerifier(
     /** DG absent : non disponible s'il n'est pas dans le SOD, échec s'il y est (puce qui le retient). */
     private fun missing(
         id: CheckId,
+        step: Step,
         signedInSod: Boolean,
         tag: String,
     ) = if (signedInSod) {
-        check(id, CheckStatus.FAILED, CheckDetail.Error("${Step.VERIFY_CHIP.name}-$tag"))
+        check(id, CheckStatus.FAILED, CheckDetail.Error("${step.name}-$tag"))
     } else {
         check(id, CheckStatus.NOT_AVAILABLE)
     }
@@ -185,19 +216,24 @@ internal class ChipVerifier(
 
     private fun failed(
         id: CheckId,
+        step: Step,
         tag: String,
         error: Throwable,
-    ) = check(id, CheckStatus.FAILED, CheckDetail.Error(technicalCode(Step.VERIFY_CHIP.name, StepFailure(tag, error))))
+    ) = check(id, CheckStatus.FAILED, CheckDetail.Error(technicalCode(step.name, StepFailure(tag, error))))
 
     private fun technicalCodeForSw(
+        step: Step,
         tag: String,
         sw: Int,
-    ) = "${Step.VERIFY_CHIP.name}-$tag-${String.format(java.util.Locale.ROOT, "%04X", sw)}"
+    ) = "${step.name}-$tag-${String.format(java.util.Locale.ROOT, "%04X", sw)}"
 
     private fun fidBytes(fid: Short) = byteArrayOf((fid.toInt() shr 8).toByte(), fid.toByte())
 
     companion object {
         const val AA_CHALLENGE_LENGTH = 8
+
+        /** Étape pendant laquelle la CA est menée (D20) : préfixe de ses codes d'erreur. */
+        private val CA_STEP = Step.READ_DATA
         private const val SW_OK = 0x9000
         private const val INS_SELECT = 0xA4
         private const val INS_READ_BINARY = 0xB0

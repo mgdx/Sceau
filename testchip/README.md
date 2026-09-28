@@ -17,7 +17,7 @@ releaseRuntimeClasspath` ne le mentionne pas (décision D17).
 | `TestPki`, `TestCredential`, `TestKeyType` | Hiérarchie factice CSCA (ancien, nouveau, lien) → DS, RSA ou EC, clés reproductibles (graine). |
 | `TestDocument`, `TestSod`, `SodOptions` | DG factices et EF.SOD signé, y compris les altérations des cas d'échec. |
 | `TestTrustStore` | `TrustStore` de test contenant les CSCA choisis. |
-| `SimulatedChip` | `CardTransport` qui se comporte comme une puce : EF.CardAccess, PACE, BAC, messagerie sécurisée 3DES/AES, lecture des fichiers, Chip Authentication, Active Authentication. |
+| `SimulatedChip` | `CardTransport` qui se comporte comme une puce : EF.CardAccess, PACE, BAC, messagerie sécurisée 3DES/AES, lecture des fichiers, Chip Authentication, Active Authentication, liaison réinitialisable (`reconnect`). Note sous quelle session chaque fichier est servi (`fileReads`, `sessionsServing`). |
 | `PaceSettings`, `PacePassword` | PACE de la puce simulée (EF.CardAccess, CAN). |
 | `SimulatedDocuments.frenchIdCard()` | CNIe française simulée prête à lire (voir ci-dessous). |
 

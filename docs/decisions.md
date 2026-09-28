@@ -223,3 +223,17 @@ Format : date, contexte, décision, justification, écart à la SPEC concerné.
 - **Décision** : le rapport n'implémente aucune sérialisation. La mention « sérialisable pour les tests » est retirée de SPEC §6.2.
 - **Justification** : les tests de `:core` et de `:app` construisent leurs cas avec la PKI factice et la puce simulée de `:testchip` (D17) et vérifient le rapport en mémoire ; aucun n'a eu besoin de le sérialiser. Ne pas offrir de sérialisation supprime aussi un chemin par lequel des données lues pourraient être écrites (SPEC §8).
 - **Écart à la SPEC** : aucun désormais (SPEC §6.2 mise à jour le 2026-09-25).
+
+## D20. Chip Authentication avant la lecture des données
+
+- **Date** : 2026-09-28.
+- **Contexte** : SPEC §6.1 énumère la lecture de DG1, DG2, DG14, DG15, DG11 et DG12 (étape 4), puis la Passive Authentication (étape 5), puis la Chip Authentication (étape 6). Menée après la lecture, la CA ne liait pas à la puce authentifiée les données lues avant elle, sous les clés de PACE ou de BAC : limite documentée par l'audit de sécurité du 2026-09-25.
+- **Décision** :
+  - ordre de lecture : EF.COM, EF.SOD, puis DG14 s'il est annoncé (EF.COM ou SOD), puis la Chip Authentication si DG14 annonce une clé, puis DG1, DG2, DG15, DG11 et DG12 sous la messagerie sécurisée de la CA, puis la Passive Authentication (qui vérifie toujours l'empreinte de DG14 : un DG14 falsifié met la ligne des empreintes en échec), puis l'Active Authentication ;
+  - la CA a lieu pendant l'étape `READ_DATA` ; `Step` est inchangé, `VERIFY_CHIP` reste émise et ne couvre plus que l'AA. Les codes d'erreur de la CA commencent par `READ_DATA-CA` au lieu de `VERIFY_CHIP-CA` ;
+  - la confirmation explicite du nouveau canal (SELECT de DG1 et READ BINARY d'un octet, MAC vérifié) est gardée avant la lecture des DG : c'est elle, et non la lecture de DG1 qui suit, qui décide de la ligne CA, si bien qu'un clone produit une ligne CA en échec et non une erreur de lecture ;
+  - CA en échec : ligne `FAILED`, et la lecture continue. Si la puce a refusé l'échange, JMRTD garde l'ancienne messagerie ; la même confirmation vérifie que la puce y répond encore. Si la puce ne répond plus sous la messagerie courante, la liaison est réinitialisée (`CardTransport.reconnect()`, nouvel état JMRTD), puis le canal est rétabli avec la même clé dans la même lecture (EF.CardAccess, PACE ou BAC, repli compris : `SecureChannel.reestablish`), et les DG sont lus sous ce canal. La clé n'est pas conservée au-delà de la lecture ;
+  - règle V1 inchangée : DG14 ou DG15 signés dans le SOD mais non fournis donnent un échec ;
+  - `readAndVerify`, `VerificationReport`, `CheckId` et `Step` sont inchangés. Tests : `ChipAuthenticationOrderTest` (la puce simulée note sous quelle session chaque fichier est servi).
+- **Justification** : procédure d'inspection d'ICAO 9303-11 (§6.2) : la CA suit la lecture de DG14 et précède celle des autres données, qui sont alors lues sous des clés que seule la puce détentrice de la clé privée de DG14 peut dériver. Un relais ou une puce qui substituerait les données après l'authentification est ainsi écarté. Garder la lecture après une CA ratée permet d'afficher les données, le verdict restant « Échec ».
+- **Écart à la SPEC** : §6.1, ordre des étapes 4 à 6 (la CA précède la lecture de DG1, DG2, DG15, DG11, DG12 et la Passive Authentication) ; §6.1 étape 6 précisée (reprise du canal après une CA ratée).

@@ -252,7 +252,7 @@ internal class ChipPace(
             return abort(SW_COUNTER or retries)
         }
         val piccToken = SimCrypto.cmac(macKey, publicKeyDataObject(checkNotNull(pcdPublic)))
-        val session = ChipSecureMessaging(SimCrypto.Algorithm.AES, checkNotNull(kEnc), macKey, 0)
+        val session = ChipSecureMessaging(SimCrypto.Algorithm.AES, checkNotNull(kEnc), macKey, 0, SessionKind.PACE)
         reset()
         retries = MAX_RETRIES
         completedWith = chosen
@@ -297,7 +297,8 @@ internal class ChipPace(
         return status(sw)
     }
 
-    private fun reset() {
+    /** Abandonne un PACE en cours (erreur, ou liaison réinitialisée). */
+    fun reset() {
         password = null
         step = 0
         nonce = null
