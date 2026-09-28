@@ -48,8 +48,9 @@ Les archives ont été téléchargées par le mainteneur depuis les pages offici
 - page CSCA (passeports) : <https://ants.gouv.fr/csca> ;
 - page CSCA e-ID (cartes d'identité) : <https://ants.gouv.fr/home/csca-e-id>.
 
-Le site de l'ANTS filtre les robots : la mise à jour se fait à la main depuis ces pages, en
-comparant les empreintes publiées dans chaque archive à celles recalculées.
+Le site de l'ANTS filtre les robots : les archives se téléchargent à la main depuis ces pages,
+puis `scripts/update-trust-store.sh --ants-dir` compare les empreintes publiées dans chaque
+archive à celles recalculées (voir « Procédure de mise à jour »).
 
 ## Master List
 
@@ -127,6 +128,47 @@ liste. Les certificats sont lus par BouncyCastle, qui accepte les clés EC à pa
 courbe explicites et les numéros de série négatifs, présents dans les listes réelles.
 
 ## Procédure de mise à jour (à chaque release)
+
+### Script
+
+`scripts/update-trust-store.sh` automatise les vérifications de la procédure ci-dessous. C'est
+un outil du développeur : l'application ne télécharge jamais rien. Il demande `bash`, `curl`,
+`openssl` 3, `sha256sum`, `sha1sum`, `unzip` et les coreutils GNU. Les URL des sources sont
+regroupées en tête du script.
+
+```bash
+# 1. Télécharger à la main les archives .zip des deux pages de l'ANTS dans un dossier
+#    (le site bloque curl), par exemple ~/ants/.
+# 2. Rapport, sans rien écrire (mode par défaut) :
+scripts/update-trust-store.sh --ants-dir ~/ants
+# 3. S'il signale des différences et que toutes les vérifications passent :
+scripts/update-trust-store.sh --ants-dir ~/ants --apply
+```
+
+- **ANTS** : pour chaque certificat de chaque archive, empreinte recalculée et comparée à
+  celle du fichier d'empreinte de l'archive (SHA-1 pour les passeports, SHA-256 pour l'e-ID),
+  conversion PEM vers DER si besoin, affichage du sujet, de l'émetteur et des dates. Le sujet
+  doit être `CN=CSCA-FRANCE` ou `CN=eID-FRANCE`, qui fixe le nom `ants-csca-<année>.der` ou
+  `ants-csca-eid-<année>.der`. Sans `--ants-dir`, cette partie est sautée et le script le
+  signale.
+- **BSI** : téléchargement de la German Master List (ou `--bsi-zip` pour une archive locale),
+  signature CMS vérifiée avec le signataire inclus, contenu de type `id-icao-cscaMasterList`,
+  signataire valide à la date de signature et signé par un certificat dont la SHA-256 figure
+  dans `EMBEDDED_MASTER_LIST_ANCHORS` (empreintes lues dans `TrustStoreLoader.kt` ; le script
+  échoue si le format de cette constante change). Affiche la date de signature et le nombre
+  de certificats.
+- **Comparaison** : rien n'est écrit si les fichiers sont identiques aux fichiers embarqués.
+  Avec `--apply` seulement, les fichiers nouveaux ou modifiés sont copiés dans
+  `core/src/main/resources/trust/` et les nouveaux noms ajoutés à `trust/index.txt`. Aucun
+  fichier n'est jamais retiré, en particulier aucun CSCA expiré.
+- Le script affiche les lignes à reporter dans les tableaux « Fichiers embarqués » et
+  « Provenance » ; ce document reste à mettre à jour à la main (étapes 6 et 7), puis
+  `./gradlew :core:test` (étape 8) confirme la cohérence.
+- Toute vérification ratée donne une sortie non nulle, et aucun fichier n'est écrit.
+
+### Étapes
+
+La procédure manuelle reste la référence de ce que fait le script.
 
 1. Télécharger les archives CSCA et CSCA e-ID depuis les pages de l'ANTS citées plus haut.
 2. Pour chaque archive, extraire le certificat et le fichier d'empreinte, puis vérifier que
