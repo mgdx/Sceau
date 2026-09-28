@@ -38,6 +38,13 @@ android {
         }
     }
 
+    // Pas de bloc de métadonnées de dépendances (chiffré pour Google Play) dans le bloc de
+    // signature de l'APK ou dans l'AAB : illisible par F-Droid, qui le refuse (D25).
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
+    }
+
     buildTypes {
         release {
             optimization {
