@@ -42,6 +42,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.isSensitiveData
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -257,7 +259,7 @@ private fun CanFields(
                 autoCorrectEnabled = false,
                 imeAction = ImeAction.Done,
             ),
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().sensitiveInput(),
     )
 }
 
@@ -281,7 +283,7 @@ private fun MrzFields(
                 autoCorrectEnabled = false,
                 imeAction = ImeAction.Next,
             ),
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().sensitiveInput(),
     )
     DateField(
         digits = form.dateOfBirthDigits,
@@ -345,6 +347,14 @@ private fun DateField(
                 autoCorrectEnabled = false,
                 imeAction = imeAction,
             ),
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().sensitiveInput(),
     )
 }
+
+/**
+ * Clé d'accès en cours de saisie : sur Android 14+, seuls les services d'accessibilité déclarés
+ * outils d'accessibilité (`isAccessibilityTool`, comme TalkBack) voient le champ et reçoivent
+ * ses événements ; les autres services, qui pourraient lire le CAN ou la MRZ, ne les voient pas.
+ * Sans effet avant Android 14.
+ */
+private fun Modifier.sensitiveInput(): Modifier = semantics { isSensitiveData = true }

@@ -1,5 +1,6 @@
 package io.github.mgdx.sceau.ui.trust
 
+import android.content.res.Resources
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -60,6 +61,9 @@ import io.github.mgdx.sceau.R
 import io.github.mgdx.sceau.core.trust.InvalidMasterListException
 import io.github.mgdx.sceau.core.trust.MasterListInfo
 import io.github.mgdx.sceau.core.trust.TrustSource
+import io.github.mgdx.sceau.trust.ImportDecision
+import io.github.mgdx.sceau.trust.ImportLimitException
+import io.github.mgdx.sceau.trust.ImportLimits
 import io.github.mgdx.sceau.trust.TrustStoreRepository
 import io.github.mgdx.sceau.ui.common.SceauIcons
 import io.github.mgdx.sceau.ui.result.Countries
@@ -158,9 +162,13 @@ fun TrustStoreScreen(
                             context.contentResolver.openInputStream(uri)?.use { readAtMost(it, MAX_MASTER_LIST_BYTES) }
                                 ?: throw IOException("OPEN")
                         }
+                    // Limites vérifiées avant l'analyse et la confirmation (D22).
+                    repository.checkImportAllowed(bytes)
                     pending = PendingImport(bytes, repository.preview(bytes).info)
                 } catch (e: CancellationException) {
                     throw e
+                } catch (e: ImportLimitException) {
+                    showMessage(importLimitMessage(resources, e.decision))
                 } catch (_: FileTooLargeException) {
                     showMessage(resources.getString(R.string.trust_import_too_large))
                 } catch (e: InvalidMasterListException) {
@@ -231,6 +239,8 @@ fun TrustStoreScreen(
                         reloadKey++
                     } catch (e: CancellationException) {
                         throw e
+                    } catch (e: ImportLimitException) {
+                        showMessage(importLimitMessage(resources, e.decision))
                     } catch (e: InvalidMasterListException) {
                         showMessage(resources.getString(R.string.trust_import_invalid, e.code))
                     } catch (_: Exception) {
@@ -276,6 +286,23 @@ fun TrustStoreScreen(
         )
     }
 }
+
+/** Message d'un import refusé par les limites de [ImportLimits] (D22). */
+private fun importLimitMessage(
+    resources: Resources,
+    decision: ImportDecision,
+): String =
+    if (decision == ImportDecision.TOO_LARGE_TOTAL) {
+        resources.getString(R.string.trust_import_limit_size, ImportLimits.MAX_IMPORTED_TOTAL_BYTES / BYTES_PER_MB)
+    } else {
+        resources.getQuantityString(
+            R.plurals.trust_import_limit_count,
+            ImportLimits.MAX_IMPORTED_LISTS,
+            ImportLimits.MAX_IMPORTED_LISTS,
+        )
+    }
+
+private const val BYTES_PER_MB = 1024L * 1024L
 
 @Composable
 private fun CenteredMessage(

@@ -51,6 +51,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.isSensitiveData
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -721,11 +722,14 @@ private fun FieldRow(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         // Valeurs venues de la puce (DG1, DG11, DG12, code pays inconnu) : assainies (audit V12).
+        // Réservées aux outils d'accessibilité (TalkBack) sur Android 14+ : un autre service
+        // d'accessibilité ne voit ni la valeur ni ses événements.
         Text(
             text = displaySafe(value),
             style = MaterialTheme.typography.bodyLarge,
             maxLines = FIELD_MAX_LINES,
             overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.semantics { isSensitiveData = true },
         )
     }
 }
