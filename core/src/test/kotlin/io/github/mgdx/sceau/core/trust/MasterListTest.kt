@@ -2,15 +2,20 @@ package io.github.mgdx.sceau.core.trust
 
 import org.bouncycastle.asn1.ASN1EncodableVector
 import org.bouncycastle.asn1.ASN1Integer
+import org.bouncycastle.asn1.ASN1ObjectIdentifier
 import org.bouncycastle.asn1.ASN1Sequence
 import org.bouncycastle.asn1.ASN1Set
 import org.bouncycastle.asn1.ASN1TaggedObject
+import org.bouncycastle.asn1.DERNull
 import org.bouncycastle.asn1.DERSequence
 import org.bouncycastle.asn1.DERSet
 import org.bouncycastle.asn1.DERTaggedObject
 import org.bouncycastle.asn1.cms.CMSObjectIdentifiers
 import org.bouncycastle.asn1.cms.ContentInfo
+import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers
+import org.bouncycastle.asn1.x509.AlgorithmIdentifier
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo
+import org.bouncycastle.cert.X509CertificateHolder
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -125,6 +130,35 @@ class MasterListTest {
     @Test
     fun malformedSignerInfoIsRejected() {
         assertRejected("NOT_CMS", rebuiltSignedData(signerInfos = DERSet(DERSequence(ASN1Integer(1)))))
+    }
+
+    /**
+     * Fuzzing (ML-content) : certificat signé dont la clé publique est illisible. BouncyCastle ne
+     * la décode qu'à la demande : le certificat entrait dans le magasin, puis `isSelfSigned`
+     * levait IllegalStateException. Il est ignoré comme tout certificat illisible.
+     */
+    @Test
+    fun certificateWithUnreadablePublicKeyIsSkipped() {
+        val badKey = SubjectPublicKeyInfo(AlgorithmIdentifier(PKCSObjectIdentifiers.rsaEncryption, DERNull.INSTANCE), byteArrayOf(1, 2, 3))
+        assertOnlyRsaCscaKept(TestMasterLists.selfSigned("C=ZZ,O=Test,CN=CSCA cle illisible", fixture.rsaCscaKey, subjectKey = badKey))
+    }
+
+    /**
+     * Fuzzing (ML-content, mode long) : clé d'algorithme inconnu de BouncyCastle, pour laquelle
+     * `publicKey` renvoie null ; `isSelfSigned` levait NullPointerException.
+     */
+    @Test
+    fun certificateWithUnknownKeyAlgorithmIsSkipped() {
+        val unknownKey = SubjectPublicKeyInfo(AlgorithmIdentifier(ASN1ObjectIdentifier("1.3.6.1.4.1.99999.42.2")), byteArrayOf(1, 2, 3))
+        assertOnlyRsaCscaKept(TestMasterLists.selfSigned("C=ZZ,O=Test,CN=CSCA cle inconnue", fixture.rsaCscaKey, subjectKey = unknownKey))
+    }
+
+    private fun assertOnlyRsaCscaKept(bad: X509CertificateHolder) {
+        val content = TestMasterLists.content(listOf(fixture.rsaCsca, bad))
+        val list = TrustStores.parseMasterList(TestMasterLists.signedMasterList(content, fixture.signer, fixture.signerKey))
+
+        assertEquals(1, list.certificates.size)
+        assertArrayEquals(fixture.rsaCsca.encoded, list.certificates.single().encoded)
     }
 
     @Test

@@ -139,16 +139,22 @@ internal object MasterListParser {
             }
         return certList.mapNotNull { element ->
             try {
-                TrustCrypto.toX509(X509CertificateHolder(Certificate.getInstance(element)))
+                toX509OrNull(X509CertificateHolder(Certificate.getInstance(element)))
             } catch (ignored: Exception) {
                 null
             }
         }
     }
 
+    /**
+     * Certificat utilisable, ou null. BouncyCastle ne décode la clé publique qu'au premier
+     * `publicKey`, qui lève `IllegalStateException` pour une clé illisible et renvoie null pour
+     * un algorithme inconnu : la clé est donc lue ici, pour ne jamais faire entrer dans le
+     * magasin un certificat sans clé utilisable.
+     */
     private fun toX509OrNull(holder: X509CertificateHolder): X509Certificate? =
         try {
-            TrustCrypto.toX509(holder)
+            TrustCrypto.toX509(holder).takeIf { it.publicKey != null }
         } catch (ignored: Exception) {
             null
         }
