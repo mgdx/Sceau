@@ -64,7 +64,10 @@ Les sources d'OpenJPEG sont un sous-module git : clonez avec `git clone --recurs
 ./gradlew check                                                         # tout ce qui bloque la CI
 ./gradlew :app:dependencies --configuration releaseRuntimeClasspath     # audit des dépendances
 app/src/main/cpp/test/run-host-tests.sh                                 # tests hôte du décodeur JPEG 2000 (ASan, UBSan)
+scripts/check-reproducible.sh                                           # double build release, APK identiques octet pour octet
 ```
+
+Les APK release doivent rester reproductibles (décision D25, [`docs/reproducible-builds.md`](docs/reproducible-builds.md)) : tout changement du build (Gradle, CMake, versions d'outils ou de dépendances) passe par `scripts/check-reproducible.sh` avant une release.
 
 Tout changement de `app/src/main/cpp/` (code C ou version d'OpenJPEG) passe par `run-host-tests.sh`, qui demande `cmake` et un compilateur C hôte avec AddressSanitizer. Le code C de Sceau est compilé avec `-Wall -Wextra -Wconversion -Werror`.
 

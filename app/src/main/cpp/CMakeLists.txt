@@ -22,6 +22,22 @@ set(BUILD_UNIT_TESTS OFF CACHE BOOL "" FORCE)
 # Décodage mono-fil : les portraits sont petits, et on évite pthread et ses tampons partagés.
 set(OPJ_USE_THREAD OFF CACHE BOOL "" FORCE)
 
+# Build reproductible (D25) : les chemins absolus du clone, du répertoire de build et du NDK,
+# présents dans les informations de débogage (__FILE__, DW_AT_comp_dir, en-têtes du sysroot),
+# sont remplacés par des noms fixes. Sans cela, le build-id calculé par l'éditeur de liens avant
+# le strip change avec l'emplacement du clone ou du SDK. Placé avant add_subdirectory pour
+# s'appliquer aussi à OpenJPEG.
+set(SCEAU_NDK_DIR "${ANDROID_NDK}")
+if(NOT SCEAU_NDK_DIR)
+    set(SCEAU_NDK_DIR "${CMAKE_ANDROID_NDK}")
+endif()
+add_compile_options(
+    "-ffile-prefix-map=${CMAKE_SOURCE_DIR}=src"
+    "-ffile-prefix-map=${CMAKE_BINARY_DIR}=build")
+if(SCEAU_NDK_DIR)
+    add_compile_options("-ffile-prefix-map=${SCEAU_NDK_DIR}=ndk")
+endif()
+
 if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/openjpeg/CMakeLists.txt")
     message(FATAL_ERROR
         "Sources d'OpenJPEG absentes : lancez « git submodule update --init » à la racine du dépôt.")
