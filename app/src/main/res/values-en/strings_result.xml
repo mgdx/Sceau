@@ -93,6 +93,9 @@
 
     <!-- Détail des vérifications -->
     <string name="result_detail_protocol">Protocol: %1$s</string>
+    <string name="result_detail_ca_method">Method: %1$s</string>
+    <string name="result_detail_ca_method_dg14">Chip Authentication with the DG14 key</string>
+    <string name="result_detail_ca_method_pace_cam">PACE-CAM, while opening the channel, with the EF.CardSecurity key</string>
     <string name="result_detail_algorithm">Signature algorithm: %1$s</string>
     <string name="result_detail_csca">CSCA: %1$s</string>
     <string name="result_detail_csca_none">No CSCA in the trust store matches.</string>

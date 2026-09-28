@@ -34,9 +34,9 @@ L'ordre réel des échanges suit ICAO 9303 partie 11 : EF.CardAccess est un fich
 
 Séquence complète (décision D20) :
 
-1. EF.CardAccess, puis PACE ou BAC (§2.1, §2.2) ;
+1. EF.CardAccess, puis PACE ou BAC (§2.1, §2.2) ; avec PACE-CAM, EF.CardSecurity au MF (§2.6.1) ;
 2. EF.COM, EF.SOD (§2.3), puis DG14 s'il est annoncé dans EF.COM ou dans le SOD ;
-3. Chip Authentication si DG14 annonce une clé (§2.6) ;
+3. Chip Authentication si DG14 annonce une clé (§2.6), sauf après PACE-CAM (la puce s'est déjà authentifiée) ;
 4. DG1, DG2, puis DG15, DG11, DG12 s'ils sont annoncés (§2.4), sous la messagerie sécurisée de la Chip Authentication si elle a réussi ;
 5. Passive Authentication (§2.5), qui vérifie aussi l'empreinte de DG14 ;
 6. Active Authentication si DG15 est présent (§2.7).
@@ -53,7 +53,7 @@ Réponse `6A82` (fichier introuvable) à la sélection : `SceauException.NotIcao
 
 ### 2.2 Canal sécurisé : PACE ou BAC
 
-- **PACE** (partie 11, *Password Authenticated Connection Establishment*) est exécuté avec la clé fournie : CAN pour `AccessKey.Can`, clé dérivée de la MRZ pour `AccessKey.Mrz`. Chaque `PACEInfo` annoncé est essayé dans l'ordre ; le mapping et les paramètres de domaine sont ceux qu'annonce la puce, jamais codés en dur. Les paramètres de domaine propriétaires (`PACEDomainParameterInfo`) ne sont pas pris en charge : le `PACEInfo` correspondant est sauté. PACE réussi : sélection de l'application ICAO sous messagerie sécurisée.
+- **PACE** (partie 11, *Password Authenticated Connection Establishment*) est exécuté avec la clé fournie : CAN pour `AccessKey.Can`, clé dérivée de la MRZ pour `AccessKey.Mrz`. Chaque `PACEInfo` annoncé est essayé dans l'ordre ; le mapping et les paramètres de domaine sont ceux qu'annonce la puce, jamais codés en dur. Les paramètres de domaine propriétaires (`PACEDomainParameterInfo`) ne sont pas pris en charge : le `PACEInfo` correspondant est sauté. PACE réussi : sélection de l'application ICAO sous messagerie sécurisée. Si PACE a abouti avec le mapping **PACE-CAM**, EF.CardSecurity est lu au MF sous la nouvelle messagerie sécurisée, avant cette sélection (§2.6.1).
 - **BAC** (partie 11, *Basic Access Control*) est utilisé si PACE n'est pas annoncé, avec la clé MRZ (numéro de document, date de naissance, date d'expiration et leurs chiffres de contrôle).
 - **CAN sans PACE** : si la clé est un CAN et que la puce n'annonce pas PACE, la lecture s'arrête avec `SceauException.CanWithoutPace` (code `CAN_WITHOUT_PACE`) : BAC ne sait pas utiliser un CAN.
 - **Clé refusée** : un SW `63xx` pendant PACE (ICAO 9303-11, BSI TR-03110) ou l'échec de BAC donnent `SceauException.AccessDenied` (code `ACCESS_DENIED`), sans autre essai.
@@ -117,7 +117,36 @@ Les listes de révocation (CRL) ne sont pas consultées en v1 : elles nécessite
 - **CA en échec** : la ligne `CHIP_AUTHENTICATION` vaut `FAILED` (donc le verdict « Échec »), et la lecture continue pour afficher les données :
   - si la puce refuse l'échange (SW d'erreur au MSE ou au GENERAL AUTHENTICATE), JMRTD garde l'ancienne messagerie ; la même confirmation vérifie que la puce y répond encore, et les DG sont lus sous l'ancien canal ;
   - si la puce ne répond plus sous la messagerie courante (confirmation ratée après le changement de clés, ou puce qui a clos la session), la liaison est réinitialisée (`CardTransport.reconnect()`), un état JMRTD neuf est créé, puis le canal est rétabli avec la même clé, dans la même lecture (EF.CardAccess, PACE ou BAC, repli PACE → BAC compris : `SecureChannel.reestablish`), et les DG sont lus sous ce canal. La clé n'est pas conservée au-delà de la lecture. Une erreur à ce rétablissement interrompt la lecture comme au premier établissement (`CONNECTION_LOST-READ_DATA-RECONNECT`, `ACCESS_DENIED`, `TIMEOUT-READ_DATA-…`).
-- Résultat : ligne `CHIP_AUTHENTICATION` (`OK`, `FAILED`, `UNSUPPORTED_ALGORITHM`, ou `NOT_AVAILABLE` sans DG14). Les codes d'erreur de la CA commencent par `READ_DATA-CA` (`READ_DATA-CA-DG14Missing`, `READ_DATA-CA_CONFIRM-…`).
+- Résultat : ligne `CHIP_AUTHENTICATION` (`OK` avec le détail `CheckDetail.ChipAuthentication(DG14)`, `FAILED`, `UNSUPPORTED_ALGORITHM`, ou `NOT_AVAILABLE` sans DG14). Les codes d'erreur de la CA commencent par `READ_DATA-CA` (`READ_DATA-CA-DG14Missing`, `READ_DATA-CA_CONFIRM-…`).
+- Si PACE a abouti avec le mapping CAM, la puce s'est déjà authentifiée pendant PACE : la CA via DG14 n'est pas menée (§2.6.1). DG14, s'il est annoncé, est lu quand même et son empreinte vérifiée.
+
+#### 2.6.1 PACE-CAM, *Chip Authentication Mapping* (partie 11 §4.4 ; décision D21)
+
+Avec le mapping CAM (`id-PACE-ECDH-CAM-AES-CBC-CMAC-128/192/256`), la puce prouve pendant PACE qu'elle détient la clé privée statique de Chip Authentication : sa dernière réponse contient, en plus du jeton d'authentification, `A_IC = E(KSenc, CA_IC)` (tag `8A`), avec `CA_IC = SK_IC⁻¹ · SK_Map,IC`. Toutes les commandes suivantes passent par le canal de PACE : les données lues sont liées à la puce authentifiée, sans autre échange.
+
+1. **Pendant l'étape `SECURE_CHANNEL`** : JMRTD mène PACE, vérifie le jeton de la puce et déchiffre `CA_IC` (IV = `E(KSenc, −1)`, `PACECAMResult`) ; Sceau garde `CA_IC` et la clé publique de mapping de la puce `PK_Map,IC`, puis lit **EF.CardSecurity** (FID `01 1D` au MF, sous la messagerie de PACE, avant la sélection de l'application ; cache distinct de celui d'EF.SOD, de même FID dans l'application). D'après le code de JMRTD 0.8.8 (cas non couvert par un test), une puce qui annonce CAM mais n'envoie pas `A_IC` fait échouer PACE dans JMRTD : repli sur BAC avec une clé MRZ (la CA via DG14 est alors menée), `ACCESS_DENIED` avec un CAN.
+2. **À l'étape `VERIFY_CHIP`**, hors ligne, une fois connu l'État émetteur de DG1 (`ChipAuthenticationMapping`) :
+   - EF.CardSecurity (CMS `SignedData`, contenu `id-SecurityObject` = `0.4.0.127.0.7.3.2.1`, un seul signataire) est vérifié avec **les mêmes règles que le SOD** (`PassiveAuthenticator.verifyCardSecurity`) : certificat DS embarqué ou cherché dans le magasin, algorithmes faibles refusés (audit V9), signature CMS, chaîne DS → CSCA avec profil d'émetteur et keyUsage du DS (V8), pays cohérents avec DG1 (V3). La validité calendaire du DS n'y est pas contrôlée : elle l'est pour le DS du SOD (§2.5) ;
+   - la clé `PK_IC` est prise dans les `ChipAuthenticationPublicKeyInfo` du contenu signé ;
+   - contrôle `PK_Map,IC = KA(CA_IC, PK_IC, D_IC)` : `CA_IC · PK_IC` en ECDH, `PK_IC^CA_IC mod p` en DH, sur les paramètres de domaine de `PK_IC`, qui doivent être ceux de `PK_Map,IC`, avec `CA_IC` dans `[1, n − 1]`. L'algorithme vient des clés ; une clé ni EC ni DH donne `UNSUPPORTED_ALGORITHM`.
+3. **Résultat**, ligne `CHIP_AUTHENTICATION` (pas de ligne propre) :
+
+| Situation | Statut | Détail |
+|---|---|---|
+| tout est vérifié | `OK` | `ChipAuthentication(PACE_CAM)` |
+| EF.CardSecurity absent ou illisible | `FAILED` | `VERIFY_CHIP-CAM-CARD_SECURITY_MISSING` |
+| EF.CardSecurity mal formé (type de contenu, signataires) | `FAILED` | `VERIFY_CHIP-CAM-CARD_SECURITY_MALFORMED` |
+| signature d'EF.CardSecurity fausse | `FAILED` | `VERIFY_CHIP-CAM-CARD_SECURITY_SIGNATURE` |
+| chaîne fausse, DS sans digitalSignature, budget dépassé | `FAILED` | `VERIFY_CHIP-CAM-CARD_SECURITY_CHAIN` |
+| pays incohérents | `FAILED` | `VERIFY_CHIP-CAM-CARD_SECURITY_COUNTRY` |
+| aucun CSCA connu pour EF.CardSecurity, alors que la chaîne du SOD aboutit | `FAILED` | `VERIFY_CHIP-CAM-CARD_SECURITY_UNKNOWN_ISSUER` (ou `…_DS_MISSING`) |
+| aucun CSCA connu, ni pour EF.CardSecurity ni pour le SOD | `NOT_AVAILABLE` | `ChipAuthentication(PACE_CAM)` ; verdict « Émetteur inconnu » |
+| pas de `ChipAuthenticationPublicKeyInfo` | `FAILED` | `VERIFY_CHIP-CAM-NO_CHIP_KEY` |
+| `CA_IC` ou `PK_Map,IC` absent (déchiffrement raté) | `FAILED` | `VERIFY_CHIP-CAM-NO_CHIP_AUTHENTICATION_DATA`, `…-NO_MAPPING_KEY` |
+| contrôle KA faux | `FAILED` | `VERIFY_CHIP-CAM-KEY_MISMATCH` |
+| algorithme inconnu (signature, chaîne, type de clé) | `UNSUPPORTED_ALGORITHM` | `UnsupportedAlgorithm` |
+
+Le verdict se calcule comme pour la CA via DG14 (§6). La CA via DG14 n'est pas menée, même si CAM échoue : la ligne est alors déjà en échec, et le verdict « Échec ».
 
 ### 2.7 Active Authentication (partie 11)
 
@@ -150,7 +179,7 @@ Les listes de révocation (CRL) ne sont pas consultées en v1 : elles nécessite
 | `SECURE_CHANNEL` | Ouverture du canal sécurisé (PACE ou BAC) | 2.2 PACE puis sélection de l'application sous messagerie sécurisée, ou BAC (repli compris) |
 | `READ_DATA` | Lecture des données | 2.3 EF.COM, EF.SOD ; DG14 ; 2.6 Chip Authentication ; 2.4 autres groupes de données |
 | `VERIFY_SIGNATURE` | Vérification de la signature | 2.5 Passive Authentication |
-| `VERIFY_CHIP` | Vérification de la puce | 2.7 Active Authentication (la CA est déjà faite, D20) |
+| `VERIFY_CHIP` | Vérification de la puce | 2.6.1 vérification hors ligne de PACE-CAM ; 2.7 Active Authentication (la CA via DG14 est déjà faite, D20) |
 
 ## 5. Erreurs : correspondance avec `SceauException`
 

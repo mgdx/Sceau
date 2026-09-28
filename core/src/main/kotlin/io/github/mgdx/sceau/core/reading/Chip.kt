@@ -52,6 +52,12 @@ internal class Chip(
 
         /** Fichiers de l'applet ICAO, sous la messagerie sécurisée courante de [service]. */
         val appletFileSystem = DefaultFileSystem(boundedSender, false)
+
+        /**
+         * Fichiers du MF lus sous messagerie sécurisée (EF.CardSecurity, PACE-CAM). Cache distinct
+         * de celui de l'applet : EF.CardSecurity (MF) et EF.SOD (applet) partagent le FID 011D.
+         */
+        val securedMasterFileSystem = DefaultFileSystem(boundedSender, false)
     }
 
     private var link = Link()
@@ -88,9 +94,32 @@ internal class Chip(
             if (fid == PassportService.EF_CARD_ACCESS) {
                 current.rootFileSystem
             } else {
-                current.appletFileSystem.also { fs -> current.service.wrapper.let { if (fs.wrapper !== it) fs.setWrapper(it) } }
+                current.appletFileSystem.withCurrentWrapper()
             }
-        return try {
+        return read(fileSystem, fid)
+    }
+
+    /**
+     * Lit un fichier du MF sous la messagerie sécurisée courante : EF.CardSecurity, après PACE
+     * et avant la sélection de l'applet ICAO (ICAO 9303-11 §4.4, PACE-CAM). Null s'il est absent
+     * ou illisible ; une erreur de transport est relancée.
+     */
+    fun readOptionalSecuredMasterFile(fid: Short): ByteArray? =
+        try {
+            read(link.securedMasterFileSystem.withCurrentWrapper(), fid)
+        } catch (e: Exception) {
+            rethrowTransportFailure()
+            null
+        }
+
+    private fun DefaultFileSystem.withCurrentWrapper(): DefaultFileSystem =
+        also { fs -> service.wrapper.let { if (fs.wrapper !== it) fs.setWrapper(it) } }
+
+    private fun read(
+        fileSystem: DefaultFileSystem,
+        fid: Short,
+    ): ByteArray =
+        try {
             fileSystem.selectFile(fid)
             CardFileInputStream(BLOCK_SIZE, fileSystem).use { it.readBytes() }
         } catch (e: Exception) {
@@ -99,7 +128,6 @@ internal class Chip(
             }
             throw e
         }
-    }
 
     /** Lit un fichier ; null s'il est absent ou illisible. Une erreur de transport est relancée. */
     fun readOptionalFile(fid: Short): ByteArray? =

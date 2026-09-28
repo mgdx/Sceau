@@ -5,6 +5,7 @@ import io.github.mgdx.sceau.core.report.Check
 import io.github.mgdx.sceau.core.report.CheckDetail
 import io.github.mgdx.sceau.core.report.CheckId
 import io.github.mgdx.sceau.core.report.CheckStatus
+import io.github.mgdx.sceau.core.report.ChipAuthenticationMethod
 import io.github.mgdx.sceau.core.verify.ActiveAuthentication
 import net.sf.scuba.smartcards.CommandAPDU
 import org.jmrtd.Util
@@ -96,7 +97,11 @@ internal class ChipVerifier(
                 }
             return ChipAuthenticationOutcome(check, channelUsable = confirmChannel("CA_CONFIRM_OLD") == null)
         }
-        val failure = confirmChannel("CA_CONFIRM") ?: return unchanged(check(CheckId.CHIP_AUTHENTICATION, CheckStatus.OK))
+        val failure =
+            confirmChannel("CA_CONFIRM")
+                ?: return unchanged(
+                    check(CheckId.CHIP_AUTHENTICATION, CheckStatus.OK, CheckDetail.ChipAuthentication(ChipAuthenticationMethod.DG14)),
+                )
         return ChipAuthenticationOutcome(check(CheckId.CHIP_AUTHENTICATION, CheckStatus.FAILED, failure), channelUsable = false)
     }
 

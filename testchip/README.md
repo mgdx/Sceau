@@ -16,6 +16,7 @@ releaseRuntimeClasspath` ne le mentionne pas (décision D17).
 |---|---|
 | `TestPki`, `TestCredential`, `TestKeyType` | Hiérarchie factice CSCA (ancien, nouveau, lien) → DS, RSA ou EC, clés reproductibles (graine). |
 | `TestDocument`, `TestSod`, `SodOptions` | DG factices et EF.SOD signé, y compris les altérations des cas d'échec. |
+| `TestCardSecurity` | EF.CardSecurity signé par le DS (PACE-CAM), mêmes altérations que le SOD. |
 | `TestTrustStore` | `TrustStore` de test contenant les CSCA choisis. |
 | `SimulatedChip` | `CardTransport` qui se comporte comme une puce : EF.CardAccess, PACE, BAC, messagerie sécurisée 3DES/AES, lecture des fichiers, Chip Authentication, Active Authentication, liaison réinitialisable (`reconnect`). Note sous quelle session chaque fichier est servi (`fileReads`, `sessionsServing`). |
 | `PaceSettings`, `PacePassword` | PACE de la puce simulée (EF.CardAccess, CAN). |
@@ -54,8 +55,16 @@ chaînées : nonce chiffré `z = E(Kπ, s)` avec `Kπ = KDF(f(π), 3)` (f(π) = 
 SHA-1 de l'information MRZ sur 20 octets), mapping générique ECDH `G' = s·G + H`, accord de clés
 éphémère sur `G'`, jetons AES-CMAC sur `7F49{06 OID, 86 point}`, clés de session `KDF(K, 1)` et
 `KDF(K, 2)`, SSC = 0. Un jeton du lecteur faux (mauvais CAN) donne `63Cx` (x = essais restants,
-3 au départ) à la dernière étape. Non simulés : mapping intégré (IM), mapping CA (CAM), DH en
-corps fini, 3DES, paramètres de domaine propriétaires, blocage du mot de passe.
+3 au départ) à la dernière étape. Non simulés : mapping intégré (IM), DH en corps fini, 3DES,
+paramètres de domaine propriétaires, blocage du mot de passe.
+
+PACE-CAM (`PaceSettings(can, protocolOid = ID_PACE_ECDH_CAM_AES_CBC_CMAC_128)`) : même échange,
+mais la dernière réponse contient aussi `8A A.IC`, `A.IC = E(KSenc, CA.IC)` (AES-CBC, IV
+`E(KSenc, −1)`), `CA.IC = SK.IC⁻¹ · SK.PICC.map mod n` avec la clé CA de la puce. EF.CardSecurity
+(`TestCardSecurity.of(document, pace)` : `PACEInfo`, `ChipAuthenticationInfo`,
+`ChipAuthenticationPublicKeyInfo`, signé par le DS) est passé à `SimulatedChip(cardSecurity = …)`
+et servi au MF sous messagerie sécurisée seulement. `tamperChipAuthenticationMapping` fait
+envoyer `CA.IC + 1`.
 
 ## Portrait synthétique
 

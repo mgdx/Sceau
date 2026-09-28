@@ -93,6 +93,9 @@
 
     <!-- Détail des vérifications -->
     <string name="result_detail_protocol">Protocole : %1$s</string>
+    <string name="result_detail_ca_method">Méthode : %1$s</string>
+    <string name="result_detail_ca_method_dg14">Chip Authentication avec la clé de DG14</string>
+    <string name="result_detail_ca_method_pace_cam">PACE-CAM, pendant l’ouverture du canal, avec la clé de EF.CardSecurity</string>
     <string name="result_detail_algorithm">Algorithme de signature : %1$s</string>
     <string name="result_detail_csca">CSCA : %1$s</string>
     <string name="result_detail_csca_none">Aucun CSCA du magasin ne correspond.</string>

@@ -72,7 +72,21 @@ object TestSod {
                 DataGroupHash(number, DEROctetString(MessageDigest.getInstance(options.digestAlgorithm, provider).digest(bytes)))
             } + options.extraHashes.map { (number, hash) -> DataGroupHash(number, DEROctetString(hash)) }
         val securityObject = LDSSecurityObject(declaredDigestId, hashes.sortedBy { it.dataGroupNumber }.toTypedArray())
+        val contentType = options.contentTypeOid?.let(::ASN1ObjectIdentifier) ?: ICAOObjectIdentifiers.id_icao_ldsSecurityObject
+        return tlv(SOD_TAG, signedData(ds, contentType, securityObject.getEncoded(ASN1Encoding.DER), options))
+    }
 
+    /**
+     * ContentInfo CMS `SignedData` encodé en DER : [content] encapsulé sous [contentType], signé
+     * par [ds] avec les attributs et altérations de [options] (hors options propres au SOD).
+     */
+    internal fun signedData(
+        ds: TestCredential,
+        contentType: ASN1ObjectIdentifier,
+        content: ByteArray,
+        options: SodOptions,
+    ): ByteArray {
+        val provider = TestCrypto.provider
         val signatureAlgorithm = options.signatureAlgorithm ?: ds.keyType.signatureAlgorithm
         val contentSigner = JcaContentSignerBuilder(signatureAlgorithm).setProvider(provider).build(ds.privateKey)
         val digests = JcaDigestCalculatorProviderBuilder().setProvider(provider).build()
@@ -83,17 +97,12 @@ object TestSod {
         val generator = CMSSignedDataGenerator()
         generator.addSignerInfoGenerator(signerInfo)
         if (options.embedDs) generator.addCertificate(ds.holder)
-        val content =
-            CMSProcessableByteArray(
-                options.contentTypeOid?.let(::ASN1ObjectIdentifier) ?: ICAOObjectIdentifiers.id_icao_ldsSecurityObject,
-                securityObject.getEncoded(ASN1Encoding.DER),
-            )
-        var contentInfo = generator.generate(content, true).toASN1Structure()
+        var contentInfo = generator.generate(CMSProcessableByteArray(contentType, content), true).toASN1Structure()
 
         if (options.tamperSignature || options.signatureAlgorithmOid != null) {
             contentInfo = alterSignerInfo(contentInfo, options.tamperSignature, options.signatureAlgorithmOid)
         }
-        return tlv(SOD_TAG, contentInfo.getEncoded(ASN1Encoding.DER))
+        return contentInfo.getEncoded(ASN1Encoding.DER)
     }
 
     /** Attributs signés d'un SOD : contentType, messageDigest et, si fourni, signingTime. */

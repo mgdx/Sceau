@@ -44,6 +44,15 @@ enum class CheckStatus {
 
 enum class ChannelProtocol { PACE, BAC }
 
+/** Méthode de Chip Authentication (ligne [CheckId.CHIP_AUTHENTICATION]). */
+enum class ChipAuthenticationMethod {
+    /** Chip Authentication avec la clé statique de DG14 (ICAO 9303-11 §6.2). */
+    DG14,
+
+    /** PACE avec Chip Authentication Mapping, clé de EF.CardSecurity (ICAO 9303-11 §4.4, décision D21). */
+    PACE_CAM,
+}
+
 enum class IssuanceDateSource {
     /** Date de délivrance lue dans DG12. */
     DG12,
@@ -106,6 +115,11 @@ sealed class CheckDetail {
 
     data class UnsupportedAlgorithm(
         val algorithm: String,
+    ) : CheckDetail()
+
+    /** Méthode de la Chip Authentication menée (ligne CHIP_AUTHENTICATION). */
+    data class ChipAuthentication(
+        val method: ChipAuthenticationMethod,
     ) : CheckDetail()
 
     /** Erreur technique pendant l'étape, sans donnée personnelle. */
