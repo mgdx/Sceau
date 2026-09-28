@@ -77,14 +77,7 @@ class LdsParsersFuzzTest {
     @Test
     fun comDataGroups() =
         campaign("COM", FuzzSeeds.com, PassportService.EF_COM, DEFAULT_ITERATIONS).run { input ->
-            val groups =
-                try {
-                    DocumentReader.parseComDataGroups(input.bytes)
-                } catch (e: OutOfMemoryError) {
-                    // Bogue connu hors du périmètre du fuzzing, tant que
-                    // FuzzRegressionTest.comWithHugeInnerLengthIsUnreadable est désactivé.
-                    return@run
-                }
+            val groups = DocumentReader.parseComDataGroups(input.bytes)
             if (input.pristine) property(1 in groups) { "graine EF.COM illisible" }
         }
 

@@ -69,7 +69,7 @@ Réponse `6A82` (fichier introuvable) à la sélection : `SceauException.NotIcao
 
 ### 2.3 EF.COM puis EF.SOD
 
-- **EF.COM** (FID `01 1E`, tag `60`) : version de la LDS et liste des groupes de données présents. Facultatif : s'il manque ou est illisible, la liste des DG vient du SOD.
+- **EF.COM** (FID `01 1E`, tag `60`) : version de la LDS et liste des groupes de données présents. Facultatif : s'il manque ou est illisible, la liste des DG vient du SOD. Ses longueurs TLV internes sont contrôlées contre la taille réelle du fichier avant JMRTD (`BerStructure`) : un EF.COM dont un élément annonce plus d'octets que son contenant est illisible, sans rien allouer (JMRTD alloue sinon la longueur annoncée, 2 Go compris).
 - **EF.SOD** (FID `01 1D`, tag `77`) : *Document Security Object*, structure CMS `SignedData` signée par le Document Signer (DS). Il contient l'algorithme d'empreinte, l'empreinte de chaque DG présent (`LDSSecurityObject`) et, en général, le certificat DS. Obligatoire : un échec de lecture donne `UNEXPECTED-READ_DATA-SOD-…`.
 
 ### 2.4 Groupes de données
