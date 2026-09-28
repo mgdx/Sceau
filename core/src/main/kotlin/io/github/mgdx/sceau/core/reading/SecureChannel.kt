@@ -9,6 +9,9 @@ import org.jmrtd.PACEKeySpec
 import org.jmrtd.PassportService
 import org.jmrtd.lds.CardAccessFile
 import org.jmrtd.lds.PACEInfo
+import org.jmrtd.protocol.PACECAMResult
+import org.jmrtd.protocol.PACEGMMappingResult
+import org.jmrtd.protocol.PACEResult
 import java.time.LocalDate
 import java.util.Locale
 
@@ -39,6 +42,10 @@ import java.util.Locale
  *    dépassé pendant PACE arrête donc la lecture, même avec une clé MRZ
  *    ([SceauException.Timeout] avec diagnostic) : relancer BAC sur une puce en pénalité ne
  *    ferait qu'ajouter un essai interrompu.
+ * 6. PACE-CAM (décision D21) : si PACE aboutit avec le mapping CAM, EF.CardSecurity est lu au
+ *    MF sous la nouvelle messagerie sécurisée, avant la sélection de l'applet ; sa vérification
+ *    et celle des données de Chip Authentication ont lieu plus tard
+ *    ([ChipAuthenticationMapping]), quand DG1 (État émetteur) est connu.
  */
 internal class SecureChannel(
     private val chip: Chip,
@@ -54,12 +61,20 @@ internal class SecureChannel(
         return paceInfos
     }
 
-    /** Étape SECURE_CHANNEL. Renvoie le protocole établi. */
-    fun establish(paceInfos: List<PACEInfo>): ChannelProtocol {
+    /**
+     * Étape SECURE_CHANNEL. Renvoie le protocole établi et, si PACE a abouti avec le mapping
+     * Chip Authentication Mapping (PACE-CAM, ICAO 9303-11 §4.4), les éléments à vérifier :
+     * EF.CardSecurity, lu au MF sous la nouvelle messagerie sécurisée avant la sélection de
+     * l'applet, et les données de Chip Authentication déchiffrées par JMRTD (voir
+     * [ChipAuthenticationMapping], décision D21).
+     */
+    fun establish(paceInfos: List<PACEInfo>): EstablishedChannel {
         if (paceInfos.isNotEmpty()) {
-            if (withAuthenticationTimeout { tryPace(paceInfos) }) {
+            val pace = withAuthenticationTimeout { tryPace(paceInfos) }
+            if (pace != null) {
+                val cam = if (pace.mappingType == PACEInfo.MappingType.CAM) camEvidence(pace) else null
                 selectApplet(secure = true)
-                return ChannelProtocol.PACE
+                return EstablishedChannel(ChannelProtocol.PACE, cam)
             }
             if (key is AccessKey.Can) throw SceauException.AccessDenied()
             // PACE a pu laisser la puce au milieu du protocole, voire muette : on repart de zéro.
@@ -69,7 +84,31 @@ internal class SecureChannel(
             throw SceauException.CanWithoutPace()
         }
         withAuthenticationTimeout { doBac(key as AccessKey.Mrz) }
-        return ChannelProtocol.BAC
+        return EstablishedChannel(ChannelProtocol.BAC, cam = null)
+    }
+
+    /**
+     * PACE-CAM : EF.CardSecurity (MF, sous la messagerie de PACE), données de Chip
+     * Authentication déchiffrées par JMRTD (CA_IC) et clé publique de mapping de la puce
+     * (PK_Map,IC). Tout élément manquant est laissé à null : la vérification le signalera.
+     */
+    private fun camEvidence(pace: PACEResult): PaceCamEvidence =
+        PaceCamEvidence(
+            chipAuthenticationData = (pace as? PACECAMResult)?.chipAuthenticationData,
+            mappingKey = (pace.mappingResult as? PACEGMMappingResult)?.piccMappingPublicKey,
+            cardSecurity = chip.readOptionalSecuredMasterFile(PassportService.EF_CARD_SECURITY),
+        )
+
+    /**
+     * Rétablit un canal sécurisé sur une liaison neuve, avec la même clé, dans la même lecture :
+     * après une Chip Authentication ratée, la puce a pu clore la messagerie sécurisée (MAC
+     * invalide sous les nouvelles clés). Reconnexion, puis [connect] et [establish] comme au
+     * début de la lecture, repli PACE → BAC compris. Les erreurs ressortent comme au premier
+     * établissement (clé refusée, délai, reconnexion impossible).
+     */
+    fun reestablish(): EstablishedChannel {
+        chip.reconnect()
+        return establish(connect())
     }
 
     /** Exécute [block] avec le délai de réponse [AUTHENTICATION_TIMEOUT_MILLIS], puis rétablit le délai. */
@@ -96,12 +135,13 @@ internal class SecureChannel(
     }
 
     /**
-     * Vrai si PACE a abouti avec l'un des `PACEInfo` annoncés, faux s'il a échoué sans refus de
-     * la clé. Lève [SceauException.AccessDenied] si la puce refuse la clé (SW 63xx), et relance
-     * un délai dépassé ainsi que, avec un CAN, toute erreur du transport. Avec une clé MRZ, une
-     * perte de liaison arrête les essais (la liaison est à réinitialiser) et renvoie faux.
+     * Résultat de PACE s'il a abouti avec l'un des `PACEInfo` annoncés, null s'il a échoué sans
+     * refus de la clé. Lève [SceauException.AccessDenied] si la puce refuse la clé (SW 63xx), et
+     * relance un délai dépassé ainsi que, avec un CAN, toute erreur du transport. Avec une clé
+     * MRZ, une perte de liaison arrête les essais (la liaison est à réinitialiser) et renvoie
+     * null.
      */
-    private fun tryPace(paceInfos: List<PACEInfo>): Boolean {
+    private fun tryPace(paceInfos: List<PACEInfo>): PACEResult? {
         val paceKey =
             when (key) {
                 is AccessKey.Can -> PACEKeySpec.createCANKey(key.value)
@@ -117,18 +157,17 @@ internal class SecureChannel(
                     continue
                 }
             try {
-                service.doPACE(paceKey, info.objectIdentifier, parameters, parameterId)
-                return true
+                return service.doPACE(paceKey, info.objectIdentifier, parameters, parameterId)
             } catch (e: Exception) {
                 chip.cardService.transportFailure?.let { failure ->
                     // Délai dépassé : puce muette ou en pénalité, un nouvel essai n'y changerait rien.
                     if (key is AccessKey.Can || failure is SceauException.Timeout) throw failure
-                    return false
+                    return null
                 }
                 if (e.isKeyRefused()) throw SceauException.AccessDenied()
             }
         }
-        return false
+        return null
     }
 
     /** Refus explicite de la clé par la puce : SW 63xx (ICAO 9303-11, BSI TR-03110). */

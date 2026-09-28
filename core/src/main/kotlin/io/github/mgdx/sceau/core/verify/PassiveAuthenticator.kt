@@ -82,6 +82,31 @@ internal object Tlv {
     }
 }
 
+/**
+ * Vérification d'EF.CardSecurity ([PassiveAuthenticator.verifyCardSecurity]).
+ *
+ * [status] : `OK` (signature et chaîne valides), `NOT_AVAILABLE` (émetteur introuvable :
+ * DS ni embarqué ni dans le magasin, ou chaîne sans CSCA connu), `FAILED` ou
+ * `UNSUPPORTED_ALGORITHM` (alors [unsupported] porte l'algorithme). [reason] : cause stable,
+ * sans donnée personnelle, null si `OK`. [content] : `SET OF SecurityInfo` signé, voir la
+ * fonction de vérification pour les cas où il est rendu.
+ */
+internal class CardSecurityVerification(
+    val status: CheckStatus,
+    val reason: String?,
+    val content: ByteArray?,
+    val unsupported: CheckDetail? = null,
+) {
+    companion object {
+        const val MALFORMED = "MALFORMED"
+        const val DS_MISSING = "DS_MISSING"
+        const val SIGNATURE = "SIGNATURE"
+        const val CHAIN = "CHAIN"
+        const val COUNTRY = "COUNTRY"
+        const val UNKNOWN_ISSUER = "UNKNOWN_ISSUER"
+    }
+}
+
 /** Implémentation de la Passive Authentication (SPEC §6.1 étape 5). */
 internal class PassiveAuthenticator(
     private val trustStore: TrustStore,
@@ -121,7 +146,7 @@ internal class PassiveAuthenticator(
     ): PassiveAuthResult {
         val hashes = guarded(CheckId.DG_HASHES) { checkHashes(parsed.securityObject, dataGroups) }
         val ds =
-            findDsCertificate(parsed)
+            findDsCertificate(parsed.signedData, parsed.signer)
                 ?: return PassiveAuthResult(
                     sodSignature = Check(CheckId.SOD_SIGNATURE, CheckStatus.NOT_AVAILABLE, CheckDetail.DsCertificateMissing),
                     certificateChain = Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.NOT_AVAILABLE, CheckDetail.DsCertificateMissing),
@@ -148,12 +173,83 @@ internal class PassiveAuthenticator(
         )
     }
 
+    // --- EF.CardSecurity (PACE-CAM) ------------------------------------------------------
+
+    /**
+     * Vérifie EF.CardSecurity (ICAO 9303-11 §4.4, PACE-CAM ; décision D21) avec les mêmes règles
+     * que le SOD : certificat DS (embarqué ou cherché dans le magasin), signature CMS (algorithmes
+     * faibles refusés, audit V9), chaîne DS → CSCA (profil d'émetteur, keyUsage du DS, pays
+     * cohérents avec [issuingState], audit V3 et V8). Le contenu signé doit être déclaré
+     * id-SecurityObject (BSI TR-03110) et n'avoir qu'un signataire.
+     *
+     * Le contenu n'est rendu que si la signature est vérifiée, ou si le DS est introuvable (la
+     * chaîne est alors `NOT_AVAILABLE` : ce contenu ne peut que faire échouer un contrôle, jamais
+     * le faire réussir). La validité calendaire du DS n'est pas contrôlée ici : elle l'est pour
+     * le DS du SOD (ligne DS_VALIDITY).
+     */
+    fun verifyCardSecurity(
+        cardSecurity: ByteArray,
+        issuingState: String?,
+    ): CardSecurityVerification =
+        try {
+            verifyCardSecurityOrThrow(cardSecurity, issuingState)
+        } catch (e: Exception) {
+            CardSecurityVerification(CheckStatus.FAILED, CardSecurityVerification.MALFORMED, null)
+        }
+
+    private fun verifyCardSecurityOrThrow(
+        cardSecurity: ByteArray,
+        issuingState: String?,
+    ): CardSecurityVerification {
+        val signedData = CMSSignedData(cardSecurity)
+        val signer = signedData.signerInfos.signers.singleOrNull()
+        val content = signedData.signedContent?.content as? ByteArray
+        if (signedData.signedContentTypeOID != ID_SECURITY_OBJECT || signer == null || content == null) {
+            return CardSecurityVerification(CheckStatus.FAILED, CardSecurityVerification.MALFORMED, null)
+        }
+        val ds =
+            findDsCertificate(signedData, signer)
+                ?: return CardSecurityVerification(CheckStatus.NOT_AVAILABLE, CardSecurityVerification.DS_MISSING, content)
+        val signature = checkSignature(signer, ds)
+        when (signature.status) {
+            CheckStatus.OK -> {}
+
+            CheckStatus.UNSUPPORTED_ALGORITHM -> {
+                return CardSecurityVerification(signature.status, CardSecurityVerification.SIGNATURE, null, signature.detail)
+            }
+
+            else -> {
+                return CardSecurityVerification(CheckStatus.FAILED, CardSecurityVerification.SIGNATURE, null)
+            }
+        }
+        val (chain, _) = checkChain(ds, issuingState)
+        val reason =
+            when {
+                chain.status == CheckStatus.OK -> null
+                chain.detail is CheckDetail.CountryMismatch -> CardSecurityVerification.COUNTRY
+                chain.status == CheckStatus.NOT_AVAILABLE -> CardSecurityVerification.UNKNOWN_ISSUER
+                else -> CardSecurityVerification.CHAIN
+            }
+        return CardSecurityVerification(
+            chain.status,
+            reason,
+            content,
+            chain.detail.takeIf {
+                chain.status ==
+                    CheckStatus.UNSUPPORTED_ALGORITHM
+            },
+        )
+    }
+
     // --- Certificat DS ----------------------------------------------------------------
 
-    private fun findDsCertificate(parsed: ParsedSod): DsCertificate? {
-        val sid = parsed.signer.sid
+    private fun findDsCertificate(
+        signedData: CMSSignedData,
+        signer: SignerInformation,
+    ): DsCertificate? {
+        val sid = signer.sid
         val embedded =
-            parsed.signedData.certificates
+            signedData.certificates
                 .getMatches(null)
                 .firstOrNull { sid.match(it) }
         if (embedded != null) return DsCertificate(embedded)
@@ -417,6 +513,9 @@ internal class PassiveAuthenticator(
         const val ERROR_CHAIN_BUDGET = "CHAIN_BUDGET"
         const val USUAL_VALIDITY_YEARS = 10L
         const val HEX = 16
+
+        /** eContentType d'EF.CardSecurity : id-SecurityObject (BSI TR-03110 partie 3, ICAO 9303-11). */
+        const val ID_SECURITY_OBJECT = "0.4.0.127.0.7.3.2.1"
 
         /** DG que Sceau demande à la puce (voir DocumentReader) : jamais DG3 ni DG4. */
         val READ_DATA_GROUPS = setOf(1, 2, 11, 12, 14, 15)

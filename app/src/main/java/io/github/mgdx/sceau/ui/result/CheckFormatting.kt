@@ -7,6 +7,7 @@ import io.github.mgdx.sceau.core.report.Check
 import io.github.mgdx.sceau.core.report.CheckDetail
 import io.github.mgdx.sceau.core.report.CheckId
 import io.github.mgdx.sceau.core.report.CheckStatus
+import io.github.mgdx.sceau.core.report.ChipAuthenticationMethod
 import io.github.mgdx.sceau.core.report.IssuanceDateSource
 import io.github.mgdx.sceau.core.trust.TrustSource
 import java.time.Instant
@@ -122,6 +123,10 @@ object CheckFormatting {
 
                 is CheckDetail.UnsupportedAlgorithm -> {
                     listOf(text(R.string.result_detail_unsupported, detail.algorithm))
+                }
+
+                is CheckDetail.ChipAuthentication -> {
+                    listOf(text(R.string.result_detail_ca_method, text(chipAuthenticationMethodLabel(detail.method))))
                 }
 
                 is CheckDetail.Error -> {
@@ -245,6 +250,14 @@ object CheckFormatting {
             TrustSource.ANTS -> R.string.result_detail_source_ants
             TrustSource.EMBEDDED_MASTER_LIST -> R.string.result_detail_source_embedded
             TrustSource.IMPORTED_MASTER_LIST -> R.string.result_detail_source_imported
+        }
+
+    /** Méthode de Chip Authentication : clé de DG14, ou PACE-CAM (décision D21). */
+    @StringRes
+    fun chipAuthenticationMethodLabel(method: ChipAuthenticationMethod): Int =
+        when (method) {
+            ChipAuthenticationMethod.DG14 -> R.string.result_detail_ca_method_dg14
+            ChipAuthenticationMethod.PACE_CAM -> R.string.result_detail_ca_method_pace_cam
         }
 
     @StringRes

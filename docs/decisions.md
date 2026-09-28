@@ -223,3 +223,31 @@ Format : date, contexte, décision, justification, écart à la SPEC concerné.
 - **Décision** : le rapport n'implémente aucune sérialisation. La mention « sérialisable pour les tests » est retirée de SPEC §6.2.
 - **Justification** : les tests de `:core` et de `:app` construisent leurs cas avec la PKI factice et la puce simulée de `:testchip` (D17) et vérifient le rapport en mémoire ; aucun n'a eu besoin de le sérialiser. Ne pas offrir de sérialisation supprime aussi un chemin par lequel des données lues pourraient être écrites (SPEC §8).
 - **Écart à la SPEC** : aucun désormais (SPEC §6.2 mise à jour le 2026-09-25).
+
+## D20. Chip Authentication avant la lecture des données
+
+- **Date** : 2026-09-28.
+- **Contexte** : SPEC §6.1 énumère la lecture de DG1, DG2, DG14, DG15, DG11 et DG12 (étape 4), puis la Passive Authentication (étape 5), puis la Chip Authentication (étape 6). Menée après la lecture, la CA ne liait pas à la puce authentifiée les données lues avant elle, sous les clés de PACE ou de BAC : limite documentée par l'audit de sécurité du 2026-09-25.
+- **Décision** :
+  - ordre de lecture : EF.COM, EF.SOD, puis DG14 s'il est annoncé (EF.COM ou SOD), puis la Chip Authentication si DG14 annonce une clé, puis DG1, DG2, DG15, DG11 et DG12 sous la messagerie sécurisée de la CA, puis la Passive Authentication (qui vérifie toujours l'empreinte de DG14 : un DG14 falsifié met la ligne des empreintes en échec), puis l'Active Authentication ;
+  - la CA a lieu pendant l'étape `READ_DATA` ; `Step` est inchangé, `VERIFY_CHIP` reste émise et ne couvre plus que l'AA. Les codes d'erreur de la CA commencent par `READ_DATA-CA` au lieu de `VERIFY_CHIP-CA` ;
+  - la confirmation explicite du nouveau canal (SELECT de DG1 et READ BINARY d'un octet, MAC vérifié) est gardée avant la lecture des DG : c'est elle, et non la lecture de DG1 qui suit, qui décide de la ligne CA, si bien qu'un clone produit une ligne CA en échec et non une erreur de lecture ;
+  - CA en échec : ligne `FAILED`, et la lecture continue. Si la puce a refusé l'échange, JMRTD garde l'ancienne messagerie ; la même confirmation vérifie que la puce y répond encore. Si la puce ne répond plus sous la messagerie courante, la liaison est réinitialisée (`CardTransport.reconnect()`, nouvel état JMRTD), puis le canal est rétabli avec la même clé dans la même lecture (EF.CardAccess, PACE ou BAC, repli compris : `SecureChannel.reestablish`), et les DG sont lus sous ce canal. La clé n'est pas conservée au-delà de la lecture ;
+  - règle V1 inchangée : DG14 ou DG15 signés dans le SOD mais non fournis donnent un échec ;
+  - `readAndVerify`, `VerificationReport`, `CheckId` et `Step` sont inchangés. Tests : `ChipAuthenticationOrderTest` (la puce simulée note sous quelle session chaque fichier est servi).
+- **Justification** : procédure d'inspection d'ICAO 9303-11 (§6.2) : la CA suit la lecture de DG14 et précède celle des autres données, qui sont alors lues sous des clés que seule la puce détentrice de la clé privée de DG14 peut dériver. Un relais ou une puce qui substituerait les données après l'authentification est ainsi écarté. Garder la lecture après une CA ratée permet d'afficher les données, le verdict restant « Échec ».
+- **Écart à la SPEC** : §6.1, ordre des étapes 4 à 6 (la CA précède la lecture de DG1, DG2, DG15, DG11, DG12 et la Passive Authentication) ; §6.1 étape 6 précisée (reprise du canal après une CA ratée).
+
+## D21. PACE-CAM (Chip Authentication Mapping)
+
+- **Date** : 2026-09-28.
+- **Contexte** : ICAO 9303-11 §4.4 définit le mapping PACE-CAM, par lequel la puce prouve détenir sa clé privée de Chip Authentication pendant PACE. `SecureChannel` acceptait n'importe quel mapping annoncé sans rien vérifier de propre à CAM : avec une puce CAM, la preuve fournie était ignorée. SPEC §6.1 ne prévoit que la CA via DG14.
+- **Décision** :
+  - si PACE aboutit avec le mapping CAM, EF.CardSecurity (FID 011D au MF) est lu sous la messagerie de PACE avant la sélection de l'application ; JMRTD déchiffre `CA_IC` (`PACECAMResult`) et fournit `PK_Map,IC` ;
+  - à l'étape `VERIFY_CHIP`, une fois l'État émetteur de DG1 connu : EF.CardSecurity est vérifié avec les mêmes règles que le SOD (`PassiveAuthenticator.verifyCardSecurity`, qui réutilise la recherche du DS, la vérification de signature et `CertificateChains` : profil d'émetteur, keyUsage du DS, pays cohérents, algorithmes faibles refusés), sa `ChipAuthenticationPublicKeyInfo` donne `PK_IC`, puis `PK_Map,IC = KA(CA_IC, PK_IC, D_IC)` est contrôlé (ECDH ou DH, selon les clés) ;
+  - résultat sur la ligne `CHIP_AUTHENTICATION` (pas de nouveau `CheckId`), avec un nouveau détail `CheckDetail.ChipAuthentication(method)` (`DG14` ou `PACE_CAM`) affiché dans la liste de contrôle. CAM réussi : la CA via DG14 n'est pas refaite, les données étant déjà lues sous le canal de PACE. CAM mené mais EF.CardSecurity absent, mal formé, à signature ou chaîne fausse, ou contrôle KA faux : `FAILED` (codes `VERIFY_CHIP-CAM-…`). Algorithme inconnu : `UNSUPPORTED_ALGORITHM`. Verdict inchangé (`Verdicts.compute`) ;
+  - émetteur d'EF.CardSecurity absent du magasin : `NOT_AVAILABLE` si la chaîne du SOD est elle aussi sans CSCA connu (verdict « Émetteur inconnu », comme tout document d'un pays absent du magasin), `FAILED` sinon ;
+  - la validité calendaire du DS d'EF.CardSecurity n'est pas contrôlée (elle l'est pour le DS du SOD, ligne « Validité du DS ») ;
+  - `:testchip` simule PACE-CAM en ECDH (A_IC, EF.CardSecurity signé par le DS factice). Tests : `PaceCamEndToEndTest`.
+- **Justification** : ICAO 9303-11 §4.4.3.5 impose au terminal, après PACE-CAM, d'authentifier `PK_IC` par EF.CardSecurity et de contrôler `CA_IC` ; sans quoi une puce clonée annonçant CAM passerait sans preuve. Réutiliser `PassiveAuthenticator` garantit que EF.CardSecurity n'est pas vérifié plus faiblement que le SOD. Traiter un émetteur inconnu comme la chaîne du SOD évite de déclarer « Échec » un document authentique d'un pays absent du magasin, sans ouvrir de déclassement : si le SOD remonte à un CSCA connu, un EF.CardSecurity non rattachable est un échec.
+- **Écart à la SPEC** : §6.1 étape 6 (la Chip Authentication peut aussi être prouvée par PACE-CAM, auquel cas la CA via DG14 n'est pas menée) ; §5.3 (détail de la méthode dans la ligne « Chip Authentication »).

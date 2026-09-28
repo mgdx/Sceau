@@ -20,6 +20,8 @@ import java.util.Locale
  * - Taille de chaque fichier plafonnée avant lecture ([FileSizeLimits], audit V11) : les
  *   fichiers sont lus par des `DefaultFileSystem` propres, au-dessus du même émetteur de
  *   messagerie sécurisée que [service], dont l'émetteur de READ BINARY contrôle l'en-tête.
+ * - [reconnect] repart d'un état JMRTD neuf (service, messagerie sécurisée, systèmes de
+ *   fichiers et leur cache) : rien de la liaison précédente n'est réutilisé.
  */
 internal class Chip(
     val transport: CardTransport,
@@ -31,15 +33,37 @@ internal class Chip(
             .coerceAtMost(PassportService.NORMAL_MAX_TRANCEIVE_LENGTH)
             .coerceAtLeast(MIN_TRANSCEIVE_LENGTH)
 
-    val service =
-        PassportService(
-            cardService,
-            maxTransceiveLength,
-            maxTransceiveLength,
-            BLOCK_SIZE,
-            false,
-            true,
-        )
+    /** État JMRTD d'une liaison, remplacé à chaque [reconnect]. */
+    private inner class Link {
+        val service =
+            PassportService(
+                cardService,
+                maxTransceiveLength,
+                maxTransceiveLength,
+                BLOCK_SIZE,
+                false,
+                true,
+            )
+
+        private val boundedSender = BoundedReadBinarySender(ReadBinaryAPDUSender(service.secureMessagingAPDUSender))
+
+        /** EF.CardAccess, au niveau MF : toujours en clair, comme le système de fichiers racine de JMRTD. */
+        val rootFileSystem = DefaultFileSystem(boundedSender, false)
+
+        /** Fichiers de l'applet ICAO, sous la messagerie sécurisée courante de [service]. */
+        val appletFileSystem = DefaultFileSystem(boundedSender, false)
+
+        /**
+         * Fichiers du MF lus sous messagerie sécurisée (EF.CardSecurity, PACE-CAM). Cache distinct
+         * de celui de l'applet : EF.CardSecurity (MF) et EF.SOD (applet) partagent le FID 011D.
+         */
+        val securedMasterFileSystem = DefaultFileSystem(boundedSender, false)
+    }
+
+    private var link = Link()
+
+    /** Service JMRTD de la liaison courante (remplacé par [reconnect]). */
+    val service: PassportService get() = link.service
 
     /** Relance l'erreur du transport (document retiré, délai) si elle s'est produite. */
     fun rethrowTransportFailure() {
@@ -48,21 +72,16 @@ internal class Chip(
 
     /**
      * Réinitialise la liaison ([CardTransport.reconnect]) et oublie l'erreur de transport qui l'a
-     * motivée : la puce repart de zéro, sans messagerie sécurisée ni applet sélectionnée.
+     * motivée : la puce repart de zéro, sans messagerie sécurisée ni applet sélectionnée, et
+     * Sceau aussi (nouvel état JMRTD, sans clé de session ni cache de fichiers de la liaison
+     * précédente).
      */
     fun reconnect() {
         // D'abord oubliée : un échec de la reconnexion elle-même doit ressortir tel quel.
         cardService.clearTransportFailure()
         transport.reconnect()
+        link = Link().also { it.service.open() }
     }
-
-    private val boundedSender = BoundedReadBinarySender(ReadBinaryAPDUSender(service.secureMessagingAPDUSender))
-
-    /** EF.CardAccess, au niveau MF : toujours en clair, comme le système de fichiers racine de JMRTD. */
-    private val rootFileSystem = DefaultFileSystem(boundedSender, false)
-
-    /** Fichiers de l'applet ICAO, sous la messagerie sécurisée courante de [service]. */
-    private val appletFileSystem = DefaultFileSystem(boundedSender, false)
 
     /**
      * Lit un fichier entier (EF.CardAccess au niveau MF, ou un fichier de l'applet ICAO). Un
@@ -70,13 +89,37 @@ internal class Chip(
      * (`<fichier>-TOO_LARGE`) sans être lu.
      */
     fun readFile(fid: Short): ByteArray {
+        val current = link
         val fileSystem =
             if (fid == PassportService.EF_CARD_ACCESS) {
-                rootFileSystem
+                current.rootFileSystem
             } else {
-                appletFileSystem.also { fs -> service.wrapper.let { if (fs.wrapper !== it) fs.setWrapper(it) } }
+                current.appletFileSystem.withCurrentWrapper()
             }
-        return try {
+        return read(fileSystem, fid)
+    }
+
+    /**
+     * Lit un fichier du MF sous la messagerie sécurisée courante : EF.CardSecurity, après PACE
+     * et avant la sélection de l'applet ICAO (ICAO 9303-11 §4.4, PACE-CAM). Null s'il est absent
+     * ou illisible ; une erreur de transport est relancée.
+     */
+    fun readOptionalSecuredMasterFile(fid: Short): ByteArray? =
+        try {
+            read(link.securedMasterFileSystem.withCurrentWrapper(), fid)
+        } catch (e: Exception) {
+            rethrowTransportFailure()
+            null
+        }
+
+    private fun DefaultFileSystem.withCurrentWrapper(): DefaultFileSystem =
+        also { fs -> service.wrapper.let { if (fs.wrapper !== it) fs.setWrapper(it) } }
+
+    private fun read(
+        fileSystem: DefaultFileSystem,
+        fid: Short,
+    ): ByteArray =
+        try {
             fileSystem.selectFile(fid)
             CardFileInputStream(BLOCK_SIZE, fileSystem).use { it.readBytes() }
         } catch (e: Exception) {
@@ -85,7 +128,6 @@ internal class Chip(
             }
             throw e
         }
-    }
 
     /** Lit un fichier ; null s'il est absent ou illisible. Une erreur de transport est relancée. */
     fun readOptionalFile(fid: Short): ByteArray? =
@@ -97,7 +139,7 @@ internal class Chip(
         }
 
     fun close() {
-        service.close()
+        link.service.close()
     }
 
     companion object {

@@ -14,6 +14,7 @@ import org.jmrtd.lds.SecurityInfo
 import org.jmrtd.lds.icao.DG14File
 import org.jmrtd.lds.icao.DG15File
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
@@ -65,7 +66,7 @@ class ChipVerifierTest {
     fun sansDg14NiDg15_NonDisponibles() {
         val transport = ScriptedTransport(respond(AID_SELECT, "9000"))
         val verifier = verifier(transport)
-        assertEquals(CheckStatus.NOT_AVAILABLE, verifier.chipAuthentication(null, signedInSod = false).status)
+        assertEquals(CheckStatus.NOT_AVAILABLE, verifier.chipAuthentication(null, signedInSod = false).check.status)
         assertEquals(CheckStatus.NOT_AVAILABLE, verifier.activeAuthentication(null, null, signedInSod = false).status)
         assertEquals(1, transport.sent.size)
     }
@@ -76,11 +77,11 @@ class ChipVerifierTest {
         val transport = ScriptedTransport(respond(AID_SELECT, "9000"))
         val verifier = verifier(transport)
 
-        val ca = verifier.chipAuthentication(null, signedInSod = true)
+        val ca = verifier.chipAuthentication(null, signedInSod = true).check
         val aa = verifier.activeAuthentication(null, null, signedInSod = true)
 
         assertEquals(CheckStatus.FAILED, ca.status)
-        assertEquals(CheckDetail.Error("VERIFY_CHIP-CA-DG14Missing"), ca.detail)
+        assertEquals(CheckDetail.Error("READ_DATA-CA-DG14Missing"), ca.detail)
         assertEquals(CheckStatus.FAILED, aa.status)
         assertEquals(CheckDetail.Error("VERIFY_CHIP-AA-DG15Missing"), aa.detail)
         assertEquals("aucune commande envoyée à la puce", 1, transport.sent.size)
@@ -90,7 +91,7 @@ class ChipVerifierTest {
     fun dg14SansCleCa_NonDisponible() {
         val transport = ScriptedTransport(respond(AID_SELECT, "9000"))
         val onlyAa = DG14File(emptyList()).encoded
-        assertEquals(CheckStatus.NOT_AVAILABLE, verifier(transport).chipAuthentication(onlyAa, signedInSod = true).status)
+        assertEquals(CheckStatus.NOT_AVAILABLE, verifier(transport).chipAuthentication(onlyAa, signedInSod = true).check.status)
     }
 
     @Test
@@ -102,12 +103,36 @@ class ChipVerifierTest {
     }
 
     @Test
-    fun caRefuseeParLaPuce_Echec() {
-        val transport = ScriptedTransport(respond(AID_SELECT, "9000"), respond("0022", "6A80"))
-        val check = verifier(transport).chipAuthentication(dg14, signedInSod = true)
+    fun caRefuseeParLaPuce_EchecEtCanalConserve() {
+        // La puce refuse le MSE : JMRTD garde l'ancien canal, qui répond encore (SELECT et
+        // READ BINARY de confirmation) : la lecture pourra continuer sans reconnexion.
+        val transport =
+            ScriptedTransport(
+                respond(AID_SELECT, "9000"),
+                respond("0022", "6A80"),
+                respond("00A4020C02${TestFixtures.fid(1)}", "9000"),
+                respond("00B0000001", "619000"),
+            )
+        val outcome = verifier(transport).chipAuthentication(dg14, signedInSod = true)
+        val check = outcome.check
         assertEquals(CheckId.CHIP_AUTHENTICATION, check.id)
         assertEquals(CheckStatus.FAILED, check.status)
-        assertTrue((check.detail as CheckDetail.Error).code.startsWith("VERIFY_CHIP-CA-"))
+        assertTrue((check.detail as CheckDetail.Error).code.startsWith("READ_DATA-CA-"))
+        assertTrue("canal toujours utilisable", outcome.channelUsable)
+        assertTrue(transport.exhausted)
+    }
+
+    @Test
+    fun caRefuseeEtPuceMuetteEnsuite_CanalARetablir() {
+        val transport =
+            ScriptedTransport(
+                respond(AID_SELECT, "9000"),
+                respond("0022", "6A80"),
+                respond("00A4020C02${TestFixtures.fid(1)}", "6988"),
+            )
+        val outcome = verifier(transport).chipAuthentication(dg14, signedInSod = true)
+        assertEquals(CheckStatus.FAILED, outcome.check.status)
+        assertFalse("canal à rétablir", outcome.channelUsable)
     }
 
     @Test

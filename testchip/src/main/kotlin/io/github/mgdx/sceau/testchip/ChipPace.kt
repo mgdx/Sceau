@@ -8,6 +8,7 @@ import org.bouncycastle.asn1.DERSequence
 import org.bouncycastle.asn1.DERSet
 import org.bouncycastle.asn1.x9.ECNamedCurveTable
 import org.bouncycastle.asn1.x9.X9ECParameters
+import org.bouncycastle.jce.interfaces.ECPrivateKey
 import org.bouncycastle.math.ec.ECPoint
 import java.math.BigInteger
 import java.security.SecureRandom
@@ -16,10 +17,11 @@ import java.security.SecureRandom
  * Configuration PACE d'une puce simulée : ce qu'annonce son EF.CardAccess et le CAN imprimé
  * sur le document.
  *
- * Seul le mapping générique ECDH avec chiffrement AES est pris en charge
- * (id-PACE-ECDH-GM-AES-CBC-CMAC-128/192/256), avec des paramètres de domaine standardisés
- * (ICAO 9303-11 §9.5.1, identifiants 8 à 18). Par défaut : AES-128 sur brainpoolP256r1
- * (identifiant 13), comme la CNIe française.
+ * Mappings pris en charge, en ECDH avec chiffrement AES : générique
+ * (id-PACE-ECDH-GM-AES-CBC-CMAC-128/192/256) et Chip Authentication Mapping
+ * (id-PACE-ECDH-CAM-AES-CBC-CMAC-128/192/256, voir [isChipAuthenticationMapping]), avec des
+ * paramètres de domaine standardisés (ICAO 9303-11 §9.5.1, identifiants 8 à 18). Par défaut :
+ * mapping générique AES-128 sur brainpoolP256r1 (identifiant 13), comme la CNIe française.
  *
  * @property can numéro d'accès à la carte (6 chiffres sur une CNIe)
  * @property protocolOid OID du protocole PACE annoncé dans le `PACEInfo`
@@ -34,6 +36,12 @@ class PaceSettings(
         require(protocolOid in AES_KEY_BITS) { "protocole PACE non simulé : $protocolOid" }
         require(parameterId in CURVES) { "paramètres de domaine non simulés : $parameterId" }
     }
+
+    /**
+     * Mapping PACE-CAM (ICAO 9303-11 §4.4.3.3.3) : la puce renvoie en plus, à la dernière étape,
+     * ses données de Chip Authentication chiffrées, et sert EF.CardSecurity au MF.
+     */
+    val isChipAuthenticationMapping: Boolean get() = protocolOid in CAM_PROTOCOLS
 
     /**
      * Contenu d'EF.CardAccess (ICAO 9303-11 §9.2) : `SET OF SecurityInfo` réduit à un
@@ -52,16 +60,25 @@ class PaceSettings(
         const val ID_PACE_ECDH_GM_AES_CBC_CMAC_128 = "0.4.0.127.0.7.2.2.4.2.2"
         const val ID_PACE_ECDH_GM_AES_CBC_CMAC_192 = "0.4.0.127.0.7.2.2.4.2.3"
         const val ID_PACE_ECDH_GM_AES_CBC_CMAC_256 = "0.4.0.127.0.7.2.2.4.2.4"
+        const val ID_PACE_ECDH_CAM_AES_CBC_CMAC_128 = "0.4.0.127.0.7.2.2.4.6.2"
+        const val ID_PACE_ECDH_CAM_AES_CBC_CMAC_192 = "0.4.0.127.0.7.2.2.4.6.3"
+        const val ID_PACE_ECDH_CAM_AES_CBC_CMAC_256 = "0.4.0.127.0.7.2.2.4.6.4"
         const val PARAM_ID_NIST_P256_R1 = 12
         const val PARAM_ID_BRAINPOOL_P256_R1 = 13
 
         private const val PACE_VERSION = 2L
+
+        private val CAM_PROTOCOLS =
+            setOf(ID_PACE_ECDH_CAM_AES_CBC_CMAC_128, ID_PACE_ECDH_CAM_AES_CBC_CMAC_192, ID_PACE_ECDH_CAM_AES_CBC_CMAC_256)
 
         internal val AES_KEY_BITS =
             mapOf(
                 ID_PACE_ECDH_GM_AES_CBC_CMAC_128 to 128,
                 ID_PACE_ECDH_GM_AES_CBC_CMAC_192 to 192,
                 ID_PACE_ECDH_GM_AES_CBC_CMAC_256 to 256,
+                ID_PACE_ECDH_CAM_AES_CBC_CMAC_128 to 128,
+                ID_PACE_ECDH_CAM_AES_CBC_CMAC_192 to 192,
+                ID_PACE_ECDH_CAM_AES_CBC_CMAC_256 to 256,
             )
 
         /** Paramètres de domaine ECDH standardisés (ICAO 9303-11 §9.5.1, tableau 6). */
@@ -108,12 +125,22 @@ enum class PacePassword(
  * f(π) : les caractères du CAN (ISO 8859-1) ; pour la MRZ, SHA-1 des champs de la clé MRZ et de
  * leurs chiffres de contrôle (20 octets, non tronqué). Un jeton T.PCD faux (mauvais mot de passe)
  * donne 63Cx, x = essais restants, et remet PACE à zéro.
+ *
+ * PACE-CAM (ICAO 9303-11 §4.4.3.3.3) : la dernière réponse contient en plus
+ * 8A A.IC, A.IC = E(KSenc, CA.IC) en AES-CBC avec IV = E(KSenc, −1) (bloc de bits à 1) et
+ * remplissage ISO/IEC 9797-1 méthode 2, CA.IC = SK.IC⁻¹ · SK.PICC.map mod n, où SK.IC est
+ * la clé privée statique de la puce ([camKey]) et SK.PICC.map sa clé de mapping : le lecteur
+ * vérifie PK.PICC.map = CA.IC · PK.IC.
  */
 internal class ChipPace(
     private val settings: PaceSettings,
     /** f(π) pour la clé MRZ : SHA-1 de l'information MRZ de la puce. */
     private val mrzSecret: ByteArray,
     private val random: SecureRandom,
+    /** Clé privée statique de Chip Authentication, pour PACE-CAM (même courbe que PACE). */
+    private val camKey: ECPrivateKey? = null,
+    /** PACE-CAM : la puce envoie CA.IC + 1 au lieu de CA.IC (puce qui ne détient pas SK.IC). */
+    private val tamperCam: Boolean = false,
 ) {
     /** Résultat d'une commande PACE : données de réponse, SW, et session ouverte en cas de succès. */
     class Outcome(
@@ -140,6 +167,7 @@ internal class ChipPace(
     private var password: PacePassword? = null
     private var step = 0
     private var nonce: BigInteger? = null
+    private var mappingSecret: BigInteger? = null
     private var generator: ECPoint? = null
     private var piccPublic: ECPoint? = null
     private var pcdPublic: ECPoint? = null
@@ -206,6 +234,7 @@ internal class ChipPace(
         val secret = randomScalar()
         val shared = pcdMapping.multiply(secret).normalize()
         if (shared.isInfinity) return abort(SW_WRONG_DATA)
+        mappingSecret = secret
         generator =
             domain.g
                 .multiply(checkNotNull(nonce))
@@ -252,11 +281,41 @@ internal class ChipPace(
             return abort(SW_COUNTER or retries)
         }
         val piccToken = SimCrypto.cmac(macKey, publicKeyDataObject(checkNotNull(pcdPublic)))
-        val session = ChipSecureMessaging(SimCrypto.Algorithm.AES, checkNotNull(kEnc), macKey, 0)
+        val encKey = checkNotNull(kEnc)
+        var response = Tlv(TAG_PICC_TOKEN, piccToken).encoded
+        if (settings.isChipAuthenticationMapping) {
+            response += Tlv(TAG_CAM_DATA, encryptedChipAuthenticationData(encKey)).encoded
+        }
+        val session = ChipSecureMessaging(SimCrypto.Algorithm.AES, encKey, macKey, 0, SessionKind.PACE)
         reset()
         retries = MAX_RETRIES
         completedWith = chosen
-        return Outcome(Tlv(TAG_DYNAMIC_AUTH, Tlv(TAG_PICC_TOKEN, piccToken).encoded).encoded, SW_OK, session)
+        return Outcome(Tlv(TAG_DYNAMIC_AUTH, response).encoded, SW_OK, session)
+    }
+
+    /** A.IC = E(KSenc, CA.IC), IV = E(KSenc, −1), CA.IC = SK.IC⁻¹ · SK.PICC.map mod n. */
+    private fun encryptedChipAuthenticationData(encKey: ByteArray): ByteArray {
+        val staticKey = checkNotNull(camKey) { "PACE-CAM sans clé de Chip Authentication" }
+        require(staticKey.parameters.curve.equals(domain.curve)) { "clé CA et PACE sur des courbes différentes" }
+        val order = domain.n
+        var caIc =
+            staticKey.d
+                .modInverse(order)
+                .multiply(checkNotNull(mappingSecret))
+                .mod(order)
+        if (tamperCam) caIc = caIc.add(BigInteger.ONE).mod(order)
+        val length = (order.bitLength() + Byte.SIZE_BITS - 1) / Byte.SIZE_BITS
+        val bytes = caIc.toByteArray()
+        val encoded =
+            if (bytes.size >
+                length
+            ) {
+                bytes.copyOfRange(bytes.size - length, bytes.size)
+            } else {
+                ByteArray(length - bytes.size) + bytes
+            }
+        val iv = SimCrypto.aesBlock(encKey, ByteArray(NONCE_LENGTH) { ALL_BITS })
+        return SimCrypto.cbc(true, SimCrypto.Algorithm.AES, encKey, iv, SimCrypto.pad(encoded, NONCE_LENGTH))
     }
 
     /** Objet clé publique ECDH de TR-03110 partie 3 §D.3.3, réduit à l'OID et au point (contexte connu). */
@@ -297,10 +356,12 @@ internal class ChipPace(
         return status(sw)
     }
 
-    private fun reset() {
+    /** Abandonne un PACE en cours (erreur, ou liaison réinitialisée). */
+    fun reset() {
         password = null
         step = 0
         nonce = null
+        mappingSecret = null
         generator = null
         piccPublic = null
         pcdPublic = null
@@ -329,6 +390,8 @@ internal class ChipPace(
         private const val TAG_PCD_TOKEN = 0x85
         private const val TAG_PICC_TOKEN = 0x86
         private const val TAG_EC_POINT = 0x86
+        private const val TAG_CAM_DATA = 0x8A
+        private const val ALL_BITS: Byte = -1
 
         private const val SW_OK = 0x9000
         private const val SW_COUNTER = 0x63C0

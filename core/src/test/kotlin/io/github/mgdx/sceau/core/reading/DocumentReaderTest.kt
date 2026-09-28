@@ -22,11 +22,16 @@ import org.junit.Test
  * les APDU émis sont donc directement observables.
  */
 class DocumentReaderTest {
+    /** Les deux temps de la lecture, sans Chip Authentication entre eux. */
     private fun read(transport: ScriptedTransport): LdsContent {
         val chip = Chip(transport)
         chip.service.open()
         chip.service.sendSelectApplet(false)
-        return DocumentReader(chip).read()
+        val reader = DocumentReader(chip)
+        val objects = reader.readSecurityObjects()
+        val dataGroups = LinkedHashMap<Int, ByteArray>()
+        objects.dg14?.let { dataGroups[14] = it }
+        return reader.readDataGroups(objects, dataGroups)
     }
 
     private fun ScriptedTransport.selectedFiles(): List<String> = sent.filter { it.startsWith("00A4020C02") }.map { it.substring(10, 14) }
@@ -40,19 +45,20 @@ class DocumentReaderTest {
                 respond(AID_SELECT, "9000"),
                 *file(FID_COM, TestFixtures.com(1, 2, 3, 4, 11, 14)),
                 *file(FID_SOD, sod),
+                // DG14 avant les autres DG : la Chip Authentication qu'il annonce les précède (D20).
+                *file(fid(14), TestFixtures.opaqueDataGroup(14)),
                 *file(fid(1), dg1),
                 *file(fid(2), TestFixtures.opaqueDataGroup(2)),
-                *file(fid(14), TestFixtures.opaqueDataGroup(14)),
                 // DG11 annoncé mais protégé : absent, la lecture continue.
                 missingFile(fid(11), "6982"),
             )
 
         val content = read(transport)
 
-        assertEquals(listOf(1, 2, 14), content.dataGroups.keys.toList())
+        assertEquals(listOf(14, 1, 2), content.dataGroups.keys.toList())
         assertArrayEquals(dg1, content.dataGroups[1])
         assertArrayEquals(sod, content.sod)
-        assertEquals(listOf(FID_COM, FID_SOD, fid(1), fid(2), fid(14), fid(11)), transport.selectedFiles())
+        assertEquals(listOf(FID_COM, FID_SOD, fid(14), fid(1), fid(2), fid(11)), transport.selectedFiles())
         assertFalse(transport.selectedFiles().any { it == fid(3) || it == fid(4) })
         assertTrue(transport.exhausted)
     }

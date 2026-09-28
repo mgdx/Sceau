@@ -105,12 +105,30 @@ internal class ReadingSession(
         val paceInfos = channel.connect()
 
         step(Step.SECURE_CHANNEL)
-        val protocol = channel.establish(paceInfos)
-        val secureChannel = Check(CheckId.SECURE_CHANNEL, CheckStatus.OK, CheckDetail.SecureChannel(protocol))
+        val established = channel.establish(paceInfos)
+        val secureChannel = Check(CheckId.SECURE_CHANNEL, CheckStatus.OK, CheckDetail.SecureChannel(established.protocol))
+        // PACE-CAM (D21) : la puce s'est authentifiée pendant PACE, et tout ce qui suit est déjà
+        // lu sous les clés de ce canal ; la CA via DG14 n'est pas refaite.
+        val cam = established.cam
 
+        // Décision D20 : EF.COM, EF.SOD et DG14, puis Chip Authentication, puis les autres DG
+        // sous la messagerie sécurisée de la CA, qui lie ainsi les données lues à la puce.
         step(Step.READ_DATA)
-        val content = DocumentReader(chip).read()
-        rawDataGroups = content.dataGroups
+        val reader = DocumentReader(chip)
+        val objects = reader.readSecurityObjects()
+        val dataGroups = LinkedHashMap<Int, ByteArray>()
+        rawDataGroups = dataGroups
+        objects.dg14?.let { dataGroups[DocumentReader.SECURITY_DATA_GROUP] = it }
+
+        val verifier = ChipVerifier(chip, random)
+        val dg14Signed = DocumentReader.SECURITY_DATA_GROUP in objects.signedDataGroups
+        val caOutcome = if (cam == null) verifier.chipAuthentication(objects.dg14, signedInSod = dg14Signed) else null
+        // CA ratée et puce muette sous la messagerie courante : canal rétabli avec la même clé,
+        // pour lire quand même les données (la ligne CA reste en échec, donc le verdict aussi).
+        if (caOutcome?.channelUsable == false) channel.reestablish()
+        ensureActive()
+
+        val content = reader.readDataGroups(objects, dataGroups)
         val data = DataGroupParsers.document(content.dataGroups)
         document = data
 
@@ -126,10 +144,12 @@ internal class ReadingSession(
                 issuingState = data.dg1.issuingState,
             )
 
+        // La CA est déjà faite (READ_DATA) : l'étape VERIFY_CHIP ne couvre plus que l'AA, et la
+        // vérification hors ligne de PACE-CAM, qui a besoin de l'État émetteur de DG1.
         step(Step.VERIFY_CHIP)
-        val verifier = ChipVerifier(chip, random)
-        val ca = verifier.chipAuthentication(content.dataGroups[14], signedInSod = 14 in content.signedDataGroups)
-        ensureActive()
+        val ca =
+            cam?.let { ChipAuthenticationMapping.verify(it, trustStore, data.dg1.issuingState, pa.certificateChain.status) }
+                ?: checkNotNull(caOutcome).check
         val aa = verifier.activeAuthentication(content.dataGroups[15], content.dataGroups[14], signedInSod = 15 in content.signedDataGroups)
 
         val checks = listOf(secureChannel, pa.sodSignature, pa.certificateChain, pa.dsValidity, pa.dataGroupHashes, ca, aa)

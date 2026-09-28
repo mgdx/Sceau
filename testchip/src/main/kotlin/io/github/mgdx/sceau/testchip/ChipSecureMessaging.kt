@@ -21,6 +21,15 @@ internal class SecureMessagingError(
     message: String,
 ) : Exception(message)
 
+/** Protocole qui a ouvert une session de messagerie sécurisée de la puce simulée. */
+enum class SessionKind {
+    BAC,
+    PACE,
+
+    /** Chip Authentication via DG14 (clés dérivées de la clé statique de DG14). */
+    CHIP_AUTHENTICATION,
+}
+
 /**
  * Messagerie sécurisée côté puce (ICAO 9303-11 §9.8) : déballe les commandes
  * (DO'87, DO'97, DO'8E), vérifie leur MAC, et emballe les réponses (DO'87, DO'99, DO'8E).
@@ -31,6 +40,8 @@ internal class ChipSecureMessaging(
     private val kEnc: ByteArray,
     private val kMac: ByteArray,
     ssc: Long,
+    /** Protocole qui a ouvert cette session. */
+    val kind: SessionKind,
 ) {
     var ssc: Long = ssc
         private set
