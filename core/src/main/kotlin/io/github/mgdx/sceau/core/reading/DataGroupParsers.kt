@@ -15,6 +15,8 @@ import org.jmrtd.lds.icao.DG1File
 import org.jmrtd.lds.icao.DG2File
 import org.jmrtd.lds.iso19794.FaceInfo
 import org.jmrtd.lds.iso39794.FaceImageDataBlock
+import java.io.ByteArrayInputStream
+import java.io.EOFException
 import java.time.DateTimeException
 import java.time.LocalDate
 
@@ -46,7 +48,7 @@ internal object DataGroupParsers {
         bytes: ByteArray,
         today: LocalDate = LocalDate.now(),
     ): Dg1Data {
-        val mrz = DG1File(bytes.inputStream()).mrzInfo
+        val mrz = DG1File(StrictInputStream(bytes)).mrzInfo
         return Dg1Data(
             documentCode = mrz.documentCode.orEmpty(),
             issuingState = mrz.issuingState.orEmpty(),
@@ -69,7 +71,7 @@ internal object DataGroupParsers {
     /** Première image de visage de DG2 (ISO 19794-5 ou ISO 39794-5), ou null. */
     fun parseDg2(bytes: ByteArray): EncodedImage? {
         val images =
-            DG2File(bytes.inputStream()).subRecords.orEmpty().asSequence().flatMap { record ->
+            DG2File(StrictInputStream(bytes)).subRecords.orEmpty().asSequence().flatMap { record ->
                 when (record) {
                     is FaceInfo -> record.faceImageInfos.orEmpty().asSequence()
                     is FaceImageDataBlock -> record.representationBlocks.orEmpty().asSequence()
@@ -85,7 +87,7 @@ internal object DataGroupParsers {
         bytes: ByteArray,
         today: LocalDate = LocalDate.now(),
     ): Dg11Data {
-        val dg11 = DG11File(bytes.inputStream())
+        val dg11 = DG11File(StrictInputStream(bytes))
         return Dg11Data(
             fullName = cleanName(dg11.nameOfHolder),
             otherNames = dg11.otherNames.orEmpty().mapNotNull(::cleanName),
@@ -106,7 +108,7 @@ internal object DataGroupParsers {
         bytes: ByteArray,
         today: LocalDate = LocalDate.now(),
     ): Dg12Data {
-        val dg12 = DG12File(bytes.inputStream())
+        val dg12 = DG12File(StrictInputStream(bytes))
         return Dg12Data(
             issuingAuthority = clean(dg12.issuingAuthority),
             dateOfIssue = Dates.parsePast(dg12.dateOfIssue, today),
@@ -173,6 +175,21 @@ internal object DataGroupParsers {
         }
 
     private val WHITESPACE = Regex("\\s+")
+}
+
+/**
+ * Flux d'un DG en mémoire dont `skip` lève [EOFException] en fin de flux au lieu de renvoyer 0.
+ * JMRTD saute des octets par des boucles `while (skipped < n) skipped += in.skip(n)` (octets
+ * réservés des points caractéristiques ISO 19794-5, notamment) : sur un DG tronqué, un `skip`
+ * qui renvoie 0 les faisait tourner sans fin.
+ */
+internal class StrictInputStream(
+    bytes: ByteArray,
+) : ByteArrayInputStream(bytes) {
+    override fun skip(n: Long): Long {
+        if (n > 0 && available() == 0) throw EOFException()
+        return super.skip(n)
+    }
 }
 
 /** Dates MRZ (AAMMJJ) et dates complètes (AAAAMMJJ) des DG. */

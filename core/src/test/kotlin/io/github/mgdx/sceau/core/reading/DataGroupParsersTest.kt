@@ -165,4 +165,35 @@ class DataGroupParsersTest {
         assertNull(document.dg12)
         assertEquals(raw.keys, document.rawDataGroups.keys)
     }
+
+    /**
+     * Fuzzing (DG2) : enregistrement de visage ISO 19794-5 annonçant un point caractéristique
+     * mais qui s'arrête avant ses deux octets réservés. JMRTD les saute par
+     * `while (skipped < 2) skipped += in.skip(2)` : `skip` renvoie 0 en fin de flux et la
+     * lecture bouclait sans fin. Le DG2 doit être illisible, donc absent.
+     */
+    @Test(timeout = 10_000)
+    fun dg2_PointCaracteristiqueTronque_PasDeBoucleSansFin() {
+        val faceImage =
+            hex("0000001A" + "0001" + "00" + "00" + "00" + "000000" + "0000" + "000000" + "000000") +
+                hex("01" + "01" + "0000" + "0000")
+        val facialRecord = "FAC\u0000".toByteArray() + "010\u0000".toByteArray() + hex("00000028" + "0001") + faceImage
+        val header = hex("A10E" + "810102" + "82010087020101" + "88020008")
+        val bit = tlv(0x7F60, header + tlv(0x5F2E, facialRecord))
+        val dg2 = tlv(0x75, tlv(0x7F61, hex("020101") + bit))
+
+        assertNull(DataGroupParsers.document(mapOf(1 to TestFixtures.dg1(), 2 to dg2), TODAY).portrait)
+    }
+
+    private fun hex(value: String): ByteArray = ByteArray(value.length / 2) { value.substring(2 * it, 2 * it + 2).toInt(16).toByte() }
+
+    /** TLV à longueur courte (moins de 128 octets), tag sur un ou deux octets. */
+    private fun tlv(
+        tag: Int,
+        value: ByteArray,
+    ): ByteArray {
+        require(value.size < 0x80)
+        val tagBytes = if (tag > 0xFF) byteArrayOf((tag shr 8).toByte(), tag.toByte()) else byteArrayOf(tag.toByte())
+        return tagBytes + byteArrayOf(value.size.toByte()) + value
+    }
 }

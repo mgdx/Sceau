@@ -1,11 +1,21 @@
 package io.github.mgdx.sceau.core.trust
 
+import org.bouncycastle.asn1.ASN1EncodableVector
 import org.bouncycastle.asn1.ASN1Integer
+import org.bouncycastle.asn1.ASN1ObjectIdentifier
 import org.bouncycastle.asn1.ASN1Sequence
+import org.bouncycastle.asn1.ASN1Set
+import org.bouncycastle.asn1.ASN1TaggedObject
+import org.bouncycastle.asn1.DERNull
 import org.bouncycastle.asn1.DERSequence
 import org.bouncycastle.asn1.DERSet
+import org.bouncycastle.asn1.DERTaggedObject
 import org.bouncycastle.asn1.cms.CMSObjectIdentifiers
+import org.bouncycastle.asn1.cms.ContentInfo
+import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers
+import org.bouncycastle.asn1.x509.AlgorithmIdentifier
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo
+import org.bouncycastle.cert.X509CertificateHolder
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -106,6 +116,51 @@ class MasterListTest {
         assertEquals(1, list.info.certificateCount)
     }
 
+    /**
+     * Fuzzing (ML-test) : bloc `certificates` du CMS qui ne contient pas de certificat.
+     * BouncyCastle ne le décode qu'à la demande et levait IllegalArgumentException, que
+     * `TrustStoreLoader.load` ne rattrape pas.
+     */
+    @Test
+    fun malformedCmsCertificateIsRejected() {
+        assertRejected("NOT_CMS", rebuiltSignedData(certificates = DERSet(DERSequence(ASN1Integer(1)))))
+    }
+
+    /** Fuzzing (ML-test) : `signerInfos` qui ne contient pas de SignerInfo (NoSuchElementException). */
+    @Test
+    fun malformedSignerInfoIsRejected() {
+        assertRejected("NOT_CMS", rebuiltSignedData(signerInfos = DERSet(DERSequence(ASN1Integer(1)))))
+    }
+
+    /**
+     * Fuzzing (ML-content) : certificat signé dont la clé publique est illisible. BouncyCastle ne
+     * la décode qu'à la demande : le certificat entrait dans le magasin, puis `isSelfSigned`
+     * levait IllegalStateException. Il est ignoré comme tout certificat illisible.
+     */
+    @Test
+    fun certificateWithUnreadablePublicKeyIsSkipped() {
+        val badKey = SubjectPublicKeyInfo(AlgorithmIdentifier(PKCSObjectIdentifiers.rsaEncryption, DERNull.INSTANCE), byteArrayOf(1, 2, 3))
+        assertOnlyRsaCscaKept(TestMasterLists.selfSigned("C=ZZ,O=Test,CN=CSCA cle illisible", fixture.rsaCscaKey, subjectKey = badKey))
+    }
+
+    /**
+     * Fuzzing (ML-content, mode long) : clé d'algorithme inconnu de BouncyCastle, pour laquelle
+     * `publicKey` renvoie null ; `isSelfSigned` levait NullPointerException.
+     */
+    @Test
+    fun certificateWithUnknownKeyAlgorithmIsSkipped() {
+        val unknownKey = SubjectPublicKeyInfo(AlgorithmIdentifier(ASN1ObjectIdentifier("1.3.6.1.4.1.99999.42.2")), byteArrayOf(1, 2, 3))
+        assertOnlyRsaCscaKept(TestMasterLists.selfSigned("C=ZZ,O=Test,CN=CSCA cle inconnue", fixture.rsaCscaKey, subjectKey = unknownKey))
+    }
+
+    private fun assertOnlyRsaCscaKept(bad: X509CertificateHolder) {
+        val content = TestMasterLists.content(listOf(fixture.rsaCsca, bad))
+        val list = TrustStores.parseMasterList(TestMasterLists.signedMasterList(content, fixture.signer, fixture.signerKey))
+
+        assertEquals(1, list.certificates.size)
+        assertArrayEquals(fixture.rsaCsca.encoded, list.certificates.single().encoded)
+    }
+
     @Test
     fun anchoredSignerIsRequiredForEmbeddedList() {
         val parsed = MasterListParser.parse(fixture.bytes)
@@ -164,6 +219,28 @@ class MasterListTest {
         val found = store.findBySubjectKeyId(ski!!)
         assertEquals(1, found.size)
         assertArrayEquals(list.certificates[1].encoded, found[0].certificate.encoded)
+    }
+
+    /**
+     * Master List de la fixture dont le SignedData est réassemblé élément par élément, avec
+     * [certificates] (bloc [0] IMPLICIT) ou [signerInfos] (dernier élément) remplacés.
+     */
+    private fun rebuiltSignedData(
+        certificates: ASN1Set? = null,
+        signerInfos: ASN1Set? = null,
+    ): ByteArray {
+        val signedData = ASN1Sequence.getInstance(ContentInfo.getInstance(fixture.bytes).content)
+        val elements = ASN1EncodableVector()
+        signedData.forEachIndexed { index, element ->
+            elements.add(
+                when {
+                    index == signedData.size() - 1 && signerInfos != null -> signerInfos
+                    element is ASN1TaggedObject && element.tagNo == 0 && certificates != null -> DERTaggedObject(false, 0, certificates)
+                    else -> element
+                },
+            )
+        }
+        return ContentInfo(CMSObjectIdentifiers.signedData, DERSequence(elements)).encoded
     }
 
     private fun indexOf(
