@@ -34,7 +34,22 @@ internal object MasterListParser {
     /** id-icao-cscaMasterList. */
     val CSCA_MASTER_LIST_OID = ASN1ObjectIdentifier("2.23.136.1.1.2")
 
-    fun parse(bytes: ByteArray): ParsedMasterList {
+    /**
+     * Lève [InvalidMasterListException], et elle seule, si la liste est invalide : c'est la seule
+     * exception que `TrustStoreLoader.load` rattrape pour un import. BouncyCastle ne décode
+     * `signerInfos` et `certificates` qu'à la demande : une structure malformée y lève
+     * `IllegalArgumentException` ou `NoSuchElementException`, rendues ici en `NOT_CMS`.
+     */
+    fun parse(bytes: ByteArray): ParsedMasterList =
+        try {
+            parseCms(bytes)
+        } catch (e: InvalidMasterListException) {
+            throw e
+        } catch (e: Exception) {
+            throw InvalidMasterListException("NOT_CMS", e)
+        }
+
+    private fun parseCms(bytes: ByteArray): ParsedMasterList {
         val signed =
             try {
                 CMSSignedData(bytes)

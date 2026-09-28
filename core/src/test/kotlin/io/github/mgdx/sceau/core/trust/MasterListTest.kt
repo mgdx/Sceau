@@ -1,10 +1,15 @@
 package io.github.mgdx.sceau.core.trust
 
+import org.bouncycastle.asn1.ASN1EncodableVector
 import org.bouncycastle.asn1.ASN1Integer
 import org.bouncycastle.asn1.ASN1Sequence
+import org.bouncycastle.asn1.ASN1Set
+import org.bouncycastle.asn1.ASN1TaggedObject
 import org.bouncycastle.asn1.DERSequence
 import org.bouncycastle.asn1.DERSet
+import org.bouncycastle.asn1.DERTaggedObject
 import org.bouncycastle.asn1.cms.CMSObjectIdentifiers
+import org.bouncycastle.asn1.cms.ContentInfo
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
@@ -106,6 +111,22 @@ class MasterListTest {
         assertEquals(1, list.info.certificateCount)
     }
 
+    /**
+     * Fuzzing (ML-test) : bloc `certificates` du CMS qui ne contient pas de certificat.
+     * BouncyCastle ne le décode qu'à la demande et levait IllegalArgumentException, que
+     * `TrustStoreLoader.load` ne rattrape pas.
+     */
+    @Test
+    fun malformedCmsCertificateIsRejected() {
+        assertRejected("NOT_CMS", rebuiltSignedData(certificates = DERSet(DERSequence(ASN1Integer(1)))))
+    }
+
+    /** Fuzzing (ML-test) : `signerInfos` qui ne contient pas de SignerInfo (NoSuchElementException). */
+    @Test
+    fun malformedSignerInfoIsRejected() {
+        assertRejected("NOT_CMS", rebuiltSignedData(signerInfos = DERSet(DERSequence(ASN1Integer(1)))))
+    }
+
     @Test
     fun anchoredSignerIsRequiredForEmbeddedList() {
         val parsed = MasterListParser.parse(fixture.bytes)
@@ -164,6 +185,28 @@ class MasterListTest {
         val found = store.findBySubjectKeyId(ski!!)
         assertEquals(1, found.size)
         assertArrayEquals(list.certificates[1].encoded, found[0].certificate.encoded)
+    }
+
+    /**
+     * Master List de la fixture dont le SignedData est réassemblé élément par élément, avec
+     * [certificates] (bloc [0] IMPLICIT) ou [signerInfos] (dernier élément) remplacés.
+     */
+    private fun rebuiltSignedData(
+        certificates: ASN1Set? = null,
+        signerInfos: ASN1Set? = null,
+    ): ByteArray {
+        val signedData = ASN1Sequence.getInstance(ContentInfo.getInstance(fixture.bytes).content)
+        val elements = ASN1EncodableVector()
+        signedData.forEachIndexed { index, element ->
+            elements.add(
+                when {
+                    index == signedData.size() - 1 && signerInfos != null -> signerInfos
+                    element is ASN1TaggedObject && element.tagNo == 0 && certificates != null -> DERTaggedObject(false, 0, certificates)
+                    else -> element
+                },
+            )
+        }
+        return ContentInfo(CMSObjectIdentifiers.signedData, DERSequence(elements)).encoded
     }
 
     private fun indexOf(
