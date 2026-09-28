@@ -195,3 +195,18 @@ Aucun appel à `android.util.Log`, `println` ni `printStackTrace` dans le code d
 ### Réseau
 
 Le manifeste ne déclare aucune permission réseau (`android.permission.NFC` seulement, décision D7 pour la permission interne ajoutée par androidx.core). Aucune donnée ne peut quitter l'appareil ; le magasin de confiance n'est jamais mis à jour par le réseau.
+
+## 5. Tests
+
+### Fuzzing des parseurs
+
+`core/src/test/kotlin/…/core/fuzz/` contient un fuzzer mutationnel déterministe, sans dépendance (pas de Jazzer), lancé par `./gradlew :core:test`. Les graines sont des entrées valides produites par `:testchip` (EF.COM, EF.SOD, DG1 TD1 et TD3, DG2, DG11, DG12, DG14, DG15, EF.CardAccess, Master List de test) et la Master List embarquée. Les mutations touchent les octets (bit, octet, troncature, insertion, duplication ou suppression de bloc) et l'arbre TLV/DER (longueur gonflée, réduite, en forme longue sur 4 octets ou plus, indéfinie, imbrication profonde, tag inattendu, enfants dupliqués ou permutés, valeur remplacée) ; le contenu signé est aussi muté puis re-signé (LDSSecurityObject, `CscaMasterList`). Chaque cible vérifie le contrat de son appelant réel : résultat ou exception attendue, jamais d'`Error` (mémoire, pile), de délai dépassé (2 s par entrée), ni de SOD_SIGNATURE, DG_HASHES ou AA « OK » pour une entrée mutée dans sa partie signée.
+
+Le nombre d'itérations par défaut tient l'ensemble sous 30 s. Mode long, reproduction et délai (`SCEAU_FUZZ_TIMEOUT_MILLIS`), par variables d'environnement (les `-D` de `./gradlew` n'atteignent pas la JVM des tests ; les propriétés système `sceau.fuzz.*` restent lues, pour un lancement depuis l'IDE) :
+
+```bash
+SCEAU_FUZZ_ITERATIONS=200000 ./gradlew :core:test --tests "io.github.mgdx.sceau.core.fuzz.*" --rerun   # mode long
+SCEAU_FUZZ_SEED=0x5cea2026 SCEAU_FUZZ_INDEX=736 ./gradlew :core:test --tests "…FuzzTest.comDataGroups" --rerun  # une itération
+```
+
+Un échec donne la cible, la graine, l'index et la liste des mutations, jamais les octets ; les graines signées sont resignées de façon déterministe (ECDSA RFC 6979, heure de signature fixe) pour que graine et index suffisent à le rejouer. Les échecs sont regroupés par signature (exception et ligne du projet). Une entrée minimale devient un test de non-régression ; un bogue non encore corrigé reste dans `FuzzRegressionTest`, marqué `@Ignore`.
