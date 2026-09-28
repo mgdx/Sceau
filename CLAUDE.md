@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Jalons atteints (SPEC §11) : Socle, Lecture, Vérification et l'essentiel des Finitions (DG11/DG12, écran Magasin de confiance et import, À propos, effacement mémoire, `FLAG_SECURE`, traductions en-US). La lecture réelle d'un passeport français a été validée sur Fairphone 3 le 2026-09-25. Reste le jalon Publication (revue sécurité, plan de test complet sur appareil, première release, soumission F-Droid).
 
-`SPEC.md` est la source de vérité : lis-le en entier avant toute modification. Tout écart est consigné et justifié dans `docs/decisions.md` (D1 à D24 à ce jour). La documentation vit dans `docs/` : `architecture.md`, `protocol.md` (séquence ICAO réelle, délais, codes d'erreur), `trust-store.md`, `dependencies.md`, `test-plan.md`, `decisions.md`.
+`SPEC.md` est la source de vérité : lis-le en entier avant toute modification. Tout écart est consigné et justifié dans `docs/decisions.md` (D1 à D25 à ce jour). La documentation vit dans `docs/` : `architecture.md`, `protocol.md` (séquence ICAO réelle, délais, codes d'erreur), `trust-store.md`, `dependencies.md`, `test-plan.md`, `decisions.md`.
 
 ## Ce qu'est Sceau
 
@@ -29,6 +29,8 @@ Le décodeur JPEG 2000 (OpenJPEG) est un sous-module git : après un clone, `git
 ./gradlew ktlintFormat                                                  # reformate selon .editorconfig
 ./gradlew check                                                         # tout ce qui bloque la CI
 ./gradlew :app:dependencies --configuration releaseRuntimeClasspath     # audit des dépendances
+scripts/check-reproducible.sh                                           # double build release, APK identiques octet pour octet (D25)
+scripts/update-trust-store.sh --ants-dir DOSSIER [--apply]              # vérifie les sources du magasin de confiance (à chaque release)
 app/src/main/cpp/test/run-host-tests.sh                                 # tests hôte du décodeur JPEG 2000 (ASan, UBSan)
 ```
 
