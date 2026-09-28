@@ -223,3 +223,11 @@ Format : date, contexte, décision, justification, écart à la SPEC concerné.
 - **Décision** : le rapport n'implémente aucune sérialisation. La mention « sérialisable pour les tests » est retirée de SPEC §6.2.
 - **Justification** : les tests de `:core` et de `:app` construisent leurs cas avec la PKI factice et la puce simulée de `:testchip` (D17) et vérifient le rapport en mémoire ; aucun n'a eu besoin de le sérialiser. Ne pas offrir de sérialisation supprime aussi un chemin par lequel des données lues pourraient être écrites (SPEC §8).
 - **Écart à la SPEC** : aucun désormais (SPEC §6.2 mise à jour le 2026-09-25).
+
+## D22. Nombre et taille cumulée des Master Lists importées limités
+
+- **Date** : 2026-09-28.
+- **Contexte** : audit de sécurité du 2026-09-25, recommandations de durcissement (« limiter le nombre de Master Lists importées »). Toutes les Master Lists importées sont relues et fusionnées au préchargement du magasin (D16). Chaque fichier est déjà borné à 20 Mo à la lecture (`MAX_MASTER_LIST_BYTES`, SPEC §5.4), mais rien ne bornait leur nombre, donc ni la mémoire ni le temps de démarrage.
+- **Décision** : `ImportLimits` (`app/.../trust/ImportLimits.kt`) fixe **10 Master Lists importées au plus** et une **taille cumulée de 40 Mo au plus** (deux fois la limite par fichier, qu'elle réutilise). La règle est vérifiée avant l'analyse du fichier, pour ne pas demander de confirmer un import voué à l'échec, puis de nouveau sous verrou au moment de l'écriture (`TrustStoreRepository.import`). Au-delà, l'import est refusé par un message qui invite à supprimer les certificats importés. Une liste déjà présente (même empreinte SHA-256, donc même nom de fichier) reste sans effet et ne compte pas, même quand les limites sont atteintes. `:core` n'est pas modifié.
+- **Justification** : une Master List réelle pèse de l'ordre du mégaoctet (celle du BSI embarquée : 0,9 Mo) et couvre déjà des dizaines d'émetteurs ; dix listes suffisent largement (quelques autorités publiant une Master List, plus leurs mises à jour), et 40 Mo représentent plus de quarante fois la liste du BSI. Ces bornes gardent le préchargement dans la mémoire d'un téléphone ancien (Fairphone 3) quels que soient les fichiers choisis par l'utilisateur.
+- **Écart à la SPEC** : aucun ; précise SPEC §5.4 (import de Master List).

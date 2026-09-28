@@ -38,19 +38,43 @@ class TrustStoreRepository(
     /** Parse et vérifie une Master List sans l'importer (pour afficher l'empreinte du signataire). */
     suspend fun preview(bytes: ByteArray): MasterList = withContext(Dispatchers.IO) { TrustStores.parseMasterList(bytes) }
 
-    /** Importe une Master List déjà prévisualisée et confirmée ; invalide le cache. */
+    /**
+     * Vérifie, avant toute analyse, que [bytes] pourrait être importée sans dépasser les limites
+     * de [ImportLimits] ; lève [ImportLimitException] sinon.
+     */
+    suspend fun checkImportAllowed(bytes: ByteArray): Unit =
+        withContext(Dispatchers.IO) {
+            mutex.withLock { requireAllowed(bytes) }
+        }
+
+    /**
+     * Importe une Master List déjà prévisualisée et confirmée ; invalide le cache. Une liste déjà
+     * importée est laissée telle quelle ; au-delà des limites de [ImportLimits], lève
+     * [ImportLimitException].
+     */
     suspend fun import(bytes: ByteArray): Unit =
         withContext(Dispatchers.IO) {
             // Revérifiée ici : l'appelant ne doit pas pouvoir écrire une liste invalide.
             TrustStores.parseMasterList(bytes)
             mutex.withLock {
-                val dir = directory
-                if (!dir.isDirectory && !dir.mkdirs()) throw IOException("TRUST_DIR")
-                val target = File(dir, importFileName(bytes))
-                if (!target.exists()) writeAtomically(dir, target, bytes)
-                cached = null
+                if (requireAllowed(bytes) == ImportDecision.ALLOWED) {
+                    val dir = directory
+                    if (!dir.isDirectory && !dir.mkdirs()) throw IOException("TRUST_DIR")
+                    writeAtomically(dir, File(dir, importFileName(bytes)), bytes)
+                    cached = null
+                }
             }
         }
+
+    /** Décision d'import de [bytes] ; lève [ImportLimitException] si l'import est refusé. */
+    private fun requireAllowed(bytes: ByteArray): ImportDecision {
+        val existing = importedFiles().map { ImportedFile(it.name, it.length()) }
+        val decision = ImportLimits.decide(existing, importFileName(bytes), bytes.size.toLong())
+        if (decision == ImportDecision.TOO_MANY || decision == ImportDecision.TOO_LARGE_TOTAL) {
+            throw ImportLimitException(decision)
+        }
+        return decision
+    }
 
     /** Supprime toutes les Master Lists importées ; invalide le cache. */
     suspend fun clearImported(): Unit =
@@ -63,12 +87,13 @@ class TrustStoreRepository(
             }
         }
 
-    private fun readImported(): List<ByteArray> =
+    private fun readImported(): List<ByteArray> = importedFiles().sortedBy { it.name }.map { it.readBytes() }
+
+    private fun importedFiles(): List<File> =
         directory
             .listFiles { file -> file.isFile && file.name.endsWith(IMPORT_EXTENSION) }
             .orEmpty()
-            .sortedBy { it.name }
-            .map { it.readBytes() }
+            .toList()
 
     /** Écrit dans un fichier temporaire du même dossier, synchronise, puis renomme. */
     private fun writeAtomically(
