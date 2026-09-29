@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">Om</string>
+    <string name="about_back">Tilbake</string>
+    <string name="about_tagline">Avlesing og frakoblet verifisering av brikken i ICAO 9303-identitetsdokumenter.</string>
+    <string name="about_version">Versjon %1$s</string>
+    <string name="about_version_unknown">Ukjent versjon</string>
+
+    <string name="about_section_license">Lisens og kildekode</string>
+    <string name="about_license">Fri programvare distribuert under GNU GPL versjon 3 eller senere.</string>
+    <string name="about_open_repository">Se kildekoden</string>
+    <string name="about_no_browser">Ingen app kan åpne denne lenken.</string>
+
+    <string name="about_section_trust">Innebygd tillitslager</string>
+    <string name="about_trust_ants_only">Franske CSCA-er fra ANTS (pass og ID-kort).</string>
+    <string name="about_trust_ants_and_bsi">Franske CSCA-er fra ANTS og tysk Master List fra BSI.</string>
+    <string name="about_trust_master_list_date">Master List signert %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">Signeringsdatoen for Master List er ikke oppgitt.</string>
+    <string name="about_trust_bsi_notice">Master List fra BSI (det tyske forbundskontoret for informasjonssikkerhet) videreformidles uendret, uten samarbeid med eller godkjenning fra BSI.</string>
+    <string name="about_trust_national">Sertifikater publisert av følgende stater for egne dokumenter: %1$s.</string>
+    <string name="about_trust_ogl_notice">Inneholder informasjon fra britisk offentlig sektor publisert under Open Government Licence v3.0.</string>
+    <string name="about_trust_loading">Laster inn …</string>
+    <string name="about_trust_error">Kan ikke laste inn tillitslageret.</string>
+
+    <string name="about_section_limits">Begrensninger</string>
+    <string name="about_limit_unknown_issuer">Et dokument fra et utstedende land som ikke finnes i tillitslageret, får resultatet «Ukjent utsteder», ikke «Mislyktes». Å importere en nyere Master List kan løse dette.</string>
+    <string name="about_limit_revocation">Tilbakekallingslister blir ikke sjekket: de krever nettverk, og Sceau bruker aldri nettverket.</string>
+
+    <string name="about_section_usage">Bruksvilkår</string>
+    <string name="about_usage_holder">Avlesingen forutsetter at innehaveren selv viser frem dokumentet og samtykker.</string>
+    <string name="about_usage_biometrics">Bildet blir en biometrisk opplysning etter GDPR (personvernforordningen) hvis det brukes til automatisk ansiktssammenligning. Sceau gjør ingen slik sammenligning og må ikke brukes til dette uten eget rettslig grunnlag.</string>
+    <string name="about_usage_privacy">Ingen avleste data lagres eller sendes: alt slettes fra minnet når du forlater resultatet eller appen går i bakgrunnen.</string>
+</resources>

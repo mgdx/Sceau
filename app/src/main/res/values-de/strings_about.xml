@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">Über</string>
+    <string name="about_back">Zurück</string>
+    <string name="about_tagline">Offline-Auslesen und -Prüfen des Chips von Ausweisdokumenten nach ICAO 9303.</string>
+    <string name="about_version">Version %1$s</string>
+    <string name="about_version_unknown">Version unbekannt</string>
+
+    <string name="about_section_license">Lizenz und Quellcode</string>
+    <string name="about_license">Freie Software, lizenziert unter der GNU GPL Version 3 oder höher.</string>
+    <string name="about_open_repository">Quellcode ansehen</string>
+    <string name="about_no_browser">Keine App kann diesen Link öffnen.</string>
+
+    <string name="about_section_trust">Integrierter Vertrauensspeicher</string>
+    <string name="about_trust_ants_only">Französische CSCA der ANTS (Reisepässe und Personalausweise).</string>
+    <string name="about_trust_ants_and_bsi">Französische CSCA der ANTS und deutsche Master List des BSI.</string>
+    <string name="about_trust_master_list_date">Master List signiert am %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">Signaturdatum der Master List nicht angegeben.</string>
+    <string name="about_trust_bsi_notice">Die Master List des BSI (Bundesamt für Sicherheit in der Informationstechnik) wird unverändert weitergegeben, ohne Mitwirkung oder Billigung des BSI.</string>
+    <string name="about_trust_national">Von folgenden Staaten für ihre eigenen Dokumente veröffentlichte Zertifikate: %1$s.</string>
+    <string name="about_trust_ogl_notice">Enthält Informationen des britischen öffentlichen Sektors, veröffentlicht unter der Open Government Licence v3.0.</string>
+    <string name="about_trust_loading">Wird geladen…</string>
+    <string name="about_trust_error">Vertrauensspeicher kann nicht geladen werden.</string>
+
+    <string name="about_section_limits">Einschränkungen</string>
+    <string name="about_limit_unknown_issuer">Ist der Ausstellungsstaat eines Dokuments nicht im Vertrauensspeicher enthalten, lautet das Ergebnis „Unbekannter Aussteller“, nicht „Fehlgeschlagen“. Der Import einer neueren Master List kann Abhilfe schaffen.</string>
+    <string name="about_limit_revocation">Sperrlisten werden nicht abgefragt: Dafür wäre eine Netzwerkverbindung nötig, die Sceau nie verwendet.</string>
+
+    <string name="about_section_usage">Nutzungsrahmen</string>
+    <string name="about_usage_holder">Das Auslesen setzt voraus, dass die Inhaberin oder der Inhaber das Dokument selbst vorlegt und einwilligt.</string>
+    <string name="about_usage_biometrics">Das Foto wird zu einem biometrischen Datum im Sinne der DSGVO, wenn es für einen automatisierten Gesichtsabgleich verwendet wird. Sceau führt keinen solchen Abgleich durch und darf ohne eigene Rechtsgrundlage nicht dafür verwendet werden.</string>
+    <string name="about_usage_privacy">Ausgelesene Daten werden weder gespeichert noch gesendet: Beim Verlassen des Ergebnisses oder wenn die App in den Hintergrund wechselt, wird alles aus dem Arbeitsspeicher gelöscht.</string>
+</resources>

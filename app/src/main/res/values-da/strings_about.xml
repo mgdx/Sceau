@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">Om</string>
+    <string name="about_back">Tilbage</string>
+    <string name="about_tagline">Offline læsning og kontrol af chippen i ICAO 9303-identitetsdokumenter.</string>
+    <string name="about_version">Version %1$s</string>
+    <string name="about_version_unknown">Ukendt version</string>
+
+    <string name="about_section_license">Licens og kildekode</string>
+    <string name="about_license">Fri software, der distribueres under GNU GPL version 3 eller nyere.</string>
+    <string name="about_open_repository">Se kildekoden</string>
+    <string name="about_no_browser">Ingen app kan åbne dette link.</string>
+
+    <string name="about_section_trust">Indbygget tillidslager</string>
+    <string name="about_trust_ants_only">Franske CSCA-certifikater fra ANTS (pas og identitetskort).</string>
+    <string name="about_trust_ants_and_bsi">Franske CSCA-certifikater fra ANTS og den tyske Master List fra BSI.</string>
+    <string name="about_trust_master_list_date">Master List underskrevet den %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">Master Listens underskriftsdato er ikke angivet.</string>
+    <string name="about_trust_bsi_notice">BSI’s Master List (Bundesamt für Sicherheit in der Informationstechnik, den tyske forbundsmyndighed for it-sikkerhed) videredistribueres uændret, uden samarbejde med eller godkendelse fra BSI.</string>
+    <string name="about_trust_national">Certifikater offentliggjort af følgende stater til deres egne dokumenter: %1$s.</string>
+    <string name="about_trust_ogl_notice">Indeholder oplysninger fra den britiske offentlige sektor, offentliggjort under Open Government Licence v3.0.</string>
+    <string name="about_trust_loading">Indlæser…</string>
+    <string name="about_trust_error">Tillidslageret kunne ikke indlæses.</string>
+
+    <string name="about_section_limits">Begrænsninger</string>
+    <string name="about_limit_unknown_issuer">Et dokument, hvis udstedende land ikke findes i tillidslageret, får resultatet »Ukendt udsteder«, ikke »Mislykkedes«. Import af en nyere Master List kan afhjælpe det.</string>
+    <string name="about_limit_revocation">Tilbagekaldelseslister kontrolleres ikke: de kræver netværk, som Sceau aldrig bruger.</string>
+
+    <string name="about_section_usage">Brug</string>
+    <string name="about_usage_holder">Læsningen forudsætter, at indehaveren selv fremviser sit dokument og giver samtykke.</string>
+    <string name="about_usage_biometrics">Fotoet bliver til biometriske data i GDPR’s forstand, hvis det bruges til automatisk ansigtssammenligning. Sceau foretager ingen sådan sammenligning og må ikke bruges til det uden et særligt retsgrundlag.</string>
+    <string name="about_usage_privacy">Ingen læste data gemmes eller sendes: alt slettes fra hukommelsen, når du forlader resultatet, eller når appen går i baggrunden.</string>
+</resources>

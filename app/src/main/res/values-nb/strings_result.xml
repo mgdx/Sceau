@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="result_title">Resultat</string>
+    <string name="result_clear">Tøm</string>
+
+    <!-- Verdict -->
+    <string name="result_verdict_authentic">Ekte</string>
+    <string name="result_verdict_authentic_explanation">Utstederens signatur er gyldig, og brikken har bevist at den ikke er en kopi.</string>
+    <string name="result_verdict_chip_unverified">Gyldig signatur, brikken er ikke verifisert</string>
+    <string name="result_verdict_chip_unverified_explanation">Dataene er signert av utstederen, men brikken kan ikke bevise at den er originalen: den kan være en klone.</string>
+    <string name="result_verdict_unknown_issuer">Ukjent utsteder</string>
+    <string name="result_verdict_unknown_issuer_explanation">Utstederens sertifikat finnes ikke i tillitslageret. Dataene vises, men ingenting er garantert. Å importere en nyere Master List kan gjøre det mulig å verifisere dette dokumentet.</string>
+    <string name="result_verdict_failed">Mislyktes</string>
+    <string name="result_verdict_failed_explanation">Minst én kontroll mislyktes: dette dokumentet skal ikke anses som ekte.</string>
+    <string name="result_verdict_imported_anchor">Verifisert med et sertifikat du har importert</string>
+
+    <!-- Photo -->
+    <string name="result_photo_description">Bilde av innehaveren</string>
+    <string name="result_photo_unavailable">Bildet er uleselig eller mangler</string>
+    <string name="result_photo_fullscreen">Vis bildet i fullskjerm</string>
+    <string name="result_photo_close">Lukk</string>
+    <string name="result_image_front">Bilde av forsiden</string>
+    <string name="result_image_rear">Bilde av baksiden</string>
+    <string name="result_image_unavailable">Uleselig bilde</string>
+
+    <!-- Identité -->
+    <string name="result_section_identity">Identitet</string>
+    <string name="result_expired">Dokumentet er utløpt</string>
+    <string name="result_field_surname">Etternavn</string>
+    <string name="result_field_given_names">Fornavn</string>
+    <string name="result_field_sex">Kjønn</string>
+    <string name="result_field_birth_date">Fødselsdato</string>
+    <string name="result_field_nationality">Nasjonalitet</string>
+    <string name="result_field_document_type">Dokumenttype</string>
+    <string name="result_field_document_number">Dokumentnummer</string>
+    <string name="result_field_issuing_state">Utstedende stat</string>
+    <string name="result_field_expiry_date">Utløpsdato</string>
+    <string name="result_sex_male">Mann</string>
+    <string name="result_sex_female">Kvinne</string>
+    <string name="result_sex_unspecified">Ikke oppgitt</string>
+    <string name="result_document_passport">Pass</string>
+    <string name="result_document_identity_card">ID-kort</string>
+    <string name="result_document_other">Annet reisedokument</string>
+    <string name="result_value_with_code">%1$s (%2$s)</string>
+    <string name="result_unknown_value">Ukjent</string>
+
+    <!-- Pays spéciaux ICAO -->
+    <string name="result_country_united_nations">De forente nasjoner</string>
+    <string name="result_country_un_agency">FNs særorganisasjon</string>
+    <string name="result_country_un_kosovo">Kosovo (UNMIK)</string>
+    <string name="result_country_stateless">Statsløs</string>
+    <string name="result_country_refugee">Flyktning (1951-konvensjonen)</string>
+    <string name="result_country_refugee_other">Flyktning</string>
+    <string name="result_country_unspecified">Nasjonalitet ikke oppgitt</string>
+
+    <!-- Données complémentaires -->
+    <string name="result_section_additional">Tilleggsopplysninger</string>
+    <string name="result_field_full_name">Fullt navn</string>
+    <string name="result_field_other_names">Andre navn</string>
+    <string name="result_field_personal_number">Personnummer</string>
+    <string name="result_field_full_birth_date">Fullstendig fødselsdato</string>
+    <string name="result_field_place_of_birth">Fødested</string>
+    <string name="result_field_address">Adresse</string>
+    <string name="result_field_telephone">Telefon</string>
+    <string name="result_field_profession">Yrke</string>
+    <string name="result_field_title">Tittel</string>
+    <string name="result_field_personal_summary">Personlig sammendrag</string>
+    <string name="result_field_other_td_numbers">Andre gyldige reisedokumenter</string>
+    <string name="result_field_custody">Opplysninger om foreldreansvar</string>
+    <string name="result_field_issuing_authority">Utstedende myndighet</string>
+    <string name="result_field_issue_date">Utstedelsesdato</string>
+    <string name="result_field_other_persons">Andre personer nevnt</string>
+    <string name="result_field_endorsements">Påtegninger og merknader</string>
+    <string name="result_field_tax_exit">Skatte- eller utreiseplikter</string>
+    <string name="result_field_personalization_time">Personaliseringsdato</string>
+    <string name="result_field_personalization_device">Personaliseringssystemets nummer</string>
+
+    <!-- Vérifications -->
+    <string name="result_section_checks">Kontroller</string>
+    <string name="result_check_secure_channel">Sikker kanal opprettet</string>
+    <string name="result_check_sod_signature">Gyldig SOD-signatur</string>
+    <string name="result_check_chain">Sertifikatkjede</string>
+    <string name="result_check_ds_validity">Gyldighet for DS-sertifikatet</string>
+    <string name="result_check_dg_hashes">Fingeravtrykk for datagruppene</string>
+    <string name="result_check_chip_authentication">Chip Authentication (DG14)</string>
+    <string name="result_check_active_authentication">Active Authentication (DG15)</string>
+    <string name="result_status_ok">Vellykket</string>
+    <string name="result_status_failed">Mislyktes</string>
+    <string name="result_status_not_available">Ikke tilgjengelig</string>
+    <string name="result_status_unsupported">Algoritmen støttes ikke</string>
+    <string name="result_check_expand">Vis detaljer</string>
+    <string name="result_check_collapse">Skjul detaljer</string>
+
+    <!-- Détail des vérifications -->
+    <string name="result_detail_protocol">Protokoll: %1$s</string>
+    <string name="result_detail_ca_method">Metode: %1$s</string>
+    <string name="result_detail_ca_method_dg14">Chip Authentication med nøkkelen fra DG14</string>
+    <string name="result_detail_ca_method_pace_cam">PACE-CAM, under åpningen av kanalen, med nøkkelen fra EF.CardSecurity</string>
+    <string name="result_detail_algorithm">Signaturalgoritme: %1$s</string>
+    <string name="result_detail_csca">CSCA: %1$s</string>
+    <string name="result_detail_csca_none">Ingen CSCA i lageret samsvarer.</string>
+    <string name="result_detail_country">Land: %1$s</string>
+    <string name="result_detail_country_mismatch">Land samsvarer ikke: sertifiseringsinstans %1$s, signatarens sertifikat %2$s, dokument %3$s</string>
+    <string name="result_detail_source">Kilde: %1$s</string>
+    <string name="result_detail_source_ants">sertifikater fra ANTS</string>
+    <string name="result_detail_source_national">sertifikater publisert av den utstedende staten</string>
+    <string name="result_detail_source_embedded">innebygd Master List</string>
+    <string name="result_detail_source_imported">importert Master List</string>
+    <string name="result_detail_ds_subject">DS-sertifikat: %1$s</string>
+    <string name="result_detail_links">Lenkesertifikater i kjeden:</string>
+    <string name="result_detail_link_item">• %1$s</string>
+    <string name="result_detail_links_none">Ingen lenkesertifikater i kjeden.</string>
+    <string name="result_detail_ds_missing">DS-sertifikatet finnes verken i SOD eller i tillitslageret.</string>
+    <string name="result_detail_ds_period">Gyldighetsperiode for DS: %1$s til %2$s</string>
+    <string name="result_detail_issuance">Utstedelsesdato: %1$s (%2$s)</string>
+    <string name="result_detail_issuance_no_source">Utstedelsesdato: %1$s</string>
+    <string name="result_detail_issuance_unknown">Ukjent utstedelsesdato.</string>
+    <string name="result_detail_issuance_dg12">lest fra DG12</string>
+    <string name="result_detail_issuance_sod">signeringsdato for SOD</string>
+    <string name="result_detail_issuance_estimated">anslått</string>
+    <string name="result_detail_digest_algorithm">Hashalgoritme: %1$s</string>
+    <string name="result_detail_dg_checked">Kontrollerte datagrupper: %1$s</string>
+    <string name="result_detail_dg_checked_none">Ingen datagrupper kontrollert.</string>
+    <string name="result_detail_dg_mismatched">Fingeravtrykk som ikke samsvarer: %1$s</string>
+    <string name="result_detail_dg_all_match">Alle fingeravtrykk samsvarer.</string>
+    <string name="result_detail_dg_missing">Datagrupper som er oppgitt, men ikke levert av brikken: %1$s</string>
+    <string name="result_detail_unsupported">Algoritmen støttes ikke: %1$s</string>
+    <string name="result_detail_error">Teknisk feil: %1$s</string>
+    <string name="result_detail_no_dg14">Dokumentet inneholder ikke DG14: brikken tilbyr ikke denne kontrollen.</string>
+    <string name="result_detail_no_dg15">Dokumentet inneholder ikke DG15: brikken tilbyr ikke denne kontrollen.</string>
+    <string name="result_detail_not_reached">Trinnet ble ikke utført.</string>
+    <string name="result_detail_none">Ingen flere detaljer.</string>
+    <string name="result_demo_banner">Simulert dokument – demo</string>
+</resources>

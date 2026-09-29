@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="result_title">Resultaat</string>
+    <string name="result_clear">Wissen</string>
+
+    <!-- Verdict -->
+    <string name="result_verdict_authentic">Echt</string>
+    <string name="result_verdict_authentic_explanation">De handtekening van de uitgever is geldig en de chip heeft bewezen dat hij geen kopie is.</string>
+    <string name="result_verdict_chip_unverified">Handtekening geldig, chip niet gecontroleerd</string>
+    <string name="result_verdict_chip_unverified_explanation">De gegevens zijn door de uitgever ondertekend, maar de chip kan niet bewijzen dat hij het origineel is: het kan een kloon zijn.</string>
+    <string name="result_verdict_unknown_issuer">Onbekende uitgever</string>
+    <string name="result_verdict_unknown_issuer_explanation">Het certificaat van de uitgever staat niet in de vertrouwensopslag. De gegevens worden getoond, maar niets is gegarandeerd. Met een recentere Master List kan dit document mogelijk wel worden gecontroleerd.</string>
+    <string name="result_verdict_failed">Mislukt</string>
+    <string name="result_verdict_failed_explanation">Minstens één controle is mislukt: dit document mag niet als echt worden beschouwd.</string>
+    <string name="result_verdict_imported_anchor">Gecontroleerd met een certificaat dat je hebt geïmporteerd</string>
+
+    <!-- Photo -->
+    <string name="result_photo_description">Foto van de houder</string>
+    <string name="result_photo_unavailable">Foto onleesbaar of ontbreekt</string>
+    <string name="result_photo_fullscreen">Foto op volledig scherm tonen</string>
+    <string name="result_photo_close">Sluiten</string>
+    <string name="result_image_front">Afbeelding voorkant</string>
+    <string name="result_image_rear">Afbeelding achterkant</string>
+    <string name="result_image_unavailable">Afbeelding onleesbaar</string>
+
+    <!-- Identité -->
+    <string name="result_section_identity">Identiteit</string>
+    <string name="result_expired">Document verlopen</string>
+    <string name="result_field_surname">Naam</string>
+    <string name="result_field_given_names">Voornamen</string>
+    <string name="result_field_sex">Geslacht</string>
+    <string name="result_field_birth_date">Geboortedatum</string>
+    <string name="result_field_nationality">Nationaliteit</string>
+    <string name="result_field_document_type">Soort document</string>
+    <string name="result_field_document_number">Documentnummer</string>
+    <string name="result_field_issuing_state">Staat van afgifte</string>
+    <string name="result_field_expiry_date">Vervaldatum</string>
+    <string name="result_sex_male">Man</string>
+    <string name="result_sex_female">Vrouw</string>
+    <string name="result_sex_unspecified">Niet vermeld</string>
+    <string name="result_document_passport">Paspoort</string>
+    <string name="result_document_identity_card">Identiteitskaart</string>
+    <string name="result_document_other">Ander reisdocument</string>
+    <string name="result_value_with_code">%1$s (%2$s)</string>
+    <string name="result_unknown_value">Onbekend</string>
+
+    <!-- Pays spéciaux ICAO -->
+    <string name="result_country_united_nations">Verenigde Naties</string>
+    <string name="result_country_un_agency">Gespecialiseerde organisatie van de Verenigde Naties</string>
+    <string name="result_country_un_kosovo">Kosovo (UNMIK)</string>
+    <string name="result_country_stateless">Staatloos</string>
+    <string name="result_country_refugee">Vluchteling (Verdrag van 1951)</string>
+    <string name="result_country_refugee_other">Vluchteling</string>
+    <string name="result_country_unspecified">Nationaliteit niet vermeld</string>
+
+    <!-- Données complémentaires -->
+    <string name="result_section_additional">Aanvullende gegevens</string>
+    <string name="result_field_full_name">Volledige naam</string>
+    <string name="result_field_other_names">Andere namen</string>
+    <string name="result_field_personal_number">Persoonsnummer</string>
+    <string name="result_field_full_birth_date">Volledige geboortedatum</string>
+    <string name="result_field_place_of_birth">Geboorteplaats</string>
+    <string name="result_field_address">Adres</string>
+    <string name="result_field_telephone">Telefoon</string>
+    <string name="result_field_profession">Beroep</string>
+    <string name="result_field_title">Titel</string>
+    <string name="result_field_personal_summary">Persoonlijke samenvatting</string>
+    <string name="result_field_other_td_numbers">Andere geldige reisdocumenten</string>
+    <string name="result_field_custody">Gegevens over gezag</string>
+    <string name="result_field_issuing_authority">Instantie van afgifte</string>
+    <string name="result_field_issue_date">Datum van afgifte</string>
+    <string name="result_field_other_persons">Andere vermelde personen</string>
+    <string name="result_field_endorsements">Aantekeningen en opmerkingen</string>
+    <string name="result_field_tax_exit">Belasting- of uitreisverplichtingen</string>
+    <string name="result_field_personalization_time">Datum van personalisatie</string>
+    <string name="result_field_personalization_device">Nummer van het personalisatiesysteem</string>
+
+    <!-- Vérifications -->
+    <string name="result_section_checks">Controles</string>
+    <string name="result_check_secure_channel">Beveiligd kanaal tot stand gebracht</string>
+    <string name="result_check_sod_signature">Handtekening van de SOD geldig</string>
+    <string name="result_check_chain">Certificaatketen</string>
+    <string name="result_check_ds_validity">Geldigheid van het DS-certificaat</string>
+    <string name="result_check_dg_hashes">Hashes van de gegevensgroepen</string>
+    <string name="result_check_chip_authentication">Chip Authentication (DG14)</string>
+    <string name="result_check_active_authentication">Active Authentication (DG15)</string>
+    <string name="result_status_ok">Geslaagd</string>
+    <string name="result_status_failed">Mislukt</string>
+    <string name="result_status_not_available">Niet beschikbaar</string>
+    <string name="result_status_unsupported">Algoritme niet ondersteund</string>
+    <string name="result_check_expand">Details tonen</string>
+    <string name="result_check_collapse">Details verbergen</string>
+
+    <!-- Détail des vérifications -->
+    <string name="result_detail_protocol">Protocol: %1$s</string>
+    <string name="result_detail_ca_method">Methode: %1$s</string>
+    <string name="result_detail_ca_method_dg14">Chip Authentication met de sleutel uit DG14</string>
+    <string name="result_detail_ca_method_pace_cam">PACE-CAM, tijdens het openen van het kanaal, met de sleutel uit EF.CardSecurity</string>
+    <string name="result_detail_algorithm">Handtekeningalgoritme: %1$s</string>
+    <string name="result_detail_csca">CSCA: %1$s</string>
+    <string name="result_detail_csca_none">Geen enkele CSCA in de opslag komt overeen.</string>
+    <string name="result_detail_country">Land: %1$s</string>
+    <string name="result_detail_country_mismatch">Landen komen niet overeen: certificeringsinstantie %1$s, certificaat van de ondertekenaar %2$s, document %3$s</string>
+    <string name="result_detail_source">Bron: %1$s</string>
+    <string name="result_detail_source_ants">certificaten van het ANTS</string>
+    <string name="result_detail_source_national">certificaten gepubliceerd door de staat van afgifte</string>
+    <string name="result_detail_source_embedded">ingebouwde Master List</string>
+    <string name="result_detail_source_imported">geïmporteerde Master List</string>
+    <string name="result_detail_ds_subject">DS-certificaat: %1$s</string>
+    <string name="result_detail_links">Doorlopen koppelingscertificaten:</string>
+    <string name="result_detail_link_item">• %1$s</string>
+    <string name="result_detail_links_none">Geen koppelingscertificaat doorlopen.</string>
+    <string name="result_detail_ds_missing">Het DS-certificaat staat niet in de SOD en ook niet in de vertrouwensopslag.</string>
+    <string name="result_detail_ds_period">Geldigheidsperiode van het DS: van %1$s tot %2$s</string>
+    <string name="result_detail_issuance">Datum van afgifte: %1$s (%2$s)</string>
+    <string name="result_detail_issuance_no_source">Datum van afgifte: %1$s</string>
+    <string name="result_detail_issuance_unknown">Datum van afgifte onbekend.</string>
+    <string name="result_detail_issuance_dg12">gelezen uit DG12</string>
+    <string name="result_detail_issuance_sod">ondertekeningsdatum van de SOD</string>
+    <string name="result_detail_issuance_estimated">geschat</string>
+    <string name="result_detail_digest_algorithm">Hash-algoritme: %1$s</string>
+    <string name="result_detail_dg_checked">Gecontroleerde gegevensgroepen: %1$s</string>
+    <string name="result_detail_dg_checked_none">Geen gegevensgroep gecontroleerd.</string>
+    <string name="result_detail_dg_mismatched">Afwijkende hashes: %1$s</string>
+    <string name="result_detail_dg_all_match">Alle hashes komen overeen.</string>
+    <string name="result_detail_dg_missing">Gegevensgroepen aangekondigd maar niet door de chip geleverd: %1$s</string>
+    <string name="result_detail_unsupported">Algoritme niet ondersteund: %1$s</string>
+    <string name="result_detail_error">Technische fout: %1$s</string>
+    <string name="result_detail_no_dg14">Het document bevat geen DG14: de chip biedt deze controle niet aan.</string>
+    <string name="result_detail_no_dg15">Het document bevat geen DG15: de chip biedt deze controle niet aan.</string>
+    <string name="result_detail_not_reached">Stap niet uitgevoerd.</string>
+    <string name="result_detail_none">Geen verdere details.</string>
+    <string name="result_demo_banner">Gesimuleerd document — demonstratie</string>
+</resources>

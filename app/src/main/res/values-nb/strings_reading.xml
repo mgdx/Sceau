@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reading_title">Avlesing av dokumentet</string>
+    <string name="reading_prompt">Hold dokumentet mot baksiden av telefonen, og ikke flytt det</string>
+    <string name="reading_step_connect">Kobler til brikken</string>
+    <string name="reading_step_secure_channel">Åpner sikker kanal (PACE eller BAC)</string>
+    <string name="reading_step_read_data">Leser data</string>
+    <string name="reading_step_verify_signature">Verifiserer signaturen</string>
+    <string name="reading_step_verify_chip">Verifiserer brikken</string>
+    <string name="reading_step_pending">venter</string>
+    <string name="reading_step_in_progress">pågår</string>
+    <string name="reading_step_done">fullført</string>
+    <string name="reading_error_title">Avlesingen ble avbrutt</string>
+    <string name="reading_slow_chip">Brikken i dokumentet lar deg vente, ofte etter mislykkede forsøk. Hold dokumentet i ro. Det kan ta opptil ett minutt.</string>
+    <string name="reading_error_access_denied">CAN eller MRZ-opplysningene er feil. Kontroller nummeret og datoene du har skrevet inn, og prøv igjen. Hvert mislykket forsøk kan forlenge ventetiden brikken krever før den svarer.</string>
+    <string name="reading_error_connection_lost">Dokumentet ble fjernet for tidlig. Hold det i ro mot telefonen til avlesingen er ferdig.</string>
+    <string name="reading_error_not_icao">Dette dokumentet følger ikke ICAO 9303-standarden: brikken kan ikke leses av.</string>
+    <string name="reading_error_timeout">Tidsavbrudd: brikken svarte ikke i tide. Prøv igjen, og hold dokumentet i ro.</string>
+    <string name="reading_error_can_without_pace">Dette dokumentet kan ikke leses av med CAN. Bruk fanen Pass og skriv inn MRZ-opplysningene.</string>
+    <string name="reading_error_unexpected">Det oppstod en uventet feil.</string>
+    <string name="reading_error_code">Feilkode: %1$s</string>
+    <string name="reading_retry">Prøv igjen</string>
+    <string name="reading_cancel">Avbryt</string>
+</resources>

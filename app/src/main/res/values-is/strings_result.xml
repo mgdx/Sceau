@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="result_title">Niðurstaða</string>
+    <string name="result_clear">Hreinsa</string>
+
+    <!-- Verdict -->
+    <string name="result_verdict_authentic">Ósvikið</string>
+    <string name="result_verdict_authentic_explanation">Undirskrift útgefandans er gild og kubburinn hefur sannað að hann er ekki afrit.</string>
+    <string name="result_verdict_chip_unverified">Gild undirskrift, kubbur ekki sannprófaður</string>
+    <string name="result_verdict_chip_unverified_explanation">Útgefandinn undirritaði gögnin, en kubburinn getur ekki sannað að hann sé upprunalegur: hann gæti verið eftirlíking.</string>
+    <string name="result_verdict_unknown_issuer">Óþekktur útgefandi</string>
+    <string name="result_verdict_unknown_issuer_explanation">Vottorð útgefandans er ekki í traustgeymslunni. Gögnin eru birt, en ekkert er tryggt. Með því að flytja inn nýrri Master List gæti verið hægt að sannprófa þetta skilríki.</string>
+    <string name="result_verdict_failed">Mistókst</string>
+    <string name="result_verdict_failed_explanation">Að minnsta kosti ein prófun mistókst: ekki má líta á þetta skilríki sem ósvikið.</string>
+    <string name="result_verdict_imported_anchor">Sannprófað með vottorði sem þú fluttir inn</string>
+
+    <!-- Photo -->
+    <string name="result_photo_description">Mynd af handhafa</string>
+    <string name="result_photo_unavailable">Mynd ólæsileg eða vantar</string>
+    <string name="result_photo_fullscreen">Sýna myndina á öllum skjánum</string>
+    <string name="result_photo_close">Loka</string>
+    <string name="result_image_front">Mynd af framhlið</string>
+    <string name="result_image_rear">Mynd af bakhlið</string>
+    <string name="result_image_unavailable">Ólæsileg mynd</string>
+
+    <!-- Identité -->
+    <string name="result_section_identity">Auðkenni</string>
+    <string name="result_expired">Skilríkið er útrunnið</string>
+    <string name="result_field_surname">Kenninafn</string>
+    <string name="result_field_given_names">Eiginnöfn</string>
+    <string name="result_field_sex">Kyn</string>
+    <string name="result_field_birth_date">Fæðingardagur</string>
+    <string name="result_field_nationality">Ríkisfang</string>
+    <string name="result_field_document_type">Tegund skilríkis</string>
+    <string name="result_field_document_number">Númer skilríkis</string>
+    <string name="result_field_issuing_state">Útgáfuríki</string>
+    <string name="result_field_expiry_date">Gildir til</string>
+    <string name="result_sex_male">Karl</string>
+    <string name="result_sex_female">Kona</string>
+    <string name="result_sex_unspecified">Ótilgreint</string>
+    <string name="result_document_passport">Vegabréf</string>
+    <string name="result_document_identity_card">Nafnskírteini</string>
+    <string name="result_document_other">Annað ferðaskilríki</string>
+    <string name="result_value_with_code">%1$s (%2$s)</string>
+    <string name="result_unknown_value">Óþekkt</string>
+
+    <!-- Pays spéciaux ICAO -->
+    <string name="result_country_united_nations">Sameinuðu þjóðirnar</string>
+    <string name="result_country_un_agency">Sérstofnun Sameinuðu þjóðanna</string>
+    <string name="result_country_un_kosovo">Kósovó (UNMIK)</string>
+    <string name="result_country_stateless">Ríkisfangslaus</string>
+    <string name="result_country_refugee">Flóttamaður (samningurinn frá 1951)</string>
+    <string name="result_country_refugee_other">Flóttamaður</string>
+    <string name="result_country_unspecified">Ríkisfang ótilgreint</string>
+
+    <!-- Données complémentaires -->
+    <string name="result_section_additional">Viðbótarupplýsingar</string>
+    <string name="result_field_full_name">Fullt nafn</string>
+    <string name="result_field_other_names">Önnur nöfn</string>
+    <string name="result_field_personal_number">Persónunúmer</string>
+    <string name="result_field_full_birth_date">Fullur fæðingardagur</string>
+    <string name="result_field_place_of_birth">Fæðingarstaður</string>
+    <string name="result_field_address">Heimilisfang</string>
+    <string name="result_field_telephone">Sími</string>
+    <string name="result_field_profession">Starfsheiti</string>
+    <string name="result_field_title">Titill</string>
+    <string name="result_field_personal_summary">Persónulýsing</string>
+    <string name="result_field_other_td_numbers">Önnur gild ferðaskilríki</string>
+    <string name="result_field_custody">Upplýsingar um forsjá</string>
+    <string name="result_field_issuing_authority">Útgáfuyfirvald</string>
+    <string name="result_field_issue_date">Útgáfudagur</string>
+    <string name="result_field_other_persons">Aðrir einstaklingar sem getið er</string>
+    <string name="result_field_endorsements">Áritanir og athugasemdir</string>
+    <string name="result_field_tax_exit">Skatt- eða brottfararskyldur</string>
+    <string name="result_field_personalization_time">Dagsetning sérútgáfu</string>
+    <string name="result_field_personalization_device">Númer sérútgáfukerfis</string>
+
+    <!-- Vérifications -->
+    <string name="result_section_checks">Prófanir</string>
+    <string name="result_check_secure_channel">Örugg rás opnuð</string>
+    <string name="result_check_sod_signature">Undirskrift SOD gild</string>
+    <string name="result_check_chain">Vottunarkeðja</string>
+    <string name="result_check_ds_validity">Gildi DS-vottorðs</string>
+    <string name="result_check_dg_hashes">Tætigildi gagnahópa</string>
+    <string name="result_check_chip_authentication">Chip Authentication (DG14)</string>
+    <string name="result_check_active_authentication">Active Authentication (DG15)</string>
+    <string name="result_status_ok">Tókst</string>
+    <string name="result_status_failed">Mistókst</string>
+    <string name="result_status_not_available">Ekki í boði</string>
+    <string name="result_status_unsupported">Reiknirit ekki stutt</string>
+    <string name="result_check_expand">Sýna nánar</string>
+    <string name="result_check_collapse">Fela nánari upplýsingar</string>
+
+    <!-- Détail des vérifications -->
+    <string name="result_detail_protocol">Samskiptaregla: %1$s</string>
+    <string name="result_detail_ca_method">Aðferð: %1$s</string>
+    <string name="result_detail_ca_method_dg14">Chip Authentication með lyklinum úr DG14</string>
+    <string name="result_detail_ca_method_pace_cam">PACE-CAM, þegar rásin var opnuð, með lyklinum úr EF.CardSecurity</string>
+    <string name="result_detail_algorithm">Undirskriftarreiknirit: %1$s</string>
+    <string name="result_detail_csca">CSCA: %1$s</string>
+    <string name="result_detail_csca_none">Ekkert CSCA í geymslunni passar.</string>
+    <string name="result_detail_country">Land: %1$s</string>
+    <string name="result_detail_country_mismatch">Löndin stemma ekki: vottunaraðili %1$s, vottorð undirritara %2$s, skilríki %3$s</string>
+    <string name="result_detail_source">Uppruni: %1$s</string>
+    <string name="result_detail_source_ants">vottorð frá ANTS</string>
+    <string name="result_detail_source_national">vottorð sem útgáfuríkið birtir</string>
+    <string name="result_detail_source_embedded">innbyggður Master List</string>
+    <string name="result_detail_source_imported">innfluttur Master List</string>
+    <string name="result_detail_ds_subject">DS-vottorð: %1$s</string>
+    <string name="result_detail_links">Tengivottorð sem farið var um:</string>
+    <string name="result_detail_link_item">• %1$s</string>
+    <string name="result_detail_links_none">Ekkert tengivottorð notað.</string>
+    <string name="result_detail_ds_missing">DS-vottorðið er hvorki í SOD né í traustgeymslunni.</string>
+    <string name="result_detail_ds_period">Gildistími DS: frá %1$s til %2$s</string>
+    <string name="result_detail_issuance">Útgáfudagur: %1$s (%2$s)</string>
+    <string name="result_detail_issuance_no_source">Útgáfudagur: %1$s</string>
+    <string name="result_detail_issuance_unknown">Útgáfudagur óþekktur.</string>
+    <string name="result_detail_issuance_dg12">lesinn úr DG12</string>
+    <string name="result_detail_issuance_sod">undirritunardagur SOD</string>
+    <string name="result_detail_issuance_estimated">áætlaður</string>
+    <string name="result_detail_digest_algorithm">Tætireiknirit: %1$s</string>
+    <string name="result_detail_dg_checked">Gagnahópar prófaðir: %1$s</string>
+    <string name="result_detail_dg_checked_none">Enginn gagnahópur prófaður.</string>
+    <string name="result_detail_dg_mismatched">Tætigildi stemma ekki: %1$s</string>
+    <string name="result_detail_dg_all_match">Öll tætigildi stemma.</string>
+    <string name="result_detail_dg_missing">Gagnahópar sem eru tilgreindir en kubburinn skilaði ekki: %1$s</string>
+    <string name="result_detail_unsupported">Reiknirit ekki stutt: %1$s</string>
+    <string name="result_detail_error">Tæknileg villa: %1$s</string>
+    <string name="result_detail_no_dg14">Skilríkið inniheldur ekki DG14: kubburinn býður ekki upp á þessa prófun.</string>
+    <string name="result_detail_no_dg15">Skilríkið inniheldur ekki DG15: kubburinn býður ekki upp á þessa prófun.</string>
+    <string name="result_detail_not_reached">Skref ekki framkvæmt.</string>
+    <string name="result_detail_none">Engar frekari upplýsingar.</string>
+    <string name="result_demo_banner">Hermt skilríki — kynning</string>
+</resources>

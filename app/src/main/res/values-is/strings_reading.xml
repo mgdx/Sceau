@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reading_title">Lestur skilríkis</string>
+    <string name="reading_prompt">Leggðu skilríkið að bakhlið símans og ekki fjarlægja það</string>
+    <string name="reading_step_connect">Tengist kubbnum</string>
+    <string name="reading_step_secure_channel">Opnar örugga rás (PACE eða BAC)</string>
+    <string name="reading_step_read_data">Les gögn</string>
+    <string name="reading_step_verify_signature">Sannprófar undirskrift</string>
+    <string name="reading_step_verify_chip">Sannprófar kubbinn</string>
+    <string name="reading_step_pending">í bið</string>
+    <string name="reading_step_in_progress">í gangi</string>
+    <string name="reading_step_done">lokið</string>
+    <string name="reading_error_title">Lestur rofnaði</string>
+    <string name="reading_slow_chip">Kubbur skilríkisins lætur bíða eftir sér, oft eftir misheppnaðar tilraunir. Haltu skilríkinu kyrru, þetta getur tekið allt að mínútu.</string>
+    <string name="reading_error_access_denied">CAN-númerið eða MRZ-gögnin eru röng. Athugaðu númerið og dagsetningarnar sem þú slóst inn og reyndu svo aftur. Hver misheppnuð tilraun getur lengt biðina sem kubburinn krefst áður en hann svarar.</string>
+    <string name="reading_error_connection_lost">Skilríkið var fjarlægt of snemma. Haltu því kyrru við símann þar til lestri lýkur.</string>
+    <string name="reading_error_not_icao">Þetta skilríki uppfyllir ekki ICAO 9303-staðalinn: ekki er hægt að lesa kubb þess.</string>
+    <string name="reading_error_timeout">Tímamörk runnu út: kubburinn svaraði ekki í tæka tíð. Reyndu aftur og haltu skilríkinu kyrru.</string>
+    <string name="reading_error_can_without_pace">Þetta skilríki er ekki lesið með CAN. Notaðu flipann Vegabréf og sláðu inn MRZ-gögnin.</string>
+    <string name="reading_error_unexpected">Óvænt villa kom upp.</string>
+    <string name="reading_error_code">Villukóði: %1$s</string>
+    <string name="reading_retry">Reyna aftur</string>
+    <string name="reading_cancel">Hætta við</string>
+</resources>
