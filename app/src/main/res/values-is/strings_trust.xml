@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trust_title">Traustgeymsla</string>
+    <string name="trust_back">Til baka</string>
+    <string name="trust_intro">Rótarvottorð (CSCA) útgáfuríkja, notuð til að sannprófa undirskrift skilríkja. Engin persónuleg gögn fara um þennan skjá.</string>
+    <plurals name="trust_summary">
+        <item quantity="one">%1$d vottorð · lönd: %2$d</item>
+        <item quantity="other">%1$d vottorð · lönd: %2$d</item>
+    </plurals>
+    <string name="trust_loading">Hleður traustgeymslu…</string>
+    <string name="trust_load_error">Ekki tókst að hlaða traustgeymslunni.</string>
+    <string name="trust_retry">Reyna aftur</string>
+    <string name="trust_empty">Engin vottorð í traustgeymslunni.</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">Land ótilgreint</string>
+    <plurals name="trust_country_count">
+        <item quantity="one">%1$d vottorð</item>
+        <item quantity="other">%1$d vottorð</item>
+    </plurals>
+    <string name="trust_country_expand">Sýna vottorð</string>
+    <string name="trust_country_collapse">Fela vottorð</string>
+    <string name="trust_validity">Gildir frá %1$s til %2$s</string>
+    <string name="trust_fingerprint">SHA-256-fingrafar</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_national">Birt af ríkinu</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">Innflutt</string>
+    <string name="trust_link_certificate">Tengivottorð</string>
+
+    <!-- Import -->
+    <string name="trust_import">Flytja inn Master List</string>
+    <string name="trust_busy">Augnablik…</string>
+    <string name="trust_import_confirm_title">Flytja inn þennan Master List?</string>
+    <string name="trust_import_confirm_text">Undirskriftin er gild. Gakktu úr skugga um að fingrafar undirritarans sé það sama og útgáfuyfirvaldið hefur birt áður en þú flytur inn.</string>
+    <string name="trust_import_signer">Undirritari</string>
+    <string name="trust_import_signer_fingerprint">SHA-256-fingrafar undirritara</string>
+    <string name="trust_import_signing_date">Undirritunardagur</string>
+    <string name="trust_import_signing_date_unknown">Ótilgreindur</string>
+    <string name="trust_import_certificate_count">Fjöldi vottorða</string>
+    <string name="trust_import_confirm">Flytja inn</string>
+    <string name="trust_cancel">Hætta við</string>
+    <plurals name="trust_import_done">
+        <item quantity="one">Master List fluttur inn: %1$d vottorð.</item>
+        <item quantity="other">Master List fluttur inn: %1$d vottorð.</item>
+    </plurals>
+    <string name="trust_import_invalid">Þessi skrá er ekki gildur Master List: ólæsilegt snið eða röng undirskrift (%1$s).</string>
+    <string name="trust_import_too_large">Skránni hafnað: hún er stærri en 20 MB.</string>
+    <string name="trust_import_read_error">Ekki tókst að lesa þessa skrá.</string>
+    <string name="trust_import_write_error">Ekki tókst að vista Master List.</string>
+    <plurals name="trust_import_limit_count">
+        <item quantity="one">Innflutningi hafnað: í mesta lagi %1$d innfluttur Master List. Eyddu innfluttu vottorðunum til að bæta öðrum við.</item>
+        <item quantity="other">Innflutningi hafnað: í mesta lagi %1$d innfluttir Master List. Eyddu innfluttu vottorðunum til að bæta öðrum við.</item>
+    </plurals>
+    <string name="trust_import_limit_size">Innflutningi hafnað: innfluttir Master List færu yfir %1$d MB samtals. Eyddu innfluttu vottorðunum til að bæta öðrum við.</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">Eyða innfluttum vottorðum</string>
+    <string name="trust_delete_confirm_title">Eyða innfluttum vottorðum?</string>
+    <string name="trust_delete_confirm_text">Innfluttum Master List verður eytt. Vottorð sem eru innbyggð í forritið haldast.</string>
+    <string name="trust_delete_confirm">Eyða</string>
+    <string name="trust_delete_done">Innfluttum vottorðum eytt.</string>
+    <string name="trust_delete_error">Ekki tókst að eyða innfluttu vottorðunum.</string>
+</resources>

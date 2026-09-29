@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reading_title">Document uitlezen</string>
+    <string name="reading_prompt">Houd het document tegen de achterkant van de telefoon en haal het niet weg</string>
+    <string name="reading_step_connect">Verbinden met de chip</string>
+    <string name="reading_step_secure_channel">Beveiligd kanaal openen (PACE of BAC)</string>
+    <string name="reading_step_read_data">Gegevens uitlezen</string>
+    <string name="reading_step_verify_signature">Handtekening controleren</string>
+    <string name="reading_step_verify_chip">Chip controleren</string>
+    <string name="reading_step_pending">wachten</string>
+    <string name="reading_step_in_progress">bezig</string>
+    <string name="reading_step_done">voltooid</string>
+    <string name="reading_error_title">Uitlezen onderbroken</string>
+    <string name="reading_slow_chip">De chip van het document laat je wachten, vaak na mislukte pogingen. Houd het document stil, dit kan tot een minuut duren.</string>
+    <string name="reading_error_access_denied">De CAN of de MRZ-gegevens zijn onjuist. Controleer het ingevoerde nummer en de datums en probeer het opnieuw. Elke mislukte poging kan de wachttijd van de chip verlengen.</string>
+    <string name="reading_error_connection_lost">Het document is te vroeg weggehaald. Houd het stil tegen de telefoon tot het uitlezen klaar is.</string>
+    <string name="reading_error_not_icao">Dit document voldoet niet aan de ICAO 9303-norm: de chip kan niet worden uitgelezen.</string>
+    <string name="reading_error_timeout">Time-out: de chip heeft niet op tijd gereageerd. Probeer het opnieuw en houd het document stil.</string>
+    <string name="reading_error_can_without_pace">Dit document kan niet met een CAN worden uitgelezen. Gebruik het tabblad Paspoort en voer de MRZ-gegevens in.</string>
+    <string name="reading_error_unexpected">Er is een onverwachte fout opgetreden.</string>
+    <string name="reading_error_code">Foutcode: %1$s</string>
+    <string name="reading_retry">Opnieuw proberen</string>
+    <string name="reading_cancel">Annuleren</string>
+</resources>

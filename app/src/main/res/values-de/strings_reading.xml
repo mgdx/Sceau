@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reading_title">Dokument wird ausgelesen</string>
+    <string name="reading_prompt">Dokument an die Rückseite des Smartphones halten und nicht entfernen</string>
+    <string name="reading_step_connect">Verbindung zum Chip</string>
+    <string name="reading_step_secure_channel">Aufbau des sicheren Kanals (PACE oder BAC)</string>
+    <string name="reading_step_read_data">Auslesen der Daten</string>
+    <string name="reading_step_verify_signature">Prüfung der Signatur</string>
+    <string name="reading_step_verify_chip">Prüfung des Chips</string>
+    <string name="reading_step_pending">ausstehend</string>
+    <string name="reading_step_in_progress">läuft</string>
+    <string name="reading_step_done">abgeschlossen</string>
+    <string name="reading_error_title">Auslesen abgebrochen</string>
+    <string name="reading_slow_chip">Der Chip des Dokuments antwortet verzögert, oft nach fehlgeschlagenen Versuchen. Halten Sie das Dokument ruhig, das kann bis zu einer Minute dauern.</string>
+    <string name="reading_error_access_denied">Die CAN oder die MRZ-Daten sind falsch. Prüfen Sie die eingegebene Nummer und die Daten und versuchen Sie es dann erneut. Jeder Fehlversuch kann die Wartezeit verlängern, die der Chip vor einer Antwort erzwingt.</string>
+    <string name="reading_error_connection_lost">Das Dokument wurde zu früh entfernt. Halten Sie es ruhig an das Smartphone, bis das Auslesen abgeschlossen ist.</string>
+    <string name="reading_error_not_icao">Dieses Dokument entspricht nicht der Norm ICAO 9303: Sein Chip kann nicht ausgelesen werden.</string>
+    <string name="reading_error_timeout">Zeitüberschreitung: Der Chip hat nicht rechtzeitig geantwortet. Versuchen Sie es erneut und halten Sie das Dokument ruhig.</string>
+    <string name="reading_error_can_without_pace">Dieses Dokument lässt sich nicht mit einer CAN auslesen. Verwenden Sie den Tab „Reisepass“ und geben Sie die MRZ-Daten ein.</string>
+    <string name="reading_error_unexpected">Ein unerwarteter Fehler ist aufgetreten.</string>
+    <string name="reading_error_code">Fehlercode: %1$s</string>
+    <string name="reading_retry">Wiederholen</string>
+    <string name="reading_cancel">Abbrechen</string>
+</resources>

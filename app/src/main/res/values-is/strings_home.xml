@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">Fleiri valkostir</string>
+    <string name="home_menu_trust_store">Traustgeymsla</string>
+    <string name="home_menu_about">Um forritið</string>
+    <string name="home_tab_id_card">Nafnskírteini</string>
+    <string name="home_tab_passport">Vegabréf</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">6 stafa númer prentað framan á kortið</string>
+    <string name="home_document_number_label">Númer skilríkis</string>
+    <string name="home_document_number_supporting">Eins og það er prentað á persónusíðuna, í mesta lagi 9 stafir</string>
+    <string name="home_date_of_birth_label">Fæðingardagur</string>
+    <string name="home_date_of_expiry_label">Gildir til</string>
+    <string name="home_date_day">DD</string>
+    <string name="home_date_month">MM</string>
+    <string name="home_date_year">ÁÁÁÁ</string>
+    <string name="home_date_format">Snið: %1$s</string>
+    <string name="home_date_error_invalid">Þessi dagsetning er ekki til</string>
+    <string name="home_date_error_future">Fæðingardagur getur ekki verið í framtíðinni</string>
+    <string name="home_date_error_too_old">Gildistími of gamall (fyrir %1$d)</string>
+    <string name="home_holder_notice">Handhafi skilríkisins verður að framvísa því sjálfur.</string>
+    <string name="home_read">Lesa</string>
+    <string name="home_nfc_disabled">Slökkt er á NFC. Kveiktu á því til að lesa kubb skilríkisins.</string>
+    <string name="home_nfc_settings">Opna NFC-stillingar</string>
+    <string name="home_nfc_absent">Þessi sími er ekki með NFC: hann getur ekki lesið kubb skilríkja.</string>
+    <string name="home_menu_demo">Herma eftir frönsku nafnskírteini (kynning)</string>
+</resources>

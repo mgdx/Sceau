@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="result_title">Resultat</string>
+    <string name="result_clear">Rensa</string>
+
+    <!-- Verdict -->
+    <string name="result_verdict_authentic">Äkta</string>
+    <string name="result_verdict_authentic_explanation">Utfärdarens signatur är giltig och chippet har bevisat att det inte är en kopia.</string>
+    <string name="result_verdict_chip_unverified">Giltig signatur, chippet ej verifierat</string>
+    <string name="result_verdict_chip_unverified_explanation">Uppgifterna har signerats av utfärdaren, men chippet kan inte bevisa att det är originalet: det kan vara en klon.</string>
+    <string name="result_verdict_unknown_issuer">Okänd utfärdare</string>
+    <string name="result_verdict_unknown_issuer_explanation">Utfärdarens certifikat finns inte i tillitsarkivet. Uppgifterna visas, men ingenting är garanterat. Att importera en nyare Master List kan göra det möjligt att verifiera handlingen.</string>
+    <string name="result_verdict_failed">Misslyckades</string>
+    <string name="result_verdict_failed_explanation">Minst en kontroll misslyckades: handlingen ska inte betraktas som äkta.</string>
+    <string name="result_verdict_imported_anchor">Verifierad med ett certifikat som du har importerat</string>
+
+    <!-- Photo -->
+    <string name="result_photo_description">Innehavarens foto</string>
+    <string name="result_photo_unavailable">Fotot är oläsligt eller saknas</string>
+    <string name="result_photo_fullscreen">Visa fotot i helskärm</string>
+    <string name="result_photo_close">Stäng</string>
+    <string name="result_image_front">Bild av framsidan</string>
+    <string name="result_image_rear">Bild av baksidan</string>
+    <string name="result_image_unavailable">Oläslig bild</string>
+
+    <!-- Identité -->
+    <string name="result_section_identity">Identitet</string>
+    <string name="result_expired">Handlingen har gått ut</string>
+    <string name="result_field_surname">Efternamn</string>
+    <string name="result_field_given_names">Förnamn</string>
+    <string name="result_field_sex">Kön</string>
+    <string name="result_field_birth_date">Födelsedatum</string>
+    <string name="result_field_nationality">Nationalitet</string>
+    <string name="result_field_document_type">Typ av handling</string>
+    <string name="result_field_document_number">Dokumentnummer</string>
+    <string name="result_field_issuing_state">Utfärdande stat</string>
+    <string name="result_field_expiry_date">Giltig till</string>
+    <string name="result_sex_male">Man</string>
+    <string name="result_sex_female">Kvinna</string>
+    <string name="result_sex_unspecified">Ej angivet</string>
+    <string name="result_document_passport">Pass</string>
+    <string name="result_document_identity_card">Identitetskort</string>
+    <string name="result_document_other">Annan resehandling</string>
+    <string name="result_value_with_code">%1$s (%2$s)</string>
+    <string name="result_unknown_value">Okänt</string>
+
+    <!-- Pays spéciaux ICAO -->
+    <string name="result_country_united_nations">Förenta nationerna</string>
+    <string name="result_country_un_agency">FN:s fackorgan</string>
+    <string name="result_country_un_kosovo">Kosovo (UNMIK)</string>
+    <string name="result_country_stateless">Statslös</string>
+    <string name="result_country_refugee">Flykting (1951 års konvention)</string>
+    <string name="result_country_refugee_other">Flykting</string>
+    <string name="result_country_unspecified">Nationalitet ej angiven</string>
+
+    <!-- Données complémentaires -->
+    <string name="result_section_additional">Ytterligare uppgifter</string>
+    <string name="result_field_full_name">Fullständigt namn</string>
+    <string name="result_field_other_names">Andra namn</string>
+    <string name="result_field_personal_number">Personnummer</string>
+    <string name="result_field_full_birth_date">Fullständigt födelsedatum</string>
+    <string name="result_field_place_of_birth">Födelseort</string>
+    <string name="result_field_address">Adress</string>
+    <string name="result_field_telephone">Telefon</string>
+    <string name="result_field_profession">Yrke</string>
+    <string name="result_field_title">Titel</string>
+    <string name="result_field_personal_summary">Personlig sammanfattning</string>
+    <string name="result_field_other_td_numbers">Andra giltiga resehandlingar</string>
+    <string name="result_field_custody">Vårdnadsuppgifter</string>
+    <string name="result_field_issuing_authority">Utfärdande myndighet</string>
+    <string name="result_field_issue_date">Utfärdandedatum</string>
+    <string name="result_field_other_persons">Andra angivna personer</string>
+    <string name="result_field_endorsements">Anteckningar och observationer</string>
+    <string name="result_field_tax_exit">Skatte- eller utresekrav</string>
+    <string name="result_field_personalization_time">Personaliseringsdatum</string>
+    <string name="result_field_personalization_device">Personaliseringssystemets nummer</string>
+
+    <!-- Vérifications -->
+    <string name="result_section_checks">Kontroller</string>
+    <string name="result_check_secure_channel">Säker kanal upprättad</string>
+    <string name="result_check_sod_signature">SOD-signaturen är giltig</string>
+    <string name="result_check_chain">Certifikatkedja</string>
+    <string name="result_check_ds_validity">DS-certifikatets giltighet</string>
+    <string name="result_check_dg_hashes">Datagruppernas hashvärden</string>
+    <string name="result_check_chip_authentication">Chip Authentication (DG14)</string>
+    <string name="result_check_active_authentication">Active Authentication (DG15)</string>
+    <string name="result_status_ok">Godkänd</string>
+    <string name="result_status_failed">Misslyckades</string>
+    <string name="result_status_not_available">Inte tillgänglig</string>
+    <string name="result_status_unsupported">Algoritmen stöds inte</string>
+    <string name="result_check_expand">Visa detaljer</string>
+    <string name="result_check_collapse">Dölj detaljer</string>
+
+    <!-- Détail des vérifications -->
+    <string name="result_detail_protocol">Protokoll: %1$s</string>
+    <string name="result_detail_ca_method">Metod: %1$s</string>
+    <string name="result_detail_ca_method_dg14">Chip Authentication med nyckeln i DG14</string>
+    <string name="result_detail_ca_method_pace_cam">PACE-CAM, när kanalen öppnades, med nyckeln i EF.CardSecurity</string>
+    <string name="result_detail_algorithm">Signaturalgoritm: %1$s</string>
+    <string name="result_detail_csca">CSCA: %1$s</string>
+    <string name="result_detail_csca_none">Ingen CSCA i arkivet matchar.</string>
+    <string name="result_detail_country">Land: %1$s</string>
+    <string name="result_detail_country_mismatch">Länderna stämmer inte överens: certifikatutfärdare %1$s, signerarens certifikat %2$s, handling %3$s</string>
+    <string name="result_detail_source">Källa: %1$s</string>
+    <string name="result_detail_source_ants">certifikat från ANTS</string>
+    <string name="result_detail_source_national">certifikat publicerade av den utfärdande staten</string>
+    <string name="result_detail_source_embedded">inbyggd Master List</string>
+    <string name="result_detail_source_imported">importerad Master List</string>
+    <string name="result_detail_ds_subject">DS-certifikat: %1$s</string>
+    <string name="result_detail_links">Länkcertifikat i kedjan:</string>
+    <string name="result_detail_link_item">• %1$s</string>
+    <string name="result_detail_links_none">Inga länkcertifikat i kedjan.</string>
+    <string name="result_detail_ds_missing">DS-certifikatet finns varken i SOD eller i tillitsarkivet.</string>
+    <string name="result_detail_ds_period">DS-certifikatets giltighetstid: %1$s till %2$s</string>
+    <string name="result_detail_issuance">Utfärdandedatum: %1$s (%2$s)</string>
+    <string name="result_detail_issuance_no_source">Utfärdandedatum: %1$s</string>
+    <string name="result_detail_issuance_unknown">Utfärdandedatum okänt.</string>
+    <string name="result_detail_issuance_dg12">läst från DG12</string>
+    <string name="result_detail_issuance_sod">signeringsdatum för SOD</string>
+    <string name="result_detail_issuance_estimated">uppskattat</string>
+    <string name="result_detail_digest_algorithm">Hashalgoritm: %1$s</string>
+    <string name="result_detail_dg_checked">Kontrollerade datagrupper: %1$s</string>
+    <string name="result_detail_dg_checked_none">Inga datagrupper kontrollerade.</string>
+    <string name="result_detail_dg_mismatched">Hashvärden som inte stämmer: %1$s</string>
+    <string name="result_detail_dg_all_match">Alla hashvärden stämmer.</string>
+    <string name="result_detail_dg_missing">Datagrupper som anges men inte levereras av chippet: %1$s</string>
+    <string name="result_detail_unsupported">Algoritmen stöds inte: %1$s</string>
+    <string name="result_detail_error">Tekniskt fel: %1$s</string>
+    <string name="result_detail_no_dg14">Handlingen innehåller ingen DG14: chippet erbjuder inte denna kontroll.</string>
+    <string name="result_detail_no_dg15">Handlingen innehåller ingen DG15: chippet erbjuder inte denna kontroll.</string>
+    <string name="result_detail_not_reached">Steget utfördes inte.</string>
+    <string name="result_detail_none">Inga ytterligare detaljer.</string>
+    <string name="result_demo_banner">Simulerad handling – demonstration</string>
+</resources>

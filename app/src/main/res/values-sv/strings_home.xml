@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">Fler alternativ</string>
+    <string name="home_menu_trust_store">Tillitsarkiv</string>
+    <string name="home_menu_about">Om</string>
+    <string name="home_tab_id_card">Identitetskort</string>
+    <string name="home_tab_passport">Pass</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">Sexsiffrigt nummer på kortets framsida</string>
+    <string name="home_document_number_label">Dokumentnummer</string>
+    <string name="home_document_number_supporting">Som det står på personuppgiftssidan, högst 9 tecken</string>
+    <string name="home_date_of_birth_label">Födelsedatum</string>
+    <string name="home_date_of_expiry_label">Giltig till</string>
+    <string name="home_date_day">DD</string>
+    <string name="home_date_month">MM</string>
+    <string name="home_date_year">ÅÅÅÅ</string>
+    <string name="home_date_format">Format: %1$s</string>
+    <string name="home_date_error_invalid">Datumet finns inte</string>
+    <string name="home_date_error_future">Födelsedatumet kan inte ligga i framtiden</string>
+    <string name="home_date_error_too_old">Giltighetsdatumet är för gammalt (före %1$d)</string>
+    <string name="home_holder_notice">Handlingen ska visas upp av innehavaren.</string>
+    <string name="home_read">Läs</string>
+    <string name="home_nfc_disabled">NFC är avstängt. Aktivera det för att läsa handlingens chip.</string>
+    <string name="home_nfc_settings">Öppna NFC-inställningarna</string>
+    <string name="home_nfc_absent">Telefonen saknar NFC och kan inte läsa chippet i identitetshandlingar.</string>
+    <string name="home_menu_demo">Simulera ett franskt id-kort (demo)</string>
+</resources>

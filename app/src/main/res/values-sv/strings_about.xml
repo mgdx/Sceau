@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">Om</string>
+    <string name="about_back">Tillbaka</string>
+    <string name="about_tagline">Läser och verifierar chippet i ICAO 9303-identitetshandlingar, helt offline.</string>
+    <string name="about_version">Version %1$s</string>
+    <string name="about_version_unknown">Okänd version</string>
+
+    <string name="about_section_license">Licens och källkod</string>
+    <string name="about_license">Fri programvara som distribueras under GNU GPL version 3 eller senare.</string>
+    <string name="about_open_repository">Visa källkoden</string>
+    <string name="about_no_browser">Det finns ingen app som kan öppna länken.</string>
+
+    <string name="about_section_trust">Inbyggt tillitsarkiv</string>
+    <string name="about_trust_ants_only">Franska CSCA från ANTS (pass och identitetskort).</string>
+    <string name="about_trust_ants_and_bsi">Franska CSCA från ANTS och den tyska Master List från BSI.</string>
+    <string name="about_trust_master_list_date">Master List signerad %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">Signeringsdatum för Master List saknas.</string>
+    <string name="about_trust_bsi_notice">Master List från BSI (Tysklands federala myndighet för informationssäkerhet) vidaredistribueras oförändrad, utan samarbete med eller godkännande från BSI.</string>
+    <string name="about_trust_national">Certifikat som följande stater har publicerat för sina egna handlingar: %1$s.</string>
+    <string name="about_trust_ogl_notice">Innehåller information från brittisk offentlig sektor publicerad under Open Government Licence v3.0.</string>
+    <string name="about_trust_loading">Läser in …</string>
+    <string name="about_trust_error">Det gick inte att läsa in tillitsarkivet.</string>
+
+    <string name="about_section_limits">Begränsningar</string>
+    <string name="about_limit_unknown_issuer">En handling vars utfärdande land inte finns i tillitsarkivet får resultatet ”Okänd utfärdare”, inte ”Misslyckades”. Att importera en nyare Master List kan lösa det.</string>
+    <string name="about_limit_revocation">Spärrlistor kontrolleras inte: de kräver nätverksåtkomst, som Sceau aldrig använder.</string>
+
+    <string name="about_section_usage">Användningsvillkor</string>
+    <string name="about_usage_holder">Läsningen förutsätter att innehavaren själv visar upp sin handling och samtycker till det.</string>
+    <string name="about_usage_biometrics">Fotot blir en biometrisk uppgift enligt GDPR (dataskyddsförordningen) om det används för automatisk ansiktsjämförelse. Sceau gör ingen sådan jämförelse och får inte användas till det utan särskild rättslig grund.</string>
+    <string name="about_usage_privacy">Inga lästa uppgifter sparas eller skickas: allt raderas ur minnet när du lämnar resultatet eller när appen hamnar i bakgrunden.</string>
+</resources>

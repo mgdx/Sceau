@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">Weitere Optionen</string>
+    <string name="home_menu_trust_store">Vertrauensspeicher</string>
+    <string name="home_menu_about">Über</string>
+    <string name="home_tab_id_card">Personalausweis</string>
+    <string name="home_tab_passport">Reisepass</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">6-stellige Zugangsnummer (CAN) auf der Vorderseite der Karte</string>
+    <string name="home_document_number_label">Dokumentennummer</string>
+    <string name="home_document_number_supporting">Wie auf der Personaldatenseite aufgedruckt, höchstens 9 Zeichen</string>
+    <string name="home_date_of_birth_label">Geburtsdatum</string>
+    <string name="home_date_of_expiry_label">Gültig bis</string>
+    <string name="home_date_day">TT</string>
+    <string name="home_date_month">MM</string>
+    <string name="home_date_year">JJJJ</string>
+    <string name="home_date_format">Format: %1$s</string>
+    <string name="home_date_error_invalid">Dieses Datum existiert nicht</string>
+    <string name="home_date_error_future">Das Geburtsdatum darf nicht in der Zukunft liegen</string>
+    <string name="home_date_error_too_old">Ablaufdatum zu weit zurück (vor %1$d)</string>
+    <string name="home_holder_notice">Das Dokument muss von der Inhaberin oder dem Inhaber vorgelegt werden.</string>
+    <string name="home_read">Auslesen</string>
+    <string name="home_nfc_disabled">NFC ist deaktiviert. Aktivieren Sie NFC, um den Chip des Dokuments auszulesen.</string>
+    <string name="home_nfc_settings">NFC-Einstellungen öffnen</string>
+    <string name="home_nfc_absent">Dieses Smartphone hat kein NFC und kann den Chip von Ausweisdokumenten nicht auslesen.</string>
+    <string name="home_menu_demo">Französischen Ausweis simulieren (Demo)</string>
+</resources>

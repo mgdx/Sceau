@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">Over</string>
+    <string name="about_back">Terug</string>
+    <string name="about_tagline">Offline uitlezen en controleren van de chip in ICAO 9303-identiteitsdocumenten.</string>
+    <string name="about_version">Versie %1$s</string>
+    <string name="about_version_unknown">Versie onbekend</string>
+
+    <string name="about_section_license">Licentie en broncode</string>
+    <string name="about_license">Vrije software, verspreid onder de GNU GPL versie 3 of later.</string>
+    <string name="about_open_repository">Broncode bekijken</string>
+    <string name="about_no_browser">Er is geen app die deze link kan openen.</string>
+
+    <string name="about_section_trust">Ingebouwde vertrouwensopslag</string>
+    <string name="about_trust_ants_only">Franse CSCA’s van het ANTS (paspoorten en identiteitskaarten).</string>
+    <string name="about_trust_ants_and_bsi">Franse CSCA’s van het ANTS en de Duitse Master List van het BSI.</string>
+    <string name="about_trust_master_list_date">Master List ondertekend op %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">Ondertekeningsdatum van de Master List niet vermeld.</string>
+    <string name="about_trust_bsi_notice">De Master List van het BSI (Duitse federale dienst voor informatiebeveiliging) wordt ongewijzigd doorgegeven, zonder medewerking of goedkeuring van het BSI.</string>
+    <string name="about_trust_national">Certificaten die de volgende staten voor hun eigen documenten publiceren: %1$s.</string>
+    <string name="about_trust_ogl_notice">Bevat informatie van de Britse overheid, gepubliceerd onder de Open Government Licence v3.0.</string>
+    <string name="about_trust_loading">Laden…</string>
+    <string name="about_trust_error">Kan de vertrouwensopslag niet laden.</string>
+
+    <string name="about_section_limits">Beperkingen</string>
+    <string name="about_limit_unknown_issuer">Een document waarvan het land van afgifte niet in de vertrouwensopslag staat, krijgt het oordeel ‘Onbekende uitgever’, niet ‘Mislukt’. Een recentere Master List importeren kan dit verhelpen.</string>
+    <string name="about_limit_revocation">Intrekkingslijsten worden niet geraadpleegd: daarvoor is een netwerk nodig, en Sceau gebruikt nooit het netwerk.</string>
+
+    <string name="about_section_usage">Gebruiksvoorwaarden</string>
+    <string name="about_usage_holder">Het uitlezen veronderstelt dat de houder het document zelf toont en daarmee instemt.</string>
+    <string name="about_usage_biometrics">De foto wordt een biometrisch gegeven in de zin van de AVG als hij wordt gebruikt voor automatische gezichtsvergelijking. Sceau doet zo’n vergelijking niet en mag daar niet voor worden gebruikt zonder specifieke wettelijke grondslag.</string>
+    <string name="about_usage_privacy">Er worden geen uitgelezen gegevens bewaard of verzonden: alles wordt uit het geheugen gewist wanneer je het resultaat verlaat of de app naar de achtergrond gaat.</string>
+</resources>

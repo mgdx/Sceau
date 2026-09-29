@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">Um forritið</string>
+    <string name="about_back">Til baka</string>
+    <string name="about_tagline">Lestur og sannprófun án nettengingar á kubbi skilríkja samkvæmt ICAO 9303.</string>
+    <string name="about_version">Útgáfa %1$s</string>
+    <string name="about_version_unknown">Óþekkt útgáfa</string>
+
+    <string name="about_section_license">Leyfi og frumkóði</string>
+    <string name="about_license">Frjáls hugbúnaður sem dreift er með GNU GPL-leyfi, útgáfu 3 eða nýrri.</string>
+    <string name="about_open_repository">Skoða frumkóðann</string>
+    <string name="about_no_browser">Ekkert forrit getur opnað þennan tengil.</string>
+
+    <string name="about_section_trust">Innbyggð traustgeymsla</string>
+    <string name="about_trust_ants_only">Frönsk CSCA-vottorð frá ANTS (vegabréf og nafnskírteini).</string>
+    <string name="about_trust_ants_and_bsi">Frönsk CSCA-vottorð frá ANTS og Master List frá þýsku stofnuninni BSI.</string>
+    <string name="about_trust_master_list_date">Undirritunardagur Master List: %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">Undirritunardagur Master List er ekki tilgreindur.</string>
+    <string name="about_trust_bsi_notice">Master List frá BSI (Bundesamt für Sicherheit in der Informationstechnik, þýsku alríkisstofnuninni um upplýsingaöryggi) er endurdreift án breytinga, án samstarfs við BSI eða samþykkis þess.</string>
+    <string name="about_trust_national">Vottorð sem eftirtalin ríki gefa út fyrir eigin skilríki: %1$s.</string>
+    <string name="about_trust_ogl_notice">Inniheldur upplýsingar frá breskum opinberum aðilum sem birtar eru samkvæmt Open Government Licence v3.0.</string>
+    <string name="about_trust_loading">Hleður…</string>
+    <string name="about_trust_error">Ekki tókst að hlaða traustgeymslunni.</string>
+
+    <string name="about_section_limits">Takmarkanir</string>
+    <string name="about_limit_unknown_issuer">Skilríki frá útgáfuríki sem er ekki í traustgeymslunni fá niðurstöðuna „Óþekktur útgefandi“, ekki „Mistókst“. Það getur hjálpað að flytja inn nýrri Master List.</string>
+    <string name="about_limit_revocation">Afturköllunarlistar eru ekki skoðaðir: þeir krefjast nettengingar, sem Sceau notar aldrei.</string>
+
+    <string name="about_section_usage">Notkunarforsendur</string>
+    <string name="about_usage_holder">Lesturinn gerir ráð fyrir að handhafinn framvísi skilríkjunum sjálfur og samþykki lesturinn.</string>
+    <string name="about_usage_biometrics">Myndin verður að lífkennaupplýsingum í skilningi almennu persónuverndarreglugerðarinnar (GDPR) ef hún er notuð til sjálfvirks andlitssamanburðar. Sceau framkvæmir engan slíkan samanburð og má ekki nota forritið til þess án sérstakrar lagaheimildar.</string>
+    <string name="about_usage_privacy">Engin lesin gögn eru geymd eða send: allt er hreinsað úr minninu þegar farið er af niðurstöðuskjánum eða forritið fer í bakgrunn.</string>
+</resources>

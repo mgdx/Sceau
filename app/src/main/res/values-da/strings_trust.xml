@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trust_title">Tillidslager</string>
+    <string name="trust_back">Tilbage</string>
+    <string name="trust_intro">Rodcertifikater (CSCA) fra de udstedende lande, der bruges til at kontrollere dokumenternes signatur. Ingen personoplysninger passerer gennem denne skærm.</string>
+    <plurals name="trust_summary">
+        <item quantity="one">%1$d certifikat, lande: %2$d</item>
+        <item quantity="other">%1$d certifikater, lande: %2$d</item>
+    </plurals>
+    <string name="trust_loading">Indlæser tillidslageret…</string>
+    <string name="trust_load_error">Tillidslageret kunne ikke indlæses.</string>
+    <string name="trust_retry">Prøv igen</string>
+    <string name="trust_empty">Ingen certifikater i tillidslageret.</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">Land ikke angivet</string>
+    <plurals name="trust_country_count">
+        <item quantity="one">%1$d certifikat</item>
+        <item quantity="other">%1$d certifikater</item>
+    </plurals>
+    <string name="trust_country_expand">Vis certifikaterne</string>
+    <string name="trust_country_collapse">Skjul certifikaterne</string>
+    <string name="trust_validity">Gyldigt fra %1$s til %2$s</string>
+    <string name="trust_fingerprint">SHA-256-fingeraftryk</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_national">National offentliggørelse</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">Importeret</string>
+    <string name="trust_link_certificate">Linkcertifikat</string>
+
+    <!-- Import -->
+    <string name="trust_import">Importér en Master List</string>
+    <string name="trust_busy">Vent venligst…</string>
+    <string name="trust_import_confirm_title">Vil du importere denne Master List?</string>
+    <string name="trust_import_confirm_text">Signaturen er gyldig. Kontrollér, at underskriverens fingeraftryk svarer til det, som den udstedende myndighed har offentliggjort, før du importerer den.</string>
+    <string name="trust_import_signer">Underskriver</string>
+    <string name="trust_import_signer_fingerprint">Underskriverens SHA-256-fingeraftryk</string>
+    <string name="trust_import_signing_date">Underskriftsdato</string>
+    <string name="trust_import_signing_date_unknown">Ikke angivet</string>
+    <string name="trust_import_certificate_count">Antal certifikater</string>
+    <string name="trust_import_confirm">Importér</string>
+    <string name="trust_cancel">Annuller</string>
+    <plurals name="trust_import_done">
+        <item quantity="one">Master List importeret: %1$d certifikat.</item>
+        <item quantity="other">Master List importeret: %1$d certifikater.</item>
+    </plurals>
+    <string name="trust_import_invalid">Denne fil er ikke en gyldig Master List: ulæseligt format eller forkert signatur (%1$s).</string>
+    <string name="trust_import_too_large">Filen blev afvist: den er større end 20 MB.</string>
+    <string name="trust_import_read_error">Filen kunne ikke læses.</string>
+    <string name="trust_import_write_error">Master Listen kunne ikke gemmes.</string>
+    <plurals name="trust_import_limit_count">
+        <item quantity="one">Import afvist: højst %1$d importeret Master List. Slet de importerede certifikater for at tilføje en anden.</item>
+        <item quantity="other">Import afvist: højst %1$d importerede Master Lists. Slet de importerede certifikater for at tilføje en anden.</item>
+    </plurals>
+    <string name="trust_import_limit_size">Import afvist: de importerede Master Lists ville fylde mere end %1$d MB i alt. Slet de importerede certifikater for at tilføje en anden.</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">Slet importerede certifikater</string>
+    <string name="trust_delete_confirm_title">Vil du slette de importerede certifikater?</string>
+    <string name="trust_delete_confirm_text">De importerede Master Lists slettes. De certifikater, der er indbygget i appen, bevares.</string>
+    <string name="trust_delete_confirm">Slet</string>
+    <string name="trust_delete_done">Importerede certifikater er slettet.</string>
+    <string name="trust_delete_error">De importerede certifikater kunne ikke slettes.</string>
+</resources>

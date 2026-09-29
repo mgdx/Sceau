@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="result_title">Resultat</string>
+    <string name="result_clear">Ryd</string>
+
+    <!-- Verdict -->
+    <string name="result_verdict_authentic">Ægte</string>
+    <string name="result_verdict_authentic_explanation">Udstederens signatur er gyldig, og chippen har bevist, at den ikke er en kopi.</string>
+    <string name="result_verdict_chip_unverified">Gyldig signatur, chip ikke kontrolleret</string>
+    <string name="result_verdict_chip_unverified_explanation">Dataene er signeret af udstederen, men chippen kan ikke bevise, at den er den originale: den kan være en klon.</string>
+    <string name="result_verdict_unknown_issuer">Ukendt udsteder</string>
+    <string name="result_verdict_unknown_issuer_explanation">Udstederens certifikat findes ikke i tillidslageret. Dataene vises, men intet er garanteret. Import af en nyere Master List kan gøre det muligt at kontrollere dokumentet.</string>
+    <string name="result_verdict_failed">Mislykkedes</string>
+    <string name="result_verdict_failed_explanation">Mindst én kontrol mislykkedes: dokumentet må ikke betragtes som ægte.</string>
+    <string name="result_verdict_imported_anchor">Kontrolleret med et certifikat, du har importeret</string>
+
+    <!-- Photo -->
+    <string name="result_photo_description">Foto af indehaveren</string>
+    <string name="result_photo_unavailable">Fotoet er ulæseligt eller mangler</string>
+    <string name="result_photo_fullscreen">Vis fotoet i fuld skærm</string>
+    <string name="result_photo_close">Luk</string>
+    <string name="result_image_front">Billede af forsiden</string>
+    <string name="result_image_rear">Billede af bagsiden</string>
+    <string name="result_image_unavailable">Ulæseligt billede</string>
+
+    <!-- Identité -->
+    <string name="result_section_identity">Identitet</string>
+    <string name="result_expired">Dokumentet er udløbet</string>
+    <string name="result_field_surname">Efternavn</string>
+    <string name="result_field_given_names">Fornavne</string>
+    <string name="result_field_sex">Køn</string>
+    <string name="result_field_birth_date">Fødselsdato</string>
+    <string name="result_field_nationality">Nationalitet</string>
+    <string name="result_field_document_type">Dokumenttype</string>
+    <string name="result_field_document_number">Dokumentnummer</string>
+    <string name="result_field_issuing_state">Udstedende stat</string>
+    <string name="result_field_expiry_date">Udløbsdato</string>
+    <string name="result_sex_male">Mand</string>
+    <string name="result_sex_female">Kvinde</string>
+    <string name="result_sex_unspecified">Ikke angivet</string>
+    <string name="result_document_passport">Pas</string>
+    <string name="result_document_identity_card">Identitetskort</string>
+    <string name="result_document_other">Andet rejsedokument</string>
+    <string name="result_value_with_code">%1$s (%2$s)</string>
+    <string name="result_unknown_value">Ukendt</string>
+
+    <!-- Pays spéciaux ICAO -->
+    <string name="result_country_united_nations">De Forenede Nationer</string>
+    <string name="result_country_un_agency">FN’s særorganisation</string>
+    <string name="result_country_un_kosovo">Kosovo (UNMIK)</string>
+    <string name="result_country_stateless">Statsløs</string>
+    <string name="result_country_refugee">Flygtning (konventionen fra 1951)</string>
+    <string name="result_country_refugee_other">Flygtning</string>
+    <string name="result_country_unspecified">Nationalitet ikke angivet</string>
+
+    <!-- Données complémentaires -->
+    <string name="result_section_additional">Supplerende oplysninger</string>
+    <string name="result_field_full_name">Fulde navn</string>
+    <string name="result_field_other_names">Andre navne</string>
+    <string name="result_field_personal_number">Personnummer</string>
+    <string name="result_field_full_birth_date">Fuld fødselsdato</string>
+    <string name="result_field_place_of_birth">Fødested</string>
+    <string name="result_field_address">Adresse</string>
+    <string name="result_field_telephone">Telefon</string>
+    <string name="result_field_profession">Erhverv</string>
+    <string name="result_field_title">Titel</string>
+    <string name="result_field_personal_summary">Personlig beskrivelse</string>
+    <string name="result_field_other_td_numbers">Andre gyldige rejsedokumenter</string>
+    <string name="result_field_custody">Oplysninger om forældremyndighed</string>
+    <string name="result_field_issuing_authority">Udstedende myndighed</string>
+    <string name="result_field_issue_date">Udstedelsesdato</string>
+    <string name="result_field_other_persons">Andre nævnte personer</string>
+    <string name="result_field_endorsements">Påtegninger og bemærkninger</string>
+    <string name="result_field_tax_exit">Skatte- eller udrejseforpligtelser</string>
+    <string name="result_field_personalization_time">Personaliseringsdato</string>
+    <string name="result_field_personalization_device">Personaliseringssystemets nummer</string>
+
+    <!-- Vérifications -->
+    <string name="result_section_checks">Kontroller</string>
+    <string name="result_check_secure_channel">Sikker kanal oprettet</string>
+    <string name="result_check_sod_signature">Gyldig SOD-signatur</string>
+    <string name="result_check_chain">Certifikatkæde</string>
+    <string name="result_check_ds_validity">DS-certifikatets gyldighed</string>
+    <string name="result_check_dg_hashes">Datagruppernes hashværdier</string>
+    <string name="result_check_chip_authentication">Chip Authentication (DG14)</string>
+    <string name="result_check_active_authentication">Active Authentication (DG15)</string>
+    <string name="result_status_ok">Gennemført</string>
+    <string name="result_status_failed">Mislykkedes</string>
+    <string name="result_status_not_available">Ikke tilgængelig</string>
+    <string name="result_status_unsupported">Algoritmen understøttes ikke</string>
+    <string name="result_check_expand">Vis detaljer</string>
+    <string name="result_check_collapse">Skjul detaljer</string>
+
+    <!-- Détail des vérifications -->
+    <string name="result_detail_protocol">Protokol: %1$s</string>
+    <string name="result_detail_ca_method">Metode: %1$s</string>
+    <string name="result_detail_ca_method_dg14">Chip Authentication med nøglen fra DG14</string>
+    <string name="result_detail_ca_method_pace_cam">PACE-CAM under åbning af kanalen, med nøglen fra EF.CardSecurity</string>
+    <string name="result_detail_algorithm">Signaturalgoritme: %1$s</string>
+    <string name="result_detail_csca">CSCA: %1$s</string>
+    <string name="result_detail_csca_none">Intet CSCA i lageret passer.</string>
+    <string name="result_detail_country">Land: %1$s</string>
+    <string name="result_detail_country_mismatch">Landene stemmer ikke overens: certificeringsmyndighed %1$s, underskriverens certifikat %2$s, dokument %3$s</string>
+    <string name="result_detail_source">Kilde: %1$s</string>
+    <string name="result_detail_source_ants">certifikater fra ANTS</string>
+    <string name="result_detail_source_national">certifikater offentliggjort af den udstedende stat</string>
+    <string name="result_detail_source_embedded">indbygget Master List</string>
+    <string name="result_detail_source_imported">importeret Master List</string>
+    <string name="result_detail_ds_subject">DS-certifikat: %1$s</string>
+    <string name="result_detail_links">Gennemløbne linkcertifikater:</string>
+    <string name="result_detail_link_item">• %1$s</string>
+    <string name="result_detail_links_none">Intet linkcertifikat gennemløbet.</string>
+    <string name="result_detail_ds_missing">DS-certifikatet findes hverken i SOD eller i tillidslageret.</string>
+    <string name="result_detail_ds_period">DS-certifikatets gyldighedsperiode: fra %1$s til %2$s</string>
+    <string name="result_detail_issuance">Udstedelsesdato: %1$s (%2$s)</string>
+    <string name="result_detail_issuance_no_source">Udstedelsesdato: %1$s</string>
+    <string name="result_detail_issuance_unknown">Udstedelsesdato ukendt.</string>
+    <string name="result_detail_issuance_dg12">læst i DG12</string>
+    <string name="result_detail_issuance_sod">SOD’s underskriftsdato</string>
+    <string name="result_detail_issuance_estimated">anslået</string>
+    <string name="result_detail_digest_algorithm">Hashalgoritme: %1$s</string>
+    <string name="result_detail_dg_checked">Kontrollerede datagrupper: %1$s</string>
+    <string name="result_detail_dg_checked_none">Ingen datagrupper kontrolleret.</string>
+    <string name="result_detail_dg_mismatched">Hashværdier, der ikke stemmer: %1$s</string>
+    <string name="result_detail_dg_all_match">Alle hashværdier stemmer.</string>
+    <string name="result_detail_dg_missing">Datagrupper, der er angivet, men ikke leveret af chippen: %1$s</string>
+    <string name="result_detail_unsupported">Algoritmen understøttes ikke: %1$s</string>
+    <string name="result_detail_error">Teknisk fejl: %1$s</string>
+    <string name="result_detail_no_dg14">Dokumentet indeholder ikke DG14: chippen tilbyder ikke denne kontrol.</string>
+    <string name="result_detail_no_dg15">Dokumentet indeholder ikke DG15: chippen tilbyder ikke denne kontrol.</string>
+    <string name="result_detail_not_reached">Trinnet blev ikke udført.</string>
+    <string name="result_detail_none">Ingen yderligere detaljer.</string>
+    <string name="result_demo_banner">Simuleret dokument – demonstration</string>
+</resources>

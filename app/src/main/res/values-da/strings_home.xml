@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">Flere valgmuligheder</string>
+    <string name="home_menu_trust_store">Tillidslager</string>
+    <string name="home_menu_about">Om</string>
+    <string name="home_tab_id_card">Identitetskort</string>
+    <string name="home_tab_passport">Pas</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">6-cifret nummer trykt på kortets forside</string>
+    <string name="home_document_number_label">Dokumentnummer</string>
+    <string name="home_document_number_supporting">Som trykt på personsiden, højst 9 tegn</string>
+    <string name="home_date_of_birth_label">Fødselsdato</string>
+    <string name="home_date_of_expiry_label">Udløbsdato</string>
+    <string name="home_date_day">DD</string>
+    <string name="home_date_month">MM</string>
+    <string name="home_date_year">ÅÅÅÅ</string>
+    <string name="home_date_format">Format: %1$s</string>
+    <string name="home_date_error_invalid">Denne dato findes ikke</string>
+    <string name="home_date_error_future">Fødselsdatoen kan ikke ligge i fremtiden</string>
+    <string name="home_date_error_too_old">Udløbsdatoen er for gammel (før %1$d)</string>
+    <string name="home_holder_notice">Dokumentet skal fremvises af dets indehaver.</string>
+    <string name="home_read">Læs</string>
+    <string name="home_nfc_disabled">NFC er slået fra. Slå det til for at læse dokumentets chip.</string>
+    <string name="home_nfc_settings">Åbn NFC-indstillinger</string>
+    <string name="home_nfc_absent">Denne telefon har ikke NFC: den kan ikke læse chippen i identitetsdokumenter.</string>
+    <string name="home_menu_demo">Simulér et fransk ID-kort (demo)</string>
+</resources>

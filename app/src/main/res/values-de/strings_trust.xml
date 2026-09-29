@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trust_title">Vertrauensspeicher</string>
+    <string name="trust_back">Zurück</string>
+    <string name="trust_intro">Stammzertifikate (CSCA) der Ausstellungsstaaten, mit denen die Signatur der Dokumente geprüft wird. Über diesen Bildschirm werden keine personenbezogenen Daten verarbeitet.</string>
+    <plurals name="trust_summary">
+        <item quantity="one">%1$d Zertifikat, Länder: %2$d</item>
+        <item quantity="other">%1$d Zertifikate, Länder: %2$d</item>
+    </plurals>
+    <string name="trust_loading">Vertrauensspeicher wird geladen…</string>
+    <string name="trust_load_error">Vertrauensspeicher kann nicht geladen werden.</string>
+    <string name="trust_retry">Wiederholen</string>
+    <string name="trust_empty">Keine Zertifikate im Vertrauensspeicher.</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">Land nicht angegeben</string>
+    <plurals name="trust_country_count">
+        <item quantity="one">%1$d Zertifikat</item>
+        <item quantity="other">%1$d Zertifikate</item>
+    </plurals>
+    <string name="trust_country_expand">Zertifikate anzeigen</string>
+    <string name="trust_country_collapse">Zertifikate ausblenden</string>
+    <string name="trust_validity">Gültig vom %1$s bis %2$s</string>
+    <string name="trust_fingerprint">SHA-256-Fingerabdruck</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_national">Nationale Veröffentlichung</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">Importiert</string>
+    <string name="trust_link_certificate">Link-Zertifikat</string>
+
+    <!-- Import -->
+    <string name="trust_import">Master List importieren</string>
+    <string name="trust_busy">Bitte warten…</string>
+    <string name="trust_import_confirm_title">Diese Master List importieren?</string>
+    <string name="trust_import_confirm_text">Ihre Signatur ist gültig. Prüfen Sie vor dem Import, ob der Fingerabdruck des Signierers mit dem von der ausstellenden Stelle veröffentlichten übereinstimmt.</string>
+    <string name="trust_import_signer">Signierer</string>
+    <string name="trust_import_signer_fingerprint">SHA-256-Fingerabdruck des Signierers</string>
+    <string name="trust_import_signing_date">Signaturdatum</string>
+    <string name="trust_import_signing_date_unknown">Nicht angegeben</string>
+    <string name="trust_import_certificate_count">Anzahl der Zertifikate</string>
+    <string name="trust_import_confirm">Importieren</string>
+    <string name="trust_cancel">Abbrechen</string>
+    <plurals name="trust_import_done">
+        <item quantity="one">Master List importiert: %1$d Zertifikat.</item>
+        <item quantity="other">Master List importiert: %1$d Zertifikate.</item>
+    </plurals>
+    <string name="trust_import_invalid">Diese Datei ist keine gültige Master List: Format unlesbar oder Signatur ungültig (%1$s).</string>
+    <string name="trust_import_too_large">Datei abgelehnt: Sie ist größer als 20 MB.</string>
+    <string name="trust_import_read_error">Diese Datei kann nicht gelesen werden.</string>
+    <string name="trust_import_write_error">Die Master List kann nicht gespeichert werden.</string>
+    <plurals name="trust_import_limit_count">
+        <item quantity="one">Import abgelehnt: höchstens %1$d importierte Master List. Löschen Sie die importierten Zertifikate, um eine weitere hinzuzufügen.</item>
+        <item quantity="other">Import abgelehnt: höchstens %1$d importierte Master Lists. Löschen Sie die importierten Zertifikate, um eine weitere hinzuzufügen.</item>
+    </plurals>
+    <string name="trust_import_limit_size">Import abgelehnt: Die importierten Master Lists würden insgesamt %1$d MB überschreiten. Löschen Sie die importierten Zertifikate, um eine weitere hinzuzufügen.</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">Importierte Zertifikate löschen</string>
+    <string name="trust_delete_confirm_title">Importierte Zertifikate löschen?</string>
+    <string name="trust_delete_confirm_text">Die importierten Master Lists werden gelöscht. Die in die App integrierten Zertifikate bleiben erhalten.</string>
+    <string name="trust_delete_confirm">Löschen</string>
+    <string name="trust_delete_done">Importierte Zertifikate gelöscht.</string>
+    <string name="trust_delete_error">Die importierten Zertifikate können nicht gelöscht werden.</string>
+</resources>
