@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">Ďalšie možnosti</string>
+    <string name="home_menu_trust_store">Dôveryhodné certifikáty</string>
+    <string name="home_menu_about">O aplikácii</string>
+    <string name="home_tab_id_card">Občiansky preukaz</string>
+    <string name="home_tab_passport">Cestovný pas</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">Šesťmiestne číslo vytlačené na prednej strane preukazu</string>
+    <string name="home_document_number_label">Číslo dokladu</string>
+    <string name="home_document_number_supporting">Ako je uvedené na údajovej strane, najviac 9 znakov</string>
+    <string name="home_date_of_birth_label">Dátum narodenia</string>
+    <string name="home_date_of_expiry_label">Platnosť do</string>
+    <string name="home_date_day">DD</string>
+    <string name="home_date_month">MM</string>
+    <string name="home_date_year">RRRR</string>
+    <string name="home_date_format">Formát: %1$s</string>
+    <string name="home_date_error_invalid">Tento dátum neexistuje</string>
+    <string name="home_date_error_future">Dátum narodenia nemôže byť v budúcnosti</string>
+    <string name="home_date_error_too_old">Príliš starý dátum skončenia platnosti (pred rokom %1$d)</string>
+    <string name="home_holder_notice">Doklad musí predložiť jeho držiteľ.</string>
+    <string name="home_read">Prečítať</string>
+    <string name="home_nfc_disabled">NFC je vypnuté. Zapnite ho, aby ste mohli prečítať čip dokladu.</string>
+    <string name="home_nfc_settings">Otvoriť nastavenia NFC</string>
+    <string name="home_nfc_absent">Tento telefón nemá NFC: nemôže čítať čipy dokladov totožnosti.</string>
+    <string name="home_menu_demo">Simulovať francúzsky občiansky preukaz (ukážka)</string>
+</resources>

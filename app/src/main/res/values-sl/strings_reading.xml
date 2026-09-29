@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reading_title">Branje dokumenta</string>
+    <string name="reading_prompt">Dokument prislonite na hrbtno stran telefona in ga ne odmikajte</string>
+    <string name="reading_step_connect">Povezovanje s čipom</string>
+    <string name="reading_step_secure_channel">Vzpostavljanje varnega kanala (PACE ali BAC)</string>
+    <string name="reading_step_read_data">Branje podatkov</string>
+    <string name="reading_step_verify_signature">Preverjanje podpisa</string>
+    <string name="reading_step_verify_chip">Preverjanje čipa</string>
+    <string name="reading_step_pending">čaka</string>
+    <string name="reading_step_in_progress">poteka</string>
+    <string name="reading_step_done">končano</string>
+    <string name="reading_error_title">Branje prekinjeno</string>
+    <string name="reading_slow_chip">Čip dokumenta zahteva čakanje, pogosto po neuspešnih poskusih. Dokument držite pri miru, to lahko traja do ene minute.</string>
+    <string name="reading_error_access_denied">CAN ali podatki iz MRZ so napačni. Preverite vneseno številko in datume ter poskusite znova. Vsak neuspešen poskus lahko podaljša čakanje, ki ga čip zahteva pred odgovorom.</string>
+    <string name="reading_error_connection_lost">Dokument je bil odmaknjen prezgodaj. Do konca branja ga držite pri miru ob telefonu.</string>
+    <string name="reading_error_not_icao">Ta dokument ni skladen s standardom ICAO 9303: njegovega čipa ni mogoče prebrati.</string>
+    <string name="reading_error_timeout">Čas je potekel: čip ni odgovoril pravočasno. Poskusite znova in dokument držite pri miru.</string>
+    <string name="reading_error_can_without_pace">Tega dokumenta ni mogoče prebrati s CAN. Uporabite zavihek Potni list in vnesite podatke iz MRZ.</string>
+    <string name="reading_error_unexpected">Prišlo je do nepričakovane napake.</string>
+    <string name="reading_error_code">Koda napake: %1$s</string>
+    <string name="reading_retry">Poskusi znova</string>
+    <string name="reading_cancel">Prekliči</string>
+</resources>

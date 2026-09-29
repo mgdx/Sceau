@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">Više opcija</string>
+    <string name="home_menu_trust_store">Pouzdani certifikati</string>
+    <string name="home_menu_about">O aplikaciji</string>
+    <string name="home_tab_id_card">Osobna iskaznica</string>
+    <string name="home_tab_passport">Putovnica</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">Šesteroznamenkasti broj otisnut na prednjoj strani iskaznice</string>
+    <string name="home_document_number_label">Broj isprave</string>
+    <string name="home_document_number_supporting">Kako je otisnut na stranici s podacima, najviše 9 znakova</string>
+    <string name="home_date_of_birth_label">Datum rođenja</string>
+    <string name="home_date_of_expiry_label">Datum isteka</string>
+    <string name="home_date_day">DD</string>
+    <string name="home_date_month">MM</string>
+    <string name="home_date_year">GGGG</string>
+    <string name="home_date_format">Format: %1$s</string>
+    <string name="home_date_error_invalid">Taj datum ne postoji</string>
+    <string name="home_date_error_future">Datum rođenja ne može biti u budućnosti</string>
+    <string name="home_date_error_too_old">Datum isteka je prestar (prije %1$d.)</string>
+    <string name="home_holder_notice">Ispravu mora predočiti njezin nositelj.</string>
+    <string name="home_read">Očitaj</string>
+    <string name="home_nfc_disabled">NFC je isključen. Uključite ga da biste očitali čip isprave.</string>
+    <string name="home_nfc_settings">Otvori postavke NFC-a</string>
+    <string name="home_nfc_absent">Ovaj telefon nema NFC: ne može očitavati čipove identifikacijskih isprava.</string>
+    <string name="home_menu_demo">Simuliraj francusku osobnu iskaznicu (demo)</string>
+</resources>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">O aplikaci</string>
+    <string name="about_back">Zpět</string>
+    <string name="about_tagline">Offline čtení a ověřování čipu dokladů totožnosti podle ICAO 9303.</string>
+    <string name="about_version">Verze %1$s</string>
+    <string name="about_version_unknown">Neznámá verze</string>
+
+    <string name="about_section_license">Licence a zdrojový kód</string>
+    <string name="about_license">Svobodný software šířený pod licencí GNU GPL verze 3 nebo novější.</string>
+    <string name="about_open_repository">Zobrazit zdrojový kód</string>
+    <string name="about_no_browser">Tento odkaz nelze otevřít v žádné aplikaci.</string>
+
+    <string name="about_section_trust">Vestavěné důvěryhodné certifikáty</string>
+    <string name="about_trust_ants_only">Francouzské certifikáty CSCA od ANTS (cestovní pasy a občanské průkazy).</string>
+    <string name="about_trust_ants_and_bsi">Francouzské certifikáty CSCA od ANTS a německý seznam Master List úřadu BSI.</string>
+    <string name="about_trust_master_list_date">Seznam Master List podepsán dne %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">Datum podpisu seznamu Master List není uvedeno.</string>
+    <string name="about_trust_bsi_notice">Seznam Master List úřadu BSI (německého Spolkového úřadu pro bezpečnost informačních technologií) je šířen beze změn, bez spolupráce či souhlasu BSI.</string>
+    <string name="about_trust_national">Certifikáty zveřejněné následujícími státy pro jejich vlastní doklady: %1$s.</string>
+    <string name="about_trust_ogl_notice">Obsahuje informace britského veřejného sektoru zveřejněné pod licencí Open Government Licence v3.0.</string>
+    <string name="about_trust_loading">Načítání…</string>
+    <string name="about_trust_error">Důvěryhodné certifikáty nelze načíst.</string>
+
+    <string name="about_section_limits">Omezení</string>
+    <string name="about_limit_unknown_issuer">Doklad, jehož vydávající stát není mezi důvěryhodnými certifikáty, dostane verdikt „Neznámý vydavatel“, nikoli „Neúspěch“. Pomoci může import novějšího seznamu Master List.</string>
+    <string name="about_limit_revocation">Seznamy odvolaných certifikátů se nekontrolují: vyžadují připojení k síti, které Sceau nikdy nepoužívá.</string>
+
+    <string name="about_section_usage">Podmínky použití</string>
+    <string name="about_usage_holder">Čtení předpokládá, že držitel svůj doklad předkládá sám a souhlasí s tím.</string>
+    <string name="about_usage_biometrics">Fotografie se stává biometrickým údajem ve smyslu GDPR, pokud slouží k automatizovanému porovnávání obličejů. Sceau takové porovnání neprovádí a bez zvláštního právního základu k tomu nesmí být používán.</string>
+    <string name="about_usage_privacy">Žádné přečtené údaje se neukládají ani neodesílají: vše se vymaže z paměti při opuštění výsledku nebo přesunutí aplikace na pozadí.</string>
+</resources>
