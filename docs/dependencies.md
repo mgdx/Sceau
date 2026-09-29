@@ -56,6 +56,7 @@ Ces dépendances sont déclarées en `debugImplementation` : elles n'apparaissen
 |---|---|---|---|
 | `androidx.compose.ui:ui-tooling` | 1.11.2 | Apache 2.0 | Outils de prévisualisation Compose |
 | `project(":testchip")` | — | GPLv3 (code de Sceau) | Mode démo : CNIe simulée, PKI de test (décision D17). Tire JMRTD, SCUBA et BouncyCastle, déjà présents. |
+| `androidx.compose.ui:ui-test-manifest` | 1.11.2 (BOM Compose) | Apache 2.0 (POM) | Déclare l'activité vide `androidx.activity.ComponentActivity` (exportée, sans contenu) qui accueille les tests Compose sous Robolectric (`TextOverflowTest`, D28). Rien d'autre : ni code, ni permission. Présente dans l'APK de debug seulement. |
 
 Vérification : `./gradlew :app:dependencies --configuration releaseRuntimeClasspath` ne mentionne pas `project :testchip`, `debugRuntimeClasspath` le mentionne (constaté le 2026-09-25).
 
@@ -108,6 +109,12 @@ Provenance et empreintes : `docs/trust-store.md`.
 | JUnit (tests uniquement) | 4.13.2 | EPL 1.0 (`LICENSE-junit.txt` du jar) |
 | Hamcrest Core (tests uniquement, tiré par JUnit) | 1.3 | BSD (`LICENSE.txt` du jar) |
 | kotlinx-coroutines-test (tests uniquement) | 1.11.0 | Apache 2.0 |
+| Robolectric `org.robolectric:robolectric` (tests uniquement, D28) | 4.17 | MIT (POM, comme `nativeruntime` 4.17) |
+| Jars Android de Robolectric `org.robolectric:android-all-instrumented` (téléchargés par Robolectric au premier lancement des tests, depuis Maven Central) | 17-robolectric-15733970-i7 (Android 37) | Apache 2.0 (code d'AOSP) |
+| Compose UI test `androidx.compose.ui:ui-test-junit4` (tests uniquement, D28) | 1.11.2 (BOM Compose) | Apache 2.0 (POM) |
+| Espresso `androidx.test.espresso:espresso-core` (tests uniquement, D28) | 3.7.0 | Apache 2.0 (POM de Google Maven, en-têtes du jar `-sources`) |
 | Plugin `org.gradle.toolchains.foojay-resolver-convention` | 1.0.0 | non vérifiée sur l'artefact : le POM publié ne déclare pas de licence (Apache 2.0 selon le dépôt amont, à confirmer) |
 | Android NDK (compilation de `libsceau_jp2.so`) | 28.2.13676358 | Apache 2.0 (Clang/LLVM : Apache 2.0 avec exception LLVM) |
 | CMake (compilation native) | 4.1.2 | BSD-3-Clause |
+
+Robolectric, Compose UI test et Espresso ne servent qu'au contrôle des débordements de texte (`app/src/test/.../l10n/TextOverflowTest.kt`, D28) et n'entrent dans aucun APK : `./gradlew :app:dependencies --configuration releaseRuntimeClasspath` n'en mentionne aucun, ni `ui-test-manifest` (constaté le 2026-09-29). Le rendu natif de Robolectric (`nativeruntime`) contient des bibliothèques précompilées, exécutées seulement par les tests JVM : F-Droid construit l'APK sans lancer les tests. Espresso 3.7.0 est imposé parce que la version 3.5.0 tirée par `ui-test-junit4` appelle `InputManager.getInstance()`, absent d'Android 37. Les tests de `:app` tournent sur le JDK 25 (celui du démon Gradle et de la CI) : Robolectric exige Java 21 ou plus pour Android 37 ; le code reste compilé pour Java 17.

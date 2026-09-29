@@ -67,6 +67,10 @@ android {
             excludes += "META-INF/versions/*/OSGI-INF/MANIFEST.MF"
         }
     }
+    testOptions {
+        // Ressources Android (chaînes des 45 langues) visibles des tests Robolectric (D28).
+        unitTests.isIncludeAndroidResources = true
+    }
     lint {
         warningsAsErrors = true
         abortOnError = true
@@ -83,6 +87,15 @@ kotlin {
     compilerOptions {
         allWarningsAsErrors = true
     }
+}
+
+// Robolectric exige Java 21 ou plus pour simuler Android 37 (compileSdk) : les tests JVM de
+// l'app tournent sur le JDK 25 déjà utilisé par le démon Gradle et la CI ; le code reste compilé
+// pour Java 17. --add-exports : Robolectric manipule les descripteurs de fichiers internes du
+// JDK ; --enable-native-access : son rendu natif, sans avertissement (D28).
+tasks.withType<Test>().configureEach {
+    javaLauncher.set(javaToolchains.launcherFor { languageVersion.set(JavaLanguageVersion.of(25)) })
+    jvmArgs("--add-exports=java.base/jdk.internal.access=ALL-UNNAMED", "--enable-native-access=ALL-UNNAMED")
 }
 
 configurations.configureEach {
@@ -110,6 +123,16 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
 
     testImplementation(libs.junit)
+    // Contrôle des débordements de texte dans toutes les langues (D28) : Robolectric et
+    // Compose UI test, en tests JVM uniquement. ui-test-manifest déclare l'activité hôte des
+    // tests Compose : debugImplementation, jamais dans l'APK release.
+    testImplementation(libs.robolectric)
+    testImplementation(platform(libs.androidx.compose.bom))
+    testImplementation(libs.androidx.compose.ui.test.junit4)
+    // Espresso 3.5 tiré par ui-test-junit4 appelle InputManager.getInstance(), absent
+    // d'Android 37 : version récente imposée (tests uniquement).
+    testImplementation(libs.androidx.test.espresso.core)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
     // Mode démo (CNIe simulée) : APK de debug uniquement, jamais en release.
     debugImplementation(project(":testchip"))
