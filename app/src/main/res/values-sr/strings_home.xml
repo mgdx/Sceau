@@ -23,5 +23,5 @@
     <string name="home_nfc_disabled">NFC је искључен. Укључите га да бисте прочитали чип документа.</string>
     <string name="home_nfc_settings">Отвори NFC подешавања</string>
     <string name="home_nfc_absent">Овај телефон нема NFC: не може да чита чип идентификационих докумената.</string>
-    <string name="home_menu_demo">Симулирај CNIe (демо)</string>
+    <string name="home_menu_demo">Симулирај француску личну карту (демо)</string>
 </resources>
