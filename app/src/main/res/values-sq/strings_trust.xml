@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trust_title">Certifikatat e besuara</string>
+    <string name="trust_back">Prapa</string>
+    <string name="trust_intro">Certifikatat rrënjë (CSCA) të vendeve lëshuese, që përdoren për të verifikuar nënshkrimin e dokumenteve. Asnjë e dhënë personale nuk kalon nëpër këtë ekran.</string>
+    <plurals name="trust_summary">
+        <item quantity="one">%1$d certifikatë, vende: %2$d</item>
+        <item quantity="other">%1$d certifikata, vende: %2$d</item>
+    </plurals>
+    <string name="trust_loading">Po ngarkohen certifikatat e besuara…</string>
+    <string name="trust_load_error">Certifikatat e besuara nuk mund të ngarkoheshin.</string>
+    <string name="trust_retry">Provo përsëri</string>
+    <string name="trust_empty">Nuk ka asnjë certifikatë të besuar.</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">Vendi nuk është treguar</string>
+    <plurals name="trust_country_count">
+        <item quantity="one">%1$d certifikatë</item>
+        <item quantity="other">%1$d certifikata</item>
+    </plurals>
+    <string name="trust_country_expand">Shfaq certifikatat</string>
+    <string name="trust_country_collapse">Fshih certifikatat</string>
+    <string name="trust_validity">E vlefshme nga %1$s deri më %2$s</string>
+    <string name="trust_fingerprint">Gjurma SHA-256</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_national">Publikim kombëtar</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">E importuar</string>
+    <string name="trust_link_certificate">Certifikatë lidhëse</string>
+
+    <!-- Import -->
+    <string name="trust_import">Importo një Master List</string>
+    <string name="trust_busy">Prit pak…</string>
+    <string name="trust_import_confirm_title">Të importohet kjo Master List?</string>
+    <string name="trust_import_confirm_text">Nënshkrimi i saj është i vlefshëm. Para importimit, kontrollo që gjurma e nënshkruesit të përputhet me atë të publikuar nga autoriteti lëshues.</string>
+    <string name="trust_import_signer">Nënshkruesi</string>
+    <string name="trust_import_signer_fingerprint">Gjurma SHA-256 e nënshkruesit</string>
+    <string name="trust_import_signing_date">Data e nënshkrimit</string>
+    <string name="trust_import_signing_date_unknown">Nuk është treguar</string>
+    <string name="trust_import_certificate_count">Numri i certifikatave</string>
+    <string name="trust_import_confirm">Importo</string>
+    <string name="trust_cancel">Anulo</string>
+    <plurals name="trust_import_done">
+        <item quantity="one">Master List u importua: %1$d certifikatë.</item>
+        <item quantity="other">Master List u importua: %1$d certifikata.</item>
+    </plurals>
+    <string name="trust_import_invalid">Ky skedar nuk është Master List e vlefshme: format i palexueshëm ose nënshkrim i pasaktë (%1$s).</string>
+    <string name="trust_import_too_large">Skedari u refuzua: i kalon 20 MB.</string>
+    <string name="trust_import_read_error">Ky skedar nuk mund të lexohej.</string>
+    <string name="trust_import_write_error">Master List nuk mund të ruhej.</string>
+    <plurals name="trust_import_limit_count">
+        <item quantity="one">Importimi u refuzua: lejohet të shumtën %1$d Master List e importuar. Fshi certifikatat e importuara për të shtuar një tjetër.</item>
+        <item quantity="other">Importimi u refuzua: lejohen të shumtën %1$d Master List të importuara. Fshi certifikatat e importuara për të shtuar një tjetër.</item>
+    </plurals>
+    <string name="trust_import_limit_size">Importimi u refuzua: Master List-at e importuara do të kalonin gjithsej %1$d MB. Fshi certifikatat e importuara për të shtuar një tjetër.</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">Fshi certifikatat e importuara</string>
+    <string name="trust_delete_confirm_title">Të fshihen certifikatat e importuara?</string>
+    <string name="trust_delete_confirm_text">Master List-at e importuara do të fshihen. Certifikatat e integruara në aplikacion ruhen.</string>
+    <string name="trust_delete_confirm">Fshi</string>
+    <string name="trust_delete_done">Certifikatat e importuara u fshinë.</string>
+    <string name="trust_delete_error">Certifikatat e importuara nuk mund të fshiheshin.</string>
+</resources>

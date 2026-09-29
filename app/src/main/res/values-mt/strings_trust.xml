@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trust_title">Ħażna ta’ fiduċja</string>
+    <string name="trust_back">Lura</string>
+    <string name="trust_intro">Ċertifikati għerq (CSCA) tal-pajjiżi emittenti, użati biex tiġi vverifikata l-firma tad-dokumenti. L-ebda data personali ma tgħaddi minn dan l-iskrin.</string>
+    <plurals name="trust_summary">
+        <item quantity="one">%1$d ċertifikat, pajjiżi: %2$d</item>
+        <item quantity="few">%1$d ċertifikati, pajjiżi: %2$d</item>
+        <item quantity="many">%1$d-il ċertifikat, pajjiżi: %2$d</item>
+        <item quantity="other">%1$d ċertifikat, pajjiżi: %2$d</item>
+    </plurals>
+    <string name="trust_loading">Il-ħażna ta’ fiduċja qed titgħabba…</string>
+    <string name="trust_load_error">Ma setgħetx titgħabba l-ħażna ta’ fiduċja.</string>
+    <string name="trust_retry">Erġa’ pprova</string>
+    <string name="trust_empty">M’hemm l-ebda ċertifikat fil-ħażna ta’ fiduċja.</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">Pajjiż mhux indikat</string>
+    <plurals name="trust_country_count">
+        <item quantity="one">%1$d ċertifikat</item>
+        <item quantity="few">%1$d ċertifikati</item>
+        <item quantity="many">%1$d-il ċertifikat</item>
+        <item quantity="other">%1$d ċertifikat</item>
+    </plurals>
+    <string name="trust_country_expand">Uri ċ-ċertifikati</string>
+    <string name="trust_country_collapse">Aħbi ċ-ċertifikati</string>
+    <string name="trust_validity">Validu minn %1$s sa %2$s</string>
+    <string name="trust_fingerprint">Impronta SHA-256</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_national">Pubblikazzjoni nazzjonali</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">Importat</string>
+    <string name="trust_link_certificate">Ċertifikat ta’ rabta</string>
+
+    <!-- Import -->
+    <string name="trust_import">Importa Master List</string>
+    <string name="trust_busy">Stenna ftit…</string>
+    <string name="trust_import_confirm_title">Timporta din il-Master List?</string>
+    <string name="trust_import_confirm_text">Il-firma tagħha hija valida. Qabel ma timportaha, iċċekkja li l-impronta tal-firmatarju taqbel ma’ dik ippubblikata mill-awtorità emittenti.</string>
+    <string name="trust_import_signer">Firmatarju</string>
+    <string name="trust_import_signer_fingerprint">Impronta SHA-256 tal-firmatarju</string>
+    <string name="trust_import_signing_date">Data tal-firma</string>
+    <string name="trust_import_signing_date_unknown">Mhux indikata</string>
+    <string name="trust_import_certificate_count">Numru ta’ ċertifikati</string>
+    <string name="trust_import_confirm">Importa</string>
+    <string name="trust_cancel">Ikkanċella</string>
+    <plurals name="trust_import_done">
+        <item quantity="one">Master List importata: %1$d ċertifikat.</item>
+        <item quantity="few">Master List importata: %1$d ċertifikati.</item>
+        <item quantity="many">Master List importata: %1$d-il ċertifikat.</item>
+        <item quantity="other">Master List importata: %1$d ċertifikat.</item>
+    </plurals>
+    <string name="trust_import_invalid">Dan il-fajl mhuwiex Master List valida: format li ma jinqarax jew firma mhux korretta (%1$s).</string>
+    <string name="trust_import_too_large">Fajl miċħud: jaqbeż l-20 MB.</string>
+    <string name="trust_import_read_error">Dan il-fajl ma setax jinqara.</string>
+    <string name="trust_import_write_error">Il-Master List ma setgħetx tiġi salvata.</string>
+    <plurals name="trust_import_limit_count">
+        <item quantity="one">Importazzjoni miċħuda: massimu ta’ %1$d Master List importata. Ħassar iċ-ċertifikati importati biex iżżid oħra.</item>
+        <item quantity="few">Importazzjoni miċħuda: massimu ta’ %1$d Master Lists importati. Ħassar iċ-ċertifikati importati biex iżżid oħra.</item>
+        <item quantity="many">Importazzjoni miċħuda: massimu ta’ %1$d-il Master List importata. Ħassar iċ-ċertifikati importati biex iżżid oħra.</item>
+        <item quantity="other">Importazzjoni miċħuda: massimu ta’ %1$d Master List importata. Ħassar iċ-ċertifikati importati biex iżżid oħra.</item>
+    </plurals>
+    <string name="trust_import_limit_size">Importazzjoni miċħuda: il-Master Lists importati kienu jaqbżu %1$d MB b’kollox. Ħassar iċ-ċertifikati importati biex iżżid oħra.</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">Ħassar iċ-ċertifikati importati</string>
+    <string name="trust_delete_confirm_title">Tħassar iċ-ċertifikati importati?</string>
+    <string name="trust_delete_confirm_text">Il-Master Lists importati se jitħassru. Iċ-ċertifikati integrati fl-app jinżammu.</string>
+    <string name="trust_delete_confirm">Ħassar</string>
+    <string name="trust_delete_done">Iċ-ċertifikati importati tħassru.</string>
+    <string name="trust_delete_error">Iċ-ċertifikati importati ma setgħux jitħassru.</string>
+</resources>

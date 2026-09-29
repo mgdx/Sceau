@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">Aktar għażliet</string>
+    <string name="home_menu_trust_store">Ħażna ta’ fiduċja</string>
+    <string name="home_menu_about">Dwar</string>
+    <string name="home_tab_id_card">Karta tal-identità</string>
+    <string name="home_tab_passport">Passaport</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">Numru ta’ 6 ċifri stampat fuq quddiem tal-karta</string>
+    <string name="home_document_number_label">Numru tad-dokument</string>
+    <string name="home_document_number_supporting">Kif stampat fuq il-paġna tad-data, massimu ta’ 9 karattri</string>
+    <string name="home_date_of_birth_label">Data tat-twelid</string>
+    <string name="home_date_of_expiry_label">Data ta’ skadenza</string>
+    <string name="home_date_day">JJ</string>
+    <string name="home_date_month">XX</string>
+    <string name="home_date_year">SSSS</string>
+    <string name="home_date_format">Format: %1$s</string>
+    <string name="home_date_error_invalid">Din id-data ma teżistix</string>
+    <string name="home_date_error_future">Id-data tat-twelid ma tistax tkun fil-futur</string>
+    <string name="home_date_error_too_old">Data ta’ skadenza antika wisq (qabel %1$d)</string>
+    <string name="home_holder_notice">Id-dokument irid jiġi ppreżentat mid-detentur tiegħu.</string>
+    <string name="home_read">Aqra</string>
+    <string name="home_nfc_disabled">L-NFC huwa mitfi. Ixgħelu biex taqra ċ-ċippa tad-dokument.</string>
+    <string name="home_nfc_settings">Iftaħ is-settings tal-NFC</string>
+    <string name="home_nfc_absent">Dan it-telefon m’għandux NFC: ma jistax jaqra ċ-ċippa tad-dokumenti tal-identità.</string>
+    <string name="home_menu_demo">Issimula karta tal-identità Franċiża (demo)</string>
+</resources>

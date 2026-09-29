@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trust_title">Luotetut varmenteet</string>
+    <string name="trust_back">Takaisin</string>
+    <string name="trust_intro">Myöntäjämaiden juurivarmenteet (CSCA), joilla tarkistetaan asiakirjojen allekirjoitus. Tämä näkymä ei käsittele henkilötietoja.</string>
+    <plurals name="trust_summary">
+        <item quantity="one">%1$d varmenne, maita: %2$d</item>
+        <item quantity="other">%1$d varmennetta, maita: %2$d</item>
+    </plurals>
+    <string name="trust_loading">Ladataan luotettuja varmenteita…</string>
+    <string name="trust_load_error">Luotettujen varmenteiden lataaminen epäonnistui.</string>
+    <string name="trust_retry">Yritä uudelleen</string>
+    <string name="trust_empty">Luotettuja varmenteita ei ole.</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">Maata ei ole ilmoitettu</string>
+    <plurals name="trust_country_count">
+        <item quantity="one">%1$d varmenne</item>
+        <item quantity="other">%1$d varmennetta</item>
+    </plurals>
+    <string name="trust_country_expand">Näytä varmenteet</string>
+    <string name="trust_country_collapse">Piilota varmenteet</string>
+    <string name="trust_validity">Voimassa %1$s–%2$s</string>
+    <string name="trust_fingerprint">SHA-256-sormenjälki</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_national">Kansallinen julkaisu</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">Tuotu</string>
+    <string name="trust_link_certificate">Linkkivarmenne</string>
+
+    <!-- Import -->
+    <string name="trust_import">Tuo Master List</string>
+    <string name="trust_busy">Odota…</string>
+    <string name="trust_import_confirm_title">Tuodaanko tämä Master List?</string>
+    <string name="trust_import_confirm_text">Sen allekirjoitus on kelvollinen. Varmista ennen tuontia, että allekirjoittajan sormenjälki vastaa myöntävän viranomaisen julkaisemaa sormenjälkeä.</string>
+    <string name="trust_import_signer">Allekirjoittaja</string>
+    <string name="trust_import_signer_fingerprint">Allekirjoittajan SHA-256-sormenjälki</string>
+    <string name="trust_import_signing_date">Allekirjoituspäivä</string>
+    <string name="trust_import_signing_date_unknown">Ei ilmoitettu</string>
+    <string name="trust_import_certificate_count">Varmenteiden määrä</string>
+    <string name="trust_import_confirm">Tuo</string>
+    <string name="trust_cancel">Peruuta</string>
+    <plurals name="trust_import_done">
+        <item quantity="one">Master List tuotu: %1$d varmenne.</item>
+        <item quantity="other">Master List tuotu: %1$d varmennetta.</item>
+    </plurals>
+    <string name="trust_import_invalid">Tiedosto ei ole kelvollinen Master List: muotoa ei voi lukea tai allekirjoitus on virheellinen (%1$s).</string>
+    <string name="trust_import_too_large">Tiedosto hylättiin: se on yli 20 Mt.</string>
+    <string name="trust_import_read_error">Tiedoston lukeminen epäonnistui.</string>
+    <string name="trust_import_write_error">Master Listin tallentaminen epäonnistui.</string>
+    <plurals name="trust_import_limit_count">
+        <item quantity="one">Tuonti hylättiin: enintään %1$d tuotu Master List. Poista tuodut varmenteet, jos haluat lisätä uuden.</item>
+        <item quantity="other">Tuonti hylättiin: enintään %1$d tuotua Master Listiä. Poista tuodut varmenteet, jos haluat lisätä uuden.</item>
+    </plurals>
+    <string name="trust_import_limit_size">Tuonti hylättiin: tuotujen Master Listien yhteiskoko ylittäisi %1$d Mt. Poista tuodut varmenteet, jos haluat lisätä uuden.</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">Poista tuodut varmenteet</string>
+    <string name="trust_delete_confirm_title">Poistetaanko tuodut varmenteet?</string>
+    <string name="trust_delete_confirm_text">Tuodut Master Listit poistetaan. Sovellukseen sisäänrakennetut varmenteet säilyvät.</string>
+    <string name="trust_delete_confirm">Poista</string>
+    <string name="trust_delete_done">Tuodut varmenteet poistettu.</string>
+    <string name="trust_delete_error">Tuotujen varmenteiden poistaminen epäonnistui.</string>
+</resources>

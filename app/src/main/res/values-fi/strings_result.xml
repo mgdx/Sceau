@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="result_title">Tulos</string>
+    <string name="result_clear">Tyhjennä</string>
+
+    <!-- Verdict -->
+    <string name="result_verdict_authentic">Aito</string>
+    <string name="result_verdict_authentic_explanation">Myöntäjän allekirjoitus on kelvollinen, ja siru osoitti, ettei se ole kopio.</string>
+    <string name="result_verdict_chip_unverified">Allekirjoitus kelvollinen, sirua ei varmennettu</string>
+    <string name="result_verdict_chip_unverified_explanation">Myöntäjä on allekirjoittanut tiedot, mutta siru ei pysty osoittamaan olevansa alkuperäinen: se voi olla klooni.</string>
+    <string name="result_verdict_unknown_issuer">Tuntematon myöntäjä</string>
+    <string name="result_verdict_unknown_issuer_explanation">Myöntäjän varmenne ei ole luotettujen varmenteiden joukossa. Tiedot näytetään, mutta mitään ei voida taata. Uudemman Master Listin tuominen voi mahdollistaa asiakirjan tarkistamisen.</string>
+    <string name="result_verdict_failed">Epäonnistui</string>
+    <string name="result_verdict_failed_explanation">Vähintään yksi tarkistus epäonnistui: asiakirjaa ei pidä pitää aitona.</string>
+    <string name="result_verdict_imported_anchor">Tarkistettu tuomasi varmenteen avulla</string>
+
+    <!-- Photo -->
+    <string name="result_photo_description">Haltijan kuva</string>
+    <string name="result_photo_unavailable">Kuva puuttuu tai sitä ei voi lukea</string>
+    <string name="result_photo_fullscreen">Näytä kuva koko näytöllä</string>
+    <string name="result_photo_close">Sulje</string>
+    <string name="result_image_front">Etupuolen kuva</string>
+    <string name="result_image_rear">Takapuolen kuva</string>
+    <string name="result_image_unavailable">Kuvaa ei voi lukea</string>
+
+    <!-- Identité -->
+    <string name="result_section_identity">Henkilötiedot</string>
+    <string name="result_expired">Asiakirja on vanhentunut</string>
+    <string name="result_field_surname">Sukunimi</string>
+    <string name="result_field_given_names">Etunimet</string>
+    <string name="result_field_sex">Sukupuoli</string>
+    <string name="result_field_birth_date">Syntymäaika</string>
+    <string name="result_field_nationality">Kansalaisuus</string>
+    <string name="result_field_document_type">Asiakirjan tyyppi</string>
+    <string name="result_field_document_number">Asiakirjan numero</string>
+    <string name="result_field_issuing_state">Myöntäjävaltio</string>
+    <string name="result_field_expiry_date">Voimassaolon päättymispäivä</string>
+    <string name="result_sex_male">Mies</string>
+    <string name="result_sex_female">Nainen</string>
+    <string name="result_sex_unspecified">Ei määritetty</string>
+    <string name="result_document_passport">Passi</string>
+    <string name="result_document_identity_card">Henkilökortti</string>
+    <string name="result_document_other">Muu matkustusasiakirja</string>
+    <string name="result_value_with_code">%1$s (%2$s)</string>
+    <string name="result_unknown_value">Tuntematon</string>
+
+    <!-- Pays spéciaux ICAO -->
+    <string name="result_country_united_nations">Yhdistyneet kansakunnat</string>
+    <string name="result_country_un_agency">YK:n erityisjärjestö</string>
+    <string name="result_country_un_kosovo">Kosovo (UNMIK)</string>
+    <string name="result_country_stateless">Kansalaisuudeton</string>
+    <string name="result_country_refugee">Pakolainen (vuoden 1951 yleissopimus)</string>
+    <string name="result_country_refugee_other">Pakolainen</string>
+    <string name="result_country_unspecified">Kansalaisuutta ei ole määritetty</string>
+
+    <!-- Données complémentaires -->
+    <string name="result_section_additional">Lisätiedot</string>
+    <string name="result_field_full_name">Koko nimi</string>
+    <string name="result_field_other_names">Muut nimet</string>
+    <string name="result_field_personal_number">Henkilönumero</string>
+    <string name="result_field_full_birth_date">Täydellinen syntymäaika</string>
+    <string name="result_field_place_of_birth">Syntymäpaikka</string>
+    <string name="result_field_address">Osoite</string>
+    <string name="result_field_telephone">Puhelin</string>
+    <string name="result_field_profession">Ammatti</string>
+    <string name="result_field_title">Arvo</string>
+    <string name="result_field_personal_summary">Henkilökuvaus</string>
+    <string name="result_field_other_td_numbers">Muut voimassa olevat matkustusasiakirjat</string>
+    <string name="result_field_custody">Huoltajuustiedot</string>
+    <string name="result_field_issuing_authority">Myöntävä viranomainen</string>
+    <string name="result_field_issue_date">Myöntämispäivä</string>
+    <string name="result_field_other_persons">Muut mainitut henkilöt</string>
+    <string name="result_field_endorsements">Merkinnät ja huomautukset</string>
+    <string name="result_field_tax_exit">Vero- tai maastalähtövaatimukset</string>
+    <string name="result_field_personalization_time">Henkilöintipäivä</string>
+    <string name="result_field_personalization_device">Henkilöintijärjestelmän sarjanumero</string>
+
+    <!-- Vérifications -->
+    <string name="result_section_checks">Tarkistukset</string>
+    <string name="result_check_secure_channel">Suojattu kanava muodostettu</string>
+    <string name="result_check_sod_signature">SOD-allekirjoitus kelvollinen</string>
+    <string name="result_check_chain">Varmenneketju</string>
+    <string name="result_check_ds_validity">DS-varmenteen voimassaolo</string>
+    <string name="result_check_dg_hashes">Tietoryhmien tiivisteet</string>
+    <string name="result_check_chip_authentication">Chip Authentication (DG14)</string>
+    <string name="result_check_active_authentication">Active Authentication (DG15)</string>
+    <string name="result_status_ok">Onnistui</string>
+    <string name="result_status_failed">Epäonnistui</string>
+    <string name="result_status_not_available">Ei saatavilla</string>
+    <string name="result_status_unsupported">Algoritmia ei tueta</string>
+    <string name="result_check_expand">Näytä tiedot</string>
+    <string name="result_check_collapse">Piilota tiedot</string>
+
+    <!-- Détail des vérifications -->
+    <string name="result_detail_protocol">Protokolla: %1$s</string>
+    <string name="result_detail_ca_method">Menetelmä: %1$s</string>
+    <string name="result_detail_ca_method_dg14">Chip Authentication DG14:n avaimella</string>
+    <string name="result_detail_ca_method_pace_cam">PACE-CAM kanavaa avattaessa, EF.CardSecurityn avaimella</string>
+    <string name="result_detail_algorithm">Allekirjoitusalgoritmi: %1$s</string>
+    <string name="result_detail_csca">CSCA: %1$s</string>
+    <string name="result_detail_csca_none">Mikään luotetuista CSCA-varmenteista ei vastaa.</string>
+    <string name="result_detail_country">Maa: %1$s</string>
+    <string name="result_detail_country_mismatch">Maat eivät täsmää: varmentaja %1$s, allekirjoittajan varmenne %2$s, asiakirja %3$s</string>
+    <string name="result_detail_source">Lähde: %1$s</string>
+    <string name="result_detail_source_ants">ANTS:n varmenteet</string>
+    <string name="result_detail_source_national">myöntäjävaltion julkaisemat varmenteet</string>
+    <string name="result_detail_source_embedded">sisäänrakennettu Master List</string>
+    <string name="result_detail_source_imported">tuotu Master List</string>
+    <string name="result_detail_ds_subject">DS-varmenne: %1$s</string>
+    <string name="result_detail_links">Läpikäydyt linkkivarmenteet:</string>
+    <string name="result_detail_link_item">• %1$s</string>
+    <string name="result_detail_links_none">Linkkivarmenteita ei käyty läpi.</string>
+    <string name="result_detail_ds_missing">DS-varmenne ei ole SOD:ssa eikä luotettujen varmenteiden joukossa.</string>
+    <string name="result_detail_ds_period">DS-varmenteen voimassaolo: %1$s–%2$s</string>
+    <string name="result_detail_issuance">Myöntämispäivä: %1$s (%2$s)</string>
+    <string name="result_detail_issuance_no_source">Myöntämispäivä: %1$s</string>
+    <string name="result_detail_issuance_unknown">Myöntämispäivä tuntematon.</string>
+    <string name="result_detail_issuance_dg12">luettu DG12:sta</string>
+    <string name="result_detail_issuance_sod">SOD:n allekirjoituspäivä</string>
+    <string name="result_detail_issuance_estimated">arvio</string>
+    <string name="result_detail_digest_algorithm">Tiivistealgoritmi: %1$s</string>
+    <string name="result_detail_dg_checked">Tarkistetut tietoryhmät: %1$s</string>
+    <string name="result_detail_dg_checked_none">Yhtään tietoryhmää ei tarkistettu.</string>
+    <string name="result_detail_dg_mismatched">Poikkeavat tiivisteet: %1$s</string>
+    <string name="result_detail_dg_all_match">Kaikki tiivisteet täsmäävät.</string>
+    <string name="result_detail_dg_missing">Ilmoitetut tietoryhmät, joita siru ei antanut: %1$s</string>
+    <string name="result_detail_unsupported">Algoritmia ei tueta: %1$s</string>
+    <string name="result_detail_error">Tekninen virhe: %1$s</string>
+    <string name="result_detail_no_dg14">Asiakirjassa ei ole DG14:ää: siru ei tarjoa tätä tarkistusta.</string>
+    <string name="result_detail_no_dg15">Asiakirjassa ei ole DG15:tä: siru ei tarjoa tätä tarkistusta.</string>
+    <string name="result_detail_not_reached">Vaihetta ei suoritettu.</string>
+    <string name="result_detail_none">Ei lisätietoja.</string>
+    <string name="result_demo_banner">Simuloitu asiakirja – esittely</string>
+</resources>

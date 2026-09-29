@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">Tuilleadh roghanna</string>
+    <string name="home_menu_trust_store">Stór iontaobhais</string>
+    <string name="home_menu_about">Maidir le</string>
+    <string name="home_tab_id_card">Cárta aitheantais</string>
+    <string name="home_tab_passport">Pas</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">Uimhir 6 dhigit atá clóite ar aghaidh an chárta</string>
+    <string name="home_document_number_label">Uimhir na cáipéise</string>
+    <string name="home_document_number_supporting">Mar atá sí ar an leathanach sonraí, 9 gcarachtar ar a mhéad</string>
+    <string name="home_date_of_birth_label">Dáta breithe</string>
+    <string name="home_date_of_expiry_label">Dáta éaga</string>
+    <string name="home_date_day">LL</string>
+    <string name="home_date_month">MM</string>
+    <string name="home_date_year">BBBB</string>
+    <string name="home_date_format">Formáid: %1$s</string>
+    <string name="home_date_error_invalid">Níl an dáta seo ann</string>
+    <string name="home_date_error_future">Ní féidir leis an dáta breithe a bheith sa todhchaí</string>
+    <string name="home_date_error_too_old">Dáta éaga róshean (roimh %1$d)</string>
+    <string name="home_holder_notice">Ní mór don sealbhóir féin an cháipéis a thaispeáint.</string>
+    <string name="home_read">Léigh</string>
+    <string name="home_nfc_disabled">Tá NFC casta as. Cas air é chun sliseog na cáipéise a léamh.</string>
+    <string name="home_nfc_settings">Oscail socruithe NFC</string>
+    <string name="home_nfc_absent">Níl NFC ar an bhfón seo, mar sin ní féidir leis sliseog na gcáipéisí aitheantais a léamh.</string>
+    <string name="home_menu_demo">Insamhail cárta aitheantais Francach (taispeántas)</string>
+</resources>

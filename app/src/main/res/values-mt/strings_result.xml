@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="result_title">Riżultat</string>
+    <string name="result_clear">Ħassar</string>
+
+    <!-- Verdict -->
+    <string name="result_verdict_authentic">Awtentiku</string>
+    <string name="result_verdict_authentic_explanation">Il-firma tal-emittent hija valida u ċ-ċippa wriet li mhijiex kopja.</string>
+    <string name="result_verdict_chip_unverified">Firma valida, ċippa mhux ivverifikata</string>
+    <string name="result_verdict_chip_unverified_explanation">Id-data ġiet iffirmata mill-emittent, iżda ċ-ċippa ma tistax tipprova li hija l-oriġinali: tista’ tkun klonu.</string>
+    <string name="result_verdict_unknown_issuer">Emittent mhux magħruf</string>
+    <string name="result_verdict_unknown_issuer_explanation">Iċ-ċertifikat tal-emittent mhuwiex fil-ħażna ta’ fiduċja. Id-data tintwera, iżda xejn mhu garantit. L-importazzjoni ta’ Master List aktar riċenti tista’ tippermetti l-verifika ta’ dan id-dokument.</string>
+    <string name="result_verdict_failed">Falla</string>
+    <string name="result_verdict_failed_explanation">Mill-inqas verifika waħda falliet: dan id-dokument m’għandux jitqies awtentiku.</string>
+    <string name="result_verdict_imported_anchor">Ivverifikat b’ċertifikat li importajt int</string>
+
+    <!-- Photo -->
+    <string name="result_photo_description">Ritratt tad-detentur</string>
+    <string name="result_photo_unavailable">Ritratt nieqes jew ma jinqarax</string>
+    <string name="result_photo_fullscreen">Uri r-ritratt fuq l-iskrin kollu</string>
+    <string name="result_photo_close">Agħlaq</string>
+    <string name="result_image_front">Immaġni ta’ quddiem</string>
+    <string name="result_image_rear">Immaġni ta’ wara</string>
+    <string name="result_image_unavailable">Immaġni li ma tinqarax</string>
+
+    <!-- Identité -->
+    <string name="result_section_identity">Identità</string>
+    <string name="result_expired">Dokument skadut</string>
+    <string name="result_field_surname">Kunjom</string>
+    <string name="result_field_given_names">Ismijiet</string>
+    <string name="result_field_sex">Sess</string>
+    <string name="result_field_birth_date">Data tat-twelid</string>
+    <string name="result_field_nationality">Nazzjonalità</string>
+    <string name="result_field_document_type">Tip ta’ dokument</string>
+    <string name="result_field_document_number">Numru tad-dokument</string>
+    <string name="result_field_issuing_state">Stat emittenti</string>
+    <string name="result_field_expiry_date">Data ta’ skadenza</string>
+    <string name="result_sex_male">Maskil</string>
+    <string name="result_sex_female">Femminil</string>
+    <string name="result_sex_unspecified">Mhux speċifikat</string>
+    <string name="result_document_passport">Passaport</string>
+    <string name="result_document_identity_card">Karta tal-identità</string>
+    <string name="result_document_other">Dokument tal-ivvjaġġar ieħor</string>
+    <string name="result_value_with_code">%1$s (%2$s)</string>
+    <string name="result_unknown_value">Mhux magħruf</string>
+
+    <!-- Pays spéciaux ICAO -->
+    <string name="result_country_united_nations">Nazzjonijiet Uniti</string>
+    <string name="result_country_un_agency">Aġenzija speċjalizzata tan-Nazzjonijiet Uniti</string>
+    <string name="result_country_un_kosovo">Kosovo (UNMIK)</string>
+    <string name="result_country_stateless">Persuna apolida</string>
+    <string name="result_country_refugee">Refuġjat (Konvenzjoni tal-1951)</string>
+    <string name="result_country_refugee_other">Refuġjat</string>
+    <string name="result_country_unspecified">Nazzjonalità mhux speċifikata</string>
+
+    <!-- Données complémentaires -->
+    <string name="result_section_additional">Data addizzjonali</string>
+    <string name="result_field_full_name">Isem sħiħ</string>
+    <string name="result_field_other_names">Ismijiet oħra</string>
+    <string name="result_field_personal_number">Numru personali</string>
+    <string name="result_field_full_birth_date">Data sħiħa tat-twelid</string>
+    <string name="result_field_place_of_birth">Post tat-twelid</string>
+    <string name="result_field_address">Indirizz</string>
+    <string name="result_field_telephone">Telefon</string>
+    <string name="result_field_profession">Professjoni</string>
+    <string name="result_field_title">Titlu</string>
+    <string name="result_field_personal_summary">Sommarju personali</string>
+    <string name="result_field_other_td_numbers">Dokumenti tal-ivvjaġġar validi oħra</string>
+    <string name="result_field_custody">Informazzjoni dwar il-kustodja</string>
+    <string name="result_field_issuing_authority">Awtorità tal-ħruġ</string>
+    <string name="result_field_issue_date">Data tal-ħruġ</string>
+    <string name="result_field_other_persons">Persuni oħra msemmija</string>
+    <string name="result_field_endorsements">Annotazzjonijiet u osservazzjonijiet</string>
+    <string name="result_field_tax_exit">Obbligi fiskali jew tal-ħruġ mill-pajjiż</string>
+    <string name="result_field_personalization_time">Data tal-personalizzazzjoni</string>
+    <string name="result_field_personalization_device">Numru serjali tas-sistema tal-personalizzazzjoni</string>
+
+    <!-- Vérifications -->
+    <string name="result_section_checks">Verifiki</string>
+    <string name="result_check_secure_channel">Kanal sigur stabbilit</string>
+    <string name="result_check_sod_signature">Firma tas-SOD valida</string>
+    <string name="result_check_chain">Katina taċ-ċertifikazzjoni</string>
+    <string name="result_check_ds_validity">Validità taċ-ċertifikat DS</string>
+    <string name="result_check_dg_hashes">Hashes tal-gruppi tad-data</string>
+    <string name="result_check_chip_authentication">Chip Authentication (DG14)</string>
+    <string name="result_check_active_authentication">Active Authentication (DG15)</string>
+    <string name="result_status_ok">Irnexxiet</string>
+    <string name="result_status_failed">Falliet</string>
+    <string name="result_status_not_available">Mhux disponibbli</string>
+    <string name="result_status_unsupported">Algoritmu mhux appoġġat</string>
+    <string name="result_check_expand">Uri d-dettalji</string>
+    <string name="result_check_collapse">Aħbi d-dettalji</string>
+
+    <!-- Détail des vérifications -->
+    <string name="result_detail_protocol">Protokoll: %1$s</string>
+    <string name="result_detail_ca_method">Metodu: %1$s</string>
+    <string name="result_detail_ca_method_dg14">Chip Authentication biċ-ċavetta ta’ DG14</string>
+    <string name="result_detail_ca_method_pace_cam">PACE-CAM, waqt il-ftuħ tal-kanal, biċ-ċavetta ta’ EF.CardSecurity</string>
+    <string name="result_detail_algorithm">Algoritmu tal-firma: %1$s</string>
+    <string name="result_detail_csca">CSCA: %1$s</string>
+    <string name="result_detail_csca_none">L-ebda CSCA fil-ħażna ma jaqbel.</string>
+    <string name="result_detail_country">Pajjiż: %1$s</string>
+    <string name="result_detail_country_mismatch">Pajjiżi inkonsistenti: awtorità taċ-ċertifikazzjoni %1$s, ċertifikat tal-firmatarju %2$s, dokument %3$s</string>
+    <string name="result_detail_source">Sors: %1$s</string>
+    <string name="result_detail_source_ants">ċertifikati tal-ANTS</string>
+    <string name="result_detail_source_national">ċertifikati ppubblikati mill-Istat emittenti</string>
+    <string name="result_detail_source_embedded">Master List integrata</string>
+    <string name="result_detail_source_imported">Master List importata</string>
+    <string name="result_detail_ds_subject">Ċertifikat DS: %1$s</string>
+    <string name="result_detail_links">Ċertifikati ta’ rabta użati:</string>
+    <string name="result_detail_link_item">• %1$s</string>
+    <string name="result_detail_links_none">L-ebda ċertifikat ta’ rabta ma ntuża.</string>
+    <string name="result_detail_ds_missing">Iċ-ċertifikat DS mhuwiex fis-SOD u lanqas fil-ħażna ta’ fiduċja.</string>
+    <string name="result_detail_ds_period">Perjodu ta’ validità tad-DS: minn %1$s sa %2$s</string>
+    <string name="result_detail_issuance">Data tal-ħruġ: %1$s (%2$s)</string>
+    <string name="result_detail_issuance_no_source">Data tal-ħruġ: %1$s</string>
+    <string name="result_detail_issuance_unknown">Data tal-ħruġ mhux magħrufa.</string>
+    <string name="result_detail_issuance_dg12">moqrija minn DG12</string>
+    <string name="result_detail_issuance_sod">data tal-firma tas-SOD</string>
+    <string name="result_detail_issuance_estimated">stmata</string>
+    <string name="result_detail_digest_algorithm">Algoritmu tal-hash: %1$s</string>
+    <string name="result_detail_dg_checked">Gruppi tad-data vverifikati: %1$s</string>
+    <string name="result_detail_dg_checked_none">L-ebda grupp tad-data ma ġie vverifikat.</string>
+    <string name="result_detail_dg_mismatched">Hashes li ma jaqblux: %1$s</string>
+    <string name="result_detail_dg_all_match">Il-hashes kollha jaqblu.</string>
+    <string name="result_detail_dg_missing">Gruppi tad-data ddikjarati iżda mhux ipprovduti miċ-ċippa: %1$s</string>
+    <string name="result_detail_unsupported">Algoritmu mhux appoġġat: %1$s</string>
+    <string name="result_detail_error">Żball tekniku: %1$s</string>
+    <string name="result_detail_no_dg14">Id-dokument ma fihx DG14: iċ-ċippa ma toffrix din il-verifika.</string>
+    <string name="result_detail_no_dg15">Id-dokument ma fihx DG15: iċ-ċippa ma toffrix din il-verifika.</string>
+    <string name="result_detail_not_reached">Il-pass ma twettaqx.</string>
+    <string name="result_detail_none">L-ebda dettall ieħor.</string>
+    <string name="result_demo_banner">Dokument simulat — dimostrazzjoni</string>
+</resources>

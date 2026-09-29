@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">További lehetőségek</string>
+    <string name="home_menu_trust_store">Megbízható tanúsítványok</string>
+    <string name="home_menu_about">Névjegy</string>
+    <string name="home_tab_id_card">Személyi igazolvány</string>
+    <string name="home_tab_passport">Útlevél</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">A kártya előlapjára nyomtatott 6 jegyű szám</string>
+    <string name="home_document_number_label">Okmányazonosító</string>
+    <string name="home_document_number_supporting">Az adatoldalon feltüntetett módon, legfeljebb 9 karakter</string>
+    <string name="home_date_of_birth_label">Születési idő</string>
+    <string name="home_date_of_expiry_label">Érvényesség vége</string>
+    <string name="home_date_day">NN</string>
+    <string name="home_date_month">HH</string>
+    <string name="home_date_year">ÉÉÉÉ</string>
+    <string name="home_date_format">Formátum: %1$s</string>
+    <string name="home_date_error_invalid">Ez a dátum nem létezik</string>
+    <string name="home_date_error_future">A születési idő nem lehet a jövőben</string>
+    <string name="home_date_error_too_old">Túl régi lejárati dátum (%1$d előtti)</string>
+    <string name="home_holder_notice">Az okmányt a tulajdonosának kell bemutatnia.</string>
+    <string name="home_read">Olvasás</string>
+    <string name="home_nfc_disabled">Az NFC ki van kapcsolva. Kapcsolja be az okmány chipjének olvasásához.</string>
+    <string name="home_nfc_settings">NFC-beállítások megnyitása</string>
+    <string name="home_nfc_absent">Ez a telefon nem rendelkezik NFC-vel, ezért nem tudja olvasni a személyazonosító okmányok chipjét.</string>
+    <string name="home_menu_demo">Francia személyi igazolvány szimulálása (demó)</string>
+</resources>

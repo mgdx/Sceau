@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reading_title">Leximi i dokumentit</string>
+    <string name="reading_prompt">Vendose dokumentin te pjesa e pasme e telefonit dhe mos e largo</string>
+    <string name="reading_step_connect">Lidhja me çipin</string>
+    <string name="reading_step_secure_channel">Hapja e kanalit të sigurt (PACE ose BAC)</string>
+    <string name="reading_step_read_data">Leximi i të dhënave</string>
+    <string name="reading_step_verify_signature">Verifikimi i nënshkrimit</string>
+    <string name="reading_step_verify_chip">Verifikimi i çipit</string>
+    <string name="reading_step_pending">në pritje</string>
+    <string name="reading_step_in_progress">në vazhdim</string>
+    <string name="reading_step_done">përfundoi</string>
+    <string name="reading_error_title">Leximi u ndërpre</string>
+    <string name="reading_slow_chip">Çipi i dokumentit po vonon përgjigjen, shpesh pas përpjekjeve të dështuara. Mbaje dokumentin të palëvizur: kjo mund të zgjasë deri në një minutë.</string>
+    <string name="reading_error_access_denied">CAN-i ose të dhënat e MRZ-së janë të pasakta. Kontrollo numrin e futur dhe datat, pastaj provo përsëri. Çdo përpjekje e dështuar mund ta zgjasë vonesën që çipi imponon para se të përgjigjet.</string>
+    <string name="reading_error_connection_lost">Dokumenti u largua shumë herët. Mbaje të palëvizur pranë telefonit deri në fund të leximit.</string>
+    <string name="reading_error_not_icao">Ky dokument nuk është në përputhje me standardin ICAO 9303: çipi i tij nuk mund të lexohet.</string>
+    <string name="reading_error_timeout">Koha mbaroi: çipi nuk u përgjigj në kohë. Provo përsëri duke e mbajtur dokumentin të palëvizur.</string>
+    <string name="reading_error_can_without_pace">Ky dokument nuk lexohet me CAN. Përdor skedën Pasaportë dhe fut të dhënat e MRZ-së.</string>
+    <string name="reading_error_unexpected">Ndodhi një gabim i papritur.</string>
+    <string name="reading_error_code">Kodi i gabimit: %1$s</string>
+    <string name="reading_retry">Provo përsëri</string>
+    <string name="reading_cancel">Anulo</string>
+</resources>

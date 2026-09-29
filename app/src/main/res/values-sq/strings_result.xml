@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="result_title">Rezultati</string>
+    <string name="result_clear">Pastro</string>
+
+    <!-- Verdict -->
+    <string name="result_verdict_authentic">Autentik</string>
+    <string name="result_verdict_authentic_explanation">Nënshkrimi i lëshuesit është i vlefshëm dhe çipi provoi se nuk është kopje.</string>
+    <string name="result_verdict_chip_unverified">Nënshkrim i vlefshëm, çipi i paverifikuar</string>
+    <string name="result_verdict_chip_unverified_explanation">Të dhënat janë nënshkruar nga lëshuesi, por çipi nuk mund të provojë se është origjinali: mund të jetë klon.</string>
+    <string name="result_verdict_unknown_issuer">Lëshues i panjohur</string>
+    <string name="result_verdict_unknown_issuer_explanation">Certifikata e lëshuesit nuk gjendet te certifikatat e besuara. Të dhënat shfaqen, por asgjë nuk garantohet. Importimi i një Master List më të re mund të lejojë verifikimin e këtij dokumenti.</string>
+    <string name="result_verdict_failed">Dështim</string>
+    <string name="result_verdict_failed_explanation">Të paktën një verifikim dështoi: ky dokument nuk duhet konsideruar autentik.</string>
+    <string name="result_verdict_imported_anchor">Verifikuar me një certifikatë që ke importuar</string>
+
+    <!-- Photo -->
+    <string name="result_photo_description">Fotografia e mbajtësit</string>
+    <string name="result_photo_unavailable">Fotografia mungon ose është e palexueshme</string>
+    <string name="result_photo_fullscreen">Shfaq fotografinë në ekran të plotë</string>
+    <string name="result_photo_close">Mbyll</string>
+    <string name="result_image_front">Pamja e përparme</string>
+    <string name="result_image_rear">Pamja e pasme</string>
+    <string name="result_image_unavailable">Imazh i palexueshëm</string>
+
+    <!-- Identité -->
+    <string name="result_section_identity">Identiteti</string>
+    <string name="result_expired">Dokument i skaduar</string>
+    <string name="result_field_surname">Mbiemri</string>
+    <string name="result_field_given_names">Emri</string>
+    <string name="result_field_sex">Gjinia</string>
+    <string name="result_field_birth_date">Datëlindja</string>
+    <string name="result_field_nationality">Shtetësia</string>
+    <string name="result_field_document_type">Lloji i dokumentit</string>
+    <string name="result_field_document_number">Numri i dokumentit</string>
+    <string name="result_field_issuing_state">Shteti lëshues</string>
+    <string name="result_field_expiry_date">Data e skadimit</string>
+    <string name="result_sex_male">Mashkull</string>
+    <string name="result_sex_female">Femër</string>
+    <string name="result_sex_unspecified">E papërcaktuar</string>
+    <string name="result_document_passport">Pasaportë</string>
+    <string name="result_document_identity_card">Letërnjoftim</string>
+    <string name="result_document_other">Dokument tjetër udhëtimi</string>
+    <string name="result_value_with_code">%1$s (%2$s)</string>
+    <string name="result_unknown_value">I panjohur</string>
+
+    <!-- Pays spéciaux ICAO -->
+    <string name="result_country_united_nations">Kombet e Bashkuara</string>
+    <string name="result_country_un_agency">Agjenci e specializuar e Kombeve të Bashkuara</string>
+    <string name="result_country_un_kosovo">Kosovë (UNMIK)</string>
+    <string name="result_country_stateless">Pa shtetësi</string>
+    <string name="result_country_refugee">Refugjat (Konventa e vitit 1951)</string>
+    <string name="result_country_refugee_other">Refugjat</string>
+    <string name="result_country_unspecified">Shtetësi e papërcaktuar</string>
+
+    <!-- Données complémentaires -->
+    <string name="result_section_additional">Të dhëna shtesë</string>
+    <string name="result_field_full_name">Emri i plotë</string>
+    <string name="result_field_other_names">Emra të tjerë</string>
+    <string name="result_field_personal_number">Numri personal</string>
+    <string name="result_field_full_birth_date">Datëlindja e plotë</string>
+    <string name="result_field_place_of_birth">Vendlindja</string>
+    <string name="result_field_address">Adresa</string>
+    <string name="result_field_telephone">Telefoni</string>
+    <string name="result_field_profession">Profesioni</string>
+    <string name="result_field_title">Titulli</string>
+    <string name="result_field_personal_summary">Përmbledhje personale</string>
+    <string name="result_field_other_td_numbers">Dokumente të tjera të vlefshme udhëtimi</string>
+    <string name="result_field_custody">Të dhëna për kujdestarinë</string>
+    <string name="result_field_issuing_authority">Autoriteti lëshues</string>
+    <string name="result_field_issue_date">Data e lëshimit</string>
+    <string name="result_field_other_persons">Persona të tjerë të përmendur</string>
+    <string name="result_field_endorsements">Shënime dhe vërejtje</string>
+    <string name="result_field_tax_exit">Detyrime tatimore ose për daljen nga vendi</string>
+    <string name="result_field_personalization_time">Data e personalizimit</string>
+    <string name="result_field_personalization_device">Numri serial i sistemit të personalizimit</string>
+
+    <!-- Vérifications -->
+    <string name="result_section_checks">Verifikimet</string>
+    <string name="result_check_secure_channel">Kanali i sigurt u vendos</string>
+    <string name="result_check_sod_signature">Nënshkrimi i SOD-it i vlefshëm</string>
+    <string name="result_check_chain">Zinxhiri i certifikimit</string>
+    <string name="result_check_ds_validity">Vlefshmëria e certifikatës DS</string>
+    <string name="result_check_dg_hashes">Gjurmët e grupeve të të dhënave</string>
+    <string name="result_check_chip_authentication">Chip Authentication (DG14)</string>
+    <string name="result_check_active_authentication">Active Authentication (DG15)</string>
+    <string name="result_status_ok">Me sukses</string>
+    <string name="result_status_failed">Dështoi</string>
+    <string name="result_status_not_available">Nuk ofrohet</string>
+    <string name="result_status_unsupported">Algoritëm i pambështetur</string>
+    <string name="result_check_expand">Shfaq detajet</string>
+    <string name="result_check_collapse">Fshih detajet</string>
+
+    <!-- Détail des vérifications -->
+    <string name="result_detail_protocol">Protokolli: %1$s</string>
+    <string name="result_detail_ca_method">Metoda: %1$s</string>
+    <string name="result_detail_ca_method_dg14">Chip Authentication me çelësin e DG14</string>
+    <string name="result_detail_ca_method_pace_cam">PACE-CAM, gjatë hapjes së kanalit, me çelësin e EF.CardSecurity</string>
+    <string name="result_detail_algorithm">Algoritmi i nënshkrimit: %1$s</string>
+    <string name="result_detail_csca">CSCA: %1$s</string>
+    <string name="result_detail_csca_none">Asnjë CSCA e besuar nuk përputhet.</string>
+    <string name="result_detail_country">Vendi: %1$s</string>
+    <string name="result_detail_country_mismatch">Vende që nuk përputhen: autoriteti i certifikimit %1$s, certifikata e nënshkruesit %2$s, dokumenti %3$s</string>
+    <string name="result_detail_source">Burimi: %1$s</string>
+    <string name="result_detail_source_ants">certifikatat e ANTS</string>
+    <string name="result_detail_source_national">certifikata të publikuara nga shteti lëshues</string>
+    <string name="result_detail_source_embedded">Master List e integruar</string>
+    <string name="result_detail_source_imported">Master List e importuar</string>
+    <string name="result_detail_ds_subject">Certifikata DS: %1$s</string>
+    <string name="result_detail_links">Certifikatat lidhëse të përshkuara:</string>
+    <string name="result_detail_link_item">• %1$s</string>
+    <string name="result_detail_links_none">Nuk u përshkua asnjë certifikatë lidhëse.</string>
+    <string name="result_detail_ds_missing">Certifikata DS nuk gjendet as në SOD, as te certifikatat e besuara.</string>
+    <string name="result_detail_ds_period">Periudha e vlefshmërisë së DS: nga %1$s deri më %2$s</string>
+    <string name="result_detail_issuance">Data e lëshimit: %1$s (%2$s)</string>
+    <string name="result_detail_issuance_no_source">Data e lëshimit: %1$s</string>
+    <string name="result_detail_issuance_unknown">Data e lëshimit e panjohur.</string>
+    <string name="result_detail_issuance_dg12">lexuar nga DG12</string>
+    <string name="result_detail_issuance_sod">data e nënshkrimit të SOD-it</string>
+    <string name="result_detail_issuance_estimated">e vlerësuar</string>
+    <string name="result_detail_digest_algorithm">Algoritmi i gjurmës: %1$s</string>
+    <string name="result_detail_dg_checked">Grupet e të dhënave të kontrolluara: %1$s</string>
+    <string name="result_detail_dg_checked_none">Asnjë grup të dhënash nuk u kontrollua.</string>
+    <string name="result_detail_dg_mismatched">Gjurmë që nuk përputhen: %1$s</string>
+    <string name="result_detail_dg_all_match">Të gjitha gjurmët përputhen.</string>
+    <string name="result_detail_dg_missing">Grupe të dhënash të deklaruara, por të pa ofruara nga çipi: %1$s</string>
+    <string name="result_detail_unsupported">Algoritëm i pambështetur: %1$s</string>
+    <string name="result_detail_error">Gabim teknik: %1$s</string>
+    <string name="result_detail_no_dg14">Dokumenti nuk përmban DG14: çipi nuk e ofron këtë verifikim.</string>
+    <string name="result_detail_no_dg15">Dokumenti nuk përmban DG15: çipi nuk e ofron këtë verifikim.</string>
+    <string name="result_detail_not_reached">Hapi nuk u krye.</string>
+    <string name="result_detail_none">Nuk ka detaje të tjera.</string>
+    <string name="result_demo_banner">Dokument i simuluar — demonstrim</string>
+</resources>

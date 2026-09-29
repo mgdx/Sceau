@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">Névjegy</string>
+    <string name="about_back">Vissza</string>
+    <string name="about_tagline">ICAO 9303 szabványú személyazonosító okmányok chipjének offline olvasása és ellenőrzése.</string>
+    <string name="about_version">Verzió: %1$s</string>
+    <string name="about_version_unknown">Ismeretlen verzió</string>
+
+    <string name="about_section_license">Licenc és forráskód</string>
+    <string name="about_license">Szabad szoftver, a GNU GPL 3-as vagy újabb verziója alatt terjesztve.</string>
+    <string name="about_open_repository">Forráskód megtekintése</string>
+    <string name="about_no_browser">Egyik alkalmazás sem tudja megnyitni ezt a linket.</string>
+
+    <string name="about_section_trust">Beépített megbízható tanúsítványok</string>
+    <string name="about_trust_ants_only">Az ANTS francia CSCA-tanúsítványai (útlevelek és személyi igazolványok).</string>
+    <string name="about_trust_ants_and_bsi">Az ANTS francia CSCA-tanúsítványai és a BSI német Master Listje.</string>
+    <string name="about_trust_master_list_date">A Master List aláírásának dátuma: %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">A Master List aláírásának dátuma nincs megadva.</string>
+    <string name="about_trust_bsi_notice">A BSI (Német Szövetségi Információbiztonsági Hivatal) Master Listje változtatás nélkül, a BSI közreműködése és jóváhagyása nélkül kerül továbbterjesztésre.</string>
+    <string name="about_trust_national">Az alábbi államok által saját okmányaikhoz közzétett tanúsítványok: %1$s.</string>
+    <string name="about_trust_ogl_notice">Az Open Government Licence v3.0 licenc alapján közzétett brit közszférabeli információkat tartalmaz.</string>
+    <string name="about_trust_loading">Betöltés…</string>
+    <string name="about_trust_error">Nem sikerült betölteni a megbízható tanúsítványokat.</string>
+
+    <string name="about_section_limits">Korlátok</string>
+    <string name="about_limit_unknown_issuer">Ha egy okmány kibocsátó országa nem szerepel a megbízható tanúsítványok között, az eredmény „Ismeretlen kibocsátó”, nem pedig „Sikertelen”. Egy újabb Master List importálása megoldhatja ezt.</string>
+    <string name="about_limit_revocation">A visszavonási listák nincsenek ellenőrizve: ehhez hálózat kellene, amelyet a Sceau soha nem használ.</string>
+
+    <string name="about_section_usage">Felhasználási keretek</string>
+    <string name="about_usage_holder">Az olvasás feltétele, hogy a tulajdonos maga mutassa be az okmányát, és hozzájáruljon az olvasáshoz.</string>
+    <string name="about_usage_biometrics">A fénykép a GDPR értelmében biometrikus adattá válik, ha automatizált arcösszehasonlításra használják. A Sceau nem végez ilyen összehasonlítást, és erre külön jogalap nélkül nem is használható.</string>
+    <string name="about_usage_privacy">Az alkalmazás egyetlen beolvasott adatot sem tárol és nem küld el: az eredmény elhagyásakor vagy az alkalmazás háttérbe helyezésekor minden törlődik a memóriából.</string>
+</resources>
