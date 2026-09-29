@@ -23,5 +23,5 @@
     <string name="home_nfc_disabled">NFC je isključen. Uključite ga da biste očitali čip dokumenta.</string>
     <string name="home_nfc_settings">Otvori postavke NFC-a</string>
     <string name="home_nfc_absent">Ovaj telefon nema NFC: ne može očitati čip identifikacijskih dokumenata.</string>
-    <string name="home_menu_demo">Simuliraj CNIe (demo)</string>
+    <string name="home_menu_demo">Simuliraj francusku ličnu kartu (demo)</string>
 </resources>
