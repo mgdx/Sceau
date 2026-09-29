@@ -5,6 +5,7 @@
     <string name="trust_intro">Ċertifikati għerq (CSCA) tal-pajjiżi emittenti, użati biex tiġi vverifikata l-firma tad-dokumenti. L-ebda data personali ma tgħaddi minn dan l-iskrin.</string>
     <plurals name="trust_summary">
         <item quantity="one">%1$d ċertifikat, pajjiżi: %2$d</item>
+        <item quantity="two">%1$d ċertifikati, pajjiżi: %2$d</item>
         <item quantity="few">%1$d ċertifikati, pajjiżi: %2$d</item>
         <item quantity="many">%1$d-il ċertifikat, pajjiżi: %2$d</item>
         <item quantity="other">%1$d ċertifikat, pajjiżi: %2$d</item>
@@ -18,6 +19,7 @@
     <string name="trust_country_unknown">Pajjiż mhux indikat</string>
     <plurals name="trust_country_count">
         <item quantity="one">%1$d ċertifikat</item>
+        <item quantity="two">%1$d ċertifikati</item>
         <item quantity="few">%1$d ċertifikati</item>
         <item quantity="many">%1$d-il ċertifikat</item>
         <item quantity="other">%1$d ċertifikat</item>
@@ -46,6 +48,7 @@
     <string name="trust_cancel">Ikkanċella</string>
     <plurals name="trust_import_done">
         <item quantity="one">Master List importata: %1$d ċertifikat.</item>
+        <item quantity="two">Master List importata: %1$d ċertifikati.</item>
         <item quantity="few">Master List importata: %1$d ċertifikati.</item>
         <item quantity="many">Master List importata: %1$d-il ċertifikat.</item>
         <item quantity="other">Master List importata: %1$d ċertifikat.</item>
@@ -56,6 +59,7 @@
     <string name="trust_import_write_error">Il-Master List ma setgħetx tiġi salvata.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Importazzjoni miċħuda: massimu ta’ %1$d Master List importata. Ħassar iċ-ċertifikati importati biex iżżid oħra.</item>
+        <item quantity="two">Importazzjoni miċħuda: massimu ta’ %1$d Master Lists importati. Ħassar iċ-ċertifikati importati biex iżżid oħra.</item>
         <item quantity="few">Importazzjoni miċħuda: massimu ta’ %1$d Master Lists importati. Ħassar iċ-ċertifikati importati biex iżżid oħra.</item>
         <item quantity="many">Importazzjoni miċħuda: massimu ta’ %1$d-il Master List importata. Ħassar iċ-ċertifikati importati biex iżżid oħra.</item>
         <item quantity="other">Importazzjoni miċħuda: massimu ta’ %1$d Master List importata. Ħassar iċ-ċertifikati importati biex iżżid oħra.</item>

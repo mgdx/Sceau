@@ -6,7 +6,6 @@
     <plurals name="trust_summary">
         <item quantity="one">%1$d תעודה, מדינות: %2$d</item>
         <item quantity="two">%1$d תעודות, מדינות: %2$d</item>
-        <item quantity="many">%1$d תעודות, מדינות: %2$d</item>
         <item quantity="other">%1$d תעודות, מדינות: %2$d</item>
     </plurals>
     <string name="trust_loading">מאגר האמון בטעינה…</string>
@@ -19,7 +18,6 @@
     <plurals name="trust_country_count">
         <item quantity="one">%1$d תעודה</item>
         <item quantity="two">%1$d תעודות</item>
-        <item quantity="many">%1$d תעודות</item>
         <item quantity="other">%1$d תעודות</item>
     </plurals>
     <string name="trust_country_expand">הצגת התעודות</string>
@@ -47,7 +45,6 @@
     <plurals name="trust_import_done">
         <item quantity="one">רשימת ה-Master List יובאה: %1$d תעודה.</item>
         <item quantity="two">רשימת ה-Master List יובאה: %1$d תעודות.</item>
-        <item quantity="many">רשימת ה-Master List יובאה: %1$d תעודות.</item>
         <item quantity="other">רשימת ה-Master List יובאה: %1$d תעודות.</item>
     </plurals>
     <string name="trust_import_invalid">הקובץ הזה אינו Master List תקינה: הפורמט אינו קריא או שהחתימה שגויה (%1$s).</string>
@@ -57,7 +54,6 @@
     <plurals name="trust_import_limit_count">
         <item quantity="one">הייבוא נדחה: ניתן לייבא לכל היותר %1$d רשימת Master List. כדי להוסיף רשימה אחרת, יש למחוק את התעודות המיובאות.</item>
         <item quantity="two">הייבוא נדחה: ניתן לייבא עד %1$d רשימות Master List. כדי להוסיף רשימה אחרת, יש למחוק את התעודות המיובאות.</item>
-        <item quantity="many">הייבוא נדחה: ניתן לייבא עד %1$d רשימות Master List. כדי להוסיף רשימה אחרת, יש למחוק את התעודות המיובאות.</item>
         <item quantity="other">הייבוא נדחה: ניתן לייבא עד %1$d רשימות Master List. כדי להוסיף רשימה אחרת, יש למחוק את התעודות המיובאות.</item>
     </plurals>
     <string name="trust_import_limit_size">הייבוא נדחה: הגודל הכולל של רשימות ה-Master List המיובאות יעלה על %1$d MB. כדי להוסיף רשימה אחרת, יש למחוק את התעודות המיובאות.</string>

@@ -5,6 +5,7 @@
     <string name="trust_intro">Certificados raiz (CSCA) dos países emissores, utilizados para verificar a assinatura dos documentos. Nenhum dado pessoal passa por este ecrã.</string>
     <plurals name="trust_summary">
         <item quantity="one">%1$d certificado, países: %2$d</item>
+        <item quantity="many">%1$d certificados, países: %2$d</item>
         <item quantity="other">%1$d certificados, países: %2$d</item>
     </plurals>
     <string name="trust_loading">A carregar o repositório de confiança…</string>
@@ -16,6 +17,7 @@
     <string name="trust_country_unknown">País não indicado</string>
     <plurals name="trust_country_count">
         <item quantity="one">%1$d certificado</item>
+        <item quantity="many">%1$d certificados</item>
         <item quantity="other">%1$d certificados</item>
     </plurals>
     <string name="trust_country_expand">Mostrar certificados</string>
@@ -42,6 +44,7 @@
     <string name="trust_cancel">Cancelar</string>
     <plurals name="trust_import_done">
         <item quantity="one">Master List importada: %1$d certificado.</item>
+        <item quantity="many">Master List importada: %1$d certificados.</item>
         <item quantity="other">Master List importada: %1$d certificados.</item>
     </plurals>
     <string name="trust_import_invalid">Este ficheiro não é uma Master List válida: formato ilegível ou assinatura incorreta (%1$s).</string>
@@ -50,6 +53,7 @@
     <string name="trust_import_write_error">Não foi possível guardar a Master List.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Importação recusada: só é possível importar %1$d Master List no máximo. Elimine os certificados importados para adicionar outra.</item>
+        <item quantity="many">Importação recusada: só é possível importar %1$d Master Lists no máximo. Elimine os certificados importados para adicionar outra.</item>
         <item quantity="other">Importação recusada: só é possível importar %1$d Master Lists no máximo. Elimine os certificados importados para adicionar outra.</item>
     </plurals>
     <string name="trust_import_limit_size">Importação recusada: as Master Lists importadas excederiam %1$d MB no total. Elimine os certificados importados para adicionar outra.</string>

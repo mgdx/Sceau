@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Jalons atteints (SPEC §11) : Socle, Lecture, Vérification et l'essentiel des Finitions (DG11/DG12, écran Magasin de confiance et import, À propos, effacement mémoire, `FLAG_SECURE`, traductions en-US). La lecture réelle d'un passeport français a été validée sur Fairphone 3 le 2026-09-25. Reste le jalon Publication (revue sécurité, plan de test complet sur appareil, première release, soumission F-Droid).
 
-`SPEC.md` est la source de vérité : lis-le en entier avant toute modification. Tout écart est consigné et justifié dans `docs/decisions.md` (D1 à D26 à ce jour). La documentation vit dans `docs/` : `architecture.md`, `protocol.md` (séquence ICAO réelle, délais, codes d'erreur), `trust-store.md`, `dependencies.md`, `test-plan.md`, `decisions.md`.
+`SPEC.md` est la source de vérité : lis-le en entier avant toute modification. Tout écart est consigné et justifié dans `docs/decisions.md` (D1 à D27 à ce jour). La documentation vit dans `docs/` : `architecture.md`, `protocol.md` (séquence ICAO réelle, délais, codes d'erreur), `trust-store.md`, `dependencies.md`, `test-plan.md`, `decisions.md`.
 
 ## Ce qu'est Sceau
 
@@ -72,7 +72,7 @@ JMRTD et SCUBA (`scuba-smartcards`, `scuba-sc-android` ; LGPL 2.1 ou ultérieure
 - Aucune donnée lue n'est écrite sur disque, en cache, en base ni en log, en debug comme en release. **Aucun journal, même temporaire pour déboguer** : ni `Log`, ni `println`, ni `printStackTrace` ; le diagnostic passe par le code d'erreur affiché. Les loggers de JMRTD et SCUBA sont coupés, et aucune exception de JMRTD n'est attachée comme cause (leurs messages contiennent des APDU). Aucune donnée personnelle dans les exceptions ou les identifiants d'erreur.
 - `FLAG_SECURE` sur les écrans Lecture et Résultat. Tableaux d'octets DG1/DG2/DG11/DG12 remis à zéro et libérés à la sortie du résultat et en arrière-plan. CAN/MRZ jamais mémorisés entre deux lectures.
 - Nonce AA tiré d'un `SecureRandom`.
-- Interface en français, aucune chaîne codée en dur : chaînes réparties par écran dans `res/values/strings_<écran>.xml` (D5), `values-en` fourni.
+- Interface en français, aucune chaîne codée en dur : chaînes réparties par écran dans `res/values/strings_<écran>.xml` (D5), `values-en` et 43 autres langues (D27), proposées dans `res/xml/locales_config.xml` à tenir à jour avec les dossiers `values-*` (le lint échoue sinon). Glossaires dans `docs/traduction/`.
 - Aucune télémétrie ni rapport de plantage.
 
 ## Skills du projet

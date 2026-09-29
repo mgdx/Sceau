@@ -324,3 +324,16 @@ Format : date, contexte, décision, justification, écart à la SPEC concerné.
   - Seuls les certificats valides sont ajoutés : les 33 autres certificats nouveaux de statut A sont expirés depuis longtemps et n'apportent rien à des documents en circulation.
   - Taille : 7 fichiers d'environ 1,2 à 1,6 Ko, négligeable devant l'objectif de 8 Mo (D2).
 - **Écart à la SPEC** : §7.1 ne listait que l'ANTS et la Master List du BSI, §7.2 que trois sources. SPEC mise à jour (§5.5, §6 contrôle 3, §7.1, §7.2, §7.4).
+
+## D27. Traductions dans 43 langues, choix de la langue par application
+
+- **Date** : 2026-09-29 (décision de l'utilisateur).
+- **Contexte** : la v1 ne prévoyait que le français et l'anglais (SPEC §2). Le magasin de confiance couvre 110 pays (Master List du BSI, ANTS, publications nationales) : les porteurs de ces documents, et les agents qui les contrôlent, ne lisent souvent ni l'une ni l'autre langue.
+- **Décision** :
+  - 43 langues ajoutées : les 24 langues officielles de l'UE et les grandes langues des pays du magasin (de, nl, da, sv, nb, is, es, it, pt, pt-BR, ro, pl, cs, sk, sl, hr, bs, sr en cyrillique, mk, bg, ru, uk, el, lt, lv, et, fi, hu, ga, mt, sq, ar, hébreu sous le qualificatif historique `iw`, tr, ka, zh-CN, zh-TW, ja, ko, hi, vi, th, ms) ;
+  - `res/xml/locales_config.xml` (`android:localeConfig`) propose ces langues dans les réglages Android 13+ (langue de l'application). Sous Android 12 et avant, l'application suit la langue du système : pas d'AppCompat pour si peu ;
+  - termes ICAO jamais traduits (CAN, MRZ, SOD, CSCA, DG1…DG15, « Master List », « Chip Authentication », « Active Authentication ») ; le reste reprend le vocabulaire d'Android et celui des documents d'identité de chaque pays ; un glossaire par langue dans `docs/traduction/glossaire-<qualificatif>.md` ;
+  - pluriels selon les catégories attendues par le lint (par exemple `many` en es, it et pt, `two` en maltais, pas de `many` en hébreu).
+- **Justification** : les chaînes étaient déjà toutes externalisées (D5), l'ajout ne touche ni le code ni les écrans. Coût : environ 635 Ko par APK release (3,5 → 4,1 Mo par ABI, 4,9 Mo pour l'universel), sous l'objectif de 8 Mo (D2).
+- **Limite** : traductions faites sans relecture par des locuteurs natifs. Les plus fragiles (maltais, irlandais, islandais, géorgien) et le rendu droite-à-gauche (arabe, hébreu) sont à faire relire avant d'être mis en avant ; les doutes relevés sont notés dans les glossaires.
+- **Écart à la SPEC** : §2 ne prévoyait que `values-en` ; SPEC mise à jour.

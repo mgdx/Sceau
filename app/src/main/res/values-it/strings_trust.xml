@@ -5,6 +5,7 @@
     <string name="trust_intro">Certificati radice (CSCA) dei paesi emittenti, usati per verificare la firma dei documenti. Nessun dato personale passa da questa schermata.</string>
     <plurals name="trust_summary">
         <item quantity="one">%1$d certificato, paesi: %2$d</item>
+        <item quantity="many">%1$d certificati, paesi: %2$d</item>
         <item quantity="other">%1$d certificati, paesi: %2$d</item>
     </plurals>
     <string name="trust_loading">Caricamento dell’archivio attendibile…</string>
@@ -16,6 +17,7 @@
     <string name="trust_country_unknown">Paese non indicato</string>
     <plurals name="trust_country_count">
         <item quantity="one">%1$d certificato</item>
+        <item quantity="many">%1$d certificati</item>
         <item quantity="other">%1$d certificati</item>
     </plurals>
     <string name="trust_country_expand">Mostra certificati</string>
@@ -42,6 +44,7 @@
     <string name="trust_cancel">Annulla</string>
     <plurals name="trust_import_done">
         <item quantity="one">Master List importata: %1$d certificato.</item>
+        <item quantity="many">Master List importata: %1$d certificati.</item>
         <item quantity="other">Master List importata: %1$d certificati.</item>
     </plurals>
     <string name="trust_import_invalid">Questo file non è una Master List valida: formato illeggibile o firma non corretta (%1$s).</string>
@@ -50,6 +53,7 @@
     <string name="trust_import_write_error">Impossibile salvare la Master List.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Importazione rifiutata: puoi importare al massimo %1$d Master List. Elimina i certificati importati per aggiungerne un’altra.</item>
+        <item quantity="many">Importazione rifiutata: puoi importare al massimo %1$d Master List. Elimina i certificati importati per aggiungerne un’altra.</item>
         <item quantity="other">Importazione rifiutata: puoi importare al massimo %1$d Master List. Elimina i certificati importati per aggiungerne un’altra.</item>
     </plurals>
     <string name="trust_import_limit_size">Importazione rifiutata: le Master List importate supererebbero %1$d MB in totale. Elimina i certificati importati per aggiungerne un’altra.</string>
