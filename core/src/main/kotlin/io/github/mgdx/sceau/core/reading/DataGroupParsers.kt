@@ -68,8 +68,12 @@ internal object DataGroupParsers {
         )
     }
 
-    /** Première image de visage de DG2 (ISO 19794-5 ou ISO 39794-5), ou null. */
+    /**
+     * Première image de visage de DG2 (ISO 19794-5 ou ISO 39794-5), ou null. Longueurs BER et
+     * longueurs des blocs d'image ISO 19794-5 contrôlées avant JMRTD ([lengthsFitDg2]).
+     */
     fun parseDg2(bytes: ByteArray): EncodedImage? {
+        require(lengthsFitDg2(bytes)) { "DG2_LENGTH" }
         val images =
             DG2File(StrictInputStream(bytes)).subRecords.orEmpty().asSequence().flatMap { record ->
                 when (record) {
@@ -87,6 +91,8 @@ internal object DataGroupParsers {
         bytes: ByteArray,
         today: LocalDate = LocalDate.now(),
     ): Dg11Data {
+        // JMRTD alloue la longueur annoncée par chaque champ : contrôlée d'abord (BerStructure).
+        require(BerStructure.lengthsFit(bytes)) { "DG11_LENGTH" }
         val dg11 = DG11File(StrictInputStream(bytes))
         return Dg11Data(
             fullName = cleanName(dg11.nameOfHolder),
@@ -108,6 +114,8 @@ internal object DataGroupParsers {
         bytes: ByteArray,
         today: LocalDate = LocalDate.now(),
     ): Dg12Data {
+        // Idem DG11 : champs et images (5F2F…) lus à la longueur annoncée.
+        require(BerStructure.lengthsFit(bytes)) { "DG12_LENGTH" }
         val dg12 = DG12File(StrictInputStream(bytes))
         return Dg12Data(
             issuingAuthority = clean(dg12.issuingAuthority),
@@ -160,10 +168,54 @@ internal object DataGroupParsers {
     }
 
     /**
-     * Résultat de [block], ou null s'il échoue. Une longueur interne forgée (en-tête d'image de
-     * DG2…) fait allouer à JMRTD un tableau démesuré : `OutOfMemoryError` et
-     * `NegativeArraySizeException` rendent donc aussi le DG absent (audit V11) ; les autres
-     * `Error` traversent.
+     * DG2 : longueurs BER ([BerStructure]) et, dans chaque bloc biométrique (5F2E) au format
+     * ISO 19794-5 (« FAC\0 »), longueur de chaque bloc d'image de visage au plus égale aux octets
+     * restants du bloc biométrique. JMRTD alloue sinon cette longueur d'emblée (2 Go possibles,
+     * fuzzing). Un bloc d'un autre format (ISO 39794-5) est laissé au parseur, avec
+     * [orNull] pour filet.
+     */
+    internal fun lengthsFitDg2(bytes: ByteArray): Boolean =
+        BerStructure.lengthsFit(bytes) { tag, start, end ->
+            tag != TAG_BIOMETRIC_DATA_BLOCK || faceBlocksFit(bytes, start, end)
+        }
+
+    /** En-tête ISO 19794-5 : « FAC\0 », version (4), longueur d'enregistrement (4), nombre d'images (2). */
+    private fun faceBlocksFit(
+        bytes: ByteArray,
+        start: Int,
+        end: Int,
+    ): Boolean {
+        val isIso19794 = end - start >= FACE_HEADER && FACE_MAGIC.indices.all { bytes[start + it] == FACE_MAGIC[it] }
+        if (!isIso19794) return true
+        val count = uint(bytes, start + FACE_COUNT_OFFSET, 2)
+        var offset = start + FACE_HEADER.toLong()
+        repeat(count.toInt()) {
+            if (offset + FACE_BLOCK_LENGTH > end) return true // tronqué : JMRTD échouera en fin de flux
+            val blockLength = uint(bytes, offset.toInt(), FACE_BLOCK_LENGTH)
+            if (offset + blockLength > end) return false
+            if (blockLength == 0L) return true
+            offset += blockLength
+        }
+        return true
+    }
+
+    private fun uint(
+        bytes: ByteArray,
+        start: Int,
+        size: Int,
+    ): Long = (0 until size).fold(0L) { acc, i -> (acc shl Byte.SIZE_BITS) or (bytes[start + i].toLong() and 0xFF) }
+
+    private const val TAG_BIOMETRIC_DATA_BLOCK = 0x5F2E
+    private val FACE_MAGIC = byteArrayOf(0x46, 0x41, 0x43, 0x00)
+    private const val FACE_COUNT_OFFSET = 12
+    private const val FACE_HEADER = 14
+    private const val FACE_BLOCK_LENGTH = 4
+
+    /**
+     * Résultat de [block], ou null s'il échoue. Les longueurs démesurées connues sont refusées
+     * avant JMRTD ([BerStructure], [lengthsFitDg2]) ; `OutOfMemoryError` et
+     * `NegativeArraySizeException` restent rattrapées en dernier filet et rendent le DG absent
+     * (audit V11) ; les autres `Error` traversent.
      */
     private inline fun <T> orNull(block: () -> T): T? =
         try {

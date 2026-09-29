@@ -42,9 +42,19 @@ class BerStructureTest {
     @Test
     fun casLaissesAuParseur_Acceptes() {
         assertTrue(BerStructure.lengthsFit(ByteArray(0)))
-        // En-tête tronqué, longueur indéfinie, octets après le premier TLV.
+        // En-tête tronqué en fin de tampon, octets 00 et FF ignorés avant une étiquette (SCUBA).
         assertTrue(BerStructure.lengthsFit(hex("30")))
-        assertTrue(BerStructure.lengthsFit(hex("3080" + "0400" + "0000")))
-        assertTrue(BerStructure.lengthsFit(hex("0401AA" + "FFFFFF")))
+        assertTrue(BerStructure.lengthsFit(hex("0401AA" + "FFFF00")))
+        assertTrue(BerStructure.lengthsFit(hex("3005" + "00" + "0402AABB")))
+    }
+
+    @Test
+    fun enteteQuiDiffereDeSaLectureParScuba_Refuse() {
+        // Fuzzing (DG11, seed=0x5cea2026 index=35761) : SCUBA ignore FF, lit l'étiquette D3 puis
+        // une longueur sur 0x44 octets ; le contrôle lit comme SCUBA.
+        assertFalse(BerStructure.lengthsFit(hex("A00B" + "FFD3C4A1E9990A0E" + "535045")))
+        // En-tête d'un élément tronqué par la fin de son parent, longueur indéfinie.
+        assertFalse(BerStructure.lengthsFit(hex("3002" + "5F01" + "04303130")))
+        assertFalse(BerStructure.lengthsFit(hex("3080" + "0400" + "0000")))
     }
 }

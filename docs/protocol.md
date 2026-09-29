@@ -69,7 +69,7 @@ Réponse `6A82` (fichier introuvable) à la sélection : `SceauException.NotIcao
 
 ### 2.3 EF.COM puis EF.SOD
 
-- **EF.COM** (FID `01 1E`, tag `60`) : version de la LDS et liste des groupes de données présents. Facultatif : s'il manque ou est illisible, la liste des DG vient du SOD. Ses longueurs TLV internes sont contrôlées contre la taille réelle du fichier avant JMRTD (`BerStructure`) : un EF.COM dont un élément annonce plus d'octets que son contenant est illisible, sans rien allouer (JMRTD alloue sinon la longueur annoncée, 2 Go compris).
+- **EF.COM** (FID `01 1E`, tag `60`) : version de la LDS et liste des groupes de données présents. Facultatif : s'il manque ou est illisible, la liste des DG vient du SOD. Ses longueurs TLV internes sont contrôlées contre la taille réelle du fichier avant JMRTD (`BerStructure`) : un EF.COM dont un élément déborde de son contenant est illisible, sans rien allouer (JMRTD alloue sinon la longueur annoncée, 2 Go compris).
 - **EF.SOD** (FID `01 1D`, tag `77`) : *Document Security Object*, structure CMS `SignedData` signée par le Document Signer (DS). Il contient l'algorithme d'empreinte, l'empreinte de chaque DG présent (`LDSSecurityObject`) et, en général, le certificat DS. Obligatoire : un échec de lecture donne `UNEXPECTED-READ_DATA-SOD-…`.
 
 ### 2.4 Groupes de données
@@ -87,7 +87,7 @@ Réponse `6A82` (fichier introuvable) à la sélection : `SceauException.NotIcao
 
 Ordre de lecture (décision D20) : DG14 d'abord, s'il est annoncé dans EF.COM **ou** dans le SOD, puis la Chip Authentication (§2.6), puis DG1, DG2, et DG15, DG11, DG12 s'ils sont annoncés. DG3 et DG4 sont protégés par Terminal Authentication (Extended Access Control), qui exige des certificats délivrés par les États : ils sont hors périmètre (SPEC §1) et ne sont jamais demandés (`DocumentReader` ne demande que DG14, `SECURITY_DATA_GROUP`, puis DG1, DG2 et `OPTIONAL_DATA_GROUPS` = 15, 11, 12 ; les tests de bout en bout échouent si la puce simulée reçoit une demande de DG3 ou DG4).
 
-Un échec de lecture de DG1 donne `UNEXPECTED-READ_DATA-DG1-…`. Un DG facultatif (DG2 compris) absent ou illisible est simplement omis : une puce sans DG2 est lue sans photo (décision D14). Une erreur de transport (document retiré, délai) interrompt toujours la lecture.
+Un échec de lecture de DG1 donne `UNEXPECTED-READ_DATA-DG1-…`. Un DG facultatif (DG2 compris) absent ou illisible est simplement omis : une puce sans DG2 est lue sans photo (décision D14). Avant JMRTD, les longueurs TLV de DG11, DG12 et DG2 sont contrôlées contre la taille réelle du DG (`BerStructure`, qui lit les en-têtes comme SCUBA), ainsi que, dans DG2, la longueur de chaque bloc d'image ISO 19794-5 : un DG dont une longueur interne déborde est illisible, sans allocation démesurée (le rattrapage d'`OutOfMemoryError` de `DataGroupParsers` ne reste qu'un filet). DG1 n'est pas concerné (JMRTD refuse déjà une longueur de MRZ anormale). Une erreur de transport (document retiré, délai) interrompt toujours la lecture.
 
 Les octets bruts de chaque DG lu sont conservés dans `DocumentData.rawDataGroups` pour le recalcul des empreintes, puis remis à zéro par `wipe()` (voir `docs/architecture.md`).
 
