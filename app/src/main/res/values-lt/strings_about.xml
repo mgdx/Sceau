@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">Apie</string>
+    <string name="about_back">Atgal</string>
+    <string name="about_tagline">ICAO 9303 asmens dokumentų lusto nuskaitymas ir patikra be interneto ryšio.</string>
+    <string name="about_version">Versija %1$s</string>
+    <string name="about_version_unknown">Versija nežinoma</string>
+
+    <string name="about_section_license">Licencija ir šaltinio kodas</string>
+    <string name="about_license">Laisvoji programinė įranga, platinama pagal GNU GPL 3 arba vėlesnės versijos licenciją.</string>
+    <string name="about_open_repository">Žiūrėti šaltinio kodą</string>
+    <string name="about_no_browser">Nėra programos, kuri galėtų atidaryti šią nuorodą.</string>
+
+    <string name="about_section_trust">Integruota patikimų sertifikatų saugykla</string>
+    <string name="about_trust_ants_only">Prancūzijos ANTS CSCA sertifikatai (pasai ir asmens tapatybės kortelės).</string>
+    <string name="about_trust_ants_and_bsi">Prancūzijos ANTS CSCA sertifikatai ir Vokietijos BSI Master List.</string>
+    <string name="about_trust_master_list_date">Master List pasirašytas %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">Master List pasirašymo data nenurodyta.</string>
+    <string name="about_trust_bsi_notice">BSI (Vokietijos federalinės informacijos saugumo tarnybos) Master List platinamas be pakeitimų, be BSI bendradarbiavimo ar pritarimo.</string>
+    <string name="about_trust_national">Šių valstybių savo dokumentams paskelbti sertifikatai: %1$s.</string>
+    <string name="about_trust_ogl_notice">Yra Jungtinės Karalystės viešojo sektoriaus informacijos, paskelbtos pagal Open Government Licence v3.0.</string>
+    <string name="about_trust_loading">Įkeliama…</string>
+    <string name="about_trust_error">Nepavyko įkelti patikimų sertifikatų saugyklos.</string>
+
+    <string name="about_section_limits">Apribojimai</string>
+    <string name="about_limit_unknown_issuer">Jei dokumentą išdavusios šalies nėra patikimų sertifikatų saugykloje, rezultatas bus „Nežinomas išdavėjas“, o ne „Nepavyko“. Tai gali padėti išspręsti naujesnio Master List importavimas.</string>
+    <string name="about_limit_revocation">Atšauktų sertifikatų sąrašai netikrinami: tam reikia tinklo, o Sceau jo niekada nenaudoja.</string>
+
+    <string name="about_section_usage">Naudojimo sąlygos</string>
+    <string name="about_usage_holder">Nuskaityti galima tik tada, kai dokumentą pateikia pats turėtojas ir su tuo sutinka.</string>
+    <string name="about_usage_biometrics">Nuotrauka tampa biometriniais duomenimis, kaip apibrėžta BDAR, jei naudojama automatiniam veidų palyginimui. Sceau tokio palyginimo neatlieka ir neturi būti tam naudojama be atskiro teisinio pagrindo.</string>
+    <string name="about_usage_privacy">Jokie nuskaityti duomenys nesaugomi ir niekur nesiunčiami: išėjus iš rezultato ekrano arba perjungus programą į foninį režimą, viskas ištrinama iš atminties.</string>
+</resources>

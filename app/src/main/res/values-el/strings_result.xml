@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="result_title">Αποτέλεσμα</string>
+    <string name="result_clear">Διαγραφή</string>
+
+    <!-- Verdict -->
+    <string name="result_verdict_authentic">Γνήσιο</string>
+    <string name="result_verdict_authentic_explanation">Η υπογραφή του εκδότη είναι έγκυρη και το τσιπ απέδειξε ότι δεν είναι αντίγραφο.</string>
+    <string name="result_verdict_chip_unverified">Έγκυρη υπογραφή, μη επαληθευμένο τσιπ</string>
+    <string name="result_verdict_chip_unverified_explanation">Τα δεδομένα έχουν όντως υπογραφεί από τον εκδότη, αλλά το τσιπ δεν επιτρέπει να αποδειχθεί ότι είναι το πρωτότυπο: θα μπορούσε να είναι κλώνος.</string>
+    <string name="result_verdict_unknown_issuer">Άγνωστος εκδότης</string>
+    <string name="result_verdict_unknown_issuer_explanation">Το πιστοποιητικό του εκδότη δεν περιλαμβάνεται στα αξιόπιστα πιστοποιητικά. Τα δεδομένα εμφανίζονται, αλλά τίποτα δεν είναι εγγυημένο. Η εισαγωγή μιας νεότερης Master List μπορεί να επιτρέψει την επαλήθευση αυτού του εγγράφου.</string>
+    <string name="result_verdict_failed">Αποτυχία</string>
+    <string name="result_verdict_failed_explanation">Τουλάχιστον ένας έλεγχος απέτυχε: αυτό το έγγραφο δεν πρέπει να θεωρείται γνήσιο.</string>
+    <string name="result_verdict_imported_anchor">Επαληθεύτηκε με πιστοποιητικό που εισαγάγατε</string>
+
+    <!-- Photo -->
+    <string name="result_photo_description">Φωτογραφία του κατόχου</string>
+    <string name="result_photo_unavailable">Η φωτογραφία δεν είναι αναγνώσιμη ή λείπει</string>
+    <string name="result_photo_fullscreen">Εμφάνιση φωτογραφίας σε πλήρη οθόνη</string>
+    <string name="result_photo_close">Κλείσιμο</string>
+    <string name="result_image_front">Εικόνα εμπρόσθιας όψης</string>
+    <string name="result_image_rear">Εικόνα οπίσθιας όψης</string>
+    <string name="result_image_unavailable">Η εικόνα δεν είναι αναγνώσιμη</string>
+
+    <!-- Identité -->
+    <string name="result_section_identity">Ταυτότητα</string>
+    <string name="result_expired">Το έγγραφο έχει λήξει</string>
+    <string name="result_field_surname">Επώνυμο</string>
+    <string name="result_field_given_names">Όνομα</string>
+    <string name="result_field_sex">Φύλο</string>
+    <string name="result_field_birth_date">Ημερομηνία γέννησης</string>
+    <string name="result_field_nationality">Υπηκοότητα</string>
+    <string name="result_field_document_type">Τύπος εγγράφου</string>
+    <string name="result_field_document_number">Αριθμός εγγράφου</string>
+    <string name="result_field_issuing_state">Κράτος έκδοσης</string>
+    <string name="result_field_expiry_date">Ημερομηνία λήξης</string>
+    <string name="result_sex_male">Άρρεν</string>
+    <string name="result_sex_female">Θήλυ</string>
+    <string name="result_sex_unspecified">Δεν προσδιορίζεται</string>
+    <string name="result_document_passport">Διαβατήριο</string>
+    <string name="result_document_identity_card">Δελτίο ταυτότητας</string>
+    <string name="result_document_other">Άλλο ταξιδιωτικό έγγραφο</string>
+    <string name="result_value_with_code">%1$s (%2$s)</string>
+    <string name="result_unknown_value">Άγνωστο</string>
+
+    <!-- Pays spéciaux ICAO -->
+    <string name="result_country_united_nations">Ηνωμένα Έθνη</string>
+    <string name="result_country_un_agency">Εξειδικευμένος οργανισμός των Ηνωμένων Εθνών</string>
+    <string name="result_country_un_kosovo">Κοσσυφοπέδιο (UNMIK)</string>
+    <string name="result_country_stateless">Ανιθαγενής</string>
+    <string name="result_country_refugee">Πρόσφυγας (Σύμβαση του 1951)</string>
+    <string name="result_country_refugee_other">Πρόσφυγας</string>
+    <string name="result_country_unspecified">Μη προσδιορισμένη υπηκοότητα</string>
+
+    <!-- Données complémentaires -->
+    <string name="result_section_additional">Πρόσθετα στοιχεία</string>
+    <string name="result_field_full_name">Πλήρες όνομα</string>
+    <string name="result_field_other_names">Άλλα ονόματα</string>
+    <string name="result_field_personal_number">Προσωπικός αριθμός</string>
+    <string name="result_field_full_birth_date">Πλήρης ημερομηνία γέννησης</string>
+    <string name="result_field_place_of_birth">Τόπος γέννησης</string>
+    <string name="result_field_address">Διεύθυνση</string>
+    <string name="result_field_telephone">Τηλέφωνο</string>
+    <string name="result_field_profession">Επάγγελμα</string>
+    <string name="result_field_title">Τίτλος</string>
+    <string name="result_field_personal_summary">Σύνοψη προφίλ</string>
+    <string name="result_field_other_td_numbers">Άλλα έγκυρα ταξιδιωτικά έγγραφα</string>
+    <string name="result_field_custody">Στοιχεία επιμέλειας</string>
+    <string name="result_field_issuing_authority">Αρχή έκδοσης</string>
+    <string name="result_field_issue_date">Ημερομηνία έκδοσης</string>
+    <string name="result_field_other_persons">Άλλα αναφερόμενα πρόσωπα</string>
+    <string name="result_field_endorsements">Σημειώσεις και παρατηρήσεις</string>
+    <string name="result_field_tax_exit">Φορολογικές υποχρεώσεις ή υποχρεώσεις εξόδου</string>
+    <string name="result_field_personalization_time">Ημερομηνία εξατομίκευσης</string>
+    <string name="result_field_personalization_device">Αριθμός συστήματος εξατομίκευσης</string>
+
+    <!-- Vérifications -->
+    <string name="result_section_checks">Έλεγχοι</string>
+    <string name="result_check_secure_channel">Δημιουργήθηκε ασφαλές κανάλι</string>
+    <string name="result_check_sod_signature">Έγκυρη υπογραφή του SOD</string>
+    <string name="result_check_chain">Αλυσίδα πιστοποίησης</string>
+    <string name="result_check_ds_validity">Εγκυρότητα του πιστοποιητικού DS</string>
+    <string name="result_check_dg_hashes">Αποτυπώματα ομάδων δεδομένων</string>
+    <string name="result_check_chip_authentication">Chip Authentication (DG14)</string>
+    <string name="result_check_active_authentication">Active Authentication (DG15)</string>
+    <string name="result_status_ok">Επιτυχία</string>
+    <string name="result_status_failed">Αποτυχία</string>
+    <string name="result_status_not_available">Μη διαθέσιμο</string>
+    <string name="result_status_unsupported">Μη υποστηριζόμενος αλγόριθμος</string>
+    <string name="result_check_expand">Εμφάνιση λεπτομερειών</string>
+    <string name="result_check_collapse">Απόκρυψη λεπτομερειών</string>
+
+    <!-- Détail des vérifications -->
+    <string name="result_detail_protocol">Πρωτόκολλο: %1$s</string>
+    <string name="result_detail_ca_method">Μέθοδος: %1$s</string>
+    <string name="result_detail_ca_method_dg14">Chip Authentication με το κλειδί του DG14</string>
+    <string name="result_detail_ca_method_pace_cam">PACE-CAM, κατά το άνοιγμα του καναλιού, με το κλειδί του EF.CardSecurity</string>
+    <string name="result_detail_algorithm">Αλγόριθμος υπογραφής: %1$s</string>
+    <string name="result_detail_csca">CSCA: %1$s</string>
+    <string name="result_detail_csca_none">Κανένα CSCA των αξιόπιστων πιστοποιητικών δεν αντιστοιχεί.</string>
+    <string name="result_detail_country">Χώρα: %1$s</string>
+    <string name="result_detail_country_mismatch">Ασυμφωνία χωρών: αρχή πιστοποίησης %1$s, πιστοποιητικό υπογράφοντος %2$s, έγγραφο %3$s</string>
+    <string name="result_detail_source">Προέλευση: %1$s</string>
+    <string name="result_detail_source_ants">πιστοποιητικά της ANTS</string>
+    <string name="result_detail_source_national">πιστοποιητικά που δημοσιεύει το κράτος έκδοσης</string>
+    <string name="result_detail_source_embedded">Ενσωματωμένη Master List</string>
+    <string name="result_detail_source_imported">Εισαγόμενη Master List</string>
+    <string name="result_detail_ds_subject">Πιστοποιητικό DS: %1$s</string>
+    <string name="result_detail_links">Πιστοποιητικά σύνδεσης στη διαδρομή:</string>
+    <string name="result_detail_link_item">• %1$s</string>
+    <string name="result_detail_links_none">Κανένα πιστοποιητικό σύνδεσης στη διαδρομή.</string>
+    <string name="result_detail_ds_missing">Το πιστοποιητικό DS δεν περιλαμβάνεται ούτε στο SOD ούτε στα αξιόπιστα πιστοποιητικά.</string>
+    <string name="result_detail_ds_period">Περίοδος ισχύος του DS: από %1$s έως %2$s</string>
+    <string name="result_detail_issuance">Ημερομηνία έκδοσης: %1$s (%2$s)</string>
+    <string name="result_detail_issuance_no_source">Ημερομηνία έκδοσης: %1$s</string>
+    <string name="result_detail_issuance_unknown">Άγνωστη ημερομηνία έκδοσης.</string>
+    <string name="result_detail_issuance_dg12">από το DG12</string>
+    <string name="result_detail_issuance_sod">ημερομηνία υπογραφής του SOD</string>
+    <string name="result_detail_issuance_estimated">κατ’ εκτίμηση</string>
+    <string name="result_detail_digest_algorithm">Αλγόριθμος αποτυπώματος: %1$s</string>
+    <string name="result_detail_dg_checked">Ομάδες δεδομένων που ελέγχθηκαν: %1$s</string>
+    <string name="result_detail_dg_checked_none">Δεν ελέγχθηκε καμία ομάδα δεδομένων.</string>
+    <string name="result_detail_dg_mismatched">Αποτυπώματα που δεν αντιστοιχούν: %1$s</string>
+    <string name="result_detail_dg_all_match">Όλα τα αποτυπώματα αντιστοιχούν.</string>
+    <string name="result_detail_dg_missing">Ομάδες δεδομένων που δηλώνονται αλλά δεν παρέχονται από το τσιπ: %1$s</string>
+    <string name="result_detail_unsupported">Μη υποστηριζόμενος αλγόριθμος: %1$s</string>
+    <string name="result_detail_error">Τεχνικό σφάλμα: %1$s</string>
+    <string name="result_detail_no_dg14">Το έγγραφο δεν περιέχει DG14: το τσιπ δεν προσφέρει αυτόν τον έλεγχο.</string>
+    <string name="result_detail_no_dg15">Το έγγραφο δεν περιέχει DG15: το τσιπ δεν προσφέρει αυτόν τον έλεγχο.</string>
+    <string name="result_detail_not_reached">Το βήμα δεν εκτελέστηκε.</string>
+    <string name="result_detail_none">Καμία επιπλέον λεπτομέρεια.</string>
+    <string name="result_demo_banner">Προσομοιωμένο έγγραφο — επίδειξη</string>
+</resources>

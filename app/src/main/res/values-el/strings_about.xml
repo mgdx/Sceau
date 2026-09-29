@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">Σχετικά</string>
+    <string name="about_back">Πίσω</string>
+    <string name="about_tagline">Ανάγνωση και επαλήθευση εκτός σύνδεσης του τσιπ των εγγράφων ταυτότητας ICAO 9303.</string>
+    <string name="about_version">Έκδοση %1$s</string>
+    <string name="about_version_unknown">Άγνωστη έκδοση</string>
+
+    <string name="about_section_license">Άδεια χρήσης και πηγαίος κώδικας</string>
+    <string name="about_license">Ελεύθερο λογισμικό που διανέμεται με άδεια GNU GPL έκδοση 3 ή νεότερη.</string>
+    <string name="about_open_repository">Προβολή πηγαίου κώδικα</string>
+    <string name="about_no_browser">Καμία εφαρμογή δεν μπορεί να ανοίξει αυτόν τον σύνδεσμο.</string>
+
+    <string name="about_section_trust">Ενσωματωμένα αξιόπιστα πιστοποιητικά</string>
+    <string name="about_trust_ants_only">Γαλλικά CSCA της ANTS (διαβατήρια και δελτία ταυτότητας).</string>
+    <string name="about_trust_ants_and_bsi">Γαλλικά CSCA της ANTS και γερμανική Master List του BSI.</string>
+    <string name="about_trust_master_list_date">Master List υπογεγραμμένη στις %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">Η ημερομηνία υπογραφής της Master List δεν αναφέρεται.</string>
+    <string name="about_trust_bsi_notice">Η Master List του BSI (Ομοσπονδιακή Υπηρεσία Ασφάλειας Πληροφοριών της Γερμανίας) αναδιανέμεται χωρίς τροποποίηση, χωρίς συνεργασία ή έγκριση του BSI.</string>
+    <string name="about_trust_national">Πιστοποιητικά που δημοσιεύουν τα ακόλουθα κράτη για τα δικά τους έγγραφα: %1$s.</string>
+    <string name="about_trust_ogl_notice">Περιέχει πληροφορίες του βρετανικού δημόσιου τομέα που δημοσιεύονται με άδεια Open Government Licence v3.0.</string>
+    <string name="about_trust_loading">Φόρτωση…</string>
+    <string name="about_trust_error">Δεν ήταν δυνατή η φόρτωση των αξιόπιστων πιστοποιητικών.</string>
+
+    <string name="about_section_limits">Περιορισμοί</string>
+    <string name="about_limit_unknown_issuer">Ένα έγγραφο του οποίου η χώρα έκδοσης δεν περιλαμβάνεται στα αξιόπιστα πιστοποιητικά λαμβάνει την ετυμηγορία «Άγνωστος εκδότης», όχι «Αποτυχία». Η εισαγωγή μιας νεότερης Master List μπορεί να το διορθώσει.</string>
+    <string name="about_limit_revocation">Οι λίστες ανάκλησης δεν ελέγχονται: απαιτούν δίκτυο, το οποίο το Sceau δεν χρησιμοποιεί ποτέ.</string>
+
+    <string name="about_section_usage">Πλαίσιο χρήσης</string>
+    <string name="about_usage_holder">Η ανάγνωση προϋποθέτει ότι ο κάτοχος επιδεικνύει ο ίδιος το έγγραφό του και συναινεί.</string>
+    <string name="about_usage_biometrics">Η φωτογραφία αποτελεί βιομετρικό δεδομένο κατά την έννοια του ΓΚΠΔ εάν χρησιμοποιείται για αυτοματοποιημένη σύγκριση προσώπων. Το Sceau δεν κάνει τέτοια σύγκριση και δεν πρέπει να χρησιμοποιείται για αυτόν τον σκοπό χωρίς ειδική νομική βάση.</string>
+    <string name="about_usage_privacy">Κανένα δεδομένο που διαβάζεται δεν αποθηκεύεται ούτε αποστέλλεται: όλα διαγράφονται από τη μνήμη όταν κλείνετε το αποτέλεσμα ή όταν η εφαρμογή μεταβαίνει στο παρασκήνιο.</string>
+</resources>

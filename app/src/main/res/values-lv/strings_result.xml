@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="result_title">Rezultāts</string>
+    <string name="result_clear">Notīrīt</string>
+
+    <!-- Verdict -->
+    <string name="result_verdict_authentic">Autentisks</string>
+    <string name="result_verdict_authentic_explanation">Izdevēja paraksts ir derīgs, un mikroshēma ir pierādījusi, ka tā nav kopija.</string>
+    <string name="result_verdict_chip_unverified">Paraksts derīgs, mikroshēma nav pārbaudīta</string>
+    <string name="result_verdict_chip_unverified_explanation">Datus ir parakstījis izdevējs, taču mikroshēma neļauj pierādīt, ka tā ir oriģināla: tā varētu būt klons.</string>
+    <string name="result_verdict_unknown_issuer">Nezināms izdevējs</string>
+    <string name="result_verdict_unknown_issuer_explanation">Izdevēja sertifikāts nav uzticamības krātuvē. Dati ir parādīti, taču nekas nav garantēts. Importējot jaunāku Master List, šo dokumentu varētu pārbaudīt.</string>
+    <string name="result_verdict_failed">Neizdevās</string>
+    <string name="result_verdict_failed_explanation">Vismaz viena pārbaude neizdevās: šo dokumentu nedrīkst uzskatīt par autentisku.</string>
+    <string name="result_verdict_imported_anchor">Pārbaudīts, izmantojot jūsu importētu sertifikātu</string>
+
+    <!-- Photo -->
+    <string name="result_photo_description">Turētāja fotoattēls</string>
+    <string name="result_photo_unavailable">Fotoattēls nav nolasāms vai nav pieejams</string>
+    <string name="result_photo_fullscreen">Rādīt fotoattēlu pilnekrāna režīmā</string>
+    <string name="result_photo_close">Aizvērt</string>
+    <string name="result_image_front">Priekšpuses attēls</string>
+    <string name="result_image_rear">Aizmugures attēls</string>
+    <string name="result_image_unavailable">Attēls nav nolasāms</string>
+
+    <!-- Identité -->
+    <string name="result_section_identity">Personas dati</string>
+    <string name="result_expired">Dokumenta derīguma termiņš ir beidzies</string>
+    <string name="result_field_surname">Uzvārds</string>
+    <string name="result_field_given_names">Vārdi</string>
+    <string name="result_field_sex">Dzimums</string>
+    <string name="result_field_birth_date">Dzimšanas datums</string>
+    <string name="result_field_nationality">Pilsonība</string>
+    <string name="result_field_document_type">Dokumenta veids</string>
+    <string name="result_field_document_number">Dokumenta numurs</string>
+    <string name="result_field_issuing_state">Izdevējvalsts</string>
+    <string name="result_field_expiry_date">Derīguma termiņš</string>
+    <string name="result_sex_male">Vīrietis</string>
+    <string name="result_sex_female">Sieviete</string>
+    <string name="result_sex_unspecified">Nav norādīts</string>
+    <string name="result_document_passport">Pase</string>
+    <string name="result_document_identity_card">Personas apliecība</string>
+    <string name="result_document_other">Cits ceļošanas dokuments</string>
+    <string name="result_value_with_code">%1$s (%2$s)</string>
+    <string name="result_unknown_value">Nezināms</string>
+
+    <!-- Pays spéciaux ICAO -->
+    <string name="result_country_united_nations">Apvienoto Nāciju Organizācija</string>
+    <string name="result_country_un_agency">ANO specializētā aģentūra</string>
+    <string name="result_country_un_kosovo">Kosova (UNMIK)</string>
+    <string name="result_country_stateless">Bezvalstnieks</string>
+    <string name="result_country_refugee">Bēglis (1951. gada konvencija)</string>
+    <string name="result_country_refugee_other">Bēglis</string>
+    <string name="result_country_unspecified">Pilsonība nav norādīta</string>
+
+    <!-- Données complémentaires -->
+    <string name="result_section_additional">Papildu dati</string>
+    <string name="result_field_full_name">Pilns vārds</string>
+    <string name="result_field_other_names">Citi vārdi</string>
+    <string name="result_field_personal_number">Personas kods</string>
+    <string name="result_field_full_birth_date">Pilns dzimšanas datums</string>
+    <string name="result_field_place_of_birth">Dzimšanas vieta</string>
+    <string name="result_field_address">Adrese</string>
+    <string name="result_field_telephone">Tālrunis</string>
+    <string name="result_field_profession">Profesija</string>
+    <string name="result_field_title">Tituls</string>
+    <string name="result_field_personal_summary">Personas apraksts</string>
+    <string name="result_field_other_td_numbers">Citi derīgi ceļošanas dokumenti</string>
+    <string name="result_field_custody">Aizbildnības dati</string>
+    <string name="result_field_issuing_authority">Izdevējiestāde</string>
+    <string name="result_field_issue_date">Izdošanas datums</string>
+    <string name="result_field_other_persons">Citas minētās personas</string>
+    <string name="result_field_endorsements">Atzīmes un piezīmes</string>
+    <string name="result_field_tax_exit">Nodokļu vai izbraukšanas prasības</string>
+    <string name="result_field_personalization_time">Personalizācijas datums</string>
+    <string name="result_field_personalization_device">Personalizācijas sistēmas numurs</string>
+
+    <!-- Vérifications -->
+    <string name="result_section_checks">Pārbaudes</string>
+    <string name="result_check_secure_channel">Drošais kanāls izveidots</string>
+    <string name="result_check_sod_signature">SOD paraksts derīgs</string>
+    <string name="result_check_chain">Sertifikācijas ķēde</string>
+    <string name="result_check_ds_validity">DS sertifikāta derīgums</string>
+    <string name="result_check_dg_hashes">Datu grupu nospiedumi</string>
+    <string name="result_check_chip_authentication">Chip Authentication (DG14)</string>
+    <string name="result_check_active_authentication">Active Authentication (DG15)</string>
+    <string name="result_status_ok">Izdevās</string>
+    <string name="result_status_failed">Neizdevās</string>
+    <string name="result_status_not_available">Nav pieejama</string>
+    <string name="result_status_unsupported">Algoritms netiek atbalstīts</string>
+    <string name="result_check_expand">Rādīt detalizētu informāciju</string>
+    <string name="result_check_collapse">Paslēpt detalizētu informāciju</string>
+
+    <!-- Détail des vérifications -->
+    <string name="result_detail_protocol">Protokols: %1$s</string>
+    <string name="result_detail_ca_method">Metode: %1$s</string>
+    <string name="result_detail_ca_method_dg14">Chip Authentication ar DG14 atslēgu</string>
+    <string name="result_detail_ca_method_pace_cam">PACE-CAM kanāla atvēršanas laikā ar EF.CardSecurity atslēgu</string>
+    <string name="result_detail_algorithm">Paraksta algoritms: %1$s</string>
+    <string name="result_detail_csca">CSCA: %1$s</string>
+    <string name="result_detail_csca_none">Neviens krātuves CSCA neatbilst.</string>
+    <string name="result_detail_country">Valsts: %1$s</string>
+    <string name="result_detail_country_mismatch">Valstis nesakrīt: sertifikācijas iestāde %1$s, parakstītāja sertifikāts %2$s, dokuments %3$s</string>
+    <string name="result_detail_source">Avots: %1$s</string>
+    <string name="result_detail_source_ants">ANTS sertifikāti</string>
+    <string name="result_detail_source_national">izdevējvalsts publicētie sertifikāti</string>
+    <string name="result_detail_source_embedded">iebūvētā Master List</string>
+    <string name="result_detail_source_imported">importētā Master List</string>
+    <string name="result_detail_ds_subject">DS sertifikāts: %1$s</string>
+    <string name="result_detail_links">Izmantotie saites sertifikāti:</string>
+    <string name="result_detail_link_item">• %1$s</string>
+    <string name="result_detail_links_none">Saites sertifikāti netika izmantoti.</string>
+    <string name="result_detail_ds_missing">DS sertifikāts nav atrodams ne SOD, ne uzticamības krātuvē.</string>
+    <string name="result_detail_ds_period">DS derīguma periods: no %1$s līdz %2$s</string>
+    <string name="result_detail_issuance">Izdošanas datums: %1$s (%2$s)</string>
+    <string name="result_detail_issuance_no_source">Izdošanas datums: %1$s</string>
+    <string name="result_detail_issuance_unknown">Izdošanas datums nav zināms.</string>
+    <string name="result_detail_issuance_dg12">nolasīts no DG12</string>
+    <string name="result_detail_issuance_sod">SOD parakstīšanas datums</string>
+    <string name="result_detail_issuance_estimated">aptuvens</string>
+    <string name="result_detail_digest_algorithm">Nospieduma algoritms: %1$s</string>
+    <string name="result_detail_dg_checked">Pārbaudītās datu grupas: %1$s</string>
+    <string name="result_detail_dg_checked_none">Neviena datu grupa netika pārbaudīta.</string>
+    <string name="result_detail_dg_mismatched">Nesakrītoši nospiedumi: %1$s</string>
+    <string name="result_detail_dg_all_match">Visi nospiedumi sakrīt.</string>
+    <string name="result_detail_dg_missing">Datu grupas, kas norādītas, bet mikroshēmā nav pieejamas: %1$s</string>
+    <string name="result_detail_unsupported">Algoritms netiek atbalstīts: %1$s</string>
+    <string name="result_detail_error">Tehniska kļūda: %1$s</string>
+    <string name="result_detail_no_dg14">Dokumentā nav DG14: mikroshēma nepiedāvā šo pārbaudi.</string>
+    <string name="result_detail_no_dg15">Dokumentā nav DG15: mikroshēma nepiedāvā šo pārbaudi.</string>
+    <string name="result_detail_not_reached">Darbība netika veikta.</string>
+    <string name="result_detail_none">Nav papildu informācijas.</string>
+    <string name="result_demo_banner">Simulēts dokuments — demonstrācija</string>
+</resources>

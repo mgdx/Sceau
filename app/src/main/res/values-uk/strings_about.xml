@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">Про застосунок</string>
+    <string name="about_back">Назад</string>
+    <string name="about_tagline">Офлайн-зчитування та перевірка чипа документів, що посвідчують особу, за стандартом ICAO 9303.</string>
+    <string name="about_version">Версія %1$s</string>
+    <string name="about_version_unknown">Версія невідома</string>
+
+    <string name="about_section_license">Ліцензія та вихідний код</string>
+    <string name="about_license">Вільне програмне забезпечення, що поширюється за ліцензією GNU GPL версії 3 або пізнішої.</string>
+    <string name="about_open_repository">Переглянути вихідний код</string>
+    <string name="about_no_browser">Немає застосунку, який може відкрити це посилання.</string>
+
+    <string name="about_section_trust">Вбудоване сховище сертифікатів</string>
+    <string name="about_trust_ants_only">Французькі CSCA від ANTS (паспорти та ID-картки).</string>
+    <string name="about_trust_ants_and_bsi">Французькі CSCA від ANTS і німецький Master List від BSI.</string>
+    <string name="about_trust_master_list_date">Master List підписано %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">Дату підпису Master List не вказано.</string>
+    <string name="about_trust_bsi_notice">Master List від BSI (Федерального відомства з інформаційної безпеки Німеччини) поширюється без змін, без співпраці з BSI і без його схвалення.</string>
+    <string name="about_trust_national">Сертифікати, опубліковані такими державами для власних документів: %1$s.</string>
+    <string name="about_trust_ogl_notice">Містить інформацію публічного сектору Великої Британії, опубліковану за ліцензією Open Government Licence v3.0.</string>
+    <string name="about_trust_loading">Завантаження…</string>
+    <string name="about_trust_error">Не вдалося завантажити сховище сертифікатів.</string>
+
+    <string name="about_section_limits">Обмеження</string>
+    <string name="about_limit_unknown_issuer">Якщо країни, що видала документ, немає у сховищі сертифікатів, результат буде «Невідомий видавець», а не «Помилка». Імпорт новішого Master List може це виправити.</string>
+    <string name="about_limit_revocation">Списки відкликаних сертифікатів не перевіряються: для цього потрібна мережа, якою Sceau ніколи не користується.</string>
+
+    <string name="about_section_usage">Умови використання</string>
+    <string name="about_usage_holder">Зчитування передбачає, що власник сам пред’являє свій документ і дає на це згоду.</string>
+    <string name="about_usage_biometrics">Фото стає біометричними даними в розумінні Загального регламенту ЄС про захист даних (GDPR), якщо його використовують для автоматичного порівняння облич. Sceau такого порівняння не виконує, і його не можна використовувати для цього без окремої правової підстави.</string>
+    <string name="about_usage_privacy">Зчитані дані не зберігаються й нікуди не надсилаються: усе видаляється з пам’яті, коли ви закриваєте результат або переводите застосунок у фоновий режим.</string>
+</resources>

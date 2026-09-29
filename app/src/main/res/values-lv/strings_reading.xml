@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reading_title">Dokumenta nolasīšana</string>
+    <string name="reading_prompt">Pielieciet dokumentu pie tālruņa aizmugures un nenoņemiet to</string>
+    <string name="reading_step_connect">Savienojuma izveide ar mikroshēmu</string>
+    <string name="reading_step_secure_channel">Drošā kanāla atvēršana (PACE vai BAC)</string>
+    <string name="reading_step_read_data">Datu nolasīšana</string>
+    <string name="reading_step_verify_signature">Paraksta pārbaude</string>
+    <string name="reading_step_verify_chip">Mikroshēmas pārbaude</string>
+    <string name="reading_step_pending">gaida</string>
+    <string name="reading_step_in_progress">notiek</string>
+    <string name="reading_step_done">pabeigts</string>
+    <string name="reading_error_title">Nolasīšana pārtraukta</string>
+    <string name="reading_slow_chip">Dokumenta mikroshēma liek gaidīt, parasti pēc neveiksmīgiem mēģinājumiem. Turiet dokumentu nekustīgi, tas var ilgt līdz vienai minūtei.</string>
+    <string name="reading_error_access_denied">CAN vai MRZ dati nav pareizi. Pārbaudiet ievadīto numuru un datumus un mēģiniet vēlreiz. Katrs neveiksmīgs mēģinājums var pagarināt laiku, ko mikroshēma liek gaidīt pirms atbildes.</string>
+    <string name="reading_error_connection_lost">Dokuments tika noņemts par agru. Turiet to nekustīgi pie tālruņa līdz nolasīšanas beigām.</string>
+    <string name="reading_error_not_icao">Šis dokuments neatbilst standartam ICAO 9303: tā mikroshēmu nevar nolasīt.</string>
+    <string name="reading_error_timeout">Noildze: mikroshēma neatbildēja laikā. Mēģiniet vēlreiz, turot dokumentu nekustīgi.</string>
+    <string name="reading_error_can_without_pace">Šo dokumentu nevar nolasīt ar CAN. Izmantojiet cilni “Pase” un ievadiet MRZ datus.</string>
+    <string name="reading_error_unexpected">Radās neparedzēta kļūda.</string>
+    <string name="reading_error_code">Kļūdas kods: %1$s</string>
+    <string name="reading_retry">Mēģināt vēlreiz</string>
+    <string name="reading_cancel">Atcelt</string>
+</resources>

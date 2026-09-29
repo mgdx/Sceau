@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trust_title">Uzticamības krātuve</string>
+    <string name="trust_back">Atpakaļ</string>
+    <string name="trust_intro">Izdevējvalstu saknes sertifikāti (CSCA), ko izmanto dokumentu parakstu pārbaudei. Šajā ekrānā netiek apstrādāti nekādi personas dati.</string>
+    <plurals name="trust_summary">
+        <item quantity="zero">%1$d sertifikātu, valstis: %2$d</item>
+        <item quantity="one">%1$d sertifikāts, valstis: %2$d</item>
+        <item quantity="other">%1$d sertifikāti, valstis: %2$d</item>
+    </plurals>
+    <string name="trust_loading">Ielādē uzticamības krātuvi…</string>
+    <string name="trust_load_error">Neizdevās ielādēt uzticamības krātuvi.</string>
+    <string name="trust_retry">Mēģināt vēlreiz</string>
+    <string name="trust_empty">Uzticamības krātuvē nav neviena sertifikāta.</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">Valsts nav norādīta</string>
+    <plurals name="trust_country_count">
+        <item quantity="zero">%1$d sertifikātu</item>
+        <item quantity="one">%1$d sertifikāts</item>
+        <item quantity="other">%1$d sertifikāti</item>
+    </plurals>
+    <string name="trust_country_expand">Rādīt sertifikātus</string>
+    <string name="trust_country_collapse">Paslēpt sertifikātus</string>
+    <string name="trust_validity">Derīgs no %1$s līdz %2$s</string>
+    <string name="trust_fingerprint">SHA-256 nospiedums</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_national">Valsts publikācija</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">Importēts</string>
+    <string name="trust_link_certificate">Saites sertifikāts</string>
+
+    <!-- Import -->
+    <string name="trust_import">Importēt Master List</string>
+    <string name="trust_busy">Lūdzu, uzgaidiet…</string>
+    <string name="trust_import_confirm_title">Vai importēt šo Master List?</string>
+    <string name="trust_import_confirm_text">Tās paraksts ir derīgs. Pirms importēšanas pārbaudiet, vai parakstītāja nospiedums sakrīt ar izdevējiestādes publicēto.</string>
+    <string name="trust_import_signer">Parakstītājs</string>
+    <string name="trust_import_signer_fingerprint">Parakstītāja SHA-256 nospiedums</string>
+    <string name="trust_import_signing_date">Parakstīšanas datums</string>
+    <string name="trust_import_signing_date_unknown">Nav norādīts</string>
+    <string name="trust_import_certificate_count">Sertifikātu skaits</string>
+    <string name="trust_import_confirm">Importēt</string>
+    <string name="trust_cancel">Atcelt</string>
+    <plurals name="trust_import_done">
+        <item quantity="zero">Master List importēta: %1$d sertifikātu.</item>
+        <item quantity="one">Master List importēta: %1$d sertifikāts.</item>
+        <item quantity="other">Master List importēta: %1$d sertifikāti.</item>
+    </plurals>
+    <string name="trust_import_invalid">Šis fails nav derīga Master List: nenolasāms formāts vai nepareizs paraksts (%1$s).</string>
+    <string name="trust_import_too_large">Fails noraidīts: tas pārsniedz 20 MB.</string>
+    <string name="trust_import_read_error">Neizdevās nolasīt šo failu.</string>
+    <string name="trust_import_write_error">Neizdevās saglabāt Master List.</string>
+    <plurals name="trust_import_limit_count">
+        <item quantity="zero">Importēšana noraidīta: var importēt ne vairāk kā %1$d Master List. Lai pievienotu citu, dzēsiet importētos sertifikātus.</item>
+        <item quantity="one">Importēšana noraidīta: var importēt ne vairāk kā %1$d Master List. Lai pievienotu citu, dzēsiet importētos sertifikātus.</item>
+        <item quantity="other">Importēšana noraidīta: var importēt ne vairāk kā %1$d Master List. Lai pievienotu citu, dzēsiet importētos sertifikātus.</item>
+    </plurals>
+    <string name="trust_import_limit_size">Importēšana noraidīta: importēto Master List kopējais apjoms pārsniegtu %1$d MB. Lai pievienotu citu, dzēsiet importētos sertifikātus.</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">Dzēst importētos sertifikātus</string>
+    <string name="trust_delete_confirm_title">Vai dzēst importētos sertifikātus?</string>
+    <string name="trust_delete_confirm_text">Importētās Master List tiks dzēstas. Lietotnē iebūvētie sertifikāti tiks saglabāti.</string>
+    <string name="trust_delete_confirm">Dzēst</string>
+    <string name="trust_delete_done">Importētie sertifikāti ir dzēsti.</string>
+    <string name="trust_delete_error">Neizdevās dzēst importētos sertifikātus.</string>
+</resources>
