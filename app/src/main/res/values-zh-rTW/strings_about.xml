@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">關於</string>
+    <string name="about_back">返回</string>
+    <string name="about_tagline">離線讀取並驗證 ICAO 9303 身分證件的晶片。</string>
+    <string name="about_version">版本 %1$s</string>
+    <string name="about_version_unknown">版本不明</string>
+
+    <string name="about_section_license">授權與原始碼</string>
+    <string name="about_license">自由軟體，依 GNU GPL 第 3 版或更新版本授權發布。</string>
+    <string name="about_open_repository">查看原始碼</string>
+    <string name="about_no_browser">沒有可開啟這個連結的應用程式。</string>
+
+    <string name="about_section_trust">內建信任存放區</string>
+    <string name="about_trust_ants_only">法國 ANTS 的 CSCA（護照與身分證）。</string>
+    <string name="about_trust_ants_and_bsi">法國 ANTS 的 CSCA，以及德國 BSI 的 Master List。</string>
+    <string name="about_trust_master_list_date">Master List 簽署日期：%1$s。</string>
+    <string name="about_trust_master_list_date_unknown">未註明 Master List 的簽署日期。</string>
+    <string name="about_trust_bsi_notice">BSI（德國聯邦資訊安全局）的 Master List 以原樣再散布，未經 BSI 合作或認可。</string>
+    <string name="about_trust_national">下列國家為其本國證件發布的憑證：%1$s。</string>
+    <string name="about_trust_ogl_notice">包含依 Open Government Licence v3.0 發布的英國公部門資訊。</string>
+    <string name="about_trust_loading">載入中…</string>
+    <string name="about_trust_error">無法載入信任存放區。</string>
+
+    <string name="about_section_limits">限制</string>
+    <string name="about_limit_unknown_issuer">如果證件的核發國不在信任存放區中，結果會是「核發者不明」，而不是「驗證失敗」。匯入較新的 Master List 或許可以解決這個問題。</string>
+    <string name="about_limit_revocation">不會查詢撤銷清單：查詢需要連上網路，而 Sceau 從不使用網路。</string>
+
+    <string name="about_section_usage">使用須知</string>
+    <string name="about_usage_holder">讀取的前提是持有人親自出示證件並同意讀取。</string>
+    <string name="about_usage_biometrics">如果相片用於自動臉部比對，即屬於《一般資料保護規則》（GDPR）所定義的生物特徵資料。Sceau 不會進行這類比對；在沒有專門法律依據的情況下，不得用於此目的。</string>
+    <string name="about_usage_privacy">讀取的資料不會保存，也不會傳送：離開結果畫面或將應用程式切換到背景時，所有資料都會從記憶體中清除。</string>
+</resources>

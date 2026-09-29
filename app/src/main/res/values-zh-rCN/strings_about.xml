@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">关于</string>
+    <string name="about_back">返回</string>
+    <string name="about_tagline">离线读取并验证 ICAO 9303 身份证件的芯片。</string>
+    <string name="about_version">版本 %1$s</string>
+    <string name="about_version_unknown">版本未知</string>
+
+    <string name="about_section_license">许可和源代码</string>
+    <string name="about_license">自由软件，依据 GNU GPL 第 3 版或更高版本发布。</string>
+    <string name="about_open_repository">查看源代码</string>
+    <string name="about_no_browser">没有可打开此链接的应用。</string>
+
+    <string name="about_section_trust">内置信任存储</string>
+    <string name="about_trust_ants_only">来自法国 ANTS 的 CSCA（护照和身份证）。</string>
+    <string name="about_trust_ants_and_bsi">来自法国 ANTS 的 CSCA，以及德国 BSI 的 Master List。</string>
+    <string name="about_trust_master_list_date">Master List 签署于 %1$s。</string>
+    <string name="about_trust_master_list_date_unknown">未注明 Master List 的签署日期。</string>
+    <string name="about_trust_bsi_notice">BSI（德国联邦信息安全办公室）的 Master List 按原样再分发，未经 BSI 合作或认可。</string>
+    <string name="about_trust_national">以下国家为本国证件发布的证书：%1$s。</string>
+    <string name="about_trust_ogl_notice">包含依据 Open Government Licence v3.0 发布的英国公共部门信息。</string>
+    <string name="about_trust_loading">正在加载…</string>
+    <string name="about_trust_error">无法加载信任存储。</string>
+
+    <string name="about_section_limits">局限性</string>
+    <string name="about_limit_unknown_issuer">如果证件的签发国不在信任存储中，结果为“签发者未知”，而不是“验证失败”。导入较新的 Master List 可能会解决此问题。</string>
+    <string name="about_limit_revocation">不会查询吊销列表：查询需要联网，而 Sceau 从不联网。</string>
+
+    <string name="about_section_usage">使用须知</string>
+    <string name="about_usage_holder">读取的前提是持证人亲自出示证件并表示同意。</string>
+    <string name="about_usage_biometrics">如果照片用于自动人脸比对，即属于《通用数据保护条例》（GDPR）所定义的生物特征数据。Sceau 不进行此类比对；在没有专门法律依据的情况下，不得将其用于此目的。</string>
+    <string name="about_usage_privacy">读取的数据不会保存，也不会发送：退出结果页面或将应用切换到后台时，所有数据都会从内存中清除。</string>
+</resources>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">更多选项</string>
+    <string name="home_menu_trust_store">信任存储</string>
+    <string name="home_menu_about">关于</string>
+    <string name="home_tab_id_card">身份证</string>
+    <string name="home_tab_passport">护照</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">印在卡片正面的 6 位数字（卡片访问号码）</string>
+    <string name="home_document_number_label">证件号码</string>
+    <string name="home_document_number_supporting">与资料页上印刷的一致，最多 9 个字符</string>
+    <string name="home_date_of_birth_label">出生日期</string>
+    <string name="home_date_of_expiry_label">有效期至</string>
+    <string name="home_date_day">DD</string>
+    <string name="home_date_month">MM</string>
+    <string name="home_date_year">YYYY</string>
+    <string name="home_date_format">格式：%1$s</string>
+    <string name="home_date_error_invalid">此日期不存在</string>
+    <string name="home_date_error_future">出生日期不能晚于今天</string>
+    <string name="home_date_error_too_old">有效期过早（早于 %1$d 年）</string>
+    <string name="home_holder_notice">证件必须由持证人本人出示。</string>
+    <string name="home_read">读取</string>
+    <string name="home_nfc_disabled">NFC 已关闭。请开启 NFC 以读取证件芯片。</string>
+    <string name="home_nfc_settings">打开 NFC 设置</string>
+    <string name="home_nfc_absent">此手机不支持 NFC，无法读取身份证件的芯片。</string>
+    <string name="home_menu_demo">模拟法国身份证（演示）</string>
+</resources>

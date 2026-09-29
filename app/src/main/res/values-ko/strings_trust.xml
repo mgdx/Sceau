@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trust_title">신뢰 저장소</string>
+    <string name="trust_back">뒤로</string>
+    <string name="trust_intro">신분증 서명 검증에 사용되는 발급 국가의 루트 인증서(CSCA)입니다. 이 화면에서는 개인정보를 전혀 다루지 않습니다.</string>
+    <plurals name="trust_summary">
+        <item quantity="other">인증서 %1$d개, 국가 %2$d곳</item>
+    </plurals>
+    <string name="trust_loading">신뢰 저장소 로드 중…</string>
+    <string name="trust_load_error">신뢰 저장소를 로드할 수 없습니다.</string>
+    <string name="trust_retry">다시 시도</string>
+    <string name="trust_empty">신뢰 저장소에 인증서가 없습니다.</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">국가 정보 없음</string>
+    <plurals name="trust_country_count">
+        <item quantity="other">인증서 %1$d개</item>
+    </plurals>
+    <string name="trust_country_expand">인증서 표시</string>
+    <string name="trust_country_collapse">인증서 숨기기</string>
+    <string name="trust_validity">유효 기간: %1$s~%2$s</string>
+    <string name="trust_fingerprint">SHA-256 지문</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_national">국가 공개</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">가져옴</string>
+    <string name="trust_link_certificate">링크 인증서</string>
+
+    <!-- Import -->
+    <string name="trust_import">Master List 가져오기</string>
+    <string name="trust_busy">잠시 기다려 주세요…</string>
+    <string name="trust_import_confirm_title">이 Master List를 가져오시겠습니까?</string>
+    <string name="trust_import_confirm_text">서명이 유효합니다. 가져오기 전에 서명자의 지문이 발급기관에서 공개한 지문과 일치하는지 확인하세요.</string>
+    <string name="trust_import_signer">서명자</string>
+    <string name="trust_import_signer_fingerprint">서명자의 SHA-256 지문</string>
+    <string name="trust_import_signing_date">서명일</string>
+    <string name="trust_import_signing_date_unknown">표시되지 않음</string>
+    <string name="trust_import_certificate_count">인증서 수</string>
+    <string name="trust_import_confirm">가져오기</string>
+    <string name="trust_cancel">취소</string>
+    <plurals name="trust_import_done">
+        <item quantity="other">Master List를 가져왔습니다(인증서 %1$d개).</item>
+    </plurals>
+    <string name="trust_import_invalid">유효한 Master List 파일이 아닙니다. 형식을 읽을 수 없거나 서명이 올바르지 않습니다(%1$s).</string>
+    <string name="trust_import_too_large">파일이 거부되었습니다. 20MB를 초과합니다.</string>
+    <string name="trust_import_read_error">이 파일을 읽을 수 없습니다.</string>
+    <string name="trust_import_write_error">Master List를 저장할 수 없습니다.</string>
+    <plurals name="trust_import_limit_count">
+        <item quantity="other">가져오기가 거부되었습니다. Master List는 최대 %1$d개까지 가져올 수 있습니다. 다른 Master List를 추가하려면 가져온 인증서를 삭제하세요.</item>
+    </plurals>
+    <string name="trust_import_limit_size">가져오기가 거부되었습니다. 가져온 Master List의 합계가 %1$dMB를 초과하게 됩니다. 다른 Master List를 추가하려면 가져온 인증서를 삭제하세요.</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">가져온 인증서 삭제</string>
+    <string name="trust_delete_confirm_title">가져온 인증서를 삭제하시겠습니까?</string>
+    <string name="trust_delete_confirm_text">가져온 Master List가 삭제됩니다. 앱에 내장된 인증서는 유지됩니다.</string>
+    <string name="trust_delete_confirm">삭제</string>
+    <string name="trust_delete_done">가져온 인증서를 삭제했습니다.</string>
+    <string name="trust_delete_error">가져온 인증서를 삭제할 수 없습니다.</string>
+</resources>

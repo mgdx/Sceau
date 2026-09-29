@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="result_title">结果</string>
+    <string name="result_clear">清除</string>
+
+    <!-- Verdict -->
+    <string name="result_verdict_authentic">真实</string>
+    <string name="result_verdict_authentic_explanation">签发者的签名有效，且芯片已证明自己不是复制品。</string>
+    <string name="result_verdict_chip_unverified">签名有效，芯片未验证</string>
+    <string name="result_verdict_chip_unverified_explanation">数据确实由签发者签名，但芯片无法证明自己是原件：它可能是克隆的。</string>
+    <string name="result_verdict_unknown_issuer">签发者未知</string>
+    <string name="result_verdict_unknown_issuer_explanation">签发者的证书不在信任存储中。数据仍会显示，但不作任何保证。导入较新的 Master List 可能可以验证此证件。</string>
+    <string name="result_verdict_failed">验证失败</string>
+    <string name="result_verdict_failed_explanation">至少有一项验证未通过：不应将此证件视为真实证件。</string>
+    <string name="result_verdict_imported_anchor">已通过您导入的证书完成验证</string>
+
+    <!-- Photo -->
+    <string name="result_photo_description">持证人照片</string>
+    <string name="result_photo_unavailable">照片无法读取或不存在</string>
+    <string name="result_photo_fullscreen">全屏显示照片</string>
+    <string name="result_photo_close">关闭</string>
+    <string name="result_image_front">正面图像</string>
+    <string name="result_image_rear">背面图像</string>
+    <string name="result_image_unavailable">图像无法读取</string>
+
+    <!-- Identité -->
+    <string name="result_section_identity">身份信息</string>
+    <string name="result_expired">证件已过期</string>
+    <string name="result_field_surname">姓</string>
+    <string name="result_field_given_names">名</string>
+    <string name="result_field_sex">性别</string>
+    <string name="result_field_birth_date">出生日期</string>
+    <string name="result_field_nationality">国籍</string>
+    <string name="result_field_document_type">证件类型</string>
+    <string name="result_field_document_number">证件号码</string>
+    <string name="result_field_issuing_state">签发国</string>
+    <string name="result_field_expiry_date">有效期至</string>
+    <string name="result_sex_male">男</string>
+    <string name="result_sex_female">女</string>
+    <string name="result_sex_unspecified">未指明</string>
+    <string name="result_document_passport">护照</string>
+    <string name="result_document_identity_card">身份证</string>
+    <string name="result_document_other">其他旅行证件</string>
+    <string name="result_value_with_code">%1$s（%2$s）</string>
+    <string name="result_unknown_value">未知</string>
+
+    <!-- Pays spéciaux ICAO -->
+    <string name="result_country_united_nations">联合国</string>
+    <string name="result_country_un_agency">联合国专门机构</string>
+    <string name="result_country_un_kosovo">科索沃（联合国科索沃特派团）</string>
+    <string name="result_country_stateless">无国籍</string>
+    <string name="result_country_refugee">难民（1951 年公约）</string>
+    <string name="result_country_refugee_other">难民</string>
+    <string name="result_country_unspecified">国籍未指明</string>
+
+    <!-- Données complémentaires -->
+    <string name="result_section_additional">补充信息</string>
+    <string name="result_field_full_name">全名</string>
+    <string name="result_field_other_names">其他姓名</string>
+    <string name="result_field_personal_number">个人号码</string>
+    <string name="result_field_full_birth_date">完整出生日期</string>
+    <string name="result_field_place_of_birth">出生地点</string>
+    <string name="result_field_address">地址</string>
+    <string name="result_field_telephone">电话</string>
+    <string name="result_field_profession">职业</string>
+    <string name="result_field_title">头衔</string>
+    <string name="result_field_personal_summary">个人概况</string>
+    <string name="result_field_other_td_numbers">其他有效旅行证件</string>
+    <string name="result_field_custody">监护信息</string>
+    <string name="result_field_issuing_authority">签发机关</string>
+    <string name="result_field_issue_date">签发日期</string>
+    <string name="result_field_other_persons">提及的其他人员</string>
+    <string name="result_field_endorsements">签注和备注</string>
+    <string name="result_field_tax_exit">税务或出境要求</string>
+    <string name="result_field_personalization_time">个人化日期</string>
+    <string name="result_field_personalization_device">个人化系统编号</string>
+
+    <!-- Vérifications -->
+    <string name="result_section_checks">验证项目</string>
+    <string name="result_check_secure_channel">已建立安全通道</string>
+    <string name="result_check_sod_signature">SOD 签名有效</string>
+    <string name="result_check_chain">证书链</string>
+    <string name="result_check_ds_validity">DS 证书有效期</string>
+    <string name="result_check_dg_hashes">数据组哈希值</string>
+    <string name="result_check_chip_authentication">Chip Authentication（DG14）</string>
+    <string name="result_check_active_authentication">Active Authentication（DG15）</string>
+    <string name="result_status_ok">通过</string>
+    <string name="result_status_failed">失败</string>
+    <string name="result_status_not_available">不可用</string>
+    <string name="result_status_unsupported">不支持的算法</string>
+    <string name="result_check_expand">显示详情</string>
+    <string name="result_check_collapse">隐藏详情</string>
+
+    <!-- Détail des vérifications -->
+    <string name="result_detail_protocol">协议：%1$s</string>
+    <string name="result_detail_ca_method">方法：%1$s</string>
+    <string name="result_detail_ca_method_dg14">使用 DG14 中密钥的 Chip Authentication</string>
+    <string name="result_detail_ca_method_pace_cam">PACE-CAM，在建立通道时使用 EF.CardSecurity 中的密钥</string>
+    <string name="result_detail_algorithm">签名算法：%1$s</string>
+    <string name="result_detail_csca">CSCA：%1$s</string>
+    <string name="result_detail_csca_none">信任存储中没有匹配的 CSCA。</string>
+    <string name="result_detail_country">国家/地区：%1$s</string>
+    <string name="result_detail_country_mismatch">国家/地区不一致：认证机构 %1$s，签名者证书 %2$s，证件 %3$s</string>
+    <string name="result_detail_source">来源：%1$s</string>
+    <string name="result_detail_source_ants">ANTS 证书</string>
+    <string name="result_detail_source_national">签发国发布的证书</string>
+    <string name="result_detail_source_embedded">内置 Master List</string>
+    <string name="result_detail_source_imported">导入的 Master List</string>
+    <string name="result_detail_ds_subject">DS 证书：%1$s</string>
+    <string name="result_detail_links">经过的链接证书：</string>
+    <string name="result_detail_link_item">• %1$s</string>
+    <string name="result_detail_links_none">未经过任何链接证书。</string>
+    <string name="result_detail_ds_missing">DS 证书既不在 SOD 中，也不在信任存储中。</string>
+    <string name="result_detail_ds_period">DS 有效期：%1$s 至 %2$s</string>
+    <string name="result_detail_issuance">签发日期：%1$s（%2$s）</string>
+    <string name="result_detail_issuance_no_source">签发日期：%1$s</string>
+    <string name="result_detail_issuance_unknown">签发日期未知。</string>
+    <string name="result_detail_issuance_dg12">读取自 DG12</string>
+    <string name="result_detail_issuance_sod">SOD 签名日期</string>
+    <string name="result_detail_issuance_estimated">估算</string>
+    <string name="result_detail_digest_algorithm">哈希算法：%1$s</string>
+    <string name="result_detail_dg_checked">已检查的数据组：%1$s</string>
+    <string name="result_detail_dg_checked_none">未检查任何数据组。</string>
+    <string name="result_detail_dg_mismatched">哈希值不符：%1$s</string>
+    <string name="result_detail_dg_all_match">所有哈希值均相符。</string>
+    <string name="result_detail_dg_missing">已声明但芯片未提供的数据组：%1$s</string>
+    <string name="result_detail_unsupported">不支持的算法：%1$s</string>
+    <string name="result_detail_error">技术错误：%1$s</string>
+    <string name="result_detail_no_dg14">证件不含 DG14：芯片不提供此项验证。</string>
+    <string name="result_detail_no_dg15">证件不含 DG15：芯片不提供此项验证。</string>
+    <string name="result_detail_not_reached">未执行此步骤。</string>
+    <string name="result_detail_none">无更多详情。</string>
+    <string name="result_demo_banner">模拟证件 — 演示</string>
+</resources>

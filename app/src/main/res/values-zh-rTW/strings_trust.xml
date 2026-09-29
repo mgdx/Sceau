@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trust_title">信任存放區</string>
+    <string name="trust_back">返回</string>
+    <string name="trust_intro">核發國的根憑證（CSCA），用於驗證證件的簽章。這個畫面不會經手任何個人資料。</string>
+    <plurals name="trust_summary">
+        <item quantity="other">%1$d 個憑證，%2$d 個國家/地區</item>
+    </plurals>
+    <string name="trust_loading">正在載入信任存放區…</string>
+    <string name="trust_load_error">無法載入信任存放區。</string>
+    <string name="trust_retry">重試</string>
+    <string name="trust_empty">信任存放區中沒有任何憑證。</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">未註明國家/地區</string>
+    <plurals name="trust_country_count">
+        <item quantity="other">%1$d 個憑證</item>
+    </plurals>
+    <string name="trust_country_expand">顯示憑證</string>
+    <string name="trust_country_collapse">隱藏憑證</string>
+    <string name="trust_validity">有效期間：%1$s 至 %2$s</string>
+    <string name="trust_fingerprint">SHA-256 指紋</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_national">本國發布</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">已匯入</string>
+    <string name="trust_link_certificate">連結憑證</string>
+
+    <!-- Import -->
+    <string name="trust_import">匯入 Master List</string>
+    <string name="trust_busy">請稍候…</string>
+    <string name="trust_import_confirm_title">要匯入這份 Master List 嗎？</string>
+    <string name="trust_import_confirm_text">其簽章有效。匯入前，請確認簽署者的指紋與核發機關公布的指紋相符。</string>
+    <string name="trust_import_signer">簽署者</string>
+    <string name="trust_import_signer_fingerprint">簽署者的 SHA-256 指紋</string>
+    <string name="trust_import_signing_date">簽署日期</string>
+    <string name="trust_import_signing_date_unknown">未註明</string>
+    <string name="trust_import_certificate_count">憑證數量</string>
+    <string name="trust_import_confirm">匯入</string>
+    <string name="trust_cancel">取消</string>
+    <plurals name="trust_import_done">
+        <item quantity="other">已匯入 Master List：%1$d 個憑證。</item>
+    </plurals>
+    <string name="trust_import_invalid">這個檔案不是有效的 Master List：格式無法辨識或簽章不正確（%1$s）。</string>
+    <string name="trust_import_too_large">檔案遭拒：超過 20 MB。</string>
+    <string name="trust_import_read_error">無法讀取這個檔案。</string>
+    <string name="trust_import_write_error">無法儲存 Master List。</string>
+    <plurals name="trust_import_limit_count">
+        <item quantity="other">匯入遭拒：最多只能匯入 %1$d 份 Master List。請先刪除已匯入的憑證，再新增其他 Master List。</item>
+    </plurals>
+    <string name="trust_import_limit_size">匯入遭拒：已匯入的 Master List 總計將超過 %1$d MB。請先刪除已匯入的憑證，再新增其他 Master List。</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">刪除已匯入的憑證</string>
+    <string name="trust_delete_confirm_title">要刪除已匯入的憑證嗎？</string>
+    <string name="trust_delete_confirm_text">已匯入的 Master List 將會刪除。應用程式內建的憑證會保留。</string>
+    <string name="trust_delete_confirm">刪除</string>
+    <string name="trust_delete_done">已刪除匯入的憑證。</string>
+    <string name="trust_delete_error">無法刪除已匯入的憑證。</string>
+</resources>

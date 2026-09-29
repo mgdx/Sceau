@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">옵션 더보기</string>
+    <string name="home_menu_trust_store">신뢰 저장소</string>
+    <string name="home_menu_about">정보</string>
+    <string name="home_tab_id_card">신분증</string>
+    <string name="home_tab_passport">여권</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">카드 앞면에 인쇄된 6자리 숫자(카드 액세스 번호)</string>
+    <string name="home_document_number_label">문서 번호</string>
+    <string name="home_document_number_supporting">신원 정보면에 인쇄된 그대로, 최대 9자</string>
+    <string name="home_date_of_birth_label">생년월일</string>
+    <string name="home_date_of_expiry_label">기간 만료일</string>
+    <string name="home_date_day">DD</string>
+    <string name="home_date_month">MM</string>
+    <string name="home_date_year">YYYY</string>
+    <string name="home_date_format">형식: %1$s</string>
+    <string name="home_date_error_invalid">존재하지 않는 날짜입니다</string>
+    <string name="home_date_error_future">생년월일은 미래 날짜일 수 없습니다</string>
+    <string name="home_date_error_too_old">기간 만료일이 너무 이릅니다(%1$d년 이전)</string>
+    <string name="home_holder_notice">신분증은 소지자 본인이 제시해야 합니다.</string>
+    <string name="home_read">읽기</string>
+    <string name="home_nfc_disabled">NFC가 꺼져 있습니다. 신분증 칩을 읽으려면 NFC를 켜세요.</string>
+    <string name="home_nfc_settings">NFC 설정 열기</string>
+    <string name="home_nfc_absent">이 휴대전화에는 NFC가 없어 신분증 칩을 읽을 수 없습니다.</string>
+    <string name="home_menu_demo">프랑스 신분증 시뮬레이션(데모)</string>
+</resources>

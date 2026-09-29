@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">その他のオプション</string>
+    <string name="home_menu_trust_store">信頼ストア</string>
+    <string name="home_menu_about">このアプリについて</string>
+    <string name="home_tab_id_card">身分証明書</string>
+    <string name="home_tab_passport">パスポート</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">カード表面に印字された 6 桁の番号（カードアクセス番号）</string>
+    <string name="home_document_number_label">文書番号</string>
+    <string name="home_document_number_supporting">身分事項ページの印字どおり、9 文字以内</string>
+    <string name="home_date_of_birth_label">生年月日</string>
+    <string name="home_date_of_expiry_label">有効期間満了日</string>
+    <string name="home_date_day">DD</string>
+    <string name="home_date_month">MM</string>
+    <string name="home_date_year">YYYY</string>
+    <string name="home_date_format">形式：%1$s</string>
+    <string name="home_date_error_invalid">存在しない日付です</string>
+    <string name="home_date_error_future">生年月日に未来の日付は指定できません</string>
+    <string name="home_date_error_too_old">有効期間満了日が古すぎます（%1$d 年より前）</string>
+    <string name="home_holder_notice">書類は所持者本人が提示する必要があります。</string>
+    <string name="home_read">読み取る</string>
+    <string name="home_nfc_disabled">NFC がオフになっています。書類の IC チップを読み取るには NFC をオンにしてください。</string>
+    <string name="home_nfc_settings">NFC の設定を開く</string>
+    <string name="home_nfc_absent">このスマートフォンには NFC がないため、身分証明書の IC チップを読み取れません。</string>
+    <string name="home_menu_demo">フランスの身分証明書をシミュレート（デモ）</string>
+</resources>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="result_title">結果</string>
+    <string name="result_clear">消去</string>
+
+    <!-- Verdict -->
+    <string name="result_verdict_authentic">真正</string>
+    <string name="result_verdict_authentic_explanation">発行者の署名は有効で、IC チップは複製品でないことを証明しました。</string>
+    <string name="result_verdict_chip_unverified">署名は有効、IC チップは未検証</string>
+    <string name="result_verdict_chip_unverified_explanation">データは確かに発行者によって署名されていますが、IC チップが本物であることは証明できません。複製されたチップの可能性があります。</string>
+    <string name="result_verdict_unknown_issuer">発行者不明</string>
+    <string name="result_verdict_unknown_issuer_explanation">発行者の証明書が信頼ストアにありません。データは表示されますが、何も保証されません。新しい Master List をインポートすると、この書類を検証できる場合があります。</string>
+    <string name="result_verdict_failed">失敗</string>
+    <string name="result_verdict_failed_explanation">1 つ以上の検証に失敗しました。この書類を真正なものとみなさないでください。</string>
+    <string name="result_verdict_imported_anchor">インポートした証明書で検証済み</string>
+
+    <!-- Photo -->
+    <string name="result_photo_description">所持者の顔写真</string>
+    <string name="result_photo_unavailable">顔写真を読み取れないか、含まれていません</string>
+    <string name="result_photo_fullscreen">顔写真を全画面表示</string>
+    <string name="result_photo_close">閉じる</string>
+    <string name="result_image_front">表面の画像</string>
+    <string name="result_image_rear">裏面の画像</string>
+    <string name="result_image_unavailable">画像を読み取れません</string>
+
+    <!-- Identité -->
+    <string name="result_section_identity">身分事項</string>
+    <string name="result_expired">有効期限切れ</string>
+    <string name="result_field_surname">姓</string>
+    <string name="result_field_given_names">名</string>
+    <string name="result_field_sex">性別</string>
+    <string name="result_field_birth_date">生年月日</string>
+    <string name="result_field_nationality">国籍</string>
+    <string name="result_field_document_type">書類の種類</string>
+    <string name="result_field_document_number">文書番号</string>
+    <string name="result_field_issuing_state">発行国</string>
+    <string name="result_field_expiry_date">有効期間満了日</string>
+    <string name="result_sex_male">男性</string>
+    <string name="result_sex_female">女性</string>
+    <string name="result_sex_unspecified">指定なし</string>
+    <string name="result_document_passport">パスポート</string>
+    <string name="result_document_identity_card">身分証明書</string>
+    <string name="result_document_other">その他の渡航文書</string>
+    <string name="result_value_with_code">%1$s（%2$s）</string>
+    <string name="result_unknown_value">不明</string>
+
+    <!-- Pays spéciaux ICAO -->
+    <string name="result_country_united_nations">国際連合</string>
+    <string name="result_country_un_agency">国際連合の専門機関</string>
+    <string name="result_country_un_kosovo">コソボ（UNMIK）</string>
+    <string name="result_country_stateless">無国籍</string>
+    <string name="result_country_refugee">難民（1951 年条約）</string>
+    <string name="result_country_refugee_other">難民</string>
+    <string name="result_country_unspecified">国籍指定なし</string>
+
+    <!-- Données complémentaires -->
+    <string name="result_section_additional">追加データ</string>
+    <string name="result_field_full_name">氏名（フルネーム）</string>
+    <string name="result_field_other_names">その他の氏名</string>
+    <string name="result_field_personal_number">個人番号</string>
+    <string name="result_field_full_birth_date">完全な生年月日</string>
+    <string name="result_field_place_of_birth">出生地</string>
+    <string name="result_field_address">住所</string>
+    <string name="result_field_telephone">電話番号</string>
+    <string name="result_field_profession">職業</string>
+    <string name="result_field_title">肩書</string>
+    <string name="result_field_personal_summary">個人の概要</string>
+    <string name="result_field_other_td_numbers">その他の有効な渡航文書</string>
+    <string name="result_field_custody">監護に関する情報</string>
+    <string name="result_field_issuing_authority">発行官庁</string>
+    <string name="result_field_issue_date">発行年月日</string>
+    <string name="result_field_other_persons">記載されているその他の人物</string>
+    <string name="result_field_endorsements">追記・所見</string>
+    <string name="result_field_tax_exit">税務または出国に関する義務</string>
+    <string name="result_field_personalization_time">個人化の日付</string>
+    <string name="result_field_personalization_device">個人化システムの番号</string>
+
+    <!-- Vérifications -->
+    <string name="result_section_checks">検証</string>
+    <string name="result_check_secure_channel">セキュアチャネルの確立</string>
+    <string name="result_check_sod_signature">SOD の署名の有効性</string>
+    <string name="result_check_chain">証明書チェーン</string>
+    <string name="result_check_ds_validity">DS 証明書の有効性</string>
+    <string name="result_check_dg_hashes">データグループのハッシュ値</string>
+    <string name="result_check_chip_authentication">Chip Authentication（DG14）</string>
+    <string name="result_check_active_authentication">Active Authentication（DG15）</string>
+    <string name="result_status_ok">成功</string>
+    <string name="result_status_failed">失敗</string>
+    <string name="result_status_not_available">利用不可</string>
+    <string name="result_status_unsupported">サポートされていないアルゴリズム</string>
+    <string name="result_check_expand">詳細を表示</string>
+    <string name="result_check_collapse">詳細を非表示</string>
+
+    <!-- Détail des vérifications -->
+    <string name="result_detail_protocol">プロトコル：%1$s</string>
+    <string name="result_detail_ca_method">方式：%1$s</string>
+    <string name="result_detail_ca_method_dg14">DG14 の鍵による Chip Authentication</string>
+    <string name="result_detail_ca_method_pace_cam">PACE-CAM（チャネル確立時に EF.CardSecurity の鍵を使用）</string>
+    <string name="result_detail_algorithm">署名アルゴリズム：%1$s</string>
+    <string name="result_detail_csca">CSCA：%1$s</string>
+    <string name="result_detail_csca_none">信頼ストアに一致する CSCA がありません。</string>
+    <string name="result_detail_country">国：%1$s</string>
+    <string name="result_detail_country_mismatch">国が一致しません：認証局 %1$s、署名者証明書 %2$s、書類 %3$s</string>
+    <string name="result_detail_source">入手元：%1$s</string>
+    <string name="result_detail_source_ants">ANTS の証明書</string>
+    <string name="result_detail_source_national">発行国が公開している証明書</string>
+    <string name="result_detail_source_embedded">内蔵の Master List</string>
+    <string name="result_detail_source_imported">インポートした Master List</string>
+    <string name="result_detail_ds_subject">DS 証明書：%1$s</string>
+    <string name="result_detail_links">経由したリンク証明書：</string>
+    <string name="result_detail_link_item">・%1$s</string>
+    <string name="result_detail_links_none">経由したリンク証明書はありません。</string>
+    <string name="result_detail_ds_missing">DS 証明書が SOD にも信頼ストアにもありません。</string>
+    <string name="result_detail_ds_period">DS の有効期間：%1$s～%2$s</string>
+    <string name="result_detail_issuance">発行年月日：%1$s（%2$s）</string>
+    <string name="result_detail_issuance_no_source">発行年月日：%1$s</string>
+    <string name="result_detail_issuance_unknown">発行年月日は不明です。</string>
+    <string name="result_detail_issuance_dg12">DG12 から取得</string>
+    <string name="result_detail_issuance_sod">SOD の署名日</string>
+    <string name="result_detail_issuance_estimated">推定</string>
+    <string name="result_detail_digest_algorithm">ハッシュアルゴリズム：%1$s</string>
+    <string name="result_detail_dg_checked">検証したデータグループ：%1$s</string>
+    <string name="result_detail_dg_checked_none">検証したデータグループはありません。</string>
+    <string name="result_detail_dg_mismatched">一致しないハッシュ値：%1$s</string>
+    <string name="result_detail_dg_all_match">すべてのハッシュ値が一致しました。</string>
+    <string name="result_detail_dg_missing">宣言されているが IC チップから提供されなかったデータグループ：%1$s</string>
+    <string name="result_detail_unsupported">サポートされていないアルゴリズム：%1$s</string>
+    <string name="result_detail_error">技術的なエラー：%1$s</string>
+    <string name="result_detail_no_dg14">この書類には DG14 がありません。IC チップはこの検証に対応していません。</string>
+    <string name="result_detail_no_dg15">この書類には DG15 がありません。IC チップはこの検証に対応していません。</string>
+    <string name="result_detail_not_reached">この手順は実行されませんでした。</string>
+    <string name="result_detail_none">追加の詳細はありません。</string>
+    <string name="result_demo_banner">シミュレートされた書類 — デモ</string>
+</resources>

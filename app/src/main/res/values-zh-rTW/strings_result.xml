@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="result_title">結果</string>
+    <string name="result_clear">清除</string>
+
+    <!-- Verdict -->
+    <string name="result_verdict_authentic">真實</string>
+    <string name="result_verdict_authentic_explanation">核發者的簽章有效，且晶片已證明本身不是複製品。</string>
+    <string name="result_verdict_chip_unverified">簽章有效，晶片未驗證</string>
+    <string name="result_verdict_chip_unverified_explanation">資料確實由核發者簽署，但晶片無法證明本身是原件：它可能是複製的。</string>
+    <string name="result_verdict_unknown_issuer">核發者不明</string>
+    <string name="result_verdict_unknown_issuer_explanation">核發者的憑證不在信任存放區中。資料仍會顯示，但不提供任何保證。匯入較新的 Master List 或許可以驗證這份證件。</string>
+    <string name="result_verdict_failed">驗證失敗</string>
+    <string name="result_verdict_failed_explanation">至少有一項驗證未通過：不應將這份證件視為真實證件。</string>
+    <string name="result_verdict_imported_anchor">已透過你匯入的憑證完成驗證</string>
+
+    <!-- Photo -->
+    <string name="result_photo_description">持有人相片</string>
+    <string name="result_photo_unavailable">相片無法讀取或不存在</string>
+    <string name="result_photo_fullscreen">以全螢幕顯示相片</string>
+    <string name="result_photo_close">關閉</string>
+    <string name="result_image_front">正面影像</string>
+    <string name="result_image_rear">背面影像</string>
+    <string name="result_image_unavailable">影像無法讀取</string>
+
+    <!-- Identité -->
+    <string name="result_section_identity">身分資料</string>
+    <string name="result_expired">證件已過期</string>
+    <string name="result_field_surname">姓</string>
+    <string name="result_field_given_names">名</string>
+    <string name="result_field_sex">性別</string>
+    <string name="result_field_birth_date">出生日期</string>
+    <string name="result_field_nationality">國籍</string>
+    <string name="result_field_document_type">證件類型</string>
+    <string name="result_field_document_number">證件號碼</string>
+    <string name="result_field_issuing_state">核發國</string>
+    <string name="result_field_expiry_date">效期截止日期</string>
+    <string name="result_sex_male">男</string>
+    <string name="result_sex_female">女</string>
+    <string name="result_sex_unspecified">未指定</string>
+    <string name="result_document_passport">護照</string>
+    <string name="result_document_identity_card">身分證</string>
+    <string name="result_document_other">其他旅行文件</string>
+    <string name="result_value_with_code">%1$s（%2$s）</string>
+    <string name="result_unknown_value">不明</string>
+
+    <!-- Pays spéciaux ICAO -->
+    <string name="result_country_united_nations">聯合國</string>
+    <string name="result_country_un_agency">聯合國專門機構</string>
+    <string name="result_country_un_kosovo">科索沃（聯合國科索沃特派團）</string>
+    <string name="result_country_stateless">無國籍</string>
+    <string name="result_country_refugee">難民（1951 年公約）</string>
+    <string name="result_country_refugee_other">難民</string>
+    <string name="result_country_unspecified">國籍未指定</string>
+
+    <!-- Données complémentaires -->
+    <string name="result_section_additional">其他資料</string>
+    <string name="result_field_full_name">全名</string>
+    <string name="result_field_other_names">其他姓名</string>
+    <string name="result_field_personal_number">個人號碼</string>
+    <string name="result_field_full_birth_date">完整出生日期</string>
+    <string name="result_field_place_of_birth">出生地</string>
+    <string name="result_field_address">地址</string>
+    <string name="result_field_telephone">電話</string>
+    <string name="result_field_profession">職業</string>
+    <string name="result_field_title">頭銜</string>
+    <string name="result_field_personal_summary">個人概要</string>
+    <string name="result_field_other_td_numbers">其他有效旅行文件</string>
+    <string name="result_field_custody">監護資料</string>
+    <string name="result_field_issuing_authority">發照機關</string>
+    <string name="result_field_issue_date">發照日期</string>
+    <string name="result_field_other_persons">提及的其他人員</string>
+    <string name="result_field_endorsements">加簽與備註</string>
+    <string name="result_field_tax_exit">稅務或出境義務</string>
+    <string name="result_field_personalization_time">個人化日期</string>
+    <string name="result_field_personalization_device">個人化系統編號</string>
+
+    <!-- Vérifications -->
+    <string name="result_section_checks">驗證項目</string>
+    <string name="result_check_secure_channel">已建立安全通道</string>
+    <string name="result_check_sod_signature">SOD 簽章有效</string>
+    <string name="result_check_chain">憑證鏈</string>
+    <string name="result_check_ds_validity">DS 憑證有效性</string>
+    <string name="result_check_dg_hashes">資料組雜湊值</string>
+    <string name="result_check_chip_authentication">Chip Authentication（DG14）</string>
+    <string name="result_check_active_authentication">Active Authentication（DG15）</string>
+    <string name="result_status_ok">通過</string>
+    <string name="result_status_failed">失敗</string>
+    <string name="result_status_not_available">無法使用</string>
+    <string name="result_status_unsupported">不支援的演算法</string>
+    <string name="result_check_expand">顯示詳細資料</string>
+    <string name="result_check_collapse">隱藏詳細資料</string>
+
+    <!-- Détail des vérifications -->
+    <string name="result_detail_protocol">通訊協定：%1$s</string>
+    <string name="result_detail_ca_method">方法：%1$s</string>
+    <string name="result_detail_ca_method_dg14">使用 DG14 金鑰的 Chip Authentication</string>
+    <string name="result_detail_ca_method_pace_cam">PACE-CAM，於建立通道時使用 EF.CardSecurity 的金鑰</string>
+    <string name="result_detail_algorithm">簽章演算法：%1$s</string>
+    <string name="result_detail_csca">CSCA：%1$s</string>
+    <string name="result_detail_csca_none">信任存放區中沒有相符的 CSCA。</string>
+    <string name="result_detail_country">國家/地區：%1$s</string>
+    <string name="result_detail_country_mismatch">國家/地區不一致：憑證機構 %1$s，簽署者憑證 %2$s，證件 %3$s</string>
+    <string name="result_detail_source">來源：%1$s</string>
+    <string name="result_detail_source_ants">ANTS 憑證</string>
+    <string name="result_detail_source_national">核發國發布的憑證</string>
+    <string name="result_detail_source_embedded">內建 Master List</string>
+    <string name="result_detail_source_imported">匯入的 Master List</string>
+    <string name="result_detail_ds_subject">DS 憑證：%1$s</string>
+    <string name="result_detail_links">經過的連結憑證：</string>
+    <string name="result_detail_link_item">• %1$s</string>
+    <string name="result_detail_links_none">未經過任何連結憑證。</string>
+    <string name="result_detail_ds_missing">DS 憑證既不在 SOD 中，也不在信任存放區中。</string>
+    <string name="result_detail_ds_period">DS 有效期間：%1$s 至 %2$s</string>
+    <string name="result_detail_issuance">發照日期：%1$s（%2$s）</string>
+    <string name="result_detail_issuance_no_source">發照日期：%1$s</string>
+    <string name="result_detail_issuance_unknown">發照日期不明。</string>
+    <string name="result_detail_issuance_dg12">讀取自 DG12</string>
+    <string name="result_detail_issuance_sod">SOD 簽署日期</string>
+    <string name="result_detail_issuance_estimated">估計值</string>
+    <string name="result_detail_digest_algorithm">雜湊演算法：%1$s</string>
+    <string name="result_detail_dg_checked">已檢查的資料組：%1$s</string>
+    <string name="result_detail_dg_checked_none">未檢查任何資料組。</string>
+    <string name="result_detail_dg_mismatched">雜湊值不符：%1$s</string>
+    <string name="result_detail_dg_all_match">所有雜湊值皆相符。</string>
+    <string name="result_detail_dg_missing">已宣告但晶片未提供的資料組：%1$s</string>
+    <string name="result_detail_unsupported">不支援的演算法：%1$s</string>
+    <string name="result_detail_error">技術錯誤：%1$s</string>
+    <string name="result_detail_no_dg14">證件不含 DG14：晶片不提供這項驗證。</string>
+    <string name="result_detail_no_dg15">證件不含 DG15：晶片不提供這項驗證。</string>
+    <string name="result_detail_not_reached">未執行此步驟。</string>
+    <string name="result_detail_none">沒有其他詳細資料。</string>
+    <string name="result_demo_banner">模擬證件 — 示範</string>
+</resources>
