@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">О приложении</string>
+    <string name="about_back">Назад</string>
+    <string name="about_tagline">Офлайн-чтение и проверка чипа документов, удостоверяющих личность, по стандарту ICAO 9303.</string>
+    <string name="about_version">Версия %1$s</string>
+    <string name="about_version_unknown">Версия неизвестна</string>
+
+    <string name="about_section_license">Лицензия и исходный код</string>
+    <string name="about_license">Свободное ПО, распространяемое по лицензии GNU GPL версии 3 или более поздней.</string>
+    <string name="about_open_repository">Исходный код</string>
+    <string name="about_no_browser">Нет приложения, которое может открыть эту ссылку.</string>
+
+    <string name="about_section_trust">Встроенные доверенные сертификаты</string>
+    <string name="about_trust_ants_only">Французские CSCA от ANTS (паспорта и удостоверения личности).</string>
+    <string name="about_trust_ants_and_bsi">Французские CSCA от ANTS и немецкий Master List от BSI.</string>
+    <string name="about_trust_master_list_date">Дата подписи Master List: %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">Дата подписи Master List не указана.</string>
+    <string name="about_trust_bsi_notice">Master List от BSI (Федеральное ведомство по информационной безопасности Германии) распространяется без изменений, без участия и одобрения BSI.</string>
+    <string name="about_trust_national">Сертификаты, опубликованные следующими государствами для своих документов: %1$s.</string>
+    <string name="about_trust_ogl_notice">Содержит информацию государственного сектора Великобритании, опубликованную по лицензии Open Government Licence v3.0.</string>
+    <string name="about_trust_loading">Загрузка…</string>
+    <string name="about_trust_error">Не удалось загрузить доверенные сертификаты.</string>
+
+    <string name="about_section_limits">Ограничения</string>
+    <string name="about_limit_unknown_issuer">Если государства, выдавшего документ, нет среди доверенных сертификатов, результат будет «Неизвестный издатель», а не «Проверка не пройдена». Импорт более свежего Master List может это исправить.</string>
+    <string name="about_limit_revocation">Списки отзыва не проверяются: для этого нужна сеть, а Sceau никогда её не использует.</string>
+
+    <string name="about_section_usage">Условия использования</string>
+    <string name="about_usage_holder">Чтение предполагает, что владелец сам предъявляет свой документ и согласен на это.</string>
+    <string name="about_usage_biometrics">Фотография становится биометрическими данными в смысле GDPR (Общего регламента по защите данных), если используется для автоматического сравнения лиц. Sceau такого сравнения не выполняет, и его нельзя использовать для этого без отдельного правового основания.</string>
+    <string name="about_usage_privacy">Считанные данные не сохраняются и не передаются: всё удаляется из памяти при выходе из результата или при переходе приложения в фоновый режим.</string>
+</resources>

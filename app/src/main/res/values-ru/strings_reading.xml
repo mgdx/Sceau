@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reading_title">Чтение документа</string>
+    <string name="reading_prompt">Приложите документ к задней панели телефона и не убирайте его</string>
+    <string name="reading_step_connect">Подключение к чипу</string>
+    <string name="reading_step_secure_channel">Установка защищенного канала (PACE или BAC)</string>
+    <string name="reading_step_read_data">Чтение данных</string>
+    <string name="reading_step_verify_signature">Проверка подписи</string>
+    <string name="reading_step_verify_chip">Проверка чипа</string>
+    <string name="reading_step_pending">ожидание</string>
+    <string name="reading_step_in_progress">выполняется</string>
+    <string name="reading_step_done">завершено</string>
+    <string name="reading_error_title">Чтение прервано</string>
+    <string name="reading_slow_chip">Чип документа медлит с ответом, часто после неудачных попыток. Держите документ неподвижно, это может занять до минуты.</string>
+    <string name="reading_error_access_denied">Неверный CAN или данные MRZ. Проверьте введенный номер и даты, затем повторите попытку. Каждая неудачная попытка может увеличить задержку, которую чип выдерживает перед ответом.</string>
+    <string name="reading_error_connection_lost">Документ убран слишком рано. Держите его неподвижно у телефона до конца чтения.</string>
+    <string name="reading_error_not_icao">Документ не соответствует стандарту ICAO 9303: его чип не может быть считан.</string>
+    <string name="reading_error_timeout">Время ожидания истекло: чип не ответил вовремя. Повторите попытку, держа документ неподвижно.</string>
+    <string name="reading_error_can_without_pace">Этот документ не считывается по CAN. Откройте вкладку «Паспорт» и введите данные MRZ.</string>
+    <string name="reading_error_unexpected">Произошла непредвиденная ошибка.</string>
+    <string name="reading_error_code">Код ошибки: %1$s</string>
+    <string name="reading_retry">Повторить</string>
+    <string name="reading_cancel">Отмена</string>
+</resources>

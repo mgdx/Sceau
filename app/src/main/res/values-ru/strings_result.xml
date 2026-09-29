@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="result_title">Результат</string>
+    <string name="result_clear">Очистить</string>
+
+    <!-- Verdict -->
+    <string name="result_verdict_authentic">Подлинный</string>
+    <string name="result_verdict_authentic_explanation">Подпись издателя действительна, и чип доказал, что он не является копией.</string>
+    <string name="result_verdict_chip_unverified">Подпись действительна, чип не проверен</string>
+    <string name="result_verdict_chip_unverified_explanation">Данные действительно подписаны издателем, но чип не позволяет доказать, что он оригинальный: это может быть клон.</string>
+    <string name="result_verdict_unknown_issuer">Неизвестный издатель</string>
+    <string name="result_verdict_unknown_issuer_explanation">Сертификата издателя нет среди доверенных сертификатов. Данные показаны, но ничего не гарантировано. Импорт более свежего Master List может позволить проверить этот документ.</string>
+    <string name="result_verdict_failed">Проверка не пройдена</string>
+    <string name="result_verdict_failed_explanation">По крайней мере одна проверка не пройдена: этот документ нельзя считать подлинным.</string>
+    <string name="result_verdict_imported_anchor">Проверено с помощью импортированного вами сертификата</string>
+
+    <!-- Photo -->
+    <string name="result_photo_description">Фотография владельца</string>
+    <string name="result_photo_unavailable">Фотография нечитаема или отсутствует</string>
+    <string name="result_photo_fullscreen">Показать фотографию во весь экран</string>
+    <string name="result_photo_close">Закрыть</string>
+    <string name="result_image_front">Изображение лицевой стороны</string>
+    <string name="result_image_rear">Изображение оборотной стороны</string>
+    <string name="result_image_unavailable">Изображение нечитаемо</string>
+
+    <!-- Identité -->
+    <string name="result_section_identity">Личные данные</string>
+    <string name="result_expired">Срок действия истек</string>
+    <string name="result_field_surname">Фамилия</string>
+    <string name="result_field_given_names">Имя</string>
+    <string name="result_field_sex">Пол</string>
+    <string name="result_field_birth_date">Дата рождения</string>
+    <string name="result_field_nationality">Гражданство</string>
+    <string name="result_field_document_type">Тип документа</string>
+    <string name="result_field_document_number">Номер документа</string>
+    <string name="result_field_issuing_state">Государство выдачи</string>
+    <string name="result_field_expiry_date">Дата окончания срока действия</string>
+    <string name="result_sex_male">Мужской</string>
+    <string name="result_sex_female">Женский</string>
+    <string name="result_sex_unspecified">Не указан</string>
+    <string name="result_document_passport">Паспорт</string>
+    <string name="result_document_identity_card">ID-карта</string>
+    <string name="result_document_other">Другой проездной документ</string>
+    <string name="result_value_with_code">%1$s (%2$s)</string>
+    <string name="result_unknown_value">Неизвестно</string>
+
+    <!-- Pays spéciaux ICAO -->
+    <string name="result_country_united_nations">Организация Объединенных Наций</string>
+    <string name="result_country_un_agency">Специализированное учреждение ООН</string>
+    <string name="result_country_un_kosovo">Косово (МООНК)</string>
+    <string name="result_country_stateless">Лицо без гражданства</string>
+    <string name="result_country_refugee">Беженец (Конвенция 1951 года)</string>
+    <string name="result_country_refugee_other">Беженец</string>
+    <string name="result_country_unspecified">Гражданство не указано</string>
+
+    <!-- Données complémentaires -->
+    <string name="result_section_additional">Дополнительные данные</string>
+    <string name="result_field_full_name">Полное имя</string>
+    <string name="result_field_other_names">Другие имена</string>
+    <string name="result_field_personal_number">Личный номер</string>
+    <string name="result_field_full_birth_date">Полная дата рождения</string>
+    <string name="result_field_place_of_birth">Место рождения</string>
+    <string name="result_field_address">Адрес</string>
+    <string name="result_field_telephone">Телефон</string>
+    <string name="result_field_profession">Профессия</string>
+    <string name="result_field_title">Звание</string>
+    <string name="result_field_personal_summary">Краткие сведения</string>
+    <string name="result_field_other_td_numbers">Другие действительные проездные документы</string>
+    <string name="result_field_custody">Сведения об опеке</string>
+    <string name="result_field_issuing_authority">Орган, выдавший документ</string>
+    <string name="result_field_issue_date">Дата выдачи</string>
+    <string name="result_field_other_persons">Другие упомянутые лица</string>
+    <string name="result_field_endorsements">Отметки и примечания</string>
+    <string name="result_field_tax_exit">Налоговые или выездные требования</string>
+    <string name="result_field_personalization_time">Дата персонализации</string>
+    <string name="result_field_personalization_device">Номер системы персонализации</string>
+
+    <!-- Vérifications -->
+    <string name="result_section_checks">Проверки</string>
+    <string name="result_check_secure_channel">Защищенный канал установлен</string>
+    <string name="result_check_sod_signature">Подпись SOD действительна</string>
+    <string name="result_check_chain">Цепочка сертификатов</string>
+    <string name="result_check_ds_validity">Срок действия сертификата DS</string>
+    <string name="result_check_dg_hashes">Хеши групп данных</string>
+    <string name="result_check_chip_authentication">Chip Authentication (DG14)</string>
+    <string name="result_check_active_authentication">Active Authentication (DG15)</string>
+    <string name="result_status_ok">Пройдена</string>
+    <string name="result_status_failed">Не пройдена</string>
+    <string name="result_status_not_available">Недоступна</string>
+    <string name="result_status_unsupported">Алгоритм не поддерживается</string>
+    <string name="result_check_expand">Показать подробности</string>
+    <string name="result_check_collapse">Скрыть подробности</string>
+
+    <!-- Détail des vérifications -->
+    <string name="result_detail_protocol">Протокол: %1$s</string>
+    <string name="result_detail_ca_method">Метод: %1$s</string>
+    <string name="result_detail_ca_method_dg14">Chip Authentication с ключом из DG14</string>
+    <string name="result_detail_ca_method_pace_cam">PACE-CAM при установке канала, с ключом из EF.CardSecurity</string>
+    <string name="result_detail_algorithm">Алгоритм подписи: %1$s</string>
+    <string name="result_detail_csca">CSCA: %1$s</string>
+    <string name="result_detail_csca_none">Ни один CSCA из доверенных сертификатов не подходит.</string>
+    <string name="result_detail_country">Страна: %1$s</string>
+    <string name="result_detail_country_mismatch">Страны не совпадают: удостоверяющий центр %1$s, сертификат подписанта %2$s, документ %3$s</string>
+    <string name="result_detail_source">Источник: %1$s</string>
+    <string name="result_detail_source_ants">сертификаты ANTS</string>
+    <string name="result_detail_source_national">сертификаты, опубликованные государством выдачи</string>
+    <string name="result_detail_source_embedded">встроенный Master List</string>
+    <string name="result_detail_source_imported">импортированный Master List</string>
+    <string name="result_detail_ds_subject">Сертификат DS: %1$s</string>
+    <string name="result_detail_links">Пройденные связующие сертификаты:</string>
+    <string name="result_detail_link_item">• %1$s</string>
+    <string name="result_detail_links_none">Связующие сертификаты не использовались.</string>
+    <string name="result_detail_ds_missing">Сертификата DS нет ни в SOD, ни среди доверенных сертификатов.</string>
+    <string name="result_detail_ds_period">Срок действия DS: с %1$s по %2$s</string>
+    <string name="result_detail_issuance">Дата выдачи: %1$s (%2$s)</string>
+    <string name="result_detail_issuance_no_source">Дата выдачи: %1$s</string>
+    <string name="result_detail_issuance_unknown">Дата выдачи неизвестна.</string>
+    <string name="result_detail_issuance_dg12">из DG12</string>
+    <string name="result_detail_issuance_sod">дата подписи SOD</string>
+    <string name="result_detail_issuance_estimated">оценка</string>
+    <string name="result_detail_digest_algorithm">Алгоритм хеширования: %1$s</string>
+    <string name="result_detail_dg_checked">Проверенные группы данных: %1$s</string>
+    <string name="result_detail_dg_checked_none">Ни одна группа данных не проверена.</string>
+    <string name="result_detail_dg_mismatched">Несовпадающие хеши: %1$s</string>
+    <string name="result_detail_dg_all_match">Все хеши совпадают.</string>
+    <string name="result_detail_dg_missing">Группы данных, заявленные, но не предоставленные чипом: %1$s</string>
+    <string name="result_detail_unsupported">Алгоритм не поддерживается: %1$s</string>
+    <string name="result_detail_error">Техническая ошибка: %1$s</string>
+    <string name="result_detail_no_dg14">В документе нет DG14: чип не поддерживает эту проверку.</string>
+    <string name="result_detail_no_dg15">В документе нет DG15: чип не поддерживает эту проверку.</string>
+    <string name="result_detail_not_reached">Этап не выполнен.</string>
+    <string name="result_detail_none">Дополнительных сведений нет.</string>
+    <string name="result_demo_banner">Имитация документа — демонстрация</string>
+</resources>

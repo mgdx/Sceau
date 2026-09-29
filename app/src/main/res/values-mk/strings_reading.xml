@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reading_title">Читање на документот</string>
+    <string name="reading_prompt">Ставете го документот на задната страна од телефонот и не го поместувајте</string>
+    <string name="reading_step_connect">Поврзување со чипот</string>
+    <string name="reading_step_secure_channel">Воспоставување заштитен канал (PACE или BAC)</string>
+    <string name="reading_step_read_data">Читање на податоците</string>
+    <string name="reading_step_verify_signature">Проверка на потписот</string>
+    <string name="reading_step_verify_chip">Проверка на чипот</string>
+    <string name="reading_step_pending">на чекање</string>
+    <string name="reading_step_in_progress">во тек</string>
+    <string name="reading_step_done">завршено</string>
+    <string name="reading_error_title">Читањето е прекинато</string>
+    <string name="reading_slow_chip">Чипот на документот доцни со одговорот, често по неуспешни обиди. Држете го документот мирно, ова може да трае до една минута.</string>
+    <string name="reading_error_access_denied">CAN или податоците од MRZ се неточни. Проверете го внесениот број и датумите, па обидете се повторно. Секој неуспешен обид може да го продолжи чекањето што чипот го наметнува пред да одговори.</string>
+    <string name="reading_error_connection_lost">Документот е тргнат прерано. Држете го мирно до телефонот до крајот на читањето.</string>
+    <string name="reading_error_not_icao">Овој документ не е во согласност со стандардот ICAO 9303: неговиот чип не може да се прочита.</string>
+    <string name="reading_error_timeout">Времето истече: чипот не одговори навреме. Обидете се повторно држејќи го документот мирно.</string>
+    <string name="reading_error_can_without_pace">Овој документ не се чита со CAN. Користете ја картичката „Пасош“ и внесете ги податоците од MRZ.</string>
+    <string name="reading_error_unexpected">Настана неочекувана грешка.</string>
+    <string name="reading_error_code">Код на грешка: %1$s</string>
+    <string name="reading_retry">Обиди се повторно</string>
+    <string name="reading_cancel">Откажи</string>
+</resources>

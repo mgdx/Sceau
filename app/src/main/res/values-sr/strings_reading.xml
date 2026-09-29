@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reading_title">Читање документа</string>
+    <string name="reading_prompt">Прислоните документ уз полеђину телефона и не одмичите га</string>
+    <string name="reading_step_connect">Повезивање са чипом</string>
+    <string name="reading_step_secure_channel">Успостављање заштићеног канала (PACE или BAC)</string>
+    <string name="reading_step_read_data">Читање података</string>
+    <string name="reading_step_verify_signature">Провера потписа</string>
+    <string name="reading_step_verify_chip">Провера чипа</string>
+    <string name="reading_step_pending">на чекању</string>
+    <string name="reading_step_in_progress">у току</string>
+    <string name="reading_step_done">завршено</string>
+    <string name="reading_error_title">Читање је прекинуто</string>
+    <string name="reading_slow_chip">Чип документа одлаже одговор, често после неуспелих покушаја. Држите документ мирно, ово може потрајати до једног минута.</string>
+    <string name="reading_error_access_denied">CAN или подаци из MRZ нису тачни. Проверите унети број и датуме, па покушајте поново. Сваки неуспели покушај може да продужи чекање које чип намеће пре него што одговори.</string>
+    <string name="reading_error_connection_lost">Документ је одмакнут прерано. Држите га мирно уз телефон до краја читања.</string>
+    <string name="reading_error_not_icao">Овај документ није усклађен са стандардом ICAO 9303: његов чип не може да се прочита.</string>
+    <string name="reading_error_timeout">Време је истекло: чип није одговорио на време. Покушајте поново и држите документ мирно.</string>
+    <string name="reading_error_can_without_pace">Овај документ се не чита помоћу CAN-а. Користите картицу „Пасош“ и унесите податке из MRZ.</string>
+    <string name="reading_error_unexpected">Дошло је до неочекиване грешке.</string>
+    <string name="reading_error_code">Кôд грешке: %1$s</string>
+    <string name="reading_retry">Покушај поново</string>
+    <string name="reading_cancel">Откажи</string>
+</resources>

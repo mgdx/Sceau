@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">Повеќе опции</string>
+    <string name="home_menu_trust_store">Доверливи сертификати</string>
+    <string name="home_menu_about">За апликацијата</string>
+    <string name="home_tab_id_card">Лична карта</string>
+    <string name="home_tab_passport">Пасош</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">Шестцифрен број отпечатен на предната страна од картата</string>
+    <string name="home_document_number_label">Број на документот</string>
+    <string name="home_document_number_supporting">Како што е отпечатен на страницата со податоци, најмногу 9 знаци</string>
+    <string name="home_date_of_birth_label">Датум на раѓање</string>
+    <string name="home_date_of_expiry_label">Датум на истекување</string>
+    <string name="home_date_day">ДД</string>
+    <string name="home_date_month">ММ</string>
+    <string name="home_date_year">ГГГГ</string>
+    <string name="home_date_format">Формат: %1$s</string>
+    <string name="home_date_error_invalid">Овој датум не постои</string>
+    <string name="home_date_error_future">Датумот на раѓање не може да биде во иднината</string>
+    <string name="home_date_error_too_old">Премногу стар датум на истекување (пред %1$d)</string>
+    <string name="home_holder_notice">Документот мора да го покаже неговиот имател.</string>
+    <string name="home_read">Прочитај</string>
+    <string name="home_nfc_disabled">NFC е исклучен. Вклучете го за да го прочитате чипот на документот.</string>
+    <string name="home_nfc_settings">Отвори ги поставките за NFC</string>
+    <string name="home_nfc_absent">Овој телефон нема NFC: не може да го чита чипот на документите за идентификација.</string>
+    <string name="home_menu_demo">Симулирај CNIe (демо)</string>
+</resources>
