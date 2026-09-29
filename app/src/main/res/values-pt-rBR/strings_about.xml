@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">Sobre</string>
+    <string name="about_back">Voltar</string>
+    <string name="about_tagline">Leitura e verificação offline do chip dos documentos de identidade ICAO 9303.</string>
+    <string name="about_version">Versão %1$s</string>
+    <string name="about_version_unknown">Versão desconhecida</string>
+
+    <string name="about_section_license">Licença e código-fonte</string>
+    <string name="about_license">Software livre distribuído sob a licença GNU GPL versão 3 ou posterior.</string>
+    <string name="about_open_repository">Ver o código-fonte</string>
+    <string name="about_no_browser">Nenhum aplicativo pode abrir este link.</string>
+
+    <string name="about_section_trust">Repositório de confiança integrado</string>
+    <string name="about_trust_ants_only">CSCA franceses da ANTS (passaportes e carteiras de identidade).</string>
+    <string name="about_trust_ants_and_bsi">CSCA franceses da ANTS e Master List alemã do BSI.</string>
+    <string name="about_trust_master_list_date">Master List assinada em %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">Data de assinatura da Master List não indicada.</string>
+    <string name="about_trust_bsi_notice">A Master List do BSI (Serviço Federal de Segurança da Informação da Alemanha) é redistribuída sem modificações, sem a cooperação nem a aprovação do BSI.</string>
+    <string name="about_trust_national">Certificados publicados pelos seguintes Estados para seus próprios documentos: %1$s.</string>
+    <string name="about_trust_ogl_notice">Contém informações do setor público britânico publicadas sob a licença Open Government Licence v3.0.</string>
+    <string name="about_trust_loading">Carregando…</string>
+    <string name="about_trust_error">Não foi possível carregar o repositório de confiança.</string>
+
+    <string name="about_section_limits">Limitações</string>
+    <string name="about_limit_unknown_issuer">Um documento cujo país emissor não conste no repositório de confiança recebe o veredito “Emissor desconhecido”, e não “Falha”. Importar uma Master List mais recente pode resolver isso.</string>
+    <string name="about_limit_revocation">As listas de revogação não são consultadas: exigem acesso à rede, que o Sceau nunca utiliza.</string>
+
+    <string name="about_section_usage">Condições de uso</string>
+    <string name="about_usage_holder">A leitura pressupõe que o titular apresente pessoalmente o próprio documento e concorde com ela.</string>
+    <string name="about_usage_biometrics">A foto se torna um dado biométrico nos termos do RGPD se for usada em uma comparação facial automatizada. O Sceau não faz esse tipo de comparação e não deve ser usado para isso sem uma base legal específica.</string>
+    <string name="about_usage_privacy">Nenhum dado lido é armazenado nem enviado: tudo é apagado da memória ao sair do resultado ou ao colocar o aplicativo em segundo plano.</string>
+</resources>

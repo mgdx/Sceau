@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reading_title">Citirea documentului</string>
+    <string name="reading_prompt">Așezați documentul pe spatele telefonului și nu îl îndepărtați</string>
+    <string name="reading_step_connect">Conectare la cip</string>
+    <string name="reading_step_secure_channel">Deschiderea canalului securizat (PACE sau BAC)</string>
+    <string name="reading_step_read_data">Citirea datelor</string>
+    <string name="reading_step_verify_signature">Verificarea semnăturii</string>
+    <string name="reading_step_verify_chip">Verificarea cipului</string>
+    <string name="reading_step_pending">în așteptare</string>
+    <string name="reading_step_in_progress">în curs</string>
+    <string name="reading_step_done">finalizată</string>
+    <string name="reading_error_title">Citire întreruptă</string>
+    <string name="reading_slow_chip">Cipul documentului întârzie să răspundă, adesea după încercări eșuate. Țineți documentul nemișcat; poate dura până la un minut.</string>
+    <string name="reading_error_access_denied">CAN-ul sau datele din MRZ sunt incorecte. Verificați numărul introdus și cele două date, apoi reîncercați. Fiecare încercare eșuată poate prelungi timpul de așteptare impus de cip înainte de a răspunde.</string>
+    <string name="reading_error_connection_lost">Documentul a fost îndepărtat prea devreme. Țineți-l nemișcat lângă telefon până la finalul citirii.</string>
+    <string name="reading_error_not_icao">Acest document nu respectă standardul ICAO 9303: cipul său nu poate fi citit.</string>
+    <string name="reading_error_timeout">Timpul a expirat: cipul nu a răspuns la timp. Reîncercați ținând documentul nemișcat.</string>
+    <string name="reading_error_can_without_pace">Acest document nu se citește cu un CAN. Folosiți fila Pașaport și introduceți datele din MRZ.</string>
+    <string name="reading_error_unexpected">A apărut o eroare neașteptată.</string>
+    <string name="reading_error_code">Cod de eroare: %1$s</string>
+    <string name="reading_retry">Reîncercați</string>
+    <string name="reading_cancel">Anulați</string>
+</resources>

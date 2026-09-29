@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">Informazioni</string>
+    <string name="about_back">Indietro</string>
+    <string name="about_tagline">Lettura e verifica offline del chip dei documenti d’identità ICAO 9303.</string>
+    <string name="about_version">Versione %1$s</string>
+    <string name="about_version_unknown">Versione sconosciuta</string>
+
+    <string name="about_section_license">Licenza e codice sorgente</string>
+    <string name="about_license">Software libero distribuito con licenza GNU GPL versione 3 o successiva.</string>
+    <string name="about_open_repository">Visualizza il codice sorgente</string>
+    <string name="about_no_browser">Nessuna app può aprire questo link.</string>
+
+    <string name="about_section_trust">Archivio attendibile integrato</string>
+    <string name="about_trust_ants_only">CSCA francesi dell’ANTS (passaporti e carte d’identità).</string>
+    <string name="about_trust_ants_and_bsi">CSCA francesi dell’ANTS e Master List tedesca del BSI.</string>
+    <string name="about_trust_master_list_date">Master List firmata il %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">Data di firma della Master List non indicata.</string>
+    <string name="about_trust_bsi_notice">La Master List del BSI (Ufficio federale tedesco per la sicurezza informatica) è ridistribuita senza modifiche, senza la collaborazione né l’approvazione del BSI.</string>
+    <string name="about_trust_national">Certificati pubblicati dai seguenti Stati per i propri documenti: %1$s.</string>
+    <string name="about_trust_ogl_notice">Contiene informazioni del settore pubblico britannico pubblicate con licenza Open Government Licence v3.0.</string>
+    <string name="about_trust_loading">Caricamento…</string>
+    <string name="about_trust_error">Impossibile caricare l’archivio attendibile.</string>
+
+    <string name="about_section_limits">Limiti</string>
+    <string name="about_limit_unknown_issuer">Un documento il cui paese emittente non figura nell’archivio attendibile ottiene l’esito «Emittente sconosciuto», non «Esito negativo». Importare una Master List più recente può risolvere il problema.</string>
+    <string name="about_limit_revocation">Gli elenchi di revoca non vengono consultati: richiedono la rete, che Sceau non usa mai.</string>
+
+    <string name="about_section_usage">Condizioni d’uso</string>
+    <string name="about_usage_holder">La lettura presuppone che il titolare presenti di persona il proprio documento e vi acconsenta.</string>
+    <string name="about_usage_biometrics">La foto diventa un dato biometrico ai sensi del GDPR se viene usata per un confronto automatizzato dei volti. Sceau non effettua confronti di questo tipo e non deve essere usato a tale scopo senza una specifica base giuridica.</string>
+    <string name="about_usage_privacy">Nessun dato letto viene conservato o inviato: tutto viene cancellato dalla memoria quando si esce dal risultato o si mette l’app in background.</string>
+</resources>

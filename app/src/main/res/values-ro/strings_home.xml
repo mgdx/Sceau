@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">Mai multe opțiuni</string>
+    <string name="home_menu_trust_store">Depozit de încredere</string>
+    <string name="home_menu_about">Despre</string>
+    <string name="home_tab_id_card">Carte de identitate</string>
+    <string name="home_tab_passport">Pașaport</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">Număr de 6 cifre tipărit pe fața cardului</string>
+    <string name="home_document_number_label">Numărul documentului</string>
+    <string name="home_document_number_supporting">Așa cum este tipărit pe pagina de date, maximum 9 caractere</string>
+    <string name="home_date_of_birth_label">Data nașterii</string>
+    <string name="home_date_of_expiry_label">Data expirării</string>
+    <string name="home_date_day">ZZ</string>
+    <string name="home_date_month">LL</string>
+    <string name="home_date_year">AAAA</string>
+    <string name="home_date_format">Format: %1$s</string>
+    <string name="home_date_error_invalid">Această dată nu există</string>
+    <string name="home_date_error_future">Data nașterii nu poate fi în viitor</string>
+    <string name="home_date_error_too_old">Data expirării este prea veche (înainte de %1$d)</string>
+    <string name="home_holder_notice">Documentul trebuie prezentat de titularul său.</string>
+    <string name="home_read">Citiți</string>
+    <string name="home_nfc_disabled">NFC este dezactivat. Activați-l pentru a citi cipul documentului.</string>
+    <string name="home_nfc_settings">Deschideți setările NFC</string>
+    <string name="home_nfc_absent">Acest telefon nu are NFC: nu poate citi cipul documentelor de identitate.</string>
+    <string name="home_menu_demo">Simulați o CNIe (demo)</string>
+</resources>

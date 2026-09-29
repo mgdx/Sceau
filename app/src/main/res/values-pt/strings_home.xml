@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">Mais opções</string>
+    <string name="home_menu_trust_store">Repositório de confiança</string>
+    <string name="home_menu_about">Acerca de</string>
+    <string name="home_tab_id_card">Cartão de identidade</string>
+    <string name="home_tab_passport">Passaporte</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">Número de 6 algarismos impresso na frente do cartão</string>
+    <string name="home_document_number_label">Número do documento</string>
+    <string name="home_document_number_supporting">Tal como impresso na página de identificação, 9 carateres no máximo</string>
+    <string name="home_date_of_birth_label">Data de nascimento</string>
+    <string name="home_date_of_expiry_label">Data de validade</string>
+    <string name="home_date_day">DD</string>
+    <string name="home_date_month">MM</string>
+    <string name="home_date_year">AAAA</string>
+    <string name="home_date_format">Formato: %1$s</string>
+    <string name="home_date_error_invalid">Esta data não existe</string>
+    <string name="home_date_error_future">A data de nascimento não pode ser no futuro</string>
+    <string name="home_date_error_too_old">Data de validade demasiado antiga (antes de %1$d)</string>
+    <string name="home_holder_notice">O documento deve ser apresentado pelo seu titular.</string>
+    <string name="home_read">Ler</string>
+    <string name="home_nfc_disabled">O NFC está desativado. Ative-o para ler o chip do documento.</string>
+    <string name="home_nfc_settings">Abrir definições de NFC</string>
+    <string name="home_nfc_absent">Este telemóvel não tem NFC: não consegue ler o chip dos documentos de identificação.</string>
+    <string name="home_menu_demo">Simular uma CNIe (demonstração)</string>
+</resources>

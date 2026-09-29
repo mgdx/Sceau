@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reading_title">Lectura del documento</string>
+    <string name="reading_prompt">Coloca el documento contra la parte trasera del teléfono y no lo retires</string>
+    <string name="reading_step_connect">Conexión con el chip</string>
+    <string name="reading_step_secure_channel">Apertura del canal seguro (PACE o BAC)</string>
+    <string name="reading_step_read_data">Lectura de los datos</string>
+    <string name="reading_step_verify_signature">Verificación de la firma</string>
+    <string name="reading_step_verify_chip">Verificación del chip</string>
+    <string name="reading_step_pending">pendiente</string>
+    <string name="reading_step_in_progress">en curso</string>
+    <string name="reading_step_done">completada</string>
+    <string name="reading_error_title">Lectura interrumpida</string>
+    <string name="reading_slow_chip">El chip del documento está tardando en responder, a menudo tras intentos fallidos. Mantén el documento inmóvil; puede tardar hasta un minuto.</string>
+    <string name="reading_error_access_denied">El CAN o los datos de la MRZ son incorrectos. Comprueba el número introducido y las fechas y vuelve a intentarlo. Cada intento fallido puede alargar el tiempo que el chip tarda en responder.</string>
+    <string name="reading_error_connection_lost">Se ha retirado el documento demasiado pronto. Mantenlo inmóvil contra el teléfono hasta que termine la lectura.</string>
+    <string name="reading_error_not_icao">Este documento no cumple la norma ICAO 9303: su chip no se puede leer.</string>
+    <string name="reading_error_timeout">Tiempo de espera agotado: el chip no ha respondido a tiempo. Vuelve a intentarlo manteniendo el documento inmóvil.</string>
+    <string name="reading_error_can_without_pace">Este documento no se lee con un CAN. Usa la pestaña Pasaporte e introduce los datos de la MRZ.</string>
+    <string name="reading_error_unexpected">Se ha producido un error inesperado.</string>
+    <string name="reading_error_code">Código de error: %1$s</string>
+    <string name="reading_retry">Reintentar</string>
+    <string name="reading_cancel">Cancelar</string>
+</resources>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">Despre</string>
+    <string name="about_back">Înapoi</string>
+    <string name="about_tagline">Citirea și verificarea offline a cipului documentelor de identitate ICAO 9303.</string>
+    <string name="about_version">Versiunea %1$s</string>
+    <string name="about_version_unknown">Versiune necunoscută</string>
+
+    <string name="about_section_license">Licență și cod sursă</string>
+    <string name="about_license">Software liber distribuit sub licența GNU GPL, versiunea 3 sau o versiune ulterioară.</string>
+    <string name="about_open_repository">Vedeți codul sursă</string>
+    <string name="about_no_browser">Nicio aplicație nu poate deschide acest link.</string>
+
+    <string name="about_section_trust">Depozit de încredere integrat</string>
+    <string name="about_trust_ants_only">CSCA francezi ai ANTS (pașapoarte și cărți de identitate).</string>
+    <string name="about_trust_ants_and_bsi">CSCA francezi ai ANTS și Master List germană a BSI.</string>
+    <string name="about_trust_master_list_date">Master List semnată pe %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">Data semnării Master List nu este indicată.</string>
+    <string name="about_trust_bsi_notice">Master List a BSI (Oficiul Federal German pentru Securitatea Informației) este redistribuită fără modificări, fără cooperarea sau aprobarea BSI.</string>
+    <string name="about_trust_national">Certificate publicate de următoarele state pentru propriile documente: %1$s.</string>
+    <string name="about_trust_ogl_notice">Conține informații din sectorul public britanic publicate sub licența Open Government Licence v3.0.</string>
+    <string name="about_trust_loading">Se încarcă…</string>
+    <string name="about_trust_error">Nu s-a putut încărca depozitul de încredere.</string>
+
+    <string name="about_section_limits">Limitări</string>
+    <string name="about_limit_unknown_issuer">Un document a cărui țară emitentă nu figurează în depozitul de încredere primește verdictul „Emitent necunoscut”, nu „Eșec”. Importarea unei Master List mai recente poate rezolva problema.</string>
+    <string name="about_limit_revocation">Listele de revocare nu sunt consultate: necesită acces la rețea, pe care Sceau nu îl folosește niciodată.</string>
+
+    <string name="about_section_usage">Cadrul de utilizare</string>
+    <string name="about_usage_holder">Citirea presupune că titularul își prezintă personal documentul și își dă consimțământul.</string>
+    <string name="about_usage_biometrics">Fotografia devine o dată biometrică în sensul GDPR dacă este folosită pentru o comparare automată a fețelor. Sceau nu face astfel de comparări și nu trebuie folosit în acest scop fără un temei juridic specific.</string>
+    <string name="about_usage_privacy">Nicio dată citită nu este păstrată sau trimisă: totul este șters din memorie la ieșirea din rezultat sau la trecerea aplicației în fundal.</string>
+</resources>
