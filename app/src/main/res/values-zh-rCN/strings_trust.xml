@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trust_title">信任存储</string>
+    <string name="trust_back">返回</string>
+    <string name="trust_intro">签发国的根证书（CSCA），用于验证证件签名。此页面不涉及任何个人数据。</string>
+    <plurals name="trust_summary">
+        <item quantity="other">%1$d 个证书，%2$d 个国家/地区</item>
+    </plurals>
+    <string name="trust_loading">正在加载信任存储…</string>
+    <string name="trust_load_error">无法加载信任存储。</string>
+    <string name="trust_retry">重试</string>
+    <string name="trust_empty">信任存储中没有证书。</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">未注明国家/地区</string>
+    <plurals name="trust_country_count">
+        <item quantity="other">%1$d 个证书</item>
+    </plurals>
+    <string name="trust_country_expand">显示证书</string>
+    <string name="trust_country_collapse">隐藏证书</string>
+    <string name="trust_validity">有效期：%1$s 至 %2$s</string>
+    <string name="trust_fingerprint">SHA-256 指纹</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_national">本国发布</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">已导入</string>
+    <string name="trust_link_certificate">链接证书</string>
+
+    <!-- Import -->
+    <string name="trust_import">导入 Master List</string>
+    <string name="trust_busy">请稍候…</string>
+    <string name="trust_import_confirm_title">要导入此 Master List 吗？</string>
+    <string name="trust_import_confirm_text">其签名有效。导入前，请核实签名者的指纹与签发机构公布的指纹一致。</string>
+    <string name="trust_import_signer">签名者</string>
+    <string name="trust_import_signer_fingerprint">签名者的 SHA-256 指纹</string>
+    <string name="trust_import_signing_date">签名日期</string>
+    <string name="trust_import_signing_date_unknown">未注明</string>
+    <string name="trust_import_certificate_count">证书数量</string>
+    <string name="trust_import_confirm">导入</string>
+    <string name="trust_cancel">取消</string>
+    <plurals name="trust_import_done">
+        <item quantity="other">已导入 Master List：%1$d 个证书。</item>
+    </plurals>
+    <string name="trust_import_invalid">此文件不是有效的 Master List：格式无法识别或签名不正确（%1$s）。</string>
+    <string name="trust_import_too_large">文件被拒绝：超过 20 MB。</string>
+    <string name="trust_import_read_error">无法读取此文件。</string>
+    <string name="trust_import_write_error">无法保存 Master List。</string>
+    <plurals name="trust_import_limit_count">
+        <item quantity="other">导入被拒绝：最多只能导入 %1$d 个 Master List。请先删除已导入的证书，再添加新的 Master List。</item>
+    </plurals>
+    <string name="trust_import_limit_size">导入被拒绝：已导入的 Master List 总大小将超过 %1$d MB。请先删除已导入的证书，再添加新的 Master List。</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">删除已导入的证书</string>
+    <string name="trust_delete_confirm_title">要删除已导入的证书吗？</string>
+    <string name="trust_delete_confirm_text">已导入的 Master List 将被删除。应用内置的证书会保留。</string>
+    <string name="trust_delete_confirm">删除</string>
+    <string name="trust_delete_done">已删除导入的证书。</string>
+    <string name="trust_delete_error">无法删除已导入的证书。</string>
+</resources>

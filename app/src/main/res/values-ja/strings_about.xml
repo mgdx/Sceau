@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">このアプリについて</string>
+    <string name="about_back">戻る</string>
+    <string name="about_tagline">ICAO 9303 準拠の身分証明書の IC チップをオフラインで読み取り、検証します。</string>
+    <string name="about_version">バージョン %1$s</string>
+    <string name="about_version_unknown">バージョン不明</string>
+
+    <string name="about_section_license">ライセンスとソースコード</string>
+    <string name="about_license">GNU GPL バージョン 3 以降のライセンスで配布されている自由ソフトウェアです。</string>
+    <string name="about_open_repository">ソースコードを表示</string>
+    <string name="about_no_browser">このリンクを開けるアプリがありません。</string>
+
+    <string name="about_section_trust">内蔵の信頼ストア</string>
+    <string name="about_trust_ants_only">フランス ANTS の CSCA（パスポートと身分証明書）。</string>
+    <string name="about_trust_ants_and_bsi">フランス ANTS の CSCA と、ドイツ BSI の Master List。</string>
+    <string name="about_trust_master_list_date">Master List の署名日：%1$s</string>
+    <string name="about_trust_master_list_date_unknown">Master List の署名日は記載されていません。</string>
+    <string name="about_trust_bsi_notice">BSI（ドイツ連邦情報セキュリティ庁）の Master List は無改変で再配布しています。BSI の協力や承認は受けていません。</string>
+    <string name="about_trust_national">次の国が自国の書類向けに公開している証明書：%1$s</string>
+    <string name="about_trust_ogl_notice">Open Government Licence v3.0 に基づいて公開された英国の公共部門情報を含みます。</string>
+    <string name="about_trust_loading">読み込んでいます…</string>
+    <string name="about_trust_error">信頼ストアを読み込めません。</string>
+
+    <string name="about_section_limits">制限事項</string>
+    <string name="about_limit_unknown_issuer">発行国が信頼ストアに含まれていない書類の判定は「発行者不明」となり、「失敗」にはなりません。新しい Master List をインポートすると解決する場合があります。</string>
+    <string name="about_limit_revocation">失効リストは確認しません。確認にはネットワークが必要ですが、Sceau はネットワークを一切使用しません。</string>
+
+    <string name="about_section_usage">利用上の注意</string>
+    <string name="about_usage_holder">読み取りは、所持者本人が書類を提示し、同意していることを前提とします。</string>
+    <string name="about_usage_biometrics">顔写真を自動顔照合に使用する場合、写真は一般データ保護規則（GDPR）上の生体データに該当します。Sceau はそのような照合を行いません。専用の法的根拠なしに、この目的で使用しないでください。</string>
+    <string name="about_usage_privacy">読み取ったデータは保存も送信もされません。結果画面を閉じたとき、またはアプリがバックグラウンドに移ったときに、すべてメモリから消去されます。</string>
+</resources>

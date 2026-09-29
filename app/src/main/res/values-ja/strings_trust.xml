@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trust_title">信頼ストア</string>
+    <string name="trust_back">戻る</string>
+    <string name="trust_intro">書類の署名の検証に使用する、発行国のルート証明書（CSCA）です。この画面では個人データは一切扱いません。</string>
+    <plurals name="trust_summary">
+        <item quantity="other">証明書 %1$d 件（%2$d か国）</item>
+    </plurals>
+    <string name="trust_loading">信頼ストアを読み込んでいます…</string>
+    <string name="trust_load_error">信頼ストアを読み込めません。</string>
+    <string name="trust_retry">再試行</string>
+    <string name="trust_empty">信頼ストアに証明書がありません。</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">国の記載なし</string>
+    <plurals name="trust_country_count">
+        <item quantity="other">証明書 %1$d 件</item>
+    </plurals>
+    <string name="trust_country_expand">証明書を表示</string>
+    <string name="trust_country_collapse">証明書を非表示</string>
+    <string name="trust_validity">有効期間：%1$s～%2$s</string>
+    <string name="trust_fingerprint">SHA-256 フィンガープリント</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_national">各国の公開</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">インポート済み</string>
+    <string name="trust_link_certificate">リンク証明書</string>
+
+    <!-- Import -->
+    <string name="trust_import">Master List をインポート</string>
+    <string name="trust_busy">お待ちください…</string>
+    <string name="trust_import_confirm_title">この Master List をインポートしますか？</string>
+    <string name="trust_import_confirm_text">署名は有効です。インポートする前に、署名者のフィンガープリントが発行機関の公開しているものと一致することを確認してください。</string>
+    <string name="trust_import_signer">署名者</string>
+    <string name="trust_import_signer_fingerprint">署名者の SHA-256 フィンガープリント</string>
+    <string name="trust_import_signing_date">署名日</string>
+    <string name="trust_import_signing_date_unknown">記載なし</string>
+    <string name="trust_import_certificate_count">証明書の数</string>
+    <string name="trust_import_confirm">インポート</string>
+    <string name="trust_cancel">キャンセル</string>
+    <plurals name="trust_import_done">
+        <item quantity="other">Master List をインポートしました（証明書 %1$d 件）。</item>
+    </plurals>
+    <string name="trust_import_invalid">このファイルは有効な Master List ではありません。形式を読み取れないか、署名が正しくありません（%1$s）。</string>
+    <string name="trust_import_too_large">20 MB を超えるファイルはインポートできません。</string>
+    <string name="trust_import_read_error">このファイルを読み取れません。</string>
+    <string name="trust_import_write_error">Master List を保存できません。</string>
+    <plurals name="trust_import_limit_count">
+        <item quantity="other">インポートできません。インポートできる Master List は %1$d 件までです。別のものを追加するには、インポートした証明書を削除してください。</item>
+    </plurals>
+    <string name="trust_import_limit_size">インポートできません。インポートした Master List の合計が %1$d MB を超えます。別のものを追加するには、インポートした証明書を削除してください。</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">インポートした証明書を削除</string>
+    <string name="trust_delete_confirm_title">インポートした証明書を削除しますか？</string>
+    <string name="trust_delete_confirm_text">インポートした Master List が削除されます。アプリに内蔵されている証明書は残ります。</string>
+    <string name="trust_delete_confirm">削除</string>
+    <string name="trust_delete_done">インポートした証明書を削除しました。</string>
+    <string name="trust_delete_error">インポートした証明書を削除できません。</string>
+</resources>

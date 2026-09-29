@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="result_title">결과</string>
+    <string name="result_clear">지우기</string>
+
+    <!-- Verdict -->
+    <string name="result_verdict_authentic">진본</string>
+    <string name="result_verdict_authentic_explanation">발급기관의 서명이 유효하며, 칩이 복제품이 아님을 증명했습니다.</string>
+    <string name="result_verdict_chip_unverified">서명 유효, 칩 미검증</string>
+    <string name="result_verdict_chip_unverified_explanation">데이터는 발급기관이 서명한 것이 맞지만, 칩이 원본임을 증명할 수 없습니다. 복제된 칩일 수 있습니다.</string>
+    <string name="result_verdict_unknown_issuer">알 수 없는 발급기관</string>
+    <string name="result_verdict_unknown_issuer_explanation">발급기관의 인증서가 신뢰 저장소에 없습니다. 데이터는 표시되지만 아무것도 보장되지 않습니다. 최신 Master List를 가져오면 이 신분증을 검증할 수 있습니다.</string>
+    <string name="result_verdict_failed">실패</string>
+    <string name="result_verdict_failed_explanation">하나 이상의 검증에 실패했습니다. 이 신분증을 진본으로 간주해서는 안 됩니다.</string>
+    <string name="result_verdict_imported_anchor">가져온 인증서로 검증됨</string>
+
+    <!-- Photo -->
+    <string name="result_photo_description">소지자 사진</string>
+    <string name="result_photo_unavailable">사진을 읽을 수 없거나 사진이 없습니다</string>
+    <string name="result_photo_fullscreen">사진을 전체 화면으로 보기</string>
+    <string name="result_photo_close">닫기</string>
+    <string name="result_image_front">앞면 이미지</string>
+    <string name="result_image_rear">뒷면 이미지</string>
+    <string name="result_image_unavailable">이미지를 읽을 수 없음</string>
+
+    <!-- Identité -->
+    <string name="result_section_identity">신원 정보</string>
+    <string name="result_expired">만료된 신분증</string>
+    <string name="result_field_surname">성</string>
+    <string name="result_field_given_names">이름</string>
+    <string name="result_field_sex">성별</string>
+    <string name="result_field_birth_date">생년월일</string>
+    <string name="result_field_nationality">국적</string>
+    <string name="result_field_document_type">문서 종류</string>
+    <string name="result_field_document_number">문서 번호</string>
+    <string name="result_field_issuing_state">발급 국가</string>
+    <string name="result_field_expiry_date">기간 만료일</string>
+    <string name="result_sex_male">남성</string>
+    <string name="result_sex_female">여성</string>
+    <string name="result_sex_unspecified">지정되지 않음</string>
+    <string name="result_document_passport">여권</string>
+    <string name="result_document_identity_card">신분증</string>
+    <string name="result_document_other">기타 여행 문서</string>
+    <string name="result_value_with_code">%1$s(%2$s)</string>
+    <string name="result_unknown_value">알 수 없음</string>
+
+    <!-- Pays spéciaux ICAO -->
+    <string name="result_country_united_nations">국제연합</string>
+    <string name="result_country_un_agency">국제연합 전문기구</string>
+    <string name="result_country_un_kosovo">코소보(UNMIK)</string>
+    <string name="result_country_stateless">무국적</string>
+    <string name="result_country_refugee">난민(1951년 협약)</string>
+    <string name="result_country_refugee_other">난민</string>
+    <string name="result_country_unspecified">국적 미지정</string>
+
+    <!-- Données complémentaires -->
+    <string name="result_section_additional">추가 정보</string>
+    <string name="result_field_full_name">전체 이름</string>
+    <string name="result_field_other_names">기타 이름</string>
+    <string name="result_field_personal_number">개인 번호</string>
+    <string name="result_field_full_birth_date">전체 생년월일</string>
+    <string name="result_field_place_of_birth">출생지</string>
+    <string name="result_field_address">주소</string>
+    <string name="result_field_telephone">전화번호</string>
+    <string name="result_field_profession">직업</string>
+    <string name="result_field_title">직함</string>
+    <string name="result_field_personal_summary">개인 요약</string>
+    <string name="result_field_other_td_numbers">기타 유효한 여행 문서</string>
+    <string name="result_field_custody">보호 관련 정보</string>
+    <string name="result_field_issuing_authority">발행관청</string>
+    <string name="result_field_issue_date">발급일</string>
+    <string name="result_field_other_persons">기재된 기타 인물</string>
+    <string name="result_field_endorsements">기재 사항 및 비고</string>
+    <string name="result_field_tax_exit">세금 또는 출국 관련 의무</string>
+    <string name="result_field_personalization_time">개인화 날짜</string>
+    <string name="result_field_personalization_device">개인화 시스템 번호</string>
+
+    <!-- Vérifications -->
+    <string name="result_section_checks">검증</string>
+    <string name="result_check_secure_channel">보안 채널 설정</string>
+    <string name="result_check_sod_signature">SOD 서명 유효성</string>
+    <string name="result_check_chain">인증서 체인</string>
+    <string name="result_check_ds_validity">DS 인증서 유효성</string>
+    <string name="result_check_dg_hashes">데이터 그룹 해시</string>
+    <string name="result_check_chip_authentication">Chip Authentication(DG14)</string>
+    <string name="result_check_active_authentication">Active Authentication(DG15)</string>
+    <string name="result_status_ok">성공</string>
+    <string name="result_status_failed">실패</string>
+    <string name="result_status_not_available">사용할 수 없음</string>
+    <string name="result_status_unsupported">지원되지 않는 알고리즘</string>
+    <string name="result_check_expand">세부정보 표시</string>
+    <string name="result_check_collapse">세부정보 숨기기</string>
+
+    <!-- Détail des vérifications -->
+    <string name="result_detail_protocol">프로토콜: %1$s</string>
+    <string name="result_detail_ca_method">방식: %1$s</string>
+    <string name="result_detail_ca_method_dg14">DG14 키를 사용한 Chip Authentication</string>
+    <string name="result_detail_ca_method_pace_cam">PACE-CAM(채널 설정 중 EF.CardSecurity 키 사용)</string>
+    <string name="result_detail_algorithm">서명 알고리즘: %1$s</string>
+    <string name="result_detail_csca">CSCA: %1$s</string>
+    <string name="result_detail_csca_none">신뢰 저장소에 일치하는 CSCA가 없습니다.</string>
+    <string name="result_detail_country">국가: %1$s</string>
+    <string name="result_detail_country_mismatch">국가 불일치: 인증기관 %1$s, 서명자 인증서 %2$s, 신분증 %3$s</string>
+    <string name="result_detail_source">출처: %1$s</string>
+    <string name="result_detail_source_ants">ANTS 인증서</string>
+    <string name="result_detail_source_national">발급 국가가 공개한 인증서</string>
+    <string name="result_detail_source_embedded">내장 Master List</string>
+    <string name="result_detail_source_imported">가져온 Master List</string>
+    <string name="result_detail_ds_subject">DS 인증서: %1$s</string>
+    <string name="result_detail_links">거친 링크 인증서:</string>
+    <string name="result_detail_link_item">• %1$s</string>
+    <string name="result_detail_links_none">거친 링크 인증서가 없습니다.</string>
+    <string name="result_detail_ds_missing">DS 인증서가 SOD에도 신뢰 저장소에도 없습니다.</string>
+    <string name="result_detail_ds_period">DS 유효 기간: %1$s~%2$s</string>
+    <string name="result_detail_issuance">발급일: %1$s(%2$s)</string>
+    <string name="result_detail_issuance_no_source">발급일: %1$s</string>
+    <string name="result_detail_issuance_unknown">발급일을 알 수 없습니다.</string>
+    <string name="result_detail_issuance_dg12">DG12에서 읽음</string>
+    <string name="result_detail_issuance_sod">SOD 서명일</string>
+    <string name="result_detail_issuance_estimated">추정</string>
+    <string name="result_detail_digest_algorithm">해시 알고리즘: %1$s</string>
+    <string name="result_detail_dg_checked">확인한 데이터 그룹: %1$s</string>
+    <string name="result_detail_dg_checked_none">확인한 데이터 그룹이 없습니다.</string>
+    <string name="result_detail_dg_mismatched">일치하지 않는 해시: %1$s</string>
+    <string name="result_detail_dg_all_match">모든 해시가 일치합니다.</string>
+    <string name="result_detail_dg_missing">명시되었으나 칩이 제공하지 않은 데이터 그룹: %1$s</string>
+    <string name="result_detail_unsupported">지원되지 않는 알고리즘: %1$s</string>
+    <string name="result_detail_error">기술 오류: %1$s</string>
+    <string name="result_detail_no_dg14">이 신분증에는 DG14가 없습니다. 칩이 이 검증을 지원하지 않습니다.</string>
+    <string name="result_detail_no_dg15">이 신분증에는 DG15가 없습니다. 칩이 이 검증을 지원하지 않습니다.</string>
+    <string name="result_detail_not_reached">이 단계는 수행되지 않았습니다.</string>
+    <string name="result_detail_none">추가 세부정보가 없습니다.</string>
+    <string name="result_demo_banner">시뮬레이션 신분증 — 데모</string>
+</resources>
