@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">Lagi pilihan</string>
+    <string name="home_menu_trust_store">Stor sijil dipercayai</string>
+    <string name="home_menu_about">Perihal</string>
+    <string name="home_tab_id_card">Kad pengenalan</string>
+    <string name="home_tab_passport">Pasport</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">Nombor 6 digit yang dicetak di bahagian depan kad</string>
+    <string name="home_document_number_label">Nombor dokumen</string>
+    <string name="home_document_number_supporting">Seperti yang dicetak pada halaman butiran peribadi, maksimum 9 aksara</string>
+    <string name="home_date_of_birth_label">Tarikh lahir</string>
+    <string name="home_date_of_expiry_label">Tarikh tamat tempoh</string>
+    <string name="home_date_day">HH</string>
+    <string name="home_date_month">BB</string>
+    <string name="home_date_year">TTTT</string>
+    <string name="home_date_format">Format: %1$s</string>
+    <string name="home_date_error_invalid">Tarikh ini tidak wujud</string>
+    <string name="home_date_error_future">Tarikh lahir tidak boleh pada masa hadapan</string>
+    <string name="home_date_error_too_old">Tarikh tamat tempoh terlalu lama (sebelum %1$d)</string>
+    <string name="home_holder_notice">Dokumen mesti ditunjukkan oleh pemegangnya sendiri.</string>
+    <string name="home_read">Baca</string>
+    <string name="home_nfc_disabled">NFC dimatikan. Hidupkan NFC untuk membaca cip dokumen.</string>
+    <string name="home_nfc_settings">Buka tetapan NFC</string>
+    <string name="home_nfc_absent">Telefon ini tiada NFC: telefon ini tidak dapat membaca cip dokumen pengenalan.</string>
+    <string name="home_menu_demo">Simulasikan CNIe (demo)</string>
+</resources>

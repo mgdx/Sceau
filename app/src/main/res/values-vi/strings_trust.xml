@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trust_title">Kho chứng chỉ tin cậy</string>
+    <string name="trust_back">Quay lại</string>
+    <string name="trust_intro">Chứng chỉ gốc (CSCA) của các quốc gia cấp giấy tờ, dùng để xác minh chữ ký trên giấy tờ. Không có dữ liệu cá nhân nào đi qua màn hình này.</string>
+    <plurals name="trust_summary">
+        <item quantity="other">%1$d chứng chỉ, %2$d quốc gia</item>
+    </plurals>
+    <string name="trust_loading">Đang tải kho chứng chỉ tin cậy…</string>
+    <string name="trust_load_error">Không thể tải kho chứng chỉ tin cậy.</string>
+    <string name="trust_retry">Thử lại</string>
+    <string name="trust_empty">Kho chứng chỉ tin cậy không có chứng chỉ nào.</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">Không rõ quốc gia</string>
+    <plurals name="trust_country_count">
+        <item quantity="other">%1$d chứng chỉ</item>
+    </plurals>
+    <string name="trust_country_expand">Hiện chứng chỉ</string>
+    <string name="trust_country_collapse">Ẩn chứng chỉ</string>
+    <string name="trust_validity">Có hiệu lực từ %1$s đến %2$s</string>
+    <string name="trust_fingerprint">Vân tay SHA-256</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_national">Công bố quốc gia</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">Đã nhập</string>
+    <string name="trust_link_certificate">Chứng chỉ liên kết</string>
+
+    <!-- Import -->
+    <string name="trust_import">Nhập Master List</string>
+    <string name="trust_busy">Vui lòng chờ…</string>
+    <string name="trust_import_confirm_title">Nhập Master List này?</string>
+    <string name="trust_import_confirm_text">Chữ ký của Master List hợp lệ. Trước khi nhập, hãy kiểm tra để chắc chắn rằng vân tay của bên ký trùng với vân tay do cơ quan cấp công bố.</string>
+    <string name="trust_import_signer">Bên ký</string>
+    <string name="trust_import_signer_fingerprint">Vân tay SHA-256 của bên ký</string>
+    <string name="trust_import_signing_date">Ngày ký</string>
+    <string name="trust_import_signing_date_unknown">Không có thông tin</string>
+    <string name="trust_import_certificate_count">Số chứng chỉ</string>
+    <string name="trust_import_confirm">Nhập</string>
+    <string name="trust_cancel">Hủy</string>
+    <plurals name="trust_import_done">
+        <item quantity="other">Đã nhập Master List: %1$d chứng chỉ.</item>
+    </plurals>
+    <string name="trust_import_invalid">Tệp này không phải là Master List hợp lệ: không đọc được định dạng hoặc chữ ký không đúng (%1$s).</string>
+    <string name="trust_import_too_large">Tệp bị từ chối: dung lượng vượt quá 20 MB.</string>
+    <string name="trust_import_read_error">Không thể đọc tệp này.</string>
+    <string name="trust_import_write_error">Không thể lưu Master List.</string>
+    <plurals name="trust_import_limit_count">
+        <item quantity="other">Không thể nhập: chỉ được nhập tối đa %1$d Master List. Hãy xóa các chứng chỉ đã nhập để thêm Master List khác.</item>
+    </plurals>
+    <string name="trust_import_limit_size">Không thể nhập: tổng dung lượng các Master List đã nhập sẽ vượt quá %1$d MB. Hãy xóa các chứng chỉ đã nhập để thêm Master List khác.</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">Xóa chứng chỉ đã nhập</string>
+    <string name="trust_delete_confirm_title">Xóa các chứng chỉ đã nhập?</string>
+    <string name="trust_delete_confirm_text">Các Master List đã nhập sẽ bị xóa. Chứng chỉ tích hợp sẵn trong ứng dụng vẫn được giữ lại.</string>
+    <string name="trust_delete_confirm">Xóa</string>
+    <string name="trust_delete_done">Đã xóa các chứng chỉ đã nhập.</string>
+    <string name="trust_delete_error">Không thể xóa các chứng chỉ đã nhập.</string>
+</resources>

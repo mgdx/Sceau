@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trust_title">Stor sijil dipercayai</string>
+    <string name="trust_back">Kembali</string>
+    <string name="trust_intro">Sijil akar (CSCA) negara pengeluar, yang digunakan untuk mengesahkan tandatangan dokumen. Tiada data peribadi yang melalui skrin ini.</string>
+    <plurals name="trust_summary">
+        <item quantity="other">%1$d sijil, %2$d negara</item>
+    </plurals>
+    <string name="trust_loading">Memuatkan stor sijil dipercayai…</string>
+    <string name="trust_load_error">Tidak dapat memuatkan stor sijil dipercayai.</string>
+    <string name="trust_retry">Cuba lagi</string>
+    <string name="trust_empty">Tiada sijil dalam stor sijil dipercayai.</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">Negara tidak dinyatakan</string>
+    <plurals name="trust_country_count">
+        <item quantity="other">%1$d sijil</item>
+    </plurals>
+    <string name="trust_country_expand">Tunjukkan sijil</string>
+    <string name="trust_country_collapse">Sembunyikan sijil</string>
+    <string name="trust_validity">Sah dari %1$s hingga %2$s</string>
+    <string name="trust_fingerprint">Cap jari SHA-256</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_national">Terbitan kebangsaan</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">Diimport</string>
+    <string name="trust_link_certificate">Sijil pautan</string>
+
+    <!-- Import -->
+    <string name="trust_import">Import Master List</string>
+    <string name="trust_busy">Sila tunggu…</string>
+    <string name="trust_import_confirm_title">Import Master List ini?</string>
+    <string name="trust_import_confirm_text">Tandatangannya sah. Sebelum mengimport, pastikan cap jari penandatangan sepadan dengan cap jari yang diterbitkan oleh pihak berkuasa pengeluar.</string>
+    <string name="trust_import_signer">Penandatangan</string>
+    <string name="trust_import_signer_fingerprint">Cap jari SHA-256 penandatangan</string>
+    <string name="trust_import_signing_date">Tarikh tandatangan</string>
+    <string name="trust_import_signing_date_unknown">Tidak dinyatakan</string>
+    <string name="trust_import_certificate_count">Bilangan sijil</string>
+    <string name="trust_import_confirm">Import</string>
+    <string name="trust_cancel">Batal</string>
+    <plurals name="trust_import_done">
+        <item quantity="other">Master List diimport: %1$d sijil.</item>
+    </plurals>
+    <string name="trust_import_invalid">Fail ini bukan Master List yang sah: format tidak dapat dibaca atau tandatangan tidak betul (%1$s).</string>
+    <string name="trust_import_too_large">Fail ditolak: saiznya melebihi 20 MB.</string>
+    <string name="trust_import_read_error">Tidak dapat membaca fail ini.</string>
+    <string name="trust_import_write_error">Tidak dapat menyimpan Master List.</string>
+    <plurals name="trust_import_limit_count">
+        <item quantity="other">Import ditolak: maksimum %1$d Master List boleh diimport. Padamkan sijil yang diimport untuk menambah Master List lain.</item>
+    </plurals>
+    <string name="trust_import_limit_size">Import ditolak: jumlah saiz Master List yang diimport akan melebihi %1$d MB. Padamkan sijil yang diimport untuk menambah Master List lain.</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">Padamkan sijil yang diimport</string>
+    <string name="trust_delete_confirm_title">Padamkan sijil yang diimport?</string>
+    <string name="trust_delete_confirm_text">Master List yang diimport akan dipadamkan. Sijil yang terbina dalam apl akan dikekalkan.</string>
+    <string name="trust_delete_confirm">Padam</string>
+    <string name="trust_delete_done">Sijil yang diimport telah dipadamkan.</string>
+    <string name="trust_delete_error">Tidak dapat memadamkan sijil yang diimport.</string>
+</resources>

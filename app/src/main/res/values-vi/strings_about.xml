@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">Giới thiệu</string>
+    <string name="about_back">Quay lại</string>
+    <string name="about_tagline">Đọc và xác minh ngoại tuyến chip của giấy tờ tùy thân theo chuẩn ICAO 9303.</string>
+    <string name="about_version">Phiên bản %1$s</string>
+    <string name="about_version_unknown">Không rõ phiên bản</string>
+
+    <string name="about_section_license">Giấy phép và mã nguồn</string>
+    <string name="about_license">Phần mềm tự do, phát hành theo giấy phép GNU GPL phiên bản 3 hoặc mới hơn.</string>
+    <string name="about_open_repository">Xem mã nguồn</string>
+    <string name="about_no_browser">Không có ứng dụng nào mở được đường liên kết này.</string>
+
+    <string name="about_section_trust">Kho chứng chỉ tin cậy tích hợp</string>
+    <string name="about_trust_ants_only">CSCA của Pháp do ANTS cấp (hộ chiếu và thẻ căn cước).</string>
+    <string name="about_trust_ants_and_bsi">CSCA của Pháp do ANTS cấp và Master List của Đức do BSI cấp.</string>
+    <string name="about_trust_master_list_date">Master List được ký ngày %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">Không có thông tin ngày ký Master List.</string>
+    <string name="about_trust_bsi_notice">Master List của BSI (Văn phòng Liên bang về An ninh Công nghệ Thông tin của Đức) được phân phối lại nguyên trạng, không có sự hợp tác hay chấp thuận của BSI.</string>
+    <string name="about_trust_national">Chứng chỉ do chính các quốc gia sau công bố cho giấy tờ của mình: %1$s.</string>
+    <string name="about_trust_ogl_notice">Có chứa thông tin khu vực công của Vương quốc Anh, được công bố theo giấy phép Open Government Licence v3.0.</string>
+    <string name="about_trust_loading">Đang tải…</string>
+    <string name="about_trust_error">Không thể tải kho chứng chỉ tin cậy.</string>
+
+    <string name="about_section_limits">Giới hạn</string>
+    <string name="about_limit_unknown_issuer">Nếu quốc gia cấp giấy tờ không có trong kho chứng chỉ tin cậy, kết quả sẽ là “Không rõ bên cấp”, không phải “Thất bại”. Nhập một Master List mới hơn có thể khắc phục điều này.</string>
+    <string name="about_limit_revocation">Danh sách thu hồi chứng chỉ không được kiểm tra: việc này cần kết nối mạng, mà Sceau không bao giờ sử dụng.</string>
+
+    <string name="about_section_usage">Phạm vi sử dụng</string>
+    <string name="about_usage_holder">Chỉ đọc giấy tờ khi chính người mang giấy tờ xuất trình và đồng ý.</string>
+    <string name="about_usage_biometrics">Ảnh chân dung trở thành dữ liệu sinh trắc học theo GDPR nếu được dùng để so sánh khuôn mặt tự động. Sceau không thực hiện việc so sánh như vậy và không được dùng vào mục đích đó khi không có cơ sở pháp lý riêng.</string>
+    <string name="about_usage_privacy">Không dữ liệu nào đã đọc được lưu lại hay gửi đi: mọi thứ bị xóa khỏi bộ nhớ khi bạn rời màn hình kết quả hoặc chuyển ứng dụng xuống nền.</string>
+</resources>

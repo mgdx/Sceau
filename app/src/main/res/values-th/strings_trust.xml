@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trust_title">คลังใบรับรอง</string>
+    <string name="trust_back">กลับ</string>
+    <string name="trust_intro">ใบรับรองหลัก (CSCA) ของประเทศผู้ออกเอกสาร ใช้ตรวจสอบลายมือชื่อของเอกสาร หน้าจอนี้ไม่มีข้อมูลส่วนบุคคลใดผ่านเข้ามา</string>
+    <plurals name="trust_summary">
+        <item quantity="other">ใบรับรอง %1$d รายการ จาก %2$d ประเทศ</item>
+    </plurals>
+    <string name="trust_loading">กำลังโหลดคลังใบรับรอง…</string>
+    <string name="trust_load_error">โหลดคลังใบรับรองไม่ได้</string>
+    <string name="trust_retry">ลองอีกครั้ง</string>
+    <string name="trust_empty">ไม่มีใบรับรองในคลังใบรับรอง</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">ไม่ระบุประเทศ</string>
+    <plurals name="trust_country_count">
+        <item quantity="other">ใบรับรอง %1$d รายการ</item>
+    </plurals>
+    <string name="trust_country_expand">แสดงใบรับรอง</string>
+    <string name="trust_country_collapse">ซ่อนใบรับรอง</string>
+    <string name="trust_validity">ใช้ได้ตั้งแต่ %1$s ถึง %2$s</string>
+    <string name="trust_fingerprint">ลายนิ้วมือ SHA-256</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_national">เผยแพร่โดยประเทศผู้ออก</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">นำเข้า</string>
+    <string name="trust_link_certificate">ใบรับรองเชื่อมโยง</string>
+
+    <!-- Import -->
+    <string name="trust_import">นำเข้า Master List</string>
+    <string name="trust_busy">โปรดรอสักครู่…</string>
+    <string name="trust_import_confirm_title">นำเข้า Master List นี้ใช่ไหม</string>
+    <string name="trust_import_confirm_text">ลายมือชื่อถูกต้อง ก่อนนำเข้า โปรดตรวจสอบว่าลายนิ้วมือของผู้ลงนามตรงกับที่หน่วยงานผู้ออกเผยแพร่ไว้</string>
+    <string name="trust_import_signer">ผู้ลงนาม</string>
+    <string name="trust_import_signer_fingerprint">ลายนิ้วมือ SHA-256 ของผู้ลงนาม</string>
+    <string name="trust_import_signing_date">วันที่ลงนาม</string>
+    <string name="trust_import_signing_date_unknown">ไม่ระบุ</string>
+    <string name="trust_import_certificate_count">จำนวนใบรับรอง</string>
+    <string name="trust_import_confirm">นำเข้า</string>
+    <string name="trust_cancel">ยกเลิก</string>
+    <plurals name="trust_import_done">
+        <item quantity="other">นำเข้า Master List แล้ว: ใบรับรอง %1$d รายการ</item>
+    </plurals>
+    <string name="trust_import_invalid">ไฟล์นี้ไม่ใช่ Master List ที่ถูกต้อง: อ่านรูปแบบไม่ได้หรือลายมือชื่อไม่ถูกต้อง (%1$s)</string>
+    <string name="trust_import_too_large">ปฏิเสธไฟล์: ขนาดเกิน 20 MB</string>
+    <string name="trust_import_read_error">อ่านไฟล์นี้ไม่ได้</string>
+    <string name="trust_import_write_error">บันทึก Master List ไม่ได้</string>
+    <plurals name="trust_import_limit_count">
+        <item quantity="other">ปฏิเสธการนำเข้า: นำเข้า Master List ได้ไม่เกิน %1$d รายการ ลบใบรับรองที่นำเข้าก่อนเพิ่มรายการใหม่</item>
+    </plurals>
+    <string name="trust_import_limit_size">ปฏิเสธการนำเข้า: Master List ที่นำเข้าจะมีขนาดรวมเกิน %1$d MB ลบใบรับรองที่นำเข้าก่อนเพิ่มรายการใหม่</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">ลบใบรับรองที่นำเข้า</string>
+    <string name="trust_delete_confirm_title">ลบใบรับรองที่นำเข้าใช่ไหม</string>
+    <string name="trust_delete_confirm_text">ระบบจะลบ Master List ที่นำเข้า ส่วนใบรับรองที่มีในแอปจะยังคงอยู่</string>
+    <string name="trust_delete_confirm">ลบ</string>
+    <string name="trust_delete_done">ลบใบรับรองที่นำเข้าแล้ว</string>
+    <string name="trust_delete_error">ลบใบรับรองที่นำเข้าไม่ได้</string>
+</resources>

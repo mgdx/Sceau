@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">เกี่ยวกับ</string>
+    <string name="about_back">กลับ</string>
+    <string name="about_tagline">อ่านและตรวจสอบชิปของเอกสารแสดงตนตามมาตรฐาน ICAO 9303 แบบออฟไลน์</string>
+    <string name="about_version">เวอร์ชัน %1$s</string>
+    <string name="about_version_unknown">ไม่ทราบเวอร์ชัน</string>
+
+    <string name="about_section_license">สัญญาอนุญาตและซอร์สโค้ด</string>
+    <string name="about_license">ซอฟต์แวร์เสรี เผยแพร่ภายใต้สัญญาอนุญาต GNU GPL เวอร์ชัน 3 หรือใหม่กว่า</string>
+    <string name="about_open_repository">ดูซอร์สโค้ด</string>
+    <string name="about_no_browser">ไม่มีแอปที่เปิดลิงก์นี้ได้</string>
+
+    <string name="about_section_trust">คลังใบรับรองที่มีในแอป</string>
+    <string name="about_trust_ants_only">CSCA ของฝรั่งเศสจาก ANTS (หนังสือเดินทางและบัตรประจำตัว)</string>
+    <string name="about_trust_ants_and_bsi">CSCA ของฝรั่งเศสจาก ANTS และ Master List ของเยอรมนีจาก BSI</string>
+    <string name="about_trust_master_list_date">Master List ลงนามเมื่อ %1$s</string>
+    <string name="about_trust_master_list_date_unknown">ไม่ระบุวันที่ลงนามของ Master List</string>
+    <string name="about_trust_bsi_notice">Master List ของ BSI (สำนักงานกลางด้านความปลอดภัยเทคโนโลยีสารสนเทศของเยอรมนี) นำมาเผยแพร่ต่อโดยไม่มีการแก้ไข และไม่ได้รับความร่วมมือหรือการรับรองจาก BSI</string>
+    <string name="about_trust_national">ใบรับรองที่ประเทศต่อไปนี้เผยแพร่เองสำหรับเอกสารของตน: %1$s</string>
+    <string name="about_trust_ogl_notice">มีข้อมูลภาครัฐของสหราชอาณาจักรที่เผยแพร่ภายใต้สัญญาอนุญาต Open Government Licence v3.0</string>
+    <string name="about_trust_loading">กำลังโหลด…</string>
+    <string name="about_trust_error">โหลดคลังใบรับรองไม่ได้</string>
+
+    <string name="about_section_limits">ข้อจำกัด</string>
+    <string name="about_limit_unknown_issuer">หากประเทศผู้ออกเอกสารไม่อยู่ในคลังใบรับรอง ผลจะเป็น “ไม่ทราบผู้ออก” ไม่ใช่ “ไม่ผ่าน” การนำเข้า Master List ที่ใหม่กว่าอาจแก้ปัญหานี้ได้</string>
+    <string name="about_limit_revocation">ไม่มีการตรวจสอบรายการเพิกถอนใบรับรอง เนื่องจากต้องใช้เครือข่าย ซึ่ง Sceau ไม่ใช้เลย</string>
+
+    <string name="about_section_usage">ขอบเขตการใช้งาน</string>
+    <string name="about_usage_holder">การอ่านเอกสารต้องทำเมื่อผู้ถือเป็นผู้แสดงเอกสารด้วยตนเองและให้ความยินยอม</string>
+    <string name="about_usage_biometrics">รูปถ่ายจะถือเป็นข้อมูลชีวมิติตาม GDPR หากนำไปใช้เปรียบเทียบใบหน้าโดยอัตโนมัติ Sceau ไม่ได้เปรียบเทียบใบหน้าดังกล่าว และต้องไม่นำไปใช้เพื่อการนั้นหากไม่มีฐานทางกฎหมายรองรับโดยเฉพาะ</string>
+    <string name="about_usage_privacy">ไม่มีการเก็บหรือส่งข้อมูลที่อ่านได้ไปที่ใด ข้อมูลทั้งหมดจะถูกลบออกจากหน่วยความจำเมื่อออกจากหน้าผลลัพธ์หรือเมื่อแอปทำงานอยู่เบื้องหลัง</string>
+</resources>
