@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="result_title">नतीजा</string>
+    <string name="result_clear">साफ़ करें</string>
+
+    <!-- Verdict -->
+    <string name="result_verdict_authentic">असली</string>
+    <string name="result_verdict_authentic_explanation">जारीकर्ता का हस्ताक्षर मान्य है और चिप ने साबित किया है कि वह कॉपी नहीं है।</string>
+    <string name="result_verdict_chip_unverified">हस्ताक्षर मान्य, चिप की पुष्टि नहीं हुई</string>
+    <string name="result_verdict_chip_unverified_explanation">डेटा पर जारीकर्ता के ही हस्ताक्षर हैं, लेकिन चिप यह साबित नहीं कर सकती कि वह मूल चिप है: वह क्लोन हो सकती है।</string>
+    <string name="result_verdict_unknown_issuer">अज्ञात जारीकर्ता</string>
+    <string name="result_verdict_unknown_issuer_explanation">जारीकर्ता का प्रमाणपत्र ट्रस्ट स्टोर में नहीं है। डेटा दिखाया गया है, लेकिन उसकी कोई गारंटी नहीं है। नई Master List इंपोर्ट करके इस दस्तावेज़ की पुष्टि की जा सकती है।</string>
+    <string name="result_verdict_failed">विफल</string>
+    <string name="result_verdict_failed_explanation">कम से कम एक जांच विफल रही: इस दस्तावेज़ को असली नहीं माना जाना चाहिए।</string>
+    <string name="result_verdict_imported_anchor">आपके इंपोर्ट किए गए प्रमाणपत्र से पुष्टि की गई</string>
+
+    <!-- Photo -->
+    <string name="result_photo_description">धारक की फ़ोटो</string>
+    <string name="result_photo_unavailable">फ़ोटो पढ़ी नहीं जा सकी या मौजूद नहीं है</string>
+    <string name="result_photo_fullscreen">फ़ोटो को फ़ुल स्क्रीन में दिखाएं</string>
+    <string name="result_photo_close">बंद करें</string>
+    <string name="result_image_front">सामने की ओर की इमेज</string>
+    <string name="result_image_rear">पीछे की ओर की इमेज</string>
+    <string name="result_image_unavailable">इमेज पढ़ी नहीं जा सकी</string>
+
+    <!-- Identité -->
+    <string name="result_section_identity">पहचान</string>
+    <string name="result_expired">दस्तावेज़ की अवधि समाप्त</string>
+    <string name="result_field_surname">उपनाम</string>
+    <string name="result_field_given_names">दिया गया नाम</string>
+    <string name="result_field_sex">लिंग</string>
+    <string name="result_field_birth_date">जन्म तिथि</string>
+    <string name="result_field_nationality">राष्ट्रीयता</string>
+    <string name="result_field_document_type">दस्तावेज़ का प्रकार</string>
+    <string name="result_field_document_number">दस्तावेज़ संख्या</string>
+    <string name="result_field_issuing_state">जारीकर्ता देश</string>
+    <string name="result_field_expiry_date">समाप्ति तिथि</string>
+    <string name="result_sex_male">पुरुष</string>
+    <string name="result_sex_female">महिला</string>
+    <string name="result_sex_unspecified">नहीं बताया गया</string>
+    <string name="result_document_passport">पासपोर्ट</string>
+    <string name="result_document_identity_card">पहचान पत्र</string>
+    <string name="result_document_other">अन्य यात्रा दस्तावेज़</string>
+    <string name="result_value_with_code">%1$s (%2$s)</string>
+    <string name="result_unknown_value">अज्ञात</string>
+
+    <!-- Pays spéciaux ICAO -->
+    <string name="result_country_united_nations">संयुक्त राष्ट्र</string>
+    <string name="result_country_un_agency">संयुक्त राष्ट्र की विशेष एजेंसी</string>
+    <string name="result_country_un_kosovo">कोसोवो (UNMIK)</string>
+    <string name="result_country_stateless">राज्यविहीन</string>
+    <string name="result_country_refugee">शरणार्थी (1951 का अभिसमय)</string>
+    <string name="result_country_refugee_other">शरणार्थी</string>
+    <string name="result_country_unspecified">राष्ट्रीयता नहीं बताई गई</string>
+
+    <!-- Données complémentaires -->
+    <string name="result_section_additional">अतिरिक्त जानकारी</string>
+    <string name="result_field_full_name">पूरा नाम</string>
+    <string name="result_field_other_names">अन्य नाम</string>
+    <string name="result_field_personal_number">व्यक्तिगत संख्या</string>
+    <string name="result_field_full_birth_date">पूरी जन्म तिथि</string>
+    <string name="result_field_place_of_birth">जन्म स्थान</string>
+    <string name="result_field_address">पता</string>
+    <string name="result_field_telephone">फ़ोन नंबर</string>
+    <string name="result_field_profession">पेशा</string>
+    <string name="result_field_title">उपाधि</string>
+    <string name="result_field_personal_summary">व्यक्तिगत विवरण</string>
+    <string name="result_field_other_td_numbers">अन्य मान्य यात्रा दस्तावेज़</string>
+    <string name="result_field_custody">अभिरक्षा की जानकारी</string>
+    <string name="result_field_issuing_authority">जारी करने वाला प्राधिकारी</string>
+    <string name="result_field_issue_date">जारी करने की तिथि</string>
+    <string name="result_field_other_persons">उल्लिखित अन्य व्यक्ति</string>
+    <string name="result_field_endorsements">पृष्ठांकन और टिप्पणियां</string>
+    <string name="result_field_tax_exit">कर या देश छोड़ने से जुड़ी शर्तें</string>
+    <string name="result_field_personalization_time">पर्सनलाइज़ेशन की तिथि</string>
+    <string name="result_field_personalization_device">पर्सनलाइज़ेशन सिस्टम की संख्या</string>
+
+    <!-- Vérifications -->
+    <string name="result_section_checks">जांच</string>
+    <string name="result_check_secure_channel">सुरक्षित चैनल बना</string>
+    <string name="result_check_sod_signature">SOD का हस्ताक्षर मान्य</string>
+    <string name="result_check_chain">प्रमाणन शृंखला</string>
+    <string name="result_check_ds_validity">DS प्रमाणपत्र की वैधता</string>
+    <string name="result_check_dg_hashes">डेटा ग्रुप के हैश</string>
+    <string name="result_check_chip_authentication">Chip Authentication (DG14)</string>
+    <string name="result_check_active_authentication">Active Authentication (DG15)</string>
+    <string name="result_status_ok">सफल</string>
+    <string name="result_status_failed">विफल</string>
+    <string name="result_status_not_available">उपलब्ध नहीं</string>
+    <string name="result_status_unsupported">एल्गोरिदम समर्थित नहीं है</string>
+    <string name="result_check_expand">जानकारी दिखाएं</string>
+    <string name="result_check_collapse">जानकारी छिपाएं</string>
+
+    <!-- Détail des vérifications -->
+    <string name="result_detail_protocol">प्रोटोकॉल: %1$s</string>
+    <string name="result_detail_ca_method">तरीका: %1$s</string>
+    <string name="result_detail_ca_method_dg14">DG14 की कुंजी से Chip Authentication</string>
+    <string name="result_detail_ca_method_pace_cam">PACE-CAM, चैनल खोलते समय, EF.CardSecurity की कुंजी से</string>
+    <string name="result_detail_algorithm">हस्ताक्षर एल्गोरिदम: %1$s</string>
+    <string name="result_detail_csca">CSCA: %1$s</string>
+    <string name="result_detail_csca_none">स्टोर का कोई भी CSCA मेल नहीं खाता।</string>
+    <string name="result_detail_country">देश: %1$s</string>
+    <string name="result_detail_country_mismatch">देश मेल नहीं खाते: प्रमाणन प्राधिकारी %1$s, हस्ताक्षरकर्ता का प्रमाणपत्र %2$s, दस्तावेज़ %3$s</string>
+    <string name="result_detail_source">स्रोत: %1$s</string>
+    <string name="result_detail_source_ants">ANTS के प्रमाणपत्र</string>
+    <string name="result_detail_source_national">जारीकर्ता देश के प्रकाशित प्रमाणपत्र</string>
+    <string name="result_detail_source_embedded">ऐप में शामिल Master List</string>
+    <string name="result_detail_source_imported">इंपोर्ट की गई Master List</string>
+    <string name="result_detail_ds_subject">DS प्रमाणपत्र: %1$s</string>
+    <string name="result_detail_links">इस्तेमाल हुए लिंक प्रमाणपत्र:</string>
+    <string name="result_detail_link_item">• %1$s</string>
+    <string name="result_detail_links_none">किसी लिंक प्रमाणपत्र का इस्तेमाल नहीं हुआ।</string>
+    <string name="result_detail_ds_missing">DS प्रमाणपत्र न तो SOD में है और न ही ट्रस्ट स्टोर में।</string>
+    <string name="result_detail_ds_period">DS की वैधता अवधि: %1$s से %2$s तक</string>
+    <string name="result_detail_issuance">जारी करने की तिथि: %1$s (%2$s)</string>
+    <string name="result_detail_issuance_no_source">जारी करने की तिथि: %1$s</string>
+    <string name="result_detail_issuance_unknown">जारी करने की तिथि अज्ञात है।</string>
+    <string name="result_detail_issuance_dg12">DG12 से पढ़ी गई</string>
+    <string name="result_detail_issuance_sod">SOD पर हस्ताक्षर की तिथि</string>
+    <string name="result_detail_issuance_estimated">अनुमानित</string>
+    <string name="result_detail_digest_algorithm">हैश एल्गोरिदम: %1$s</string>
+    <string name="result_detail_dg_checked">जांचे गए डेटा ग्रुप: %1$s</string>
+    <string name="result_detail_dg_checked_none">किसी डेटा ग्रुप की जांच नहीं हुई।</string>
+    <string name="result_detail_dg_mismatched">मेल न खाने वाले हैश: %1$s</string>
+    <string name="result_detail_dg_all_match">सभी हैश मेल खाते हैं।</string>
+    <string name="result_detail_dg_missing">ये डेटा ग्रुप घोषित हैं, लेकिन चिप ने नहीं दिए: %1$s</string>
+    <string name="result_detail_unsupported">एल्गोरिदम समर्थित नहीं है: %1$s</string>
+    <string name="result_detail_error">तकनीकी गड़बड़ी: %1$s</string>
+    <string name="result_detail_no_dg14">दस्तावेज़ में DG14 नहीं है: चिप में यह जांच उपलब्ध नहीं है।</string>
+    <string name="result_detail_no_dg15">दस्तावेज़ में DG15 नहीं है: चिप में यह जांच उपलब्ध नहीं है।</string>
+    <string name="result_detail_not_reached">यह चरण पूरा नहीं किया गया।</string>
+    <string name="result_detail_none">कोई और जानकारी नहीं।</string>
+    <string name="result_demo_banner">सिम्युलेट किया गया दस्तावेज़ — डेमो</string>
+</resources>

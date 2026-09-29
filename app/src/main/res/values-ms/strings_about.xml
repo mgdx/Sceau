@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">Perihal</string>
+    <string name="about_back">Kembali</string>
+    <string name="about_tagline">Membaca dan mengesahkan cip dokumen pengenalan ICAO 9303 secara luar talian.</string>
+    <string name="about_version">Versi %1$s</string>
+    <string name="about_version_unknown">Versi tidak diketahui</string>
+
+    <string name="about_section_license">Lesen dan kod sumber</string>
+    <string name="about_license">Perisian bebas yang diedarkan di bawah lesen GNU GPL versi 3 atau yang lebih baharu.</string>
+    <string name="about_open_repository">Lihat kod sumber</string>
+    <string name="about_no_browser">Tiada apl yang boleh membuka pautan ini.</string>
+
+    <string name="about_section_trust">Stor sijil dipercayai terbina dalam</string>
+    <string name="about_trust_ants_only">CSCA Perancis daripada ANTS (pasport dan kad pengenalan).</string>
+    <string name="about_trust_ants_and_bsi">CSCA Perancis daripada ANTS dan Master List Jerman daripada BSI.</string>
+    <string name="about_trust_master_list_date">Master List ditandatangani pada %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">Tarikh tandatangan Master List tidak dinyatakan.</string>
+    <string name="about_trust_bsi_notice">Master List BSI (Pejabat Persekutuan Jerman bagi Keselamatan Teknologi Maklumat) diedarkan semula tanpa pengubahsuaian, tanpa kerjasama atau kelulusan BSI.</string>
+    <string name="about_trust_national">Sijil yang diterbitkan oleh negara berikut untuk dokumen mereka sendiri: %1$s.</string>
+    <string name="about_trust_ogl_notice">Mengandungi maklumat sektor awam United Kingdom yang diterbitkan di bawah lesen Open Government Licence v3.0.</string>
+    <string name="about_trust_loading">Memuatkan…</string>
+    <string name="about_trust_error">Tidak dapat memuatkan stor sijil dipercayai.</string>
+
+    <string name="about_section_limits">Had</string>
+    <string name="about_limit_unknown_issuer">Dokumen yang negara pengeluarnya tiada dalam stor sijil dipercayai akan mendapat keputusan “Pengeluar tidak diketahui”, bukan “Gagal”. Mengimport Master List yang lebih baharu mungkin dapat menyelesaikannya.</string>
+    <string name="about_limit_revocation">Senarai pembatalan sijil tidak disemak: senarai ini memerlukan rangkaian, yang tidak pernah digunakan oleh Sceau.</string>
+
+    <string name="about_section_usage">Syarat penggunaan</string>
+    <string name="about_usage_holder">Bacaan hanya boleh dibuat apabila pemegang sendiri menunjukkan dokumennya dan memberikan persetujuan.</string>
+    <string name="about_usage_biometrics">Foto menjadi data biometrik di bawah GDPR jika digunakan untuk perbandingan wajah secara automatik. Sceau tidak membuat perbandingan sedemikian dan tidak boleh digunakan untuk tujuan itu tanpa asas undang-undang yang khusus.</string>
+    <string name="about_usage_privacy">Tiada data yang dibaca disimpan atau dihantar: semuanya dipadamkan daripada memori apabila anda keluar dari keputusan atau apabila apl beralih ke latar belakang.</string>
+</resources>

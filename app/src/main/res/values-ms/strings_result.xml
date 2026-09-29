@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="result_title">Keputusan</string>
+    <string name="result_clear">Kosongkan</string>
+
+    <!-- Verdict -->
+    <string name="result_verdict_authentic">Tulen</string>
+    <string name="result_verdict_authentic_explanation">Tandatangan pengeluar sah dan cip telah membuktikan bahawa ia bukan salinan.</string>
+    <string name="result_verdict_chip_unverified">Tandatangan sah, cip tidak disahkan</string>
+    <string name="result_verdict_chip_unverified_explanation">Data memang ditandatangani oleh pengeluar, tetapi cip tidak dapat membuktikan bahawa ia cip asal: cip ini mungkin klon.</string>
+    <string name="result_verdict_unknown_issuer">Pengeluar tidak diketahui</string>
+    <string name="result_verdict_unknown_issuer_explanation">Sijil pengeluar tiada dalam stor sijil dipercayai. Data dipaparkan, tetapi tiada apa-apa yang terjamin. Mengimport Master List yang lebih baharu mungkin membolehkan dokumen ini disahkan.</string>
+    <string name="result_verdict_failed">Gagal</string>
+    <string name="result_verdict_failed_explanation">Sekurang-kurangnya satu semakan gagal: dokumen ini tidak boleh dianggap tulen.</string>
+    <string name="result_verdict_imported_anchor">Disahkan menggunakan sijil yang anda import</string>
+
+    <!-- Photo -->
+    <string name="result_photo_description">Foto pemegang</string>
+    <string name="result_photo_unavailable">Foto tidak dapat dibaca atau tiada</string>
+    <string name="result_photo_fullscreen">Paparkan foto dalam skrin penuh</string>
+    <string name="result_photo_close">Tutup</string>
+    <string name="result_image_front">Imej bahagian depan</string>
+    <string name="result_image_rear">Imej bahagian belakang</string>
+    <string name="result_image_unavailable">Imej tidak dapat dibaca</string>
+
+    <!-- Identité -->
+    <string name="result_section_identity">Butiran peribadi</string>
+    <string name="result_expired">Dokumen telah tamat tempoh</string>
+    <string name="result_field_surname">Nama keluarga</string>
+    <string name="result_field_given_names">Nama diberi</string>
+    <string name="result_field_sex">Jantina</string>
+    <string name="result_field_birth_date">Tarikh lahir</string>
+    <string name="result_field_nationality">Warganegara</string>
+    <string name="result_field_document_type">Jenis dokumen</string>
+    <string name="result_field_document_number">Nombor dokumen</string>
+    <string name="result_field_issuing_state">Negara pengeluar</string>
+    <string name="result_field_expiry_date">Tarikh tamat tempoh</string>
+    <string name="result_sex_male">Lelaki</string>
+    <string name="result_sex_female">Perempuan</string>
+    <string name="result_sex_unspecified">Tidak dinyatakan</string>
+    <string name="result_document_passport">Pasport</string>
+    <string name="result_document_identity_card">Kad pengenalan</string>
+    <string name="result_document_other">Dokumen perjalanan lain</string>
+    <string name="result_value_with_code">%1$s (%2$s)</string>
+    <string name="result_unknown_value">Tidak diketahui</string>
+
+    <!-- Pays spéciaux ICAO -->
+    <string name="result_country_united_nations">Pertubuhan Bangsa-Bangsa Bersatu</string>
+    <string name="result_country_un_agency">Agensi khusus Pertubuhan Bangsa-Bangsa Bersatu</string>
+    <string name="result_country_un_kosovo">Kosovo (UNMIK)</string>
+    <string name="result_country_stateless">Tanpa kerakyatan</string>
+    <string name="result_country_refugee">Pelarian (Konvensyen 1951)</string>
+    <string name="result_country_refugee_other">Pelarian</string>
+    <string name="result_country_unspecified">Warganegara tidak dinyatakan</string>
+
+    <!-- Données complémentaires -->
+    <string name="result_section_additional">Butiran tambahan</string>
+    <string name="result_field_full_name">Nama penuh</string>
+    <string name="result_field_other_names">Nama lain</string>
+    <string name="result_field_personal_number">Nombor peribadi</string>
+    <string name="result_field_full_birth_date">Tarikh lahir penuh</string>
+    <string name="result_field_place_of_birth">Tempat lahir</string>
+    <string name="result_field_address">Alamat</string>
+    <string name="result_field_telephone">Telefon</string>
+    <string name="result_field_profession">Pekerjaan</string>
+    <string name="result_field_title">Gelaran</string>
+    <string name="result_field_personal_summary">Ringkasan profil</string>
+    <string name="result_field_other_td_numbers">Dokumen perjalanan lain yang sah</string>
+    <string name="result_field_custody">Maklumat penjagaan</string>
+    <string name="result_field_issuing_authority">Pihak berkuasa pengeluar</string>
+    <string name="result_field_issue_date">Tarikh dikeluarkan</string>
+    <string name="result_field_other_persons">Orang lain yang dinyatakan</string>
+    <string name="result_field_endorsements">Endorsan dan catatan</string>
+    <string name="result_field_tax_exit">Obligasi cukai atau keluar negara</string>
+    <string name="result_field_personalization_time">Tarikh pemperibadian</string>
+    <string name="result_field_personalization_device">Nombor sistem pemperibadian</string>
+
+    <!-- Vérifications -->
+    <string name="result_section_checks">Semakan</string>
+    <string name="result_check_secure_channel">Saluran selamat diwujudkan</string>
+    <string name="result_check_sod_signature">Tandatangan SOD sah</string>
+    <string name="result_check_chain">Rantaian pensijilan</string>
+    <string name="result_check_ds_validity">Kesahan sijil DS</string>
+    <string name="result_check_dg_hashes">Cincangan kumpulan data</string>
+    <string name="result_check_chip_authentication">Chip Authentication (DG14)</string>
+    <string name="result_check_active_authentication">Active Authentication (DG15)</string>
+    <string name="result_status_ok">Berjaya</string>
+    <string name="result_status_failed">Gagal</string>
+    <string name="result_status_not_available">Tidak tersedia</string>
+    <string name="result_status_unsupported">Algoritma tidak disokong</string>
+    <string name="result_check_expand">Tunjukkan butiran</string>
+    <string name="result_check_collapse">Sembunyikan butiran</string>
+
+    <!-- Détail des vérifications -->
+    <string name="result_detail_protocol">Protokol: %1$s</string>
+    <string name="result_detail_ca_method">Kaedah: %1$s</string>
+    <string name="result_detail_ca_method_dg14">Chip Authentication dengan kunci daripada DG14</string>
+    <string name="result_detail_ca_method_pace_cam">PACE-CAM, semasa saluran dibuka, dengan kunci daripada EF.CardSecurity</string>
+    <string name="result_detail_algorithm">Algoritma tandatangan: %1$s</string>
+    <string name="result_detail_csca">CSCA: %1$s</string>
+    <string name="result_detail_csca_none">Tiada CSCA dalam stor yang sepadan.</string>
+    <string name="result_detail_country">Negara: %1$s</string>
+    <string name="result_detail_country_mismatch">Negara tidak konsisten: pihak berkuasa pensijilan %1$s, sijil penandatangan %2$s, dokumen %3$s</string>
+    <string name="result_detail_source">Sumber: %1$s</string>
+    <string name="result_detail_source_ants">sijil daripada ANTS</string>
+    <string name="result_detail_source_national">sijil yang diterbitkan oleh negara pengeluar</string>
+    <string name="result_detail_source_embedded">Master List terbina dalam</string>
+    <string name="result_detail_source_imported">Master List yang diimport</string>
+    <string name="result_detail_ds_subject">Sijil DS: %1$s</string>
+    <string name="result_detail_links">Sijil pautan yang dilalui:</string>
+    <string name="result_detail_link_item">• %1$s</string>
+    <string name="result_detail_links_none">Tiada sijil pautan yang dilalui.</string>
+    <string name="result_detail_ds_missing">Sijil DS tiada dalam SOD mahupun dalam stor sijil dipercayai.</string>
+    <string name="result_detail_ds_period">Tempoh sah DS: dari %1$s hingga %2$s</string>
+    <string name="result_detail_issuance">Tarikh dikeluarkan: %1$s (%2$s)</string>
+    <string name="result_detail_issuance_no_source">Tarikh dikeluarkan: %1$s</string>
+    <string name="result_detail_issuance_unknown">Tarikh dikeluarkan tidak diketahui.</string>
+    <string name="result_detail_issuance_dg12">dibaca daripada DG12</string>
+    <string name="result_detail_issuance_sod">tarikh tandatangan SOD</string>
+    <string name="result_detail_issuance_estimated">anggaran</string>
+    <string name="result_detail_digest_algorithm">Algoritma cincangan: %1$s</string>
+    <string name="result_detail_dg_checked">Kumpulan data yang disemak: %1$s</string>
+    <string name="result_detail_dg_checked_none">Tiada kumpulan data yang disemak.</string>
+    <string name="result_detail_dg_mismatched">Cincangan tidak sepadan: %1$s</string>
+    <string name="result_detail_dg_all_match">Semua cincangan sepadan.</string>
+    <string name="result_detail_dg_missing">Kumpulan data yang diisytiharkan tetapi tidak diberikan oleh cip: %1$s</string>
+    <string name="result_detail_unsupported">Algoritma tidak disokong: %1$s</string>
+    <string name="result_detail_error">Ralat teknikal: %1$s</string>
+    <string name="result_detail_no_dg14">Dokumen ini tiada DG14: cip tidak menawarkan semakan ini.</string>
+    <string name="result_detail_no_dg15">Dokumen ini tiada DG15: cip tidak menawarkan semakan ini.</string>
+    <string name="result_detail_not_reached">Langkah ini tidak dilaksanakan.</string>
+    <string name="result_detail_none">Tiada butiran tambahan.</string>
+    <string name="result_demo_banner">Dokumen simulasi — demonstrasi</string>
+</resources>

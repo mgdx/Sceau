@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">ज़्यादा विकल्प</string>
+    <string name="home_menu_trust_store">ट्रस्ट स्टोर</string>
+    <string name="home_menu_about">ऐप के बारे में</string>
+    <string name="home_tab_id_card">पहचान पत्र</string>
+    <string name="home_tab_passport">पासपोर्ट</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">कार्ड के सामने की ओर छपा 6 अंकों का नंबर</string>
+    <string name="home_document_number_label">दस्तावेज़ संख्या</string>
+    <string name="home_document_number_supporting">पहचान वाले पेज पर जैसा छपा है, ज़्यादा से ज़्यादा 9 वर्ण</string>
+    <string name="home_date_of_birth_label">जन्म तिथि</string>
+    <string name="home_date_of_expiry_label">समाप्ति तिथि</string>
+    <string name="home_date_day">दद</string>
+    <string name="home_date_month">मम</string>
+    <string name="home_date_year">वववव</string>
+    <string name="home_date_format">फ़ॉर्मैट: %1$s</string>
+    <string name="home_date_error_invalid">यह तारीख मौजूद नहीं है</string>
+    <string name="home_date_error_future">जन्म तिथि भविष्य की नहीं हो सकती</string>
+    <string name="home_date_error_too_old">समाप्ति तिथि बहुत पुरानी है (%1$d से पहले की)</string>
+    <string name="home_holder_notice">दस्तावेज़ उसके धारक को खुद पेश करना चाहिए।</string>
+    <string name="home_read">पढ़ें</string>
+    <string name="home_nfc_disabled">NFC बंद है। दस्तावेज़ की चिप पढ़ने के लिए इसे चालू करें।</string>
+    <string name="home_nfc_settings">NFC सेटिंग खोलें</string>
+    <string name="home_nfc_absent">इस फ़ोन में NFC नहीं है: यह पहचान दस्तावेज़ों की चिप नहीं पढ़ सकता।</string>
+    <string name="home_menu_demo">CNIe सिम्युलेट करें (डेमो)</string>
+</resources>

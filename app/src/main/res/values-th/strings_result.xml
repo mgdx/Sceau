@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="result_title">ผลลัพธ์</string>
+    <string name="result_clear">ล้างข้อมูล</string>
+
+    <!-- Verdict -->
+    <string name="result_verdict_authentic">ของแท้</string>
+    <string name="result_verdict_authentic_explanation">ลายมือชื่อของผู้ออกถูกต้อง และชิปพิสูจน์แล้วว่าไม่ใช่ชิปที่ทำสำเนา</string>
+    <string name="result_verdict_chip_unverified">ลายมือชื่อถูกต้อง ยังไม่ได้ตรวจสอบชิป</string>
+    <string name="result_verdict_chip_unverified_explanation">ผู้ออกเป็นผู้ลงนามข้อมูลจริง แต่ชิปไม่สามารถพิสูจน์ได้ว่าเป็นชิปต้นฉบับ จึงอาจเป็นชิปที่ถูกโคลน</string>
+    <string name="result_verdict_unknown_issuer">ไม่ทราบผู้ออก</string>
+    <string name="result_verdict_unknown_issuer_explanation">ใบรับรองของผู้ออกไม่อยู่ในคลังใบรับรอง ข้อมูลจะแสดงอยู่ แต่ไม่มีสิ่งใดรับประกันได้ การนำเข้า Master List ที่ใหม่กว่าอาจช่วยให้ตรวจสอบเอกสารนี้ได้</string>
+    <string name="result_verdict_failed">ไม่ผ่าน</string>
+    <string name="result_verdict_failed_explanation">การตรวจสอบอย่างน้อยหนึ่งรายการไม่ผ่าน จึงไม่ควรถือว่าเอกสารนี้เป็นของแท้</string>
+    <string name="result_verdict_imported_anchor">ตรวจสอบด้วยใบรับรองที่คุณนำเข้า</string>
+
+    <!-- Photo -->
+    <string name="result_photo_description">รูปถ่ายของผู้ถือ</string>
+    <string name="result_photo_unavailable">อ่านรูปถ่ายไม่ได้หรือไม่มีรูปถ่าย</string>
+    <string name="result_photo_fullscreen">แสดงรูปถ่ายแบบเต็มหน้าจอ</string>
+    <string name="result_photo_close">ปิด</string>
+    <string name="result_image_front">ภาพด้านหน้า</string>
+    <string name="result_image_rear">ภาพด้านหลัง</string>
+    <string name="result_image_unavailable">อ่านภาพไม่ได้</string>
+
+    <!-- Identité -->
+    <string name="result_section_identity">ข้อมูลบุคคล</string>
+    <string name="result_expired">เอกสารหมดอายุแล้ว</string>
+    <string name="result_field_surname">ชื่อสกุล</string>
+    <string name="result_field_given_names">ชื่อตัว</string>
+    <string name="result_field_sex">เพศ</string>
+    <string name="result_field_birth_date">วันเกิด</string>
+    <string name="result_field_nationality">สัญชาติ</string>
+    <string name="result_field_document_type">ประเภทเอกสาร</string>
+    <string name="result_field_document_number">เลขที่เอกสาร</string>
+    <string name="result_field_issuing_state">ประเทศที่ออก</string>
+    <string name="result_field_expiry_date">วันหมดอายุ</string>
+    <string name="result_sex_male">ชาย</string>
+    <string name="result_sex_female">หญิง</string>
+    <string name="result_sex_unspecified">ไม่ระบุ</string>
+    <string name="result_document_passport">หนังสือเดินทาง</string>
+    <string name="result_document_identity_card">บัตรประจำตัว</string>
+    <string name="result_document_other">เอกสารเดินทางอื่น</string>
+    <string name="result_value_with_code">%1$s (%2$s)</string>
+    <string name="result_unknown_value">ไม่ทราบ</string>
+
+    <!-- Pays spéciaux ICAO -->
+    <string name="result_country_united_nations">สหประชาชาติ</string>
+    <string name="result_country_un_agency">ทบวงการชำนัญพิเศษแห่งสหประชาชาติ</string>
+    <string name="result_country_un_kosovo">โคโซโว (UNMIK)</string>
+    <string name="result_country_stateless">ไร้สัญชาติ</string>
+    <string name="result_country_refugee">ผู้ลี้ภัย (อนุสัญญาปี 1951)</string>
+    <string name="result_country_refugee_other">ผู้ลี้ภัย</string>
+    <string name="result_country_unspecified">ไม่ระบุสัญชาติ</string>
+
+    <!-- Données complémentaires -->
+    <string name="result_section_additional">ข้อมูลเพิ่มเติม</string>
+    <string name="result_field_full_name">ชื่อเต็ม</string>
+    <string name="result_field_other_names">ชื่ออื่น</string>
+    <string name="result_field_personal_number">เลขประจำตัวบุคคล</string>
+    <string name="result_field_full_birth_date">วันเกิดแบบเต็ม</string>
+    <string name="result_field_place_of_birth">สถานที่เกิด</string>
+    <string name="result_field_address">ที่อยู่</string>
+    <string name="result_field_telephone">โทรศัพท์</string>
+    <string name="result_field_profession">อาชีพ</string>
+    <string name="result_field_title">คำนำหน้าหรือตำแหน่ง</string>
+    <string name="result_field_personal_summary">ข้อมูลโดยสรุป</string>
+    <string name="result_field_other_td_numbers">เอกสารเดินทางอื่นที่ยังใช้ได้</string>
+    <string name="result_field_custody">ข้อมูลผู้ปกครอง</string>
+    <string name="result_field_issuing_authority">หน่วยงานที่ออก</string>
+    <string name="result_field_issue_date">วันที่ออก</string>
+    <string name="result_field_other_persons">บุคคลอื่นที่ระบุไว้</string>
+    <string name="result_field_endorsements">ข้อความรับรองและหมายเหตุ</string>
+    <string name="result_field_tax_exit">ภาระภาษีหรือเงื่อนไขการออกนอกประเทศ</string>
+    <string name="result_field_personalization_time">วันที่บันทึกข้อมูลส่วนบุคคล</string>
+    <string name="result_field_personalization_device">หมายเลขระบบบันทึกข้อมูลส่วนบุคคล</string>
+
+    <!-- Vérifications -->
+    <string name="result_section_checks">การตรวจสอบ</string>
+    <string name="result_check_secure_channel">สร้างช่องทางที่ปลอดภัยแล้ว</string>
+    <string name="result_check_sod_signature">ลายมือชื่อของ SOD ถูกต้อง</string>
+    <string name="result_check_chain">ลำดับชั้นใบรับรอง</string>
+    <string name="result_check_ds_validity">อายุของใบรับรอง DS</string>
+    <string name="result_check_dg_hashes">ค่าแฮชของกลุ่มข้อมูล</string>
+    <string name="result_check_chip_authentication">Chip Authentication (DG14)</string>
+    <string name="result_check_active_authentication">Active Authentication (DG15)</string>
+    <string name="result_status_ok">ผ่าน</string>
+    <string name="result_status_failed">ไม่ผ่าน</string>
+    <string name="result_status_not_available">ไม่มี</string>
+    <string name="result_status_unsupported">ไม่รองรับอัลกอริทึมนี้</string>
+    <string name="result_check_expand">แสดงรายละเอียด</string>
+    <string name="result_check_collapse">ซ่อนรายละเอียด</string>
+
+    <!-- Détail des vérifications -->
+    <string name="result_detail_protocol">โปรโตคอล: %1$s</string>
+    <string name="result_detail_ca_method">วิธีการ: %1$s</string>
+    <string name="result_detail_ca_method_dg14">Chip Authentication ด้วยคีย์ใน DG14</string>
+    <string name="result_detail_ca_method_pace_cam">PACE-CAM ระหว่างเปิดช่องทาง ด้วยคีย์ใน EF.CardSecurity</string>
+    <string name="result_detail_algorithm">อัลกอริทึมลายมือชื่อ: %1$s</string>
+    <string name="result_detail_csca">CSCA: %1$s</string>
+    <string name="result_detail_csca_none">ไม่มี CSCA ในคลังที่ตรงกัน</string>
+    <string name="result_detail_country">ประเทศ: %1$s</string>
+    <string name="result_detail_country_mismatch">ประเทศไม่ตรงกัน: ผู้ออกใบรับรอง %1$s ใบรับรองของผู้ลงนาม %2$s เอกสาร %3$s</string>
+    <string name="result_detail_source">แหล่งที่มา: %1$s</string>
+    <string name="result_detail_source_ants">ใบรับรองจาก ANTS</string>
+    <string name="result_detail_source_national">ใบรับรองที่ประเทศผู้ออกเผยแพร่</string>
+    <string name="result_detail_source_embedded">Master List ที่มีในแอป</string>
+    <string name="result_detail_source_imported">Master List ที่นำเข้า</string>
+    <string name="result_detail_ds_subject">ใบรับรอง DS: %1$s</string>
+    <string name="result_detail_links">ใบรับรองเชื่อมโยงที่ใช้:</string>
+    <string name="result_detail_link_item">• %1$s</string>
+    <string name="result_detail_links_none">ไม่ได้ใช้ใบรับรองเชื่อมโยง</string>
+    <string name="result_detail_ds_missing">ไม่พบใบรับรอง DS ทั้งใน SOD และในคลังใบรับรอง</string>
+    <string name="result_detail_ds_period">ระยะเวลาที่ DS ใช้ได้: ตั้งแต่ %1$s ถึง %2$s</string>
+    <string name="result_detail_issuance">วันที่ออก: %1$s (%2$s)</string>
+    <string name="result_detail_issuance_no_source">วันที่ออก: %1$s</string>
+    <string name="result_detail_issuance_unknown">ไม่ทราบวันที่ออก</string>
+    <string name="result_detail_issuance_dg12">อ่านจาก DG12</string>
+    <string name="result_detail_issuance_sod">วันที่ลงนาม SOD</string>
+    <string name="result_detail_issuance_estimated">โดยประมาณ</string>
+    <string name="result_detail_digest_algorithm">อัลกอริทึมแฮช: %1$s</string>
+    <string name="result_detail_dg_checked">กลุ่มข้อมูลที่ตรวจสอบแล้ว: %1$s</string>
+    <string name="result_detail_dg_checked_none">ไม่ได้ตรวจสอบกลุ่มข้อมูลใด</string>
+    <string name="result_detail_dg_mismatched">ค่าแฮชที่ไม่ตรงกัน: %1$s</string>
+    <string name="result_detail_dg_all_match">ค่าแฮชทั้งหมดตรงกัน</string>
+    <string name="result_detail_dg_missing">กลุ่มข้อมูลที่ประกาศไว้แต่ชิปไม่ได้ให้มา: %1$s</string>
+    <string name="result_detail_unsupported">ไม่รองรับอัลกอริทึม: %1$s</string>
+    <string name="result_detail_error">ข้อผิดพลาดทางเทคนิค: %1$s</string>
+    <string name="result_detail_no_dg14">เอกสารไม่มี DG14 ชิปจึงไม่รองรับการตรวจสอบนี้</string>
+    <string name="result_detail_no_dg15">เอกสารไม่มี DG15 ชิปจึงไม่รองรับการตรวจสอบนี้</string>
+    <string name="result_detail_not_reached">ไม่ได้ดำเนินการขั้นตอนนี้</string>
+    <string name="result_detail_none">ไม่มีรายละเอียดเพิ่มเติม</string>
+    <string name="result_demo_banner">เอกสารจำลอง — การสาธิต</string>
+</resources>

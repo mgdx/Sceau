@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reading_title">दस्तावेज़ पढ़ा जा रहा है</string>
+    <string name="reading_prompt">दस्तावेज़ को फ़ोन के पिछले हिस्से से सटाकर रखें और हटाएं नहीं</string>
+    <string name="reading_step_connect">चिप से कनेक्शन</string>
+    <string name="reading_step_secure_channel">सुरक्षित चैनल खोलना (PACE या BAC)</string>
+    <string name="reading_step_read_data">डेटा पढ़ना</string>
+    <string name="reading_step_verify_signature">हस्ताक्षर की पुष्टि</string>
+    <string name="reading_step_verify_chip">चिप की पुष्टि</string>
+    <string name="reading_step_pending">इंतज़ार में</string>
+    <string name="reading_step_in_progress">जारी है</string>
+    <string name="reading_step_done">पूरा हुआ</string>
+    <string name="reading_error_title">पढ़ना बीच में रुक गया</string>
+    <string name="reading_slow_chip">दस्तावेज़ की चिप इंतज़ार करवा रही है, ऐसा अक्सर गलत कोशिशों के बाद होता है। दस्तावेज़ को हिलाए बिना रखें, इसमें एक मिनट तक लग सकता है।</string>
+    <string name="reading_error_access_denied">CAN या MRZ का डेटा गलत है। डाला गया नंबर और तारीखें जांचें, फिर से कोशिश करें। हर गलत कोशिश के बाद, जवाब देने से पहले चिप ज़्यादा देर तक इंतज़ार करवा सकती है।</string>
+    <string name="reading_error_connection_lost">दस्तावेज़ बहुत जल्दी हटा लिया गया। पढ़ना पूरा होने तक उसे फ़ोन से सटाकर बिना हिलाए रखें।</string>
+    <string name="reading_error_not_icao">यह दस्तावेज़ ICAO 9303 मानक के मुताबिक नहीं है: इसकी चिप नहीं पढ़ी जा सकती।</string>
+    <string name="reading_error_timeout">समय खत्म हो गया: चिप ने समय पर जवाब नहीं दिया। दस्तावेज़ को बिना हिलाए रखकर फिर से कोशिश करें।</string>
+    <string name="reading_error_can_without_pace">यह दस्तावेज़ CAN से नहीं पढ़ा जा सकता। पासपोर्ट टैब खोलें और MRZ का डेटा डालें।</string>
+    <string name="reading_error_unexpected">कोई अनचाही गड़बड़ी हुई।</string>
+    <string name="reading_error_code">गड़बड़ी कोड: %1$s</string>
+    <string name="reading_retry">फिर से कोशिश करें</string>
+    <string name="reading_cancel">रद्द करें</string>
+</resources>

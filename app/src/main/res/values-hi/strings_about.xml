@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">ऐप के बारे में</string>
+    <string name="about_back">वापस जाएं</string>
+    <string name="about_tagline">ICAO 9303 पहचान दस्तावेज़ों की चिप को ऑफ़लाइन पढ़ना और उसकी पुष्टि करना।</string>
+    <string name="about_version">वर्शन %1$s</string>
+    <string name="about_version_unknown">वर्शन की जानकारी नहीं है</string>
+
+    <string name="about_section_license">लाइसेंस और सोर्स कोड</string>
+    <string name="about_license">मुक्त सॉफ़्टवेयर, जो GNU GPL वर्शन 3 या उसके बाद के किसी वर्शन के लाइसेंस के तहत उपलब्ध है।</string>
+    <string name="about_open_repository">सोर्स कोड देखें</string>
+    <string name="about_no_browser">कोई भी ऐप यह लिंक नहीं खोल सकता।</string>
+
+    <string name="about_section_trust">ऐप में शामिल ट्रस्ट स्टोर</string>
+    <string name="about_trust_ants_only">ANTS के फ़्रांसीसी CSCA (पासपोर्ट और पहचान पत्र)।</string>
+    <string name="about_trust_ants_and_bsi">ANTS के फ़्रांसीसी CSCA और BSI की जर्मन Master List।</string>
+    <string name="about_trust_master_list_date">Master List पर %1$s को हस्ताक्षर किए गए।</string>
+    <string name="about_trust_master_list_date_unknown">Master List पर हस्ताक्षर की तारीख नहीं दी गई है।</string>
+    <string name="about_trust_bsi_notice">BSI (जर्मनी का संघीय सूचना सुरक्षा कार्यालय) की Master List को बिना किसी बदलाव के आगे बांटा जाता है। इसमें BSI का सहयोग या अनुमोदन शामिल नहीं है।</string>
+    <string name="about_trust_national">इन देशों ने अपने दस्तावेज़ों के लिए ये प्रमाणपत्र खुद प्रकाशित किए हैं: %1$s।</string>
+    <string name="about_trust_ogl_notice">इसमें ब्रिटेन के सार्वजनिक क्षेत्र की जानकारी शामिल है, जो Open Government Licence v3.0 के तहत प्रकाशित है।</string>
+    <string name="about_trust_loading">लोड हो रहा है…</string>
+    <string name="about_trust_error">ट्रस्ट स्टोर लोड नहीं किया जा सका।</string>
+
+    <string name="about_section_limits">सीमाएं</string>
+    <string name="about_limit_unknown_issuer">अगर दस्तावेज़ जारी करने वाला देश ट्रस्ट स्टोर में नहीं है, तो नतीजा “विफल” नहीं, बल्कि “अज्ञात जारीकर्ता” होता है। नई Master List इंपोर्ट करने से यह ठीक हो सकता है।</string>
+    <string name="about_limit_revocation">रद्द किए गए प्रमाणपत्रों की सूचियां नहीं देखी जातीं: इसके लिए इंटरनेट चाहिए, जिसका इस्तेमाल Sceau कभी नहीं करता।</string>
+
+    <string name="about_section_usage">इस्तेमाल के नियम</string>
+    <string name="about_usage_holder">दस्तावेज़ तभी पढ़ा जाना चाहिए, जब उसका धारक खुद उसे पेश करे और इसके लिए सहमति दे।</string>
+    <string name="about_usage_biometrics">अगर फ़ोटो का इस्तेमाल चेहरों की अपने-आप तुलना के लिए किया जाए, तो GDPR के तहत वह बायोमेट्रिक डेटा मानी जाती है। Sceau ऐसी कोई तुलना नहीं करता और किसी खास कानूनी आधार के बिना इस काम के लिए इसका इस्तेमाल नहीं किया जाना चाहिए।</string>
+    <string name="about_usage_privacy">पढ़ा गया कोई भी डेटा न तो सेव किया जाता है और न ही कहीं भेजा जाता है: नतीजे से बाहर निकलने या ऐप को बैकग्राउंड में भेजने पर सब कुछ मेमोरी से मिटा दिया जाता है।</string>
+</resources>

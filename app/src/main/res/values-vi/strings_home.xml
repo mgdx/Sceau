@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">Tùy chọn khác</string>
+    <string name="home_menu_trust_store">Kho chứng chỉ tin cậy</string>
+    <string name="home_menu_about">Giới thiệu</string>
+    <string name="home_tab_id_card">Thẻ căn cước</string>
+    <string name="home_tab_passport">Hộ chiếu</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">Dãy 6 chữ số in ở mặt trước của thẻ</string>
+    <string name="home_document_number_label">Số giấy tờ</string>
+    <string name="home_document_number_supporting">Như in trên trang nhân thân, tối đa 9 ký tự</string>
+    <string name="home_date_of_birth_label">Ngày sinh</string>
+    <string name="home_date_of_expiry_label">Ngày hết hạn</string>
+    <string name="home_date_day">dd</string>
+    <string name="home_date_month">mm</string>
+    <string name="home_date_year">yyyy</string>
+    <string name="home_date_format">Định dạng: %1$s</string>
+    <string name="home_date_error_invalid">Ngày này không tồn tại</string>
+    <string name="home_date_error_future">Ngày sinh không thể ở tương lai</string>
+    <string name="home_date_error_too_old">Ngày hết hạn quá cũ (trước năm %1$d)</string>
+    <string name="home_holder_notice">Giấy tờ phải do chính người mang giấy tờ xuất trình.</string>
+    <string name="home_read">Đọc</string>
+    <string name="home_nfc_disabled">NFC đang tắt. Hãy bật NFC để đọc chip của giấy tờ.</string>
+    <string name="home_nfc_settings">Mở cài đặt NFC</string>
+    <string name="home_nfc_absent">Điện thoại này không có NFC: không thể đọc chip của giấy tờ tùy thân.</string>
+    <string name="home_menu_demo">Mô phỏng CNIe (bản minh họa)</string>
+</resources>
