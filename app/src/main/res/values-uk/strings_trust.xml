@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trust_title">Сховище сертифікатів</string>
+    <string name="trust_back">Назад</string>
+    <string name="trust_intro">Кореневі сертифікати (CSCA) країн, що видають документи, за якими перевіряється підпис документів. Персональні дані через цей екран не передаються.</string>
+    <plurals name="trust_summary">
+        <item quantity="one">%1$d сертифікат, країн: %2$d</item>
+        <item quantity="few">%1$d сертифікати, країн: %2$d</item>
+        <item quantity="many">%1$d сертифікатів, країн: %2$d</item>
+        <item quantity="other">%1$d сертифіката, країн: %2$d</item>
+    </plurals>
+    <string name="trust_loading">Завантаження сховища сертифікатів…</string>
+    <string name="trust_load_error">Не вдалося завантажити сховище сертифікатів.</string>
+    <string name="trust_retry">Повторити</string>
+    <string name="trust_empty">У сховищі немає жодного сертифіката.</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">Країну не вказано</string>
+    <plurals name="trust_country_count">
+        <item quantity="one">%1$d сертифікат</item>
+        <item quantity="few">%1$d сертифікати</item>
+        <item quantity="many">%1$d сертифікатів</item>
+        <item quantity="other">%1$d сертифіката</item>
+    </plurals>
+    <string name="trust_country_expand">Показати сертифікати</string>
+    <string name="trust_country_collapse">Сховати сертифікати</string>
+    <string name="trust_validity">Дійсний з %1$s до %2$s</string>
+    <string name="trust_fingerprint">Відбиток SHA-256</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_national">Національна публікація</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">Імпортовано</string>
+    <string name="trust_link_certificate">Сполучний сертифікат</string>
+
+    <!-- Import -->
+    <string name="trust_import">Імпортувати Master List</string>
+    <string name="trust_busy">Зачекайте…</string>
+    <string name="trust_import_confirm_title">Імпортувати цей Master List?</string>
+    <string name="trust_import_confirm_text">Його підпис дійсний. Перед імпортом переконайтеся, що відбиток підписувача збігається з відбитком, опублікованим органом, що видав цей список.</string>
+    <string name="trust_import_signer">Підписувач</string>
+    <string name="trust_import_signer_fingerprint">Відбиток SHA-256 підписувача</string>
+    <string name="trust_import_signing_date">Дата підпису</string>
+    <string name="trust_import_signing_date_unknown">Не вказано</string>
+    <string name="trust_import_certificate_count">Кількість сертифікатів</string>
+    <string name="trust_import_confirm">Імпортувати</string>
+    <string name="trust_cancel">Скасувати</string>
+    <plurals name="trust_import_done">
+        <item quantity="one">Master List імпортовано: %1$d сертифікат.</item>
+        <item quantity="few">Master List імпортовано: %1$d сертифікати.</item>
+        <item quantity="many">Master List імпортовано: %1$d сертифікатів.</item>
+        <item quantity="other">Master List імпортовано: %1$d сертифіката.</item>
+    </plurals>
+    <string name="trust_import_invalid">Цей файл не є дійсним Master List: нечитабельний формат або неправильний підпис (%1$s).</string>
+    <string name="trust_import_too_large">Файл відхилено: він перевищує 20 МБ.</string>
+    <string name="trust_import_read_error">Не вдалося прочитати цей файл.</string>
+    <string name="trust_import_write_error">Не вдалося зберегти Master List.</string>
+    <plurals name="trust_import_limit_count">
+        <item quantity="one">Імпорт відхилено: можна імпортувати щонайбільше %1$d Master List. Видаліть імпортовані сертифікати, щоб додати інший.</item>
+        <item quantity="few">Імпорт відхилено: можна імпортувати щонайбільше %1$d Master List. Видаліть імпортовані сертифікати, щоб додати інший.</item>
+        <item quantity="many">Імпорт відхилено: можна імпортувати щонайбільше %1$d Master List. Видаліть імпортовані сертифікати, щоб додати інший.</item>
+        <item quantity="other">Імпорт відхилено: можна імпортувати щонайбільше %1$d Master List. Видаліть імпортовані сертифікати, щоб додати інший.</item>
+    </plurals>
+    <string name="trust_import_limit_size">Імпорт відхилено: імпортовані Master List разом перевищили б %1$d МБ. Видаліть імпортовані сертифікати, щоб додати інший.</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">Видалити імпортовані сертифікати</string>
+    <string name="trust_delete_confirm_title">Видалити імпортовані сертифікати?</string>
+    <string name="trust_delete_confirm_text">Імпортовані Master List буде видалено. Сертифікати, вбудовані в застосунок, залишаться.</string>
+    <string name="trust_delete_confirm">Видалити</string>
+    <string name="trust_delete_done">Імпортовані сертифікати видалено.</string>
+    <string name="trust_delete_error">Не вдалося видалити імпортовані сертифікати.</string>
+</resources>

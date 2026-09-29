@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trust_title">Patikimų sertifikatų saugykla</string>
+    <string name="trust_back">Atgal</string>
+    <string name="trust_intro">Dokumentus išduodančių šalių šakniniai sertifikatai (CSCA), naudojami dokumentų parašui tikrinti. Šiame ekrane jokie asmens duomenys neapdorojami.</string>
+    <plurals name="trust_summary">
+        <item quantity="one">%1$d sertifikatas, šalių: %2$d</item>
+        <item quantity="few">%1$d sertifikatai, šalių: %2$d</item>
+        <item quantity="many">%1$d sertifikato, šalių: %2$d</item>
+        <item quantity="other">%1$d sertifikatų, šalių: %2$d</item>
+    </plurals>
+    <string name="trust_loading">Įkeliama patikimų sertifikatų saugykla…</string>
+    <string name="trust_load_error">Nepavyko įkelti patikimų sertifikatų saugyklos.</string>
+    <string name="trust_retry">Bandyti dar kartą</string>
+    <string name="trust_empty">Patikimų sertifikatų saugykloje nėra sertifikatų.</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">Šalis nenurodyta</string>
+    <plurals name="trust_country_count">
+        <item quantity="one">%1$d sertifikatas</item>
+        <item quantity="few">%1$d sertifikatai</item>
+        <item quantity="many">%1$d sertifikato</item>
+        <item quantity="other">%1$d sertifikatų</item>
+    </plurals>
+    <string name="trust_country_expand">Rodyti sertifikatus</string>
+    <string name="trust_country_collapse">Slėpti sertifikatus</string>
+    <string name="trust_validity">Galioja nuo %1$s iki %2$s</string>
+    <string name="trust_fingerprint">SHA-256 kontrolinė suma</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_national">Nacionalinis leidinys</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">Importuotas</string>
+    <string name="trust_link_certificate">Susiejimo sertifikatas</string>
+
+    <!-- Import -->
+    <string name="trust_import">Importuoti Master List</string>
+    <string name="trust_busy">Palaukite…</string>
+    <string name="trust_import_confirm_title">Importuoti šį Master List?</string>
+    <string name="trust_import_confirm_text">Jo parašas galioja. Prieš importuodami patikrinkite, ar pasirašančiojo kontrolinė suma sutampa su ta, kurią paskelbė išduodančioji institucija.</string>
+    <string name="trust_import_signer">Pasirašantysis</string>
+    <string name="trust_import_signer_fingerprint">Pasirašančiojo SHA-256 kontrolinė suma</string>
+    <string name="trust_import_signing_date">Pasirašymo data</string>
+    <string name="trust_import_signing_date_unknown">Nenurodyta</string>
+    <string name="trust_import_certificate_count">Sertifikatų skaičius</string>
+    <string name="trust_import_confirm">Importuoti</string>
+    <string name="trust_cancel">Atšaukti</string>
+    <plurals name="trust_import_done">
+        <item quantity="one">Master List importuotas: %1$d sertifikatas.</item>
+        <item quantity="few">Master List importuotas: %1$d sertifikatai.</item>
+        <item quantity="many">Master List importuotas: %1$d sertifikato.</item>
+        <item quantity="other">Master List importuotas: %1$d sertifikatų.</item>
+    </plurals>
+    <string name="trust_import_invalid">Šis failas nėra galiojantis Master List: neįskaitomas formatas arba neteisingas parašas (%1$s).</string>
+    <string name="trust_import_too_large">Failas atmestas: jis didesnis nei 20 MB.</string>
+    <string name="trust_import_read_error">Nepavyko nuskaityti šio failo.</string>
+    <string name="trust_import_write_error">Nepavyko išsaugoti Master List.</string>
+    <plurals name="trust_import_limit_count">
+        <item quantity="one">Importuoti neleidžiama: galima importuoti ne daugiau kaip %1$d Master List. Ištrinkite importuotus sertifikatus, kad pridėtumėte kitą.</item>
+        <item quantity="few">Importuoti neleidžiama: galima importuoti ne daugiau kaip %1$d Master List. Ištrinkite importuotus sertifikatus, kad pridėtumėte kitą.</item>
+        <item quantity="many">Importuoti neleidžiama: galima importuoti ne daugiau kaip %1$d Master List. Ištrinkite importuotus sertifikatus, kad pridėtumėte kitą.</item>
+        <item quantity="other">Importuoti neleidžiama: galima importuoti ne daugiau kaip %1$d Master List. Ištrinkite importuotus sertifikatus, kad pridėtumėte kitą.</item>
+    </plurals>
+    <string name="trust_import_limit_size">Importuoti neleidžiama: importuotų Master List bendras dydis viršytų %1$d MB. Ištrinkite importuotus sertifikatus, kad pridėtumėte kitą.</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">Ištrinti importuotus sertifikatus</string>
+    <string name="trust_delete_confirm_title">Ištrinti importuotus sertifikatus?</string>
+    <string name="trust_delete_confirm_text">Importuoti Master List bus ištrinti. Programoje integruoti sertifikatai paliekami.</string>
+    <string name="trust_delete_confirm">Ištrinti</string>
+    <string name="trust_delete_done">Importuoti sertifikatai ištrinti.</string>
+    <string name="trust_delete_error">Nepavyko ištrinti importuotų sertifikatų.</string>
+</resources>

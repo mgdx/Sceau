@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reading_title">Ανάγνωση εγγράφου</string>
+    <string name="reading_prompt">Τοποθετήστε το έγγραφο στο πίσω μέρος του τηλεφώνου και μην το απομακρύνετε</string>
+    <string name="reading_step_connect">Σύνδεση με το τσιπ</string>
+    <string name="reading_step_secure_channel">Άνοιγμα ασφαλούς καναλιού (PACE ή BAC)</string>
+    <string name="reading_step_read_data">Ανάγνωση δεδομένων</string>
+    <string name="reading_step_verify_signature">Επαλήθευση υπογραφής</string>
+    <string name="reading_step_verify_chip">Επαλήθευση τσιπ</string>
+    <string name="reading_step_pending">σε αναμονή</string>
+    <string name="reading_step_in_progress">σε εξέλιξη</string>
+    <string name="reading_step_done">ολοκληρώθηκε</string>
+    <string name="reading_error_title">Η ανάγνωση διακόπηκε</string>
+    <string name="reading_slow_chip">Το τσιπ του εγγράφου καθυστερεί την απάντηση, συχνά μετά από αποτυχημένες προσπάθειες. Κρατήστε το έγγραφο ακίνητο· αυτό μπορεί να διαρκέσει έως ένα λεπτό.</string>
+    <string name="reading_error_access_denied">Ο CAN ή τα δεδομένα της MRZ είναι εσφαλμένα. Ελέγξτε τον αριθμό και τις ημερομηνίες που καταχωρίσατε και δοκιμάστε ξανά. Κάθε αποτυχημένη προσπάθεια μπορεί να αυξήσει τον χρόνο που επιβάλλει το τσιπ πριν απαντήσει.</string>
+    <string name="reading_error_connection_lost">Το έγγραφο απομακρύνθηκε πολύ νωρίς. Κρατήστε το ακίνητο πάνω στο τηλέφωνο μέχρι το τέλος της ανάγνωσης.</string>
+    <string name="reading_error_not_icao">Αυτό το έγγραφο δεν συμμορφώνεται με το πρότυπο ICAO 9303: το τσιπ του δεν μπορεί να διαβαστεί.</string>
+    <string name="reading_error_timeout">Λήξη χρονικού ορίου: το τσιπ δεν απάντησε εγκαίρως. Δοκιμάστε ξανά κρατώντας το έγγραφο ακίνητο.</string>
+    <string name="reading_error_can_without_pace">Αυτό το έγγραφο δεν διαβάζεται με CAN. Χρησιμοποιήστε την καρτέλα Διαβατήριο και καταχωρίστε τα δεδομένα της MRZ.</string>
+    <string name="reading_error_unexpected">Παρουσιάστηκε μη αναμενόμενο σφάλμα.</string>
+    <string name="reading_error_code">Κωδικός σφάλματος: %1$s</string>
+    <string name="reading_retry">Επανάληψη</string>
+    <string name="reading_cancel">Ακύρωση</string>
+</resources>

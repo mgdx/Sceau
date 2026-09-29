@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reading_title">Зчитування документа</string>
+    <string name="reading_prompt">Прикладіть документ до задньої панелі телефона й не забирайте його</string>
+    <string name="reading_step_connect">З’єднання з чипом</string>
+    <string name="reading_step_secure_channel">Відкриття захищеного каналу (PACE або BAC)</string>
+    <string name="reading_step_read_data">Зчитування даних</string>
+    <string name="reading_step_verify_signature">Перевірка підпису</string>
+    <string name="reading_step_verify_chip">Перевірка чипа</string>
+    <string name="reading_step_pending">очікування</string>
+    <string name="reading_step_in_progress">виконується</string>
+    <string name="reading_step_done">завершено</string>
+    <string name="reading_error_title">Зчитування перервано</string>
+    <string name="reading_slow_chip">Чип документа змушує чекати, зазвичай після невдалих спроб. Тримайте документ нерухомо, це може тривати до хвилини.</string>
+    <string name="reading_error_access_denied">CAN або дані MRZ неправильні. Перевірте введений номер і дати, а потім повторіть спробу. Кожна невдала спроба може збільшити час, який чип вимагає зачекати перед відповіддю.</string>
+    <string name="reading_error_connection_lost">Документ забрали зарано. Тримайте його нерухомо біля телефона до завершення зчитування.</string>
+    <string name="reading_error_not_icao">Цей документ не відповідає стандарту ICAO 9303: його чип неможливо зчитати.</string>
+    <string name="reading_error_timeout">Час очікування минув: чип не відповів вчасно. Повторіть спробу, тримаючи документ нерухомо.</string>
+    <string name="reading_error_can_without_pace">Цей документ не зчитується за CAN. Відкрийте вкладку «Паспорт» і введіть дані MRZ.</string>
+    <string name="reading_error_unexpected">Сталася неочікувана помилка.</string>
+    <string name="reading_error_code">Код помилки: %1$s</string>
+    <string name="reading_retry">Повторити</string>
+    <string name="reading_cancel">Скасувати</string>
+</resources>

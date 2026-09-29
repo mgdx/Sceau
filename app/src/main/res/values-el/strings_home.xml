@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">Περισσότερες επιλογές</string>
+    <string name="home_menu_trust_store">Αξιόπιστα πιστοποιητικά</string>
+    <string name="home_menu_about">Σχετικά</string>
+    <string name="home_tab_id_card">Δελτίο ταυτότητας</string>
+    <string name="home_tab_passport">Διαβατήριο</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">Εξαψήφιος αριθμός τυπωμένος στην εμπρόσθια όψη της κάρτας</string>
+    <string name="home_document_number_label">Αριθμός εγγράφου</string>
+    <string name="home_document_number_supporting">Όπως είναι τυπωμένος στη σελίδα στοιχείων, έως 9 χαρακτήρες</string>
+    <string name="home_date_of_birth_label">Ημερομηνία γέννησης</string>
+    <string name="home_date_of_expiry_label">Ημερομηνία λήξης</string>
+    <string name="home_date_day">ΗΗ</string>
+    <string name="home_date_month">ΜΜ</string>
+    <string name="home_date_year">ΕΕΕΕ</string>
+    <string name="home_date_format">Μορφή: %1$s</string>
+    <string name="home_date_error_invalid">Αυτή η ημερομηνία δεν υπάρχει</string>
+    <string name="home_date_error_future">Η ημερομηνία γέννησης δεν μπορεί να είναι στο μέλλον</string>
+    <string name="home_date_error_too_old">Πολύ παλιά ημερομηνία λήξης (πριν από το %1$d)</string>
+    <string name="home_holder_notice">Το έγγραφο πρέπει να επιδεικνύεται από τον κάτοχό του.</string>
+    <string name="home_read">Ανάγνωση</string>
+    <string name="home_nfc_disabled">Το NFC είναι απενεργοποιημένο. Ενεργοποιήστε το για να διαβάσετε το τσιπ του εγγράφου.</string>
+    <string name="home_nfc_settings">Άνοιγμα ρυθμίσεων NFC</string>
+    <string name="home_nfc_absent">Αυτό το τηλέφωνο δεν διαθέτει NFC: δεν μπορεί να διαβάσει το τσιπ των εγγράφων ταυτότητας.</string>
+    <string name="home_menu_demo">Προσομοίωση γαλλικής ταυτότητας (επίδειξη)</string>
+</resources>

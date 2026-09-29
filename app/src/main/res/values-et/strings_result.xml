@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="result_title">Tulemus</string>
+    <string name="result_clear">Kustuta</string>
+
+    <!-- Verdict -->
+    <string name="result_verdict_authentic">Ehtne</string>
+    <string name="result_verdict_authentic_explanation">Väljaandja allkiri on kehtiv ja kiip tõestas, et see ei ole koopia.</string>
+    <string name="result_verdict_chip_unverified">Allkiri kehtiv, kiip kontrollimata</string>
+    <string name="result_verdict_chip_unverified_explanation">Andmed on väljaandja allkirjastatud, kuid kiip ei võimalda tõestada, et see on originaal: see võib olla kloon.</string>
+    <string name="result_verdict_unknown_issuer">Tundmatu väljaandja</string>
+    <string name="result_verdict_unknown_issuer_explanation">Väljaandja sertifikaati pole usaldushoidlas. Andmed kuvatakse, kuid midagi ei ole tagatud. Uuema Master Listi importimine võib võimaldada seda dokumenti kontrollida.</string>
+    <string name="result_verdict_failed">Ebaõnnestus</string>
+    <string name="result_verdict_failed_explanation">Vähemalt üks kontroll ebaõnnestus: seda dokumenti ei tohi pidada ehtsaks.</string>
+    <string name="result_verdict_imported_anchor">Kontrollitud teie imporditud sertifikaadi abil</string>
+
+    <!-- Photo -->
+    <string name="result_photo_description">Dokumendi kasutaja foto</string>
+    <string name="result_photo_unavailable">Foto on loetamatu või puudub</string>
+    <string name="result_photo_fullscreen">Kuva foto täisekraanil</string>
+    <string name="result_photo_close">Sulge</string>
+    <string name="result_image_front">Esikülje kujutis</string>
+    <string name="result_image_rear">Tagakülje kujutis</string>
+    <string name="result_image_unavailable">Kujutis on loetamatu</string>
+
+    <!-- Identité -->
+    <string name="result_section_identity">Isikuandmed</string>
+    <string name="result_expired">Dokument on aegunud</string>
+    <string name="result_field_surname">Perekonnanimi</string>
+    <string name="result_field_given_names">Eesnimed</string>
+    <string name="result_field_sex">Sugu</string>
+    <string name="result_field_birth_date">Sünniaeg</string>
+    <string name="result_field_nationality">Kodakondsus</string>
+    <string name="result_field_document_type">Dokumendi liik</string>
+    <string name="result_field_document_number">Dokumendi number</string>
+    <string name="result_field_issuing_state">Väljaandja riik</string>
+    <string name="result_field_expiry_date">Kehtiv kuni</string>
+    <string name="result_sex_male">Mees</string>
+    <string name="result_sex_female">Naine</string>
+    <string name="result_sex_unspecified">Määramata</string>
+    <string name="result_document_passport">Pass</string>
+    <string name="result_document_identity_card">ID-kaart</string>
+    <string name="result_document_other">Muu reisidokument</string>
+    <string name="result_value_with_code">%1$s (%2$s)</string>
+    <string name="result_unknown_value">Teadmata</string>
+
+    <!-- Pays spéciaux ICAO -->
+    <string name="result_country_united_nations">Ühinenud Rahvaste Organisatsioon</string>
+    <string name="result_country_un_agency">ÜRO eriasutus</string>
+    <string name="result_country_un_kosovo">Kosovo (UNMIK)</string>
+    <string name="result_country_stateless">Kodakondsuseta isik</string>
+    <string name="result_country_refugee">Pagulane (1951. aasta konventsioon)</string>
+    <string name="result_country_refugee_other">Pagulane</string>
+    <string name="result_country_unspecified">Kodakondsus määramata</string>
+
+    <!-- Données complémentaires -->
+    <string name="result_section_additional">Lisaandmed</string>
+    <string name="result_field_full_name">Täisnimi</string>
+    <string name="result_field_other_names">Muud nimed</string>
+    <string name="result_field_personal_number">Isikukood</string>
+    <string name="result_field_full_birth_date">Täielik sünniaeg</string>
+    <string name="result_field_place_of_birth">Sünnikoht</string>
+    <string name="result_field_address">Aadress</string>
+    <string name="result_field_telephone">Telefon</string>
+    <string name="result_field_profession">Amet</string>
+    <string name="result_field_title">Tiitel</string>
+    <string name="result_field_personal_summary">Isiku kokkuvõte</string>
+    <string name="result_field_other_td_numbers">Muud kehtivad reisidokumendid</string>
+    <string name="result_field_custody">Hooldusõiguse andmed</string>
+    <string name="result_field_issuing_authority">Väljaandja asutus</string>
+    <string name="result_field_issue_date">Väljaandmise kuupäev</string>
+    <string name="result_field_other_persons">Muud märgitud isikud</string>
+    <string name="result_field_endorsements">Märked ja tähelepanekud</string>
+    <string name="result_field_tax_exit">Maksu- või väljasõidukohustused</string>
+    <string name="result_field_personalization_time">Isikustamise kuupäev</string>
+    <string name="result_field_personalization_device">Isikustamissüsteemi number</string>
+
+    <!-- Vérifications -->
+    <string name="result_section_checks">Kontrollid</string>
+    <string name="result_check_secure_channel">Turvaline kanal loodud</string>
+    <string name="result_check_sod_signature">SOD allkiri kehtiv</string>
+    <string name="result_check_chain">Sertifitseerimisahel</string>
+    <string name="result_check_ds_validity">DS-sertifikaadi kehtivus</string>
+    <string name="result_check_dg_hashes">Andmerühmade räsid</string>
+    <string name="result_check_chip_authentication">Chip Authentication (DG14)</string>
+    <string name="result_check_active_authentication">Active Authentication (DG15)</string>
+    <string name="result_status_ok">Õnnestus</string>
+    <string name="result_status_failed">Ebaõnnestus</string>
+    <string name="result_status_not_available">Pole saadaval</string>
+    <string name="result_status_unsupported">Algoritmi ei toetata</string>
+    <string name="result_check_expand">Kuva üksikasjad</string>
+    <string name="result_check_collapse">Peida üksikasjad</string>
+
+    <!-- Détail des vérifications -->
+    <string name="result_detail_protocol">Protokoll: %1$s</string>
+    <string name="result_detail_ca_method">Meetod: %1$s</string>
+    <string name="result_detail_ca_method_dg14">Chip Authentication DG14 võtmega</string>
+    <string name="result_detail_ca_method_pace_cam">PACE-CAM kanali avamise ajal, EF.CardSecurity võtmega</string>
+    <string name="result_detail_algorithm">Allkirjaalgoritm: %1$s</string>
+    <string name="result_detail_csca">CSCA: %1$s</string>
+    <string name="result_detail_csca_none">Ükski hoidla CSCA ei sobi.</string>
+    <string name="result_detail_country">Riik: %1$s</string>
+    <string name="result_detail_country_mismatch">Riigid ei ühti: sertifitseerimiskeskus %1$s, allkirjastaja sertifikaat %2$s, dokument %3$s</string>
+    <string name="result_detail_source">Allikas: %1$s</string>
+    <string name="result_detail_source_ants">ANTS-i sertifikaadid</string>
+    <string name="result_detail_source_national">väljaandja riigi avaldatud sertifikaadid</string>
+    <string name="result_detail_source_embedded">sisseehitatud Master List</string>
+    <string name="result_detail_source_imported">imporditud Master List</string>
+    <string name="result_detail_ds_subject">DS-sertifikaat: %1$s</string>
+    <string name="result_detail_links">Läbitud lingisertifikaadid:</string>
+    <string name="result_detail_link_item">• %1$s</string>
+    <string name="result_detail_links_none">Ühtegi lingisertifikaati ei läbitud.</string>
+    <string name="result_detail_ds_missing">DS-sertifikaati pole SOD-is ega usaldushoidlas.</string>
+    <string name="result_detail_ds_period">DS-i kehtivusaeg: %1$s – %2$s</string>
+    <string name="result_detail_issuance">Väljaandmise kuupäev: %1$s (%2$s)</string>
+    <string name="result_detail_issuance_no_source">Väljaandmise kuupäev: %1$s</string>
+    <string name="result_detail_issuance_unknown">Väljaandmise kuupäev on teadmata.</string>
+    <string name="result_detail_issuance_dg12">loetud DG12-st</string>
+    <string name="result_detail_issuance_sod">SOD allkirjastamise kuupäev</string>
+    <string name="result_detail_issuance_estimated">hinnanguline</string>
+    <string name="result_detail_digest_algorithm">Räsialgoritm: %1$s</string>
+    <string name="result_detail_dg_checked">Kontrollitud andmerühmad: %1$s</string>
+    <string name="result_detail_dg_checked_none">Ühtegi andmerühma ei kontrollitud.</string>
+    <string name="result_detail_dg_mismatched">Mittevastavad räsid: %1$s</string>
+    <string name="result_detail_dg_all_match">Kõik räsid vastavad.</string>
+    <string name="result_detail_dg_missing">Teatatud, kuid kiibi poolt esitamata andmerühmad: %1$s</string>
+    <string name="result_detail_unsupported">Algoritmi ei toetata: %1$s</string>
+    <string name="result_detail_error">Tehniline viga: %1$s</string>
+    <string name="result_detail_no_dg14">Dokumendis pole DG14-t: kiip seda kontrolli ei paku.</string>
+    <string name="result_detail_no_dg15">Dokumendis pole DG15-t: kiip seda kontrolli ei paku.</string>
+    <string name="result_detail_not_reached">Etappi ei tehtud.</string>
+    <string name="result_detail_none">Lisateave puudub.</string>
+    <string name="result_demo_banner">Simuleeritud dokument – demo</string>
+</resources>

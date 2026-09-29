@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">Teave</string>
+    <string name="about_back">Tagasi</string>
+    <string name="about_tagline">ICAO 9303 isikut tõendavate dokumentide kiibi lugemine ja kontrollimine võrguühenduseta.</string>
+    <string name="about_version">Versioon %1$s</string>
+    <string name="about_version_unknown">Tundmatu versioon</string>
+
+    <string name="about_section_license">Litsents ja lähtekood</string>
+    <string name="about_license">Vaba tarkvara, mida levitatakse GNU GPL versiooni 3 või hilisema litsentsi alusel.</string>
+    <string name="about_open_repository">Vaata lähtekoodi</string>
+    <string name="about_no_browser">Ükski rakendus ei saa seda linki avada.</string>
+
+    <string name="about_section_trust">Sisseehitatud usaldushoidla</string>
+    <string name="about_trust_ants_only">ANTS-i Prantsuse CSCA-d (passid ja isikutunnistused).</string>
+    <string name="about_trust_ants_and_bsi">ANTS-i Prantsuse CSCA-d ja BSI Saksa Master List.</string>
+    <string name="about_trust_master_list_date">Master List on allkirjastatud %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">Master Listi allkirjastamise kuupäev pole märgitud.</string>
+    <string name="about_trust_bsi_notice">BSI (Saksamaa Liidu Infoturbeamet) Master Listi levitatakse muutmata kujul, ilma BSI koostöö ja heakskiiduta.</string>
+    <string name="about_trust_national">Järgmiste riikide poolt oma dokumentide jaoks avaldatud sertifikaadid: %1$s.</string>
+    <string name="about_trust_ogl_notice">Sisaldab Ühendkuningriigi avaliku sektori teavet, mis on avaldatud litsentsi Open Government Licence v3.0 alusel.</string>
+    <string name="about_trust_loading">Laadimine…</string>
+    <string name="about_trust_error">Usaldushoidlat ei õnnestunud laadida.</string>
+
+    <string name="about_section_limits">Piirangud</string>
+    <string name="about_limit_unknown_issuer">Kui dokumendi väljaandnud riiki usaldushoidlas pole, on otsus „Tundmatu väljaandja“, mitte „Ebaõnnestus“. Uuema Master Listi importimine võib selle lahendada.</string>
+    <string name="about_limit_revocation">Tühistusnimekirju ei kontrollita: selleks on vaja võrguühendust, mida Sceau kunagi ei kasuta.</string>
+
+    <string name="about_section_usage">Kasutustingimused</string>
+    <string name="about_usage_holder">Lugemine eeldab, et dokumendi kasutaja esitab oma dokumendi ise ja on lugemisega nõus.</string>
+    <string name="about_usage_biometrics">Foto muutub isikuandmete kaitse üldmääruse (IKÜM) tähenduses biomeetriliseks andmeks, kui seda kasutatakse nägude automaatseks võrdlemiseks. Sceau sellist võrdlust ei tee ja seda ei tohi selleks kasutada ilma konkreetse õigusliku aluseta.</string>
+    <string name="about_usage_privacy">Loetud andmeid ei salvestata ega saadeta: kõik kustutatakse mälust, kui lahkute tulemuse ekraanilt või viite rakenduse taustale.</string>
+</resources>

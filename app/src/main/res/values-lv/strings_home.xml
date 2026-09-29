@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">Vairāk opciju</string>
+    <string name="home_menu_trust_store">Uzticamības krātuve</string>
+    <string name="home_menu_about">Par lietotni</string>
+    <string name="home_tab_id_card">Personas apliecība</string>
+    <string name="home_tab_passport">Pase</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">6 ciparu numurs, kas uzdrukāts apliecības priekšpusē</string>
+    <string name="home_document_number_label">Dokumenta numurs</string>
+    <string name="home_document_number_supporting">Kā norādīts datu lapā, ne vairāk kā 9 rakstzīmes</string>
+    <string name="home_date_of_birth_label">Dzimšanas datums</string>
+    <string name="home_date_of_expiry_label">Derīguma termiņš</string>
+    <string name="home_date_day">DD</string>
+    <string name="home_date_month">MM</string>
+    <string name="home_date_year">GGGG</string>
+    <string name="home_date_format">Formāts: %1$s</string>
+    <string name="home_date_error_invalid">Šāds datums neeksistē</string>
+    <string name="home_date_error_future">Dzimšanas datums nevar būt nākotnē</string>
+    <string name="home_date_error_too_old">Derīguma termiņš ir pārāk sens (pirms %1$d)</string>
+    <string name="home_holder_notice">Dokumentu jāuzrāda tā turētājam.</string>
+    <string name="home_read">Nolasīt</string>
+    <string name="home_nfc_disabled">NFC ir izslēgts. Ieslēdziet to, lai nolasītu dokumenta mikroshēmu.</string>
+    <string name="home_nfc_settings">Atvērt NFC iestatījumus</string>
+    <string name="home_nfc_absent">Šim tālrunim nav NFC, tāpēc tas nevar nolasīt personu apliecinošo dokumentu mikroshēmu.</string>
+    <string name="home_menu_demo">Simulēt Francijas personas apliecību (demo)</string>
+</resources>

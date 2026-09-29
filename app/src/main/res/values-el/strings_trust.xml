@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trust_title">Αξιόπιστα πιστοποιητικά</string>
+    <string name="trust_back">Πίσω</string>
+    <string name="trust_intro">Πιστοποιητικά ρίζας (CSCA) των χωρών έκδοσης, που χρησιμοποιούνται για την επαλήθευση της υπογραφής των εγγράφων. Κανένα προσωπικό δεδομένο δεν διέρχεται από αυτή την οθόνη.</string>
+    <plurals name="trust_summary">
+        <item quantity="one">%1$d πιστοποιητικό, χώρες: %2$d</item>
+        <item quantity="other">%1$d πιστοποιητικά, χώρες: %2$d</item>
+    </plurals>
+    <string name="trust_loading">Φόρτωση αξιόπιστων πιστοποιητικών…</string>
+    <string name="trust_load_error">Δεν ήταν δυνατή η φόρτωση των αξιόπιστων πιστοποιητικών.</string>
+    <string name="trust_retry">Επανάληψη</string>
+    <string name="trust_empty">Δεν υπάρχουν αξιόπιστα πιστοποιητικά.</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">Χώρα μη καθορισμένη</string>
+    <plurals name="trust_country_count">
+        <item quantity="one">%1$d πιστοποιητικό</item>
+        <item quantity="other">%1$d πιστοποιητικά</item>
+    </plurals>
+    <string name="trust_country_expand">Εμφάνιση πιστοποιητικών</string>
+    <string name="trust_country_collapse">Απόκρυψη πιστοποιητικών</string>
+    <string name="trust_validity">Ισχύει από %1$s έως %2$s</string>
+    <string name="trust_fingerprint">Αποτύπωμα SHA-256</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_national">Εθνική δημοσίευση</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">Εισαγόμενο</string>
+    <string name="trust_link_certificate">Πιστοποιητικό σύνδεσης</string>
+
+    <!-- Import -->
+    <string name="trust_import">Εισαγωγή Master List</string>
+    <string name="trust_busy">Περιμένετε…</string>
+    <string name="trust_import_confirm_title">Εισαγωγή αυτής της Master List;</string>
+    <string name="trust_import_confirm_text">Η υπογραφή της είναι έγκυρη. Πριν από την εισαγωγή, βεβαιωθείτε ότι το αποτύπωμα του υπογράφοντος αντιστοιχεί σε αυτό που δημοσιεύει η αρχή έκδοσης.</string>
+    <string name="trust_import_signer">Υπογράφων</string>
+    <string name="trust_import_signer_fingerprint">Αποτύπωμα SHA-256 του υπογράφοντος</string>
+    <string name="trust_import_signing_date">Ημερομηνία υπογραφής</string>
+    <string name="trust_import_signing_date_unknown">Δεν αναφέρεται</string>
+    <string name="trust_import_certificate_count">Αριθμός πιστοποιητικών</string>
+    <string name="trust_import_confirm">Εισαγωγή</string>
+    <string name="trust_cancel">Ακύρωση</string>
+    <plurals name="trust_import_done">
+        <item quantity="one">Η Master List εισήχθη: %1$d πιστοποιητικό.</item>
+        <item quantity="other">Η Master List εισήχθη: %1$d πιστοποιητικά.</item>
+    </plurals>
+    <string name="trust_import_invalid">Αυτό το αρχείο δεν είναι έγκυρη Master List: μη αναγνώσιμη μορφή ή εσφαλμένη υπογραφή (%1$s).</string>
+    <string name="trust_import_too_large">Το αρχείο απορρίφθηκε: υπερβαίνει τα 20 MB.</string>
+    <string name="trust_import_read_error">Δεν ήταν δυνατή η ανάγνωση αυτού του αρχείου.</string>
+    <string name="trust_import_write_error">Δεν ήταν δυνατή η αποθήκευση της Master List.</string>
+    <plurals name="trust_import_limit_count">
+        <item quantity="one">Η εισαγωγή απορρίφθηκε: επιτρέπεται έως %1$d εισαγόμενη Master List. Διαγράψτε τα εισαγόμενα πιστοποιητικά για να προσθέσετε άλλη.</item>
+        <item quantity="other">Η εισαγωγή απορρίφθηκε: επιτρέπονται έως %1$d εισαγόμενες Master List. Διαγράψτε τα εισαγόμενα πιστοποιητικά για να προσθέσετε άλλη.</item>
+    </plurals>
+    <string name="trust_import_limit_size">Η εισαγωγή απορρίφθηκε: οι εισαγόμενες Master List θα ξεπερνούσαν συνολικά τα %1$d MB. Διαγράψτε τα εισαγόμενα πιστοποιητικά για να προσθέσετε άλλη.</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">Διαγραφή εισαγόμενων πιστοποιητικών</string>
+    <string name="trust_delete_confirm_title">Διαγραφή εισαγόμενων πιστοποιητικών;</string>
+    <string name="trust_delete_confirm_text">Οι εισαγόμενες Master List θα διαγραφούν. Τα πιστοποιητικά που είναι ενσωματωμένα στην εφαρμογή διατηρούνται.</string>
+    <string name="trust_delete_confirm">Διαγραφή</string>
+    <string name="trust_delete_done">Τα εισαγόμενα πιστοποιητικά διαγράφηκαν.</string>
+    <string name="trust_delete_error">Δεν ήταν δυνατή η διαγραφή των εισαγόμενων πιστοποιητικών.</string>
+</resources>

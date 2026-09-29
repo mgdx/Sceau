@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">Інші параметри</string>
+    <string name="home_menu_trust_store">Сховище сертифікатів</string>
+    <string name="home_menu_about">Про застосунок</string>
+    <string name="home_tab_id_card">ID-картка</string>
+    <string name="home_tab_passport">Паспорт</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">6-значний номер на лицьовому боці картки</string>
+    <string name="home_document_number_label">Номер документа</string>
+    <string name="home_document_number_supporting">Як на сторінці з даними, не більше 9 символів</string>
+    <string name="home_date_of_birth_label">Дата народження</string>
+    <string name="home_date_of_expiry_label">Дійсний до</string>
+    <string name="home_date_day">ДД</string>
+    <string name="home_date_month">ММ</string>
+    <string name="home_date_year">РРРР</string>
+    <string name="home_date_format">Формат: %1$s</string>
+    <string name="home_date_error_invalid">Такої дати не існує</string>
+    <string name="home_date_error_future">Дата народження не може бути в майбутньому</string>
+    <string name="home_date_error_too_old">Дата закінчення строку дії надто давня (до %1$d)</string>
+    <string name="home_holder_notice">Документ має пред’являти його власник.</string>
+    <string name="home_read">Зчитати</string>
+    <string name="home_nfc_disabled">NFC вимкнено. Увімкніть його, щоб зчитати чип документа.</string>
+    <string name="home_nfc_settings">Відкрити налаштування NFC</string>
+    <string name="home_nfc_absent">Цей телефон не має NFC, тому не може зчитувати чип документів, що посвідчують особу.</string>
+    <string name="home_menu_demo">Імітувати французьку ID-картку (демо)</string>
+</resources>

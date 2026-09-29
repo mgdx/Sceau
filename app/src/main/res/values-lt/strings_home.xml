@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">Daugiau parinkčių</string>
+    <string name="home_menu_trust_store">Patikimų sertifikatų saugykla</string>
+    <string name="home_menu_about">Apie</string>
+    <string name="home_tab_id_card">Asmens tapatybės kortelė</string>
+    <string name="home_tab_passport">Pasas</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">6 skaitmenų numeris, išspausdintas kortelės priekinėje pusėje</string>
+    <string name="home_document_number_label">Dokumento numeris</string>
+    <string name="home_document_number_supporting">Kaip nurodyta asmens duomenų puslapyje, ne daugiau kaip 9 simboliai</string>
+    <string name="home_date_of_birth_label">Gimimo data</string>
+    <string name="home_date_of_expiry_label">Galioja iki</string>
+    <string name="home_date_day">DD</string>
+    <string name="home_date_month">MM</string>
+    <string name="home_date_year">MMMM</string>
+    <string name="home_date_format">Formatas: %1$s</string>
+    <string name="home_date_error_invalid">Tokios datos nėra</string>
+    <string name="home_date_error_future">Gimimo data negali būti ateityje</string>
+    <string name="home_date_error_too_old">Galiojimo data per sena (iki %1$d)</string>
+    <string name="home_holder_notice">Dokumentą turi pateikti jo turėtojas.</string>
+    <string name="home_read">Nuskaityti</string>
+    <string name="home_nfc_disabled">NFC išjungtas. Įjunkite jį, kad galėtumėte nuskaityti dokumento lustą.</string>
+    <string name="home_nfc_settings">Atidaryti NFC nustatymus</string>
+    <string name="home_nfc_absent">Šiame telefone nėra NFC, todėl jis negali nuskaityti asmens dokumentų lusto.</string>
+    <string name="home_menu_demo">Imituoti Prancūzijos asmens tapatybės kortelę (demonstracija)</string>
+</resources>

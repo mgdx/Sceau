@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">Par lietotni</string>
+    <string name="about_back">Atpakaļ</string>
+    <string name="about_tagline">ICAO 9303 personu apliecinošo dokumentu mikroshēmas nolasīšana un pārbaude bezsaistē.</string>
+    <string name="about_version">Versija %1$s</string>
+    <string name="about_version_unknown">Nezināma versija</string>
+
+    <string name="about_section_license">Licence un pirmkods</string>
+    <string name="about_license">Brīvā programmatūra, ko izplata saskaņā ar GNU GPL licences 3. vai jaunāku versiju.</string>
+    <string name="about_open_repository">Skatīt pirmkodu</string>
+    <string name="about_no_browser">Neviena lietotne nevar atvērt šo saiti.</string>
+
+    <string name="about_section_trust">Iebūvētā uzticamības krātuve</string>
+    <string name="about_trust_ants_only">ANTS izdotie Francijas CSCA (pases un personas apliecības).</string>
+    <string name="about_trust_ants_and_bsi">ANTS izdotie Francijas CSCA un BSI publicētā Vācijas Master List.</string>
+    <string name="about_trust_master_list_date">Master List parakstīta %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">Master List parakstīšanas datums nav norādīts.</string>
+    <string name="about_trust_bsi_notice">BSI (Vācijas Federālais informācijas drošības birojs) Master List tiek izplatīta bez izmaiņām, bez BSI līdzdalības vai apstiprinājuma.</string>
+    <string name="about_trust_national">Sertifikāti, ko savu dokumentu vajadzībām publicējušas šīs valstis: %1$s.</string>
+    <string name="about_trust_ogl_notice">Satur Apvienotās Karalistes publiskā sektora informāciju, kas publicēta saskaņā ar Open Government Licence v3.0.</string>
+    <string name="about_trust_loading">Ielādē…</string>
+    <string name="about_trust_error">Neizdevās ielādēt uzticamības krātuvi.</string>
+
+    <string name="about_section_limits">Ierobežojumi</string>
+    <string name="about_limit_unknown_issuer">Ja dokumenta izdevējvalsts nav uzticamības krātuvē, rezultāts ir “Nezināms izdevējs”, nevis “Neizdevās”. To var novērst, importējot jaunāku Master List.</string>
+    <string name="about_limit_revocation">Atsaukšanas saraksti netiek pārbaudīti: tiem nepieciešams tīkls, ko Sceau nekad neizmanto.</string>
+
+    <string name="about_section_usage">Lietošanas nosacījumi</string>
+    <string name="about_usage_holder">Nolasīšana paredz, ka dokumenta turētājs pats uzrāda savu dokumentu un tam piekrīt.</string>
+    <string name="about_usage_biometrics">Fotoattēls kļūst par biometriskajiem datiem VDAR izpratnē, ja to izmanto automatizētai seju salīdzināšanai. Sceau šādu salīdzināšanu neveic, un to nedrīkst šim nolūkam izmantot bez atbilstoša juridiskā pamata.</string>
+    <string name="about_usage_privacy">Nolasītie dati netiek ne saglabāti, ne nosūtīti: viss tiek dzēsts no atmiņas, izejot no rezultāta vai pārslēdzot lietotni fonā.</string>
+</resources>

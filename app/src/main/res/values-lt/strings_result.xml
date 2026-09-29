@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="result_title">Rezultatas</string>
+    <string name="result_clear">Išvalyti</string>
+
+    <!-- Verdict -->
+    <string name="result_verdict_authentic">Autentiškas</string>
+    <string name="result_verdict_authentic_explanation">Išdavėjo parašas galioja, o lustas įrodė, kad nėra kopija.</string>
+    <string name="result_verdict_chip_unverified">Parašas galioja, lustas nepatikrintas</string>
+    <string name="result_verdict_chip_unverified_explanation">Duomenis tikrai pasirašė išdavėjas, tačiau lustas negali įrodyti, kad yra originalus: jis gali būti klonas.</string>
+    <string name="result_verdict_unknown_issuer">Nežinomas išdavėjas</string>
+    <string name="result_verdict_unknown_issuer_explanation">Išdavėjo sertifikato nėra patikimų sertifikatų saugykloje. Duomenys rodomi, bet niekas negarantuojama. Importavus naujesnį Master List, šį dokumentą gali būti įmanoma patikrinti.</string>
+    <string name="result_verdict_failed">Nepavyko</string>
+    <string name="result_verdict_failed_explanation">Bent viena patikra nepavyko: šio dokumento negalima laikyti autentišku.</string>
+    <string name="result_verdict_imported_anchor">Patikrinta naudojant jūsų importuotą sertifikatą</string>
+
+    <!-- Photo -->
+    <string name="result_photo_description">Turėtojo nuotrauka</string>
+    <string name="result_photo_unavailable">Nuotrauka neįskaitoma arba jos nėra</string>
+    <string name="result_photo_fullscreen">Rodyti nuotrauką visame ekrane</string>
+    <string name="result_photo_close">Uždaryti</string>
+    <string name="result_image_front">Priekinės pusės vaizdas</string>
+    <string name="result_image_rear">Galinės pusės vaizdas</string>
+    <string name="result_image_unavailable">Vaizdas neįskaitomas</string>
+
+    <!-- Identité -->
+    <string name="result_section_identity">Asmens duomenys</string>
+    <string name="result_expired">Dokumento galiojimas pasibaigęs</string>
+    <string name="result_field_surname">Pavardė</string>
+    <string name="result_field_given_names">Vardai</string>
+    <string name="result_field_sex">Lytis</string>
+    <string name="result_field_birth_date">Gimimo data</string>
+    <string name="result_field_nationality">Pilietybė</string>
+    <string name="result_field_document_type">Dokumento tipas</string>
+    <string name="result_field_document_number">Dokumento numeris</string>
+    <string name="result_field_issuing_state">Išdavusi valstybė</string>
+    <string name="result_field_expiry_date">Galioja iki</string>
+    <string name="result_sex_male">Vyras</string>
+    <string name="result_sex_female">Moteris</string>
+    <string name="result_sex_unspecified">Nenurodyta</string>
+    <string name="result_document_passport">Pasas</string>
+    <string name="result_document_identity_card">Asmens tapatybės kortelė</string>
+    <string name="result_document_other">Kitas kelionės dokumentas</string>
+    <string name="result_value_with_code">%1$s (%2$s)</string>
+    <string name="result_unknown_value">Nežinoma</string>
+
+    <!-- Pays spéciaux ICAO -->
+    <string name="result_country_united_nations">Jungtinės Tautos</string>
+    <string name="result_country_un_agency">Jungtinių Tautų specializuotoji agentūra</string>
+    <string name="result_country_un_kosovo">Kosovas (UNMIK)</string>
+    <string name="result_country_stateless">Asmuo be pilietybės</string>
+    <string name="result_country_refugee">Pabėgėlis (1951 m. konvencija)</string>
+    <string name="result_country_refugee_other">Pabėgėlis</string>
+    <string name="result_country_unspecified">Pilietybė nenurodyta</string>
+
+    <!-- Données complémentaires -->
+    <string name="result_section_additional">Papildomi duomenys</string>
+    <string name="result_field_full_name">Vardas ir pavardė</string>
+    <string name="result_field_other_names">Kiti vardai</string>
+    <string name="result_field_personal_number">Asmens kodas</string>
+    <string name="result_field_full_birth_date">Visa gimimo data</string>
+    <string name="result_field_place_of_birth">Gimimo vieta</string>
+    <string name="result_field_address">Adresas</string>
+    <string name="result_field_telephone">Telefonas</string>
+    <string name="result_field_profession">Profesija</string>
+    <string name="result_field_title">Titulas</string>
+    <string name="result_field_personal_summary">Asmens aprašymas</string>
+    <string name="result_field_other_td_numbers">Kiti galiojantys kelionės dokumentai</string>
+    <string name="result_field_custody">Globos duomenys</string>
+    <string name="result_field_issuing_authority">Išdavusi institucija</string>
+    <string name="result_field_issue_date">Išdavimo data</string>
+    <string name="result_field_other_persons">Kiti nurodyti asmenys</string>
+    <string name="result_field_endorsements">Įrašai ir pastabos</string>
+    <string name="result_field_tax_exit">Mokestinės ar išvykimo prievolės</string>
+    <string name="result_field_personalization_time">Personalizavimo data</string>
+    <string name="result_field_personalization_device">Personalizavimo sistemos numeris</string>
+
+    <!-- Vérifications -->
+    <string name="result_section_checks">Patikros</string>
+    <string name="result_check_secure_channel">Saugus kanalas sukurtas</string>
+    <string name="result_check_sod_signature">SOD parašas galioja</string>
+    <string name="result_check_chain">Sertifikavimo grandinė</string>
+    <string name="result_check_ds_validity">DS sertifikato galiojimas</string>
+    <string name="result_check_dg_hashes">Duomenų grupių kontrolinės sumos</string>
+    <string name="result_check_chip_authentication">Chip Authentication (DG14)</string>
+    <string name="result_check_active_authentication">Active Authentication (DG15)</string>
+    <string name="result_status_ok">Pavyko</string>
+    <string name="result_status_failed">Nepavyko</string>
+    <string name="result_status_not_available">Nepasiekiama</string>
+    <string name="result_status_unsupported">Algoritmas nepalaikomas</string>
+    <string name="result_check_expand">Rodyti išsamią informaciją</string>
+    <string name="result_check_collapse">Slėpti išsamią informaciją</string>
+
+    <!-- Détail des vérifications -->
+    <string name="result_detail_protocol">Protokolas: %1$s</string>
+    <string name="result_detail_ca_method">Metodas: %1$s</string>
+    <string name="result_detail_ca_method_dg14">Chip Authentication naudojant DG14 raktą</string>
+    <string name="result_detail_ca_method_pace_cam">PACE-CAM, atidarant kanalą, naudojant EF.CardSecurity raktą</string>
+    <string name="result_detail_algorithm">Parašo algoritmas: %1$s</string>
+    <string name="result_detail_csca">CSCA: %1$s</string>
+    <string name="result_detail_csca_none">Saugykloje nėra atitinkančio CSCA.</string>
+    <string name="result_detail_country">Šalis: %1$s</string>
+    <string name="result_detail_country_mismatch">Šalys nesutampa: sertifikavimo institucija %1$s, pasirašančiojo sertifikatas %2$s, dokumentas %3$s</string>
+    <string name="result_detail_source">Šaltinis: %1$s</string>
+    <string name="result_detail_source_ants">ANTS sertifikatai</string>
+    <string name="result_detail_source_national">išdavusios valstybės paskelbti sertifikatai</string>
+    <string name="result_detail_source_embedded">integruotas Master List</string>
+    <string name="result_detail_source_imported">importuotas Master List</string>
+    <string name="result_detail_ds_subject">DS sertifikatas: %1$s</string>
+    <string name="result_detail_links">Panaudoti susiejimo sertifikatai:</string>
+    <string name="result_detail_link_item">• %1$s</string>
+    <string name="result_detail_links_none">Susiejimo sertifikatų nepanaudota.</string>
+    <string name="result_detail_ds_missing">DS sertifikato nėra nei SOD, nei patikimų sertifikatų saugykloje.</string>
+    <string name="result_detail_ds_period">DS galiojimo laikotarpis: nuo %1$s iki %2$s</string>
+    <string name="result_detail_issuance">Išdavimo data: %1$s (%2$s)</string>
+    <string name="result_detail_issuance_no_source">Išdavimo data: %1$s</string>
+    <string name="result_detail_issuance_unknown">Išdavimo data nežinoma.</string>
+    <string name="result_detail_issuance_dg12">nuskaityta iš DG12</string>
+    <string name="result_detail_issuance_sod">SOD pasirašymo data</string>
+    <string name="result_detail_issuance_estimated">apytikslė</string>
+    <string name="result_detail_digest_algorithm">Kontrolinės sumos algoritmas: %1$s</string>
+    <string name="result_detail_dg_checked">Patikrintos duomenų grupės: %1$s</string>
+    <string name="result_detail_dg_checked_none">Nepatikrinta nė viena duomenų grupė.</string>
+    <string name="result_detail_dg_mismatched">Nesutampančios kontrolinės sumos: %1$s</string>
+    <string name="result_detail_dg_all_match">Visos kontrolinės sumos sutampa.</string>
+    <string name="result_detail_dg_missing">Nurodytos, bet lusto nepateiktos duomenų grupės: %1$s</string>
+    <string name="result_detail_unsupported">Algoritmas nepalaikomas: %1$s</string>
+    <string name="result_detail_error">Techninė klaida: %1$s</string>
+    <string name="result_detail_no_dg14">Dokumente nėra DG14: lustas šios patikros nesiūlo.</string>
+    <string name="result_detail_no_dg15">Dokumente nėra DG15: lustas šios patikros nesiūlo.</string>
+    <string name="result_detail_not_reached">Veiksmas neatliktas.</string>
+    <string name="result_detail_none">Daugiau informacijos nėra.</string>
+    <string name="result_demo_banner">Imituotas dokumentas – demonstracija</string>
+</resources>

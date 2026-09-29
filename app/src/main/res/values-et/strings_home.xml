@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">Rohkem valikuid</string>
+    <string name="home_menu_trust_store">Usaldushoidla</string>
+    <string name="home_menu_about">Teave</string>
+    <string name="home_tab_id_card">ID-kaart</string>
+    <string name="home_tab_passport">Pass</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">Kaardi esiküljele trükitud 6-kohaline number</string>
+    <string name="home_document_number_label">Dokumendi number</string>
+    <string name="home_document_number_supporting">Nagu isikuandmete lehel, kuni 9 märki</string>
+    <string name="home_date_of_birth_label">Sünniaeg</string>
+    <string name="home_date_of_expiry_label">Kehtiv kuni</string>
+    <string name="home_date_day">PP</string>
+    <string name="home_date_month">KK</string>
+    <string name="home_date_year">AAAA</string>
+    <string name="home_date_format">Vorming: %1$s</string>
+    <string name="home_date_error_invalid">Sellist kuupäeva pole olemas</string>
+    <string name="home_date_error_future">Sünniaeg ei saa olla tulevikus</string>
+    <string name="home_date_error_too_old">Kehtivusaeg on liiga vana (enne aastat %1$d)</string>
+    <string name="home_holder_notice">Dokumendi peab esitama selle kasutaja.</string>
+    <string name="home_read">Loe</string>
+    <string name="home_nfc_disabled">NFC on välja lülitatud. Lülitage see sisse, et dokumendi kiipi lugeda.</string>
+    <string name="home_nfc_settings">Ava NFC seaded</string>
+    <string name="home_nfc_absent">Sellel telefonil pole NFC-d, seega ei saa see isikut tõendavate dokumentide kiipi lugeda.</string>
+    <string name="home_menu_demo">Simuleeri Prantsuse ID-kaarti (demo)</string>
+</resources>
