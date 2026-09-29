@@ -1,0 +1,2 @@
+# Débordements de texte connus, relevés par TextOverflowTest (D28) : une ligne « langue|clé ».
+# Le test échoue si un débordement absent de cette liste apparaît, ou si une ligne ne se produit plus.
