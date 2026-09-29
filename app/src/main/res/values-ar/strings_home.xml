@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">خيارات إضافية</string>
+    <string name="home_menu_trust_store">مخزن الثقة</string>
+    <string name="home_menu_about">حول التطبيق</string>
+    <string name="home_tab_id_card">بطاقة الهوية</string>
+    <string name="home_tab_passport">جواز السفر</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">رقم من 6 أرقام مطبوع على وجه البطاقة</string>
+    <string name="home_document_number_label">رقم الوثيقة</string>
+    <string name="home_document_number_supporting">كما هو مطبوع في صفحة البيانات، 9 رموز كحد أقصى</string>
+    <string name="home_date_of_birth_label">تاريخ الميلاد</string>
+    <string name="home_date_of_expiry_label">تاريخ الانتهاء</string>
+    <string name="home_date_day">يوم</string>
+    <string name="home_date_month">شهر</string>
+    <string name="home_date_year">سنة</string>
+    <string name="home_date_format">التنسيق: %1$s</string>
+    <string name="home_date_error_invalid">هذا التاريخ غير موجود</string>
+    <string name="home_date_error_future">لا يمكن أن يكون تاريخ الميلاد في المستقبل</string>
+    <string name="home_date_error_too_old">تاريخ الانتهاء قديم جدًا (قبل %1$d)</string>
+    <string name="home_holder_notice">يجب أن يقدّم حامل الوثيقة وثيقته بنفسه.</string>
+    <string name="home_read">قراءة</string>
+    <string name="home_nfc_disabled">تقنية NFC غير مفعّلة. فعّلها لقراءة شريحة الوثيقة.</string>
+    <string name="home_nfc_settings">فتح إعدادات NFC</string>
+    <string name="home_nfc_absent">لا يدعم هذا الهاتف تقنية NFC، لذا لا يمكنه قراءة شريحة وثائق الهوية.</string>
+    <string name="home_menu_demo">محاكاة بطاقة هوية فرنسية (عرض توضيحي)</string>
+</resources>

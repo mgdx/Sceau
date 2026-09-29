@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">حول التطبيق</string>
+    <string name="about_back">رجوع</string>
+    <string name="about_tagline">قراءة شريحة وثائق الهوية المطابقة لمعيار ICAO 9303 والتحقق منها دون اتصال بالإنترنت.</string>
+    <string name="about_version">الإصدار %1$s</string>
+    <string name="about_version_unknown">إصدار غير معروف</string>
+
+    <string name="about_section_license">الترخيص والرمز المصدر</string>
+    <string name="about_license">برنامج حر موزَّع بموجب الترخيص GNU GPL، الإصدار 3 أو أي إصدار لاحق.</string>
+    <string name="about_open_repository">عرض الرمز المصدر</string>
+    <string name="about_no_browser">لا يتوفر تطبيق يمكنه فتح هذا الرابط.</string>
+
+    <string name="about_section_trust">مخزن الثقة المدمج</string>
+    <string name="about_trust_ants_only">شهادات CSCA الفرنسية الصادرة عن ANTS (جوازات السفر وبطاقات الهوية).</string>
+    <string name="about_trust_ants_and_bsi">شهادات CSCA الفرنسية الصادرة عن ANTS، وقائمة Master List الألمانية الصادرة عن BSI.</string>
+    <string name="about_trust_master_list_date">تاريخ توقيع قائمة Master List: %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">تاريخ توقيع قائمة Master List غير مذكور.</string>
+    <string name="about_trust_bsi_notice">يُعاد توزيع قائمة Master List الصادرة عن BSI (المكتب الاتحادي الألماني لأمن المعلومات) دون أي تعديل، ودون تعاون من BSI أو موافقته.</string>
+    <string name="about_trust_national">شهادات نشرتها الدول التالية لوثائقها الخاصة: %1$s.</string>
+    <string name="about_trust_ogl_notice">يتضمن معلومات من القطاع العام البريطاني منشورة بموجب الترخيص Open Government Licence v3.0.</string>
+    <string name="about_trust_loading">جارٍ التحميل…</string>
+    <string name="about_trust_error">تعذّر تحميل مخزن الثقة.</string>
+
+    <string name="about_section_limits">القيود</string>
+    <string name="about_limit_unknown_issuer">إذا لم تكن دولة إصدار الوثيقة موجودة في مخزن الثقة، تكون النتيجة «جهة إصدار غير معروفة» وليس «فشل التحقق». يمكن حل ذلك باستيراد قائمة Master List أحدث.</string>
+    <string name="about_limit_revocation">لا يتم الرجوع إلى قوائم الإبطال: فهي تتطلب الاتصال بالشبكة، وهو ما لا يستخدمه Sceau أبدًا.</string>
+
+    <string name="about_section_usage">إطار الاستخدام</string>
+    <string name="about_usage_holder">تفترض القراءة أن حامل الوثيقة يقدّمها بنفسه ويوافق على قراءتها.</string>
+    <string name="about_usage_biometrics">تصبح الصورة بيانات بيومترية بمفهوم اللائحة العامة لحماية البيانات (GDPR) إذا استُخدمت في مقارنة آلية للوجوه. لا يُجري Sceau أي مقارنة من هذا النوع، ولا يجوز استخدامه لهذا الغرض دون أساس قانوني مخصص.</string>
+    <string name="about_usage_privacy">لا يتم الاحتفاظ بأي بيانات مقروءة أو إرسالها: تُمحى جميعها من الذاكرة عند مغادرة شاشة النتيجة أو نقل التطبيق إلى الخلفية.</string>
+</resources>

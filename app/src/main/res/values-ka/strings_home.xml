@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">მეტი ვარიანტი</string>
+    <string name="home_menu_trust_store">სანდო საცავი</string>
+    <string name="home_menu_about">აპის შესახებ</string>
+    <string name="home_tab_id_card">პირადობის მოწმობა</string>
+    <string name="home_tab_passport">პასპორტი</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">ბარათის წინა მხარეს დაბეჭდილი 6-ნიშნა ნომერი</string>
+    <string name="home_document_number_label">დოკუმენტის ნომერი</string>
+    <string name="home_document_number_supporting">ისე, როგორც მონაცემთა გვერდზეა დაბეჭდილი, მაქსიმუმ 9 სიმბოლო</string>
+    <string name="home_date_of_birth_label">დაბადების თარიღი</string>
+    <string name="home_date_of_expiry_label">მოქმედების ვადა</string>
+    <string name="home_date_day">დდ</string>
+    <string name="home_date_month">თთ</string>
+    <string name="home_date_year">წწწწ</string>
+    <string name="home_date_format">ფორმატი: %1$s</string>
+    <string name="home_date_error_invalid">ასეთი თარიღი არ არსებობს</string>
+    <string name="home_date_error_future">დაბადების თარიღი მომავალში ვერ იქნება</string>
+    <string name="home_date_error_too_old">მოქმედების ვადა ძალიან ძველია (%1$d წლამდე)</string>
+    <string name="home_holder_notice">დოკუმენტი უნდა წარადგინოს მისმა მფლობელმა.</string>
+    <string name="home_read">წაკითხვა</string>
+    <string name="home_nfc_disabled">NFC გამორთულია. ჩართეთ, რომ დოკუმენტის ჩიპი წაიკითხოთ.</string>
+    <string name="home_nfc_settings">NFC-ის პარამეტრების გახსნა</string>
+    <string name="home_nfc_absent">ამ ტელეფონს NFC არ აქვს: ის ვერ წაიკითხავს პირადობის დოკუმენტების ჩიპს.</string>
+    <string name="home_menu_demo">საფრანგეთის პირადობის მოწმობის სიმულაცია (დემო)</string>
+</resources>

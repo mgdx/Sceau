@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">מידע על האפליקציה</string>
+    <string name="about_back">חזרה</string>
+    <string name="about_tagline">קריאה ואימות של השבב במסמכי זיהוי לפי תקן ICAO 9303, ללא חיבור לאינטרנט.</string>
+    <string name="about_version">גרסה %1$s</string>
+    <string name="about_version_unknown">גרסה לא ידועה</string>
+
+    <string name="about_section_license">רישיון וקוד מקור</string>
+    <string name="about_license">תוכנה חופשית המופצת בהתאם לרישיון GNU GPL, גרסה 3 או כל גרסה מאוחרת יותר.</string>
+    <string name="about_open_repository">הצגת קוד המקור</string>
+    <string name="about_no_browser">אין אפליקציה שיכולה לפתוח את הקישור הזה.</string>
+
+    <string name="about_section_trust">מאגר האמון המובנה</string>
+    <string name="about_trust_ants_only">תעודות CSCA צרפתיות של ANTS (דרכונים ותעודות זהות).</string>
+    <string name="about_trust_ants_and_bsi">תעודות CSCA צרפתיות של ANTS ורשימת Master List הגרמנית של BSI.</string>
+    <string name="about_trust_master_list_date">רשימת ה-Master List נחתמה בתאריך %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">תאריך החתימה של רשימת ה-Master List לא צוין.</string>
+    <string name="about_trust_bsi_notice">רשימת ה-Master List של BSI (המשרד הפדרלי הגרמני לאבטחת מידע) מופצת מחדש ללא שינוי, ללא שיתוף פעולה של BSI וללא אישורו.</string>
+    <string name="about_trust_national">תעודות שפרסמו המדינות הבאות עבור המסמכים שלהן: %1$s.</string>
+    <string name="about_trust_ogl_notice">כולל מידע של המגזר הציבורי הבריטי המתפרסם בהתאם לרישיון Open Government Licence v3.0.</string>
+    <string name="about_trust_loading">בטעינה…</string>
+    <string name="about_trust_error">לא ניתן לטעון את מאגר האמון.</string>
+
+    <string name="about_section_limits">מגבלות</string>
+    <string name="about_limit_unknown_issuer">מסמך שהמדינה המנפיקה שלו אינה מופיעה במאגר האמון יקבל את התוצאה \"מנפיק לא ידוע\" ולא \"האימות נכשל\". ייבוא של Master List עדכנית יותר יכול לפתור זאת.</string>
+    <string name="about_limit_revocation">רשימות הביטול אינן נבדקות: הן מחייבות חיבור לרשת, ו-Sceau אף פעם לא משתמשת ברשת.</string>
+
+    <string name="about_section_usage">מסגרת השימוש</string>
+    <string name="about_usage_holder">הקריאה מניחה שבעל המסמך מציג אותו בעצמו ומסכים לכך.</string>
+    <string name="about_usage_biometrics">התמונה הופכת למידע ביומטרי כמשמעותו בתקנה הכללית להגנה על מידע (GDPR) אם היא משמשת להשוואת פנים אוטומטית. Sceau אינה מבצעת השוואה כזו, ואין להשתמש בה לשם כך ללא בסיס חוקי ייעודי.</string>
+    <string name="about_usage_privacy">שום מידע שנקרא אינו נשמר או נשלח: הכול נמחק מהזיכרון ביציאה ממסך התוצאה או כשהאפליקציה עוברת לרקע.</string>
+</resources>

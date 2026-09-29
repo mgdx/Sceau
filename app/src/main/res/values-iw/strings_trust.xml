@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trust_title">מאגר האמון</string>
+    <string name="trust_back">חזרה</string>
+    <string name="trust_intro">תעודות שורש (CSCA) של המדינות המנפיקות, המשמשות לאימות החתימה על המסמכים. שום מידע אישי לא עובר דרך המסך הזה.</string>
+    <plurals name="trust_summary">
+        <item quantity="one">%1$d תעודה, מדינות: %2$d</item>
+        <item quantity="two">%1$d תעודות, מדינות: %2$d</item>
+        <item quantity="many">%1$d תעודות, מדינות: %2$d</item>
+        <item quantity="other">%1$d תעודות, מדינות: %2$d</item>
+    </plurals>
+    <string name="trust_loading">מאגר האמון בטעינה…</string>
+    <string name="trust_load_error">לא ניתן לטעון את מאגר האמון.</string>
+    <string name="trust_retry">ניסיון חוזר</string>
+    <string name="trust_empty">אין תעודות במאגר האמון.</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">מדינה לא צוינה</string>
+    <plurals name="trust_country_count">
+        <item quantity="one">%1$d תעודה</item>
+        <item quantity="two">%1$d תעודות</item>
+        <item quantity="many">%1$d תעודות</item>
+        <item quantity="other">%1$d תעודות</item>
+    </plurals>
+    <string name="trust_country_expand">הצגת התעודות</string>
+    <string name="trust_country_collapse">הסתרת התעודות</string>
+    <string name="trust_validity">בתוקף מ-%1$s עד %2$s</string>
+    <string name="trust_fingerprint">טביעת אצבע SHA-256</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_national">פרסום לאומי</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">מיובאת</string>
+    <string name="trust_link_certificate">תעודת קישור</string>
+
+    <!-- Import -->
+    <string name="trust_import">ייבוא רשימת Master List</string>
+    <string name="trust_busy">רק רגע…</string>
+    <string name="trust_import_confirm_title">לייבא את רשימת ה-Master List הזו?</string>
+    <string name="trust_import_confirm_text">החתימה שלה תקפה. לפני הייבוא, יש לוודא שטביעת האצבע של החותם תואמת לזו שפרסמה הרשות המנפיקה.</string>
+    <string name="trust_import_signer">החותם</string>
+    <string name="trust_import_signer_fingerprint">טביעת אצבע SHA-256 של החותם</string>
+    <string name="trust_import_signing_date">תאריך החתימה</string>
+    <string name="trust_import_signing_date_unknown">לא צוין</string>
+    <string name="trust_import_certificate_count">מספר התעודות</string>
+    <string name="trust_import_confirm">ייבוא</string>
+    <string name="trust_cancel">ביטול</string>
+    <plurals name="trust_import_done">
+        <item quantity="one">רשימת ה-Master List יובאה: %1$d תעודה.</item>
+        <item quantity="two">רשימת ה-Master List יובאה: %1$d תעודות.</item>
+        <item quantity="many">רשימת ה-Master List יובאה: %1$d תעודות.</item>
+        <item quantity="other">רשימת ה-Master List יובאה: %1$d תעודות.</item>
+    </plurals>
+    <string name="trust_import_invalid">הקובץ הזה אינו Master List תקינה: הפורמט אינו קריא או שהחתימה שגויה (%1$s).</string>
+    <string name="trust_import_too_large">הקובץ נדחה: הוא גדול מ-20 MB.</string>
+    <string name="trust_import_read_error">לא ניתן לקרוא את הקובץ הזה.</string>
+    <string name="trust_import_write_error">לא ניתן לשמור את רשימת ה-Master List.</string>
+    <plurals name="trust_import_limit_count">
+        <item quantity="one">הייבוא נדחה: ניתן לייבא לכל היותר %1$d רשימת Master List. כדי להוסיף רשימה אחרת, יש למחוק את התעודות המיובאות.</item>
+        <item quantity="two">הייבוא נדחה: ניתן לייבא עד %1$d רשימות Master List. כדי להוסיף רשימה אחרת, יש למחוק את התעודות המיובאות.</item>
+        <item quantity="many">הייבוא נדחה: ניתן לייבא עד %1$d רשימות Master List. כדי להוסיף רשימה אחרת, יש למחוק את התעודות המיובאות.</item>
+        <item quantity="other">הייבוא נדחה: ניתן לייבא עד %1$d רשימות Master List. כדי להוסיף רשימה אחרת, יש למחוק את התעודות המיובאות.</item>
+    </plurals>
+    <string name="trust_import_limit_size">הייבוא נדחה: הגודל הכולל של רשימות ה-Master List המיובאות יעלה על %1$d MB. כדי להוסיף רשימה אחרת, יש למחוק את התעודות המיובאות.</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">מחיקת התעודות המיובאות</string>
+    <string name="trust_delete_confirm_title">למחוק את התעודות המיובאות?</string>
+    <string name="trust_delete_confirm_text">רשימות ה-Master List המיובאות יימחקו. התעודות המובנות באפליקציה יישמרו.</string>
+    <string name="trust_delete_confirm">מחיקה</string>
+    <string name="trust_delete_done">התעודות המיובאות נמחקו.</string>
+    <string name="trust_delete_error">לא ניתן למחוק את התעודות המיובאות.</string>
+</resources>

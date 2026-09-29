@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">აპის შესახებ</string>
+    <string name="about_back">უკან</string>
+    <string name="about_tagline">ICAO 9303 სტანდარტის პირადობის დოკუმენტების ჩიპის წაკითხვა და შემოწმება ინტერნეტის გარეშე.</string>
+    <string name="about_version">ვერსია %1$s</string>
+    <string name="about_version_unknown">უცნობი ვერსია</string>
+
+    <string name="about_section_license">ლიცენზია და საწყისი კოდი</string>
+    <string name="about_license">თავისუფალი პროგრამა, რომელიც ვრცელდება GNU GPL ლიცენზიით, ვერსია 3 ან ნებისმიერი უფრო ახალი ვერსია.</string>
+    <string name="about_open_repository">საწყისი კოდის ნახვა</string>
+    <string name="about_no_browser">ამ ბმულის გახსნა ვერცერთ აპს არ შეუძლია.</string>
+
+    <string name="about_section_trust">ჩაშენებული სანდო საცავი</string>
+    <string name="about_trust_ants_only">ANTS-ის მიერ გამოცემული საფრანგეთის CSCA სერტიფიკატები (პასპორტები და პირადობის მოწმობები).</string>
+    <string name="about_trust_ants_and_bsi">ANTS-ის მიერ გამოცემული საფრანგეთის CSCA სერტიფიკატები და BSI-ის გერმანული Master List.</string>
+    <string name="about_trust_master_list_date">Master List ხელმოწერილია: %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">Master List-ის ხელმოწერის თარიღი მითითებული არ არის.</string>
+    <string name="about_trust_bsi_notice">BSI-ის (გერმანიის ინფორმაციული უსაფრთხოების ფედერალური უწყება) Master List ხელახლა ვრცელდება ცვლილებების გარეშე, BSI-ის თანამშრომლობისა და თანხმობის გარეშე.</string>
+    <string name="about_trust_national">სერტიფიკატები, რომლებიც შემდეგმა სახელმწიფოებმა გამოაქვეყნეს საკუთარი დოკუმენტებისთვის: %1$s.</string>
+    <string name="about_trust_ogl_notice">შეიცავს გაერთიანებული სამეფოს საჯარო სექტორის ინფორმაციას, რომელიც გამოქვეყნებულია Open Government Licence v3.0 ლიცენზიით.</string>
+    <string name="about_trust_loading">იტვირთება…</string>
+    <string name="about_trust_error">სანდო საცავის ჩატვირთვა ვერ მოხერხდა.</string>
+
+    <string name="about_section_limits">შეზღუდვები</string>
+    <string name="about_limit_unknown_issuer">თუ დოკუმენტის გამცემი ქვეყანა სანდო საცავში არ არის, შედეგი იქნება „უცნობი გამცემი“ და არა „წარუმატებელი“. ამის გამოსწორება შესაძლებელია უფრო ახალი Master List-ის იმპორტით.</string>
+    <string name="about_limit_revocation">გაუქმებული სერტიფიკატების სიები არ მოწმდება: ისინი ქსელს საჭიროებს, Sceau კი ქსელს არასოდეს იყენებს.</string>
+
+    <string name="about_section_usage">გამოყენების ჩარჩო</string>
+    <string name="about_usage_holder">წაკითხვა გულისხმობს, რომ დოკუმენტის მფლობელი თავად წარადგენს დოკუმენტს და ეთანხმება წაკითხვას.</string>
+    <string name="about_usage_biometrics">ფოტო ხდება ბიომეტრიული მონაცემი მონაცემთა დაცვის ზოგადი რეგულაციის (GDPR) გაგებით, თუ ის სახეების ავტომატური შედარებისთვის გამოიყენება. Sceau ასეთ შედარებას არ ასრულებს და არ უნდა იქნეს გამოყენებული ამ მიზნით სპეციალური სამართლებრივი საფუძვლის გარეშე.</string>
+    <string name="about_usage_privacy">წაკითხული მონაცემები არც ინახება და არც იგზავნება: ყველაფერი იშლება მეხსიერებიდან შედეგის ეკრანიდან გასვლისას ან აპის ფონურ რეჟიმში გადასვლისას.</string>
+</resources>
