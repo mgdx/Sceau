@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="result_title">Eredmény</string>
+    <string name="result_clear">Törlés</string>
+
+    <!-- Verdict -->
+    <string name="result_verdict_authentic">Hiteles</string>
+    <string name="result_verdict_authentic_explanation">A kibocsátó aláírása érvényes, és a chip igazolta, hogy nem másolat.</string>
+    <string name="result_verdict_chip_unverified">Érvényes aláírás, a chip nincs ellenőrizve</string>
+    <string name="result_verdict_chip_unverified_explanation">Az adatokat a kibocsátó írta alá, de a chip nem tudja igazolni, hogy eredeti: lehet klón is.</string>
+    <string name="result_verdict_unknown_issuer">Ismeretlen kibocsátó</string>
+    <string name="result_verdict_unknown_issuer_explanation">A kibocsátó tanúsítványa nem szerepel a megbízható tanúsítványok között. Az adatok megjelennek, de semmi sem garantált. Egy újabb Master List importálásával az okmány ellenőrizhetővé válhat.</string>
+    <string name="result_verdict_failed">Sikertelen</string>
+    <string name="result_verdict_failed_explanation">Legalább egy ellenőrzés sikertelen volt: ez az okmány nem tekinthető hitelesnek.</string>
+    <string name="result_verdict_imported_anchor">Az Ön által importált tanúsítvánnyal ellenőrizve</string>
+
+    <!-- Photo -->
+    <string name="result_photo_description">A tulajdonos fényképe</string>
+    <string name="result_photo_unavailable">A fénykép hiányzik vagy olvashatatlan</string>
+    <string name="result_photo_fullscreen">Fénykép megjelenítése teljes képernyőn</string>
+    <string name="result_photo_close">Bezárás</string>
+    <string name="result_image_front">Előlap képe</string>
+    <string name="result_image_rear">Hátlap képe</string>
+    <string name="result_image_unavailable">Olvashatatlan kép</string>
+
+    <!-- Identité -->
+    <string name="result_section_identity">Személyazonosság</string>
+    <string name="result_expired">Lejárt okmány</string>
+    <string name="result_field_surname">Családi név</string>
+    <string name="result_field_given_names">Utónév</string>
+    <string name="result_field_sex">Nem</string>
+    <string name="result_field_birth_date">Születési idő</string>
+    <string name="result_field_nationality">Állampolgárság</string>
+    <string name="result_field_document_type">Okmány típusa</string>
+    <string name="result_field_document_number">Okmányazonosító</string>
+    <string name="result_field_issuing_state">Kibocsátó állam</string>
+    <string name="result_field_expiry_date">Érvényesség vége</string>
+    <string name="result_sex_male">Férfi</string>
+    <string name="result_sex_female">Nő</string>
+    <string name="result_sex_unspecified">Nincs megadva</string>
+    <string name="result_document_passport">Útlevél</string>
+    <string name="result_document_identity_card">Személyi igazolvány</string>
+    <string name="result_document_other">Egyéb úti okmány</string>
+    <string name="result_value_with_code">%1$s (%2$s)</string>
+    <string name="result_unknown_value">Ismeretlen</string>
+
+    <!-- Pays spéciaux ICAO -->
+    <string name="result_country_united_nations">Egyesült Nemzetek</string>
+    <string name="result_country_un_agency">ENSZ szakosított intézmény</string>
+    <string name="result_country_un_kosovo">Koszovó (UNMIK)</string>
+    <string name="result_country_stateless">Hontalan</string>
+    <string name="result_country_refugee">Menekült (1951. évi egyezmény)</string>
+    <string name="result_country_refugee_other">Menekült</string>
+    <string name="result_country_unspecified">Nincs megadva állampolgárság</string>
+
+    <!-- Données complémentaires -->
+    <string name="result_section_additional">További adatok</string>
+    <string name="result_field_full_name">Teljes név</string>
+    <string name="result_field_other_names">Egyéb nevek</string>
+    <string name="result_field_personal_number">Személyi szám</string>
+    <string name="result_field_full_birth_date">Teljes születési dátum</string>
+    <string name="result_field_place_of_birth">Születési hely</string>
+    <string name="result_field_address">Lakcím</string>
+    <string name="result_field_telephone">Telefon</string>
+    <string name="result_field_profession">Foglalkozás</string>
+    <string name="result_field_title">Titulus</string>
+    <string name="result_field_personal_summary">Személyes összefoglaló</string>
+    <string name="result_field_other_td_numbers">Egyéb érvényes úti okmányok</string>
+    <string name="result_field_custody">Felügyeleti adatok</string>
+    <string name="result_field_issuing_authority">Kiállító hatóság</string>
+    <string name="result_field_issue_date">Kiállítás dátuma</string>
+    <string name="result_field_other_persons">Egyéb feltüntetett személyek</string>
+    <string name="result_field_endorsements">Bejegyzések és megjegyzések</string>
+    <string name="result_field_tax_exit">Adó- vagy kiutazási kötelezettségek</string>
+    <string name="result_field_personalization_time">Megszemélyesítés dátuma</string>
+    <string name="result_field_personalization_device">Megszemélyesítő rendszer sorozatszáma</string>
+
+    <!-- Vérifications -->
+    <string name="result_section_checks">Ellenőrzések</string>
+    <string name="result_check_secure_channel">Biztonságos csatorna létrejött</string>
+    <string name="result_check_sod_signature">A SOD aláírása érvényes</string>
+    <string name="result_check_chain">Tanúsítványlánc</string>
+    <string name="result_check_ds_validity">A DS-tanúsítvány érvényessége</string>
+    <string name="result_check_dg_hashes">Adatcsoportok hash-értékei</string>
+    <string name="result_check_chip_authentication">Chip Authentication (DG14)</string>
+    <string name="result_check_active_authentication">Active Authentication (DG15)</string>
+    <string name="result_status_ok">Sikeres</string>
+    <string name="result_status_failed">Sikertelen</string>
+    <string name="result_status_not_available">Nem érhető el</string>
+    <string name="result_status_unsupported">Nem támogatott algoritmus</string>
+    <string name="result_check_expand">Részletek megjelenítése</string>
+    <string name="result_check_collapse">Részletek elrejtése</string>
+
+    <!-- Détail des vérifications -->
+    <string name="result_detail_protocol">Protokoll: %1$s</string>
+    <string name="result_detail_ca_method">Módszer: %1$s</string>
+    <string name="result_detail_ca_method_dg14">Chip Authentication a DG14 kulcsával</string>
+    <string name="result_detail_ca_method_pace_cam">PACE-CAM a csatorna megnyitása közben, az EF.CardSecurity kulcsával</string>
+    <string name="result_detail_algorithm">Aláírási algoritmus: %1$s</string>
+    <string name="result_detail_csca">CSCA: %1$s</string>
+    <string name="result_detail_csca_none">Egyik megbízható CSCA sem egyezik.</string>
+    <string name="result_detail_country">Ország: %1$s</string>
+    <string name="result_detail_country_mismatch">Eltérő országok: hitelesítésszolgáltató %1$s, aláírói tanúsítvány %2$s, okmány %3$s</string>
+    <string name="result_detail_source">Forrás: %1$s</string>
+    <string name="result_detail_source_ants">az ANTS tanúsítványai</string>
+    <string name="result_detail_source_national">a kibocsátó állam által közzétett tanúsítványok</string>
+    <string name="result_detail_source_embedded">beépített Master List</string>
+    <string name="result_detail_source_imported">importált Master List</string>
+    <string name="result_detail_ds_subject">DS-tanúsítvány: %1$s</string>
+    <string name="result_detail_links">Érintett összekötő tanúsítványok:</string>
+    <string name="result_detail_link_item">• %1$s</string>
+    <string name="result_detail_links_none">Nem volt érintett összekötő tanúsítvány.</string>
+    <string name="result_detail_ds_missing">A DS-tanúsítvány sem a SOD-ban, sem a megbízható tanúsítványok között nem szerepel.</string>
+    <string name="result_detail_ds_period">A DS érvényességi ideje: %1$s – %2$s</string>
+    <string name="result_detail_issuance">Kiállítás dátuma: %1$s (%2$s)</string>
+    <string name="result_detail_issuance_no_source">Kiállítás dátuma: %1$s</string>
+    <string name="result_detail_issuance_unknown">A kiállítás dátuma ismeretlen.</string>
+    <string name="result_detail_issuance_dg12">a DG12-ből olvasva</string>
+    <string name="result_detail_issuance_sod">a SOD aláírásának dátuma</string>
+    <string name="result_detail_issuance_estimated">becsült</string>
+    <string name="result_detail_digest_algorithm">Hash-algoritmus: %1$s</string>
+    <string name="result_detail_dg_checked">Ellenőrzött adatcsoportok: %1$s</string>
+    <string name="result_detail_dg_checked_none">Egyetlen adatcsoport sem lett ellenőrizve.</string>
+    <string name="result_detail_dg_mismatched">Nem egyező hash-értékek: %1$s</string>
+    <string name="result_detail_dg_all_match">Minden hash-érték egyezik.</string>
+    <string name="result_detail_dg_missing">Bejelentett, de a chip által nem szolgáltatott adatcsoportok: %1$s</string>
+    <string name="result_detail_unsupported">Nem támogatott algoritmus: %1$s</string>
+    <string name="result_detail_error">Technikai hiba: %1$s</string>
+    <string name="result_detail_no_dg14">Az okmány nem tartalmaz DG14-et: a chip nem kínálja ezt az ellenőrzést.</string>
+    <string name="result_detail_no_dg15">Az okmány nem tartalmaz DG15-öt: a chip nem kínálja ezt az ellenőrzést.</string>
+    <string name="result_detail_not_reached">A lépés nem történt meg.</string>
+    <string name="result_detail_none">Nincsenek további részletek.</string>
+    <string name="result_demo_banner">Szimulált okmány – bemutató</string>
+</resources>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trust_title">Megbízható tanúsítványok</string>
+    <string name="trust_back">Vissza</string>
+    <string name="trust_intro">A kibocsátó országok gyökértanúsítványai (CSCA), amelyekkel az okmányok aláírása ellenőrizhető. Ezen a képernyőn nem halad át személyes adat.</string>
+    <plurals name="trust_summary">
+        <item quantity="one">%1$d tanúsítvány, %2$d ország</item>
+        <item quantity="other">%1$d tanúsítvány, %2$d ország</item>
+    </plurals>
+    <string name="trust_loading">Megbízható tanúsítványok betöltése…</string>
+    <string name="trust_load_error">Nem sikerült betölteni a megbízható tanúsítványokat.</string>
+    <string name="trust_retry">Újra</string>
+    <string name="trust_empty">Nincsenek megbízható tanúsítványok.</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">Nincs megadva ország</string>
+    <plurals name="trust_country_count">
+        <item quantity="one">%1$d tanúsítvány</item>
+        <item quantity="other">%1$d tanúsítvány</item>
+    </plurals>
+    <string name="trust_country_expand">Tanúsítványok megjelenítése</string>
+    <string name="trust_country_collapse">Tanúsítványok elrejtése</string>
+    <string name="trust_validity">Érvényes: %1$s – %2$s</string>
+    <string name="trust_fingerprint">SHA-256 ujjlenyomat</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_national">Nemzeti közzététel</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">Importált</string>
+    <string name="trust_link_certificate">Összekötő tanúsítvány</string>
+
+    <!-- Import -->
+    <string name="trust_import">Master List importálása</string>
+    <string name="trust_busy">Kérjük, várjon…</string>
+    <string name="trust_import_confirm_title">Importálja ezt a Master Listet?</string>
+    <string name="trust_import_confirm_text">Az aláírása érvényes. Importálás előtt ellenőrizze, hogy az aláíró ujjlenyomata megegyezik-e a kibocsátó hatóság által közzétettel.</string>
+    <string name="trust_import_signer">Aláíró</string>
+    <string name="trust_import_signer_fingerprint">Az aláíró SHA-256 ujjlenyomata</string>
+    <string name="trust_import_signing_date">Aláírás dátuma</string>
+    <string name="trust_import_signing_date_unknown">Nincs megadva</string>
+    <string name="trust_import_certificate_count">Tanúsítványok száma</string>
+    <string name="trust_import_confirm">Importálás</string>
+    <string name="trust_cancel">Mégse</string>
+    <plurals name="trust_import_done">
+        <item quantity="one">Master List importálva: %1$d tanúsítvány.</item>
+        <item quantity="other">Master List importálva: %1$d tanúsítvány.</item>
+    </plurals>
+    <string name="trust_import_invalid">Ez a fájl nem érvényes Master List: olvashatatlan formátum vagy hibás aláírás (%1$s).</string>
+    <string name="trust_import_too_large">Fájl elutasítva: nagyobb 20 MB-nál.</string>
+    <string name="trust_import_read_error">Nem sikerült beolvasni a fájlt.</string>
+    <string name="trust_import_write_error">Nem sikerült menteni a Master Listet.</string>
+    <plurals name="trust_import_limit_count">
+        <item quantity="one">Importálás elutasítva: legfeljebb %1$d importált Master List lehet. Újabb hozzáadásához törölje az importált tanúsítványokat.</item>
+        <item quantity="other">Importálás elutasítva: legfeljebb %1$d importált Master List lehet. Újabb hozzáadásához törölje az importált tanúsítványokat.</item>
+    </plurals>
+    <string name="trust_import_limit_size">Importálás elutasítva: az importált Master Listek összmérete meghaladná a(z) %1$d MB-ot. Újabb hozzáadásához törölje az importált tanúsítványokat.</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">Importált tanúsítványok törlése</string>
+    <string name="trust_delete_confirm_title">Törli az importált tanúsítványokat?</string>
+    <string name="trust_delete_confirm_text">Az importált Master Listek törlődnek. Az alkalmazásba beépített tanúsítványok megmaradnak.</string>
+    <string name="trust_delete_confirm">Törlés</string>
+    <string name="trust_delete_done">Importált tanúsítványok törölve.</string>
+    <string name="trust_delete_error">Nem sikerült törölni az importált tanúsítványokat.</string>
+</resources>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="result_title">Toradh</string>
+    <string name="result_clear">Glan</string>
+
+    <!-- Verdict -->
+    <string name="result_verdict_authentic">Barántúil</string>
+    <string name="result_verdict_authentic_explanation">Tá síniú an eisitheora bailí agus chruthaigh an tsliseog nach cóip í.</string>
+    <string name="result_verdict_chip_unverified">Síniú bailí, sliseog gan fíorú</string>
+    <string name="result_verdict_chip_unverified_explanation">Shínigh an t-eisitheoir na sonraí, ach ní féidir leis an tsliseog a chruthú gurb í an bunleagan í: d’fhéadfadh gur clón í.</string>
+    <string name="result_verdict_unknown_issuer">Eisitheoir anaithnid</string>
+    <string name="result_verdict_unknown_issuer_explanation">Níl deimhniú an eisitheora sa stór iontaobhais. Taispeántar na sonraí, ach níl aon rud ráthaithe. D’fhéadfaí an cháipéis seo a fhíorú trí Master List níos déanaí a iompórtáil.</string>
+    <string name="result_verdict_failed">Teip</string>
+    <string name="result_verdict_failed_explanation">Theip ar sheiceáil amháin ar a laghad: ní ceart glacadh leis an gcáipéis seo mar cháipéis bharántúil.</string>
+    <string name="result_verdict_imported_anchor">Fíoraithe le deimhniú a d’iompórtáil tú</string>
+
+    <!-- Photo -->
+    <string name="result_photo_description">Grianghraf an tsealbhóra</string>
+    <string name="result_photo_unavailable">Grianghraf ar iarraidh nó doléite</string>
+    <string name="result_photo_fullscreen">Taispeáin an grianghraf ar an scáileán iomlán</string>
+    <string name="result_photo_close">Dún</string>
+    <string name="result_image_front">Íomhá den taobh tosaigh</string>
+    <string name="result_image_rear">Íomhá den chúl</string>
+    <string name="result_image_unavailable">Íomhá dholéite</string>
+
+    <!-- Identité -->
+    <string name="result_section_identity">Aitheantas</string>
+    <string name="result_expired">Cáipéis as feidhm</string>
+    <string name="result_field_surname">Sloinne</string>
+    <string name="result_field_given_names">Réamhainmneacha</string>
+    <string name="result_field_sex">Gnéas</string>
+    <string name="result_field_birth_date">Dáta breithe</string>
+    <string name="result_field_nationality">Náisiúntacht</string>
+    <string name="result_field_document_type">Cineál cáipéise</string>
+    <string name="result_field_document_number">Uimhir na cáipéise</string>
+    <string name="result_field_issuing_state">Stát eisiúna</string>
+    <string name="result_field_expiry_date">Dáta éaga</string>
+    <string name="result_sex_male">Fireann</string>
+    <string name="result_sex_female">Baineann</string>
+    <string name="result_sex_unspecified">Gan sonrú</string>
+    <string name="result_document_passport">Pas</string>
+    <string name="result_document_identity_card">Cárta aitheantais</string>
+    <string name="result_document_other">Cáipéis taistil eile</string>
+    <string name="result_value_with_code">%1$s (%2$s)</string>
+    <string name="result_unknown_value">Anaithnid</string>
+
+    <!-- Pays spéciaux ICAO -->
+    <string name="result_country_united_nations">Na Náisiúin Aontaithe</string>
+    <string name="result_country_un_agency">Gníomhaireacht speisialaithe de chuid na Náisiún Aontaithe</string>
+    <string name="result_country_un_kosovo">An Chosaiv (UNMIK)</string>
+    <string name="result_country_stateless">Duine gan stát</string>
+    <string name="result_country_refugee">Dídeanaí (Coinbhinsiún 1951)</string>
+    <string name="result_country_refugee_other">Dídeanaí</string>
+    <string name="result_country_unspecified">Náisiúntacht gan sonrú</string>
+
+    <!-- Données complémentaires -->
+    <string name="result_section_additional">Sonraí breise</string>
+    <string name="result_field_full_name">Ainm iomlán</string>
+    <string name="result_field_other_names">Ainmneacha eile</string>
+    <string name="result_field_personal_number">Uimhir phearsanta</string>
+    <string name="result_field_full_birth_date">Dáta breithe iomlán</string>
+    <string name="result_field_place_of_birth">Áit bhreithe</string>
+    <string name="result_field_address">Seoladh</string>
+    <string name="result_field_telephone">Teileafón</string>
+    <string name="result_field_profession">Gairm</string>
+    <string name="result_field_title">Teideal</string>
+    <string name="result_field_personal_summary">Achoimre phearsanta</string>
+    <string name="result_field_other_td_numbers">Cáipéisí taistil bailí eile</string>
+    <string name="result_field_custody">Faisnéis faoi chaomhnóireacht</string>
+    <string name="result_field_issuing_authority">Údarás eisiúna</string>
+    <string name="result_field_issue_date">Dáta eisiúna</string>
+    <string name="result_field_other_persons">Daoine eile atá luaite</string>
+    <string name="result_field_endorsements">Formhuinithe agus barúlacha</string>
+    <string name="result_field_tax_exit">Oibleagáidí cánach nó imeachta</string>
+    <string name="result_field_personalization_time">Dáta pearsantaithe</string>
+    <string name="result_field_personalization_device">Sraithuimhir an chórais phearsantaithe</string>
+
+    <!-- Vérifications -->
+    <string name="result_section_checks">Seiceálacha</string>
+    <string name="result_check_secure_channel">Cainéal slán bunaithe</string>
+    <string name="result_check_sod_signature">Síniú an SOD bailí</string>
+    <string name="result_check_chain">Slabhra deimhnithe</string>
+    <string name="result_check_ds_validity">Bailíocht an deimhnithe DS</string>
+    <string name="result_check_dg_hashes">Haiseanna na ngrúpaí sonraí</string>
+    <string name="result_check_chip_authentication">Chip Authentication (DG14)</string>
+    <string name="result_check_active_authentication">Active Authentication (DG15)</string>
+    <string name="result_status_ok">D’éirigh leis</string>
+    <string name="result_status_failed">Theip air</string>
+    <string name="result_status_not_available">Níl sé ar fáil</string>
+    <string name="result_status_unsupported">Algartam gan tacaíocht</string>
+    <string name="result_check_expand">Taispeáin sonraí</string>
+    <string name="result_check_collapse">Folaigh sonraí</string>
+
+    <!-- Détail des vérifications -->
+    <string name="result_detail_protocol">Prótacal: %1$s</string>
+    <string name="result_detail_ca_method">Modh: %1$s</string>
+    <string name="result_detail_ca_method_dg14">Chip Authentication le heochair DG14</string>
+    <string name="result_detail_ca_method_pace_cam">PACE-CAM, agus an cainéal á oscailt, le heochair EF.CardSecurity</string>
+    <string name="result_detail_algorithm">Algartam sínithe: %1$s</string>
+    <string name="result_detail_csca">CSCA: %1$s</string>
+    <string name="result_detail_csca_none">Níl aon CSCA sa stór a mheaitseálann.</string>
+    <string name="result_detail_country">Tír: %1$s</string>
+    <string name="result_detail_country_mismatch">Tíortha nach dtagann le chéile: údarás deimhniúcháin %1$s, deimhniú an tsínitheora %2$s, cáipéis %3$s</string>
+    <string name="result_detail_source">Foinse: %1$s</string>
+    <string name="result_detail_source_ants">deimhnithe ANTS</string>
+    <string name="result_detail_source_national">deimhnithe arna bhfoilsiú ag an Stát eisiúna</string>
+    <string name="result_detail_source_embedded">Master List ionsuite</string>
+    <string name="result_detail_source_imported">Master List iompórtáilte</string>
+    <string name="result_detail_ds_subject">Deimhniú DS: %1$s</string>
+    <string name="result_detail_links">Deimhnithe naisc a trasnaíodh:</string>
+    <string name="result_detail_link_item">• %1$s</string>
+    <string name="result_detail_links_none">Níor trasnaíodh aon deimhniú naisc.</string>
+    <string name="result_detail_ds_missing">Níl an deimhniú DS sa SOD ná sa stór iontaobhais.</string>
+    <string name="result_detail_ds_period">Tréimhse bhailíochta an DS: %1$s go %2$s</string>
+    <string name="result_detail_issuance">Dáta eisiúna: %1$s (%2$s)</string>
+    <string name="result_detail_issuance_no_source">Dáta eisiúna: %1$s</string>
+    <string name="result_detail_issuance_unknown">Dáta eisiúna anaithnid.</string>
+    <string name="result_detail_issuance_dg12">léite ó DG12</string>
+    <string name="result_detail_issuance_sod">dáta sínithe an SOD</string>
+    <string name="result_detail_issuance_estimated">measta</string>
+    <string name="result_detail_digest_algorithm">Algartam haiseála: %1$s</string>
+    <string name="result_detail_dg_checked">Grúpaí sonraí a seiceáladh: %1$s</string>
+    <string name="result_detail_dg_checked_none">Níor seiceáladh aon ghrúpa sonraí.</string>
+    <string name="result_detail_dg_mismatched">Haiseanna nach meaitseálann: %1$s</string>
+    <string name="result_detail_dg_all_match">Meaitseálann na haiseanna go léir.</string>
+    <string name="result_detail_dg_missing">Grúpaí sonraí fógartha nár sholáthair an tsliseog: %1$s</string>
+    <string name="result_detail_unsupported">Algartam gan tacaíocht: %1$s</string>
+    <string name="result_detail_error">Earráid theicniúil: %1$s</string>
+    <string name="result_detail_no_dg14">Níl DG14 sa cháipéis: ní thairgeann an tsliseog an tseiceáil seo.</string>
+    <string name="result_detail_no_dg15">Níl DG15 sa cháipéis: ní thairgeann an tsliseog an tseiceáil seo.</string>
+    <string name="result_detail_not_reached">Níor cuireadh an chéim seo i gcrích.</string>
+    <string name="result_detail_none">Níl aon sonraí breise ann.</string>
+    <string name="result_demo_banner">Cáipéis insamhlaithe — taispeántas</string>
+</resources>

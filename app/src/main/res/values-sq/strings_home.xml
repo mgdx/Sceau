@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">Më shumë opsione</string>
+    <string name="home_menu_trust_store">Certifikatat e besuara</string>
+    <string name="home_menu_about">Rreth</string>
+    <string name="home_tab_id_card">Letërnjoftim</string>
+    <string name="home_tab_passport">Pasaportë</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">Numër me 6 shifra i shtypur në pjesën e përparme të kartës</string>
+    <string name="home_document_number_label">Numri i dokumentit</string>
+    <string name="home_document_number_supporting">Siç është shtypur në faqen e të dhënave, deri në 9 karaktere</string>
+    <string name="home_date_of_birth_label">Datëlindja</string>
+    <string name="home_date_of_expiry_label">Data e skadimit</string>
+    <string name="home_date_day">DD</string>
+    <string name="home_date_month">MM</string>
+    <string name="home_date_year">VVVV</string>
+    <string name="home_date_format">Formati: %1$s</string>
+    <string name="home_date_error_invalid">Kjo datë nuk ekziston</string>
+    <string name="home_date_error_future">Datëlindja nuk mund të jetë në të ardhmen</string>
+    <string name="home_date_error_too_old">Data e skadimit shumë e vjetër (para %1$d)</string>
+    <string name="home_holder_notice">Dokumenti duhet paraqitur nga mbajtësi i tij.</string>
+    <string name="home_read">Lexo</string>
+    <string name="home_nfc_disabled">NFC-ja është çaktivizuar. Aktivizoje për të lexuar çipin e dokumentit.</string>
+    <string name="home_nfc_settings">Hap cilësimet e NFC-së</string>
+    <string name="home_nfc_absent">Ky telefon nuk ka NFC, prandaj nuk mund të lexojë çipin e dokumenteve të identitetit.</string>
+    <string name="home_menu_demo">Simulo një letërnjoftim francez (demo)</string>
+</resources>

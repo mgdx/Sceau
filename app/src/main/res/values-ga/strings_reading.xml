@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reading_title">Cáipéis á léamh</string>
+    <string name="reading_prompt">Cuir an cháipéis le cúl an fhóin agus ná bog í</string>
+    <string name="reading_step_connect">Ag ceangal leis an tsliseog</string>
+    <string name="reading_step_secure_channel">Cainéal slán á oscailt (PACE nó BAC)</string>
+    <string name="reading_step_read_data">Sonraí á léamh</string>
+    <string name="reading_step_verify_signature">Síniú á fhíorú</string>
+    <string name="reading_step_verify_chip">Sliseog á fíorú</string>
+    <string name="reading_step_pending">ag feitheamh</string>
+    <string name="reading_step_in_progress">ar siúl</string>
+    <string name="reading_step_done">críochnaithe</string>
+    <string name="reading_error_title">Stopadh an léamh</string>
+    <string name="reading_slow_chip">Tá sliseog na cáipéise ag cur moille ar a freagra, go minic tar éis iarrachtaí nár éirigh leo. Coinnigh an cháipéis gan bhogadh; d’fhéadfadh sé suas le nóiméad a thógáil.</string>
+    <string name="reading_error_access_denied">Tá an CAN nó sonraí an MRZ mícheart. Seiceáil an uimhir a d’iontráil tú agus na dátaí, agus bain triail eile as. D’fhéadfadh gach iarracht theipthe an mhoill a chuireann an tsliseog i bhfeidhm sula bhfreagraíonn sí a mhéadú.</string>
+    <string name="reading_error_connection_lost">Baineadh an cháipéis ró-luath. Coinnigh gan bhogadh í in aghaidh an fhóin go dtí go mbeidh an léamh críochnaithe.</string>
+    <string name="reading_error_not_icao">Níl an cháipéis seo de réir chaighdeán ICAO 9303: ní féidir a sliseog a léamh.</string>
+    <string name="reading_error_timeout">Imithe thar am: níor fhreagair an tsliseog in am. Bain triail eile as agus coinnigh an cháipéis gan bhogadh.</string>
+    <string name="reading_error_can_without_pace">Ní féidir an cháipéis seo a léamh le CAN. Úsáid an cluaisín Pas agus iontráil sonraí an MRZ.</string>
+    <string name="reading_error_unexpected">Tharla earráid gan choinne.</string>
+    <string name="reading_error_code">Cód earráide: %1$s</string>
+    <string name="reading_retry">Bain triail eile as</string>
+    <string name="reading_cancel">Cealaigh</string>
+</resources>

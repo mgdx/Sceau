@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">Tietoja</string>
+    <string name="about_back">Takaisin</string>
+    <string name="about_tagline">ICAO 9303 -henkilöasiakirjojen sirun lukeminen ja tarkistaminen ilman verkkoyhteyttä.</string>
+    <string name="about_version">Versio %1$s</string>
+    <string name="about_version_unknown">Tuntematon versio</string>
+
+    <string name="about_section_license">Lisenssi ja lähdekoodi</string>
+    <string name="about_license">Vapaa ohjelmisto, jota jaetaan GNU GPL -lisenssin version 3 tai myöhemmän ehdoin.</string>
+    <string name="about_open_repository">Näytä lähdekoodi</string>
+    <string name="about_no_browser">Mikään sovellus ei voi avata tätä linkkiä.</string>
+
+    <string name="about_section_trust">Sisäänrakennetut luotetut varmenteet</string>
+    <string name="about_trust_ants_only">ANTS:n ranskalaiset CSCA-varmenteet (passit ja henkilökortit).</string>
+    <string name="about_trust_ants_and_bsi">ANTS:n ranskalaiset CSCA-varmenteet ja BSI:n saksalainen Master List.</string>
+    <string name="about_trust_master_list_date">Master List allekirjoitettu %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">Master Listin allekirjoituspäivää ei ole ilmoitettu.</string>
+    <string name="about_trust_bsi_notice">BSI:n (Saksan liittovaltion tietoturvavirasto) Master List jaetaan muuttamattomana, ilman BSI:n yhteistyötä tai hyväksyntää.</string>
+    <string name="about_trust_national">Seuraavien valtioiden omille asiakirjoilleen julkaisemat varmenteet: %1$s.</string>
+    <string name="about_trust_ogl_notice">Sisältää Yhdistyneen kuningaskunnan julkisen sektorin tietoja, jotka on julkaistu Open Government Licence v3.0 -lisenssillä.</string>
+    <string name="about_trust_loading">Ladataan…</string>
+    <string name="about_trust_error">Luotettujen varmenteiden lataaminen epäonnistui.</string>
+
+    <string name="about_section_limits">Rajoitukset</string>
+    <string name="about_limit_unknown_issuer">Jos asiakirjan myöntäjämaa ei ole luotettujen varmenteiden joukossa, tulos on ”Tuntematon myöntäjä”, ei ”Epäonnistui”. Uudemman Master Listin tuominen voi korjata tämän.</string>
+    <string name="about_limit_revocation">Sulkulistoja ei tarkisteta: ne edellyttävät verkkoyhteyttä, jota Sceau ei koskaan käytä.</string>
+
+    <string name="about_section_usage">Käyttöehdot</string>
+    <string name="about_usage_holder">Lukeminen edellyttää, että haltija esittää asiakirjan itse ja antaa siihen suostumuksensa.</string>
+    <string name="about_usage_biometrics">Kuvasta tulee tietosuoja-asetuksessa (GDPR) tarkoitettu biometrinen tieto, jos sitä käytetään automaattiseen kasvojen vertailuun. Sceau ei tee tällaista vertailua, eikä sitä saa käyttää siihen ilman erityistä oikeusperustetta.</string>
+    <string name="about_usage_privacy">Luettuja tietoja ei tallenneta eikä lähetetä: kaikki poistetaan muistista, kun poistut tulosnäkymästä tai siirrät sovelluksen taustalle.</string>
+</resources>

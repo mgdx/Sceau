@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">Maidir le</string>
+    <string name="about_back">Siar</string>
+    <string name="about_tagline">Léamh agus fíorú as líne ar shliseog na gcáipéisí aitheantais ICAO 9303.</string>
+    <string name="about_version">Leagan %1$s</string>
+    <string name="about_version_unknown">Leagan anaithnid</string>
+
+    <string name="about_section_license">Ceadúnas agus cód foinseach</string>
+    <string name="about_license">Bogearraí saora a dháiltear faoi cheadúnas GNU GPL, leagan 3 nó leagan níos déanaí.</string>
+    <string name="about_open_repository">Féach ar an gcód foinseach</string>
+    <string name="about_no_browser">Níl aon aip in ann an nasc seo a oscailt.</string>
+
+    <string name="about_section_trust">Stór iontaobhais ionsuite</string>
+    <string name="about_trust_ants_only">Deimhnithe CSCA Francacha ó ANTS (pasanna agus cártaí aitheantais).</string>
+    <string name="about_trust_ants_and_bsi">Deimhnithe CSCA Francacha ó ANTS agus Master List Ghearmánach an BSI.</string>
+    <string name="about_trust_master_list_date">Master List sínithe ar %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">Níl dáta sínithe an Master List luaite.</string>
+    <string name="about_trust_bsi_notice">Athdháiltear Master List an BSI (Oifig Chónaidhme na Gearmáine um Shlándáil Faisnéise) gan athrú, gan comhoibriú ná formhuiniú ón BSI.</string>
+    <string name="about_trust_national">Deimhnithe arna bhfoilsiú ag na Stáit seo a leanas dá gcáipéisí féin: %1$s.</string>
+    <string name="about_trust_ogl_notice">Tá faisnéis ó earnáil phoiblí na Ríochta Aontaithe ann, arna foilsiú faoin gceadúnas Open Government Licence v3.0.</string>
+    <string name="about_trust_loading">Á lódáil…</string>
+    <string name="about_trust_error">Níorbh fhéidir an stór iontaobhais a lódáil.</string>
+
+    <string name="about_section_limits">Teorainneacha</string>
+    <string name="about_limit_unknown_issuer">Nuair nach bhfuil tír eisiúna cáipéise sa stór iontaobhais, is é “Eisitheoir anaithnid” an toradh, ní “Teip”. D’fhéadfadh Master List níos déanaí a iompórtáil é sin a réiteach.</string>
+    <string name="about_limit_revocation">Ní sheiceáiltear liostaí cúlghairme: bheadh an líonra ag teastáil, agus ní úsáideann Sceau an líonra riamh.</string>
+
+    <string name="about_section_usage">Téarmaí úsáide</string>
+    <string name="about_usage_holder">Ní mór don sealbhóir féin an cháipéis a thaispeáint agus toiliú leis an léamh.</string>
+    <string name="about_usage_biometrics">Is sonraí bithmhéadracha de réir bhrí an RGCS an grianghraf má úsáidtear é chun aghaidheanna a chur i gcomparáid go huathoibríoch. Ní dhéanann Sceau a leithéid de chomparáid, agus ní ceadmhach é a úsáid chuige sin gan bhunús dlí sonrach.</string>
+    <string name="about_usage_privacy">Ní choinnítear ná ní sheoltar aon sonraí a léitear: scriostar gach rud ón gcuimhne nuair a fhágann tú an toradh nó nuair a chuireann tú an aip sa chúlra.</string>
+</resources>

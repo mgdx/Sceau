@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">Dwar</string>
+    <string name="about_back">Lura</string>
+    <string name="about_tagline">Qari u verifika offline taċ-ċippa tad-dokumenti tal-identità ICAO 9303.</string>
+    <string name="about_version">Verżjoni %1$s</string>
+    <string name="about_version_unknown">Verżjoni mhux magħrufa</string>
+
+    <string name="about_section_license">Liċenzja u kodiċi sors</string>
+    <string name="about_license">Softwer liberu mqassam taħt il-liċenzja GNU GPL verżjoni 3 jew verżjoni aktar tard.</string>
+    <string name="about_open_repository">Ara l-kodiċi sors</string>
+    <string name="about_no_browser">L-ebda app ma tista’ tiftaħ din il-link.</string>
+
+    <string name="about_section_trust">Ħażna ta’ fiduċja integrata</string>
+    <string name="about_trust_ants_only">Ċertifikati CSCA Franċiżi tal-ANTS (passaporti u karti tal-identità).</string>
+    <string name="about_trust_ants_and_bsi">Ċertifikati CSCA Franċiżi tal-ANTS u l-Master List Ġermaniża tal-BSI.</string>
+    <string name="about_trust_master_list_date">Master List iffirmata: %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">Id-data tal-firma tal-Master List mhijiex indikata.</string>
+    <string name="about_trust_bsi_notice">Il-Master List tal-BSI (l-Uffiċċju Federali Ġermaniż għas-Sigurtà tal-Informazzjoni) titqassam mill-ġdid mingħajr modifiki, mingħajr il-kooperazzjoni jew l-approvazzjoni tal-BSI.</string>
+    <string name="about_trust_national">Ċertifikati ppubblikati mill-Istati li ġejjin għad-dokumenti tagħhom stess: %1$s.</string>
+    <string name="about_trust_ogl_notice">Fih informazzjoni tas-settur pubbliku Brittaniku ppubblikata taħt il-liċenzja Open Government Licence v3.0.</string>
+    <string name="about_trust_loading">Qed jitgħabba…</string>
+    <string name="about_trust_error">Ma setgħetx titgħabba l-ħażna ta’ fiduċja.</string>
+
+    <string name="about_section_limits">Limitazzjonijiet</string>
+    <string name="about_limit_unknown_issuer">Dokument li l-pajjiż emittenti tiegħu mhuwiex fil-ħażna ta’ fiduċja jingħata r-riżultat “Emittent mhux magħruf”, mhux “Falla”. L-importazzjoni ta’ Master List aktar riċenti tista’ ssolvi dan.</string>
+    <string name="about_limit_revocation">Il-listi ta’ revoka ma jiġux ikkonsultati: jeħtieġu n-netwerk, li Sceau qatt ma juża.</string>
+
+    <string name="about_section_usage">Qafas tal-użu</string>
+    <string name="about_usage_holder">Il-qari jippresupponi li d-detentur stess jippreżenta d-dokument u jagħti l-kunsens għalih.</string>
+    <string name="about_usage_biometrics">Ir-ritratt isir data bijometrika skont il-GDPR jekk jintuża għal tqabbil awtomatizzat tal-uċuħ. Sceau ma jagħmilx tqabbil bħal dan u ma għandux jintuża għal dan l-iskop mingħajr bażi legali speċifika.</string>
+    <string name="about_usage_privacy">L-ebda data moqrija ma tinżamm jew tintbagħat: kollox jitħassar mill-memorja meta toħroġ mir-riżultat jew meta tpoġġi l-app fl-isfond.</string>
+</resources>

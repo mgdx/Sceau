@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">Rreth</string>
+    <string name="about_back">Prapa</string>
+    <string name="about_tagline">Lexim dhe verifikim jashtë linje i çipit të dokumenteve të identitetit ICAO 9303.</string>
+    <string name="about_version">Versioni %1$s</string>
+    <string name="about_version_unknown">Version i panjohur</string>
+
+    <string name="about_section_license">Licenca dhe kodi burimor</string>
+    <string name="about_license">Softuer i lirë, i shpërndarë me licencën GNU GPL, versioni 3 ose më i ri.</string>
+    <string name="about_open_repository">Shiko kodin burimor</string>
+    <string name="about_no_browser">Asnjë aplikacion nuk mund ta hapë këtë lidhje.</string>
+
+    <string name="about_section_trust">Certifikatat e besuara të integruara</string>
+    <string name="about_trust_ants_only">Certifikatat CSCA franceze të ANTS (pasaporta dhe letërnjoftime).</string>
+    <string name="about_trust_ants_and_bsi">Certifikatat CSCA franceze të ANTS dhe Master List gjermane e BSI-së.</string>
+    <string name="about_trust_master_list_date">Master List e nënshkruar më %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">Data e nënshkrimit të Master List nuk është treguar.</string>
+    <string name="about_trust_bsi_notice">Master List e BSI-së (Zyra Federale Gjermane për Sigurinë e Informacionit) rishpërndahet e pandryshuar, pa bashkëpunimin ose miratimin e BSI-së.</string>
+    <string name="about_trust_national">Certifikata të publikuara nga shtetet e mëposhtme për dokumentet e tyre: %1$s.</string>
+    <string name="about_trust_ogl_notice">Përmban informacion të sektorit publik britanik, të publikuar me licencën Open Government Licence v3.0.</string>
+    <string name="about_trust_loading">Po ngarkohet…</string>
+    <string name="about_trust_error">Certifikatat e besuara nuk mund të ngarkoheshin.</string>
+
+    <string name="about_section_limits">Kufizimet</string>
+    <string name="about_limit_unknown_issuer">Një dokument, vendi lëshues i të cilit nuk gjendet te certifikatat e besuara, merr rezultatin „Lëshues i panjohur“, jo „Dështim“. Importimi i një Master List më të re mund ta zgjidhë këtë.</string>
+    <string name="about_limit_revocation">Listat e revokimit nuk kontrollohen: ato kërkojnë rrjetin, të cilin Sceau nuk e përdor kurrë.</string>
+
+    <string name="about_section_usage">Kushtet e përdorimit</string>
+    <string name="about_usage_holder">Leximi supozon që mbajtësi e paraqet vetë dokumentin dhe jep pëlqimin.</string>
+    <string name="about_usage_biometrics">Fotografia bëhet e dhënë biometrike sipas Rregullores së Përgjithshme për Mbrojtjen e të Dhënave (GDPR) nëse përdoret për krahasim të automatizuar të fytyrave. Sceau nuk bën një krahasim të tillë dhe nuk duhet përdorur për këtë qëllim pa një bazë ligjore të posaçme.</string>
+    <string name="about_usage_privacy">Asnjë e dhënë e lexuar nuk ruhet as nuk dërgohet: gjithçka fshihet nga memoria kur del nga rezultati ose kur e kalon aplikacionin në sfond.</string>
+</resources>

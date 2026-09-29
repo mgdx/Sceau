@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">Lisää vaihtoehtoja</string>
+    <string name="home_menu_trust_store">Luotetut varmenteet</string>
+    <string name="home_menu_about">Tietoja</string>
+    <string name="home_tab_id_card">Henkilökortti</string>
+    <string name="home_tab_passport">Passi</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">Kortin etupuolelle painettu 6-numeroinen tunnus</string>
+    <string name="home_document_number_label">Asiakirjan numero</string>
+    <string name="home_document_number_supporting">Kuten henkilötietosivulla, enintään 9 merkkiä</string>
+    <string name="home_date_of_birth_label">Syntymäaika</string>
+    <string name="home_date_of_expiry_label">Voimassaolon päättymispäivä</string>
+    <string name="home_date_day">PP</string>
+    <string name="home_date_month">KK</string>
+    <string name="home_date_year">VVVV</string>
+    <string name="home_date_format">Muoto: %1$s</string>
+    <string name="home_date_error_invalid">Päivämäärää ei ole olemassa</string>
+    <string name="home_date_error_future">Syntymäaika ei voi olla tulevaisuudessa</string>
+    <string name="home_date_error_too_old">Päättymispäivä on liian vanha (ennen vuotta %1$d)</string>
+    <string name="home_holder_notice">Asiakirjan haltijan on esitettävä asiakirja itse.</string>
+    <string name="home_read">Lue</string>
+    <string name="home_nfc_disabled">NFC on pois päältä. Laita se päälle, jotta asiakirjan siru voidaan lukea.</string>
+    <string name="home_nfc_settings">Avaa NFC-asetukset</string>
+    <string name="home_nfc_absent">Tässä puhelimessa ei ole NFC:tä, joten se ei voi lukea henkilöasiakirjojen sirua.</string>
+    <string name="home_menu_demo">Simuloi ranskalainen henkilökortti (demo)</string>
+</resources>
