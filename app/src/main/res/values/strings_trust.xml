@@ -23,6 +23,7 @@
     <string name="trust_validity">Valide du %1$s au %2$s</string>
     <string name="trust_fingerprint">Empreinte SHA-256</string>
     <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_national">Publication nationale</string>
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Importé</string>
     <string name="trust_link_certificate">Certificat de lien</string>

@@ -7,6 +7,12 @@ enum class TrustSource {
     /** Certificats DER de l'ANTS embarqués (passeport et e-ID). */
     ANTS,
 
+    /**
+     * Certificats DER embarqués, publiés par un autre État que la France pour ses propres
+     * documents (CSCA et certificats de lien absents de la Master List embarquée, D26).
+     */
+    NATIONAL,
+
     /** Master List embarquée dans `core/src/main/resources/trust/`. */
     EMBEDDED_MASTER_LIST,
 
@@ -34,7 +40,7 @@ class TrustAnchor(
     val isSelfSigned: Boolean by lazy { TrustCrypto.isSelfSigned(certificate) }
 }
 
-/** Magasin de confiance fusionné (ANTS + Master List embarquée + imports), en lecture seule. */
+/** Magasin de confiance fusionné (ANTS, publications nationales, Master List embarquée, imports), en lecture seule. */
 interface TrustStore {
     val anchors: List<TrustAnchor>
 

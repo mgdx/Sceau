@@ -1,5 +1,6 @@
 package io.github.mgdx.sceau.core.trust
 
+import io.github.mgdx.sceau.core.verify.Crypto
 import org.bouncycastle.cert.X509CertificateHolder
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -17,6 +18,18 @@ class TrustStoreTest {
             "28df42a7a0ed1b20f994cc96999060619e095b09764159703438ec60b88ee856",
             "d628b5100ddcbed8f3e5fa05e53b6b80bebb1e6264a12583319ef955c91d9349",
             "b33ea63b9be01082d98071a29111757c72257eba80d7205d21fa35436c29fe7c",
+        )
+
+    /** Certificats publiés par leur propre État (D26), empreinte vers pays et caractère auto-signé. */
+    private val nationalSha256 =
+        mapOf(
+            "737ce248b62d8b6dc1c9e3aaa8b937334406bac17bb37235c1c50281e6ad7edb" to ("GB" to true),
+            "81d9f6bf3026a04e6e3847808cf094e34f9473a92ff66eb86a975f4c42055b5d" to ("GB" to false),
+            "8f01ced4c95d9ee5cc6915e1151432e18fa1615ad6d8e61bb6ea1af025368e3e" to ("GR" to true),
+            "5bbdb09b12bc25f9373142409d9b52da806b764294baf4f028a2c13da15bdfc5" to ("GR" to false),
+            "2ef9e14c6155c315b8d7681168774a063e6fd2639f51f7d5c904ef862933c844" to ("GE" to true),
+            "277fcd17b53b3e2f20cfee967db499189bf23e0ef0a9e1040c5a24c8b09cde3c" to ("GE" to true),
+            "5acb0c0264ad18912ad80139b318ab507d00dc77a86ac4eb832d3510ff6ef95c" to ("LU" to false),
         )
 
     private fun ants(store: TrustStore) = store.anchors.filter { it.source == TrustSource.ANTS }
@@ -46,10 +59,41 @@ class TrustStoreTest {
         val embedded = store.anchors.filter { it.source == TrustSource.EMBEDDED_MASTER_LIST }
         // 588 certificats, dont 3 déjà fournis par l'ANTS (qui garde la priorité).
         assertEquals(585, embedded.size)
-        assertEquals(590, store.anchors.size)
+        assertEquals(597, store.anchors.size)
         val countries = embedded.map { it.country }.toSet()
         listOf("DE", "IT", "ES", "BE", "NL", "AT", "PL", "LU").forEach { assertTrue("CSCA $it attendu", it in countries) }
         assertTrue(store.findBySubject(X500Principal("CN=csca-germany, OU=bsi, O=bund, C=DE")).isNotEmpty())
+    }
+
+    @Test
+    fun loadsNationalAnchors() {
+        val store = TrustStores.load()
+        val national = store.anchors.filter { it.source == TrustSource.NATIONAL }
+
+        assertEquals(nationalSha256.keys, national.map { it.sha256 }.toSet())
+        national.forEach {
+            val (country, selfSigned) = nationalSha256.getValue(it.sha256)
+            assertEquals(country, it.country)
+            assertEquals(selfSigned, it.isSelfSigned)
+        }
+    }
+
+    @Test
+    fun nationalLinksAreSignedByAnEmbeddedAnchor() {
+        val store = TrustStores.load()
+        // Chaque certificat de lien ajouté se vérifie avec la clé d'un CSCA déjà dans le magasin
+        // (GBR_2021, CSCAeRP-HELLAS 002, CSCA ePassport du Luxembourg).
+        store.anchors
+            .filter { it.source == TrustSource.NATIONAL && !it.isSelfSigned }
+            .forEach { link ->
+                val issuers = store.findBySubject(link.certificate.issuerX500Principal).filter { it.sha256 != link.sha256 }
+                assertTrue(
+                    "émetteur du lien ${link.sha256} absent ou signature invalide",
+                    issuers.any { issuer ->
+                        runCatching { link.certificate.verify(issuer.certificate.publicKey, Crypto.provider) }.isSuccess
+                    },
+                )
+            }
     }
 
     @Test

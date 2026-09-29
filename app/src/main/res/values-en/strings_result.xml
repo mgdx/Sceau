@@ -103,6 +103,7 @@
     <string name="result_detail_country_mismatch">Inconsistent countries: certification authority %1$s, signer certificate %2$s, document %3$s</string>
     <string name="result_detail_source">Source: %1$s</string>
     <string name="result_detail_source_ants">ANTS certificates</string>
+    <string name="result_detail_source_national">certificates published by the issuing country</string>
     <string name="result_detail_source_embedded">built-in Master List</string>
     <string name="result_detail_source_imported">imported Master List</string>
     <string name="result_detail_ds_subject">DS certificate: %1$s</string>

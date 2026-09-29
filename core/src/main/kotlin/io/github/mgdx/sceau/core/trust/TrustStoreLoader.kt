@@ -6,11 +6,13 @@ import javax.security.auth.x500.X500Principal
 /**
  * Chargement du magasin embarqué. Lister un répertoire du classpath n'est pas fiable dans un
  * APK : les fichiers sont énumérés par `trust/index.txt` (un nom par ligne, `#` pour commenter).
- * `*.der` : certificat ANTS ; `*.ml` : Master List embarquée.
+ * `ants-*.der` : certificat ANTS ; autre `*.der` : certificat publié par son propre État (D26) ;
+ * `*.ml` : Master List embarquée.
  */
 internal object TrustStoreLoader {
     private const val DIRECTORY = "/trust/"
     private const val INDEX = DIRECTORY + "index.txt"
+    private const val ANTS_PREFIX = "ants-"
 
     /**
      * Empreintes SHA-256 des certificats autorisés à signer le signataire d'une Master List
@@ -24,12 +26,17 @@ internal object TrustStoreLoader {
 
     fun load(importedMasterLists: List<ByteArray>): TrustStore {
         val ants = mutableListOf<X509Certificate>()
+        val national = mutableListOf<X509Certificate>()
         var embedded: MasterList? = null
         for (name in embeddedFileNames()) {
             val bytes = readResource(DIRECTORY + name)
             when {
-                name.endsWith(".der") -> {
+                name.endsWith(".der") && name.startsWith(ANTS_PREFIX) -> {
                     ants += TrustCrypto.toX509(bytes)
+                }
+
+                name.endsWith(".der") -> {
+                    national += TrustCrypto.toX509(bytes)
                 }
 
                 name.endsWith(".ml") -> {
@@ -52,12 +59,13 @@ internal object TrustStoreLoader {
                     null
                 }
             }
-        return merge(ants, embedded, imported)
+        return merge(ants, national, embedded, imported)
     }
 
-    /** Fusion par ordre de priorité : ANTS, puis Master List embarquée, puis imports. */
+    /** Fusion par ordre de priorité : ANTS, publications nationales, Master List embarquée, imports. */
     fun merge(
         ants: List<X509Certificate>,
+        national: List<X509Certificate>,
         embedded: MasterList?,
         imported: List<MasterList>,
     ): TrustStore {
@@ -71,6 +79,7 @@ internal object TrustStoreLoader {
             bySha256.putIfAbsent(anchor.sha256, anchor)
         }
         ants.forEach { add(it, TrustSource.ANTS) }
+        national.forEach { add(it, TrustSource.NATIONAL) }
         embedded?.certificates?.forEach { add(it, TrustSource.EMBEDDED_MASTER_LIST) }
         imported.forEach { list -> list.certificates.forEach { add(it, TrustSource.IMPORTED_MASTER_LIST) } }
         return IndexedTrustStore(bySha256.values.toList(), embedded?.info)

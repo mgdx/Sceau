@@ -212,7 +212,7 @@ class MasterListTest {
     @Test
     fun keyIdentifierIsIndexed() {
         val list = TrustStores.parseMasterList(fixture.bytes)
-        val store = TrustStoreLoader.merge(emptyList(), null, listOf(list))
+        val store = TrustStoreLoader.merge(emptyList(), emptyList(), null, listOf(list))
         val ski = TrustCrypto.subjectKeyId(list.certificates[1])
 
         assertNotNull(ski)

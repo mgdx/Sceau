@@ -17,6 +17,8 @@
     <string name="about_trust_master_list_date">Master List signed on %1$s.</string>
     <string name="about_trust_master_list_date_unknown">Master List signing date not specified.</string>
     <string name="about_trust_bsi_notice">The BSI (German Federal Office for Information Security) Master List is redistributed unmodified, without the cooperation or endorsement of the BSI.</string>
+    <string name="about_trust_national">Certificates published by the following countries for their own documents: %1$s.</string>
+    <string name="about_trust_ogl_notice">Contains public sector information licensed under the Open Government Licence v3.0.</string>
     <string name="about_trust_loading">Loading…</string>
     <string name="about_trust_error">Couldn’t load the trust store.</string>
 

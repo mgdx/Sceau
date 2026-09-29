@@ -9,6 +9,9 @@ indique si Sceau peut l'embarquer dans un APK libre (GPLv3, F-Droid).
 - **Magasin de référence** : magasin embarqué de Sceau au 2026-09-25, soit les 5 CSCA de l'ANTS et
   la German Master List du BSI signée le 2026-05-28. Cela fait 590 certificats distincts (SHA-256)
   pour 112 émetteurs. Il est appelé « magasin actuel » ci-dessous (voir `docs/trust-store.md`).
+  Depuis le 2026-09-29, les 7 certificats valides de statut A (GB 2026 et son lien, GR titres de
+  séjour 003 et son lien, GE n° 5 et n° 6, lien eTravel LU) sont embarqués (décision D26) : les
+  chiffres de gain ci-dessous restent calculés sur le magasin du 2026-09-25.
 - **Méthode** : téléchargement uniquement depuis des domaines gouvernementaux ou institutionnels.
   Des agrégateurs tiers ont servi seulement à trouver des URL. Aucun captcha, aucun pare-feu
   applicatif et aucune condition d'utilisation n'ont été contournés.

@@ -45,7 +45,7 @@ internal sealed interface ChainOutcome {
  * Profil des émetteurs (audit V8) : un certificat du magasin n'est retenu comme émetteur que
  * s'il peut signer des certificats ([canIssueCertificates]) : `basicConstraints` avec cA=TRUE
  * et `keyUsage` avec keyCertSign, **quand ces extensions sont présentes**. Leur absence est
- * tolérée : mesuré sur les 590 ancres embarquées (ANTS et Master List BSI), tous les CSCA
+ * tolérée : mesuré sur les 590 ancres embarquées (ANTS et Master List BSI ; les 7 publications nationales ajoutées ensuite, D26, sont conformes), tous les CSCA
  * auto-signés sont conformes ; seuls des certificats de lien ne le sont pas (un sans
  * `basicConstraints`, un sans `keyUsage`, sept avec cA=FALSE — Cameroun, Italie, Portugal,
  * Turquie ×2, Luxembourg ×2). Ces sept liens sont écartés, sans effet : chacun a pour clé et
