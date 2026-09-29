@@ -62,6 +62,17 @@ class LdsParsersFuzzTest {
         fid: Short,
         iterations: Int,
     ) = campaign("DG$number", FuzzSeeds.dataGroup(number), fid, iterations).run { input ->
+        // Appel direct, sans le filet OutOfMemoryError de DataGroupParsers.orNull : une Error
+        // (allocation démesurée) doit être évitée à la racine, et fait échouer la campagne.
+        try {
+            when (number) {
+                2 -> DataGroupParsers.parseDg2(input.bytes)
+                11 -> DataGroupParsers.parseDg11(input.bytes, FuzzSeeds.TODAY)
+                else -> DataGroupParsers.parseDg12(input.bytes, FuzzSeeds.TODAY)
+            }
+        } catch (e: Exception) {
+            // DG illisible : absent, comme dans DataGroupParsers.document.
+        }
         val document = DataGroupParsers.document(mapOf(1 to validDg1, number to input.bytes), FuzzSeeds.TODAY)
         val size = input.bytes.size
         document.portrait?.let { property(it.bytes.size <= size) { "portrait plus grand que DG2" } }
@@ -77,14 +88,7 @@ class LdsParsersFuzzTest {
     @Test
     fun comDataGroups() =
         campaign("COM", FuzzSeeds.com, PassportService.EF_COM, DEFAULT_ITERATIONS).run { input ->
-            val groups =
-                try {
-                    DocumentReader.parseComDataGroups(input.bytes)
-                } catch (e: OutOfMemoryError) {
-                    // Bogue connu hors du périmètre du fuzzing, tant que
-                    // FuzzRegressionTest.comWithHugeInnerLengthIsUnreadable est désactivé.
-                    return@run
-                }
+            val groups = DocumentReader.parseComDataGroups(input.bytes)
             if (input.pristine) property(1 in groups) { "graine EF.COM illisible" }
         }
 

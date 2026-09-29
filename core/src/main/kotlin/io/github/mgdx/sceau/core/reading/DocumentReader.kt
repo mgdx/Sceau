@@ -102,11 +102,20 @@ internal class DocumentReader(
         /** DG lus après la Chip Authentication s'ils sont annoncés, dans cet ordre. Ne jamais y ajouter 3 ni 4. */
         val OPTIONAL_DATA_GROUPS = listOf(15, 11, 12)
 
+        /**
+         * DG annoncés par EF.COM ; vide s'il est illisible. Les longueurs sont contrôlées avant
+         * JMRTD ([BerStructure]) : une liste de tags (5C) annonçant 2 Go dans un EF.COM de
+         * quelques octets lui ferait allouer ce tableau (fuzzing, `FuzzRegressionTest`).
+         */
         fun parseComDataGroups(bytes: ByteArray): Set<Int> =
-            try {
-                LDSFileUtil.getDataGroupNumbers(COMFile(bytes.inputStream())).toSet()
-            } catch (e: Exception) {
+            if (!BerStructure.lengthsFit(bytes)) {
                 emptySet()
+            } else {
+                try {
+                    LDSFileUtil.getDataGroupNumbers(COMFile(bytes.inputStream())).toSet()
+                } catch (e: Exception) {
+                    emptySet()
+                }
             }
 
         fun parseSodDataGroups(bytes: ByteArray): Set<Int> =
