@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">Информация</string>
+    <string name="about_back">Назад</string>
+    <string name="about_tagline">Офлайн четене и проверка на чипа на документи за самоличност по ICAO 9303.</string>
+    <string name="about_version">Версия %1$s</string>
+    <string name="about_version_unknown">Неизвестна версия</string>
+
+    <string name="about_section_license">Лиценз и изходен код</string>
+    <string name="about_license">Свободен софтуер, разпространяван под лиценза GNU GPL, версия 3 или по-нова.</string>
+    <string name="about_open_repository">Преглед на изходния код</string>
+    <string name="about_no_browser">Няма приложение, което да отвори тази връзка.</string>
+
+    <string name="about_section_trust">Вградени доверени сертификати</string>
+    <string name="about_trust_ants_only">Френски CSCA на ANTS (паспорти и лични карти).</string>
+    <string name="about_trust_ants_and_bsi">Френски CSCA на ANTS и германският Master List на BSI.</string>
+    <string name="about_trust_master_list_date">Дата на подписване на Master List: %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">Датата на подписване на Master List не е посочена.</string>
+    <string name="about_trust_bsi_notice">Master List на BSI (Германската федерална служба за информационна сигурност) се разпространява без изменения, без сътрудничество или одобрение от BSI.</string>
+    <string name="about_trust_national">Сертификати, публикувани от следните държави за собствените им документи: %1$s.</string>
+    <string name="about_trust_ogl_notice">Съдържа информация от публичния сектор на Обединеното кралство, публикувана под лиценза Open Government Licence v3.0.</string>
+    <string name="about_trust_loading">Зарежда се…</string>
+    <string name="about_trust_error">Доверените сертификати не могат да бъдат заредени.</string>
+
+    <string name="about_section_limits">Ограничения</string>
+    <string name="about_limit_unknown_issuer">Документ, чиято издаваща държава не фигурира сред доверените сертификати, получава резултат „Неизвестен издател“, а не „Неуспешна проверка“. Импортирането на по-нов Master List може да помогне.</string>
+    <string name="about_limit_revocation">Списъците с анулирани сертификати не се проверяват: за това е нужна мрежа, която Sceau никога не използва.</string>
+
+    <string name="about_section_usage">Рамка на използване</string>
+    <string name="about_usage_holder">Четенето предполага, че притежателят сам представя документа си и е съгласен с това.</string>
+    <string name="about_usage_biometrics">Снимката става биометрични данни по смисъла на ОРЗД, ако се използва за автоматизирано сравнение на лица. Sceau не извършва такова сравнение и не бива да се използва за това без специално правно основание.</string>
+    <string name="about_usage_privacy">Прочетените данни не се съхраняват и не се изпращат: всичко се изтрива от паметта при излизане от резултата или при преминаване на приложението във фонов режим.</string>
+</resources>

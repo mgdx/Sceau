@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">О апликацији</string>
+    <string name="about_back">Назад</string>
+    <string name="about_tagline">Офлајн читање и провера чипа идентификационих докумената према стандарду ICAO 9303.</string>
+    <string name="about_version">Верзија %1$s</string>
+    <string name="about_version_unknown">Непозната верзија</string>
+
+    <string name="about_section_license">Лиценца и изворни кôд</string>
+    <string name="about_license">Слободан софтвер који се дистрибуира под лиценцом GNU GPL, верзија 3 или новија.</string>
+    <string name="about_open_repository">Прикажи изворни кôд</string>
+    <string name="about_no_browser">Ниједна апликација не може да отвори овај линк.</string>
+
+    <string name="about_section_trust">Уграђени поуздани сертификати</string>
+    <string name="about_trust_ants_only">Француски CSCA агенције ANTS (пасоши и личне карте).</string>
+    <string name="about_trust_ants_and_bsi">Француски CSCA агенције ANTS и немачка Master List коју објављује BSI.</string>
+    <string name="about_trust_master_list_date">Master List је потписана %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">Датум потписивања Master List није наведен.</string>
+    <string name="about_trust_bsi_notice">Master List коју објављује BSI (Савезна канцеларија Немачке за безбедност информационих технологија) дистрибуира се без измена, без сарадње са BSI и без његовог одобрења.</string>
+    <string name="about_trust_national">Сертификати које су следеће државе објавиле за своје документе: %1$s.</string>
+    <string name="about_trust_ogl_notice">Садржи информације јавног сектора Уједињеног Краљевства објављене под лиценцом Open Government Licence v3.0.</string>
+    <string name="about_trust_loading">Учитава се…</string>
+    <string name="about_trust_error">Учитавање поузданих сертификата није успело.</string>
+
+    <string name="about_section_limits">Ограничења</string>
+    <string name="about_limit_unknown_issuer">Документ чија држава издавања није међу поузданим сертификатима добија резултат „Непознат издавалац“, а не „Провера није успела“. Увоз новије Master List може то да реши.</string>
+    <string name="about_limit_revocation">Листе опозваних сертификата се не проверавају: за то је потребна мрежа, коју Sceau никада не користи.</string>
+
+    <string name="about_section_usage">Оквир коришћења</string>
+    <string name="about_usage_holder">Читање подразумева да носилац сам показује свој документ и да се са тим слаже.</string>
+    <string name="about_usage_biometrics">Фотографија постаје биометријски податак у смислу GDPR-а (Опште уредбе о заштити података) ако се користи за аутоматизовано поређење лица. Sceau не врши такво поређење и не сме се користити у ту сврху без посебног правног основа.</string>
+    <string name="about_usage_privacy">Прочитани подаци се не чувају нити шаљу: све се брише из меморије при изласку из резултата или када апликација пређе у позадину.</string>
+</resources>

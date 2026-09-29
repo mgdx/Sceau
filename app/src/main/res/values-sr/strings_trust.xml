@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trust_title">Поуздани сертификати</string>
+    <string name="trust_back">Назад</string>
+    <string name="trust_intro">Основни сертификати (CSCA) држава издавалаца, помоћу којих се проверава потпис докумената. Кроз овај екран не пролазе лични подаци.</string>
+    <plurals name="trust_summary">
+        <item quantity="one">%1$d сертификат, број држава: %2$d</item>
+        <item quantity="few">%1$d сертификата, број држава: %2$d</item>
+        <item quantity="other">%1$d сертификата, број држава: %2$d</item>
+    </plurals>
+    <string name="trust_loading">Учитавају се поуздани сертификати…</string>
+    <string name="trust_load_error">Учитавање поузданих сертификата није успело.</string>
+    <string name="trust_retry">Покушај поново</string>
+    <string name="trust_empty">Нема поузданих сертификата.</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">Држава није наведена</string>
+    <plurals name="trust_country_count">
+        <item quantity="one">%1$d сертификат</item>
+        <item quantity="few">%1$d сертификата</item>
+        <item quantity="other">%1$d сертификата</item>
+    </plurals>
+    <string name="trust_country_expand">Прикажи сертификате</string>
+    <string name="trust_country_collapse">Сакриј сертификате</string>
+    <string name="trust_validity">Важи од %1$s до %2$s</string>
+    <string name="trust_fingerprint">SHA-256 отисак</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_national">Национално објављивање</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">Увезено</string>
+    <string name="trust_link_certificate">Повезујући сертификат</string>
+
+    <!-- Import -->
+    <string name="trust_import">Увези Master List</string>
+    <string name="trust_busy">Сачекајте…</string>
+    <string name="trust_import_confirm_title">Желите ли да увезете ову Master List?</string>
+    <string name="trust_import_confirm_text">Њен потпис је важећи. Пре увоза проверите да ли се отисак потписника подудара са оним који је објавио орган издавања.</string>
+    <string name="trust_import_signer">Потписник</string>
+    <string name="trust_import_signer_fingerprint">SHA-256 отисак потписника</string>
+    <string name="trust_import_signing_date">Датум потписивања</string>
+    <string name="trust_import_signing_date_unknown">Није наведен</string>
+    <string name="trust_import_certificate_count">Број сертификата</string>
+    <string name="trust_import_confirm">Увези</string>
+    <string name="trust_cancel">Откажи</string>
+    <plurals name="trust_import_done">
+        <item quantity="one">Master List је увезена: %1$d сертификат.</item>
+        <item quantity="few">Master List је увезена: %1$d сертификата.</item>
+        <item quantity="other">Master List је увезена: %1$d сертификата.</item>
+    </plurals>
+    <string name="trust_import_invalid">Ова датотека није важећа Master List: формат је нечитљив или потпис није исправан (%1$s).</string>
+    <string name="trust_import_too_large">Датотека је одбијена: већа је од 20 MB.</string>
+    <string name="trust_import_read_error">Читање датотеке није успело.</string>
+    <string name="trust_import_write_error">Чување Master List није успело.</string>
+    <plurals name="trust_import_limit_count">
+        <item quantity="one">Увоз је одбијен: може се увести највише %1$d Master List. Избришите увезене сертификате да бисте додали другу.</item>
+        <item quantity="few">Увоз је одбијен: могу се увести највише %1$d Master List. Избришите увезене сертификате да бисте додали другу.</item>
+        <item quantity="other">Увоз је одбијен: може се увести највише %1$d Master List. Избришите увезене сертификате да бисте додали другу.</item>
+    </plurals>
+    <string name="trust_import_limit_size">Увоз је одбијен: увезене Master List би укупно премашиле %1$d MB. Избришите увезене сертификате да бисте додали другу.</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">Избриши увезене сертификате</string>
+    <string name="trust_delete_confirm_title">Желите ли да избришете увезене сертификате?</string>
+    <string name="trust_delete_confirm_text">Увезене Master List ће бити избрисане. Сертификати уграђени у апликацију се задржавају.</string>
+    <string name="trust_delete_confirm">Избриши</string>
+    <string name="trust_delete_done">Увезени сертификати су избрисани.</string>
+    <string name="trust_delete_error">Брисање увезених сертификата није успело.</string>
+</resources>

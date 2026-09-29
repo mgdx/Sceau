@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">Više opcija</string>
+    <string name="home_menu_trust_store">Pouzdani certifikati</string>
+    <string name="home_menu_about">O aplikaciji</string>
+    <string name="home_tab_id_card">Lična karta</string>
+    <string name="home_tab_passport">Pasoš</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">Šestocifreni broj odštampan na prednjoj strani kartice</string>
+    <string name="home_document_number_label">Broj dokumenta</string>
+    <string name="home_document_number_supporting">Kako je odštampan na stranici s ličnim podacima, najviše 9 znakova</string>
+    <string name="home_date_of_birth_label">Datum rođenja</string>
+    <string name="home_date_of_expiry_label">Datum isteka važenja</string>
+    <string name="home_date_day">DD</string>
+    <string name="home_date_month">MM</string>
+    <string name="home_date_year">GGGG</string>
+    <string name="home_date_format">Format: %1$s</string>
+    <string name="home_date_error_invalid">Ovaj datum ne postoji</string>
+    <string name="home_date_error_future">Datum rođenja ne može biti u budućnosti</string>
+    <string name="home_date_error_too_old">Datum isteka važenja je prestar (prije %1$d)</string>
+    <string name="home_holder_notice">Dokument mora pokazati njegov nosilac.</string>
+    <string name="home_read">Očitaj</string>
+    <string name="home_nfc_disabled">NFC je isključen. Uključite ga da biste očitali čip dokumenta.</string>
+    <string name="home_nfc_settings">Otvori postavke NFC-a</string>
+    <string name="home_nfc_absent">Ovaj telefon nema NFC: ne može očitati čip identifikacijskih dokumenata.</string>
+    <string name="home_menu_demo">Simuliraj CNIe (demo)</string>
+</resources>

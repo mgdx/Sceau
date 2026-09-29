@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trust_title">Доверенные сертификаты</string>
+    <string name="trust_back">Назад</string>
+    <string name="trust_intro">Корневые сертификаты (CSCA) государств, выдающих документы. По ним проверяется подпись документов. Персональные данные на этом экране не используются.</string>
+    <plurals name="trust_summary">
+        <item quantity="one">%1$d сертификат, стран: %2$d</item>
+        <item quantity="few">%1$d сертификата, стран: %2$d</item>
+        <item quantity="many">%1$d сертификатов, стран: %2$d</item>
+        <item quantity="other">%1$d сертификата, стран: %2$d</item>
+    </plurals>
+    <string name="trust_loading">Загрузка доверенных сертификатов…</string>
+    <string name="trust_load_error">Не удалось загрузить доверенные сертификаты.</string>
+    <string name="trust_retry">Повторить</string>
+    <string name="trust_empty">Нет доверенных сертификатов.</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">Страна не указана</string>
+    <plurals name="trust_country_count">
+        <item quantity="one">%1$d сертификат</item>
+        <item quantity="few">%1$d сертификата</item>
+        <item quantity="many">%1$d сертификатов</item>
+        <item quantity="other">%1$d сертификата</item>
+    </plurals>
+    <string name="trust_country_expand">Показать сертификаты</string>
+    <string name="trust_country_collapse">Скрыть сертификаты</string>
+    <string name="trust_validity">Действителен с %1$s по %2$s</string>
+    <string name="trust_fingerprint">Отпечаток SHA-256</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_national">Национальная публикация</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">Импортирован</string>
+    <string name="trust_link_certificate">Связующий сертификат</string>
+
+    <!-- Import -->
+    <string name="trust_import">Импортировать Master List</string>
+    <string name="trust_busy">Подождите…</string>
+    <string name="trust_import_confirm_title">Импортировать этот Master List?</string>
+    <string name="trust_import_confirm_text">Его подпись действительна. Перед импортом убедитесь, что отпечаток подписанта совпадает с отпечатком, опубликованным выдающим органом.</string>
+    <string name="trust_import_signer">Подписант</string>
+    <string name="trust_import_signer_fingerprint">Отпечаток SHA-256 подписанта</string>
+    <string name="trust_import_signing_date">Дата подписи</string>
+    <string name="trust_import_signing_date_unknown">Не указана</string>
+    <string name="trust_import_certificate_count">Количество сертификатов</string>
+    <string name="trust_import_confirm">Импортировать</string>
+    <string name="trust_cancel">Отмена</string>
+    <plurals name="trust_import_done">
+        <item quantity="one">Master List импортирован: %1$d сертификат.</item>
+        <item quantity="few">Master List импортирован: %1$d сертификата.</item>
+        <item quantity="many">Master List импортирован: %1$d сертификатов.</item>
+        <item quantity="other">Master List импортирован: %1$d сертификата.</item>
+    </plurals>
+    <string name="trust_import_invalid">Этот файл не является действительным Master List: формат не распознан или подпись неверна (%1$s).</string>
+    <string name="trust_import_too_large">Файл отклонен: его размер превышает 20 МБ.</string>
+    <string name="trust_import_read_error">Не удалось прочитать файл.</string>
+    <string name="trust_import_write_error">Не удалось сохранить Master List.</string>
+    <plurals name="trust_import_limit_count">
+        <item quantity="one">Импорт отклонен: можно импортировать не более %1$d Master List. Удалите импортированные сертификаты, чтобы добавить новый.</item>
+        <item quantity="few">Импорт отклонен: можно импортировать не более %1$d Master List. Удалите импортированные сертификаты, чтобы добавить новый.</item>
+        <item quantity="many">Импорт отклонен: можно импортировать не более %1$d Master List. Удалите импортированные сертификаты, чтобы добавить новый.</item>
+        <item quantity="other">Импорт отклонен: можно импортировать не более %1$d Master List. Удалите импортированные сертификаты, чтобы добавить новый.</item>
+    </plurals>
+    <string name="trust_import_limit_size">Импорт отклонен: общий размер импортированных Master List превысил бы %1$d МБ. Удалите импортированные сертификаты, чтобы добавить новый.</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">Удалить импортированные сертификаты</string>
+    <string name="trust_delete_confirm_title">Удалить импортированные сертификаты?</string>
+    <string name="trust_delete_confirm_text">Импортированные Master List будут удалены. Сертификаты, встроенные в приложение, сохранятся.</string>
+    <string name="trust_delete_confirm">Удалить</string>
+    <string name="trust_delete_done">Импортированные сертификаты удалены.</string>
+    <string name="trust_delete_error">Не удалось удалить импортированные сертификаты.</string>
+</resources>

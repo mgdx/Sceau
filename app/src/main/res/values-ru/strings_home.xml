@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">Другие параметры</string>
+    <string name="home_menu_trust_store">Доверенные сертификаты</string>
+    <string name="home_menu_about">О приложении</string>
+    <string name="home_tab_id_card">ID-карта</string>
+    <string name="home_tab_passport">Паспорт</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">6-значный номер на лицевой стороне карты</string>
+    <string name="home_document_number_label">Номер документа</string>
+    <string name="home_document_number_supporting">Как на странице с данными владельца, не более 9 символов</string>
+    <string name="home_date_of_birth_label">Дата рождения</string>
+    <string name="home_date_of_expiry_label">Дата окончания срока действия</string>
+    <string name="home_date_day">ДД</string>
+    <string name="home_date_month">ММ</string>
+    <string name="home_date_year">ГГГГ</string>
+    <string name="home_date_format">Формат: %1$s</string>
+    <string name="home_date_error_invalid">Такой даты не существует</string>
+    <string name="home_date_error_future">Дата рождения не может быть в будущем</string>
+    <string name="home_date_error_too_old">Слишком ранняя дата окончания срока действия (до %1$d)</string>
+    <string name="home_holder_notice">Документ должен предъявлять его владелец.</string>
+    <string name="home_read">Считать</string>
+    <string name="home_nfc_disabled">NFC отключен. Включите его, чтобы считать чип документа.</string>
+    <string name="home_nfc_settings">Открыть настройки NFC</string>
+    <string name="home_nfc_absent">На этом телефоне нет NFC: он не может считывать чип документов, удостоверяющих личность.</string>
+    <string name="home_menu_demo">Имитировать CNIe (демо)</string>
+</resources>
