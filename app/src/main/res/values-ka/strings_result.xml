@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="result_title">შედეგი</string>
+    <string name="result_clear">გასუფთავება</string>
+
+    <!-- Verdict -->
+    <string name="result_verdict_authentic">ავთენტურია</string>
+    <string name="result_verdict_authentic_explanation">გამცემის ხელმოწერა ვალიდურია და ჩიპმა დაამტკიცა, რომ ასლი არ არის.</string>
+    <string name="result_verdict_chip_unverified">ხელმოწერა ვალიდურია, ჩიპი შემოწმებული არ არის</string>
+    <string name="result_verdict_chip_unverified_explanation">მონაცემები ნამდვილად ხელმოწერილია გამცემის მიერ, მაგრამ ჩიპი არ იძლევა იმის დამტკიცების საშუალებას, რომ ის ორიგინალია: შესაძლოა, კლონი იყოს.</string>
+    <string name="result_verdict_unknown_issuer">უცნობი გამცემი</string>
+    <string name="result_verdict_unknown_issuer_explanation">გამცემის სერტიფიკატი სანდო საცავში არ არის. მონაცემები ნაჩვენებია, მაგრამ არაფერია გარანტირებული. უფრო ახალი Master List-ის იმპორტმა შეიძლება ამ დოკუმენტის შემოწმება შესაძლებელი გახადოს.</string>
+    <string name="result_verdict_failed">წარუმატებელი</string>
+    <string name="result_verdict_failed_explanation">სულ მცირე ერთი შემოწმება წარუმატებელი იყო: ეს დოკუმენტი ავთენტურად არ უნდა ჩაითვალოს.</string>
+    <string name="result_verdict_imported_anchor">შემოწმდა თქვენ მიერ იმპორტირებული სერტიფიკატით</string>
+
+    <!-- Photo -->
+    <string name="result_photo_description">მფლობელის ფოტო</string>
+    <string name="result_photo_unavailable">ფოტო ვერ იკითხება ან არ არსებობს</string>
+    <string name="result_photo_fullscreen">ფოტოს სრულ ეკრანზე ჩვენება</string>
+    <string name="result_photo_close">დახურვა</string>
+    <string name="result_image_front">წინა მხარის გამოსახულება</string>
+    <string name="result_image_rear">უკანა მხარის გამოსახულება</string>
+    <string name="result_image_unavailable">გამოსახულება ვერ იკითხება</string>
+
+    <!-- Identité -->
+    <string name="result_section_identity">პირადობა</string>
+    <string name="result_expired">დოკუმენტს ვადა გაუვიდა</string>
+    <string name="result_field_surname">გვარი</string>
+    <string name="result_field_given_names">სახელი</string>
+    <string name="result_field_sex">სქესი</string>
+    <string name="result_field_birth_date">დაბადების თარიღი</string>
+    <string name="result_field_nationality">მოქალაქეობა</string>
+    <string name="result_field_document_type">დოკუმენტის ტიპი</string>
+    <string name="result_field_document_number">დოკუმენტის ნომერი</string>
+    <string name="result_field_issuing_state">გამცემი სახელმწიფო</string>
+    <string name="result_field_expiry_date">მოქმედების ვადა</string>
+    <string name="result_sex_male">მამრობითი</string>
+    <string name="result_sex_female">მდედრობითი</string>
+    <string name="result_sex_unspecified">მითითებული არ არის</string>
+    <string name="result_document_passport">პასპორტი</string>
+    <string name="result_document_identity_card">პირადობის მოწმობა</string>
+    <string name="result_document_other">სხვა სამგზავრო დოკუმენტი</string>
+    <string name="result_value_with_code">%1$s (%2$s)</string>
+    <string name="result_unknown_value">უცნობია</string>
+
+    <!-- Pays spéciaux ICAO -->
+    <string name="result_country_united_nations">გაერთიანებული ერები</string>
+    <string name="result_country_un_agency">გაეროს სპეციალიზებული დაწესებულება</string>
+    <string name="result_country_un_kosovo">კოსოვო (UNMIK)</string>
+    <string name="result_country_stateless">მოქალაქეობის არმქონე პირი</string>
+    <string name="result_country_refugee">ლტოლვილი (1951 წლის კონვენცია)</string>
+    <string name="result_country_refugee_other">ლტოლვილი</string>
+    <string name="result_country_unspecified">მოქალაქეობა მითითებული არ არის</string>
+
+    <!-- Données complémentaires -->
+    <string name="result_section_additional">დამატებითი მონაცემები</string>
+    <string name="result_field_full_name">სრული სახელი</string>
+    <string name="result_field_other_names">სხვა სახელები</string>
+    <string name="result_field_personal_number">პირადი ნომერი</string>
+    <string name="result_field_full_birth_date">დაბადების სრული თარიღი</string>
+    <string name="result_field_place_of_birth">დაბადების ადგილი</string>
+    <string name="result_field_address">მისამართი</string>
+    <string name="result_field_telephone">ტელეფონი</string>
+    <string name="result_field_profession">პროფესია</string>
+    <string name="result_field_title">წოდება</string>
+    <string name="result_field_personal_summary">პირადი მონაცემების შეჯამება</string>
+    <string name="result_field_other_td_numbers">სხვა მოქმედი სამგზავრო დოკუმენტები</string>
+    <string name="result_field_custody">მეურვეობის მონაცემები</string>
+    <string name="result_field_issuing_authority">გამცემი ორგანო</string>
+    <string name="result_field_issue_date">გაცემის თარიღი</string>
+    <string name="result_field_other_persons">სხვა მითითებული პირები</string>
+    <string name="result_field_endorsements">აღნიშვნები და შენიშვნები</string>
+    <string name="result_field_tax_exit">საგადასახადო ან გასვლის ვალდებულებები</string>
+    <string name="result_field_personalization_time">პერსონალიზაციის თარიღი</string>
+    <string name="result_field_personalization_device">პერსონალიზაციის სისტემის ნომერი</string>
+
+    <!-- Vérifications -->
+    <string name="result_section_checks">შემოწმებები</string>
+    <string name="result_check_secure_channel">დაცული არხი დამყარდა</string>
+    <string name="result_check_sod_signature">SOD-ის ხელმოწერა ვალიდურია</string>
+    <string name="result_check_chain">სერტიფიკაციის ჯაჭვი</string>
+    <string name="result_check_ds_validity">DS სერტიფიკატის მოქმედება</string>
+    <string name="result_check_dg_hashes">მონაცემთა ჯგუფების ანაბეჭდები</string>
+    <string name="result_check_chip_authentication">Chip Authentication (DG14)</string>
+    <string name="result_check_active_authentication">Active Authentication (DG15)</string>
+    <string name="result_status_ok">წარმატებული</string>
+    <string name="result_status_failed">წარუმატებელი</string>
+    <string name="result_status_not_available">მიუწვდომელია</string>
+    <string name="result_status_unsupported">ალგორითმი არ არის მხარდაჭერილი</string>
+    <string name="result_check_expand">დეტალების ჩვენება</string>
+    <string name="result_check_collapse">დეტალების დამალვა</string>
+
+    <!-- Détail des vérifications -->
+    <string name="result_detail_protocol">პროტოკოლი: %1$s</string>
+    <string name="result_detail_ca_method">მეთოდი: %1$s</string>
+    <string name="result_detail_ca_method_dg14">Chip Authentication DG14-ის გასაღებით</string>
+    <string name="result_detail_ca_method_pace_cam">PACE-CAM არხის გახსნისას, EF.CardSecurity-ის გასაღებით</string>
+    <string name="result_detail_algorithm">ხელმოწერის ალგორითმი: %1$s</string>
+    <string name="result_detail_csca">CSCA: %1$s</string>
+    <string name="result_detail_csca_none">საცავში შესაბამისი CSCA არ არის.</string>
+    <string name="result_detail_country">ქვეყანა: %1$s</string>
+    <string name="result_detail_country_mismatch">ქვეყნები არ ემთხვევა: სერტიფიკაციის ორგანო %1$s, ხელმომწერის სერტიფიკატი %2$s, დოკუმენტი %3$s</string>
+    <string name="result_detail_source">წყარო: %1$s</string>
+    <string name="result_detail_source_ants">ANTS-ის სერტიფიკატები</string>
+    <string name="result_detail_source_national">გამცემი სახელმწიფოს მიერ გამოქვეყნებული სერტიფიკატები</string>
+    <string name="result_detail_source_embedded">ჩაშენებული Master List</string>
+    <string name="result_detail_source_imported">იმპორტირებული Master List</string>
+    <string name="result_detail_ds_subject">DS სერტიფიკატი: %1$s</string>
+    <string name="result_detail_links">გამოყენებული დამაკავშირებელი სერტიფიკატები:</string>
+    <string name="result_detail_link_item">• %1$s</string>
+    <string name="result_detail_links_none">დამაკავშირებელი სერტიფიკატი არ გამოყენებულა.</string>
+    <string name="result_detail_ds_missing">DS სერტიფიკატი არც SOD-შია და არც სანდო საცავში.</string>
+    <string name="result_detail_ds_period">DS-ის მოქმედების პერიოდი: %1$s – %2$s</string>
+    <string name="result_detail_issuance">გაცემის თარიღი: %1$s (%2$s)</string>
+    <string name="result_detail_issuance_no_source">გაცემის თარიღი: %1$s</string>
+    <string name="result_detail_issuance_unknown">გაცემის თარიღი უცნობია.</string>
+    <string name="result_detail_issuance_dg12">წაკითხულია DG12-დან</string>
+    <string name="result_detail_issuance_sod">SOD-ის ხელმოწერის თარიღი</string>
+    <string name="result_detail_issuance_estimated">სავარაუდო</string>
+    <string name="result_detail_digest_algorithm">ანაბეჭდის ალგორითმი: %1$s</string>
+    <string name="result_detail_dg_checked">შემოწმებული მონაცემთა ჯგუფები: %1$s</string>
+    <string name="result_detail_dg_checked_none">მონაცემთა არცერთი ჯგუფი არ შემოწმებულა.</string>
+    <string name="result_detail_dg_mismatched">შეუსაბამო ანაბეჭდები: %1$s</string>
+    <string name="result_detail_dg_all_match">ყველა ანაბეჭდი შესაბამისია.</string>
+    <string name="result_detail_dg_missing">მონაცემთა ჯგუფები, რომლებიც გამოცხადებულია, მაგრამ ჩიპმა არ მოგვაწოდა: %1$s</string>
+    <string name="result_detail_unsupported">ალგორითმი არ არის მხარდაჭერილი: %1$s</string>
+    <string name="result_detail_error">ტექნიკური შეცდომა: %1$s</string>
+    <string name="result_detail_no_dg14">დოკუმენტი არ შეიცავს DG14-ს: ჩიპი ამ შემოწმებას არ გვთავაზობს.</string>
+    <string name="result_detail_no_dg15">დოკუმენტი არ შეიცავს DG15-ს: ჩიპი ამ შემოწმებას არ გვთავაზობს.</string>
+    <string name="result_detail_not_reached">ეს ეტაპი არ შესრულებულა.</string>
+    <string name="result_detail_none">დამატებითი დეტალები არ არის.</string>
+    <string name="result_demo_banner">სიმულირებული დოკუმენტი — დემო</string>
+</resources>

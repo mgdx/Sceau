@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">אפשרויות נוספות</string>
+    <string name="home_menu_trust_store">מאגר האמון</string>
+    <string name="home_menu_about">מידע על האפליקציה</string>
+    <string name="home_tab_id_card">תעודת זהות</string>
+    <string name="home_tab_passport">דרכון</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">מספר בן 6 ספרות המודפס בצד הקדמי של הכרטיס</string>
+    <string name="home_document_number_label">מספר המסמך</string>
+    <string name="home_document_number_supporting">כפי שמודפס בדף הפרטים, עד 9 תווים</string>
+    <string name="home_date_of_birth_label">תאריך לידה</string>
+    <string name="home_date_of_expiry_label">תאריך תפוגה</string>
+    <string name="home_date_day">יי</string>
+    <string name="home_date_month">חח</string>
+    <string name="home_date_year">שששש</string>
+    <string name="home_date_format">פורמט: %1$s</string>
+    <string name="home_date_error_invalid">התאריך הזה לא קיים</string>
+    <string name="home_date_error_future">תאריך הלידה לא יכול להיות בעתיד</string>
+    <string name="home_date_error_too_old">תאריך התפוגה ישן מדי (לפני %1$d)</string>
+    <string name="home_holder_notice">המסמך חייב להיות מוצג על ידי בעליו.</string>
+    <string name="home_read">קריאה</string>
+    <string name="home_nfc_disabled">תקשורת ה-NFC כבויה. יש להפעיל אותה כדי לקרוא את השבב של המסמך.</string>
+    <string name="home_nfc_settings">פתיחת הגדרות NFC</string>
+    <string name="home_nfc_absent">בטלפון הזה אין NFC, ולכן הוא לא יכול לקרוא את השבב של מסמכי זיהוי.</string>
+    <string name="home_menu_demo">הדמיה של תעודת זהות צרפתית (הדגמה)</string>
+</resources>

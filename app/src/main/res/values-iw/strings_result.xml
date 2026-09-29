@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="result_title">תוצאה</string>
+    <string name="result_clear">מחיקה</string>
+
+    <!-- Verdict -->
+    <string name="result_verdict_authentic">אותנטי</string>
+    <string name="result_verdict_authentic_explanation">החתימה של הגורם המנפיק תקפה, והשבב הוכיח שהוא אינו העתק.</string>
+    <string name="result_verdict_chip_unverified">חתימה תקפה, השבב לא אומת</string>
+    <string name="result_verdict_chip_unverified_explanation">הנתונים אכן נחתמו על ידי הגורם המנפיק, אבל השבב לא מאפשר להוכיח שהוא המקורי: ייתכן שהוא שיבוט.</string>
+    <string name="result_verdict_unknown_issuer">מנפיק לא ידוע</string>
+    <string name="result_verdict_unknown_issuer_explanation">התעודה של הגורם המנפיק אינה מופיעה במאגר האמון. הנתונים מוצגים, אבל שום דבר אינו מובטח. ייבוא של Master List עדכנית יותר עשוי לאפשר את אימות המסמך הזה.</string>
+    <string name="result_verdict_failed">האימות נכשל</string>
+    <string name="result_verdict_failed_explanation">לפחות בדיקה אחת נכשלה: אין להתייחס למסמך הזה כאל מסמך אותנטי.</string>
+    <string name="result_verdict_imported_anchor">אומת בעזרת תעודה שייבאת</string>
+
+    <!-- Photo -->
+    <string name="result_photo_description">תמונת בעל המסמך</string>
+    <string name="result_photo_unavailable">התמונה אינה קריאה או חסרה</string>
+    <string name="result_photo_fullscreen">הצגת התמונה במסך מלא</string>
+    <string name="result_photo_close">סגירה</string>
+    <string name="result_image_front">תמונת הצד הקדמי</string>
+    <string name="result_image_rear">תמונת הצד האחורי</string>
+    <string name="result_image_unavailable">התמונה אינה קריאה</string>
+
+    <!-- Identité -->
+    <string name="result_section_identity">זהות</string>
+    <string name="result_expired">פג תוקף המסמך</string>
+    <string name="result_field_surname">שם משפחה</string>
+    <string name="result_field_given_names">שמות פרטיים</string>
+    <string name="result_field_sex">מין</string>
+    <string name="result_field_birth_date">תאריך לידה</string>
+    <string name="result_field_nationality">אזרחות</string>
+    <string name="result_field_document_type">סוג המסמך</string>
+    <string name="result_field_document_number">מספר המסמך</string>
+    <string name="result_field_issuing_state">מדינה מנפיקה</string>
+    <string name="result_field_expiry_date">תאריך תפוגה</string>
+    <string name="result_sex_male">זכר</string>
+    <string name="result_sex_female">נקבה</string>
+    <string name="result_sex_unspecified">לא צוין</string>
+    <string name="result_document_passport">דרכון</string>
+    <string name="result_document_identity_card">תעודת זהות</string>
+    <string name="result_document_other">מסמך נסיעה אחר</string>
+    <string name="result_value_with_code">%1$s (%2$s)</string>
+    <string name="result_unknown_value">לא ידוע</string>
+
+    <!-- Pays spéciaux ICAO -->
+    <string name="result_country_united_nations">האומות המאוחדות</string>
+    <string name="result_country_un_agency">סוכנות מיוחדת של האומות המאוחדות</string>
+    <string name="result_country_un_kosovo">קוסובו (UNMIK)</string>
+    <string name="result_country_stateless">חסר אזרחות</string>
+    <string name="result_country_refugee">פליט (אמנת 1951)</string>
+    <string name="result_country_refugee_other">פליט</string>
+    <string name="result_country_unspecified">אזרחות לא צוינה</string>
+
+    <!-- Données complémentaires -->
+    <string name="result_section_additional">נתונים נוספים</string>
+    <string name="result_field_full_name">שם מלא</string>
+    <string name="result_field_other_names">שמות נוספים</string>
+    <string name="result_field_personal_number">מספר אישי</string>
+    <string name="result_field_full_birth_date">תאריך לידה מלא</string>
+    <string name="result_field_place_of_birth">מקום לידה</string>
+    <string name="result_field_address">כתובת</string>
+    <string name="result_field_telephone">טלפון</string>
+    <string name="result_field_profession">מקצוע</string>
+    <string name="result_field_title">תואר</string>
+    <string name="result_field_personal_summary">תקציר אישי</string>
+    <string name="result_field_other_td_numbers">מסמכי נסיעה תקפים אחרים</string>
+    <string name="result_field_custody">נתוני משמורת</string>
+    <string name="result_field_issuing_authority">רשות מנפיקה</string>
+    <string name="result_field_issue_date">תאריך הנפקה</string>
+    <string name="result_field_other_persons">אנשים נוספים שמוזכרים</string>
+    <string name="result_field_endorsements">הערות ואישורים</string>
+    <string name="result_field_tax_exit">חובות מס או יציאה</string>
+    <string name="result_field_personalization_time">תאריך ההתאמה האישית</string>
+    <string name="result_field_personalization_device">מספר מערכת ההתאמה האישית</string>
+
+    <!-- Vérifications -->
+    <string name="result_section_checks">בדיקות</string>
+    <string name="result_check_secure_channel">הוקם ערוץ מאובטח</string>
+    <string name="result_check_sod_signature">חתימת ה-SOD תקפה</string>
+    <string name="result_check_chain">שרשרת התעודות</string>
+    <string name="result_check_ds_validity">תוקף תעודת ה-DS</string>
+    <string name="result_check_dg_hashes">טביעות האצבע של קבוצות הנתונים</string>
+    <string name="result_check_chip_authentication">Chip Authentication (DG14)</string>
+    <string name="result_check_active_authentication">Active Authentication (DG15)</string>
+    <string name="result_status_ok">הצליח</string>
+    <string name="result_status_failed">נכשל</string>
+    <string name="result_status_not_available">לא זמין</string>
+    <string name="result_status_unsupported">אלגוריתם לא נתמך</string>
+    <string name="result_check_expand">הצגת הפרטים</string>
+    <string name="result_check_collapse">הסתרת הפרטים</string>
+
+    <!-- Détail des vérifications -->
+    <string name="result_detail_protocol">פרוטוקול: %1$s</string>
+    <string name="result_detail_ca_method">שיטה: %1$s</string>
+    <string name="result_detail_ca_method_dg14">באמצעות Chip Authentication עם המפתח של DG14</string>
+    <string name="result_detail_ca_method_pace_cam">באמצעות PACE-CAM, במהלך פתיחת הערוץ, עם המפתח של EF.CardSecurity</string>
+    <string name="result_detail_algorithm">אלגוריתם החתימה: %1$s</string>
+    <string name="result_detail_csca">תעודת CSCA: %1$s</string>
+    <string name="result_detail_csca_none">אף תעודת CSCA במאגר אינה תואמת.</string>
+    <string name="result_detail_country">מדינה: %1$s</string>
+    <string name="result_detail_country_mismatch">אי-התאמה בין המדינות: רשות התעודות %1$s, תעודת החותם %2$s, המסמך %3$s</string>
+    <string name="result_detail_source">מקור: %1$s</string>
+    <string name="result_detail_source_ants">תעודות של ANTS</string>
+    <string name="result_detail_source_national">תעודות שפרסמה המדינה המנפיקה</string>
+    <string name="result_detail_source_embedded">רשימת Master List מובנית</string>
+    <string name="result_detail_source_imported">רשימת Master List מיובאת</string>
+    <string name="result_detail_ds_subject">תעודת DS: %1$s</string>
+    <string name="result_detail_links">תעודות קישור שנעשה בהן שימוש:</string>
+    <string name="result_detail_link_item">• %1$s</string>
+    <string name="result_detail_links_none">לא נעשה שימוש באף תעודת קישור.</string>
+    <string name="result_detail_ds_missing">תעודת ה-DS אינה מופיעה ב-SOD וגם לא במאגר האמון.</string>
+    <string name="result_detail_ds_period">תקופת התוקף של ה-DS: מ-%1$s עד %2$s</string>
+    <string name="result_detail_issuance">תאריך הנפקה: %1$s (%2$s)</string>
+    <string name="result_detail_issuance_no_source">תאריך הנפקה: %1$s</string>
+    <string name="result_detail_issuance_unknown">תאריך ההנפקה לא ידוע.</string>
+    <string name="result_detail_issuance_dg12">נקרא מ-DG12</string>
+    <string name="result_detail_issuance_sod">תאריך החתימה של ה-SOD</string>
+    <string name="result_detail_issuance_estimated">משוער</string>
+    <string name="result_detail_digest_algorithm">אלגוריתם הגיבוב: %1$s</string>
+    <string name="result_detail_dg_checked">קבוצות נתונים שנבדקו: %1$s</string>
+    <string name="result_detail_dg_checked_none">לא נבדקה אף קבוצת נתונים.</string>
+    <string name="result_detail_dg_mismatched">טביעות אצבע לא תואמות: %1$s</string>
+    <string name="result_detail_dg_all_match">כל טביעות האצבע תואמות.</string>
+    <string name="result_detail_dg_missing">קבוצות נתונים שהוצהרו אך השבב לא סיפק אותן: %1$s</string>
+    <string name="result_detail_unsupported">אלגוריתם לא נתמך: %1$s</string>
+    <string name="result_detail_error">שגיאה טכנית: %1$s</string>
+    <string name="result_detail_no_dg14">המסמך אינו מכיל DG14: השבב לא מציע את הבדיקה הזו.</string>
+    <string name="result_detail_no_dg15">המסמך אינו מכיל DG15: השבב לא מציע את הבדיקה הזו.</string>
+    <string name="result_detail_not_reached">השלב לא בוצע.</string>
+    <string name="result_detail_none">אין פרטים נוספים.</string>
+    <string name="result_demo_banner">מסמך מדומה — הדגמה</string>
+</resources>

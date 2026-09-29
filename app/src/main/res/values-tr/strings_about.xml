@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">Hakkında</string>
+    <string name="about_back">Geri</string>
+    <string name="about_tagline">ICAO 9303 uyumlu kimlik belgelerindeki çipin çevrimdışı okunması ve doğrulanması.</string>
+    <string name="about_version">Sürüm %1$s</string>
+    <string name="about_version_unknown">Bilinmeyen sürüm</string>
+
+    <string name="about_section_license">Lisans ve kaynak kodu</string>
+    <string name="about_license">GNU GPL sürüm 3 veya sonraki bir sürümü kapsamında dağıtılan özgür yazılım.</string>
+    <string name="about_open_repository">Kaynak kodunu görüntüle</string>
+    <string name="about_no_browser">Bu bağlantıyı açabilecek bir uygulama yok.</string>
+
+    <string name="about_section_trust">Yerleşik güven deposu</string>
+    <string name="about_trust_ants_only">ANTS tarafından yayımlanan Fransız CSCA sertifikaları (pasaportlar ve kimlik kartları).</string>
+    <string name="about_trust_ants_and_bsi">ANTS tarafından yayımlanan Fransız CSCA sertifikaları ve BSI tarafından yayımlanan Alman Master List.</string>
+    <string name="about_trust_master_list_date">Master List imza tarihi: %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">Master List imza tarihi belirtilmemiş.</string>
+    <string name="about_trust_bsi_notice">BSI (Almanya Federal Bilgi Güvenliği Dairesi) tarafından yayımlanan Master List, değiştirilmeden, BSI ile iş birliği yapılmadan ve BSI onayı alınmadan yeniden dağıtılmaktadır.</string>
+    <string name="about_trust_national">Aşağıdaki devletlerin kendi belgeleri için yayımladığı sertifikalar: %1$s.</string>
+    <string name="about_trust_ogl_notice">Open Government Licence v3.0 kapsamında yayımlanan Birleşik Krallık kamu sektörü bilgilerini içerir.</string>
+    <string name="about_trust_loading">Yükleniyor…</string>
+    <string name="about_trust_error">Güven deposu yüklenemedi.</string>
+
+    <string name="about_section_limits">Sınırlamalar</string>
+    <string name="about_limit_unknown_issuer">Düzenleyen ülkesi güven deposunda bulunmayan bir belge için sonuç “Başarısız” değil, “Bilinmeyen düzenleyici” olur. Daha yeni bir Master List içe aktarmak bu sorunu giderebilir.</string>
+    <string name="about_limit_revocation">İptal listeleri kontrol edilmez: Bu listeler ağ bağlantısı gerektirir ve Sceau ağı hiçbir zaman kullanmaz.</string>
+
+    <string name="about_section_usage">Kullanım çerçevesi</string>
+    <string name="about_usage_holder">Okuma işlemi, belge sahibinin belgesini bizzat ibraz etmesini ve buna onay vermesini gerektirir.</string>
+    <string name="about_usage_biometrics">Fotoğraf, otomatik yüz karşılaştırması için kullanılırsa Genel Veri Koruma Tüzüğü (GDPR) anlamında biyometrik veri hâline gelir. Sceau böyle bir karşılaştırma yapmaz ve buna özel bir hukuki dayanak olmadan bu amaçla kullanılmamalıdır.</string>
+    <string name="about_usage_privacy">Okunan hiçbir veri saklanmaz veya gönderilmez: Sonuç ekranından çıkıldığında ya da uygulama arka plana alındığında tüm veriler bellekten silinir.</string>
+</resources>

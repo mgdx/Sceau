@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="result_title">Sonuç</string>
+    <string name="result_clear">Temizle</string>
+
+    <!-- Verdict -->
+    <string name="result_verdict_authentic">Orijinal</string>
+    <string name="result_verdict_authentic_explanation">Düzenleyicinin imzası geçerli ve çip bir kopya olmadığını kanıtladı.</string>
+    <string name="result_verdict_chip_unverified">İmza geçerli, çip doğrulanmadı</string>
+    <string name="result_verdict_chip_unverified_explanation">Veriler gerçekten düzenleyici tarafından imzalanmış, ancak çip orijinal olduğunu kanıtlamaya olanak tanımıyor: Bir klon olabilir.</string>
+    <string name="result_verdict_unknown_issuer">Bilinmeyen düzenleyici</string>
+    <string name="result_verdict_unknown_issuer_explanation">Düzenleyicinin sertifikası güven deposunda bulunmuyor. Veriler gösteriliyor, ancak hiçbiri garanti edilmez. Daha yeni bir Master List içe aktarmak bu belgenin doğrulanmasını sağlayabilir.</string>
+    <string name="result_verdict_failed">Başarısız</string>
+    <string name="result_verdict_failed_explanation">En az bir doğrulama başarısız oldu: Bu belge orijinal kabul edilmemelidir.</string>
+    <string name="result_verdict_imported_anchor">İçe aktardığınız bir sertifika sayesinde doğrulandı</string>
+
+    <!-- Photo -->
+    <string name="result_photo_description">Belge sahibinin fotoğrafı</string>
+    <string name="result_photo_unavailable">Fotoğraf okunamıyor veya yok</string>
+    <string name="result_photo_fullscreen">Fotoğrafı tam ekran göster</string>
+    <string name="result_photo_close">Kapat</string>
+    <string name="result_image_front">Ön yüz görüntüsü</string>
+    <string name="result_image_rear">Arka yüz görüntüsü</string>
+    <string name="result_image_unavailable">Görüntü okunamıyor</string>
+
+    <!-- Identité -->
+    <string name="result_section_identity">Kimlik</string>
+    <string name="result_expired">Belgenin süresi dolmuş</string>
+    <string name="result_field_surname">Soyadı</string>
+    <string name="result_field_given_names">Adları</string>
+    <string name="result_field_sex">Cinsiyeti</string>
+    <string name="result_field_birth_date">Doğum tarihi</string>
+    <string name="result_field_nationality">Uyruğu</string>
+    <string name="result_field_document_type">Belge türü</string>
+    <string name="result_field_document_number">Belge numarası</string>
+    <string name="result_field_issuing_state">Düzenleyen devlet</string>
+    <string name="result_field_expiry_date">Son geçerlilik tarihi</string>
+    <string name="result_sex_male">Erkek</string>
+    <string name="result_sex_female">Kadın</string>
+    <string name="result_sex_unspecified">Belirtilmemiş</string>
+    <string name="result_document_passport">Pasaport</string>
+    <string name="result_document_identity_card">Kimlik kartı</string>
+    <string name="result_document_other">Diğer seyahat belgesi</string>
+    <string name="result_value_with_code">%1$s (%2$s)</string>
+    <string name="result_unknown_value">Bilinmiyor</string>
+
+    <!-- Pays spéciaux ICAO -->
+    <string name="result_country_united_nations">Birleşmiş Milletler</string>
+    <string name="result_country_un_agency">Birleşmiş Milletler uzmanlık kuruluşu</string>
+    <string name="result_country_un_kosovo">Kosova (UNMIK)</string>
+    <string name="result_country_stateless">Vatansız</string>
+    <string name="result_country_refugee">Mülteci (1951 Sözleşmesi)</string>
+    <string name="result_country_refugee_other">Mülteci</string>
+    <string name="result_country_unspecified">Belirtilmemiş uyruk</string>
+
+    <!-- Données complémentaires -->
+    <string name="result_section_additional">Ek veriler</string>
+    <string name="result_field_full_name">Tam adı</string>
+    <string name="result_field_other_names">Diğer adları</string>
+    <string name="result_field_personal_number">Kişisel numara</string>
+    <string name="result_field_full_birth_date">Tam doğum tarihi</string>
+    <string name="result_field_place_of_birth">Doğum yeri</string>
+    <string name="result_field_address">Adres</string>
+    <string name="result_field_telephone">Telefon</string>
+    <string name="result_field_profession">Meslek</string>
+    <string name="result_field_title">Unvan</string>
+    <string name="result_field_personal_summary">Kişisel özet</string>
+    <string name="result_field_other_td_numbers">Diğer geçerli seyahat belgeleri</string>
+    <string name="result_field_custody">Velayet bilgileri</string>
+    <string name="result_field_issuing_authority">Düzenleyen makam</string>
+    <string name="result_field_issue_date">Düzenlenme tarihi</string>
+    <string name="result_field_other_persons">Belirtilen diğer kişiler</string>
+    <string name="result_field_endorsements">Şerhler ve gözlemler</string>
+    <string name="result_field_tax_exit">Vergi veya çıkış yükümlülükleri</string>
+    <string name="result_field_personalization_time">Kişiselleştirme tarihi</string>
+    <string name="result_field_personalization_device">Kişiselleştirme sistemi numarası</string>
+
+    <!-- Vérifications -->
+    <string name="result_section_checks">Doğrulamalar</string>
+    <string name="result_check_secure_channel">Güvenli kanal kuruldu</string>
+    <string name="result_check_sod_signature">SOD imzası geçerli</string>
+    <string name="result_check_chain">Sertifika zinciri</string>
+    <string name="result_check_ds_validity">DS sertifikasının geçerliliği</string>
+    <string name="result_check_dg_hashes">Veri gruplarının parmak izleri</string>
+    <string name="result_check_chip_authentication">Chip Authentication (DG14)</string>
+    <string name="result_check_active_authentication">Active Authentication (DG15)</string>
+    <string name="result_status_ok">Başarılı</string>
+    <string name="result_status_failed">Başarısız</string>
+    <string name="result_status_not_available">Kullanılamıyor</string>
+    <string name="result_status_unsupported">Desteklenmeyen algoritma</string>
+    <string name="result_check_expand">Ayrıntıları göster</string>
+    <string name="result_check_collapse">Ayrıntıları gizle</string>
+
+    <!-- Détail des vérifications -->
+    <string name="result_detail_protocol">Protokol: %1$s</string>
+    <string name="result_detail_ca_method">Yöntem: %1$s</string>
+    <string name="result_detail_ca_method_dg14">DG14 anahtarıyla Chip Authentication</string>
+    <string name="result_detail_ca_method_pace_cam">Kanal açılırken EF.CardSecurity anahtarıyla PACE-CAM</string>
+    <string name="result_detail_algorithm">İmza algoritması: %1$s</string>
+    <string name="result_detail_csca">CSCA: %1$s</string>
+    <string name="result_detail_csca_none">Depodaki hiçbir CSCA eşleşmiyor.</string>
+    <string name="result_detail_country">Ülke: %1$s</string>
+    <string name="result_detail_country_mismatch">Ülkeler tutarsız: Sertifika makamı %1$s, imzalayan sertifikası %2$s, belge %3$s</string>
+    <string name="result_detail_source">Kaynak: %1$s</string>
+    <string name="result_detail_source_ants">ANTS sertifikaları</string>
+    <string name="result_detail_source_national">Düzenleyen devletin yayımladığı sertifikalar</string>
+    <string name="result_detail_source_embedded">Yerleşik Master List</string>
+    <string name="result_detail_source_imported">İçe aktarılan Master List</string>
+    <string name="result_detail_ds_subject">DS sertifikası: %1$s</string>
+    <string name="result_detail_links">Kullanılan bağlantı sertifikaları:</string>
+    <string name="result_detail_link_item">• %1$s</string>
+    <string name="result_detail_links_none">Hiçbir bağlantı sertifikası kullanılmadı.</string>
+    <string name="result_detail_ds_missing">DS sertifikası ne SOD içinde ne de güven deposunda bulunuyor.</string>
+    <string name="result_detail_ds_period">DS geçerlilik süresi: %1$s – %2$s</string>
+    <string name="result_detail_issuance">Düzenlenme tarihi: %1$s (%2$s)</string>
+    <string name="result_detail_issuance_no_source">Düzenlenme tarihi: %1$s</string>
+    <string name="result_detail_issuance_unknown">Düzenlenme tarihi bilinmiyor.</string>
+    <string name="result_detail_issuance_dg12">DG12’den okundu</string>
+    <string name="result_detail_issuance_sod">SOD imza tarihi</string>
+    <string name="result_detail_issuance_estimated">tahmini</string>
+    <string name="result_detail_digest_algorithm">Özet algoritması: %1$s</string>
+    <string name="result_detail_dg_checked">Kontrol edilen veri grupları: %1$s</string>
+    <string name="result_detail_dg_checked_none">Hiçbir veri grubu kontrol edilmedi.</string>
+    <string name="result_detail_dg_mismatched">Uyuşmayan parmak izleri: %1$s</string>
+    <string name="result_detail_dg_all_match">Tüm parmak izleri uyuşuyor.</string>
+    <string name="result_detail_dg_missing">Bildirilen ancak çipin sağlamadığı veri grupları: %1$s</string>
+    <string name="result_detail_unsupported">Desteklenmeyen algoritma: %1$s</string>
+    <string name="result_detail_error">Teknik hata: %1$s</string>
+    <string name="result_detail_no_dg14">Belge DG14 içermiyor: Çip bu doğrulamayı sunmuyor.</string>
+    <string name="result_detail_no_dg15">Belge DG15 içermiyor: Çip bu doğrulamayı sunmuyor.</string>
+    <string name="result_detail_not_reached">Adım gerçekleştirilmedi.</string>
+    <string name="result_detail_none">Ek ayrıntı yok.</string>
+    <string name="result_demo_banner">Simüle edilmiş belge — demo</string>
+</resources>

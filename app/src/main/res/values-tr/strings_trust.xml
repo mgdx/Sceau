@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trust_title">Güven deposu</string>
+    <string name="trust_back">Geri</string>
+    <string name="trust_intro">Belgelerin imzasını doğrulamak için kullanılan, düzenleyen ülkelere ait kök sertifikalar (CSCA). Bu ekrandan hiçbir kişisel veri geçmez.</string>
+    <plurals name="trust_summary">
+        <item quantity="one">%1$d sertifika, ülke sayısı: %2$d</item>
+        <item quantity="other">%1$d sertifika, ülke sayısı: %2$d</item>
+    </plurals>
+    <string name="trust_loading">Güven deposu yükleniyor…</string>
+    <string name="trust_load_error">Güven deposu yüklenemedi.</string>
+    <string name="trust_retry">Tekrar dene</string>
+    <string name="trust_empty">Güven deposunda sertifika yok.</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">Ülke belirtilmemiş</string>
+    <plurals name="trust_country_count">
+        <item quantity="one">%1$d sertifika</item>
+        <item quantity="other">%1$d sertifika</item>
+    </plurals>
+    <string name="trust_country_expand">Sertifikaları göster</string>
+    <string name="trust_country_collapse">Sertifikaları gizle</string>
+    <string name="trust_validity">Geçerlilik: %1$s – %2$s</string>
+    <string name="trust_fingerprint">SHA-256 parmak izi</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_national">Ulusal yayın</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">İçe aktarıldı</string>
+    <string name="trust_link_certificate">Bağlantı sertifikası</string>
+
+    <!-- Import -->
+    <string name="trust_import">Master List içe aktar</string>
+    <string name="trust_busy">Lütfen bekleyin…</string>
+    <string name="trust_import_confirm_title">Bu Master List içe aktarılsın mı?</string>
+    <string name="trust_import_confirm_text">İmzası geçerli. İçe aktarmadan önce, imzalayanın parmak izinin düzenleyen makamın yayımladığı parmak iziyle eşleştiğini kontrol edin.</string>
+    <string name="trust_import_signer">İmzalayan</string>
+    <string name="trust_import_signer_fingerprint">İmzalayanın SHA-256 parmak izi</string>
+    <string name="trust_import_signing_date">İmza tarihi</string>
+    <string name="trust_import_signing_date_unknown">Belirtilmemiş</string>
+    <string name="trust_import_certificate_count">Sertifika sayısı</string>
+    <string name="trust_import_confirm">İçe aktar</string>
+    <string name="trust_cancel">İptal</string>
+    <plurals name="trust_import_done">
+        <item quantity="one">Master List içe aktarıldı: %1$d sertifika.</item>
+        <item quantity="other">Master List içe aktarıldı: %1$d sertifika.</item>
+    </plurals>
+    <string name="trust_import_invalid">Bu dosya geçerli bir Master List değil: Biçim okunamıyor veya imza hatalı (%1$s).</string>
+    <string name="trust_import_too_large">Dosya reddedildi: 20 MB’ı aşıyor.</string>
+    <string name="trust_import_read_error">Bu dosya okunamadı.</string>
+    <string name="trust_import_write_error">Master List kaydedilemedi.</string>
+    <plurals name="trust_import_limit_count">
+        <item quantity="one">İçe aktarma reddedildi: En fazla %1$d Master List içe aktarılabilir. Başka bir tane eklemek için içe aktarılan sertifikaları silin.</item>
+        <item quantity="other">İçe aktarma reddedildi: En fazla %1$d Master List içe aktarılabilir. Başka bir tane eklemek için içe aktarılan sertifikaları silin.</item>
+    </plurals>
+    <string name="trust_import_limit_size">İçe aktarma reddedildi: İçe aktarılan Master List’lerin toplam boyutu %1$d MB’ı aşacak. Başka bir tane eklemek için içe aktarılan sertifikaları silin.</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">İçe aktarılan sertifikaları sil</string>
+    <string name="trust_delete_confirm_title">İçe aktarılan sertifikalar silinsin mi?</string>
+    <string name="trust_delete_confirm_text">İçe aktarılan Master List’ler silinecek. Uygulamaya yerleşik sertifikalar korunur.</string>
+    <string name="trust_delete_confirm">Sil</string>
+    <string name="trust_delete_done">İçe aktarılan sertifikalar silindi.</string>
+    <string name="trust_delete_error">İçe aktarılan sertifikalar silinemedi.</string>
+</resources>

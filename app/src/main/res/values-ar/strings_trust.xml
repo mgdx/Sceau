@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trust_title">مخزن الثقة</string>
+    <string name="trust_back">رجوع</string>
+    <string name="trust_intro">الشهادات الجذر (CSCA) لدول الإصدار، المستخدمة للتحقق من توقيع الوثائق. لا تمر أي بيانات شخصية عبر هذه الشاشة.</string>
+    <plurals name="trust_summary">
+        <item quantity="zero">%1$d شهادة، عدد الدول: %2$d</item>
+        <item quantity="one">%1$d شهادة، عدد الدول: %2$d</item>
+        <item quantity="two">%1$d شهادة، عدد الدول: %2$d</item>
+        <item quantity="few">%1$d شهادات، عدد الدول: %2$d</item>
+        <item quantity="many">%1$d شهادة، عدد الدول: %2$d</item>
+        <item quantity="other">%1$d شهادة، عدد الدول: %2$d</item>
+    </plurals>
+    <string name="trust_loading">جارٍ تحميل مخزن الثقة…</string>
+    <string name="trust_load_error">تعذّر تحميل مخزن الثقة.</string>
+    <string name="trust_retry">إعادة المحاولة</string>
+    <string name="trust_empty">لا توجد أي شهادة في مخزن الثقة.</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">دولة غير محددة</string>
+    <plurals name="trust_country_count">
+        <item quantity="zero">%1$d شهادة</item>
+        <item quantity="one">%1$d شهادة</item>
+        <item quantity="two">%1$d شهادة</item>
+        <item quantity="few">%1$d شهادات</item>
+        <item quantity="many">%1$d شهادة</item>
+        <item quantity="other">%1$d شهادة</item>
+    </plurals>
+    <string name="trust_country_expand">عرض الشهادات</string>
+    <string name="trust_country_collapse">إخفاء الشهادات</string>
+    <string name="trust_validity">صالحة من %1$s إلى %2$s</string>
+    <string name="trust_fingerprint">بصمة SHA-256</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_national">نشر وطني</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">مستوردة</string>
+    <string name="trust_link_certificate">شهادة ربط</string>
+
+    <!-- Import -->
+    <string name="trust_import">استيراد قائمة Master List</string>
+    <string name="trust_busy">يُرجى الانتظار…</string>
+    <string name="trust_import_confirm_title">هل تريد استيراد قائمة Master List هذه؟</string>
+    <string name="trust_import_confirm_text">توقيعها صالح. قبل استيرادها، تحقق من أن بصمة الموقِّع تطابق البصمة التي نشرتها الجهة المُصدِرة.</string>
+    <string name="trust_import_signer">الموقِّع</string>
+    <string name="trust_import_signer_fingerprint">بصمة SHA-256 للموقِّع</string>
+    <string name="trust_import_signing_date">تاريخ التوقيع</string>
+    <string name="trust_import_signing_date_unknown">غير مذكور</string>
+    <string name="trust_import_certificate_count">عدد الشهادات</string>
+    <string name="trust_import_confirm">استيراد</string>
+    <string name="trust_cancel">إلغاء</string>
+    <plurals name="trust_import_done">
+        <item quantity="zero">تم استيراد قائمة Master List: %1$d شهادة.</item>
+        <item quantity="one">تم استيراد قائمة Master List: %1$d شهادة.</item>
+        <item quantity="two">تم استيراد قائمة Master List: %1$d شهادة.</item>
+        <item quantity="few">تم استيراد قائمة Master List: %1$d شهادات.</item>
+        <item quantity="many">تم استيراد قائمة Master List: %1$d شهادة.</item>
+        <item quantity="other">تم استيراد قائمة Master List: %1$d شهادة.</item>
+    </plurals>
+    <string name="trust_import_invalid">هذا الملف ليس قائمة Master List صالحة: تنسيق غير مقروء أو توقيع غير صحيح (%1$s).</string>
+    <string name="trust_import_too_large">تم رفض الملف: حجمه يتجاوز 20 ميغابايت.</string>
+    <string name="trust_import_read_error">تعذّرت قراءة هذا الملف.</string>
+    <string name="trust_import_write_error">تعذّر حفظ قائمة Master List.</string>
+    <plurals name="trust_import_limit_count">
+        <item quantity="zero">تم رفض الاستيراد: الحد الأقصى للقوائم المستوردة من نوع Master List هو %1$d. احذف الشهادات المستوردة لإضافة قائمة أخرى.</item>
+        <item quantity="one">تم رفض الاستيراد: الحد الأقصى للقوائم المستوردة من نوع Master List هو %1$d. احذف الشهادات المستوردة لإضافة قائمة أخرى.</item>
+        <item quantity="two">تم رفض الاستيراد: الحد الأقصى للقوائم المستوردة من نوع Master List هو %1$d. احذف الشهادات المستوردة لإضافة قائمة أخرى.</item>
+        <item quantity="few">تم رفض الاستيراد: الحد الأقصى للقوائم المستوردة من نوع Master List هو %1$d. احذف الشهادات المستوردة لإضافة قائمة أخرى.</item>
+        <item quantity="many">تم رفض الاستيراد: الحد الأقصى للقوائم المستوردة من نوع Master List هو %1$d. احذف الشهادات المستوردة لإضافة قائمة أخرى.</item>
+        <item quantity="other">تم رفض الاستيراد: الحد الأقصى للقوائم المستوردة من نوع Master List هو %1$d. احذف الشهادات المستوردة لإضافة قائمة أخرى.</item>
+    </plurals>
+    <string name="trust_import_limit_size">تم رفض الاستيراد: سيتجاوز الحجم الإجمالي لقوائم Master List المستوردة %1$d ميغابايت. احذف الشهادات المستوردة لإضافة قائمة أخرى.</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">حذف الشهادات المستوردة</string>
+    <string name="trust_delete_confirm_title">هل تريد حذف الشهادات المستوردة؟</string>
+    <string name="trust_delete_confirm_text">سيتم حذف قوائم Master List المستوردة. أما الشهادات المدمجة في التطبيق فسيتم الاحتفاظ بها.</string>
+    <string name="trust_delete_confirm">حذف</string>
+    <string name="trust_delete_done">تم حذف الشهادات المستوردة.</string>
+    <string name="trust_delete_error">تعذّر حذف الشهادات المستوردة.</string>
+</resources>

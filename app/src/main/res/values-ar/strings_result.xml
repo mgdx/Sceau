@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="result_title">النتيجة</string>
+    <string name="result_clear">محو</string>
+
+    <!-- Verdict -->
+    <string name="result_verdict_authentic">أصلية</string>
+    <string name="result_verdict_authentic_explanation">توقيع جهة الإصدار صالح، وقد أثبتت الشريحة أنها ليست نسخة.</string>
+    <string name="result_verdict_chip_unverified">التوقيع صالح، والشريحة غير متحقَّق منها</string>
+    <string name="result_verdict_chip_unverified_explanation">وقّعت جهة الإصدار على البيانات فعلًا، لكن الشريحة لا تتيح إثبات أنها الأصلية: قد تكون مستنسخة.</string>
+    <string name="result_verdict_unknown_issuer">جهة إصدار غير معروفة</string>
+    <string name="result_verdict_unknown_issuer_explanation">شهادة جهة الإصدار غير موجودة في مخزن الثقة. تُعرض البيانات، لكن لا شيء منها مضمون. قد يتيح استيراد قائمة Master List أحدث التحقق من هذه الوثيقة.</string>
+    <string name="result_verdict_failed">فشل التحقق</string>
+    <string name="result_verdict_failed_explanation">فشلت عملية تحقق واحدة على الأقل: يجب عدم اعتبار هذه الوثيقة أصلية.</string>
+    <string name="result_verdict_imported_anchor">تم التحقق بفضل شهادة استوردتها</string>
+
+    <!-- Photo -->
+    <string name="result_photo_description">صورة حامل الوثيقة</string>
+    <string name="result_photo_unavailable">الصورة غير مقروءة أو غير موجودة</string>
+    <string name="result_photo_fullscreen">عرض الصورة بملء الشاشة</string>
+    <string name="result_photo_close">إغلاق</string>
+    <string name="result_image_front">صورة الوجه الأمامي</string>
+    <string name="result_image_rear">صورة الوجه الخلفي</string>
+    <string name="result_image_unavailable">الصورة غير مقروءة</string>
+
+    <!-- Identité -->
+    <string name="result_section_identity">الهوية</string>
+    <string name="result_expired">وثيقة منتهية الصلاحية</string>
+    <string name="result_field_surname">اسم العائلة</string>
+    <string name="result_field_given_names">الأسماء الشخصية</string>
+    <string name="result_field_sex">الجنس</string>
+    <string name="result_field_birth_date">تاريخ الميلاد</string>
+    <string name="result_field_nationality">الجنسية</string>
+    <string name="result_field_document_type">نوع الوثيقة</string>
+    <string name="result_field_document_number">رقم الوثيقة</string>
+    <string name="result_field_issuing_state">دولة الإصدار</string>
+    <string name="result_field_expiry_date">تاريخ الانتهاء</string>
+    <string name="result_sex_male">ذكر</string>
+    <string name="result_sex_female">أنثى</string>
+    <string name="result_sex_unspecified">غير محدد</string>
+    <string name="result_document_passport">جواز السفر</string>
+    <string name="result_document_identity_card">بطاقة الهوية</string>
+    <string name="result_document_other">وثيقة سفر أخرى</string>
+    <string name="result_value_with_code">%1$s (%2$s)</string>
+    <string name="result_unknown_value">غير معروف</string>
+
+    <!-- Pays spéciaux ICAO -->
+    <string name="result_country_united_nations">الأمم المتحدة</string>
+    <string name="result_country_un_agency">وكالة متخصصة تابعة للأمم المتحدة</string>
+    <string name="result_country_un_kosovo">كوسوفو (بعثة الأمم المتحدة UNMIK)</string>
+    <string name="result_country_stateless">عديم الجنسية</string>
+    <string name="result_country_refugee">لاجئ (اتفاقية 1951)</string>
+    <string name="result_country_refugee_other">لاجئ</string>
+    <string name="result_country_unspecified">جنسية غير محددة</string>
+
+    <!-- Données complémentaires -->
+    <string name="result_section_additional">بيانات إضافية</string>
+    <string name="result_field_full_name">الاسم الكامل</string>
+    <string name="result_field_other_names">أسماء أخرى</string>
+    <string name="result_field_personal_number">الرقم الشخصي</string>
+    <string name="result_field_full_birth_date">تاريخ الميلاد الكامل</string>
+    <string name="result_field_place_of_birth">مكان الميلاد</string>
+    <string name="result_field_address">العنوان</string>
+    <string name="result_field_telephone">الهاتف</string>
+    <string name="result_field_profession">المهنة</string>
+    <string name="result_field_title">اللقب</string>
+    <string name="result_field_personal_summary">ملخص الملف الشخصي</string>
+    <string name="result_field_other_td_numbers">وثائق سفر أخرى سارية</string>
+    <string name="result_field_custody">بيانات الحضانة</string>
+    <string name="result_field_issuing_authority">سلطة الإصدار</string>
+    <string name="result_field_issue_date">تاريخ الإصدار</string>
+    <string name="result_field_other_persons">أشخاص آخرون مذكورون</string>
+    <string name="result_field_endorsements">التأشيرات والملاحظات</string>
+    <string name="result_field_tax_exit">الالتزامات الضريبية أو التزامات المغادرة</string>
+    <string name="result_field_personalization_time">تاريخ التخصيص</string>
+    <string name="result_field_personalization_device">رقم نظام التخصيص</string>
+
+    <!-- Vérifications -->
+    <string name="result_section_checks">عمليات التحقق</string>
+    <string name="result_check_secure_channel">إنشاء القناة الآمنة</string>
+    <string name="result_check_sod_signature">صلاحية توقيع SOD</string>
+    <string name="result_check_chain">سلسلة الشهادات</string>
+    <string name="result_check_ds_validity">صلاحية شهادة DS</string>
+    <string name="result_check_dg_hashes">بصمات مجموعات البيانات</string>
+    <string name="result_check_chip_authentication">Chip Authentication (DG14)</string>
+    <string name="result_check_active_authentication">Active Authentication (DG15)</string>
+    <string name="result_status_ok">ناجح</string>
+    <string name="result_status_failed">فشل</string>
+    <string name="result_status_not_available">غير متاح</string>
+    <string name="result_status_unsupported">خوارزمية غير متوافقة</string>
+    <string name="result_check_expand">عرض التفاصيل</string>
+    <string name="result_check_collapse">إخفاء التفاصيل</string>
+
+    <!-- Détail des vérifications -->
+    <string name="result_detail_protocol">البروتوكول: %1$s</string>
+    <string name="result_detail_ca_method">الطريقة: %1$s</string>
+    <string name="result_detail_ca_method_dg14">عبر Chip Authentication باستخدام مفتاح DG14</string>
+    <string name="result_detail_ca_method_pace_cam">عبر PACE-CAM أثناء فتح القناة، باستخدام مفتاح EF.CardSecurity</string>
+    <string name="result_detail_algorithm">خوارزمية التوقيع: %1$s</string>
+    <string name="result_detail_csca">شهادة CSCA: %1$s</string>
+    <string name="result_detail_csca_none">لا تتطابق أي شهادة CSCA في المخزن.</string>
+    <string name="result_detail_country">الدولة: %1$s</string>
+    <string name="result_detail_country_mismatch">دول غير متسقة: سلطة التصديق %1$s، وشهادة الموقِّع %2$s، والوثيقة %3$s</string>
+    <string name="result_detail_source">المصدر: %1$s</string>
+    <string name="result_detail_source_ants">شهادات ANTS</string>
+    <string name="result_detail_source_national">شهادات نشرتها دولة الإصدار</string>
+    <string name="result_detail_source_embedded">قائمة Master List مدمجة</string>
+    <string name="result_detail_source_imported">قائمة Master List مستوردة</string>
+    <string name="result_detail_ds_subject">شهادة DS: %1$s</string>
+    <string name="result_detail_links">شهادات الربط التي تم اجتيازها:</string>
+    <string name="result_detail_link_item">• %1$s</string>
+    <string name="result_detail_links_none">لم يتم اجتياز أي شهادة ربط.</string>
+    <string name="result_detail_ds_missing">شهادة DS غير موجودة في SOD ولا في مخزن الثقة.</string>
+    <string name="result_detail_ds_period">فترة صلاحية شهادة DS: من %1$s إلى %2$s</string>
+    <string name="result_detail_issuance">تاريخ الإصدار: %1$s (%2$s)</string>
+    <string name="result_detail_issuance_no_source">تاريخ الإصدار: %1$s</string>
+    <string name="result_detail_issuance_unknown">تاريخ الإصدار غير معروف.</string>
+    <string name="result_detail_issuance_dg12">مقروء من DG12</string>
+    <string name="result_detail_issuance_sod">تاريخ توقيع SOD</string>
+    <string name="result_detail_issuance_estimated">تقديري</string>
+    <string name="result_detail_digest_algorithm">خوارزمية البصمة: %1$s</string>
+    <string name="result_detail_dg_checked">مجموعات البيانات التي تم فحصها: %1$s</string>
+    <string name="result_detail_dg_checked_none">لم يتم فحص أي مجموعة بيانات.</string>
+    <string name="result_detail_dg_mismatched">بصمات غير مطابقة: %1$s</string>
+    <string name="result_detail_dg_all_match">جميع البصمات مطابقة.</string>
+    <string name="result_detail_dg_missing">مجموعات بيانات مُعلَنة لكن الشريحة لم توفرها: %1$s</string>
+    <string name="result_detail_unsupported">خوارزمية غير متوافقة: %1$s</string>
+    <string name="result_detail_error">خطأ تقني: %1$s</string>
+    <string name="result_detail_no_dg14">لا تحتوي الوثيقة على DG14: لا توفر الشريحة عملية التحقق هذه.</string>
+    <string name="result_detail_no_dg15">لا تحتوي الوثيقة على DG15: لا توفر الشريحة عملية التحقق هذه.</string>
+    <string name="result_detail_not_reached">لم يتم تنفيذ هذه الخطوة.</string>
+    <string name="result_detail_none">لا توجد تفاصيل إضافية.</string>
+    <string name="result_demo_banner">وثيقة محاكاة — عرض توضيحي</string>
+</resources>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">Diğer seçenekler</string>
+    <string name="home_menu_trust_store">Güven deposu</string>
+    <string name="home_menu_about">Hakkında</string>
+    <string name="home_tab_id_card">Kimlik kartı</string>
+    <string name="home_tab_passport">Pasaport</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">Kartın ön yüzünde basılı 6 haneli numara</string>
+    <string name="home_document_number_label">Belge numarası</string>
+    <string name="home_document_number_supporting">Kimlik sayfasında basılı olduğu gibi, en fazla 9 karakter</string>
+    <string name="home_date_of_birth_label">Doğum tarihi</string>
+    <string name="home_date_of_expiry_label">Son geçerlilik tarihi</string>
+    <string name="home_date_day">GG</string>
+    <string name="home_date_month">AA</string>
+    <string name="home_date_year">YYYY</string>
+    <string name="home_date_format">Biçim: %1$s</string>
+    <string name="home_date_error_invalid">Böyle bir tarih yok</string>
+    <string name="home_date_error_future">Doğum tarihi gelecekte olamaz</string>
+    <string name="home_date_error_too_old">Son geçerlilik tarihi çok eski (%1$d öncesi)</string>
+    <string name="home_holder_notice">Belge, sahibi tarafından ibraz edilmelidir.</string>
+    <string name="home_read">Oku</string>
+    <string name="home_nfc_disabled">NFC kapalı. Belgenin çipini okumak için NFC’yi açın.</string>
+    <string name="home_nfc_settings">NFC ayarlarını aç</string>
+    <string name="home_nfc_absent">Bu telefonda NFC yok: Kimlik belgelerinin çipini okuyamaz.</string>
+    <string name="home_menu_demo">Fransız kimlik kartı simülasyonu (demo)</string>
+</resources>

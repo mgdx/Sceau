@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reading_title">Belge okuma</string>
+    <string name="reading_prompt">Belgeyi telefonun arkasına yerleştirin ve çekmeyin</string>
+    <string name="reading_step_connect">Çipe bağlanma</string>
+    <string name="reading_step_secure_channel">Güvenli kanalın açılması (PACE veya BAC)</string>
+    <string name="reading_step_read_data">Verilerin okunması</string>
+    <string name="reading_step_verify_signature">İmzanın doğrulanması</string>
+    <string name="reading_step_verify_chip">Çipin doğrulanması</string>
+    <string name="reading_step_pending">bekliyor</string>
+    <string name="reading_step_in_progress">devam ediyor</string>
+    <string name="reading_step_done">tamamlandı</string>
+    <string name="reading_error_title">Okuma yarıda kaldı</string>
+    <string name="reading_slow_chip">Belgenin çipi, genellikle başarısız denemelerden sonra, yanıt vermeden önce bekletiyor. Belgeyi sabit tutun; bu işlem bir dakikaya kadar sürebilir.</string>
+    <string name="reading_error_access_denied">CAN veya MRZ verileri hatalı. Girilen numarayı ve tarihleri kontrol edip tekrar deneyin. Her başarısız deneme, çipin yanıt vermeden önce uyguladığı bekleme süresini uzatabilir.</string>
+    <string name="reading_error_connection_lost">Belge çok erken çekildi. Okuma bitene kadar belgeyi telefona dayalı ve sabit tutun.</string>
+    <string name="reading_error_not_icao">Bu belge ICAO 9303 standardına uygun değil: Çipi okunamaz.</string>
+    <string name="reading_error_timeout">Zaman aşımı: Çip zamanında yanıt vermedi. Belgeyi sabit tutarak tekrar deneyin.</string>
+    <string name="reading_error_can_without_pace">Bu belge CAN ile okunamaz. Pasaport sekmesini kullanın ve MRZ verilerini girin.</string>
+    <string name="reading_error_unexpected">Beklenmeyen bir hata oluştu.</string>
+    <string name="reading_error_code">Hata kodu: %1$s</string>
+    <string name="reading_retry">Tekrar dene</string>
+    <string name="reading_cancel">İptal</string>
+</resources>
