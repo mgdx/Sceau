@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="result_title">Risultato</string>
+    <string name="result_clear">Cancella</string>
+
+    <!-- Verdict -->
+    <string name="result_verdict_authentic">Autentico</string>
+    <string name="result_verdict_authentic_explanation">La firma dell’emittente è valida e il chip ha dimostrato di non essere una copia.</string>
+    <string name="result_verdict_chip_unverified">Firma valida, chip non verificato</string>
+    <string name="result_verdict_chip_unverified_explanation">I dati sono stati firmati dall’emittente, ma il chip non consente di dimostrare di essere l’originale: potrebbe essere un clone.</string>
+    <string name="result_verdict_unknown_issuer">Emittente sconosciuto</string>
+    <string name="result_verdict_unknown_issuer_explanation">Il certificato dell’emittente non figura nell’archivio attendibile. I dati vengono mostrati, ma nulla è garantito. Importare una Master List più recente potrebbe consentire di verificare questo documento.</string>
+    <string name="result_verdict_failed">Esito negativo</string>
+    <string name="result_verdict_failed_explanation">Almeno una verifica non è riuscita: questo documento non deve essere considerato autentico.</string>
+    <string name="result_verdict_imported_anchor">Verificato grazie a un certificato che hai importato</string>
+
+    <!-- Photo -->
+    <string name="result_photo_description">Foto del titolare</string>
+    <string name="result_photo_unavailable">Foto illeggibile o assente</string>
+    <string name="result_photo_fullscreen">Mostra la foto a schermo intero</string>
+    <string name="result_photo_close">Chiudi</string>
+    <string name="result_image_front">Immagine del fronte</string>
+    <string name="result_image_rear">Immagine del retro</string>
+    <string name="result_image_unavailable">Immagine illeggibile</string>
+
+    <!-- Identité -->
+    <string name="result_section_identity">Identità</string>
+    <string name="result_expired">Documento scaduto</string>
+    <string name="result_field_surname">Cognome</string>
+    <string name="result_field_given_names">Nome</string>
+    <string name="result_field_sex">Sesso</string>
+    <string name="result_field_birth_date">Data di nascita</string>
+    <string name="result_field_nationality">Cittadinanza</string>
+    <string name="result_field_document_type">Tipo di documento</string>
+    <string name="result_field_document_number">Numero del documento</string>
+    <string name="result_field_issuing_state">Stato emittente</string>
+    <string name="result_field_expiry_date">Data di scadenza</string>
+    <string name="result_sex_male">Maschile</string>
+    <string name="result_sex_female">Femminile</string>
+    <string name="result_sex_unspecified">Non specificato</string>
+    <string name="result_document_passport">Passaporto</string>
+    <string name="result_document_identity_card">Carta d’identità</string>
+    <string name="result_document_other">Altro documento di viaggio</string>
+    <string name="result_value_with_code">%1$s (%2$s)</string>
+    <string name="result_unknown_value">Sconosciuto</string>
+
+    <!-- Pays spéciaux ICAO -->
+    <string name="result_country_united_nations">Nazioni Unite</string>
+    <string name="result_country_un_agency">Istituto specializzato delle Nazioni Unite</string>
+    <string name="result_country_un_kosovo">Kosovo (UNMIK)</string>
+    <string name="result_country_stateless">Apolide</string>
+    <string name="result_country_refugee">Rifugiato (Convenzione del 1951)</string>
+    <string name="result_country_refugee_other">Rifugiato</string>
+    <string name="result_country_unspecified">Cittadinanza non specificata</string>
+
+    <!-- Données complémentaires -->
+    <string name="result_section_additional">Dati aggiuntivi</string>
+    <string name="result_field_full_name">Nome completo</string>
+    <string name="result_field_other_names">Altri nomi</string>
+    <string name="result_field_personal_number">Numero personale</string>
+    <string name="result_field_full_birth_date">Data di nascita completa</string>
+    <string name="result_field_place_of_birth">Luogo di nascita</string>
+    <string name="result_field_address">Indirizzo</string>
+    <string name="result_field_telephone">Telefono</string>
+    <string name="result_field_profession">Professione</string>
+    <string name="result_field_title">Titolo</string>
+    <string name="result_field_personal_summary">Profilo personale</string>
+    <string name="result_field_other_td_numbers">Altri documenti di viaggio validi</string>
+    <string name="result_field_custody">Dati di affidamento</string>
+    <string name="result_field_issuing_authority">Autorità di rilascio</string>
+    <string name="result_field_issue_date">Data di rilascio</string>
+    <string name="result_field_other_persons">Altre persone indicate</string>
+    <string name="result_field_endorsements">Annotazioni e osservazioni</string>
+    <string name="result_field_tax_exit">Obblighi fiscali o di uscita</string>
+    <string name="result_field_personalization_time">Data di personalizzazione</string>
+    <string name="result_field_personalization_device">Numero del sistema di personalizzazione</string>
+
+    <!-- Vérifications -->
+    <string name="result_section_checks">Verifiche</string>
+    <string name="result_check_secure_channel">Canale sicuro stabilito</string>
+    <string name="result_check_sod_signature">Firma del SOD valida</string>
+    <string name="result_check_chain">Catena di certificazione</string>
+    <string name="result_check_ds_validity">Validità del certificato DS</string>
+    <string name="result_check_dg_hashes">Impronte dei gruppi di dati</string>
+    <string name="result_check_chip_authentication">Chip Authentication (DG14)</string>
+    <string name="result_check_active_authentication">Active Authentication (DG15)</string>
+    <string name="result_status_ok">Riuscita</string>
+    <string name="result_status_failed">Non riuscita</string>
+    <string name="result_status_not_available">Non disponibile</string>
+    <string name="result_status_unsupported">Algoritmo non supportato</string>
+    <string name="result_check_expand">Mostra dettagli</string>
+    <string name="result_check_collapse">Nascondi dettagli</string>
+
+    <!-- Détail des vérifications -->
+    <string name="result_detail_protocol">Protocollo: %1$s</string>
+    <string name="result_detail_ca_method">Metodo: %1$s</string>
+    <string name="result_detail_ca_method_dg14">Chip Authentication con la chiave del DG14</string>
+    <string name="result_detail_ca_method_pace_cam">PACE-CAM, durante l’apertura del canale, con la chiave di EF.CardSecurity</string>
+    <string name="result_detail_algorithm">Algoritmo di firma: %1$s</string>
+    <string name="result_detail_csca">CSCA: %1$s</string>
+    <string name="result_detail_csca_none">Nessun CSCA dell’archivio corrisponde.</string>
+    <string name="result_detail_country">Paese: %1$s</string>
+    <string name="result_detail_country_mismatch">Paesi incoerenti: autorità di certificazione %1$s, certificato del firmatario %2$s, documento %3$s</string>
+    <string name="result_detail_source">Origine: %1$s</string>
+    <string name="result_detail_source_ants">certificati dell’ANTS</string>
+    <string name="result_detail_source_national">certificati pubblicati dallo Stato emittente</string>
+    <string name="result_detail_source_embedded">Master List integrata</string>
+    <string name="result_detail_source_imported">Master List importata</string>
+    <string name="result_detail_ds_subject">Certificato DS: %1$s</string>
+    <string name="result_detail_links">Certificati di collegamento attraversati:</string>
+    <string name="result_detail_link_item">• %1$s</string>
+    <string name="result_detail_links_none">Nessun certificato di collegamento attraversato.</string>
+    <string name="result_detail_ds_missing">Il certificato DS non figura né nel SOD né nell’archivio attendibile.</string>
+    <string name="result_detail_ds_period">Periodo di validità del DS: dal %1$s al %2$s</string>
+    <string name="result_detail_issuance">Data di rilascio: %1$s (%2$s)</string>
+    <string name="result_detail_issuance_no_source">Data di rilascio: %1$s</string>
+    <string name="result_detail_issuance_unknown">Data di rilascio sconosciuta.</string>
+    <string name="result_detail_issuance_dg12">letta nel DG12</string>
+    <string name="result_detail_issuance_sod">data di firma del SOD</string>
+    <string name="result_detail_issuance_estimated">stimata</string>
+    <string name="result_detail_digest_algorithm">Algoritmo di impronta: %1$s</string>
+    <string name="result_detail_dg_checked">Gruppi di dati controllati: %1$s</string>
+    <string name="result_detail_dg_checked_none">Nessun gruppo di dati controllato.</string>
+    <string name="result_detail_dg_mismatched">Impronte non corrispondenti: %1$s</string>
+    <string name="result_detail_dg_all_match">Tutte le impronte corrispondono.</string>
+    <string name="result_detail_dg_missing">Gruppi di dati dichiarati ma non forniti dal chip: %1$s</string>
+    <string name="result_detail_unsupported">Algoritmo non supportato: %1$s</string>
+    <string name="result_detail_error">Errore tecnico: %1$s</string>
+    <string name="result_detail_no_dg14">Il documento non contiene il DG14: il chip non offre questa verifica.</string>
+    <string name="result_detail_no_dg15">Il documento non contiene il DG15: il chip non offre questa verifica.</string>
+    <string name="result_detail_not_reached">Passaggio non eseguito.</string>
+    <string name="result_detail_none">Nessun dettaglio aggiuntivo.</string>
+    <string name="result_demo_banner">Documento simulato — dimostrazione</string>
+</resources>

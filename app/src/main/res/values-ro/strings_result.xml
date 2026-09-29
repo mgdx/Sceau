@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="result_title">Rezultat</string>
+    <string name="result_clear">Ștergeți</string>
+
+    <!-- Verdict -->
+    <string name="result_verdict_authentic">Autentic</string>
+    <string name="result_verdict_authentic_explanation">Semnătura emitentului este validă, iar cipul a dovedit că nu este o copie.</string>
+    <string name="result_verdict_chip_unverified">Semnătură validă, cip neverificat</string>
+    <string name="result_verdict_chip_unverified_explanation">Datele au fost semnate de emitent, dar cipul nu permite să se dovedească faptul că este originalul: ar putea fi o clonă.</string>
+    <string name="result_verdict_unknown_issuer">Emitent necunoscut</string>
+    <string name="result_verdict_unknown_issuer_explanation">Certificatul emitentului nu figurează în depozitul de încredere. Datele sunt afișate, dar nimic nu este garantat. Importarea unei Master List mai recente poate permite verificarea acestui document.</string>
+    <string name="result_verdict_failed">Eșec</string>
+    <string name="result_verdict_failed_explanation">Cel puțin o verificare a eșuat: acest document nu trebuie considerat autentic.</string>
+    <string name="result_verdict_imported_anchor">Verificat datorită unui certificat pe care l-ați importat</string>
+
+    <!-- Photo -->
+    <string name="result_photo_description">Fotografia titularului</string>
+    <string name="result_photo_unavailable">Fotografie ilizibilă sau absentă</string>
+    <string name="result_photo_fullscreen">Afișați fotografia pe tot ecranul</string>
+    <string name="result_photo_close">Închideți</string>
+    <string name="result_image_front">Imaginea feței</string>
+    <string name="result_image_rear">Imaginea versoului</string>
+    <string name="result_image_unavailable">Imagine ilizibilă</string>
+
+    <!-- Identité -->
+    <string name="result_section_identity">Identitate</string>
+    <string name="result_expired">Document expirat</string>
+    <string name="result_field_surname">Nume</string>
+    <string name="result_field_given_names">Prenume</string>
+    <string name="result_field_sex">Sex</string>
+    <string name="result_field_birth_date">Data nașterii</string>
+    <string name="result_field_nationality">Cetățenie</string>
+    <string name="result_field_document_type">Tipul documentului</string>
+    <string name="result_field_document_number">Numărul documentului</string>
+    <string name="result_field_issuing_state">Stat emitent</string>
+    <string name="result_field_expiry_date">Data expirării</string>
+    <string name="result_sex_male">Masculin</string>
+    <string name="result_sex_female">Feminin</string>
+    <string name="result_sex_unspecified">Nespecificat</string>
+    <string name="result_document_passport">Pașaport</string>
+    <string name="result_document_identity_card">Carte de identitate</string>
+    <string name="result_document_other">Alt document de călătorie</string>
+    <string name="result_value_with_code">%1$s (%2$s)</string>
+    <string name="result_unknown_value">Necunoscut</string>
+
+    <!-- Pays spéciaux ICAO -->
+    <string name="result_country_united_nations">Organizația Națiunilor Unite</string>
+    <string name="result_country_un_agency">Instituție specializată a Națiunilor Unite</string>
+    <string name="result_country_un_kosovo">Kosovo (UNMIK)</string>
+    <string name="result_country_stateless">Apatrid</string>
+    <string name="result_country_refugee">Refugiat (Convenția din 1951)</string>
+    <string name="result_country_refugee_other">Refugiat</string>
+    <string name="result_country_unspecified">Cetățenie nespecificată</string>
+
+    <!-- Données complémentaires -->
+    <string name="result_section_additional">Date suplimentare</string>
+    <string name="result_field_full_name">Nume complet</string>
+    <string name="result_field_other_names">Alte nume</string>
+    <string name="result_field_personal_number">Număr personal</string>
+    <string name="result_field_full_birth_date">Data completă a nașterii</string>
+    <string name="result_field_place_of_birth">Locul nașterii</string>
+    <string name="result_field_address">Adresă</string>
+    <string name="result_field_telephone">Telefon</string>
+    <string name="result_field_profession">Profesie</string>
+    <string name="result_field_title">Titlu</string>
+    <string name="result_field_personal_summary">Rezumat personal</string>
+    <string name="result_field_other_td_numbers">Alte documente de călătorie valabile</string>
+    <string name="result_field_custody">Date privind custodia</string>
+    <string name="result_field_issuing_authority">Autoritatea emitentă</string>
+    <string name="result_field_issue_date">Data eliberării</string>
+    <string name="result_field_other_persons">Alte persoane menționate</string>
+    <string name="result_field_endorsements">Mențiuni și observații</string>
+    <string name="result_field_tax_exit">Obligații fiscale sau de ieșire</string>
+    <string name="result_field_personalization_time">Data personalizării</string>
+    <string name="result_field_personalization_device">Numărul sistemului de personalizare</string>
+
+    <!-- Vérifications -->
+    <string name="result_section_checks">Verificări</string>
+    <string name="result_check_secure_channel">Canal securizat stabilit</string>
+    <string name="result_check_sod_signature">Semnătura SOD validă</string>
+    <string name="result_check_chain">Lanț de certificare</string>
+    <string name="result_check_ds_validity">Valabilitatea certificatului DS</string>
+    <string name="result_check_dg_hashes">Amprentele grupurilor de date</string>
+    <string name="result_check_chip_authentication">Chip Authentication (DG14)</string>
+    <string name="result_check_active_authentication">Active Authentication (DG15)</string>
+    <string name="result_status_ok">Reușită</string>
+    <string name="result_status_failed">Eșuată</string>
+    <string name="result_status_not_available">Indisponibilă</string>
+    <string name="result_status_unsupported">Algoritm neacceptat</string>
+    <string name="result_check_expand">Afișați detaliile</string>
+    <string name="result_check_collapse">Ascundeți detaliile</string>
+
+    <!-- Détail des vérifications -->
+    <string name="result_detail_protocol">Protocol: %1$s</string>
+    <string name="result_detail_ca_method">Metodă: %1$s</string>
+    <string name="result_detail_ca_method_dg14">Chip Authentication cu cheia din DG14</string>
+    <string name="result_detail_ca_method_pace_cam">PACE-CAM, în timpul deschiderii canalului, cu cheia din EF.CardSecurity</string>
+    <string name="result_detail_algorithm">Algoritm de semnătură: %1$s</string>
+    <string name="result_detail_csca">CSCA: %1$s</string>
+    <string name="result_detail_csca_none">Niciun CSCA din depozit nu corespunde.</string>
+    <string name="result_detail_country">Țară: %1$s</string>
+    <string name="result_detail_country_mismatch">Țări incoerente: autoritatea de certificare %1$s, certificatul semnatarului %2$s, documentul %3$s</string>
+    <string name="result_detail_source">Sursă: %1$s</string>
+    <string name="result_detail_source_ants">certificate ANTS</string>
+    <string name="result_detail_source_national">certificate publicate de statul emitent</string>
+    <string name="result_detail_source_embedded">Master List integrată</string>
+    <string name="result_detail_source_imported">Master List importată</string>
+    <string name="result_detail_ds_subject">Certificat DS: %1$s</string>
+    <string name="result_detail_links">Certificate de legătură parcurse:</string>
+    <string name="result_detail_link_item">• %1$s</string>
+    <string name="result_detail_links_none">Nu a fost parcurs niciun certificat de legătură.</string>
+    <string name="result_detail_ds_missing">Certificatul DS nu figurează nici în SOD, nici în depozitul de încredere.</string>
+    <string name="result_detail_ds_period">Perioada de valabilitate a DS: de la %1$s la %2$s</string>
+    <string name="result_detail_issuance">Data eliberării: %1$s (%2$s)</string>
+    <string name="result_detail_issuance_no_source">Data eliberării: %1$s</string>
+    <string name="result_detail_issuance_unknown">Data eliberării este necunoscută.</string>
+    <string name="result_detail_issuance_dg12">citită din DG12</string>
+    <string name="result_detail_issuance_sod">data semnării SOD</string>
+    <string name="result_detail_issuance_estimated">estimată</string>
+    <string name="result_detail_digest_algorithm">Algoritm de amprentă: %1$s</string>
+    <string name="result_detail_dg_checked">Grupuri de date verificate: %1$s</string>
+    <string name="result_detail_dg_checked_none">Niciun grup de date verificat.</string>
+    <string name="result_detail_dg_mismatched">Amprente neconforme: %1$s</string>
+    <string name="result_detail_dg_all_match">Toate amprentele sunt conforme.</string>
+    <string name="result_detail_dg_missing">Grupuri de date anunțate, dar nefurnizate de cip: %1$s</string>
+    <string name="result_detail_unsupported">Algoritm neacceptat: %1$s</string>
+    <string name="result_detail_error">Eroare tehnică: %1$s</string>
+    <string name="result_detail_no_dg14">Documentul nu conține DG14: cipul nu oferă această verificare.</string>
+    <string name="result_detail_no_dg15">Documentul nu conține DG15: cipul nu oferă această verificare.</string>
+    <string name="result_detail_not_reached">Etapă neefectuată.</string>
+    <string name="result_detail_none">Niciun detaliu suplimentar.</string>
+    <string name="result_demo_banner">Document simulat — demonstrație</string>
+</resources>

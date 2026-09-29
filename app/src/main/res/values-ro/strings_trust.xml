@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trust_title">Depozit de încredere</string>
+    <string name="trust_back">Înapoi</string>
+    <string name="trust_intro">Certificatele rădăcină (CSCA) ale țărilor emitente, folosite pentru a verifica semnătura documentelor. Nicio dată personală nu trece prin acest ecran.</string>
+    <plurals name="trust_summary">
+        <item quantity="one">%1$d certificat, țări: %2$d</item>
+        <item quantity="few">%1$d certificate, țări: %2$d</item>
+        <item quantity="other">%1$d de certificate, țări: %2$d</item>
+    </plurals>
+    <string name="trust_loading">Se încarcă depozitul de încredere…</string>
+    <string name="trust_load_error">Nu s-a putut încărca depozitul de încredere.</string>
+    <string name="trust_retry">Reîncercați</string>
+    <string name="trust_empty">Niciun certificat în depozitul de încredere.</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">Țară neindicată</string>
+    <plurals name="trust_country_count">
+        <item quantity="one">%1$d certificat</item>
+        <item quantity="few">%1$d certificate</item>
+        <item quantity="other">%1$d de certificate</item>
+    </plurals>
+    <string name="trust_country_expand">Afișați certificatele</string>
+    <string name="trust_country_collapse">Ascundeți certificatele</string>
+    <string name="trust_validity">Valabil de la %1$s la %2$s</string>
+    <string name="trust_fingerprint">Amprentă SHA-256</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_national">Publicare națională</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">Importat</string>
+    <string name="trust_link_certificate">Certificat de legătură</string>
+
+    <!-- Import -->
+    <string name="trust_import">Importați o Master List</string>
+    <string name="trust_busy">Așteptați…</string>
+    <string name="trust_import_confirm_title">Importați această Master List?</string>
+    <string name="trust_import_confirm_text">Semnătura sa este validă. Înainte de import, verificați dacă amprenta semnatarului corespunde celei publicate de autoritatea emitentă.</string>
+    <string name="trust_import_signer">Semnatar</string>
+    <string name="trust_import_signer_fingerprint">Amprenta SHA-256 a semnatarului</string>
+    <string name="trust_import_signing_date">Data semnării</string>
+    <string name="trust_import_signing_date_unknown">Neindicată</string>
+    <string name="trust_import_certificate_count">Număr de certificate</string>
+    <string name="trust_import_confirm">Importați</string>
+    <string name="trust_cancel">Anulați</string>
+    <plurals name="trust_import_done">
+        <item quantity="one">Master List importată: %1$d certificat.</item>
+        <item quantity="few">Master List importată: %1$d certificate.</item>
+        <item quantity="other">Master List importată: %1$d de certificate.</item>
+    </plurals>
+    <string name="trust_import_invalid">Acest fișier nu este o Master List validă: format ilizibil sau semnătură incorectă (%1$s).</string>
+    <string name="trust_import_too_large">Fișier refuzat: depășește 20 MB.</string>
+    <string name="trust_import_read_error">Nu s-a putut citi acest fișier.</string>
+    <string name="trust_import_write_error">Nu s-a putut salva Master List.</string>
+    <plurals name="trust_import_limit_count">
+        <item quantity="one">Import refuzat: se poate importa cel mult %1$d Master List. Ștergeți certificatele importate pentru a adăuga alta.</item>
+        <item quantity="few">Import refuzat: se pot importa cel mult %1$d Master List. Ștergeți certificatele importate pentru a adăuga alta.</item>
+        <item quantity="other">Import refuzat: se pot importa cel mult %1$d de Master List. Ștergeți certificatele importate pentru a adăuga alta.</item>
+    </plurals>
+    <string name="trust_import_limit_size">Import refuzat: Master List importate ar depăși %1$d MB în total. Ștergeți certificatele importate pentru a adăuga alta.</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">Ștergeți certificatele importate</string>
+    <string name="trust_delete_confirm_title">Ștergeți certificatele importate?</string>
+    <string name="trust_delete_confirm_text">Master List importate vor fi șterse. Certificatele integrate în aplicație se păstrează.</string>
+    <string name="trust_delete_confirm">Ștergeți</string>
+    <string name="trust_delete_done">Certificatele importate au fost șterse.</string>
+    <string name="trust_delete_error">Nu s-au putut șterge certificatele importate.</string>
+</resources>

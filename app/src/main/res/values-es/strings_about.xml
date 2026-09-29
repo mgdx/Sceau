@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">Acerca de</string>
+    <string name="about_back">Atrás</string>
+    <string name="about_tagline">Lectura y verificación sin conexión del chip de los documentos de identidad ICAO 9303.</string>
+    <string name="about_version">Versión %1$s</string>
+    <string name="about_version_unknown">Versión desconocida</string>
+
+    <string name="about_section_license">Licencia y código fuente</string>
+    <string name="about_license">Software libre distribuido bajo la licencia GNU GPL versión 3 o posterior.</string>
+    <string name="about_open_repository">Ver el código fuente</string>
+    <string name="about_no_browser">Ninguna aplicación puede abrir este enlace.</string>
+
+    <string name="about_section_trust">Almacén de confianza integrado</string>
+    <string name="about_trust_ants_only">CSCA franceses de la ANTS (pasaportes y documentos de identidad).</string>
+    <string name="about_trust_ants_and_bsi">CSCA franceses de la ANTS y Master List alemana del BSI.</string>
+    <string name="about_trust_master_list_date">Master List firmada el %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">No se indica la fecha de firma de la Master List.</string>
+    <string name="about_trust_bsi_notice">La Master List del BSI (Oficina Federal de Seguridad de la Información de Alemania) se redistribuye sin modificaciones, sin la cooperación ni la aprobación del BSI.</string>
+    <string name="about_trust_national">Certificados publicados por los siguientes Estados para sus propios documentos: %1$s.</string>
+    <string name="about_trust_ogl_notice">Contiene información del sector público británico publicada bajo la licencia Open Government Licence v3.0.</string>
+    <string name="about_trust_loading">Cargando…</string>
+    <string name="about_trust_error">No se ha podido cargar el almacén de confianza.</string>
+
+    <string name="about_section_limits">Limitaciones</string>
+    <string name="about_limit_unknown_issuer">Si el país emisor de un documento no figura en el almacén de confianza, el veredicto es «Emisor desconocido», no «Fallo». Importar una Master List más reciente puede solucionarlo.</string>
+    <string name="about_limit_revocation">No se consultan las listas de revocación: requieren conexión de red, que Sceau nunca utiliza.</string>
+
+    <string name="about_section_usage">Condiciones de uso</string>
+    <string name="about_usage_holder">La lectura presupone que el titular presenta personalmente su documento y da su consentimiento.</string>
+    <string name="about_usage_biometrics">La foto pasa a ser un dato biométrico según el RGPD si se utiliza para una comparación facial automatizada. Sceau no realiza ese tipo de comparación y no debe utilizarse para ello sin una base jurídica específica.</string>
+    <string name="about_usage_privacy">No se conserva ni se envía ningún dato leído: todo se borra de la memoria al salir del resultado o al pasar la aplicación a segundo plano.</string>
+</resources>

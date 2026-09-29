@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trust_title">Archivio attendibile</string>
+    <string name="trust_back">Indietro</string>
+    <string name="trust_intro">Certificati radice (CSCA) dei paesi emittenti, usati per verificare la firma dei documenti. Nessun dato personale passa da questa schermata.</string>
+    <plurals name="trust_summary">
+        <item quantity="one">%1$d certificato, paesi: %2$d</item>
+        <item quantity="other">%1$d certificati, paesi: %2$d</item>
+    </plurals>
+    <string name="trust_loading">Caricamento dell’archivio attendibile…</string>
+    <string name="trust_load_error">Impossibile caricare l’archivio attendibile.</string>
+    <string name="trust_retry">Riprova</string>
+    <string name="trust_empty">Nessun certificato nell’archivio attendibile.</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">Paese non indicato</string>
+    <plurals name="trust_country_count">
+        <item quantity="one">%1$d certificato</item>
+        <item quantity="other">%1$d certificati</item>
+    </plurals>
+    <string name="trust_country_expand">Mostra certificati</string>
+    <string name="trust_country_collapse">Nascondi certificati</string>
+    <string name="trust_validity">Valido dal %1$s al %2$s</string>
+    <string name="trust_fingerprint">Impronta SHA-256</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_national">Pubblicazione nazionale</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">Importato</string>
+    <string name="trust_link_certificate">Certificato di collegamento</string>
+
+    <!-- Import -->
+    <string name="trust_import">Importa una Master List</string>
+    <string name="trust_busy">Attendi…</string>
+    <string name="trust_import_confirm_title">Importare questa Master List?</string>
+    <string name="trust_import_confirm_text">La firma è valida. Prima di importarla, verifica che l’impronta del firmatario corrisponda a quella pubblicata dall’autorità emittente.</string>
+    <string name="trust_import_signer">Firmatario</string>
+    <string name="trust_import_signer_fingerprint">Impronta SHA-256 del firmatario</string>
+    <string name="trust_import_signing_date">Data di firma</string>
+    <string name="trust_import_signing_date_unknown">Non indicata</string>
+    <string name="trust_import_certificate_count">Numero di certificati</string>
+    <string name="trust_import_confirm">Importa</string>
+    <string name="trust_cancel">Annulla</string>
+    <plurals name="trust_import_done">
+        <item quantity="one">Master List importata: %1$d certificato.</item>
+        <item quantity="other">Master List importata: %1$d certificati.</item>
+    </plurals>
+    <string name="trust_import_invalid">Questo file non è una Master List valida: formato illeggibile o firma non corretta (%1$s).</string>
+    <string name="trust_import_too_large">File rifiutato: supera i 20 MB.</string>
+    <string name="trust_import_read_error">Impossibile leggere questo file.</string>
+    <string name="trust_import_write_error">Impossibile salvare la Master List.</string>
+    <plurals name="trust_import_limit_count">
+        <item quantity="one">Importazione rifiutata: puoi importare al massimo %1$d Master List. Elimina i certificati importati per aggiungerne un’altra.</item>
+        <item quantity="other">Importazione rifiutata: puoi importare al massimo %1$d Master List. Elimina i certificati importati per aggiungerne un’altra.</item>
+    </plurals>
+    <string name="trust_import_limit_size">Importazione rifiutata: le Master List importate supererebbero %1$d MB in totale. Elimina i certificati importati per aggiungerne un’altra.</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">Elimina certificati importati</string>
+    <string name="trust_delete_confirm_title">Eliminare i certificati importati?</string>
+    <string name="trust_delete_confirm_text">Le Master List importate verranno eliminate. I certificati integrati nell’app vengono mantenuti.</string>
+    <string name="trust_delete_confirm">Elimina</string>
+    <string name="trust_delete_done">Certificati importati eliminati.</string>
+    <string name="trust_delete_error">Impossibile eliminare i certificati importati.</string>
+</resources>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reading_title">Leitura do documento</string>
+    <string name="reading_prompt">Encoste o documento na parte de trás do celular e não o afaste</string>
+    <string name="reading_step_connect">Conexão com o chip</string>
+    <string name="reading_step_secure_channel">Abertura do canal seguro (PACE ou BAC)</string>
+    <string name="reading_step_read_data">Leitura dos dados</string>
+    <string name="reading_step_verify_signature">Verificação da assinatura</string>
+    <string name="reading_step_verify_chip">Verificação do chip</string>
+    <string name="reading_step_pending">pendente</string>
+    <string name="reading_step_in_progress">em andamento</string>
+    <string name="reading_step_done">concluída</string>
+    <string name="reading_error_title">Leitura interrompida</string>
+    <string name="reading_slow_chip">O chip do documento está demorando para responder, muitas vezes após tentativas malsucedidas. Mantenha-o imóvel; isso pode levar até um minuto.</string>
+    <string name="reading_error_access_denied">O CAN ou os dados da MRZ estão incorretos. Verifique o número digitado e as datas e tente novamente. Cada tentativa malsucedida pode aumentar o tempo que o chip impõe antes de responder.</string>
+    <string name="reading_error_connection_lost">O documento foi afastado cedo demais. Mantenha-o imóvel encostado no celular até o fim da leitura.</string>
+    <string name="reading_error_not_icao">Este documento não segue o padrão ICAO 9303: seu chip não pode ser lido.</string>
+    <string name="reading_error_timeout">Tempo esgotado: o chip não respondeu a tempo. Tente novamente mantendo o documento imóvel.</string>
+    <string name="reading_error_can_without_pace">Este documento não pode ser lido com um CAN. Use a aba Passaporte e digite os dados da MRZ.</string>
+    <string name="reading_error_unexpected">Ocorreu um erro inesperado.</string>
+    <string name="reading_error_code">Código de erro: %1$s</string>
+    <string name="reading_retry">Tentar novamente</string>
+    <string name="reading_cancel">Cancelar</string>
+</resources>
