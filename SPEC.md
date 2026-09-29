@@ -136,7 +136,7 @@ Seuls les champs renseignés sont affichés. Tout texte venu de la puce (DG1, DG
 
 1. Canal sécurisé établi (PACE ou BAC, et lequel)
 2. Signature du SOD valide
-3. Chaîne de certification : DS rattaché à un CSCA du magasin, avec le nom du CSCA, le pays, la source (ANTS, Master List embarquée, Master List importée) et l'algorithme de signature. Le pays du CSCA, celui du DS et l'État émetteur de DG1 doivent concorder ; sinon la ligne est en échec avec le détail des trois pays (audit V3)
+3. Chaîne de certification : DS rattaché à un CSCA du magasin, avec le nom du CSCA, le pays, la source (ANTS, publication nationale, Master List embarquée, Master List importée) et l'algorithme de signature. Le pays du CSCA, celui du DS et l'État émetteur de DG1 doivent concorder ; sinon la ligne est en échec avec le détail des trois pays (audit V3)
 4. Certificat DS dans sa période de validité à la date de délivrance du document
 5. Empreintes des groupes de données conformes au SOD, avec la liste des DG contrôlés. Un DG que le SOD annonce, parmi ceux que Sceau lit (1, 2, 11, 12, 14, 15), et que la puce ne fournit pas est un échec, listé comme manquant : une puce ne peut pas retenir un DG signé (audit V1)
 6. Chip Authentication (DG14) réussie
@@ -156,7 +156,7 @@ Aucune donnée personnelle ne transite par cet écran.
 
 ### 5.5 Écran « À propos »
 
-Version, licence, lien vers le dépôt, rappel du cadre d'usage (voir section 8), et description du magasin de confiance embarqué : CSCA français de l'ANTS et Master List allemande du BSI, avec la date de signature de cette Master List. Une mention précise que la Master List du BSI est redistribuée sans modification, sans coopération ni approbation du BSI (conditions de réutilisation, D1). Les limites de la section 7.4 y sont rappelées.
+Version, licence, lien vers le dépôt, rappel du cadre d'usage (voir section 8), et description du magasin de confiance embarqué : CSCA français de l'ANTS et Master List allemande du BSI, avec la date de signature de cette Master List, puis les pays dont des certificats publiés par l'État lui-même sont embarqués. Une mention précise que la Master List du BSI est redistribuée sans modification, sans coopération ni approbation du BSI (conditions de réutilisation, D1). L'attribution de l'Open Government Licence v3.0 accompagne les certificats britanniques (D26). Les limites de la section 7.4 y sont rappelées.
 
 ## 6. Protocole de lecture et de vérification (module `:core`)
 
@@ -216,17 +216,18 @@ Dans `core/src/main/resources/trust/` :
 - `ants-csca-2010.der`, `ants-csca-2015.der`, `ants-csca-2020.der`, `ants-csca-2025.der` : certificats CSCA passeport de l'ANTS (`CN=CSCA-FRANCE`), depuis la page CSCA de ants.gouv.fr. Le CSCA 2010, expiré, est conservé : il a signé des DS de passeports encore valables (D16).
 - `ants-csca-eid-2021.der` : certificat CSCA e-ID de l'ANTS (`CN=eID-FRANCE`, cartes d'identité), depuis la page CSCA e-ID de ants.gouv.fr. Il ne figure dans aucune Master List nationale : sans lui, aucune CNIe ne pourrait être vérifiée.
 - `de-bsi-master-list.ml` : German Master List publiée par le BSI (fichier CMS signé), redistribuée octet pour octet, seulement renommée. Elle couvre les 27 pays de l'UE, l'EEE, la Suisse et le Royaume-Uni, parmi 112 émetteurs. La Master List de l'ICAO n'est pas embarquée : ses conditions d'utilisation interdisent la redistribution et son téléchargement impose un captcha. Celle du BSI est publiée avec des conditions de réutilisation explicites (pas d'usage publicitaire, aucune apparence de coopération ou de caution du BSI, fichier inchangé), que Sceau respecte (D1).
+- `<pays>-csca-*.der` (par exemple `gb-csca-2026.der`) : CSCA et certificats de lien publiés par un État pour ses propres documents, absents de la liste BSI, encore valides et issus d'une source de statut A de `docs/trust-sources.md` (licence ouverte, ou publication officielle sans restriction de réutilisation). Royaume-Uni, Grèce (titres de séjour), Géorgie et Luxembourg au 2026-09-29 (D26).
 - `index.txt` : liste des fichiers du répertoire, un nom par ligne, car lister un répertoire du classpath n'est pas fiable dans un APK (D16).
 
 `docs/trust-store.md` documente pour chaque fichier : l'URL d'origine, la date de téléchargement, l'empreinte publiée par la source et l'empreinte SHA-256 constatée. Un test unitaire vérifie que les empreintes des fichiers embarqués correspondent à celles listées dans `docs/trust-store.md`, et que ce document, `index.txt` et le répertoire listent exactement les mêmes fichiers, pour détecter toute substitution, tout ajout ou tout retrait.
 
 ### 7.2 Chargement
 
-`:core` charge les certificats DER, puis la Master List embarquée. Vérifier sa signature CMS avec le seul certificat signataire qu'elle contient serait circulaire : la signature est vérifiée **et** le signataire doit être émis par le CSCA allemand dont l'empreinte SHA-256 est épinglée dans le code (ou par son certificat de lien, également épinglé ; empreintes dans `docs/trust-store.md`). Sinon la liste embarquée est rejetée et le chargement échoue (D1). Le type de contenu de la Master List est vérifié.
+`:core` charge les certificats DER (source `ANTS` pour les fichiers `ants-*.der`, `NATIONAL` pour les autres, D26), puis la Master List embarquée. Vérifier sa signature CMS avec le seul certificat signataire qu'elle contient serait circulaire : la signature est vérifiée **et** le signataire doit être émis par le CSCA allemand dont l'empreinte SHA-256 est épinglée dans le code (ou par son certificat de lien, également épinglé ; empreintes dans `docs/trust-store.md`). Sinon la liste embarquée est rejetée et le chargement échoue (D1). Le type de contenu de la Master List est vérifié.
 
 Les Master Lists importées par l'utilisateur sont vérifiées selon §5.4 (signature CMS avec le signataire contenu dans le fichier, empreinte confirmée par l'utilisateur) ; un import invalide est ignoré.
 
-Les sources sont fusionnées. En cas de doublon, la priorité est ANTS, puis Master List embarquée, puis Master Lists importées. Chaque CSCA est indexé par pays, sujet, identifiant de clé et empreinte, avec sa source (`ANTS`, `EMBEDDED_MASTER_LIST`, `IMPORTED_MASTER_LIST`). Le caractère auto-signé d'une ancre se déduit de ses identifiants de clé, la signature n'étant vérifiée qu'en repli ; la construction de la chaîne vérifie toujours chaque signature (D16).
+Les sources sont fusionnées. En cas de doublon, la priorité est ANTS, puis publications nationales, puis Master List embarquée, puis Master Lists importées. Chaque CSCA est indexé par pays, sujet, identifiant de clé et empreinte, avec sa source (`ANTS`, `NATIONAL`, `EMBEDDED_MASTER_LIST`, `IMPORTED_MASTER_LIST`). Le caractère auto-signé d'une ancre se déduit de ses identifiants de clé, la signature n'étant vérifiée qu'en repli ; la construction de la chaîne vérifie toujours chaque signature (D16).
 
 Le magasin est préchargé en arrière-plan au démarrage du processus, pour que ni la première lecture ni l'écran « Magasin de confiance » n'attendent ; une erreur de préchargement est retentée et signalée à l'accès suivant (D16).
 
@@ -236,7 +237,7 @@ Les CSCA tournent tous les trois à cinq ans. Le magasin embarqué est mis à jo
 
 ### 7.4 Limites documentées
 
-- Un pays absent du magasin (ANTS, liste BSI et imports) donne le verdict « Émetteur inconnu », pas « Échec ».
+- Un pays absent du magasin (ANTS, publications nationales, liste BSI et imports) donne le verdict « Émetteur inconnu », pas « Échec ».
 - La liste BSI ne contient pas le CSCA des cartes d'identité slovaques ni 4 CSCA hongrois de 2024 ; ils figurent dans les Master Lists italienne et suédoise, que l'utilisateur peut importer (D1).
 - Les listes de révocation ne sont pas consultées en v1 (elles nécessitent le réseau).
 

@@ -248,6 +248,7 @@ object CheckFormatting {
     fun sourceLabel(source: TrustSource): Int =
         when (source) {
             TrustSource.ANTS -> R.string.result_detail_source_ants
+            TrustSource.NATIONAL -> R.string.result_detail_source_national
             TrustSource.EMBEDDED_MASTER_LIST -> R.string.result_detail_source_embedded
             TrustSource.IMPORTED_MASTER_LIST -> R.string.result_detail_source_imported
         }

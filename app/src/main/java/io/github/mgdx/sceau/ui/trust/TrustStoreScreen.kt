@@ -482,6 +482,7 @@ private fun AnchorItem(
 private fun sourceBadge(source: TrustSource): Int =
     when (source) {
         TrustSource.ANTS -> R.string.trust_source_ants
+        TrustSource.NATIONAL -> R.string.trust_source_national
         TrustSource.EMBEDDED_MASTER_LIST -> R.string.trust_source_master_list
         TrustSource.IMPORTED_MASTER_LIST -> R.string.trust_source_imported
     }

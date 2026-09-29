@@ -103,6 +103,7 @@
     <string name="result_detail_country_mismatch">Pays incohérents : autorité de certification %1$s, certificat du signataire %2$s, document %3$s</string>
     <string name="result_detail_source">Source : %1$s</string>
     <string name="result_detail_source_ants">certificats de l’ANTS</string>
+    <string name="result_detail_source_national">certificats publiés par l’État émetteur</string>
     <string name="result_detail_source_embedded">Master List embarquée</string>
     <string name="result_detail_source_imported">Master List importée</string>
     <string name="result_detail_ds_subject">Certificat DS : %1$s</string>

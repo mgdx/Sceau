@@ -20,8 +20,15 @@ colonne. Ne change ni l'ordre ni le nombre de colonnes sans adapter le test.
 | `ants-csca-2025.der` | Passeport (CSCA) | `C=FR, O=Gouv, CN=CSCA-FRANCE` | 2025-02-19 → 2040-05-19 | SHA-1 `59c8be053778295654ed32672a8045ef41405b44` | `d628b5100ddcbed8f3e5fa05e53b6b80bebb1e6264a12583319ef955c91d9349` |
 | `ants-csca-eid-2021.der` | e-ID, CNIe (CSCA) | `C=FR, O=Gouv, CN=eID-FRANCE` | 2021-02-15 → 2036-05-15 | SHA-256 `b33ea63b9be01082d98071a29111757c72257eba80d7205d21fa35436c29fe7c` | `b33ea63b9be01082d98071a29111757c72257eba80d7205d21fa35436c29fe7c` |
 | `de-bsi-master-list.ml` | Master List CSCA (BSI, Allemagne) | signataire `C=DE, O=bund, OU=bsi, serialNumber=0039, CN=CSCA Master List Signer` | signée le 2026-05-28 ; signataire valide 2024-10-17 → 2028-10-17 | aucune pour le fichier (voir « Master List embarquée ») | `e036f8c989193b38cf19493bb2c957bfa2385b35a680bf03300515cad7526dd0` |
+| `gb-csca-2026.der` | Passeport GB (CSCA GBR_2026_Root) | `C=GB, O=UKKPA, CN=Country Signing Authority` | 2026-08-24 → 2042-12-24 | aucune | `737ce248b62d8b6dc1c9e3aaa8b937334406bac17bb37235c1c50281e6ad7edb` |
+| `gb-csca-link-2021-2026.der` | Passeport GB (lien GBR_2021-2026, signé par GBR_2021) | `C=GB, O=UKKPA, CN=Country Signing Authority` | 2026-08-24 → 2038-01-17 | aucune | `81d9f6bf3026a04e6e3847808cf094e34f9473a92ff66eb86a975f4c42055b5d` |
+| `gr-csca-erp-003.der` | Titre de séjour GR (CSCA eRP 003) | `C=GR, O=Hellenic Republic, serialNumber=003, CN=CSCAeRP-HELLAS` | 2026-05-27 → 2041-05-26 | SHA-1 `3dd148e21a8c0d6d31d4269e9123f4bed9c7742b` | `8f01ced4c95d9ee5cc6915e1151432e18fa1615ad6d8e61bb6ea1af025368e3e` |
+| `gr-csca-erp-link-002-003.der` | Titre de séjour GR (lien 002 → 003) | `C=GR, O=Hellenic Republic, serialNumber=003, CN=CSCAeRP-HELLAS` | 2026-05-27 → 2036-09-20 | SHA-1 `7a15cc652f7a13afc7f0862ae2c0ae205e871dbb` | `5bbdb09b12bc25f9373142409d9b52da806b764294baf4f028a2c13da15bdfc5` |
+| `ge-csca-5.der` | Documents de voyage GE (CSCA n° 5) | `C=GE, O=Ministry of Justice of Georgia, OU=Public Service Development Agency, CN=GEO Country Signing CA` | 2025-09-09 → 2040-12-04 | SHA-256 `2ef9e14c6155c315b8d7681168774a063e6fd2639f51f7d5c904ef862933c844` | `2ef9e14c6155c315b8d7681168774a063e6fd2639f51f7d5c904ef862933c844` |
+| `ge-csca-6.der` | Documents de voyage GE (CSCA n° 6, « G2 », actif) | `C=GE, O=Ministry of Justice of Georgia, OU=Public Service Development Agency, CN=GEO Country Signing CA G2` | 2025-09-10 → 2040-12-05 | SHA-256 `277fcd17b53b3e2f20cfee967db499189bf23e0ef0a9e1040c5a24c8b09cde3c` | `277fcd17b53b3e2f20cfee967db499189bf23e0ef0a9e1040c5a24c8b09cde3c` |
+| `lu-csca-etravel-link.der` | Documents de voyage LU (lien CSCA ePassport → CSCA eTravel Documents) | `C=LU, O=Grand-Duchy of Luxembourg Ministry of Foreign Affairs, CN=Grand-Duchy of Luxembourg CSCA eTravel Documents` | 2018-11-02 → 2029-01-12 | aucune | `5acb0c0264ad18912ad80139b318ab507d00dc77a86ac4eb832d3510ff6ef95c` |
 
-Les cinq certificats sont des CSCA racines auto-signés (RSA 4096, `sha256WithRSAEncryption`).
+Les cinq certificats de l'ANTS sont des CSCA racines auto-signés (RSA 4096, `sha256WithRSAEncryption`).
 Les archives de l'ANTS ne contiennent aucun certificat de lien. Le CSCA passeport 2010 est
 expiré (mars 2026) mais reste nécessaire : il a signé des DS dont les passeports, valables
 dix ans, sont encore en circulation. La période de validité est vérifiée à la date de
@@ -41,6 +48,13 @@ ils sont copiés sans conversion et seulement renommés.
 | `ants-csca-2025.der` | `csca-france_2025.zip` | `CSCA-FRANCE_2025.crt`, empreinte dans `CSCA-FRANCE_2025_fingerprint.txt` | page CSCA de l'ANTS | 2026-09-25 |
 | `ants-csca-eid-2021.der` | `Certificat_CSCA_PROD_EID.zip` | `eID-FRANCE.crt` (un `eID-FRANCE.pem` identique l'accompagne), empreinte dans `Fingerprint_SHA256.txt` | page CSCA e-ID de l'ANTS | 2026-09-25 |
 | `de-bsi-master-list.ml` | `GermanMasterList.zip` | `DE_ML_2026-05-28-08-28-45.ml`, redistribué inchangé | <https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/ElekAusweise/CSCA/GermanMasterList.html> | 2026-09-25 |
+| `gb-csca-2026.der` | aucune (fichier DER direct) | <https://hmpo.gov.uk/csca/certificate/12fd5015-cf50-47b0-a1fb-ca1c3cc0f0ee> | <https://hmpo.gov.uk/csca> | 2026-09-29 |
+| `gb-csca-link-2021-2026.der` | aucune (fichier DER direct) | <https://hmpo.gov.uk/csca/certificate/3a083ccd-5e5d-4e7c-be90-bd4218e335af> | <https://hmpo.gov.uk/csca> | 2026-09-29 |
+| `gr-csca-erp-003.der` | aucune (fichier DER direct) | `http://spoc.immigration.gov.gr/csca/CSCAeRP-HELLAS003.cer` | <http://spoc.immigration.gov.gr/csca/> | 2026-09-29 |
+| `gr-csca-erp-link-002-003.der` | aucune (fichier PEM, converti en DER) | `http://spoc.immigration.gov.gr/csca/CSCAeRP-HELLAS003_link.cer` | <http://spoc.immigration.gov.gr/csca/> | 2026-09-29 |
+| `ge-csca-5.der` | aucune (fichier DER direct) | <https://id.ge/en/pki/GEO-CSCA-5.crt> | <https://id.ge/en/tsp/csca/> | 2026-09-29 |
+| `ge-csca-6.der` | aucune (fichier DER direct) | <https://id.ge/en/pki/GEO-CSCA-6.crt> | <https://id.ge/en/tsp/csca/> | 2026-09-29 |
+| `lu-csca-etravel-link.der` | aucune (fichier DER direct) | <https://repository.incert.lu/CSCAeTravel_link_from_CSCAePass.crt> | <https://repository.incert.lu/> | 2026-09-29 |
 
 Les archives ont été téléchargées par le mainteneur depuis les pages officielles de l'ANTS
 (URL confirmées par le mainteneur le 2026-09-25) :
@@ -52,6 +66,42 @@ Le site de l'ANTS filtre les robots : les archives se téléchargent à la main 
 puis `scripts/update-trust-store.sh --ants-dir` compare les empreintes publiées dans chaque
 archive à celles recalculées (voir « Procédure de mise à jour »).
 
+## Publications nationales
+
+Sept certificats publiés par un État pour ses **propres** documents complètent la Master List
+embarquée (décision D26). Ils sont absents de la liste du BSI, encore valides, et leur source a
+le statut A de `docs/trust-sources.md` : licence ouverte (A1) ou publication officielle sans
+restriction de réutilisation (A2). Le chargeur les reconnaît à leur nom : un fichier `.der` qui
+ne commence pas par `ants-` porte la source `NATIONAL`, affichée « Publication nationale ».
+
+| Pays | Autorité | Statut | Conditions et attribution |
+|---|---|---|---|
+| GB | HM Passport Office (UKKPA) | A1 | Open Government Licence v3.0. Attribution affichée dans « À propos » : « Contains public sector information licensed under the Open Government Licence v3.0 ». |
+| GR | Ministère des Migrations et de l'Asile (titres de séjour) | A2 | Aucune mention de réutilisation sur le site. |
+| GE | Public Service Development Agency, ministère de la Justice | A2 | Aucune mention de réutilisation sur le site. |
+| LU | INCERT | A2 | Aucune mention de réutilisation sur le site. |
+
+Contrôles faits le 2026-09-29 sur chaque fichier, avant de l'embarquer :
+
+- téléchargement depuis la page officielle de l'État, par HTTPS sauf pour la Grèce, qui ne sert
+  qu'en HTTP. L'intégrité repose alors sur les empreintes SHA-1 publiées sur la même page, sur
+  le lien 002 → 003 signé par le CSCA 002 (dont l'empreinte SHA-1 publiée,
+  `277fa92b9908cddb20899bb14e682de224e213c7`, concorde) et sur la signature du lien ;
+- empreinte publiée, quand elle existe, égale à l'empreinte recalculée (GR : SHA-1, GE :
+  SHA-256). Le Royaume-Uni et le Luxembourg n'en publient pas. Leur intégrité repose sur TLS et
+  sur la signature des liens ;
+- signature vérifiée : auto-signature des quatre CSCA racines ; lien GB signé par GBR_2021, lien
+  GR par CSCAeRP-HELLAS 002 et lien LU par « Grand-Duchy of Luxembourg CSCA ePassport »
+  (`CSCA_ePassport_card_1.crt` du même dépôt). La clé GB est une clé EC P-384 à paramètres de
+  courbe explicites, qu'OpenSSL 3 refuse de vérifier en mode `verify` : la vérification est
+  faite avec la bibliothèque Python `cryptography`, et refaite par `TrustStoreTest`
+  (`nationalLinksAreSignedByAnEmbeddedAnchor`), qui vérifie chaque lien avec la clé d'un CSCA
+  du magasin ;
+- extensions : `basicConstraints` cA=TRUE et `keyUsage` keyCertSign présents sur les sept.
+
+Les deux CSCA géorgiens n° 5 et n° 6 partagent la même clé (même SKI) sous deux noms. Le n° 6 est
+aussi dans les Master Lists italienne, suédoise et néerlandaise, qui ne sont pas embarquées.
+
 ## Master List
 
 La SPEC (§7.1) prévoit une Master List embarquée. Le code la prend en charge : un fichier `.ml`
@@ -59,7 +109,7 @@ listé dans `trust/index.txt` est parsé au chargement. Sa signature CMS est vé
 signataire doit être émis par un certificat dont l'empreinte est épinglée dans le code (voir
 « Ancrage du signataire »). Sinon le chargement échoue (`InvalidMasterListException`). Ses
 certificats portent la source `EMBEDDED_MASTER_LIST`. En cas de doublon, l'ordre de priorité
-est ANTS, puis Master List embarquée, puis Master List importée.
+est ANTS, puis publications nationales, puis Master List embarquée, puis Master List importée.
 
 ### Master List embarquée : German Master List du BSI
 
@@ -189,5 +239,12 @@ La procédure manuelle reste la référence de ce que fait le script.
    publiées des certificats épinglés, puis mettre à jour les empreintes de ce document. Si le
    pays émetteur change de CSCA, mettre à jour `EMBEDDED_MASTER_LIST_ANCHORS` à partir des
    empreintes publiées par cette autorité, jamais à partir du fichier lui-même.
-8. Lancer `./gradlew :core:test` : `TrustStoreFingerprintTest` et `TrustStoreTest` doivent
+8. Publications nationales (section du même nom) : le script ne les couvre pas. Pour chaque
+   source, suivre la procédure de `docs/trust-sources.md` §5 : retélécharger la page, relever
+   les nouveaux certificats, contrôler pays, auto-signature ou lien signé par un CSCA déjà
+   présent, validité et empreinte publiée. Nommer le fichier `<pays>-csca-<désignation>.der`,
+   jamais avec le préfixe `ants-`. Ne l'ajouter que si la source garde un statut A, et mettre à
+   jour la liste attendue de `TrustStoreTest.nationalSha256`. Surveiller les bascules
+   annoncées (DK en septembre 2026, NO en janvier 2027).
+9. Lancer `./gradlew :core:test` : `TrustStoreFingerprintTest` et `TrustStoreTest` doivent
    passer.

@@ -39,8 +39,11 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import io.github.mgdx.sceau.R
 import io.github.mgdx.sceau.core.trust.MasterListInfo
+import io.github.mgdx.sceau.core.trust.TrustSource
 import io.github.mgdx.sceau.trust.TrustStoreRepository
 import io.github.mgdx.sceau.ui.common.SceauIcons
+import io.github.mgdx.sceau.ui.result.Countries
+import io.github.mgdx.sceau.ui.result.currentLocale
 import io.github.mgdx.sceau.ui.result.rememberDateFormatter
 import io.github.mgdx.sceau.ui.result.toUtcDate
 import kotlinx.coroutines.CancellationException
@@ -54,6 +57,8 @@ private sealed interface EmbeddedUi {
 
     class Loaded(
         val masterList: MasterListInfo?,
+        /** Codes pays des certificats publiés par leur propre État (source NATIONAL), triés. */
+        val nationalCountries: List<String>,
     ) : EmbeddedUi
 }
 
@@ -75,7 +80,16 @@ fun AboutScreen(
     LaunchedEffect(repository) {
         embedded =
             try {
-                EmbeddedUi.Loaded(repository.get().embeddedMasterList)
+                val store = repository.get()
+                EmbeddedUi.Loaded(
+                    masterList = store.embeddedMasterList,
+                    nationalCountries =
+                        store.anchors
+                            .filter { it.source == TrustSource.NATIONAL }
+                            .map { it.country }
+                            .distinct()
+                            .sorted(),
+                )
             } catch (e: CancellationException) {
                 throw e
             } catch (_: Exception) {
@@ -168,6 +182,14 @@ private fun EmbeddedTrustStore(embedded: EmbeddedUi) {
                         ?: stringResource(R.string.about_trust_master_list_date_unknown),
                 )
                 Paragraph(stringResource(R.string.about_trust_bsi_notice))
+            }
+            if (embedded.nationalCountries.isNotEmpty()) {
+                val locale = currentLocale()
+                val names = embedded.nationalCountries.map { Countries.displayName(it, locale) ?: it }
+                Paragraph(stringResource(R.string.about_trust_national, names.joinToString(", ")))
+            }
+            if ("GB" in embedded.nationalCountries) {
+                Paragraph(stringResource(R.string.about_trust_ogl_notice))
             }
         }
     }

@@ -306,3 +306,21 @@ Format : date, contexte, décision, justification, écart à la SPEC concerné.
   - `scripts/check-reproducible.sh` fait la double construction (deux clones au même commit, chemins de longueurs différentes, SDK vu sous un autre chemin pour le second) et compare les APK ; procédure et versions à figer dans `docs/reproducible-builds.md`.
 - **Justification** : la mesure après correctif, avec un clone et un SDK sous deux chemins différents, donne cinq APK identiques octet pour octet (SHA-256 des APK non signés, mesurés sur un commit intermédiaire de cette branche, car ils changent à chaque commit par `version-control-info.textproto` : arm64-v8a `366a9eba…`, armeabi-v7a `e346e1f6…`, x86 `00430b49…`, x86_64 `13f3bfb7…`, universel `0ccddb62…`). Le témoin négatif (même script sur le correctif sans le remappage du NDK) montre que le seul changement de chemin du SDK suffit à faire différer les cinq APK : le remappage du NDK est nécessaire, F-Droid n'installant pas le SDK au même endroit que le développeur. Les tailles des APK sont inchangées à l'octet près (le build-id a une taille fixe). `-Wl,--build-id=none` aurait aussi supprimé l'écart, au prix de la symbolisation et sans retirer les chemins absolus du `.so` non strippé.
 - **Écart à la SPEC** : aucun. La SPEC vise F-Droid (§2) et publie les APK sur les releases (§10) sans fixer le mode de signature ; les builds reproductibles permettent de publier les APK signés par le développeur. Limite : la reproductibilité est vérifiée sur Linux x86_64 ; une construction sur une autre plateforme hôte (préfixe `prebuilt/darwin-x86_64` du NDK, autre binaire du compilateur) n'est pas garantie identique.
+
+## D26. Certificats publiés par leur propre État (sources de statut A)
+
+- **Date** : 2026-09-29 (décision de l'utilisateur).
+- **Contexte** : le catalogue `docs/trust-sources.md` recense les publications officielles de CSCA. Parmi les certificats absents du magasin et encore valides, sept viennent de sources de statut A, c'est-à-dire sous licence ouverte ou publiées par un État pour ses propres documents sans restriction de réutilisation. Ils ne sont dans aucune Master List embarquée : les documents concernés donnaient « Émetteur inconnu », ou le donneront dès que le nouveau CSCA signera des DS (bascule britannique du 2026-09-26).
+- **Décision** : embarquer ces sept certificats, sous forme de fichiers DER dans `core/src/main/resources/trust/`, avec une nouvelle source `TrustSource.NATIONAL` :
+  - GB : CSCA GBR_2026_Root et lien GBR_2021-2026 (OGL v3, A1) ;
+  - GR : CSCA des titres de séjour CSCAeRP-HELLAS 003 et lien 002 → 003 (A2) ;
+  - GE : CSCA n° 5 et n° 6 « G2 » (A2) ;
+  - LU : lien CSCA ePassport → CSCA eTravel Documents (A2).
+
+  Un fichier `.der` dont le nom commence par `ants-` reste de source `ANTS`, et tout autre `.der` devient `NATIONAL`. Priorité en cas de doublon : ANTS, publications nationales, Master List embarquée, imports. L'écran « Magasin de confiance » affiche le badge « Publication nationale », le résultat affiche « certificats publiés par l'État émetteur », et « À propos » liste les pays concernés et l'attribution OGL exigée pour le Royaume-Uni. Provenance, empreintes et contrôles dans `docs/trust-store.md`.
+- **Justification** :
+  - Ces sources ont le même statut que les certificats de l'ANTS : chaque État publie ses propres CSCA pour qu'on vérifie ses documents. Les sources B (Master Lists italienne, suédoise et néerlandaise, par exemple) attendent une autorisation écrite et ne sont pas embarquées.
+  - Une source distincte d'`ANTS` évite d'afficher « ANTS » pour un certificat britannique. Le préfixe de nom suffit et évite un second fichier d'index.
+  - Seuls les certificats valides sont ajoutés : les 33 autres certificats nouveaux de statut A sont expirés depuis longtemps et n'apportent rien à des documents en circulation.
+  - Taille : 7 fichiers d'environ 1,2 à 1,6 Ko, négligeable devant l'objectif de 8 Mo (D2).
+- **Écart à la SPEC** : §7.1 ne listait que l'ANTS et la Master List du BSI, §7.2 que trois sources. SPEC mise à jour (§5.5, §6 contrôle 3, §7.1, §7.2, §7.4).

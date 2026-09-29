@@ -25,7 +25,7 @@ class MasterListFuzzTest {
 
     /** Fusion dans un magasin et accès à tout ce qu'affiche l'écran Magasin de confiance. */
     private fun exercise(list: MasterList) {
-        val store = TrustStoreLoader.merge(emptyList(), null, listOf(list))
+        val store = TrustStoreLoader.merge(emptyList(), emptyList(), null, listOf(list))
         for (anchor in store.anchors) {
             anchor.country
             anchor.subject

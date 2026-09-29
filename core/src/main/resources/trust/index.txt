@@ -4,3 +4,10 @@ ants-csca-2020.der
 ants-csca-2025.der
 ants-csca-eid-2021.der
 de-bsi-master-list.ml
+gb-csca-2026.der
+gb-csca-link-2021-2026.der
+gr-csca-erp-003.der
+gr-csca-erp-link-002-003.der
+ge-csca-5.der
+ge-csca-6.der
+lu-csca-etravel-link.der
