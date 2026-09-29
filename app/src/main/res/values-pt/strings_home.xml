@@ -23,5 +23,5 @@
     <string name="home_nfc_disabled">O NFC está desativado. Ative-o para ler o chip do documento.</string>
     <string name="home_nfc_settings">Abrir definições de NFC</string>
     <string name="home_nfc_absent">Este telemóvel não tem NFC: não consegue ler o chip dos documentos de identificação.</string>
-    <string name="home_menu_demo">Simular uma CNIe (demonstração)</string>
+    <string name="home_menu_demo">Simular um cartão de identidade francês (demonstração)</string>
 </resources>

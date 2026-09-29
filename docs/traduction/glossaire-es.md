@@ -11,7 +11,7 @@ Termes clés de l’interface de Sceau. Les acronymes ICAO (CAN, MRZ, PACE, BAC,
 | passeport | pasaporte |  |
 | titulaire | titular | vocabulaire officiel des documents |
 | magasin de confiance | almacén de confianza | calque de « trust store » |
-| empreinte (condensat) | huella | pt/pt-BR : « hash » pour éviter la confusion avec l’empreinte digitale (impressão digital) |
+| empreinte (condensat) | huella | pt/pt-BR : « impressão digital » pour un certificat comme Android, « hash » pour les groupes de données |
 | certificat de lien | certificado de enlace | link certificate ICAO |
 | certificat racine | certificado raíz |  |
 | émetteur | emisor |  |

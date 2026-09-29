@@ -21,7 +21,7 @@
     <string name="trust_country_expand">Mostrar certificados</string>
     <string name="trust_country_collapse">Ocultar certificados</string>
     <string name="trust_validity">Válido de %1$s a %2$s</string>
-    <string name="trust_fingerprint">Hash SHA-256</string>
+    <string name="trust_fingerprint">Impressão digital SHA-256</string>
     <string name="trust_source_ants">ANTS</string>
     <string name="trust_source_national">Publicação nacional</string>
     <string name="trust_source_master_list">Master List</string>
@@ -32,9 +32,9 @@
     <string name="trust_import">Importar uma Master List</string>
     <string name="trust_busy">Aguarde…</string>
     <string name="trust_import_confirm_title">Importar esta Master List?</string>
-    <string name="trust_import_confirm_text">A assinatura é válida. Antes de importá-la, verifique se o hash do signatário corresponde ao publicado pela autoridade emissora.</string>
+    <string name="trust_import_confirm_text">A assinatura é válida. Antes de importá-la, verifique se a impressão digital do signatário corresponde à publicada pela autoridade emissora.</string>
     <string name="trust_import_signer">Signatário</string>
-    <string name="trust_import_signer_fingerprint">Hash SHA-256 do signatário</string>
+    <string name="trust_import_signer_fingerprint">Impressão digital SHA-256 do signatário</string>
     <string name="trust_import_signing_date">Data de assinatura</string>
     <string name="trust_import_signing_date_unknown">Não indicada</string>
     <string name="trust_import_certificate_count">Número de certificados</string>

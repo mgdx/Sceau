@@ -23,5 +23,5 @@
     <string name="home_nfc_disabled">NFC este dezactivat. Activați-l pentru a citi cipul documentului.</string>
     <string name="home_nfc_settings">Deschideți setările NFC</string>
     <string name="home_nfc_absent">Acest telefon nu are NFC: nu poate citi cipul documentelor de identitate.</string>
-    <string name="home_menu_demo">Simulați o CNIe (demo)</string>
+    <string name="home_menu_demo">Simulați o carte de identitate franceză (demo)</string>
 </resources>
