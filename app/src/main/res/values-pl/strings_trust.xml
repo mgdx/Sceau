@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trust_title">Zaufane certyfikaty</string>
+    <string name="trust_back">Wstecz</string>
+    <string name="trust_intro">Certyfikaty główne (CSCA) państw wydających, używane do weryfikacji podpisu dokumentów. Na tym ekranie nie są przetwarzane żadne dane osobowe.</string>
+    <plurals name="trust_summary">
+        <item quantity="one">%1$d certyfikat, liczba państw: %2$d</item>
+        <item quantity="few">%1$d certyfikaty, liczba państw: %2$d</item>
+        <item quantity="many">%1$d certyfikatów, liczba państw: %2$d</item>
+        <item quantity="other">%1$d certyfikatu, liczba państw: %2$d</item>
+    </plurals>
+    <string name="trust_loading">Wczytywanie zaufanych certyfikatów…</string>
+    <string name="trust_load_error">Nie udało się wczytać zaufanych certyfikatów.</string>
+    <string name="trust_retry">Spróbuj ponownie</string>
+    <string name="trust_empty">Brak zaufanych certyfikatów.</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">Nie podano państwa</string>
+    <plurals name="trust_country_count">
+        <item quantity="one">%1$d certyfikat</item>
+        <item quantity="few">%1$d certyfikaty</item>
+        <item quantity="many">%1$d certyfikatów</item>
+        <item quantity="other">%1$d certyfikatu</item>
+    </plurals>
+    <string name="trust_country_expand">Pokaż certyfikaty</string>
+    <string name="trust_country_collapse">Ukryj certyfikaty</string>
+    <string name="trust_validity">Ważny od %1$s do %2$s</string>
+    <string name="trust_fingerprint">Odcisk SHA-256</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_national">Publikacja krajowa</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">Zaimportowany</string>
+    <string name="trust_link_certificate">Certyfikat łączący</string>
+
+    <!-- Import -->
+    <string name="trust_import">Importuj Master List</string>
+    <string name="trust_busy">Proszę czekać…</string>
+    <string name="trust_import_confirm_title">Zaimportować tę Master List?</string>
+    <string name="trust_import_confirm_text">Jej podpis jest ważny. Przed zaimportowaniem sprawdź, czy odcisk podpisującego zgadza się z odciskiem opublikowanym przez organ wydający.</string>
+    <string name="trust_import_signer">Podpisujący</string>
+    <string name="trust_import_signer_fingerprint">Odcisk SHA-256 podpisującego</string>
+    <string name="trust_import_signing_date">Data podpisania</string>
+    <string name="trust_import_signing_date_unknown">Nie podano</string>
+    <string name="trust_import_certificate_count">Liczba certyfikatów</string>
+    <string name="trust_import_confirm">Importuj</string>
+    <string name="trust_cancel">Anuluj</string>
+    <plurals name="trust_import_done">
+        <item quantity="one">Zaimportowano Master List: %1$d certyfikat.</item>
+        <item quantity="few">Zaimportowano Master List: %1$d certyfikaty.</item>
+        <item quantity="many">Zaimportowano Master List: %1$d certyfikatów.</item>
+        <item quantity="other">Zaimportowano Master List: %1$d certyfikatu.</item>
+    </plurals>
+    <string name="trust_import_invalid">Ten plik nie jest prawidłową Master List: nieczytelny format lub nieprawidłowy podpis (%1$s).</string>
+    <string name="trust_import_too_large">Plik odrzucony: przekracza 20 MB.</string>
+    <string name="trust_import_read_error">Nie udało się odczytać tego pliku.</string>
+    <string name="trust_import_write_error">Nie udało się zapisać Master List.</string>
+    <plurals name="trust_import_limit_count">
+        <item quantity="one">Import odrzucony: maksymalna liczba zaimportowanych Master List to %1$d. Usuń zaimportowane certyfikaty, aby dodać kolejną.</item>
+        <item quantity="few">Import odrzucony: maksymalna liczba zaimportowanych Master List to %1$d. Usuń zaimportowane certyfikaty, aby dodać kolejną.</item>
+        <item quantity="many">Import odrzucony: maksymalna liczba zaimportowanych Master List to %1$d. Usuń zaimportowane certyfikaty, aby dodać kolejną.</item>
+        <item quantity="other">Import odrzucony: maksymalna liczba zaimportowanych Master List to %1$d. Usuń zaimportowane certyfikaty, aby dodać kolejną.</item>
+    </plurals>
+    <string name="trust_import_limit_size">Import odrzucony: zaimportowane Master List przekroczyłyby łącznie %1$d MB. Usuń zaimportowane certyfikaty, aby dodać kolejną.</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">Usuń zaimportowane certyfikaty</string>
+    <string name="trust_delete_confirm_title">Usunąć zaimportowane certyfikaty?</string>
+    <string name="trust_delete_confirm_text">Zaimportowane Master List zostaną usunięte. Certyfikaty wbudowane w aplikację zostaną zachowane.</string>
+    <string name="trust_delete_confirm">Usuń</string>
+    <string name="trust_delete_done">Usunięto zaimportowane certyfikaty.</string>
+    <string name="trust_delete_error">Nie udało się usunąć zaimportowanych certyfikatów.</string>
+</resources>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">Informacje</string>
+    <string name="about_back">Wstecz</string>
+    <string name="about_tagline">Odczyt i weryfikacja offline chipu dokumentów tożsamości zgodnych z ICAO 9303.</string>
+    <string name="about_version">Wersja %1$s</string>
+    <string name="about_version_unknown">Nieznana wersja</string>
+
+    <string name="about_section_license">Licencja i kod źródłowy</string>
+    <string name="about_license">Wolne oprogramowanie rozpowszechniane na licencji GNU GPL w wersji 3 lub późniejszej.</string>
+    <string name="about_open_repository">Zobacz kod źródłowy</string>
+    <string name="about_no_browser">Żadna aplikacja nie może otworzyć tego linku.</string>
+
+    <string name="about_section_trust">Wbudowane zaufane certyfikaty</string>
+    <string name="about_trust_ants_only">Francuskie certyfikaty CSCA z ANTS (paszporty i dowody osobiste).</string>
+    <string name="about_trust_ants_and_bsi">Francuskie certyfikaty CSCA z ANTS i niemiecka Master List urzędu BSI.</string>
+    <string name="about_trust_master_list_date">Master List podpisana %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">Nie podano daty podpisania Master List.</string>
+    <string name="about_trust_bsi_notice">Master List urzędu BSI (niemieckiego Federalnego Urzędu Bezpieczeństwa Informacji) jest rozpowszechniana bez zmian, bez współpracy ani zgody BSI.</string>
+    <string name="about_trust_national">Certyfikaty opublikowane przez następujące państwa dla ich własnych dokumentów: %1$s.</string>
+    <string name="about_trust_ogl_notice">Zawiera informacje brytyjskiego sektora publicznego udostępnione na licencji Open Government Licence v3.0.</string>
+    <string name="about_trust_loading">Wczytywanie…</string>
+    <string name="about_trust_error">Nie udało się wczytać zaufanych certyfikatów.</string>
+
+    <string name="about_section_limits">Ograniczenia</string>
+    <string name="about_limit_unknown_issuer">Dokument, którego państwa wydającego nie ma wśród zaufanych certyfikatów, otrzymuje wynik „Nieznany wystawca”, a nie „Niepowodzenie”. Może pomóc zaimportowanie nowszej Master List.</string>
+    <string name="about_limit_revocation">Listy odwołanych certyfikatów nie są sprawdzane: wymagają dostępu do sieci, z którego Sceau nigdy nie korzysta.</string>
+
+    <string name="about_section_usage">Zasady użytkowania</string>
+    <string name="about_usage_holder">Odczyt zakłada, że posiadacz sam okazuje swój dokument i wyraża na to zgodę.</string>
+    <string name="about_usage_biometrics">Zdjęcie staje się daną biometryczną w rozumieniu RODO, jeśli służy do automatycznego porównywania twarzy. Sceau nie wykonuje takiego porównania i nie może być do tego używany bez odrębnej podstawy prawnej.</string>
+    <string name="about_usage_privacy">Żadne odczytane dane nie są przechowywane ani wysyłane: wszystko jest usuwane z pamięci po zamknięciu wyniku lub przeniesieniu aplikacji w tło.</string>
+</resources>

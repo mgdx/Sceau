@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trust_title">Pouzdani certifikati</string>
+    <string name="trust_back">Natrag</string>
+    <string name="trust_intro">Korijenski certifikati (CSCA) država izdavanja koji služe za provjeru potpisa isprava. Na ovom se zaslonu ne obrađuju nikakvi osobni podaci.</string>
+    <plurals name="trust_summary">
+        <item quantity="one">%1$d certifikat, broj država: %2$d</item>
+        <item quantity="few">%1$d certifikata, broj država: %2$d</item>
+        <item quantity="other">%1$d certifikata, broj država: %2$d</item>
+    </plurals>
+    <string name="trust_loading">Učitavanje pouzdanih certifikata…</string>
+    <string name="trust_load_error">Učitavanje pouzdanih certifikata nije uspjelo.</string>
+    <string name="trust_retry">Pokušaj ponovno</string>
+    <string name="trust_empty">Nema pouzdanih certifikata.</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">Država nije navedena</string>
+    <plurals name="trust_country_count">
+        <item quantity="one">%1$d certifikat</item>
+        <item quantity="few">%1$d certifikata</item>
+        <item quantity="other">%1$d certifikata</item>
+    </plurals>
+    <string name="trust_country_expand">Prikaži certifikate</string>
+    <string name="trust_country_collapse">Sakrij certifikate</string>
+    <string name="trust_validity">Vrijedi od %1$s do %2$s</string>
+    <string name="trust_fingerprint">Otisak SHA-256</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_national">Nacionalna objava</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">Uvezeno</string>
+    <string name="trust_link_certificate">Povezni certifikat</string>
+
+    <!-- Import -->
+    <string name="trust_import">Uvezi Master List</string>
+    <string name="trust_busy">Pričekajte…</string>
+    <string name="trust_import_confirm_title">Uvesti ovaj popis Master List?</string>
+    <string name="trust_import_confirm_text">Njegov je potpis valjan. Prije uvoza provjerite odgovara li otisak potpisnika onome koji je objavio izdavatelj.</string>
+    <string name="trust_import_signer">Potpisnik</string>
+    <string name="trust_import_signer_fingerprint">Otisak SHA-256 potpisnika</string>
+    <string name="trust_import_signing_date">Datum potpisa</string>
+    <string name="trust_import_signing_date_unknown">Nije naveden</string>
+    <string name="trust_import_certificate_count">Broj certifikata</string>
+    <string name="trust_import_confirm">Uvezi</string>
+    <string name="trust_cancel">Odustani</string>
+    <plurals name="trust_import_done">
+        <item quantity="one">Popis Master List uvezen: %1$d certifikat.</item>
+        <item quantity="few">Popis Master List uvezen: %1$d certifikata.</item>
+        <item quantity="other">Popis Master List uvezen: %1$d certifikata.</item>
+    </plurals>
+    <string name="trust_import_invalid">Ova datoteka nije valjan popis Master List: nečitljiv format ili nevaljan potpis (%1$s).</string>
+    <string name="trust_import_too_large">Datoteka odbijena: veća je od 20 MB.</string>
+    <string name="trust_import_read_error">Čitanje ove datoteke nije uspjelo.</string>
+    <string name="trust_import_write_error">Spremanje popisa Master List nije uspjelo.</string>
+    <plurals name="trust_import_limit_count">
+        <item quantity="one">Uvoz odbijen: najveći broj uvezenih popisa Master List je %1$d. Da biste dodali novi, izbrišite uvezene certifikate.</item>
+        <item quantity="few">Uvoz odbijen: najveći broj uvezenih popisa Master List je %1$d. Da biste dodali novi, izbrišite uvezene certifikate.</item>
+        <item quantity="other">Uvoz odbijen: najveći broj uvezenih popisa Master List je %1$d. Da biste dodali novi, izbrišite uvezene certifikate.</item>
+    </plurals>
+    <string name="trust_import_limit_size">Uvoz odbijen: uvezeni popisi Master List ukupno bi premašili %1$d MB. Da biste dodali novi, izbrišite uvezene certifikate.</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">Izbriši uvezene certifikate</string>
+    <string name="trust_delete_confirm_title">Izbrisati uvezene certifikate?</string>
+    <string name="trust_delete_confirm_text">Uvezeni popisi Master List bit će izbrisani. Certifikati ugrađeni u aplikaciju zadržavaju se.</string>
+    <string name="trust_delete_confirm">Izbriši</string>
+    <string name="trust_delete_done">Uvezeni certifikati su izbrisani.</string>
+    <string name="trust_delete_error">Brisanje uvezenih certifikata nije uspjelo.</string>
+</resources>

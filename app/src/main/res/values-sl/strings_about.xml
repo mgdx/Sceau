@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">O aplikaciji</string>
+    <string name="about_back">Nazaj</string>
+    <string name="about_tagline">Branje in preverjanje čipa osebnih dokumentov po ICAO 9303 brez povezave.</string>
+    <string name="about_version">Različica %1$s</string>
+    <string name="about_version_unknown">Neznana različica</string>
+
+    <string name="about_section_license">Licenca in izvorna koda</string>
+    <string name="about_license">Prosto programje, ki se razširja pod licenco GNU GPL različice 3 ali novejše.</string>
+    <string name="about_open_repository">Prikaži izvorno kodo</string>
+    <string name="about_no_browser">Te povezave ne more odpreti nobena aplikacija.</string>
+
+    <string name="about_section_trust">Vgrajena zaupanja vredna potrdila</string>
+    <string name="about_trust_ants_only">Francoska potrdila CSCA agencije ANTS (potni listi in osebne izkaznice).</string>
+    <string name="about_trust_ants_and_bsi">Francoska potrdila CSCA agencije ANTS in nemški seznam Master List urada BSI.</string>
+    <string name="about_trust_master_list_date">Seznam Master List podpisan %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">Datum podpisa seznama Master List ni naveden.</string>
+    <string name="about_trust_bsi_notice">Seznam Master List urada BSI (nemškega Zveznega urada za informacijsko varnost) se razširja nespremenjen, brez sodelovanja ali odobritve urada BSI.</string>
+    <string name="about_trust_national">Potrdila, ki so jih za svoje dokumente objavile naslednje države: %1$s.</string>
+    <string name="about_trust_ogl_notice">Vsebuje informacije britanskega javnega sektorja, objavljene pod licenco Open Government Licence v3.0.</string>
+    <string name="about_trust_loading">Nalaganje …</string>
+    <string name="about_trust_error">Zaupanja vrednih potrdil ni mogoče naložiti.</string>
+
+    <string name="about_section_limits">Omejitve</string>
+    <string name="about_limit_unknown_issuer">Dokument, katerega država izdajateljica ni med zaupanja vrednimi potrdili, dobi oceno „Neznan izdajatelj“, ne „Neuspešno“. To lahko odpravi uvoz novejšega seznama Master List.</string>
+    <string name="about_limit_revocation">Seznami preklicanih potrdil se ne preverjajo: zahtevajo omrežno povezavo, ki je Sceau nikoli ne uporablja.</string>
+
+    <string name="about_section_usage">Pogoji uporabe</string>
+    <string name="about_usage_holder">Branje predpostavlja, da imetnik sam predloži svoj dokument in se z branjem strinja.</string>
+    <string name="about_usage_biometrics">Fotografija postane biometrični podatek v smislu Splošne uredbe o varstvu podatkov, če se uporablja za samodejno primerjavo obrazov. Sceau takšne primerjave ne izvaja in se brez posebne pravne podlage ne sme uporabljati v ta namen.</string>
+    <string name="about_usage_privacy">Noben prebran podatek se ne shrani ali pošlje: ko zapustite rezultat ali aplikacijo premaknete v ozadje, se vse izbriše iz pomnilnika.</string>
+</resources>

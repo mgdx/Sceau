@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trust_title">Zaupanja vredna potrdila</string>
+    <string name="trust_back">Nazaj</string>
+    <string name="trust_intro">Korenska potrdila (CSCA) držav izdajateljic, ki se uporabljajo za preverjanje podpisa dokumentov. Na tem zaslonu se ne obdelujejo nobeni osebni podatki.</string>
+    <plurals name="trust_summary">
+        <item quantity="one">%1$d potrdilo, število držav: %2$d</item>
+        <item quantity="two">%1$d potrdili, število držav: %2$d</item>
+        <item quantity="few">%1$d potrdila, število držav: %2$d</item>
+        <item quantity="other">%1$d potrdil, število držav: %2$d</item>
+    </plurals>
+    <string name="trust_loading">Nalaganje zaupanja vrednih potrdil …</string>
+    <string name="trust_load_error">Zaupanja vrednih potrdil ni mogoče naložiti.</string>
+    <string name="trust_retry">Poskusi znova</string>
+    <string name="trust_empty">Ni zaupanja vrednih potrdil.</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">Država ni navedena</string>
+    <plurals name="trust_country_count">
+        <item quantity="one">%1$d potrdilo</item>
+        <item quantity="two">%1$d potrdili</item>
+        <item quantity="few">%1$d potrdila</item>
+        <item quantity="other">%1$d potrdil</item>
+    </plurals>
+    <string name="trust_country_expand">Prikaži potrdila</string>
+    <string name="trust_country_collapse">Skrij potrdila</string>
+    <string name="trust_validity">Velja od %1$s do %2$s</string>
+    <string name="trust_fingerprint">Prstni odtis SHA-256</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_national">Nacionalna objava</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">Uvoženo</string>
+    <string name="trust_link_certificate">Povezovalno potrdilo</string>
+
+    <!-- Import -->
+    <string name="trust_import">Uvozi Master List</string>
+    <string name="trust_busy">Počakajte …</string>
+    <string name="trust_import_confirm_title">Želite uvoziti ta seznam Master List?</string>
+    <string name="trust_import_confirm_text">Njegov podpis je veljaven. Pred uvozom preverite, ali se prstni odtis podpisnika ujema s tistim, ki ga je objavil izdajatelj.</string>
+    <string name="trust_import_signer">Podpisnik</string>
+    <string name="trust_import_signer_fingerprint">Prstni odtis SHA-256 podpisnika</string>
+    <string name="trust_import_signing_date">Datum podpisa</string>
+    <string name="trust_import_signing_date_unknown">Ni naveden</string>
+    <string name="trust_import_certificate_count">Število potrdil</string>
+    <string name="trust_import_confirm">Uvozi</string>
+    <string name="trust_cancel">Prekliči</string>
+    <plurals name="trust_import_done">
+        <item quantity="one">Seznam Master List uvožen: %1$d potrdilo.</item>
+        <item quantity="two">Seznam Master List uvožen: %1$d potrdili.</item>
+        <item quantity="few">Seznam Master List uvožen: %1$d potrdila.</item>
+        <item quantity="other">Seznam Master List uvožen: %1$d potrdil.</item>
+    </plurals>
+    <string name="trust_import_invalid">Ta datoteka ni veljaven seznam Master List: neberljiva oblika ali neveljaven podpis (%1$s).</string>
+    <string name="trust_import_too_large">Datoteka zavrnjena: presega 20 MB.</string>
+    <string name="trust_import_read_error">Te datoteke ni mogoče prebrati.</string>
+    <string name="trust_import_write_error">Seznama Master List ni mogoče shraniti.</string>
+    <plurals name="trust_import_limit_count">
+        <item quantity="one">Uvoz zavrnjen: največje število uvoženih seznamov Master List je %1$d. Če želite dodati novega, izbrišite uvožena potrdila.</item>
+        <item quantity="two">Uvoz zavrnjen: največje število uvoženih seznamov Master List je %1$d. Če želite dodati novega, izbrišite uvožena potrdila.</item>
+        <item quantity="few">Uvoz zavrnjen: največje število uvoženih seznamov Master List je %1$d. Če želite dodati novega, izbrišite uvožena potrdila.</item>
+        <item quantity="other">Uvoz zavrnjen: največje število uvoženih seznamov Master List je %1$d. Če želite dodati novega, izbrišite uvožena potrdila.</item>
+    </plurals>
+    <string name="trust_import_limit_size">Uvoz zavrnjen: uvoženi seznami Master List bi skupaj presegli %1$d MB. Če želite dodati novega, izbrišite uvožena potrdila.</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">Izbriši uvožena potrdila</string>
+    <string name="trust_delete_confirm_title">Želite izbrisati uvožena potrdila?</string>
+    <string name="trust_delete_confirm_text">Uvoženi seznami Master List bodo izbrisani. Potrdila, vgrajena v aplikacijo, bodo ohranjena.</string>
+    <string name="trust_delete_confirm">Izbriši</string>
+    <string name="trust_delete_done">Uvožena potrdila so izbrisana.</string>
+    <string name="trust_delete_error">Uvoženih potrdil ni mogoče izbrisati.</string>
+</resources>

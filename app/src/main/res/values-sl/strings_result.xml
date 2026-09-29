@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="result_title">Rezultat</string>
+    <string name="result_clear">Počisti</string>
+
+    <!-- Verdict -->
+    <string name="result_verdict_authentic">Pristen</string>
+    <string name="result_verdict_authentic_explanation">Podpis izdajatelja je veljaven in čip je dokazal, da ni kopija.</string>
+    <string name="result_verdict_chip_unverified">Podpis veljaven, čip ni preverjen</string>
+    <string name="result_verdict_chip_unverified_explanation">Podatke je podpisal izdajatelj, vendar čip ne omogoča dokazati, da je izviren: lahko gre za klon.</string>
+    <string name="result_verdict_unknown_issuer">Neznan izdajatelj</string>
+    <string name="result_verdict_unknown_issuer_explanation">Potrdila izdajatelja ni med zaupanja vrednimi potrdili. Podatki so prikazani, vendar ni nič zagotovljeno. Uvoz novejšega seznama Master List lahko omogoči preverjanje tega dokumenta.</string>
+    <string name="result_verdict_failed">Neuspešno</string>
+    <string name="result_verdict_failed_explanation">Vsaj eno preverjanje ni uspelo: tega dokumenta ne smete šteti za pristnega.</string>
+    <string name="result_verdict_imported_anchor">Preverjeno s potrdilom, ki ste ga uvozili</string>
+
+    <!-- Photo -->
+    <string name="result_photo_description">Fotografija imetnika</string>
+    <string name="result_photo_unavailable">Fotografija je neberljiva ali je ni</string>
+    <string name="result_photo_fullscreen">Prikaži fotografijo čez cel zaslon</string>
+    <string name="result_photo_close">Zapri</string>
+    <string name="result_image_front">Slika sprednje strani</string>
+    <string name="result_image_rear">Slika zadnje strani</string>
+    <string name="result_image_unavailable">Slika je neberljiva</string>
+
+    <!-- Identité -->
+    <string name="result_section_identity">Osebni podatki</string>
+    <string name="result_expired">Dokument je potekel</string>
+    <string name="result_field_surname">Priimek</string>
+    <string name="result_field_given_names">Imena</string>
+    <string name="result_field_sex">Spol</string>
+    <string name="result_field_birth_date">Datum rojstva</string>
+    <string name="result_field_nationality">Državljanstvo</string>
+    <string name="result_field_document_type">Vrsta dokumenta</string>
+    <string name="result_field_document_number">Številka dokumenta</string>
+    <string name="result_field_issuing_state">Država izdaje</string>
+    <string name="result_field_expiry_date">Velja do</string>
+    <string name="result_sex_male">Moški</string>
+    <string name="result_sex_female">Ženski</string>
+    <string name="result_sex_unspecified">Ni navedeno</string>
+    <string name="result_document_passport">Potni list</string>
+    <string name="result_document_identity_card">Osebna izkaznica</string>
+    <string name="result_document_other">Druga potna listina</string>
+    <string name="result_value_with_code">%1$s (%2$s)</string>
+    <string name="result_unknown_value">Neznano</string>
+
+    <!-- Pays spéciaux ICAO -->
+    <string name="result_country_united_nations">Združeni narodi</string>
+    <string name="result_country_un_agency">Specializirana agencija Združenih narodov</string>
+    <string name="result_country_un_kosovo">Kosovo (UNMIK)</string>
+    <string name="result_country_stateless">Oseba brez državljanstva</string>
+    <string name="result_country_refugee">Begunec (konvencija iz leta 1951)</string>
+    <string name="result_country_refugee_other">Begunec</string>
+    <string name="result_country_unspecified">Državljanstvo ni navedeno</string>
+
+    <!-- Données complémentaires -->
+    <string name="result_section_additional">Dodatni podatki</string>
+    <string name="result_field_full_name">Polno ime</string>
+    <string name="result_field_other_names">Druga imena</string>
+    <string name="result_field_personal_number">Osebna številka</string>
+    <string name="result_field_full_birth_date">Polni datum rojstva</string>
+    <string name="result_field_place_of_birth">Kraj rojstva</string>
+    <string name="result_field_address">Naslov</string>
+    <string name="result_field_telephone">Telefon</string>
+    <string name="result_field_profession">Poklic</string>
+    <string name="result_field_title">Naziv</string>
+    <string name="result_field_personal_summary">Povzetek profila</string>
+    <string name="result_field_other_td_numbers">Druge veljavne potne listine</string>
+    <string name="result_field_custody">Podatki o skrbništvu</string>
+    <string name="result_field_issuing_authority">Izdajni organ</string>
+    <string name="result_field_issue_date">Datum izdaje</string>
+    <string name="result_field_other_persons">Druge navedene osebe</string>
+    <string name="result_field_endorsements">Zaznamki in opombe</string>
+    <string name="result_field_tax_exit">Davčne ali izstopne obveznosti</string>
+    <string name="result_field_personalization_time">Datum personalizacije</string>
+    <string name="result_field_personalization_device">Številka sistema za personalizacijo</string>
+
+    <!-- Vérifications -->
+    <string name="result_section_checks">Preverjanja</string>
+    <string name="result_check_secure_channel">Varen kanal vzpostavljen</string>
+    <string name="result_check_sod_signature">Podpis SOD veljaven</string>
+    <string name="result_check_chain">Veriga potrdil</string>
+    <string name="result_check_ds_validity">Veljavnost potrdila DS</string>
+    <string name="result_check_dg_hashes">Zgoščene vrednosti podatkovnih skupin</string>
+    <string name="result_check_chip_authentication">Chip Authentication (DG14)</string>
+    <string name="result_check_active_authentication">Active Authentication (DG15)</string>
+    <string name="result_status_ok">Uspešno</string>
+    <string name="result_status_failed">Neuspešno</string>
+    <string name="result_status_not_available">Ni na voljo</string>
+    <string name="result_status_unsupported">Nepodprt algoritem</string>
+    <string name="result_check_expand">Prikaži podrobnosti</string>
+    <string name="result_check_collapse">Skrij podrobnosti</string>
+
+    <!-- Détail des vérifications -->
+    <string name="result_detail_protocol">Protokol: %1$s</string>
+    <string name="result_detail_ca_method">Metoda: %1$s</string>
+    <string name="result_detail_ca_method_dg14">Chip Authentication s ključem iz DG14</string>
+    <string name="result_detail_ca_method_pace_cam">PACE-CAM med vzpostavljanjem kanala, s ključem iz EF.CardSecurity</string>
+    <string name="result_detail_algorithm">Algoritem podpisa: %1$s</string>
+    <string name="result_detail_csca">CSCA: %1$s</string>
+    <string name="result_detail_csca_none">Noben CSCA med zaupanja vrednimi potrdili se ne ujema.</string>
+    <string name="result_detail_country">Država: %1$s</string>
+    <string name="result_detail_country_mismatch">Neskladne države: overitelj %1$s, potrdilo podpisnika %2$s, dokument %3$s</string>
+    <string name="result_detail_source">Vir: %1$s</string>
+    <string name="result_detail_source_ants">potrdila agencije ANTS</string>
+    <string name="result_detail_source_national">potrdila, ki jih je objavila država izdajateljica</string>
+    <string name="result_detail_source_embedded">vgrajeni seznam Master List</string>
+    <string name="result_detail_source_imported">uvoženi seznam Master List</string>
+    <string name="result_detail_ds_subject">Potrdilo DS: %1$s</string>
+    <string name="result_detail_links">Uporabljena povezovalna potrdila:</string>
+    <string name="result_detail_link_item">• %1$s</string>
+    <string name="result_detail_links_none">Uporabljeno ni bilo nobeno povezovalno potrdilo.</string>
+    <string name="result_detail_ds_missing">Potrdila DS ni niti v SOD niti med zaupanja vrednimi potrdili.</string>
+    <string name="result_detail_ds_period">Obdobje veljavnosti DS: od %1$s do %2$s</string>
+    <string name="result_detail_issuance">Datum izdaje: %1$s (%2$s)</string>
+    <string name="result_detail_issuance_no_source">Datum izdaje: %1$s</string>
+    <string name="result_detail_issuance_unknown">Datum izdaje ni znan.</string>
+    <string name="result_detail_issuance_dg12">prebran iz DG12</string>
+    <string name="result_detail_issuance_sod">datum podpisa SOD</string>
+    <string name="result_detail_issuance_estimated">ocenjen</string>
+    <string name="result_detail_digest_algorithm">Algoritem zgoščevanja: %1$s</string>
+    <string name="result_detail_dg_checked">Preverjene podatkovne skupine: %1$s</string>
+    <string name="result_detail_dg_checked_none">Nobena podatkovna skupina ni bila preverjena.</string>
+    <string name="result_detail_dg_mismatched">Neskladne zgoščene vrednosti: %1$s</string>
+    <string name="result_detail_dg_all_match">Vse zgoščene vrednosti se ujemajo.</string>
+    <string name="result_detail_dg_missing">Podatkovne skupine, ki so napovedane, a jih čip ni posredoval: %1$s</string>
+    <string name="result_detail_unsupported">Nepodprt algoritem: %1$s</string>
+    <string name="result_detail_error">Tehnična napaka: %1$s</string>
+    <string name="result_detail_no_dg14">Dokument ne vsebuje DG14: čip ne ponuja tega preverjanja.</string>
+    <string name="result_detail_no_dg15">Dokument ne vsebuje DG15: čip ne ponuja tega preverjanja.</string>
+    <string name="result_detail_not_reached">Korak ni bil izveden.</string>
+    <string name="result_detail_none">Ni dodatnih podrobnosti.</string>
+    <string name="result_demo_banner">Simuliran dokument — predstavitev</string>
+</resources>

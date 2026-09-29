@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">Več možnosti</string>
+    <string name="home_menu_trust_store">Zaupanja vredna potrdila</string>
+    <string name="home_menu_about">O aplikaciji</string>
+    <string name="home_tab_id_card">Osebna izkaznica</string>
+    <string name="home_tab_passport">Potni list</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">6-mestna številka, natisnjena na sprednji strani izkaznice</string>
+    <string name="home_document_number_label">Številka dokumenta</string>
+    <string name="home_document_number_supporting">Kot je natisnjena na strani z osebnimi podatki, največ 9 znakov</string>
+    <string name="home_date_of_birth_label">Datum rojstva</string>
+    <string name="home_date_of_expiry_label">Velja do</string>
+    <string name="home_date_day">DD</string>
+    <string name="home_date_month">MM</string>
+    <string name="home_date_year">LLLL</string>
+    <string name="home_date_format">Oblika: %1$s</string>
+    <string name="home_date_error_invalid">Ta datum ne obstaja</string>
+    <string name="home_date_error_future">Datum rojstva ne more biti v prihodnosti</string>
+    <string name="home_date_error_too_old">Datum poteka veljavnosti je prestar (pred letom %1$d)</string>
+    <string name="home_holder_notice">Dokument mora predložiti njegov imetnik.</string>
+    <string name="home_read">Preberi</string>
+    <string name="home_nfc_disabled">NFC je izklopljen. Vklopite ga, da preberete čip dokumenta.</string>
+    <string name="home_nfc_settings">Odpri nastavitve NFC</string>
+    <string name="home_nfc_absent">Ta telefon nima NFC-ja: ne more brati čipov osebnih dokumentov.</string>
+    <string name="home_menu_demo">Simuliraj francosko osebno izkaznico (predstavitev)</string>
+</resources>

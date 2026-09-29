@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reading_title">Očitavanje isprave</string>
+    <string name="reading_prompt">Prislonite ispravu na stražnju stranu telefona i ne odmičite je</string>
+    <string name="reading_step_connect">Povezivanje s čipom</string>
+    <string name="reading_step_secure_channel">Otvaranje sigurnog kanala (PACE ili BAC)</string>
+    <string name="reading_step_read_data">Očitavanje podataka</string>
+    <string name="reading_step_verify_signature">Provjera potpisa</string>
+    <string name="reading_step_verify_chip">Provjera čipa</string>
+    <string name="reading_step_pending">na čekanju</string>
+    <string name="reading_step_in_progress">u tijeku</string>
+    <string name="reading_step_done">dovršeno</string>
+    <string name="reading_error_title">Očitavanje prekinuto</string>
+    <string name="reading_slow_chip">Čip isprave traži čekanje, često nakon neuspjelih pokušaja. Držite ispravu mirno, to može potrajati do jedne minute.</string>
+    <string name="reading_error_access_denied">CAN ili podaci iz MRZ-a nisu ispravni. Provjerite uneseni broj i datume pa pokušajte ponovno. Svaki neuspjeli pokušaj može produljiti vrijeme koje čip traži prije odgovora.</string>
+    <string name="reading_error_connection_lost">Isprava je prerano odmaknuta. Držite je mirno uz telefon do kraja očitavanja.</string>
+    <string name="reading_error_not_icao">Ova isprava nije u skladu s normom ICAO 9303: njezin čip nije moguće očitati.</string>
+    <string name="reading_error_timeout">Vrijeme je isteklo: čip nije odgovorio na vrijeme. Pokušajte ponovno i držite ispravu mirno.</string>
+    <string name="reading_error_can_without_pace">Ova se isprava ne očitava pomoću CAN-a. Upotrijebite karticu Putovnica i unesite podatke iz MRZ-a.</string>
+    <string name="reading_error_unexpected">Došlo je do neočekivane pogreške.</string>
+    <string name="reading_error_code">Kôd pogreške: %1$s</string>
+    <string name="reading_retry">Pokušaj ponovno</string>
+    <string name="reading_cancel">Odustani</string>
+</resources>

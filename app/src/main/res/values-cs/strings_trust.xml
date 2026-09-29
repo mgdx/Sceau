@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trust_title">Důvěryhodné certifikáty</string>
+    <string name="trust_back">Zpět</string>
+    <string name="trust_intro">Kořenové certifikáty (CSCA) vydávajících států, které slouží k ověření podpisu dokladů. Přes tuto obrazovku neprocházejí žádné osobní údaje.</string>
+    <plurals name="trust_summary">
+        <item quantity="one">%1$d certifikát, počet států: %2$d</item>
+        <item quantity="few">%1$d certifikáty, počet států: %2$d</item>
+        <item quantity="many">%1$d certifikátu, počet států: %2$d</item>
+        <item quantity="other">%1$d certifikátů, počet států: %2$d</item>
+    </plurals>
+    <string name="trust_loading">Načítání důvěryhodných certifikátů…</string>
+    <string name="trust_load_error">Důvěryhodné certifikáty nelze načíst.</string>
+    <string name="trust_retry">Zkusit znovu</string>
+    <string name="trust_empty">Žádné důvěryhodné certifikáty.</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">Stát neuveden</string>
+    <plurals name="trust_country_count">
+        <item quantity="one">%1$d certifikát</item>
+        <item quantity="few">%1$d certifikáty</item>
+        <item quantity="many">%1$d certifikátu</item>
+        <item quantity="other">%1$d certifikátů</item>
+    </plurals>
+    <string name="trust_country_expand">Zobrazit certifikáty</string>
+    <string name="trust_country_collapse">Skrýt certifikáty</string>
+    <string name="trust_validity">Platný od %1$s do %2$s</string>
+    <string name="trust_fingerprint">Otisk SHA-256</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_national">Národní zveřejnění</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">Importovaný</string>
+    <string name="trust_link_certificate">Propojovací certifikát</string>
+
+    <!-- Import -->
+    <string name="trust_import">Importovat Master List</string>
+    <string name="trust_busy">Čekejte prosím…</string>
+    <string name="trust_import_confirm_title">Importovat tento seznam Master List?</string>
+    <string name="trust_import_confirm_text">Jeho podpis je platný. Před importem ověřte, že otisk podepisujícího odpovídá otisku zveřejněnému vydávajícím orgánem.</string>
+    <string name="trust_import_signer">Podepisující</string>
+    <string name="trust_import_signer_fingerprint">Otisk SHA-256 podepisujícího</string>
+    <string name="trust_import_signing_date">Datum podpisu</string>
+    <string name="trust_import_signing_date_unknown">Neuvedeno</string>
+    <string name="trust_import_certificate_count">Počet certifikátů</string>
+    <string name="trust_import_confirm">Importovat</string>
+    <string name="trust_cancel">Zrušit</string>
+    <plurals name="trust_import_done">
+        <item quantity="one">Seznam Master List importován: %1$d certifikát.</item>
+        <item quantity="few">Seznam Master List importován: %1$d certifikáty.</item>
+        <item quantity="many">Seznam Master List importován: %1$d certifikátu.</item>
+        <item quantity="other">Seznam Master List importován: %1$d certifikátů.</item>
+    </plurals>
+    <string name="trust_import_invalid">Tento soubor není platný seznam Master List: nečitelný formát nebo neplatný podpis (%1$s).</string>
+    <string name="trust_import_too_large">Soubor odmítnut: je větší než 20 MB.</string>
+    <string name="trust_import_read_error">Tento soubor nelze přečíst.</string>
+    <string name="trust_import_write_error">Seznam Master List nelze uložit.</string>
+    <plurals name="trust_import_limit_count">
+        <item quantity="one">Import odmítnut: nejvyšší počet importovaných seznamů Master List je %1$d. Chcete-li přidat další, smažte importované certifikáty.</item>
+        <item quantity="few">Import odmítnut: nejvyšší počet importovaných seznamů Master List je %1$d. Chcete-li přidat další, smažte importované certifikáty.</item>
+        <item quantity="many">Import odmítnut: nejvyšší počet importovaných seznamů Master List je %1$d. Chcete-li přidat další, smažte importované certifikáty.</item>
+        <item quantity="other">Import odmítnut: nejvyšší počet importovaných seznamů Master List je %1$d. Chcete-li přidat další, smažte importované certifikáty.</item>
+    </plurals>
+    <string name="trust_import_limit_size">Import odmítnut: importované seznamy Master List by celkem přesáhly %1$d MB. Chcete-li přidat další, smažte importované certifikáty.</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">Smazat importované certifikáty</string>
+    <string name="trust_delete_confirm_title">Smazat importované certifikáty?</string>
+    <string name="trust_delete_confirm_text">Importované seznamy Master List budou smazány. Certifikáty vestavěné v aplikaci zůstanou zachovány.</string>
+    <string name="trust_delete_confirm">Smazat</string>
+    <string name="trust_delete_done">Importované certifikáty byly smazány.</string>
+    <string name="trust_delete_error">Importované certifikáty nelze smazat.</string>
+</resources>

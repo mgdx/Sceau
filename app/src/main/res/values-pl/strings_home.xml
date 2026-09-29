@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_menu_more">Więcej opcji</string>
+    <string name="home_menu_trust_store">Zaufane certyfikaty</string>
+    <string name="home_menu_about">Informacje</string>
+    <string name="home_tab_id_card">Dowód osobisty</string>
+    <string name="home_tab_passport">Paszport</string>
+    <string name="home_can_label">CAN</string>
+    <string name="home_can_supporting">6-cyfrowy numer wydrukowany na przedniej stronie dowodu</string>
+    <string name="home_document_number_label">Numer dokumentu</string>
+    <string name="home_document_number_supporting">Tak jak na stronie danych osobowych, maks. 9 znaków</string>
+    <string name="home_date_of_birth_label">Data urodzenia</string>
+    <string name="home_date_of_expiry_label">Data ważności</string>
+    <string name="home_date_day">DD</string>
+    <string name="home_date_month">MM</string>
+    <string name="home_date_year">RRRR</string>
+    <string name="home_date_format">Format: %1$s</string>
+    <string name="home_date_error_invalid">Taka data nie istnieje</string>
+    <string name="home_date_error_future">Data urodzenia nie może być z przyszłości</string>
+    <string name="home_date_error_too_old">Zbyt odległa data ważności (przed %1$d)</string>
+    <string name="home_holder_notice">Dokument musi okazać jego posiadacz.</string>
+    <string name="home_read">Odczytaj</string>
+    <string name="home_nfc_disabled">NFC jest wyłączone. Włącz je, aby odczytać chip dokumentu.</string>
+    <string name="home_nfc_settings">Otwórz ustawienia NFC</string>
+    <string name="home_nfc_absent">Ten telefon nie ma NFC: nie może odczytywać chipów dokumentów tożsamości.</string>
+    <string name="home_menu_demo">Symuluj francuski dowód osobisty (demo)</string>
+</resources>

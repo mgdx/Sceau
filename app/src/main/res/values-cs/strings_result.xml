@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="result_title">Výsledek</string>
+    <string name="result_clear">Vymazat</string>
+
+    <!-- Verdict -->
+    <string name="result_verdict_authentic">Pravý</string>
+    <string name="result_verdict_authentic_explanation">Podpis vydavatele je platný a čip prokázal, že není kopií.</string>
+    <string name="result_verdict_chip_unverified">Platný podpis, čip neověřen</string>
+    <string name="result_verdict_chip_unverified_explanation">Údaje podepsal vydavatel, ale čip neumožňuje prokázat, že je originální: může jít o klon.</string>
+    <string name="result_verdict_unknown_issuer">Neznámý vydavatel</string>
+    <string name="result_verdict_unknown_issuer_explanation">Certifikát vydavatele není mezi důvěryhodnými certifikáty. Údaje se zobrazují, ale nic není zaručeno. Import novějšího seznamu Master List může umožnit ověření tohoto dokladu.</string>
+    <string name="result_verdict_failed">Neúspěch</string>
+    <string name="result_verdict_failed_explanation">Alespoň jedno ověření selhalo: tento doklad nelze považovat za pravý.</string>
+    <string name="result_verdict_imported_anchor">Ověřeno pomocí certifikátu, který jste importovali</string>
+
+    <!-- Photo -->
+    <string name="result_photo_description">Fotografie držitele</string>
+    <string name="result_photo_unavailable">Fotografie je nečitelná nebo chybí</string>
+    <string name="result_photo_fullscreen">Zobrazit fotografii na celou obrazovku</string>
+    <string name="result_photo_close">Zavřít</string>
+    <string name="result_image_front">Obraz přední strany</string>
+    <string name="result_image_rear">Obraz zadní strany</string>
+    <string name="result_image_unavailable">Obraz je nečitelný</string>
+
+    <!-- Identité -->
+    <string name="result_section_identity">Totožnost</string>
+    <string name="result_expired">Doklad s prošlou platností</string>
+    <string name="result_field_surname">Příjmení</string>
+    <string name="result_field_given_names">Jména</string>
+    <string name="result_field_sex">Pohlaví</string>
+    <string name="result_field_birth_date">Datum narození</string>
+    <string name="result_field_nationality">Státní občanství</string>
+    <string name="result_field_document_type">Typ dokladu</string>
+    <string name="result_field_document_number">Číslo dokladu</string>
+    <string name="result_field_issuing_state">Vydávající stát</string>
+    <string name="result_field_expiry_date">Platnost do</string>
+    <string name="result_sex_male">Muž</string>
+    <string name="result_sex_female">Žena</string>
+    <string name="result_sex_unspecified">Neuvedeno</string>
+    <string name="result_document_passport">Cestovní pas</string>
+    <string name="result_document_identity_card">Občanský průkaz</string>
+    <string name="result_document_other">Jiný cestovní doklad</string>
+    <string name="result_value_with_code">%1$s (%2$s)</string>
+    <string name="result_unknown_value">Neznámé</string>
+
+    <!-- Pays spéciaux ICAO -->
+    <string name="result_country_united_nations">Organizace spojených národů</string>
+    <string name="result_country_un_agency">Specializovaná agentura OSN</string>
+    <string name="result_country_un_kosovo">Kosovo (UNMIK)</string>
+    <string name="result_country_stateless">Osoba bez státní příslušnosti</string>
+    <string name="result_country_refugee">Uprchlík (úmluva z roku 1951)</string>
+    <string name="result_country_refugee_other">Uprchlík</string>
+    <string name="result_country_unspecified">Státní občanství neuvedeno</string>
+
+    <!-- Données complémentaires -->
+    <string name="result_section_additional">Doplňující údaje</string>
+    <string name="result_field_full_name">Celé jméno</string>
+    <string name="result_field_other_names">Další jména</string>
+    <string name="result_field_personal_number">Osobní číslo</string>
+    <string name="result_field_full_birth_date">Úplné datum narození</string>
+    <string name="result_field_place_of_birth">Místo narození</string>
+    <string name="result_field_address">Adresa</string>
+    <string name="result_field_telephone">Telefon</string>
+    <string name="result_field_profession">Povolání</string>
+    <string name="result_field_title">Titul</string>
+    <string name="result_field_personal_summary">Shrnutí profilu</string>
+    <string name="result_field_other_td_numbers">Další platné cestovní doklady</string>
+    <string name="result_field_custody">Údaje o péči</string>
+    <string name="result_field_issuing_authority">Vydávající úřad</string>
+    <string name="result_field_issue_date">Datum vydání</string>
+    <string name="result_field_other_persons">Další uvedené osoby</string>
+    <string name="result_field_endorsements">Záznamy a poznámky</string>
+    <string name="result_field_tax_exit">Daňové nebo výjezdní povinnosti</string>
+    <string name="result_field_personalization_time">Datum personalizace</string>
+    <string name="result_field_personalization_device">Číslo personalizačního systému</string>
+
+    <!-- Vérifications -->
+    <string name="result_section_checks">Ověření</string>
+    <string name="result_check_secure_channel">Zabezpečený kanál navázán</string>
+    <string name="result_check_sod_signature">Podpis SOD je platný</string>
+    <string name="result_check_chain">Řetězec certifikátů</string>
+    <string name="result_check_ds_validity">Platnost certifikátu DS</string>
+    <string name="result_check_dg_hashes">Otisky datových skupin</string>
+    <string name="result_check_chip_authentication">Chip Authentication (DG14)</string>
+    <string name="result_check_active_authentication">Active Authentication (DG15)</string>
+    <string name="result_status_ok">Úspěšné</string>
+    <string name="result_status_failed">Neúspěšné</string>
+    <string name="result_status_not_available">Není k dispozici</string>
+    <string name="result_status_unsupported">Nepodporovaný algoritmus</string>
+    <string name="result_check_expand">Zobrazit podrobnosti</string>
+    <string name="result_check_collapse">Skrýt podrobnosti</string>
+
+    <!-- Détail des vérifications -->
+    <string name="result_detail_protocol">Protokol: %1$s</string>
+    <string name="result_detail_ca_method">Metoda: %1$s</string>
+    <string name="result_detail_ca_method_dg14">Chip Authentication s klíčem z DG14</string>
+    <string name="result_detail_ca_method_pace_cam">PACE-CAM při otevírání kanálu, s klíčem z EF.CardSecurity</string>
+    <string name="result_detail_algorithm">Algoritmus podpisu: %1$s</string>
+    <string name="result_detail_csca">CSCA: %1$s</string>
+    <string name="result_detail_csca_none">Žádný CSCA mezi důvěryhodnými certifikáty neodpovídá.</string>
+    <string name="result_detail_country">Stát: %1$s</string>
+    <string name="result_detail_country_mismatch">Nesouhlasící státy: certifikační autorita %1$s, certifikát podepisujícího %2$s, doklad %3$s</string>
+    <string name="result_detail_source">Zdroj: %1$s</string>
+    <string name="result_detail_source_ants">certifikáty ANTS</string>
+    <string name="result_detail_source_national">certifikáty zveřejněné vydávajícím státem</string>
+    <string name="result_detail_source_embedded">vestavěný seznam Master List</string>
+    <string name="result_detail_source_imported">importovaný seznam Master List</string>
+    <string name="result_detail_ds_subject">Certifikát DS: %1$s</string>
+    <string name="result_detail_links">Použité propojovací certifikáty:</string>
+    <string name="result_detail_link_item">• %1$s</string>
+    <string name="result_detail_links_none">Nebyl použit žádný propojovací certifikát.</string>
+    <string name="result_detail_ds_missing">Certifikát DS není v SOD ani mezi důvěryhodnými certifikáty.</string>
+    <string name="result_detail_ds_period">Období platnosti DS: od %1$s do %2$s</string>
+    <string name="result_detail_issuance">Datum vydání: %1$s (%2$s)</string>
+    <string name="result_detail_issuance_no_source">Datum vydání: %1$s</string>
+    <string name="result_detail_issuance_unknown">Datum vydání není známo.</string>
+    <string name="result_detail_issuance_dg12">načteno z DG12</string>
+    <string name="result_detail_issuance_sod">datum podpisu SOD</string>
+    <string name="result_detail_issuance_estimated">odhad</string>
+    <string name="result_detail_digest_algorithm">Algoritmus otisku: %1$s</string>
+    <string name="result_detail_dg_checked">Kontrolované datové skupiny: %1$s</string>
+    <string name="result_detail_dg_checked_none">Nebyla zkontrolována žádná datová skupina.</string>
+    <string name="result_detail_dg_mismatched">Neshodné otisky: %1$s</string>
+    <string name="result_detail_dg_all_match">Všechny otisky se shodují.</string>
+    <string name="result_detail_dg_missing">Datové skupiny ohlášené, ale čipem neposkytnuté: %1$s</string>
+    <string name="result_detail_unsupported">Nepodporovaný algoritmus: %1$s</string>
+    <string name="result_detail_error">Technická chyba: %1$s</string>
+    <string name="result_detail_no_dg14">Doklad neobsahuje DG14: čip toto ověření nenabízí.</string>
+    <string name="result_detail_no_dg15">Doklad neobsahuje DG15: čip toto ověření nenabízí.</string>
+    <string name="result_detail_not_reached">Krok nebyl proveden.</string>
+    <string name="result_detail_none">Žádné další podrobnosti.</string>
+    <string name="result_demo_banner">Simulovaný doklad — ukázka</string>
+</resources>

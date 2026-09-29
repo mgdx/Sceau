@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reading_title">Čítanie dokladu</string>
+    <string name="reading_prompt">Priložte doklad k zadnej strane telefónu a neodďaľujte ho</string>
+    <string name="reading_step_connect">Pripájanie k čipu</string>
+    <string name="reading_step_secure_channel">Otváranie zabezpečeného kanála (PACE alebo BAC)</string>
+    <string name="reading_step_read_data">Čítanie údajov</string>
+    <string name="reading_step_verify_signature">Overovanie podpisu</string>
+    <string name="reading_step_verify_chip">Overovanie čipu</string>
+    <string name="reading_step_pending">čaká</string>
+    <string name="reading_step_in_progress">prebieha</string>
+    <string name="reading_step_done">hotovo</string>
+    <string name="reading_error_title">Čítanie prerušené</string>
+    <string name="reading_slow_chip">Čip dokladu necháva čakať, často po neúspešných pokusoch. Držte doklad nehybne, môže to trvať až minútu.</string>
+    <string name="reading_error_access_denied">CAN alebo údaje z MRZ sú nesprávne. Skontrolujte zadané číslo a dátumy a skúste to znova. Každý neúspešný pokus môže predĺžiť čas, počas ktorého čip necháva čakať na odpoveď.</string>
+    <string name="reading_error_connection_lost">Doklad bol odtiahnutý príliš skoro. Držte ho nehybne pri telefóne až do konca čítania.</string>
+    <string name="reading_error_not_icao">Tento doklad nezodpovedá norme ICAO 9303: jeho čip nemožno prečítať.</string>
+    <string name="reading_error_timeout">Časový limit vypršal: čip neodpovedal včas. Skúste to znova a držte doklad nehybne.</string>
+    <string name="reading_error_can_without_pace">Tento doklad nemožno čítať pomocou CAN. Použite kartu Cestovný pas a zadajte údaje z MRZ.</string>
+    <string name="reading_error_unexpected">Vyskytla sa neočakávaná chyba.</string>
+    <string name="reading_error_code">Kód chyby: %1$s</string>
+    <string name="reading_retry">Skúsiť znova</string>
+    <string name="reading_cancel">Zrušiť</string>
+</resources>
