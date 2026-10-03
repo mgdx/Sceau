@@ -388,6 +388,6 @@ Format : date, contexte, décision, justification, écart à la SPEC concerné.
 - **Contexte** : l'onglet Carte d'identité n'acceptait qu'un CAN de 6 chiffres. Une carte d'identité ICAO porte aussi une MRZ, dont la clé ouvre PACE comme BAC ; certaines cartes européennes n'acceptent pas le CAN, ou impriment un CAN d'une autre longueur. Il fallait alors passer par l'onglet Passeport, ce que son nom ne suggère pas.
 - **Décision** :
   - un sélecteur à deux segments CAN / MRZ en tête de l'onglet Carte d'identité, sur CAN par défaut (`IdCardKey`, champ `idCardKey` d'`AccessForm`) ; en MRZ, les trois champs de l'onglet Passeport, avec une aide propre au numéro de document (« Tel qu'imprimé sur la carte ») ;
-  - les saisies CAN et MRZ partagent l'état du formulaire : passer d'un segment à l'autre ne les efface pas. Après une lecture, le choix est gardé et les clés sont oubliées comme avant ; « Effacer » et la mise en arrière-plan reviennent au CAN ;
+  - les saisies CAN et MRZ partagent l'état du formulaire : passer d'un segment à l'autre ne les efface pas. Quitter le résultat ou la lecture (« Effacer », retour, annulation, arrière-plan) remet tout le formulaire à son état initial, choix compris : onglet Passeport, et CAN dans l'onglet Carte d'identité ;
   - « MRZ » n'est pas traduit (glossaire), la chaîne est `translatable="false"`.
 - **Écart à la SPEC** : §5.1 mise à jour.

@@ -9,7 +9,8 @@ Plan de test manuel de SPEC §9.2, exécuté via adb sur un téléphone réel (s
 | Élément | Usage |
 |---|---|
 | Téléphone Android 8.0+ avec NFC | appareil de test (noter modèle et version d'Android) |
-| CNIe française (format carte bancaire, 2021 ou après) | cas nominal carte d'identité (PACE, CAN) |
+| CNIe française (format carte bancaire, 2021 ou après) | cas nominal carte d'identité (PACE, CAN), puis par la MRZ (TP-25) |
+| Carte d'identité d'un autre pays de l'UE, délivrée en août 2021 ou après (facultatif) | TP-25, étape 6 |
 | Passeport biométrique français | cas nominal passeport (MRZ) |
 | Document expiré (passeport ou carte) | TP-09 |
 | Document d'un émetteur absent du magasin embarqué, par exemple une carte d'identité slovaque (voir décision D1) ; à défaut, un passeport d'un pays absent de la Master List du BSI | TP-19 |
@@ -103,6 +104,19 @@ Pour chaque cas : cocher OK ou KO, et en cas de KO noter l'écart, les étapes e
   1. Saisir le numéro de document (vérifier les majuscules forcées), puis la date de naissance et la date d'expiration au clavier numérique (décision D10 ; le clavier se retire au huitième chiffre de l'expiration, D29) : les `/` apparaissent au fil de la frappe, dans l'ordre JJ/MM/AAAA en français (MM/JJ/AAAA en anglais américain). Essayer une date inexistante (31/02), une naissance future et une expiration avant 1990 : message sous le champ, « Lire » inactif.
   2. Toucher « Lire », poser le passeport ouvert sur la page de la puce (ou la couverture selon le modèle).
 - **Attendu** : lecture complète ; canal PACE si annoncé, sinon BAC (ou BAC après repli, décision D13) ; verdict **Authentique** pour un passeport français récent (chaîne vers un CSCA passeport de l'ANTS, certificats de lien le cas échéant) ; même contenu que TP-04.
+- **Résultat** : ☐ OK ☐ KO — Notes :
+
+### TP-25 Carte d'identité lue par la MRZ
+
+- **Préconditions** : NFC activé, application sur l'accueil.
+- **Étapes** :
+  1. Onglet « Carte d'identité » : le sélecteur CAN / MRZ est sur **CAN** et seul le champ CAN est affiché (décision D31). Saisir deux chiffres du CAN.
+  2. Toucher « MRZ » : les trois champs numéro du document, date de naissance et date d'expiration s'affichent ; l'aide sous le numéro dit « Tel qu'imprimé sur la carte, 9 caractères au plus ». Revenir sur « CAN » : les deux chiffres saisis sont toujours là. Repasser sur « MRZ ».
+  3. Saisir le numéro du document, la date de naissance et la date d'expiration lus dans la MRZ au verso de la CNIe (le clavier se retire au huitième chiffre de l'expiration, comme en TP-05).
+  4. Toucher « Lire », poser la carte.
+  5. Revenir à l'accueil depuis le résultat (retour arrière ou « Effacer »).
+  6. Si une carte d'identité d'un autre pays de l'UE est disponible : la lire d'abord avec son CAN, puis avec sa MRZ.
+- **Attendu** : étape 4 : lecture complète, canal « PACE » (clé MRZ), même résultat que TP-04 (verdict **Authentique**, chaîne vers le CSCA e-ID de l'ANTS). Étape 5 : l'accueil est revenu à son état initial, comme après toute lecture (TP-15) : onglet Passeport, aucun champ rempli, et l'onglet Carte d'identité de nouveau sur **CAN**. Étape 6 : les deux clés ouvrent la puce (canal PACE, ou BAC par la MRZ si la carte n'annonce pas PACE) ; verdict **Authentique**, ou **Émetteur inconnu** si son CSCA manque au magasin embarqué (TP-19). Si le CAN imprimé n'a pas 6 chiffres, le noter : seule la MRZ est alors utilisable.
 - **Résultat** : ☐ OK ☐ KO — Notes :
 
 ## C. Erreurs de lecture
@@ -296,5 +310,6 @@ Pour toutes les erreurs, l'écran affiche sous le message le code technique comp
 | TP-22 | Interface en anglais | |
 | TP-23 | Passeport après tentatives ratées (attente jusqu'à 60 s) | |
 | TP-24 | Mode démo (debug) et absence en release | |
+| TP-25 | Carte d'identité lue par la MRZ | |
 
 Appareil : ………… Android : ………… Version de Sceau : ………… Date : ………… Testeur : …………
