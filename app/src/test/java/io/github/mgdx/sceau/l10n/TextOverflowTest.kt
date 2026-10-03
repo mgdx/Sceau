@@ -211,7 +211,15 @@ class TextOverflowTest {
     // --- Scènes ------------------------------------------------------------------------------
 
     private fun homeScenes() {
-        val homeContent: @Composable () -> Unit = { HomeScreen(session, onRead = {}, onOpenTrustStore = {}, onOpenAbout = {}) }
+        val homeContent: @Composable () -> Unit = {
+            HomeScreen(
+                session,
+                onRead = {},
+                onOpenTrustStore = {},
+                onOpenAbout = {},
+                onScanMrz = {},
+            )
+        }
 
         setNfc(present = true, enabled = false)
         session.clear()
