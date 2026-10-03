@@ -98,9 +98,9 @@ Pour chaque cas : cocher OK ou KO, et en cas de KO noter l'écart, les étapes e
 
 ### TP-05 Cas nominal : passeport
 
-- **Préconditions** : onglet « Passeport ».
+- **Préconditions** : onglet « Passeport » (sélectionné à l'ouverture, D29).
 - **Étapes** :
-  1. Saisir le numéro de document (vérifier les majuscules forcées), puis la date de naissance et la date d'expiration au clavier numérique (décision D10) : les `/` apparaissent au fil de la frappe, dans l'ordre JJ/MM/AAAA en français (MM/JJ/AAAA en anglais américain). Essayer une date inexistante (31/02), une naissance future et une expiration avant 1990 : message sous le champ, « Lire » inactif.
+  1. Saisir le numéro de document (vérifier les majuscules forcées), puis la date de naissance et la date d'expiration au clavier numérique (décision D10 ; le clavier se retire au huitième chiffre de l'expiration, D29) : les `/` apparaissent au fil de la frappe, dans l'ordre JJ/MM/AAAA en français (MM/JJ/AAAA en anglais américain). Essayer une date inexistante (31/02), une naissance future et une expiration avant 1990 : message sous le champ, « Lire » inactif.
   2. Toucher « Lire », poser le passeport ouvert sur la page de la puce (ou la couverture selon le modèle).
 - **Attendu** : lecture complète ; canal PACE si annoncé, sinon BAC (ou BAC après repli, décision D13) ; verdict **Authentique** pour un passeport français récent (chaîne vers un CSCA passeport de l'ANTS, certificats de lien le cas échéant) ; même contenu que TP-04.
 - **Résultat** : ☐ OK ☐ KO — Notes :

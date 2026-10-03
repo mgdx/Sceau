@@ -41,6 +41,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.isSensitiveData
 import androidx.compose.ui.semantics.semantics
@@ -107,14 +109,14 @@ fun HomeScreen(
         ) {
             PrimaryTabRow(selectedTabIndex = form.tab.ordinal) {
                 Tab(
-                    selected = form.tab == DocumentTab.ID_CARD,
-                    onClick = { session.selectTab(DocumentTab.ID_CARD) },
-                    text = { Text(stringResource(R.string.home_tab_id_card)) },
-                )
-                Tab(
                     selected = form.tab == DocumentTab.PASSPORT,
                     onClick = { session.selectTab(DocumentTab.PASSPORT) },
                     text = { Text(stringResource(R.string.home_tab_passport)) },
+                )
+                Tab(
+                    selected = form.tab == DocumentTab.ID_CARD,
+                    onClick = { session.selectTab(DocumentTab.ID_CARD) },
+                    text = { Text(stringResource(R.string.home_tab_id_card)) },
                 )
             }
             Column(
@@ -123,8 +125,8 @@ fun HomeScreen(
             ) {
                 NfcBanner(nfc)
                 when (form.tab) {
-                    DocumentTab.ID_CARD -> CanFields(form = form, onCanChange = session::onCanChange)
                     DocumentTab.PASSPORT -> MrzFields(form = form, session = session, order = dateOrder)
+                    DocumentTab.ID_CARD -> CanFields(form = form, onCanChange = session::onCanChange)
                 }
                 Text(
                     text = stringResource(R.string.home_holder_notice),
@@ -269,6 +271,8 @@ private fun MrzFields(
     session: SessionViewModel,
     order: DateOrder,
 ) {
+    val keyboard = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
     OutlinedTextField(
         value = form.documentNumber,
         onValueChange = session::onDocumentNumberChange,
@@ -299,7 +303,15 @@ private fun MrzFields(
         order = order,
         error = AccessForm.dateOfExpiryError(form.dateOfExpiryDigits, order),
         imeAction = ImeAction.Done,
-        onValueChange = session::onDateOfExpiryChange,
+        onValueChange = { input ->
+            val wasComplete = form.dateOfExpiryDigits.length == AccessForm.DATE_DIGITS
+            session.onDateOfExpiryChange(input)
+            // Dernier chiffre du dernier champ : le clavier se retire et dégage le bouton « Lire ».
+            if (!wasComplete && session.form.dateOfExpiryDigits.length == AccessForm.DATE_DIGITS) {
+                keyboard?.hide()
+                focusManager.clearFocus()
+            }
+        },
     )
 }
 

@@ -361,3 +361,12 @@ Format : date, contexte, décision, justification, écart à la SPEC concerné.
   - non couverts : bandeau « document expiré », mention « ancre importée », verdicts « Signature valide, puce non vérifiée » et « Échec », photo affichée, dialogues d'import et de suppression de Master List, messages ponctuels (snackbars) ;
   - le rendu des polices de Robolectric est celui d'Android 37 ; un fabricant qui remplace les polices système peut élargir certains textes.
 - **Écart à la SPEC** : aucun sur le produit. La SPEC ne prévoit pas ce contrôle ; il ajoute des dépendances de test (hors APK) et une activité vide de test dans l'APK de debug seulement.
+
+## D29. Onglet Passeport en premier, clavier retiré après la date d'expiration
+
+- **Date** : 2026-10-04.
+- **Contexte** : SPEC §5.1 plaçait l'onglet Carte d'identité en premier. Le passeport est le cas d'usage principal, et une fois la date d'expiration tapée le clavier masquait le bouton « Lire » : il fallait le fermer à la main.
+- **Décision** :
+  - onglet Passeport à gauche et sélectionné par défaut (`DocumentTab.PASSPORT` en tête de l'énumération, valeur par défaut d'`AccessForm`) ;
+  - quand la date d'expiration atteint ses 8 chiffres, le clavier est masqué et le focus retiré, que la date soit valide ou non (une erreur reste affichée sous le champ). Seul le passage à 8 chiffres le déclenche : corriger un chiffre d'une date déjà complète ne referme pas le clavier en pleine saisie.
+- **Écart à la SPEC** : §5.1 mise à jour.

@@ -22,8 +22,8 @@ class AccessFormTest {
 
     @Test
     fun `can form is complete only with exactly six digits`() {
-        assertFalse(AccessForm(can = "12345").isComplete(dmy, today))
-        val form = AccessForm(can = "123456")
+        assertFalse(AccessForm(tab = DocumentTab.ID_CARD, can = "12345").isComplete(dmy, today))
+        val form = AccessForm(tab = DocumentTab.ID_CARD, can = "123456")
         assertTrue(form.isComplete(dmy, today))
         assertEquals("123456", (form.toAccessKey(dmy, today) as AccessKey.Can).value)
     }

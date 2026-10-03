@@ -8,10 +8,10 @@ import java.time.format.DateTimeFormatterBuilder
 import java.time.format.FormatStyle
 import java.util.Locale
 
-/** Onglets de l'écran d'accueil (SPEC §5.1). */
+/** Onglets de l'écran d'accueil (SPEC §5.1), dans l'ordre d'affichage : le passeport d'abord (D29). */
 enum class DocumentTab {
-    ID_CARD,
     PASSPORT,
+    ID_CARD,
 }
 
 /** Partie d'une date saisie au clavier, avec son nombre de chiffres. */
@@ -77,7 +77,7 @@ enum class DateError {
  * leur interprétation dépend de l'ordre de saisie de la locale, fourni par l'écran.
  */
 class AccessForm(
-    val tab: DocumentTab = DocumentTab.ID_CARD,
+    val tab: DocumentTab = DocumentTab.PASSPORT,
     /** CAN : uniquement des chiffres, au plus [CAN_LENGTH]. */
     val can: String = "",
     /** Numéro de document normalisé : A-Z et 0-9, au plus [DOCUMENT_NUMBER_MAX_LENGTH], sans `<`. */
