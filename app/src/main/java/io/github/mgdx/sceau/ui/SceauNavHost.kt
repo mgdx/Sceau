@@ -20,6 +20,7 @@ object Routes {
     const val RESULT = "result"
     const val TRUST = "trust"
     const val ABOUT = "about"
+    const val SCAN = "scan"
 }
 
 @Composable
@@ -35,6 +36,7 @@ fun SceauNavHost(
                 onRead = { navController.navigate(Routes.READING) { launchSingleTop = true } },
                 onOpenTrustStore = { navController.navigate(Routes.TRUST) { launchSingleTop = true } },
                 onOpenAbout = { navController.navigate(Routes.ABOUT) { launchSingleTop = true } },
+                onScanMrz = { navController.navigate(Routes.SCAN) { launchSingleTop = true } },
             )
         }
         composable(Routes.READING) {

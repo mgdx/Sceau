@@ -15,6 +15,7 @@ import io.github.mgdx.sceau.core.readAndVerify
 import io.github.mgdx.sceau.core.report.VerificationReport
 import io.github.mgdx.sceau.core.trust.TrustStore
 import io.github.mgdx.sceau.demo.DemoCard
+import io.github.mgdx.sceau.mrz.MrzKeyFields
 import io.github.mgdx.sceau.trust.TrustStoreRepository
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -117,6 +118,14 @@ class SessionViewModel(
     /** Saisie clavier de la date d'expiration : seuls les chiffres sont gardés. */
     fun onDateOfExpiryChange(input: String) {
         form = form.copy(dateOfExpiryDigits = AccessForm.filterDateDigits(input))
+    }
+
+    /**
+     * MRZ reconnue par l'écran de scan (D32) : remplit le numéro et les deux dates du
+     * formulaire. Implémenté par le lot D.
+     */
+    @Suppress("UNUSED_PARAMETER")
+    fun onMrzScanned(fields: MrzKeyFields) {
     }
 
     /** Mémorise la clé pour la prochaine lecture et passe en WaitingForCard. */

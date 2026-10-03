@@ -81,6 +81,8 @@ fun HomeScreen(
     onRead: () -> Unit,
     onOpenTrustStore: () -> Unit,
     onOpenAbout: () -> Unit,
+    // Ouvre l'écran de scan de la MRZ (D32) ; branché sur le bouton par le lot D.
+    @Suppress("UNUSED_PARAMETER") onScanMrz: () -> Unit,
 ) {
     val nfc by rememberNfcAvailability()
     val form = session.form
