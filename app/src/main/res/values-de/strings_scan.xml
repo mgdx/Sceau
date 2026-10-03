@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="scan_title">MRZ scannen</string>
+    <string name="scan_back">Zurück</string>
+    <string name="scan_instruction">Halten Sie die Zeichenzeilen unten auf der Seite in den Rahmen</string>
+    <string name="scan_status_searching">MRZ wird gesucht…</string>
+    <string name="scan_status_seen">MRZ erkannt, wird gelesen. Halten Sie das Dokument ruhig.</string>
+    <string name="scan_status_unsupported">Diese Dokumentennummer ist zu lang, um automatisch gelesen zu werden. Geben Sie die Daten manuell ein.</string>
+    <string name="scan_status_success">MRZ gelesen. Prüfen Sie die Felder, bevor Sie mit dem Auslesen beginnen.</string>
+    <string name="scan_camera_unavailable">Kamera nicht verfügbar. Die manuelle Eingabe ist weiterhin möglich.</string>
+    <string name="scan_torch_on">Taschenlampe einschalten</string>
+    <string name="scan_torch_off">Taschenlampe ausschalten</string>
+    <string name="scan_permission_title">Kamerazugriff</string>
+    <string name="scan_permission_denied">Sceau benötigt die Kamera, um die MRZ zu lesen. Es werden keine Bilder gespeichert. Die manuelle Eingabe ist weiterhin möglich.</string>
+    <string name="scan_permission_permanently_denied">Der Kamerazugriff wurde verweigert. Sie können ihn in den App-Einstellungen erlauben. Die manuelle Eingabe ist weiterhin möglich.</string>
+    <string name="scan_permission_grant">Zulassen</string>
+    <string name="scan_open_settings">Einstellungen öffnen</string>
+    <string name="scan_manual_entry">Manuell eingeben</string>
+</resources>

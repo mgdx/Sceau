@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="scan_title">Skannaa MRZ</string>
+    <string name="scan_back">Takaisin</string>
+    <string name="scan_instruction">Aseta sivun alareunan merkkirivit kehykseen</string>
+    <string name="scan_status_searching">Etsitään MRZ:aa…</string>
+    <string name="scan_status_seen">MRZ löytyi, luetaan. Pidä asiakirja paikallaan.</string>
+    <string name="scan_status_unsupported">Tämä asiakirjan numero on liian pitkä luettavaksi automaattisesti. Anna tiedot käsin.</string>
+    <string name="scan_status_success">MRZ luettu. Tarkista kentät ennen lukemisen aloittamista.</string>
+    <string name="scan_camera_unavailable">Kamera ei ole käytettävissä. Voit edelleen antaa tiedot käsin.</string>
+    <string name="scan_torch_on">Laita taskulamppu päälle</string>
+    <string name="scan_torch_off">Sammuta taskulamppu</string>
+    <string name="scan_permission_title">Kameran käyttöoikeus</string>
+    <string name="scan_permission_denied">Sceau tarvitsee kameraa MRZ:n lukemiseen. Kuvia ei tallenneta. Voit edelleen antaa tiedot käsin.</string>
+    <string name="scan_permission_permanently_denied">Kameran käyttö on estetty. Voit sallia sen sovelluksen asetuksissa. Voit edelleen antaa tiedot käsin.</string>
+    <string name="scan_permission_grant">Salli</string>
+    <string name="scan_open_settings">Avaa asetukset</string>
+    <string name="scan_manual_entry">Anna käsin</string>
+</resources>

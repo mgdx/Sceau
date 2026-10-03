@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="scan_title">掃描 MRZ</string>
+    <string name="scan_back">返回</string>
+    <string name="scan_instruction">將頁面底部的字元行放入框內</string>
+    <string name="scan_status_searching">正在尋找 MRZ…</string>
+    <string name="scan_status_seen">已找到 MRZ，正在辨識。請保持證件不動。</string>
+    <string name="scan_status_unsupported">這個證件號碼過長，無法自動辨識。請手動輸入資料。</string>
+    <string name="scan_status_success">已辨識 MRZ。請在開始讀取前檢查各欄位。</string>
+    <string name="scan_camera_unavailable">無法使用相機。你仍可手動輸入資料。</string>
+    <string name="scan_torch_on">開啟手電筒</string>
+    <string name="scan_torch_off">關閉手電筒</string>
+    <string name="scan_permission_title">相機存取權</string>
+    <string name="scan_permission_denied">Sceau 需要使用相機來辨識 MRZ。不會儲存任何圖片。你仍可手動輸入資料。</string>
+    <string name="scan_permission_permanently_denied">相機存取權已遭拒絕。你可以在應用程式設定中允許。你仍可手動輸入資料。</string>
+    <string name="scan_permission_grant">允許</string>
+    <string name="scan_open_settings">開啟設定</string>
+    <string name="scan_manual_entry">手動輸入</string>
+</resources>

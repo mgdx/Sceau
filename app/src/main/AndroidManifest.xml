@@ -3,9 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.NFC" />
+    <!-- Scan de la MRZ (D32), demandée à l'ouverture de l'écran de scan seulement. -->
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-feature
         android:name="android.hardware.nfc"
+        android:required="false" />
+    <!-- Sans ces déclarations, la permission CAMERA rendrait la caméra et l'autofocus
+         obligatoires et retirerait l'application des appareils qui en sont dépourvus (D32). -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
         android:required="false" />
 
     <application

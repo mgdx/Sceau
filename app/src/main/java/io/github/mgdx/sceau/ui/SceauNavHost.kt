@@ -11,6 +11,7 @@ import io.github.mgdx.sceau.ui.about.AboutScreen
 import io.github.mgdx.sceau.ui.home.HomeScreen
 import io.github.mgdx.sceau.ui.reading.ReadingScreen
 import io.github.mgdx.sceau.ui.result.ResultScreen
+import io.github.mgdx.sceau.ui.scan.MrzScanScreen
 import io.github.mgdx.sceau.ui.trust.TrustStoreScreen
 
 /** Routes de navigation de l'application. */
@@ -67,6 +68,13 @@ fun SceauNavHost(
             AboutScreen(
                 repository = trustStoreRepository,
                 onBack = { navController.popBackStack() },
+            )
+        }
+        composable(Routes.SCAN) {
+            MrzScanScreen(
+                session = session,
+                // Sans effet si l'écran a déjà été quitté (retour pendant l'annonce du succès).
+                onDone = { navController.popBackStack(Routes.SCAN, inclusive = true) },
             )
         }
     }

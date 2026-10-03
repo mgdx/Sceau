@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="scan_title">مسح MRZ ضوئيًا</string>
+    <string name="scan_back">رجوع</string>
+    <string name="scan_instruction">ضع أسطر الأحرف الموجودة أسفل الصفحة داخل الإطار</string>
+    <string name="scan_status_searching">جارٍ البحث عن MRZ…</string>
+    <string name="scan_status_seen">تم العثور على MRZ، جارٍ القراءة. أبقِ الوثيقة ثابتة.</string>
+    <string name="scan_status_unsupported">رقم الوثيقة هذا أطول من أن يُقرأ تلقائيًا. أدخل البيانات يدويًا.</string>
+    <string name="scan_status_success">تمت قراءة MRZ. تحقّق من الحقول قبل بدء القراءة.</string>
+    <string name="scan_camera_unavailable">الكاميرا غير متاحة. لا يزال بإمكانك إدخال البيانات يدويًا.</string>
+    <string name="scan_torch_on">تشغيل المصباح</string>
+    <string name="scan_torch_off">إيقاف المصباح</string>
+    <string name="scan_permission_title">الوصول إلى الكاميرا</string>
+    <string name="scan_permission_denied">يحتاج Sceau إلى الكاميرا لقراءة MRZ. لا يتم حفظ أي صورة. لا يزال بإمكانك إدخال البيانات يدويًا.</string>
+    <string name="scan_permission_permanently_denied">تم رفض الوصول إلى الكاميرا. يمكنك السماح به من إعدادات التطبيق. لا يزال بإمكانك إدخال البيانات يدويًا.</string>
+    <string name="scan_permission_grant">السماح</string>
+    <string name="scan_open_settings">فتح الإعدادات</string>
+    <string name="scan_manual_entry">الإدخال اليدوي</string>
+</resources>

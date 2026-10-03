@@ -16,6 +16,7 @@ ktlintGradle = "14.2.0"
 ktlint = "1.8.0"
 robolectric = "4.17"
 espresso = "3.7.0"
+camerax = "1.6.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -42,6 +43,9 @@ scuba-smartcards = { group = "net.sf.scuba", name = "scuba-smartcards", version.
 scuba-sc-android = { group = "net.sf.scuba", name = "scuba-sc-android", version.ref = "scubaAndroid" }
 bouncycastle-bcprov = { group = "org.bouncycastle", name = "bcprov-jdk18on", version.ref = "bouncycastle" }
 bouncycastle-bcpkix = { group = "org.bouncycastle", name = "bcpkix-jdk18on", version.ref = "bouncycastle" }
+androidx-camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camerax" }
+androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camerax" }
+androidx-camera-compose = { group = "androidx.camera", name = "camera-compose", version.ref = "camerax" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

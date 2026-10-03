@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="scan_title">Сканувати MRZ</string>
+    <string name="scan_back">Назад</string>
+    <string name="scan_instruction">Розмістіть у рамці рядки символів унизу сторінки</string>
+    <string name="scan_status_searching">Пошук MRZ…</string>
+    <string name="scan_status_seen">MRZ знайдено, триває зчитування. Тримайте документ нерухомо.</string>
+    <string name="scan_status_unsupported">Номер документа задовгий для автоматичного зчитування. Введіть дані вручну.</string>
+    <string name="scan_status_success">MRZ зчитано. Перевірте поля, перш ніж почати зчитування.</string>
+    <string name="scan_camera_unavailable">Камера недоступна. Дані можна ввести вручну.</string>
+    <string name="scan_torch_on">Увімкнути ліхтарик</string>
+    <string name="scan_torch_off">Вимкнути ліхтарик</string>
+    <string name="scan_permission_title">Доступ до камери</string>
+    <string name="scan_permission_denied">Sceau потрібна камера, щоб зчитати MRZ. Зображення не зберігаються. Дані можна ввести вручну.</string>
+    <string name="scan_permission_permanently_denied">Доступ до камери заборонено. Його можна дозволити в налаштуваннях додатка. Дані можна ввести вручну.</string>
+    <string name="scan_permission_grant">Дозволити</string>
+    <string name="scan_open_settings">Відкрити налаштування</string>
+    <string name="scan_manual_entry">Ввести вручну</string>
+</resources>

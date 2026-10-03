@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="scan_title">סריקת MRZ</string>
+    <string name="scan_back">חזרה</string>
+    <string name="scan_instruction">יש למקם בתוך המסגרת את שורות התווים שבתחתית הדף</string>
+    <string name="scan_status_searching">מתבצע חיפוש של ה-MRZ…</string>
+    <string name="scan_status_seen">ה-MRZ זוהה, מתבצעת קריאה. יש להחזיק את המסמך ללא תנועה.</string>
+    <string name="scan_status_unsupported">מספר המסמך הזה ארוך מדי לקריאה אוטומטית. יש להזין את הנתונים באופן ידני.</string>
+    <string name="scan_status_success">ה-MRZ נקרא. יש לבדוק את השדות לפני שמתחילים בקריאה.</string>
+    <string name="scan_camera_unavailable">המצלמה לא זמינה. עדיין אפשר להזין את הנתונים באופן ידני.</string>
+    <string name="scan_torch_on">הפעלת הפנס</string>
+    <string name="scan_torch_off">כיבוי הפנס</string>
+    <string name="scan_permission_title">גישה למצלמה</string>
+    <string name="scan_permission_denied">Sceau צריכה גישה למצלמה כדי לקרוא את ה-MRZ. אף תמונה לא נשמרת. עדיין אפשר להזין את הנתונים באופן ידני.</string>
+    <string name="scan_permission_permanently_denied">הגישה למצלמה נדחתה. אפשר להתיר אותה בהגדרות האפליקציה. עדיין אפשר להזין את הנתונים באופן ידני.</string>
+    <string name="scan_permission_grant">התרה</string>
+    <string name="scan_open_settings">פתיחת ההגדרות</string>
+    <string name="scan_manual_entry">הזנה ידנית</string>
+</resources>

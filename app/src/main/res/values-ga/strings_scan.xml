@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="scan_title">Scan an MRZ</string>
+    <string name="scan_back">Siar</string>
+    <string name="scan_instruction">Cuir línte na gcarachtar ag bun an leathanaigh laistigh den fhráma</string>
+    <string name="scan_status_searching">An MRZ á lorg…</string>
+    <string name="scan_status_seen">MRZ aimsithe, á léamh. Coinnigh an cháipéis gan corraí.</string>
+    <string name="scan_status_unsupported">Tá uimhir na cáipéise seo rófhada le léamh go huathoibríoch. Iontráil na sonraí de láimh.</string>
+    <string name="scan_status_success">MRZ léite. Seiceáil na réimsí sula dtosaíonn tú an léamh.</string>
+    <string name="scan_camera_unavailable">Níl an ceamara ar fáil. Is féidir na sonraí a iontráil de láimh fós.</string>
+    <string name="scan_torch_on">Cas air an tóirse</string>
+    <string name="scan_torch_off">Cas as an tóirse</string>
+    <string name="scan_permission_title">Rochtain ar an gceamara</string>
+    <string name="scan_permission_denied">Teastaíonn an ceamara ó Sceau chun an MRZ a léamh. Ní shábháiltear aon íomhá. Is féidir na sonraí a iontráil de láimh fós.</string>
+    <string name="scan_permission_permanently_denied">Diúltaíodh rochtain ar an gceamara. Is féidir leat í a cheadú i socruithe na haipe. Is féidir na sonraí a iontráil de láimh fós.</string>
+    <string name="scan_permission_grant">Ceadaigh</string>
+    <string name="scan_open_settings">Oscail socruithe</string>
+    <string name="scan_manual_entry">Iontráil de láimh</string>
+</resources>

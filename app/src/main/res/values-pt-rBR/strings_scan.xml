@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="scan_title">Escanear a MRZ</string>
+    <string name="scan_back">Voltar</string>
+    <string name="scan_instruction">Posicione dentro da moldura as linhas de caracteres na parte inferior da página</string>
+    <string name="scan_status_searching">Procurando a MRZ…</string>
+    <string name="scan_status_seen">MRZ detectada, lendo. Mantenha o documento parado.</string>
+    <string name="scan_status_unsupported">Este número de documento é longo demais para ser lido automaticamente. Digite os dados manualmente.</string>
+    <string name="scan_status_success">MRZ lida. Confira os campos antes de iniciar a leitura.</string>
+    <string name="scan_camera_unavailable">Câmera indisponível. Você ainda pode digitar os dados manualmente.</string>
+    <string name="scan_torch_on">Ligar lanterna</string>
+    <string name="scan_torch_off">Desligar lanterna</string>
+    <string name="scan_permission_title">Acesso à câmera</string>
+    <string name="scan_permission_denied">O Sceau precisa da câmera para ler a MRZ. Nenhuma imagem é salva. Você ainda pode digitar os dados manualmente.</string>
+    <string name="scan_permission_permanently_denied">O acesso à câmera foi negado. Você pode permiti-lo nas configurações do app. Você ainda pode digitar os dados manualmente.</string>
+    <string name="scan_permission_grant">Permitir</string>
+    <string name="scan_open_settings">Abrir configurações</string>
+    <string name="scan_manual_entry">Digitar manualmente</string>
+</resources>

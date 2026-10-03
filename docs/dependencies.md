@@ -45,6 +45,7 @@ Seuls les artefacts BouncyCastle `jdk18on` sont admis : les variantes `jdk15on` 
 | `androidx.core:core-ktx` | 1.19.0 | Apache 2.0 | Utilitaires AndroidX | oui |
 | `org.jetbrains.kotlinx:kotlinx-coroutines-android` | 1.11.0 | Apache 2.0 | `Dispatchers.Main` | oui |
 | `org.jetbrains.kotlin:kotlin-stdlib` | 2.2.20 | Apache 2.0 | Bibliothèque standard Kotlin | oui |
+| `androidx.camera:camera-camera2`, `camera-lifecycle`, `camera-compose` | 1.6.2 | Apache 2.0 (POM de chaque artefact, vérifié le 2026-10-04 sur Google Maven) | Scan de la MRZ (D32) : caméra arrière, cas d'usage Aperçu et Analyse d'image seulement (`ImageCapture` jamais lié), aperçu en Compose (`CameraXViewfinder`) | oui (Google Maven, AndroidX libre, utilisé par des applications du dépôt F-Droid) ; voir la remarque sur les bibliothèques natives de `camera-core` en section 2 |
 
 Licences Apache 2.0 des AndroidX vérifiées sur le `LICENSE.txt` embarqué dans l'AAR (`META-INF/androidx/…/LICENSE.txt`) ; celles de Kotlin et de kotlinx sur le POM publié sur Maven Central.
 
@@ -84,10 +85,21 @@ Montée de version : se placer dans le sous-module, `git fetch --tags && git che
 | `androidx.window:window` | 1.5.0 | Apache 2.0 | Activity, Compose | Informations sur la fenêtre et les écrans pliables |
 | `org.jspecify:jspecify` | 1.0.0 | Apache 2.0 | AndroidX | Annotations de nullité |
 | `org.jetbrains:annotations` | 23.0.0 | Apache 2.0 | kotlin-stdlib, coroutines | Annotations, sans code exécuté |
+| `androidx.camera:camera-core` | 1.6.2 | Apache 2.0 et BSD-3-Clause (POM : les deux licences, la seconde pour libyuv) | CameraX | Cœur de CameraX. **Contient deux bibliothèques natives précompilées** (`libimage_processing_util_jni.so`, conversion et rotation d'images par libyuv, et `libsurface_util_jni.so`), embarquées pour chaque ABI : environ 37 Ko par APK arm64. Elles sont construites par Google à partir des sources d'AndroidX (AOSP), comme `libandroidx.graphics.path.so` déjà présent via Compose ; F-Droid accepte les AAR AndroidX de Google Maven. À trancher par le superviseur au regard de la règle « aucun blob binaire » de `CLAUDE.md`. |
+| `androidx.camera:camera-camera2-pipe` | 1.6.2 | Apache 2.0 (POM) | camera-camera2 | Pilotage de Camera2 |
+| `androidx.camera.viewfinder:viewfinder-compose`, `viewfinder-core` | 1.6.2 | Apache 2.0 (POM) | camera-compose | Surface d'aperçu en Compose |
+| `androidx.camera.featurecombinationquery:featurecombinationquery` | 1.6.2 | Apache 2.0 (POM) | CameraX | Interrogation locale des combinaisons de flux prises en charge ; aucun réseau |
+| `com.google.dagger:dagger` | 2.59 | Apache 2.0 (POM) | camera-camera2-pipe | Injection de dépendances à la compilation, bibliothèque d'exécution minimale. Libre, n'est pas un service Google. |
+| `javax.inject:javax.inject` 1, `jakarta.inject:jakarta.inject-api` 2.0.1 | — | Apache 2.0 (POM) | dagger | Annotations `@Inject` |
+| `com.google.auto.value:auto-value-annotations` | 1.6.3 | Apache 2.0 (en-tête du POM parent `auto-value-parent`) | CameraX | Annotations, sans code exécuté |
+| `org.jetbrains.kotlinx:atomicfu` | 0.28.0 | Apache 2.0 (POM) | CameraX | Opérations atomiques Kotlin |
+| `androidx.exifinterface:exifinterface` | 1.4.2 | Apache 2.0 (POM) | CameraX | Lecture et écriture de métadonnées EXIF ; Sceau ne produit aucune image, rien n'est écrit |
 
-Autres transitives : bibliothèques AndroidX (`annotation`, `collection`, `arch.core`, `savedstate`, `navigationevent`, `customview-poolingcontainer`, `autofill`, `graphics-path`, `tracing`, `transition`, `dynamicanimation`, `interpolator`, `versionedparcelable`, `legacy-support-core-utils`, `loader`, `localbroadcastmanager`, `print`, `documentfile`, `concurrent-futures`, `core-viewtree`) et modules Compose (`runtime`, `runtime-saveable`, `runtime-retain`, `runtime-annotation`, `animation`, `animation-core`, `foundation`, `foundation-layout`, `material-ripple`, `ui-geometry`, `ui-text`, `ui-unit`, `ui-util`) : Apache 2.0, publiées sur Google Maven, libres. Ces transitives n'ont pas été contrôlées une à une ; la licence Apache 2.0 a été constatée sur l'AAR ou le POM de chaque dépendance directe AndroidX et Compose et de `emoji2`, `profileinstaller`, `startup-runtime` et `window`.
+Autres transitives : bibliothèques AndroidX (`annotation`, `collection`, `arch.core`, `savedstate`, `navigationevent`, `customview-poolingcontainer`, `autofill`, `graphics-path`, `tracing`, `transition`, `dynamicanimation`, `interpolator`, `versionedparcelable`, `legacy-support-core-utils`, `loader`, `localbroadcastmanager`, `print`, `documentfile`, `concurrent-futures`, `concurrent-futures-ktx`, `core-backported-fixes`, `tracing-android`, `tracing-ktx`, `core-viewtree`) et modules Compose (`runtime`, `runtime-saveable`, `runtime-retain`, `runtime-annotation`, `animation`, `animation-core`, `foundation`, `foundation-layout`, `material-ripple`, `ui-geometry`, `ui-text`, `ui-unit`, `ui-util`) : Apache 2.0, publiées sur Google Maven, libres. Ces transitives n'ont pas été contrôlées une à une ; la licence Apache 2.0 a été constatée sur l'AAR ou le POM de chaque dépendance directe AndroidX et Compose et de `emoji2`, `profileinstaller`, `startup-runtime` et `window`.
 
 Aucune dépendance ne relève de Google Play Services, Firebase, d'une bibliothèque d'analyse, de publicité ou de rapport de plantage.
+
+Ajout de CameraX (D32, 2026-10-04) : la comparaison de `./gradlew :app:dependencies --configuration releaseRuntimeClasspath` avant et après n'introduit que les artefacts listés ci-dessus et des montées de version AndroidX déjà présentes (`arch.core` 2.2.0, `tracing` 1.3.0) ; aucun artefact `com.google.android.gms`, Firebase, ML Kit ou propriétaire. `com.google.guava:listenablefuture` était déjà présent. Les règles R8 consommateur de CameraX suffisent : aucun ajout à `app/src/main/keepRules/rules.keep`. APK release arm64 : 4 178 251 octets avant, 4 688 067 après (+0,49 Mo).
 
 ## 3. Contenu embarqué qui n'est pas du code
 

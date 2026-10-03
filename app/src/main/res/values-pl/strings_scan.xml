@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="scan_title">Skanuj strefę MRZ</string>
+    <string name="scan_back">Wstecz</string>
+    <string name="scan_instruction">Umieść w ramce wiersze znaków z dołu strony</string>
+    <string name="scan_status_searching">Szukanie strefy MRZ…</string>
+    <string name="scan_status_seen">Wykryto strefę MRZ, trwa odczyt. Trzymaj dokument nieruchomo.</string>
+    <string name="scan_status_unsupported">Ten numer dokumentu jest za długi, aby odczytać go automatycznie. Wpisz dane ręcznie.</string>
+    <string name="scan_status_success">Odczytano strefę MRZ. Sprawdź pola przed rozpoczęciem odczytu.</string>
+    <string name="scan_camera_unavailable">Aparat jest niedostępny. Nadal możesz wpisać dane ręcznie.</string>
+    <string name="scan_torch_on">Włącz latarkę</string>
+    <string name="scan_torch_off">Wyłącz latarkę</string>
+    <string name="scan_permission_title">Dostęp do aparatu</string>
+    <string name="scan_permission_denied">Sceau potrzebuje aparatu, aby odczytać strefę MRZ. Żadne zdjęcie nie jest zapisywane. Nadal możesz wpisać dane ręcznie.</string>
+    <string name="scan_permission_permanently_denied">Odmówiono dostępu do aparatu. Możesz na niego zezwolić w ustawieniach aplikacji. Nadal możesz wpisać dane ręcznie.</string>
+    <string name="scan_permission_grant">Zezwól</string>
+    <string name="scan_open_settings">Otwórz ustawienia</string>
+    <string name="scan_manual_entry">Wpisz ręcznie</string>
+</resources>

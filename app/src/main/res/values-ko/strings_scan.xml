@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="scan_title">MRZ 스캔</string>
+    <string name="scan_back">뒤로</string>
+    <string name="scan_instruction">페이지 아래쪽의 문자 줄을 프레임 안에 맞추세요</string>
+    <string name="scan_status_searching">MRZ를 찾는 중…</string>
+    <string name="scan_status_seen">MRZ를 찾았습니다. 읽는 중입니다. 신분증을 움직이지 마세요.</string>
+    <string name="scan_status_unsupported">이 문서 번호는 너무 길어 자동으로 읽을 수 없습니다. 데이터를 직접 입력하세요.</string>
+    <string name="scan_status_success">MRZ를 읽었습니다. 읽기를 시작하기 전에 각 항목을 확인하세요.</string>
+    <string name="scan_camera_unavailable">카메라를 사용할 수 없습니다. 데이터는 계속 직접 입력할 수 있습니다.</string>
+    <string name="scan_torch_on">손전등 켜기</string>
+    <string name="scan_torch_off">손전등 끄기</string>
+    <string name="scan_permission_title">카메라 액세스</string>
+    <string name="scan_permission_denied">Sceau가 MRZ를 읽으려면 카메라가 필요합니다. 이미지는 저장되지 않습니다. 데이터는 계속 직접 입력할 수 있습니다.</string>
+    <string name="scan_permission_permanently_denied">카메라 액세스가 거부되었습니다. 앱 설정에서 허용할 수 있습니다. 데이터는 계속 직접 입력할 수 있습니다.</string>
+    <string name="scan_permission_grant">허용</string>
+    <string name="scan_open_settings">설정 열기</string>
+    <string name="scan_manual_entry">직접 입력</string>
+</resources>
