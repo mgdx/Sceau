@@ -34,8 +34,51 @@ internal class TemplateLineRecognizer : LineRecognizer {
  * Décodage des champs (lot A) : correction selon le type de champ, chiffres de contrôle,
  * stabilisation sur deux images successives. `null` en entrée = aucune MRZ dans l'image.
  */
-internal class MrzFieldDecoder {
-    fun accept(recognized: RecognizedMrz?): MrzScanResult = MrzScanResult.NothingFound
+internal class MrzFieldDecoder(
+    private val nanoTime: () -> Long = System::nanoTime,
+) {
+    /** Dernier résultat aux contrôles justes, en attente de confirmation. */
+    private var pending: MrzKeyFields? = null
+    private var lastMrzSeenNanos = 0L
 
-    fun reset() {}
+    /**
+     * `Found` quand deux décodages aux contrôles justes successifs sont identiques. Les images
+     * sans MRZ ou aux contrôles faux ne rompent pas l'attente, mais elle est oubliée après
+     * [FORGET_AFTER_NANOS] sans MRZ et sur [reset].
+     */
+    fun accept(recognized: RecognizedMrz?): MrzScanResult {
+        val now = nanoTime()
+        if (pending != null && now - lastMrzSeenNanos > FORGET_AFTER_NANOS) pending = null
+        if (recognized == null) return MrzScanResult.NothingFound
+        lastMrzSeenNanos = now
+        return when (val decoded = MrzDecoding.decode(recognized)) {
+            Decoded.Invalid -> {
+                MrzScanResult.Unstable
+            }
+
+            Decoded.ExtendedNumber -> {
+                pending = null
+                MrzScanResult.UnsupportedDocumentNumber
+            }
+
+            is Decoded.Valid -> {
+                if (decoded.fields == pending) {
+                    MrzScanResult.Found(decoded.fields)
+                } else {
+                    pending = decoded.fields
+                    MrzScanResult.Unstable
+                }
+            }
+        }
+    }
+
+    fun reset() {
+        pending = null
+    }
+
+    override fun toString(): String = "MrzFieldDecoder"
+
+    companion object {
+        const val FORGET_AFTER_NANOS = 2_000_000_000L
+    }
 }
