@@ -25,4 +25,7 @@
     <string name="home_nfc_settings">Opna NFC-stillingar</string>
     <string name="home_nfc_absent">Þessi sími er ekki með NFC: hann getur ekki lesið kubb skilríkja.</string>
     <string name="home_menu_demo">Herma eftir frönsku nafnskírteini (kynning)</string>
+    <string name="home_scan_mrz">Skanna MRZ</string>
+    <string name="home_mrz_scanned">MRZ skönnuð: athugaðu reitina áður en kubburinn er lesinn</string>
+    <string name="home_menu_demo_mrz_scan">Herma eftir skönnun MRZ (kynning)</string>
 </resources>

@@ -25,4 +25,7 @@
     <string name="home_nfc_settings">NFC सेटिंग खोलें</string>
     <string name="home_nfc_absent">इस फ़ोन में NFC नहीं है: यह पहचान दस्तावेज़ों की चिप नहीं पढ़ सकता।</string>
     <string name="home_menu_demo">CNIe सिम्युलेट करें (डेमो)</string>
+    <string name="home_scan_mrz">MRZ स्कैन करें</string>
+    <string name="home_mrz_scanned">MRZ स्कैन हो गया: चिप पढ़ने से पहले फ़ील्ड जाँच लें</string>
+    <string name="home_menu_demo_mrz_scan">MRZ स्कैन सिम्युलेट करें (डेमो)</string>
 </resources>

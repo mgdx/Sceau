@@ -26,4 +26,7 @@
     <string name="home_nfc_settings">Ouvrir les réglages NFC</string>
     <string name="home_nfc_absent">Ce téléphone n’a pas de NFC\u00A0: il ne peut pas lire la puce des documents d’identité.</string>
     <string name="home_menu_demo">Simuler une CNIe (démo)</string>
+    <string name="home_scan_mrz">Scanner la MRZ</string>
+    <string name="home_mrz_scanned">MRZ lue\u00A0: vérifiez les champs avant de lire la puce</string>
+    <string name="home_menu_demo_mrz_scan">Simuler un scan de MRZ (démo)</string>
 </resources>

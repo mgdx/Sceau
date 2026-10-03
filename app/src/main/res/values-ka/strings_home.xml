@@ -25,4 +25,7 @@
     <string name="home_nfc_settings">NFC-ის პარამეტრების გახსნა</string>
     <string name="home_nfc_absent">ამ ტელეფონს NFC არ აქვს: ის ვერ წაიკითხავს პირადობის დოკუმენტების ჩიპს.</string>
     <string name="home_menu_demo">საფრანგეთის პირადობის მოწმობის სიმულაცია (დემო)</string>
+    <string name="home_scan_mrz">MRZ-ის სკანირება</string>
+    <string name="home_mrz_scanned">MRZ დასკანერდა: ჩიპის წაკითხვამდე შეამოწმეთ ველები</string>
+    <string name="home_menu_demo_mrz_scan">MRZ-ის სკანირების სიმულაცია (დემო)</string>
 </resources>

@@ -3,20 +3,25 @@ package io.github.mgdx.sceau.ui.home
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.provider.Settings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -25,17 +30,21 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -81,14 +90,32 @@ fun HomeScreen(
     onRead: () -> Unit,
     onOpenTrustStore: () -> Unit,
     onOpenAbout: () -> Unit,
-    // Ouvre l'écran de scan de la MRZ (D32) ; branché sur le bouton par le lot D.
-    @Suppress("UNUSED_PARAMETER") onScanMrz: () -> Unit,
+    // Ouvre l'écran de scan de la MRZ (D32).
+    onScanMrz: () -> Unit,
 ) {
     val nfc by rememberNfcAvailability()
     val form = session.form
     val locale = LocalConfiguration.current.locales[0]
     val dateOrder = remember(locale) { DateOrder.forLocale(locale) }
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val hasCamera = remember(context) { context.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY) }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val keyboard = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
+    val scannedMessage = stringResource(R.string.home_mrz_scanned)
+
+    LaunchedEffect(dateOrder) { session.onDateOrder(dateOrder) }
+    // Retour du scan de la MRZ : clavier fermé et invitation à vérifier les champs. La lecture
+    // n'est jamais lancée d'ici. Le message vit dans [scope] : consommer l'indicateur relance cet
+    // effet, ce qui ne doit pas le retirer.
+    LaunchedEffect(session.mrzScanned) {
+        if (session.consumeMrzScanned()) {
+            keyboard?.hide()
+            focusManager.clearFocus()
+            scope.launch { snackbarHostState.showSnackbar(scannedMessage) }
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -99,10 +126,12 @@ fun HomeScreen(
                         onOpenTrustStore = onOpenTrustStore,
                         onOpenAbout = onOpenAbout,
                         onStartDemo = { startDemo(session, scope, onRead) },
+                        onSimulateMrzScan = { simulateMrzScan(session) },
                     )
                 },
             )
         },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { padding ->
         Column(
             modifier =
@@ -136,7 +165,12 @@ fun HomeScreen(
                 if (form.usesCan) {
                     CanFields(form = form, onCanChange = session::onCanChange)
                 } else {
-                    MrzFields(form = form, session = session, order = dateOrder)
+                    MrzFields(
+                        form = form,
+                        session = session,
+                        order = dateOrder,
+                        onScanMrz = onScanMrz.takeIf { hasCamera },
+                    )
                 }
                 Text(
                     text = stringResource(R.string.home_holder_notice),
@@ -176,11 +210,23 @@ private fun startDemo(
     }
 }
 
+/**
+ * Mode démo (APK de debug uniquement) : remplit le formulaire avec la MRZ de la CNIe simulée,
+ * comme le ferait l'écran de scan, et affiche le segment MRZ de l'onglet Carte d'identité.
+ */
+private fun simulateMrzScan(session: SessionViewModel) {
+    val fields = DemoMode.simulatedMrzScan() ?: return
+    session.selectTab(DocumentTab.ID_CARD)
+    session.selectIdCardKey(IdCardKey.MRZ)
+    session.onMrzScanned(fields)
+}
+
 @Composable
 private fun OverflowMenu(
     onOpenTrustStore: () -> Unit,
     onOpenAbout: () -> Unit,
     onStartDemo: () -> Unit,
+    onSimulateMrzScan: () -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
     Box {
@@ -208,6 +254,13 @@ private fun OverflowMenu(
                     onClick = {
                         expanded = false
                         onStartDemo()
+                    },
+                )
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.home_menu_demo_mrz_scan)) },
+                    onClick = {
+                        expanded = false
+                        onSimulateMrzScan()
                     },
                 )
             }
@@ -307,9 +360,25 @@ private fun MrzFields(
     form: AccessForm,
     session: SessionViewModel,
     order: DateOrder,
+    // Null si l'appareil n'a pas de caméra : le bouton de scan est alors absent.
+    onScanMrz: (() -> Unit)?,
 ) {
     val keyboard = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
+    if (onScanMrz != null) {
+        OutlinedButton(
+            onClick = onScanMrz,
+            modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
+        ) {
+            Icon(
+                imageVector = SceauIcons.PhotoCamera,
+                contentDescription = null,
+                modifier = Modifier.size(ButtonDefaults.IconSize),
+            )
+            Spacer(Modifier.width(ButtonDefaults.IconSpacing))
+            Text(stringResource(R.string.home_scan_mrz))
+        }
+    }
     OutlinedTextField(
         value = form.documentNumber,
         onValueChange = session::onDocumentNumberChange,

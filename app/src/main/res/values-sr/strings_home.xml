@@ -25,4 +25,7 @@
     <string name="home_nfc_settings">Отвори NFC подешавања</string>
     <string name="home_nfc_absent">Овај телефон нема NFC: не може да чита чип идентификационих докумената.</string>
     <string name="home_menu_demo">Симулирај француску личну карту (демо)</string>
+    <string name="home_scan_mrz">Скенирај MRZ</string>
+    <string name="home_mrz_scanned">MRZ је скенирана: проверите поља пре читања чипа</string>
+    <string name="home_menu_demo_mrz_scan">Симулирај скенирање MRZ-а (демо)</string>
 </resources>

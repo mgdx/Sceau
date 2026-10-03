@@ -25,4 +25,7 @@
     <string name="home_nfc_settings">Відкрити налаштування NFC</string>
     <string name="home_nfc_absent">Цей телефон не має NFC, тому не може зчитувати чип документів, що посвідчують особу.</string>
     <string name="home_menu_demo">Імітувати французьку ID-картку (демо)</string>
+    <string name="home_scan_mrz">Сканувати MRZ</string>
+    <string name="home_mrz_scanned">MRZ відскановано: перевірте поля, перш ніж зчитувати чип</string>
+    <string name="home_menu_demo_mrz_scan">Імітувати сканування MRZ (демо)</string>
 </resources>

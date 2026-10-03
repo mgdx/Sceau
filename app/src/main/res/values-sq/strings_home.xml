@@ -25,4 +25,7 @@
     <string name="home_nfc_settings">Hap cilësimet e NFC-së</string>
     <string name="home_nfc_absent">Ky telefon nuk ka NFC, prandaj nuk mund të lexojë çipin e dokumenteve të identitetit.</string>
     <string name="home_menu_demo">Simulo një letërnjoftim francez (demo)</string>
+    <string name="home_scan_mrz">Skano MRZ-në</string>
+    <string name="home_mrz_scanned">MRZ-ja u skanua: kontrollo fushat përpara se të lexosh çipin</string>
+    <string name="home_menu_demo_mrz_scan">Simulo një skanim të MRZ-së (demo)</string>
 </resources>

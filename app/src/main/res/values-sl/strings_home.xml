@@ -25,4 +25,7 @@
     <string name="home_nfc_settings">Odpri nastavitve NFC</string>
     <string name="home_nfc_absent">Ta telefon nima NFC-ja: ne more brati čipov osebnih dokumentov.</string>
     <string name="home_menu_demo">Simuliraj francosko osebno izkaznico (predstavitev)</string>
+    <string name="home_scan_mrz">Skeniraj MRZ</string>
+    <string name="home_mrz_scanned">MRZ je optično prebran: pred branjem čipa preverite polja</string>
+    <string name="home_menu_demo_mrz_scan">Simuliraj skeniranje MRZ (predstavitev)</string>
 </resources>

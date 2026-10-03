@@ -25,4 +25,7 @@
     <string name="home_nfc_settings">NFC ayarlarını aç</string>
     <string name="home_nfc_absent">Bu telefonda NFC yok: Kimlik belgelerinin çipini okuyamaz.</string>
     <string name="home_menu_demo">Fransız kimlik kartı simülasyonu (demo)</string>
+    <string name="home_scan_mrz">MRZ’yi tara</string>
+    <string name="home_mrz_scanned">MRZ tarandı: çipi okumadan önce alanları kontrol edin</string>
+    <string name="home_menu_demo_mrz_scan">MRZ taraması simülasyonu (demo)</string>
 </resources>

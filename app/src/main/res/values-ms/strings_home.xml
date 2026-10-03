@@ -25,4 +25,7 @@
     <string name="home_nfc_settings">Buka tetapan NFC</string>
     <string name="home_nfc_absent">Telefon ini tiada NFC: telefon ini tidak dapat membaca cip dokumen pengenalan.</string>
     <string name="home_menu_demo">Simulasikan CNIe (demo)</string>
+    <string name="home_scan_mrz">Imbas MRZ</string>
+    <string name="home_mrz_scanned">MRZ diimbas: semak medan sebelum membaca cip</string>
+    <string name="home_menu_demo_mrz_scan">Simulasikan imbasan MRZ (demo)</string>
 </resources>
