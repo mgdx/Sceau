@@ -9,6 +9,8 @@
     <string name="home_can_supporting">Numéro à 6 chiffres imprimé au recto de la carte</string>
     <string name="home_document_number_label">Numéro du document</string>
     <string name="home_document_number_supporting">Tel qu’imprimé sur la page d’identité, 9 caractères au plus</string>
+    <string name="home_mrz_label" translatable="false">MRZ</string>
+    <string name="home_document_number_supporting_id_card">Tel qu’imprimé sur la carte, 9 caractères au plus</string>
     <string name="home_date_of_birth_label">Date de naissance</string>
     <string name="home_date_of_expiry_label">Date d’expiration</string>
     <string name="home_date_day">JJ</string>

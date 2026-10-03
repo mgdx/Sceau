@@ -9,6 +9,7 @@
     <string name="home_can_supporting">印在卡片正面的 6 位數字（卡片存取碼）</string>
     <string name="home_document_number_label">證件號碼</string>
     <string name="home_document_number_supporting">與資料頁上印製的相同，最多 9 個字元</string>
+    <string name="home_document_number_supporting_id_card">與卡片上印製的相同，最多 9 個字元</string>
     <string name="home_date_of_birth_label">出生日期</string>
     <string name="home_date_of_expiry_label">效期截止日期</string>
     <string name="home_date_day">DD</string>

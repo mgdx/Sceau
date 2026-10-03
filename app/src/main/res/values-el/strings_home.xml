@@ -9,6 +9,7 @@
     <string name="home_can_supporting">Εξαψήφιος αριθμός τυπωμένος στην εμπρόσθια όψη της κάρτας</string>
     <string name="home_document_number_label">Αριθμός εγγράφου</string>
     <string name="home_document_number_supporting">Όπως είναι τυπωμένος στη σελίδα στοιχείων, έως 9 χαρακτήρες</string>
+    <string name="home_document_number_supporting_id_card">Όπως είναι τυπωμένος στην κάρτα, έως 9 χαρακτήρες</string>
     <string name="home_date_of_birth_label">Ημερομηνία γέννησης</string>
     <string name="home_date_of_expiry_label">Ημερομηνία λήξης</string>
     <string name="home_date_day">ΗΗ</string>

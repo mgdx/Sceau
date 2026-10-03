@@ -9,6 +9,7 @@
     <string name="home_can_supporting">Număr de 6 cifre tipărit pe fața cardului</string>
     <string name="home_document_number_label">Numărul documentului</string>
     <string name="home_document_number_supporting">Așa cum este tipărit pe pagina de date, maximum 9 caractere</string>
+    <string name="home_document_number_supporting_id_card">Așa cum este tipărit pe card, maximum 9 caractere</string>
     <string name="home_date_of_birth_label">Data nașterii</string>
     <string name="home_date_of_expiry_label">Data expirării</string>
     <string name="home_date_day">ZZ</string>

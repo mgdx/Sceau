@@ -9,6 +9,7 @@
     <string name="home_can_supporting">6-значный номер на лицевой стороне карты</string>
     <string name="home_document_number_label">Номер документа</string>
     <string name="home_document_number_supporting">Как на странице с данными владельца, не более 9 символов</string>
+    <string name="home_document_number_supporting_id_card">Как на карте, не более 9 символов</string>
     <string name="home_date_of_birth_label">Дата рождения</string>
     <string name="home_date_of_expiry_label">Дата окончания срока действия</string>
     <string name="home_date_day">ДД</string>

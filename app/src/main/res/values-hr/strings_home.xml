@@ -9,6 +9,7 @@
     <string name="home_can_supporting">Šesteroznamenkasti broj otisnut na prednjoj strani iskaznice</string>
     <string name="home_document_number_label">Broj isprave</string>
     <string name="home_document_number_supporting">Kako je otisnut na stranici s podacima, najviše 9 znakova</string>
+    <string name="home_document_number_supporting_id_card">Kako je otisnut na iskaznici, najviše 9 znakova</string>
     <string name="home_date_of_birth_label">Datum rođenja</string>
     <string name="home_date_of_expiry_label">Datum isteka</string>
     <string name="home_date_day">DD</string>

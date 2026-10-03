@@ -9,6 +9,7 @@
     <string name="home_can_supporting">Kaardi esiküljele trükitud 6-kohaline number</string>
     <string name="home_document_number_label">Dokumendi number</string>
     <string name="home_document_number_supporting">Nagu isikuandmete lehel, kuni 9 märki</string>
+    <string name="home_document_number_supporting_id_card">Nagu kaardil, kuni 9 märki</string>
     <string name="home_date_of_birth_label">Sünniaeg</string>
     <string name="home_date_of_expiry_label">Kehtiv kuni</string>
     <string name="home_date_day">PP</string>

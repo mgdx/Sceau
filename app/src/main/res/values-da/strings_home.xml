@@ -9,6 +9,7 @@
     <string name="home_can_supporting">6-cifret nummer trykt på kortets forside</string>
     <string name="home_document_number_label">Dokumentnummer</string>
     <string name="home_document_number_supporting">Som trykt på personsiden, højst 9 tegn</string>
+    <string name="home_document_number_supporting_id_card">Som trykt på kortet, højst 9 tegn</string>
     <string name="home_date_of_birth_label">Fødselsdato</string>
     <string name="home_date_of_expiry_label">Udløbsdato</string>
     <string name="home_date_day">DD</string>

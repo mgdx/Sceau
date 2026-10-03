@@ -9,6 +9,7 @@
     <string name="home_can_supporting">Шестцифрен број отпечатен на предната страна од картата</string>
     <string name="home_document_number_label">Број на документот</string>
     <string name="home_document_number_supporting">Како што е отпечатен на страницата со податоци, најмногу 9 знаци</string>
+    <string name="home_document_number_supporting_id_card">Како што е отпечатен на картата, најмногу 9 знаци</string>
     <string name="home_date_of_birth_label">Датум на раѓање</string>
     <string name="home_date_of_expiry_label">Датум на истекување</string>
     <string name="home_date_day">ДД</string>

@@ -9,6 +9,7 @@
     <string name="home_can_supporting">6 stafa númer prentað framan á kortið</string>
     <string name="home_document_number_label">Númer skilríkis</string>
     <string name="home_document_number_supporting">Eins og það er prentað á persónusíðuna, í mesta lagi 9 stafir</string>
+    <string name="home_document_number_supporting_id_card">Eins og það er prentað á kortið, í mesta lagi 9 stafir</string>
     <string name="home_date_of_birth_label">Fæðingardagur</string>
     <string name="home_date_of_expiry_label">Gildir til</string>
     <string name="home_date_day">DD</string>

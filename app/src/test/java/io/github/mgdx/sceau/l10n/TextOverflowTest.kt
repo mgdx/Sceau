@@ -58,6 +58,7 @@ import io.github.mgdx.sceau.demo.DemoMode
 import io.github.mgdx.sceau.session.DateOrder
 import io.github.mgdx.sceau.session.DatePart
 import io.github.mgdx.sceau.session.DocumentTab
+import io.github.mgdx.sceau.session.IdCardKey
 import io.github.mgdx.sceau.session.ReadState
 import io.github.mgdx.sceau.session.SessionViewModel
 import io.github.mgdx.sceau.testchip.SimulatedChip
@@ -227,6 +228,11 @@ class TextOverflowTest {
                 compose.onAllNodes(hasTextRes(R.string.home_menu_about), useUnmergedTree = true).fetchSemanticsNodes().isNotEmpty(),
             )
         })
+
+        setNfc(present = true, enabled = true)
+        session.selectIdCardKey(IdCardKey.MRZ)
+        render("Accueil, carte d'identité, MRZ", homeContent)
+        session.selectIdCardKey(IdCardKey.CAN)
 
         setNfc(present = false, enabled = false)
         session.selectTab(DocumentTab.PASSPORT)

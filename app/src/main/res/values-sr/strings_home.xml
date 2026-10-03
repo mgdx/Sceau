@@ -9,6 +9,7 @@
     <string name="home_can_supporting">Шестоцифрени број одштампан на предњој страни картице</string>
     <string name="home_document_number_label">Број документа</string>
     <string name="home_document_number_supporting">Како је одштампан на страни са личним подацима, највише 9 знакова</string>
+    <string name="home_document_number_supporting_id_card">Како је одштампан на картици, највише 9 знакова</string>
     <string name="home_date_of_birth_label">Датум рођења</string>
     <string name="home_date_of_expiry_label">Датум истека важења</string>
     <string name="home_date_day">ДД</string>

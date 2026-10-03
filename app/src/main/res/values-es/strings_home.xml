@@ -9,6 +9,7 @@
     <string name="home_can_supporting">Número de 6 cifras impreso en el anverso de la tarjeta</string>
     <string name="home_document_number_label">Número de documento</string>
     <string name="home_document_number_supporting">Tal como figura en la página de datos, 9 caracteres como máximo</string>
+    <string name="home_document_number_supporting_id_card">Tal como figura en la tarjeta, 9 caracteres como máximo</string>
     <string name="home_date_of_birth_label">Fecha de nacimiento</string>
     <string name="home_date_of_expiry_label">Fecha de caducidad</string>
     <string name="home_date_day">DD</string>

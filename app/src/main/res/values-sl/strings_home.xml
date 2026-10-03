@@ -9,6 +9,7 @@
     <string name="home_can_supporting">6-mestna številka, natisnjena na sprednji strani izkaznice</string>
     <string name="home_document_number_label">Številka dokumenta</string>
     <string name="home_document_number_supporting">Kot je natisnjena na strani z osebnimi podatki, največ 9 znakov</string>
+    <string name="home_document_number_supporting_id_card">Kot je natisnjena na izkaznici, največ 9 znakov</string>
     <string name="home_date_of_birth_label">Datum rojstva</string>
     <string name="home_date_of_expiry_label">Velja do</string>
     <string name="home_date_day">DD</string>

@@ -9,6 +9,7 @@
     <string name="home_can_supporting">Nombor 6 digit yang dicetak di bahagian depan kad</string>
     <string name="home_document_number_label">Nombor dokumen</string>
     <string name="home_document_number_supporting">Seperti yang dicetak pada halaman butiran peribadi, maksimum 9 aksara</string>
+    <string name="home_document_number_supporting_id_card">Seperti yang dicetak pada kad, maksimum 9 aksara</string>
     <string name="home_date_of_birth_label">Tarikh lahir</string>
     <string name="home_date_of_expiry_label">Tarikh tamat tempoh</string>
     <string name="home_date_day">HH</string>

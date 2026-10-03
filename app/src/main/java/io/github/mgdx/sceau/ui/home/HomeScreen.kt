@@ -28,6 +28,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -59,6 +62,7 @@ import io.github.mgdx.sceau.session.DateError
 import io.github.mgdx.sceau.session.DateOrder
 import io.github.mgdx.sceau.session.DatePart
 import io.github.mgdx.sceau.session.DocumentTab
+import io.github.mgdx.sceau.session.IdCardKey
 import io.github.mgdx.sceau.session.SessionViewModel
 import io.github.mgdx.sceau.ui.common.SceauIcons
 import kotlinx.coroutines.CoroutineScope
@@ -124,9 +128,13 @@ fun HomeScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 NfcBanner(nfc)
-                when (form.tab) {
-                    DocumentTab.PASSPORT -> MrzFields(form = form, session = session, order = dateOrder)
-                    DocumentTab.ID_CARD -> CanFields(form = form, onCanChange = session::onCanChange)
+                if (form.tab == DocumentTab.ID_CARD) {
+                    IdCardKeySelector(selected = form.idCardKey, onSelect = session::selectIdCardKey)
+                }
+                if (form.usesCan) {
+                    CanFields(form = form, onCanChange = session::onCanChange)
+                } else {
+                    MrzFields(form = form, session = session, order = dateOrder)
                 }
                 Text(
                     text = stringResource(R.string.home_holder_notice),
@@ -243,6 +251,33 @@ private fun openNfcSettings(context: Context) {
     }
 }
 
+/** Choix de la clé d'accès d'une carte d'identité : CAN (par défaut) ou MRZ (D31). */
+@Composable
+private fun IdCardKeySelector(
+    selected: IdCardKey,
+    onSelect: (IdCardKey) -> Unit,
+) {
+    val keys = IdCardKey.entries
+    SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
+        keys.forEachIndexed { index, key ->
+            SegmentedButton(
+                selected = key == selected,
+                onClick = { onSelect(key) },
+                shape = SegmentedButtonDefaults.itemShape(index = index, count = keys.size),
+            ) {
+                Text(
+                    stringResource(
+                        when (key) {
+                            IdCardKey.CAN -> R.string.home_can_label
+                            IdCardKey.MRZ -> R.string.home_mrz_label
+                        },
+                    ),
+                )
+            }
+        }
+    }
+}
+
 @Composable
 private fun CanFields(
     form: AccessForm,
@@ -277,7 +312,17 @@ private fun MrzFields(
         value = form.documentNumber,
         onValueChange = session::onDocumentNumberChange,
         label = { Text(stringResource(R.string.home_document_number_label)) },
-        supportingText = { Text(stringResource(R.string.home_document_number_supporting)) },
+        supportingText = {
+            Text(
+                stringResource(
+                    if (form.tab == DocumentTab.ID_CARD) {
+                        R.string.home_document_number_supporting_id_card
+                    } else {
+                        R.string.home_document_number_supporting
+                    },
+                ),
+            )
+        },
         singleLine = true,
         // Password : le clavier ne mémorise ni ne suggère la saisie.
         keyboardOptions =

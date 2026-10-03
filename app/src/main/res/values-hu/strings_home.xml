@@ -9,6 +9,7 @@
     <string name="home_can_supporting">A kártya előlapjára nyomtatott 6 jegyű szám</string>
     <string name="home_document_number_label">Okmányazonosító</string>
     <string name="home_document_number_supporting">Az adatoldalon feltüntetett módon, legfeljebb 9 karakter</string>
+    <string name="home_document_number_supporting_id_card">A kártyán feltüntetett módon, legfeljebb 9 karakter</string>
     <string name="home_date_of_birth_label">Születési idő</string>
     <string name="home_date_of_expiry_label">Érvényesség vége</string>
     <string name="home_date_day">NN</string>

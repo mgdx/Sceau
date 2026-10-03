@@ -9,6 +9,7 @@
     <string name="home_can_supporting">カード表面に印字された 6 桁の番号（カードアクセス番号）</string>
     <string name="home_document_number_label">文書番号</string>
     <string name="home_document_number_supporting">身分事項ページの印字どおり、9 文字以内</string>
+    <string name="home_document_number_supporting_id_card">カードの印字どおり、9 文字以内</string>
     <string name="home_date_of_birth_label">生年月日</string>
     <string name="home_date_of_expiry_label">有効期間満了日</string>
     <string name="home_date_day">DD</string>

@@ -9,6 +9,7 @@
     <string name="home_can_supporting">ბარათის წინა მხარეს დაბეჭდილი 6-ნიშნა ნომერი</string>
     <string name="home_document_number_label">დოკუმენტის ნომერი</string>
     <string name="home_document_number_supporting">ისე, როგორც მონაცემთა გვერდზეა დაბეჭდილი, მაქსიმუმ 9 სიმბოლო</string>
+    <string name="home_document_number_supporting_id_card">ისე, როგორც ბარათზეა დაბეჭდილი, მაქსიმუმ 9 სიმბოლო</string>
     <string name="home_date_of_birth_label">დაბადების თარიღი</string>
     <string name="home_date_of_expiry_label">მოქმედების ვადა</string>
     <string name="home_date_day">დდ</string>

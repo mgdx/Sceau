@@ -9,6 +9,7 @@
     <string name="home_can_supporting">Numero di 6 cifre stampato sul fronte della carta</string>
     <string name="home_document_number_label">Numero del documento</string>
     <string name="home_document_number_supporting">Come stampato sulla pagina dei dati, massimo 9 caratteri</string>
+    <string name="home_document_number_supporting_id_card">Come stampato sulla carta, massimo 9 caratteri</string>
     <string name="home_date_of_birth_label">Data di nascita</string>
     <string name="home_date_of_expiry_label">Data di scadenza</string>
     <string name="home_date_day">GG</string>

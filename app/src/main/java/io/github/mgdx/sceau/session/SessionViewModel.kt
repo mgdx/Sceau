@@ -96,6 +96,11 @@ class SessionViewModel(
         form = form.copy(tab = tab)
     }
 
+    /** Choix entre CAN et MRZ dans l'onglet Carte d'identité ; la saisie de l'autre clé est gardée. */
+    fun selectIdCardKey(key: IdCardKey) {
+        form = form.copy(idCardKey = key)
+    }
+
     fun onCanChange(input: String) {
         form = form.copy(can = AccessForm.filterCan(input))
     }
@@ -192,7 +197,7 @@ class SessionViewModel(
                     if (currentRead === token && _state.value is ReadState.Reading) {
                         currentRead = null
                         this@SessionViewModel.key = null
-                        form = AccessForm(tab = form.tab)
+                        form = AccessForm(tab = form.tab, idCardKey = form.idCardKey)
                         _state.value = ReadState.Done(report, isDemo)
                     } else {
                         report.wipe()

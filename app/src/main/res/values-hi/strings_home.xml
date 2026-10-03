@@ -9,6 +9,7 @@
     <string name="home_can_supporting">कार्ड के सामने की ओर छपा 6 अंकों का नंबर</string>
     <string name="home_document_number_label">दस्तावेज़ संख्या</string>
     <string name="home_document_number_supporting">पहचान वाले पेज पर जैसा छपा है, ज़्यादा से ज़्यादा 9 वर्ण</string>
+    <string name="home_document_number_supporting_id_card">कार्ड पर जैसा छपा है, ज़्यादा से ज़्यादा 9 वर्ण</string>
     <string name="home_date_of_birth_label">जन्म तिथि</string>
     <string name="home_date_of_expiry_label">समाप्ति तिथि</string>
     <string name="home_date_day">दद</string>

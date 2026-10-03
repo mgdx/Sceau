@@ -14,6 +14,12 @@ enum class DocumentTab {
     ID_CARD,
 }
 
+/** Clé d'accès saisie dans l'onglet Carte d'identité : le CAN par défaut, ou la MRZ (D31). */
+enum class IdCardKey {
+    CAN,
+    MRZ,
+}
+
 /** Partie d'une date saisie au clavier, avec son nombre de chiffres. */
 enum class DatePart(
     val length: Int,
@@ -78,6 +84,8 @@ enum class DateError {
  */
 class AccessForm(
     val tab: DocumentTab = DocumentTab.PASSPORT,
+    /** Clé choisie dans l'onglet Carte d'identité ; ignorée dans l'onglet Passeport. */
+    val idCardKey: IdCardKey = IdCardKey.CAN,
     /** CAN : uniquement des chiffres, au plus [CAN_LENGTH]. */
     val can: String = "",
     /** Numéro de document normalisé : A-Z et 0-9, au plus [DOCUMENT_NUMBER_MAX_LENGTH], sans `<`. */
@@ -93,36 +101,35 @@ class AccessForm(
         today: LocalDate = LocalDate.now(),
     ): Boolean = toAccessKey(order, today) != null
 
+    /** Vrai si l'onglet courant affiche le champ CAN, faux s'il affiche les champs de la MRZ. */
+    val usesCan: Boolean
+        get() = tab == DocumentTab.ID_CARD && idCardKey == IdCardKey.CAN
+
     /** Clé d'accès de l'onglet courant, ou null si la saisie est incomplète ou invalide. */
     fun toAccessKey(
         order: DateOrder,
         today: LocalDate = LocalDate.now(),
-    ): AccessKey? =
-        when (tab) {
-            DocumentTab.ID_CARD -> {
-                if (can.length == CAN_LENGTH) AccessKey.Can(can) else null
-            }
-
-            DocumentTab.PASSPORT -> {
-                val birth = validDateOfBirth(dateOfBirthDigits, order, today)
-                val expiry = validDateOfExpiry(dateOfExpiryDigits, order)
-                if (documentNumber.isNotEmpty() && birth != null && expiry != null) {
-                    AccessKey.Mrz(documentNumber, birth, expiry)
-                } else {
-                    null
-                }
-            }
+    ): AccessKey? {
+        if (usesCan) return if (can.length == CAN_LENGTH) AccessKey.Can(can) else null
+        val birth = validDateOfBirth(dateOfBirthDigits, order, today)
+        val expiry = validDateOfExpiry(dateOfExpiryDigits, order)
+        return if (documentNumber.isNotEmpty() && birth != null && expiry != null) {
+            AccessKey.Mrz(documentNumber, birth, expiry)
+        } else {
+            null
         }
+    }
 
     fun copy(
         tab: DocumentTab = this.tab,
+        idCardKey: IdCardKey = this.idCardKey,
         can: String = this.can,
         documentNumber: String = this.documentNumber,
         dateOfBirthDigits: String = this.dateOfBirthDigits,
         dateOfExpiryDigits: String = this.dateOfExpiryDigits,
-    ): AccessForm = AccessForm(tab, can, documentNumber, dateOfBirthDigits, dateOfExpiryDigits)
+    ): AccessForm = AccessForm(tab, idCardKey, can, documentNumber, dateOfBirthDigits, dateOfExpiryDigits)
 
-    override fun toString(): String = "AccessForm(tab=$tab, ***)"
+    override fun toString(): String = "AccessForm(tab=$tab, idCardKey=$idCardKey, ***)"
 
     companion object {
         const val CAN_LENGTH = 6

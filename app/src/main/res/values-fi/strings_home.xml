@@ -9,6 +9,7 @@
     <string name="home_can_supporting">Kortin etupuolelle painettu 6-numeroinen tunnus</string>
     <string name="home_document_number_label">Asiakirjan numero</string>
     <string name="home_document_number_supporting">Kuten henkilötietosivulla, enintään 9 merkkiä</string>
+    <string name="home_document_number_supporting_id_card">Kuten kortissa, enintään 9 merkkiä</string>
     <string name="home_date_of_birth_label">Syntymäaika</string>
     <string name="home_date_of_expiry_label">Voimassaolon päättymispäivä</string>
     <string name="home_date_day">PP</string>

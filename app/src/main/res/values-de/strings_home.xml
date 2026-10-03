@@ -9,6 +9,7 @@
     <string name="home_can_supporting">6-stellige Zugangsnummer (CAN) auf der Vorderseite der Karte</string>
     <string name="home_document_number_label">Dokumentennummer</string>
     <string name="home_document_number_supporting">Wie auf der Personaldatenseite aufgedruckt, höchstens 9 Zeichen</string>
+    <string name="home_document_number_supporting_id_card">Wie auf der Karte aufgedruckt, höchstens 9 Zeichen</string>
     <string name="home_date_of_birth_label">Geburtsdatum</string>
     <string name="home_date_of_expiry_label">Gültig bis</string>
     <string name="home_date_day">TT</string>

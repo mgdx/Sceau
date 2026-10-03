@@ -9,6 +9,7 @@
     <string name="home_can_supporting">מספר בן 6 ספרות המודפס בצד הקדמי של הכרטיס</string>
     <string name="home_document_number_label">מספר המסמך</string>
     <string name="home_document_number_supporting">כפי שמודפס בדף הפרטים, עד 9 תווים</string>
+    <string name="home_document_number_supporting_id_card">כפי שמודפס על הכרטיס, עד 9 תווים</string>
     <string name="home_date_of_birth_label">תאריך לידה</string>
     <string name="home_date_of_expiry_label">תאריך תפוגה</string>
     <string name="home_date_day">יי</string>

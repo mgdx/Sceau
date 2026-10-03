@@ -9,6 +9,7 @@
     <string name="home_can_supporting">6 skaitmenų numeris, išspausdintas kortelės priekinėje pusėje</string>
     <string name="home_document_number_label">Dokumento numeris</string>
     <string name="home_document_number_supporting">Kaip nurodyta asmens duomenų puslapyje, ne daugiau kaip 9 simboliai</string>
+    <string name="home_document_number_supporting_id_card">Kaip nurodyta kortelėje, ne daugiau kaip 9 simboliai</string>
     <string name="home_date_of_birth_label">Gimimo data</string>
     <string name="home_date_of_expiry_label">Galioja iki</string>
     <string name="home_date_day">DD</string>

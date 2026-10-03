@@ -9,6 +9,7 @@
     <string name="home_can_supporting">6 ciparu numurs, kas uzdrukāts apliecības priekšpusē</string>
     <string name="home_document_number_label">Dokumenta numurs</string>
     <string name="home_document_number_supporting">Kā norādīts datu lapā, ne vairāk kā 9 rakstzīmes</string>
+    <string name="home_document_number_supporting_id_card">Kā norādīts apliecībā, ne vairāk kā 9 rakstzīmes</string>
     <string name="home_date_of_birth_label">Dzimšanas datums</string>
     <string name="home_date_of_expiry_label">Derīguma termiņš</string>
     <string name="home_date_day">DD</string>

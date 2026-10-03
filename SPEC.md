@@ -67,7 +67,7 @@ Un document sans application ICAO (AID `A0 00 00 02 47 10 01`) est signalé « d
 Deux onglets en haut, le Passeport en premier et sélectionné à l'ouverture (D29) :
 
 - **Passeport** : trois champs, numéro de document (alphanumérique, majuscules forcées), date de naissance et date d'expiration. Le numéro de document est complété par des `<` à 9 caractères conformément à la MRZ. Dès que le huitième chiffre de la date d'expiration est tapé, le clavier se retire (D29).
-- **Carte d'identité** : champ CAN, clavier numérique, 6 chiffres, validation quand le champ est complet.
+- **Carte d'identité** : un sélecteur CAN / MRZ, sur CAN par défaut (D31). CAN : champ unique, clavier numérique, 6 chiffres, validation quand le champ est complet. MRZ : les trois champs de l'onglet Passeport, pour les cartes dont la puce n'accepte pas le CAN ou dont le CAN n'a pas 6 chiffres.
 
 Les deux dates se saisissent au clavier numérique (clavier de type mot de passe numérique, pour que le clavier du système n'apprenne ni ne suggère ces dates), en huit chiffres, sans sélecteur de date. Les séparateurs `/` s'affichent au fil de la frappe sans être stockés. L'ordre des champs suit le format de date court de la locale : JJ/MM/AAAA en français, MM/JJ/AAAA en anglais américain, jour, mois, année par défaut. Une date doit exister, la naissance ne pas dépasser aujourd'hui, l'expiration être postérieure à 1990 ; l'erreur s'affiche sous le champ et « Lire » reste inactif tant qu'une date est invalide (D10).
 

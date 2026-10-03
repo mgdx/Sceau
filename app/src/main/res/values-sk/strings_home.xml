@@ -9,6 +9,7 @@
     <string name="home_can_supporting">Šesťmiestne číslo vytlačené na prednej strane preukazu</string>
     <string name="home_document_number_label">Číslo dokladu</string>
     <string name="home_document_number_supporting">Ako je uvedené na údajovej strane, najviac 9 znakov</string>
+    <string name="home_document_number_supporting_id_card">Ako je uvedené na preukaze, najviac 9 znakov</string>
     <string name="home_date_of_birth_label">Dátum narodenia</string>
     <string name="home_date_of_expiry_label">Platnosť do</string>
     <string name="home_date_day">DD</string>

@@ -9,6 +9,7 @@
     <string name="home_can_supporting">Numër me 6 shifra i shtypur në pjesën e përparme të kartës</string>
     <string name="home_document_number_label">Numri i dokumentit</string>
     <string name="home_document_number_supporting">Siç është shtypur në faqen e të dhënave, deri në 9 karaktere</string>
+    <string name="home_document_number_supporting_id_card">Siç është shtypur në kartë, deri në 9 karaktere</string>
     <string name="home_date_of_birth_label">Datëlindja</string>
     <string name="home_date_of_expiry_label">Data e skadimit</string>
     <string name="home_date_day">DD</string>

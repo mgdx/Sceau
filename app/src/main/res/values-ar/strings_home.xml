@@ -9,6 +9,7 @@
     <string name="home_can_supporting">رقم من 6 أرقام مطبوع على وجه البطاقة</string>
     <string name="home_document_number_label">رقم الوثيقة</string>
     <string name="home_document_number_supporting">كما هو مطبوع في صفحة البيانات، 9 رموز كحد أقصى</string>
+    <string name="home_document_number_supporting_id_card">كما هو مطبوع على البطاقة، 9 رموز كحد أقصى</string>
     <string name="home_date_of_birth_label">تاريخ الميلاد</string>
     <string name="home_date_of_expiry_label">تاريخ الانتهاء</string>
     <string name="home_date_day">يوم</string>

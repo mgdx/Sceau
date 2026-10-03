@@ -9,6 +9,7 @@
     <string name="home_can_supporting">Uimhir 6 dhigit atá clóite ar aghaidh an chárta</string>
     <string name="home_document_number_label">Uimhir na cáipéise</string>
     <string name="home_document_number_supporting">Mar atá sí ar an leathanach sonraí, 9 gcarachtar ar a mhéad</string>
+    <string name="home_document_number_supporting_id_card">Mar atá sí ar an gcárta, 9 gcarachtar ar a mhéad</string>
     <string name="home_date_of_birth_label">Dáta breithe</string>
     <string name="home_date_of_expiry_label">Dáta éaga</string>
     <string name="home_date_day">LL</string>

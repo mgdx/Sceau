@@ -9,6 +9,7 @@
     <string name="home_can_supporting">6-digit number printed on the front of the card</string>
     <string name="home_document_number_label">Document number</string>
     <string name="home_document_number_supporting">As printed on the data page, up to 9 characters</string>
+    <string name="home_document_number_supporting_id_card">As printed on the card, up to 9 characters</string>
     <string name="home_date_of_birth_label">Date of birth</string>
     <string name="home_date_of_expiry_label">Expiry date</string>
     <string name="home_date_day">DD</string>

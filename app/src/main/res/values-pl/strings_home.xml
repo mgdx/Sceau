@@ -9,6 +9,7 @@
     <string name="home_can_supporting">6-cyfrowy numer wydrukowany na przedniej stronie dowodu</string>
     <string name="home_document_number_label">Numer dokumentu</string>
     <string name="home_document_number_supporting">Tak jak na stronie danych osobowych, maks. 9 znaków</string>
+    <string name="home_document_number_supporting_id_card">Tak jak na dowodzie, maks. 9 znaków</string>
     <string name="home_date_of_birth_label">Data urodzenia</string>
     <string name="home_date_of_expiry_label">Data ważności</string>
     <string name="home_date_day">DD</string>

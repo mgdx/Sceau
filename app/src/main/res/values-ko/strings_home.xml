@@ -9,6 +9,7 @@
     <string name="home_can_supporting">카드 앞면에 인쇄된 6자리 숫자(카드 액세스 번호)</string>
     <string name="home_document_number_label">문서 번호</string>
     <string name="home_document_number_supporting">신원 정보면에 인쇄된 그대로, 최대 9자</string>
+    <string name="home_document_number_supporting_id_card">카드에 인쇄된 그대로, 최대 9자</string>
     <string name="home_date_of_birth_label">생년월일</string>
     <string name="home_date_of_expiry_label">기간 만료일</string>
     <string name="home_date_day">DD</string>

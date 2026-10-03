@@ -9,6 +9,7 @@
     <string name="home_can_supporting">ตัวเลข 6 หลักที่พิมพ์อยู่ด้านหน้าบัตร</string>
     <string name="home_document_number_label">เลขที่เอกสาร</string>
     <string name="home_document_number_supporting">ตามที่พิมพ์ในหน้าข้อมูลส่วนตัว ไม่เกิน 9 ตัวอักษร</string>
+    <string name="home_document_number_supporting_id_card">ตามที่พิมพ์บนบัตร ไม่เกิน 9 ตัวอักษร</string>
     <string name="home_date_of_birth_label">วันเกิด</string>
     <string name="home_date_of_expiry_label">วันหมดอายุ</string>
     <string name="home_date_day">วว</string>

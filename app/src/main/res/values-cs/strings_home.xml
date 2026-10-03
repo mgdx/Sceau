@@ -9,6 +9,7 @@
     <string name="home_can_supporting">Šestimístné číslo vytištěné na přední straně průkazu</string>
     <string name="home_document_number_label">Číslo dokladu</string>
     <string name="home_document_number_supporting">Jak je uvedeno na datové stránce, nejvýše 9 znaků</string>
+    <string name="home_document_number_supporting_id_card">Jak je uvedeno na průkazu, nejvýše 9 znaků</string>
     <string name="home_date_of_birth_label">Datum narození</string>
     <string name="home_date_of_expiry_label">Platnost do</string>
     <string name="home_date_day">DD</string>

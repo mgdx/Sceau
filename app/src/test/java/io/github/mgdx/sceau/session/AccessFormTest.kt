@@ -29,6 +29,26 @@ class AccessFormTest {
     }
 
     @Test
+    fun `id card uses the can by default and the mrz when chosen`() {
+        val form =
+            AccessForm(
+                tab = DocumentTab.ID_CARD,
+                can = "123456",
+                documentNumber = "X1",
+                dateOfBirthDigits = "17051990",
+                dateOfExpiryDigits = "02012031",
+            )
+        assertEquals(IdCardKey.CAN, form.idCardKey)
+        assertTrue(form.toAccessKey(dmy, today) is AccessKey.Can)
+        val mrz = form.copy(idCardKey = IdCardKey.MRZ)
+        assertFalse(mrz.usesCan)
+        assertEquals("X1", (mrz.toAccessKey(dmy, today) as AccessKey.Mrz).documentNumber)
+        assertNull(mrz.copy(dateOfExpiryDigits = "0201203").toAccessKey(dmy, today))
+        // Dans l'onglet Passeport, le choix de la carte d'identité est sans effet.
+        assertTrue(form.copy(tab = DocumentTab.PASSPORT).toAccessKey(dmy, today) is AccessKey.Mrz)
+    }
+
+    @Test
     fun `document number is uppercased, stripped of filler and truncated to nine`() {
         assertEquals("AB123", AccessForm.normalizeDocumentNumber("ab 1-2<3"))
         assertEquals("ABCDEFGHI", AccessForm.normalizeDocumentNumber("abcdefghijk"))

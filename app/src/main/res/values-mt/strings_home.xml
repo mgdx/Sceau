@@ -9,6 +9,7 @@
     <string name="home_can_supporting">Numru ta’ 6 ċifri stampat fuq quddiem tal-karta</string>
     <string name="home_document_number_label">Numru tad-dokument</string>
     <string name="home_document_number_supporting">Kif stampat fuq il-paġna tad-data, massimu ta’ 9 karattri</string>
+    <string name="home_document_number_supporting_id_card">Kif stampat fuq il-karta, massimu ta’ 9 karattri</string>
     <string name="home_date_of_birth_label">Data tat-twelid</string>
     <string name="home_date_of_expiry_label">Data ta’ skadenza</string>
     <string name="home_date_day">JJ</string>

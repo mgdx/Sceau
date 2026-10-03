@@ -9,6 +9,7 @@
     <string name="home_can_supporting">Nummer van 6 cijfers op de voorkant van de kaart</string>
     <string name="home_document_number_label">Documentnummer</string>
     <string name="home_document_number_supporting">Zoals vermeld op de personaliapagina, maximaal 9 tekens</string>
+    <string name="home_document_number_supporting_id_card">Zoals vermeld op de kaart, maximaal 9 tekens</string>
     <string name="home_date_of_birth_label">Geboortedatum</string>
     <string name="home_date_of_expiry_label">Vervaldatum</string>
     <string name="home_date_day">DD</string>
