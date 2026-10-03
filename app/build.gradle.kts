@@ -121,6 +121,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(project(":mrz"))
 
     testImplementation(libs.junit)
     // Contrôle des débordements de texte dans toutes les langues (D28) : Robolectric et
