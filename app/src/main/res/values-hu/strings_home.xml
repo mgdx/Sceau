@@ -25,4 +25,7 @@
     <string name="home_nfc_settings">NFC-beállítások megnyitása</string>
     <string name="home_nfc_absent">Ez a telefon nem rendelkezik NFC-vel, ezért nem tudja olvasni a személyazonosító okmányok chipjét.</string>
     <string name="home_menu_demo">Francia személyi igazolvány szimulálása (demó)</string>
+    <string name="home_scan_mrz">MRZ beolvasása</string>
+    <string name="home_mrz_scanned">MRZ beolvasva: a chip olvasása előtt ellenőrizze a mezőket</string>
+    <string name="home_menu_demo_mrz_scan">MRZ-beolvasás szimulálása (demó)</string>
 </resources>

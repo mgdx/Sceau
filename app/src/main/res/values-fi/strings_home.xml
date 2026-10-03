@@ -25,4 +25,7 @@
     <string name="home_nfc_settings">Avaa NFC-asetukset</string>
     <string name="home_nfc_absent">Tässä puhelimessa ei ole NFC:tä, joten se ei voi lukea henkilöasiakirjojen sirua.</string>
     <string name="home_menu_demo">Simuloi ranskalainen henkilökortti (demo)</string>
+    <string name="home_scan_mrz">Skannaa MRZ</string>
+    <string name="home_mrz_scanned">MRZ skannattu: tarkista kentät ennen sirun lukemista</string>
+    <string name="home_menu_demo_mrz_scan">Simuloi MRZ:n skannaus (demo)</string>
 </resources>

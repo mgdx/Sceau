@@ -1,6 +1,7 @@
 package io.github.mgdx.sceau.session
 
 import io.github.mgdx.sceau.core.AccessKey
+import io.github.mgdx.sceau.mrz.MrzKeyFields
 import java.time.DateTimeException
 import java.time.LocalDate
 import java.time.chrono.IsoChronology
@@ -129,6 +130,29 @@ class AccessForm(
         dateOfExpiryDigits: String = this.dateOfExpiryDigits,
     ): AccessForm = AccessForm(tab, idCardKey, can, documentNumber, dateOfBirthDigits, dateOfExpiryDigits)
 
+    /**
+     * Formulaire rempli avec la MRZ lue par la caméra (D32) : numéro et dates remplacés, onglet,
+     * segment et CAN gardés. Les dates `AAMMJJ` deviennent [DATE_DIGITS] chiffres dans l'ordre
+     * [dateOrder] de la locale (D10) ; elles sont ensuite validées comme une saisie au clavier
+     * (une date inexistante reste affichée en erreur). Siècle de naissance : 20AA si la date ne
+     * dépasse pas [today], 19AA sinon ; expiration toujours en 20AA.
+     */
+    fun fillFromMrz(
+        fields: MrzKeyFields,
+        today: LocalDate,
+        dateOrder: DateOrder,
+    ): AccessForm {
+        val todayValue = today.year * 10_000 + today.monthValue * 100 + today.dayOfMonth
+        return copy(
+            documentNumber = normalizeDocumentNumber(fields.documentNumber),
+            dateOfBirthDigits =
+                mrzDateDigits(fields.dateOfBirth, dateOrder) { yy, mm, dd ->
+                    if ((2000 + yy) * 10_000 + mm * 100 + dd <= todayValue) 2000 + yy else 1900 + yy
+                },
+            dateOfExpiryDigits = mrzDateDigits(fields.dateOfExpiry, dateOrder) { yy, _, _ -> 2000 + yy },
+        )
+    }
+
     override fun toString(): String = "AccessForm(tab=$tab, idCardKey=$idCardKey, ***)"
 
     companion object {
@@ -140,6 +164,9 @@ class AccessForm(
 
         /** Aucun document ICAO lisible par NFC n'expire avant cette année. */
         const val MIN_EXPIRY_YEAR = 1990
+
+        /** Longueur d'une date de la MRZ (`AAMMJJ`). */
+        private const val MRZ_DATE_LENGTH = 6
 
         /** Ne garde que les chiffres ASCII, tronqués à [CAN_LENGTH]. */
         fun filterCan(input: String): String = input.filter { it in '0'..'9' }.take(CAN_LENGTH)
@@ -195,6 +222,29 @@ class AccessForm(
             if (digits.length < DATE_DIGITS) return null
             val date = parseDate(digits, order) ?: return DateError.INVALID
             return if (date.year < MIN_EXPIRY_YEAR) DateError.TOO_OLD else null
+        }
+
+        /**
+         * Date `AAMMJJ` de la MRZ en [DATE_DIGITS] chiffres dans l'ordre [order], l'année complète
+         * étant choisie par [fullYear] ; chaîne vide si [yymmdd] n'est pas fait de six chiffres.
+         */
+        private fun mrzDateDigits(
+            yymmdd: String,
+            order: DateOrder,
+            fullYear: (yy: Int, mm: Int, dd: Int) -> Int,
+        ): String {
+            if (yymmdd.length != MRZ_DATE_LENGTH || yymmdd.any { it !in '0'..'9' }) return ""
+            val yy = yymmdd.substring(0, 2).toInt()
+            val mm = yymmdd.substring(2, 4).toInt()
+            val dd = yymmdd.substring(4, 6).toInt()
+            val year = fullYear(yy, mm, dd)
+            return order.parts.joinToString("") { part ->
+                when (part) {
+                    DatePart.DAY -> "%02d".format(Locale.ROOT, dd)
+                    DatePart.MONTH -> "%02d".format(Locale.ROOT, mm)
+                    DatePart.YEAR -> "%04d".format(Locale.ROOT, year)
+                }
+            }
         }
 
         private fun validDateOfBirth(

@@ -25,4 +25,7 @@
     <string name="home_nfc_settings">Άνοιγμα ρυθμίσεων NFC</string>
     <string name="home_nfc_absent">Αυτό το τηλέφωνο δεν διαθέτει NFC: δεν μπορεί να διαβάσει το τσιπ των εγγράφων ταυτότητας.</string>
     <string name="home_menu_demo">Προσομοίωση γαλλικής ταυτότητας (επίδειξη)</string>
+    <string name="home_scan_mrz">Σάρωση MRZ</string>
+    <string name="home_mrz_scanned">Η MRZ σαρώθηκε: ελέγξτε τα πεδία πριν από την ανάγνωση του τσιπ</string>
+    <string name="home_menu_demo_mrz_scan">Προσομοίωση σάρωσης MRZ (επίδειξη)</string>
 </resources>

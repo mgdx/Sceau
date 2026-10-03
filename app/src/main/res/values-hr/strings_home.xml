@@ -25,4 +25,7 @@
     <string name="home_nfc_settings">Otvori postavke NFC-a</string>
     <string name="home_nfc_absent">Ovaj telefon nema NFC: ne može očitavati čipove identifikacijskih isprava.</string>
     <string name="home_menu_demo">Simuliraj francusku osobnu iskaznicu (demo)</string>
+    <string name="home_scan_mrz">Skeniraj MRZ</string>
+    <string name="home_mrz_scanned">MRZ je skeniran: provjerite polja prije očitavanja čipa</string>
+    <string name="home_menu_demo_mrz_scan">Simuliraj skeniranje MRZ-a (demo)</string>
 </resources>

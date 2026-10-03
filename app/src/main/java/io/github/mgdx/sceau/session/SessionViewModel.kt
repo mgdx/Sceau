@@ -27,6 +27,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.LocalDate
 
 /** État de la lecture, partagé entre les écrans Lecture et Résultat. */
 sealed interface ReadState {
@@ -121,12 +122,36 @@ class SessionViewModel(
     }
 
     /**
-     * MRZ reconnue par l'écran de scan (D32) : remplit le numéro et les deux dates du
-     * formulaire. Implémenté par le lot D.
+     * Vrai après un scan de la MRZ, jusqu'à ce que l'accueil l'ait pris en compte
+     * ([consumeMrzScanned]) : message invitant à vérifier les champs, clavier fermé.
      */
-    @Suppress("UNUSED_PARAMETER")
-    fun onMrzScanned(fields: MrzKeyFields) {
+    var mrzScanned: Boolean by mutableStateOf(false)
+        private set
+
+    /**
+     * Ordre de date de l'écran d'accueil, pour interpréter les dates scannées comme celles tapées
+     * au clavier ; à défaut, celui de la locale de l'application. Aucune donnée personnelle.
+     */
+    private var dateOrder: DateOrder? = null
+
+    /** Appelé par l'accueil avec l'ordre de date de sa locale (D10). */
+    fun onDateOrder(order: DateOrder) {
+        dateOrder = order
     }
+
+    /**
+     * MRZ reconnue par l'écran de scan (D32) : remplit le numéro et les deux dates du formulaire,
+     * qui suivent ensuite exactement les règles de la saisie au clavier (validation, oubli). Ne
+     * lance jamais la lecture : l'utilisateur vérifie les champs puis appuie sur « Lire ».
+     */
+    fun onMrzScanned(fields: MrzKeyFields) {
+        val order = dateOrder ?: DateOrder.forLocale(getApplication<Application>().resources.configuration.locales[0])
+        form = form.fillFromMrz(fields, LocalDate.now(), order)
+        mrzScanned = true
+    }
+
+    /** Vrai une seule fois après chaque [onMrzScanned]. */
+    fun consumeMrzScanned(): Boolean = mrzScanned.also { mrzScanned = false }
 
     /** Mémorise la clé pour la prochaine lecture et passe en WaitingForCard. */
     fun prepare(key: AccessKey) {
@@ -241,6 +266,7 @@ class SessionViewModel(
         (_state.value as? ReadState.Done)?.report?.wipe()
         key = null
         form = AccessForm()
+        mrzScanned = false
         _state.value = ReadState.Idle
         closeDisposables()
     }

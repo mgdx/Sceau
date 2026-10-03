@@ -25,4 +25,7 @@
     <string name="home_nfc_settings">Otwórz ustawienia NFC</string>
     <string name="home_nfc_absent">Ten telefon nie ma NFC: nie może odczytywać chipów dokumentów tożsamości.</string>
     <string name="home_menu_demo">Symuluj francuski dowód osobisty (demo)</string>
+    <string name="home_scan_mrz">Zeskanuj MRZ</string>
+    <string name="home_mrz_scanned">Zeskanowano MRZ: sprawdź pola przed odczytaniem chipu</string>
+    <string name="home_menu_demo_mrz_scan">Symuluj skanowanie MRZ (demo)</string>
 </resources>

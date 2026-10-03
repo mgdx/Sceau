@@ -25,4 +25,7 @@
     <string name="home_nfc_settings">Mở cài đặt NFC</string>
     <string name="home_nfc_absent">Điện thoại này không có NFC: không thể đọc chip của giấy tờ tùy thân.</string>
     <string name="home_menu_demo">Mô phỏng CNIe (bản minh họa)</string>
+    <string name="home_scan_mrz">Quét MRZ</string>
+    <string name="home_mrz_scanned">Đã quét MRZ: hãy kiểm tra các trường trước khi đọc chip</string>
+    <string name="home_menu_demo_mrz_scan">Mô phỏng quét MRZ (bản minh họa)</string>
 </resources>

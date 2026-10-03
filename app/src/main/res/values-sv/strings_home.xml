@@ -25,4 +25,7 @@
     <string name="home_nfc_settings">Öppna NFC-inställningarna</string>
     <string name="home_nfc_absent">Telefonen saknar NFC och kan inte läsa chippet i identitetshandlingar.</string>
     <string name="home_menu_demo">Simulera ett franskt id-kort (demo)</string>
+    <string name="home_scan_mrz">Skanna MRZ</string>
+    <string name="home_mrz_scanned">MRZ skannad: kontrollera fälten innan chippet läses</string>
+    <string name="home_menu_demo_mrz_scan">Simulera en MRZ-skanning (demo)</string>
 </resources>
