@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="scan_title">Skeniraj MRZ</string>
+    <string name="scan_back">Natrag</string>
+    <string name="scan_instruction">Postavite retke znakova na dnu stranice u okvir</string>
+    <string name="scan_status_searching">Traženje MRZ-a…</string>
+    <string name="scan_status_seen">MRZ pronađen, čitanje u tijeku. Držite ispravu mirno.</string>
+    <string name="scan_status_unsupported">Ovaj broj isprave predug je za automatsko čitanje. Unesite podatke ručno.</string>
+    <string name="scan_status_success">MRZ pročitan. Provjerite polja prije pokretanja čitanja.</string>
+    <string name="scan_camera_unavailable">Kamera nije dostupna. Podatke i dalje možete unijeti ručno.</string>
+    <string name="scan_torch_on">Uključi svjetiljku</string>
+    <string name="scan_torch_off">Isključi svjetiljku</string>
+    <string name="scan_permission_title">Pristup kameri</string>
+    <string name="scan_permission_denied">Sceau treba kameru za čitanje MRZ-a. Nijedna se slika ne sprema. Podatke i dalje možete unijeti ručno.</string>
+    <string name="scan_permission_permanently_denied">Pristup kameri je odbijen. Možete ga dopustiti u postavkama aplikacije. Podatke i dalje možete unijeti ručno.</string>
+    <string name="scan_permission_grant">Dopusti</string>
+    <string name="scan_open_settings">Otvori postavke</string>
+    <string name="scan_manual_entry">Unesi ručno</string>
+</resources>

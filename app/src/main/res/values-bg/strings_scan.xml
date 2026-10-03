@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="scan_title">Сканиране на MRZ</string>
+    <string name="scan_back">Назад</string>
+    <string name="scan_instruction">Поставете редовете знаци в долната част на страницата в рамката</string>
+    <string name="scan_status_searching">Търсене на MRZ…</string>
+    <string name="scan_status_seen">MRZ е открита, чете се. Дръжте документа неподвижно.</string>
+    <string name="scan_status_unsupported">Този номер на документ е твърде дълъг за автоматично четене. Въведете данните ръчно.</string>
+    <string name="scan_status_success">MRZ е прочетена. Проверете полетата, преди да започнете четенето.</string>
+    <string name="scan_camera_unavailable">Камерата не е налична. Все още можете да въведете данните ръчно.</string>
+    <string name="scan_torch_on">Включване на фенерчето</string>
+    <string name="scan_torch_off">Изключване на фенерчето</string>
+    <string name="scan_permission_title">Достъп до камерата</string>
+    <string name="scan_permission_denied">Sceau се нуждае от камерата, за да прочете MRZ. Не се запазват изображения. Все още можете да въведете данните ръчно.</string>
+    <string name="scan_permission_permanently_denied">Достъпът до камерата е отказан. Можете да го разрешите в настройките на приложението. Все още можете да въведете данните ръчно.</string>
+    <string name="scan_permission_grant">Разрешаване</string>
+    <string name="scan_open_settings">Отваряне на настройките</string>
+    <string name="scan_manual_entry">Ръчно въвеждане</string>
+</resources>

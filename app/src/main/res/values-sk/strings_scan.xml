@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="scan_title">Naskenovať MRZ</string>
+    <string name="scan_back">Späť</string>
+    <string name="scan_instruction">Umiestnite riadky znakov v dolnej časti strany do rámčeka</string>
+    <string name="scan_status_searching">Hľadá sa MRZ…</string>
+    <string name="scan_status_seen">MRZ nájdená, prebieha čítanie. Držte doklad v pokoji.</string>
+    <string name="scan_status_unsupported">Toto číslo dokladu je príliš dlhé na automatické čítanie. Zadajte údaje ručne.</string>
+    <string name="scan_status_success">MRZ načítaná. Pred spustením čítania skontrolujte polia.</string>
+    <string name="scan_camera_unavailable">Fotoaparát nie je k dispozícii. Údaje môžete stále zadať ručne.</string>
+    <string name="scan_torch_on">Zapnúť baterku</string>
+    <string name="scan_torch_off">Vypnúť baterku</string>
+    <string name="scan_permission_title">Prístup k fotoaparátu</string>
+    <string name="scan_permission_denied">Sceau potrebuje fotoaparát na čítanie MRZ. Neukladá sa žiadna snímka. Údaje môžete stále zadať ručne.</string>
+    <string name="scan_permission_permanently_denied">Prístup k fotoaparátu bol zamietnutý. Môžete ho povoliť v nastaveniach aplikácie. Údaje môžete stále zadať ručne.</string>
+    <string name="scan_permission_grant">Povoliť</string>
+    <string name="scan_open_settings">Otvoriť nastavenia</string>
+    <string name="scan_manual_entry">Zadať ručne</string>
+</resources>

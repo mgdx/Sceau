@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="scan_title">Nuskaityti MRZ</string>
+    <string name="scan_back">Atgal</string>
+    <string name="scan_instruction">Puslapio apačioje esančias simbolių eilutes įstatykite į rėmelį</string>
+    <string name="scan_status_searching">Ieškoma MRZ…</string>
+    <string name="scan_status_seen">MRZ rasta, skaitoma. Laikykite dokumentą nejudindami.</string>
+    <string name="scan_status_unsupported">Šis dokumento numeris per ilgas, kad būtų nuskaitytas automatiškai. Įveskite duomenis rankiniu būdu.</string>
+    <string name="scan_status_success">MRZ nuskaityta. Prieš pradėdami skaitymą patikrinkite laukus.</string>
+    <string name="scan_camera_unavailable">Fotoaparatas nepasiekiamas. Duomenis vis tiek galite įvesti rankiniu būdu.</string>
+    <string name="scan_torch_on">Įjungti žibintuvėlį</string>
+    <string name="scan_torch_off">Išjungti žibintuvėlį</string>
+    <string name="scan_permission_title">Prieiga prie fotoaparato</string>
+    <string name="scan_permission_denied">„Sceau“ reikia fotoaparato MRZ nuskaityti. Jokie vaizdai neišsaugomi. Duomenis vis tiek galite įvesti rankiniu būdu.</string>
+    <string name="scan_permission_permanently_denied">Prieiga prie fotoaparato atmesta. Ją galite leisti programos nustatymuose. Duomenis vis tiek galite įvesti rankiniu būdu.</string>
+    <string name="scan_permission_grant">Leisti</string>
+    <string name="scan_open_settings">Atidaryti nustatymus</string>
+    <string name="scan_manual_entry">Įvesti rankiniu būdu</string>
+</resources>

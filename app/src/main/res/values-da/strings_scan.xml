@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="scan_title">Scan MRZ</string>
+    <string name="scan_back">Tilbage</string>
+    <string name="scan_instruction">Placer tegnlinjerne nederst på siden i rammen</string>
+    <string name="scan_status_searching">Søger efter MRZ…</string>
+    <string name="scan_status_seen">MRZ fundet, læser. Hold dokumentet stille.</string>
+    <string name="scan_status_unsupported">Dette dokumentnummer er for langt til at blive læst automatisk. Indtast oplysningerne manuelt.</string>
+    <string name="scan_status_success">MRZ læst. Kontrollér felterne, før du starter læsningen.</string>
+    <string name="scan_camera_unavailable">Kameraet er ikke tilgængeligt. Du kan stadig indtaste oplysningerne manuelt.</string>
+    <string name="scan_torch_on">Tænd lommelygten</string>
+    <string name="scan_torch_off">Sluk lommelygten</string>
+    <string name="scan_permission_title">Kameraadgang</string>
+    <string name="scan_permission_denied">Sceau skal bruge kameraet til at læse MRZ. Der gemmes ingen billeder. Du kan stadig indtaste oplysningerne manuelt.</string>
+    <string name="scan_permission_permanently_denied">Adgang til kameraet er afvist. Du kan tillade det i appindstillingerne. Du kan stadig indtaste oplysningerne manuelt.</string>
+    <string name="scan_permission_grant">Tillad</string>
+    <string name="scan_open_settings">Åbn indstillinger</string>
+    <string name="scan_manual_entry">Indtast manuelt</string>
+</resources>

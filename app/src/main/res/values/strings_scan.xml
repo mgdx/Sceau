@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="scan_title">Scanner la MRZ</string>
+    <string name="scan_back">Retour</string>
+    <string name="scan_instruction">Placez la bande de caractères en bas de la page dans le cadre</string>
+    <string name="scan_status_searching">Recherche de la MRZ…</string>
+    <string name="scan_status_seen">MRZ repérée, lecture en cours. Gardez le document immobile.</string>
+    <string name="scan_status_unsupported">Ce numéro de document est trop long pour être lu automatiquement. Saisissez les données à la main.</string>
+    <string name="scan_status_success">MRZ lue. Vérifiez les champs avant de lancer la lecture.</string>
+    <string name="scan_camera_unavailable">Caméra indisponible. La saisie manuelle reste possible.</string>
+    <string name="scan_torch_on">Allumer la lampe torche</string>
+    <string name="scan_torch_off">Éteindre la lampe torche</string>
+    <string name="scan_permission_title">Accès à la caméra</string>
+    <string name="scan_permission_denied">Sceau a besoin de la caméra pour lire la MRZ. Aucune image n’est enregistrée. La saisie manuelle reste possible.</string>
+    <string name="scan_permission_permanently_denied">L’accès à la caméra est refusé. Vous pouvez l’autoriser dans les réglages de l’application. La saisie manuelle reste possible.</string>
+    <string name="scan_permission_grant">Autoriser</string>
+    <string name="scan_open_settings">Ouvrir les réglages</string>
+    <string name="scan_manual_entry">Saisie manuelle</string>
+</resources>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="scan_title">Skano MRZ-në</string>
+    <string name="scan_back">Prapa</string>
+    <string name="scan_instruction">Vendos brenda kornizës rreshtat e karaktereve në fund të faqes</string>
+    <string name="scan_status_searching">Po kërkohet MRZ-ja…</string>
+    <string name="scan_status_seen">MRZ-ja u gjet, po lexohet. Mbaje dokumentin të palëvizur.</string>
+    <string name="scan_status_unsupported">Ky numër dokumenti është shumë i gjatë për t’u lexuar automatikisht. Fut të dhënat me dorë.</string>
+    <string name="scan_status_success">MRZ-ja u lexua. Kontrollo fushat përpara se të nisësh leximin.</string>
+    <string name="scan_camera_unavailable">Kamera nuk ofrohet. Mund t’i futësh ende të dhënat me dorë.</string>
+    <string name="scan_torch_on">Ndize elektrikun e dorës</string>
+    <string name="scan_torch_off">Fike elektrikun e dorës</string>
+    <string name="scan_permission_title">Qasja te kamera</string>
+    <string name="scan_permission_denied">Sceau ka nevojë për kamerën për të lexuar MRZ-në. Asnjë imazh nuk ruhet. Mund t’i futësh ende të dhënat me dorë.</string>
+    <string name="scan_permission_permanently_denied">Qasja te kamera është refuzuar. Mund ta lejosh te cilësimet e aplikacionit. Mund t’i futësh ende të dhënat me dorë.</string>
+    <string name="scan_permission_grant">Lejo</string>
+    <string name="scan_open_settings">Hap cilësimet</string>
+    <string name="scan_manual_entry">Fut me dorë</string>
+</resources>

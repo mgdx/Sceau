@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="scan_title">Scanați MRZ</string>
+    <string name="scan_back">Înapoi</string>
+    <string name="scan_instruction">Încadrați rândurile de caractere din partea de jos a paginii</string>
+    <string name="scan_status_searching">Se caută MRZ…</string>
+    <string name="scan_status_seen">MRZ detectată, se citește. Țineți documentul nemișcat.</string>
+    <string name="scan_status_unsupported">Acest număr de document este prea lung pentru a fi citit automat. Introduceți datele manual.</string>
+    <string name="scan_status_success">MRZ citită. Verificați câmpurile înainte de a începe citirea.</string>
+    <string name="scan_camera_unavailable">Camera nu este disponibilă. Puteți introduce în continuare datele manual.</string>
+    <string name="scan_torch_on">Porniți lanterna</string>
+    <string name="scan_torch_off">Opriți lanterna</string>
+    <string name="scan_permission_title">Acces la cameră</string>
+    <string name="scan_permission_denied">Sceau are nevoie de cameră pentru a citi MRZ. Nu se salvează nicio imagine. Puteți introduce în continuare datele manual.</string>
+    <string name="scan_permission_permanently_denied">Accesul la cameră este refuzat. Îl puteți permite din setările aplicației. Puteți introduce în continuare datele manual.</string>
+    <string name="scan_permission_grant">Permiteți</string>
+    <string name="scan_open_settings">Deschideți setările</string>
+    <string name="scan_manual_entry">Introduceți manual</string>
+</resources>

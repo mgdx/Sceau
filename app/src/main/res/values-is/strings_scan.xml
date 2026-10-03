@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="scan_title">Skanna MRZ</string>
+    <string name="scan_back">Til baka</string>
+    <string name="scan_instruction">Settu stafalínurnar neðst á síðunni inn í rammann</string>
+    <string name="scan_status_searching">Leitar að MRZ…</string>
+    <string name="scan_status_seen">MRZ fundið, les. Haltu skilríkinu kyrru.</string>
+    <string name="scan_status_unsupported">Þetta skilríkisnúmer er of langt til að lesa það sjálfkrafa. Sláðu gögnin inn handvirkt.</string>
+    <string name="scan_status_success">MRZ lesið. Athugaðu reitina áður en þú hefur lesturinn.</string>
+    <string name="scan_camera_unavailable">Myndavél ekki tiltæk. Áfram er hægt að slá gögnin inn handvirkt.</string>
+    <string name="scan_torch_on">Kveikja á vasaljósi</string>
+    <string name="scan_torch_off">Slökkva á vasaljósi</string>
+    <string name="scan_permission_title">Aðgangur að myndavél</string>
+    <string name="scan_permission_denied">Sceau þarf myndavélina til að lesa MRZ. Engar myndir eru vistaðar. Áfram er hægt að slá gögnin inn handvirkt.</string>
+    <string name="scan_permission_permanently_denied">Aðgangi að myndavél var hafnað. Þú getur leyft hann í forritsstillingum. Áfram er hægt að slá gögnin inn handvirkt.</string>
+    <string name="scan_permission_grant">Leyfa</string>
+    <string name="scan_open_settings">Opna stillingar</string>
+    <string name="scan_manual_entry">Slá inn handvirkt</string>
+</resources>

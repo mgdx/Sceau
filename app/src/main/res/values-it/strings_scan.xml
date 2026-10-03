@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="scan_title">Scansiona la MRZ</string>
+    <string name="scan_back">Indietro</string>
+    <string name="scan_instruction">Inquadra nel riquadro le righe di caratteri in fondo alla pagina</string>
+    <string name="scan_status_searching">Ricerca della MRZ…</string>
+    <string name="scan_status_seen">MRZ rilevata, lettura in corso. Tieni fermo il documento.</string>
+    <string name="scan_status_unsupported">Questo numero di documento è troppo lungo per essere letto automaticamente. Inserisci i dati a mano.</string>
+    <string name="scan_status_success">MRZ letta. Controlla i campi prima di avviare la lettura.</string>
+    <string name="scan_camera_unavailable">Fotocamera non disponibile. Puoi comunque inserire i dati a mano.</string>
+    <string name="scan_torch_on">Accendi torcia</string>
+    <string name="scan_torch_off">Spegni torcia</string>
+    <string name="scan_permission_title">Accesso alla fotocamera</string>
+    <string name="scan_permission_denied">Sceau ha bisogno della fotocamera per leggere la MRZ. Nessuna immagine viene salvata. Puoi comunque inserire i dati a mano.</string>
+    <string name="scan_permission_permanently_denied">L’accesso alla fotocamera è stato negato. Puoi consentirlo nelle impostazioni dell’app. Puoi comunque inserire i dati a mano.</string>
+    <string name="scan_permission_grant">Consenti</string>
+    <string name="scan_open_settings">Apri impostazioni</string>
+    <string name="scan_manual_entry">Inserisci a mano</string>
+</resources>
