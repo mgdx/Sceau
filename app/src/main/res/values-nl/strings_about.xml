@@ -30,4 +30,6 @@
     <string name="about_usage_holder">Het uitlezen veronderstelt dat de houder het document zelf toont en daarmee instemt.</string>
     <string name="about_usage_biometrics">De foto wordt een biometrisch gegeven in de zin van de AVG als hij wordt gebruikt voor automatische gezichtsvergelijking. Sceau doet zo’n vergelijking niet en mag daar niet voor worden gebruikt zonder specifieke wettelijke grondslag.</string>
     <string name="about_usage_privacy">Er worden geen uitgelezen gegevens bewaard of verzonden: alles wordt uit het geheugen gewist wanneer je het resultaat verlaat of de app naar de achtergrond gaat.</string>
+    <string name="about_usage_no_warranty">Sceau wordt geleverd zonder enige garantie. Het resultaat gaat over de echtheid van de chip en van de gegevens die de staat van afgifte heeft ondertekend; het heeft geen bewijskracht en zegt niet of het document als verloren of gestolen is opgegeven.</string>
+    <string name="about_usage_not_official">Sceau is geen officieel hulpmiddel en geen gecertificeerde dienst voor identiteitsverificatie: het vervangt niet de identiteitscontroles die de regelgeving aan bepaalde beroepen oplegt.</string>
 </resources>

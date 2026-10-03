@@ -30,4 +30,6 @@
     <string name="about_usage_holder">Branje predpostavlja, da imetnik sam predloži svoj dokument in se z branjem strinja.</string>
     <string name="about_usage_biometrics">Fotografija postane biometrični podatek v smislu Splošne uredbe o varstvu podatkov, če se uporablja za samodejno primerjavo obrazov. Sceau takšne primerjave ne izvaja in se brez posebne pravne podlage ne sme uporabljati v ta namen.</string>
     <string name="about_usage_privacy">Noben prebran podatek se ne shrani ali pošlje: ko zapustite rezultat ali aplikacijo premaknete v ozadje, se vse izbriše iz pomnilnika.</string>
+    <string name="about_usage_no_warranty">Sceau je na voljo brez kakršne koli garancije. Rezultat se nanaša na pristnost čipa in podatkov, ki jih je podpisala država izdajateljica; nima dokazne vrednosti in ne pove, ali je bil dokument prijavljen kot izgubljen ali ukraden.</string>
+    <string name="about_usage_not_official">Sceau ni uradno orodje niti potrjena storitev za preverjanje identitete: ne nadomešča preverjanj identitete, ki jih predpisi nalagajo nekaterim poklicem.</string>
 </resources>

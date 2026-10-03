@@ -50,6 +50,8 @@ La photo stockée dans la puce est une donnée biométrique au sens du RGPD dès
 
 Le verdict de Sceau porte sur l'authenticité de la puce et des données signées par l'État émetteur ; il ne dit pas si le document a été déclaré perdu ou volé.
 
+Sceau est fourni sans aucune garantie (licence GPL, articles 15 et 16) et son verdict n'a pas valeur de preuve. Ce n'est ni un outil officiel, ni un service de vérification d'identité certifié : il ne remplace pas les contrôles d'identité qu'une réglementation impose à certaines professions (lutte contre le blanchiment, vérification d'identité à distance). Un professionnel qui l'utilise pour contrôler l'identité de ses clients devient responsable de ce traitement au sens du RGPD.
+
 ## Vie privée
 
 - Seule permission demandée : NFC. **Aucune permission réseau** : l'application ne peut rien envoyer.

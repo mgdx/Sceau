@@ -30,4 +30,6 @@
     <string name="about_usage_holder">Odczyt zakłada, że posiadacz sam okazuje swój dokument i wyraża na to zgodę.</string>
     <string name="about_usage_biometrics">Zdjęcie staje się daną biometryczną w rozumieniu RODO, jeśli służy do automatycznego porównywania twarzy. Sceau nie wykonuje takiego porównania i nie może być do tego używany bez odrębnej podstawy prawnej.</string>
     <string name="about_usage_privacy">Żadne odczytane dane nie są przechowywane ani wysyłane: wszystko jest usuwane z pamięci po zamknięciu wyniku lub przeniesieniu aplikacji w tło.</string>
+    <string name="about_usage_no_warranty">Sceau jest udostępniany bez żadnej gwarancji. Wynik dotyczy autentyczności chipu i danych podpisanych przez państwo wydające; nie ma mocy dowodowej i nie wskazuje, czy dokument został zgłoszony jako utracony lub skradziony.</string>
+    <string name="about_usage_not_official">Sceau nie jest narzędziem urzędowym ani certyfikowaną usługą weryfikacji tożsamości: nie zastępuje kontroli tożsamości, których przepisy wymagają od niektórych zawodów.</string>
 </resources>

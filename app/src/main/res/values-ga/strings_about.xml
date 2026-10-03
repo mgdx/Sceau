@@ -30,4 +30,6 @@
     <string name="about_usage_holder">Ní mór don sealbhóir féin an cháipéis a thaispeáint agus toiliú leis an léamh.</string>
     <string name="about_usage_biometrics">Is sonraí bithmhéadracha de réir bhrí an RGCS an grianghraf má úsáidtear é chun aghaidheanna a chur i gcomparáid go huathoibríoch. Ní dhéanann Sceau a leithéid de chomparáid, agus ní ceadmhach é a úsáid chuige sin gan bhunús dlí sonrach.</string>
     <string name="about_usage_privacy">Ní choinnítear ná ní sheoltar aon sonraí a léitear: scriostar gach rud ón gcuimhne nuair a fhágann tú an toradh nó nuair a chuireann tú an aip sa chúlra.</string>
+    <string name="about_usage_no_warranty">Cuirtear Sceau ar fáil gan baránta ar bith. Baineann an toradh le barántúlacht na sliseoige agus na sonraí atá sínithe ag an Stát eisiúna; níl feidhm cruthúnais leis agus ní léiríonn sé ar tuairiscíodh go raibh an doiciméad caillte nó goidte.</string>
+    <string name="about_usage_not_official">Ní uirlis oifigiúil ná seirbhís dheimhnithe fíoraithe aitheantais é Sceau: ní thagann sé in áit na seiceálacha aitheantais a éilíonn rialacháin ar ghairmeacha áirithe.</string>
 </resources>

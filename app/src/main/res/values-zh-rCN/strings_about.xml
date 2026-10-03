@@ -30,4 +30,6 @@
     <string name="about_usage_holder">读取的前提是持证人亲自出示证件并表示同意。</string>
     <string name="about_usage_biometrics">如果照片用于自动人脸比对，即属于《通用数据保护条例》（GDPR）所定义的生物特征数据。Sceau 不进行此类比对；在没有专门法律依据的情况下，不得将其用于此目的。</string>
     <string name="about_usage_privacy">读取的数据不会保存，也不会发送：退出结果页面或将应用切换到后台时，所有数据都会从内存中清除。</string>
+    <string name="about_usage_no_warranty">Sceau 不提供任何担保。其结果仅涉及芯片以及签发国所签名数据的真实性，不具有证明效力，也无法显示该证件是否已挂失或被报失窃。</string>
+    <string name="about_usage_not_official">Sceau 不是官方工具，也不是经认证的身份核验服务，不能替代法规要求某些行业进行的身份核验。</string>
 </resources>

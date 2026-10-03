@@ -30,4 +30,6 @@
     <string name="about_usage_holder">Læsningen forudsætter, at indehaveren selv fremviser sit dokument og giver samtykke.</string>
     <string name="about_usage_biometrics">Fotoet bliver til biometriske data i GDPR’s forstand, hvis det bruges til automatisk ansigtssammenligning. Sceau foretager ingen sådan sammenligning og må ikke bruges til det uden et særligt retsgrundlag.</string>
     <string name="about_usage_privacy">Ingen læste data gemmes eller sendes: alt slettes fra hukommelsen, når du forlader resultatet, eller når appen går i baggrunden.</string>
+    <string name="about_usage_no_warranty">Sceau leveres uden nogen form for garanti. Resultatet vedrører ægtheden af chippen og af de data, som den udstedende stat har signeret; det har ingen beviskraft og viser ikke, om dokumentet er meldt bortkommet eller stjålet.</string>
+    <string name="about_usage_not_official">Sceau er hverken et officielt værktøj eller en certificeret tjeneste til identitetskontrol: appen erstatter ikke de identitetskontroller, som lovgivningen pålægger visse erhverv.</string>
 </resources>

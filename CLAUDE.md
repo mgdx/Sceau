@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Jalons atteints (SPEC §11) : Socle, Lecture, Vérification et l'essentiel des Finitions (DG11/DG12, écran Magasin de confiance et import, À propos, effacement mémoire, `FLAG_SECURE`, traductions en-US). La lecture réelle d'un passeport français a été validée sur Fairphone 3 le 2026-09-25. Reste le jalon Publication (revue sécurité, plan de test complet sur appareil, première release, soumission F-Droid).
 
-`SPEC.md` est la source de vérité : lis-le en entier avant toute modification. Tout écart est consigné et justifié dans `docs/decisions.md` (D1 à D29 à ce jour). La documentation vit dans `docs/` : `architecture.md`, `protocol.md` (séquence ICAO réelle, délais, codes d'erreur), `trust-store.md`, `dependencies.md`, `test-plan.md`, `decisions.md`.
+`SPEC.md` est la source de vérité : lis-le en entier avant toute modification. Tout écart est consigné et justifié dans `docs/decisions.md` (D1 à D30 à ce jour). La documentation vit dans `docs/` : `architecture.md`, `protocol.md` (séquence ICAO réelle, délais, codes d'erreur), `trust-store.md`, `dependencies.md`, `test-plan.md`, `decisions.md`.
 
 ## Ce qu'est Sceau
 

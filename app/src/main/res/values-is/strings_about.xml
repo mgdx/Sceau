@@ -30,4 +30,6 @@
     <string name="about_usage_holder">Lesturinn gerir ráð fyrir að handhafinn framvísi skilríkjunum sjálfur og samþykki lesturinn.</string>
     <string name="about_usage_biometrics">Myndin verður að lífkennaupplýsingum í skilningi almennu persónuverndarreglugerðarinnar (GDPR) ef hún er notuð til sjálfvirks andlitssamanburðar. Sceau framkvæmir engan slíkan samanburð og má ekki nota forritið til þess án sérstakrar lagaheimildar.</string>
     <string name="about_usage_privacy">Engin lesin gögn eru geymd eða send: allt er hreinsað úr minninu þegar farið er af niðurstöðuskjánum eða forritið fer í bakgrunn.</string>
+    <string name="about_usage_no_warranty">Sceau er látið í té án nokkurrar ábyrgðar. Niðurstaðan varðar ósvikni kubbsins og gagnanna sem útgáfuríkið hefur undirritað; hún hefur ekkert sönnunargildi og segir ekki til um hvort tilkynnt hafi verið að skjalið sé glatað eða stolið.</string>
+    <string name="about_usage_not_official">Sceau er hvorki opinbert verkfæri né vottuð þjónusta til að staðfesta auðkenni: það kemur ekki í stað þeirra auðkennisathugana sem reglur leggja á tilteknar starfsstéttir.</string>
 </resources>

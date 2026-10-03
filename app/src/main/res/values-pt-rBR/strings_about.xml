@@ -30,4 +30,6 @@
     <string name="about_usage_holder">A leitura pressupõe que o titular apresente pessoalmente o próprio documento e concorde com ela.</string>
     <string name="about_usage_biometrics">A foto se torna um dado biométrico nos termos do RGPD se for usada em uma comparação facial automatizada. O Sceau não faz esse tipo de comparação e não deve ser usado para isso sem uma base legal específica.</string>
     <string name="about_usage_privacy">Nenhum dado lido é armazenado nem enviado: tudo é apagado da memória ao sair do resultado ou ao colocar o aplicativo em segundo plano.</string>
+    <string name="about_usage_no_warranty">O Sceau é fornecido sem nenhuma garantia. O resultado diz respeito à autenticidade do chip e dos dados assinados pelo Estado emissor; não tem valor de prova e não indica se o documento foi declarado perdido ou roubado.</string>
+    <string name="about_usage_not_official">O Sceau não é uma ferramenta oficial nem um serviço certificado de verificação de identidade: não substitui as verificações de identidade que a regulamentação exige de certas profissões.</string>
 </resources>

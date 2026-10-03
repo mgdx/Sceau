@@ -30,4 +30,6 @@
     <string name="about_usage_holder">Az olvasás feltétele, hogy a tulajdonos maga mutassa be az okmányát, és hozzájáruljon az olvasáshoz.</string>
     <string name="about_usage_biometrics">A fénykép a GDPR értelmében biometrikus adattá válik, ha automatizált arcösszehasonlításra használják. A Sceau nem végez ilyen összehasonlítást, és erre külön jogalap nélkül nem is használható.</string>
     <string name="about_usage_privacy">Az alkalmazás egyetlen beolvasott adatot sem tárol és nem küld el: az eredmény elhagyásakor vagy az alkalmazás háttérbe helyezésekor minden törlődik a memóriából.</string>
+    <string name="about_usage_no_warranty">A Sceau mindenféle garancia nélkül érhető el. Az eredmény a chip és a kibocsátó állam által aláírt adatok hitelességére vonatkozik; nincs bizonyító ereje, és nem mutatja meg, hogy a dokumentumot elveszettként vagy ellopottként jelentették-e be.</string>
+    <string name="about_usage_not_official">A Sceau nem hivatalos eszköz és nem tanúsított személyazonosság-ellenőrzési szolgáltatás: nem helyettesíti azokat a személyazonosság-ellenőrzéseket, amelyeket jogszabály ír elő egyes szakmák számára.</string>
 </resources>

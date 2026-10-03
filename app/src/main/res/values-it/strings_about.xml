@@ -30,4 +30,6 @@
     <string name="about_usage_holder">La lettura presuppone che il titolare presenti di persona il proprio documento e vi acconsenta.</string>
     <string name="about_usage_biometrics">La foto diventa un dato biometrico ai sensi del GDPR se viene usata per un confronto automatizzato dei volti. Sceau non effettua confronti di questo tipo e non deve essere usato a tale scopo senza una specifica base giuridica.</string>
     <string name="about_usage_privacy">Nessun dato letto viene conservato o inviato: tutto viene cancellato dalla memoria quando si esce dal risultato o si mette l’app in background.</string>
+    <string name="about_usage_no_warranty">Sceau è fornito senza alcuna garanzia. Il suo esito riguarda l’autenticità del chip e dei dati firmati dallo Stato emittente; non ha valore di prova e non indica se il documento è stato denunciato come smarrito o rubato.</string>
+    <string name="about_usage_not_official">Sceau non è uno strumento ufficiale né un servizio certificato di verifica dell’identità: non sostituisce i controlli d’identità che la normativa impone ad alcune professioni.</string>
 </resources>

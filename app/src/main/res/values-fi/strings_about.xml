@@ -30,4 +30,6 @@
     <string name="about_usage_holder">Lukeminen edellyttää, että haltija esittää asiakirjan itse ja antaa siihen suostumuksensa.</string>
     <string name="about_usage_biometrics">Kuvasta tulee tietosuoja-asetuksessa (GDPR) tarkoitettu biometrinen tieto, jos sitä käytetään automaattiseen kasvojen vertailuun. Sceau ei tee tällaista vertailua, eikä sitä saa käyttää siihen ilman erityistä oikeusperustetta.</string>
     <string name="about_usage_privacy">Luettuja tietoja ei tallenneta eikä lähetetä: kaikki poistetaan muistista, kun poistut tulosnäkymästä tai siirrät sovelluksen taustalle.</string>
+    <string name="about_usage_no_warranty">Sceau toimitetaan ilman minkäänlaista takuuta. Tulos koskee sirun ja myöntäjävaltion allekirjoittamien tietojen aitoutta; sillä ei ole todistusarvoa, eikä se kerro, onko asiakirja ilmoitettu kadonneeksi tai varastetuksi.</string>
+    <string name="about_usage_not_official">Sceau ei ole virallinen työkalu eikä sertifioitu henkilöllisyyden tarkistuspalvelu: se ei korvaa henkilöllisyyden tarkistuksia, joita säädökset edellyttävät tietyiltä ammateilta.</string>
 </resources>

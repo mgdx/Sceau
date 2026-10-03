@@ -30,4 +30,6 @@
     <string name="about_usage_holder">Avlesingen forutsetter at innehaveren selv viser frem dokumentet og samtykker.</string>
     <string name="about_usage_biometrics">Bildet blir en biometrisk opplysning etter GDPR (personvernforordningen) hvis det brukes til automatisk ansiktssammenligning. Sceau gjør ingen slik sammenligning og må ikke brukes til dette uten eget rettslig grunnlag.</string>
     <string name="about_usage_privacy">Ingen avleste data lagres eller sendes: alt slettes fra minnet når du forlater resultatet eller appen går i bakgrunnen.</string>
+    <string name="about_usage_no_warranty">Sceau leveres uten noen form for garanti. Resultatet gjelder ektheten til brikken og til dataene som den utstedende staten har signert; det har ingen bevisverdi og viser ikke om dokumentet er meldt tapt eller stjålet.</string>
+    <string name="about_usage_not_official">Sceau er verken et offisielt verktøy eller en sertifisert tjeneste for identitetskontroll: appen erstatter ikke identitetskontrollene som regelverket pålegger visse yrker.</string>
 </resources>

@@ -30,4 +30,6 @@
     <string name="about_usage_holder">Leximi supozon që mbajtësi e paraqet vetë dokumentin dhe jep pëlqimin.</string>
     <string name="about_usage_biometrics">Fotografia bëhet e dhënë biometrike sipas Rregullores së Përgjithshme për Mbrojtjen e të Dhënave (GDPR) nëse përdoret për krahasim të automatizuar të fytyrave. Sceau nuk bën një krahasim të tillë dhe nuk duhet përdorur për këtë qëllim pa një bazë ligjore të posaçme.</string>
     <string name="about_usage_privacy">Asnjë e dhënë e lexuar nuk ruhet as nuk dërgohet: gjithçka fshihet nga memoria kur del nga rezultati ose kur e kalon aplikacionin në sfond.</string>
+    <string name="about_usage_no_warranty">Sceau ofrohet pa asnjë garanci. Rezultati ka të bëjë me vërtetësinë e çipit dhe të të dhënave të nënshkruara nga shteti lëshues; nuk ka vlerë prove dhe nuk tregon nëse dokumenti është deklaruar i humbur ose i vjedhur.</string>
+    <string name="about_usage_not_official">Sceau nuk është mjet zyrtar dhe as shërbim i certifikuar për verifikimin e identitetit: nuk zëvendëson kontrollet e identitetit që rregulloret u kërkojnë disa profesioneve.</string>
 </resources>

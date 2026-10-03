@@ -30,4 +30,6 @@
     <string name="about_usage_holder">Nuskaityti galima tik tada, kai dokumentą pateikia pats turėtojas ir su tuo sutinka.</string>
     <string name="about_usage_biometrics">Nuotrauka tampa biometriniais duomenimis, kaip apibrėžta BDAR, jei naudojama automatiniam veidų palyginimui. Sceau tokio palyginimo neatlieka ir neturi būti tam naudojama be atskiro teisinio pagrindo.</string>
     <string name="about_usage_privacy">Jokie nuskaityti duomenys nesaugomi ir niekur nesiunčiami: išėjus iš rezultato ekrano arba perjungus programą į foninį režimą, viskas ištrinama iš atminties.</string>
+    <string name="about_usage_no_warranty">Sceau teikiama be jokių garantijų. Rezultatas susijęs su lusto ir išdavusios valstybės pasirašytų duomenų autentiškumu; jis neturi įrodomosios galios ir nerodo, ar apie dokumento praradimą ar vagystę buvo pranešta.</string>
+    <string name="about_usage_not_official">Sceau nėra nei oficiali priemonė, nei sertifikuota tapatybės tikrinimo paslauga: ji nepakeičia tapatybės patikrinimų, kuriuos teisės aktai nustato tam tikroms profesijoms.</string>
 </resources>

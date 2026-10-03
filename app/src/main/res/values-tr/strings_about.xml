@@ -30,4 +30,6 @@
     <string name="about_usage_holder">Okuma işlemi, belge sahibinin belgesini bizzat ibraz etmesini ve buna onay vermesini gerektirir.</string>
     <string name="about_usage_biometrics">Fotoğraf, otomatik yüz karşılaştırması için kullanılırsa Genel Veri Koruma Tüzüğü (GDPR) anlamında biyometrik veri hâline gelir. Sceau böyle bir karşılaştırma yapmaz ve buna özel bir hukuki dayanak olmadan bu amaçla kullanılmamalıdır.</string>
     <string name="about_usage_privacy">Okunan hiçbir veri saklanmaz veya gönderilmez: Sonuç ekranından çıkıldığında ya da uygulama arka plana alındığında tüm veriler bellekten silinir.</string>
+    <string name="about_usage_no_warranty">Sceau hiçbir garanti olmaksızın sunulur. Sonuç, çipin ve düzenleyen devlet tarafından imzalanan verilerin özgünlüğüyle ilgilidir; ispat değeri taşımaz ve belgenin kayıp ya da çalıntı olarak bildirilip bildirilmediğini göstermez.</string>
+    <string name="about_usage_not_official">Sceau resmî bir araç ya da sertifikalı bir kimlik doğrulama hizmeti değildir: mevzuatın bazı meslekler için zorunlu kıldığı kimlik kontrollerinin yerini tutmaz.</string>
 </resources>

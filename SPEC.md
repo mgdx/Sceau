@@ -257,7 +257,7 @@ Ces limites sont affichées dans l'écran « À propos ».
   - Les décodages sont sérialisés, jamais en parallèle (audit V4). Un décodage refusé donne une image absente, jamais un plantage.
 - Aucune télémétrie, aucun rapport de plantage, aucune bibliothèque d'analyse.
 - Le nonce d'Active Authentication est tiré d'un `SecureRandom`.
-- Le README et l'écran « À propos » rappellent le cadre d'usage : la lecture suppose que le titulaire présente lui-même son document. La photo est une donnée biométrique au sens du RGPD si elle sert à une comparaison automatisée, ce que Sceau ne fait pas et ne doit pas faire sans base légale dédiée.
+- Le README et l'écran « À propos » rappellent le cadre d'usage : la lecture suppose que le titulaire présente lui-même son document. La photo est une donnée biométrique au sens du RGPD si elle sert à une comparaison automatisée, ce que Sceau ne fait pas et ne doit pas faire sans base légale dédiée. Ils précisent aussi que Sceau est fourni sans garantie, que son verdict n'a pas valeur de preuve et ne dit pas si le document a été déclaré perdu ou volé, et que Sceau n'est ni un outil officiel ni un service de vérification d'identité certifié (D30).
 - La revue de sécurité du code (skill `android-securite`) est passée avant chaque release ; son rapport est versé dans `docs/audit-securite-<date>.md`.
 
 ## 9. Tests

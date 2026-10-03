@@ -30,4 +30,6 @@
     <string name="about_usage_holder">Nolasīšana paredz, ka dokumenta turētājs pats uzrāda savu dokumentu un tam piekrīt.</string>
     <string name="about_usage_biometrics">Fotoattēls kļūst par biometriskajiem datiem VDAR izpratnē, ja to izmanto automatizētai seju salīdzināšanai. Sceau šādu salīdzināšanu neveic, un to nedrīkst šim nolūkam izmantot bez atbilstoša juridiskā pamata.</string>
     <string name="about_usage_privacy">Nolasītie dati netiek ne saglabāti, ne nosūtīti: viss tiek dzēsts no atmiņas, izejot no rezultāta vai pārslēdzot lietotni fonā.</string>
+    <string name="about_usage_no_warranty">Sceau tiek nodrošināta bez jebkādas garantijas. Rezultāts attiecas uz mikroshēmas un izdevējvalsts parakstīto datu autentiskumu; tam nav pierādījuma spēka, un tas nenorāda, vai par dokumenta nozaudēšanu vai zādzību ir paziņots.</string>
+    <string name="about_usage_not_official">Sceau nav oficiāls rīks un nav sertificēts identitātes pārbaudes pakalpojums: tā neaizstāj identitātes pārbaudes, ko normatīvie akti nosaka noteiktām profesijām.</string>
 </resources>

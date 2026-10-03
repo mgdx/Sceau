@@ -30,4 +30,6 @@
     <string name="about_usage_holder">Il-qari jippresupponi li d-detentur stess jippreżenta d-dokument u jagħti l-kunsens għalih.</string>
     <string name="about_usage_biometrics">Ir-ritratt isir data bijometrika skont il-GDPR jekk jintuża għal tqabbil awtomatizzat tal-uċuħ. Sceau ma jagħmilx tqabbil bħal dan u ma għandux jintuża għal dan l-iskop mingħajr bażi legali speċifika.</string>
     <string name="about_usage_privacy">L-ebda data moqrija ma tinżamm jew tintbagħat: kollox jitħassar mill-memorja meta toħroġ mir-riżultat jew meta tpoġġi l-app fl-isfond.</string>
+    <string name="about_usage_no_warranty">Sceau huwa pprovdut mingħajr ebda garanzija. Ir-riżultat jirrigwarda l-awtentiċità taċ-ċippa u tad-data ffirmata mill-Istat li ħareġ id-dokument; m’għandux valur ta’ prova u ma jindikax jekk id-dokument ġiex irrappurtat mitluf jew misruq.</string>
+    <string name="about_usage_not_official">Sceau mhuwiex għodda uffiċjali u lanqas servizz ċertifikat ta’ verifika tal-identità: ma jissostitwixxix il-kontrolli tal-identità li r-regolamenti jimponu fuq ċerti professjonijiet.</string>
 </resources>

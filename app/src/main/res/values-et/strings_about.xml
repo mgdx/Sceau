@@ -30,4 +30,6 @@
     <string name="about_usage_holder">Lugemine eeldab, et dokumendi kasutaja esitab oma dokumendi ise ja on lugemisega nõus.</string>
     <string name="about_usage_biometrics">Foto muutub isikuandmete kaitse üldmääruse (IKÜM) tähenduses biomeetriliseks andmeks, kui seda kasutatakse nägude automaatseks võrdlemiseks. Sceau sellist võrdlust ei tee ja seda ei tohi selleks kasutada ilma konkreetse õigusliku aluseta.</string>
     <string name="about_usage_privacy">Loetud andmeid ei salvestata ega saadeta: kõik kustutatakse mälust, kui lahkute tulemuse ekraanilt või viite rakenduse taustale.</string>
+    <string name="about_usage_no_warranty">Sceau on saadaval ilma igasuguse garantiita. Tulemus puudutab kiibi ja väljaandnud riigi allkirjastatud andmete ehtsust; sellel ei ole tõendusjõudu ja see ei näita, kas dokument on kadunuks või varastatuks teatatud.</string>
+    <string name="about_usage_not_official">Sceau ei ole ametlik tööriist ega sertifitseeritud isikutuvastusteenus: see ei asenda isikusamasuse kontrolle, mida õigusaktid teatud ametitelt nõuavad.</string>
 </resources>

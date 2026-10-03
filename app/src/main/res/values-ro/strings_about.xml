@@ -30,4 +30,6 @@
     <string name="about_usage_holder">Citirea presupune că titularul își prezintă personal documentul și își dă consimțământul.</string>
     <string name="about_usage_biometrics">Fotografia devine o dată biometrică în sensul GDPR dacă este folosită pentru o comparare automată a fețelor. Sceau nu face astfel de comparări și nu trebuie folosit în acest scop fără un temei juridic specific.</string>
     <string name="about_usage_privacy">Nicio dată citită nu este păstrată sau trimisă: totul este șters din memorie la ieșirea din rezultat sau la trecerea aplicației în fundal.</string>
+    <string name="about_usage_no_warranty">Sceau este oferit fără nicio garanție. Rezultatul privește autenticitatea cipului și a datelor semnate de statul emitent; nu are valoare de probă și nu arată dacă documentul a fost declarat pierdut sau furat.</string>
+    <string name="about_usage_not_official">Sceau nu este un instrument oficial și nici un serviciu certificat de verificare a identității: nu înlocuiește verificările de identitate pe care reglementările le impun anumitor profesii.</string>
 </resources>

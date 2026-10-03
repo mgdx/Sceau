@@ -154,6 +154,8 @@ fun AboutScreen(
                 Paragraph(stringResource(R.string.about_usage_holder))
                 Paragraph(stringResource(R.string.about_usage_biometrics))
                 Paragraph(stringResource(R.string.about_usage_privacy))
+                Paragraph(stringResource(R.string.about_usage_no_warranty))
+                Paragraph(stringResource(R.string.about_usage_not_official))
             }
         }
     }

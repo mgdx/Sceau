@@ -30,4 +30,6 @@
     <string name="about_usage_holder">Bacaan hanya boleh dibuat apabila pemegang sendiri menunjukkan dokumennya dan memberikan persetujuan.</string>
     <string name="about_usage_biometrics">Foto menjadi data biometrik di bawah GDPR jika digunakan untuk perbandingan wajah secara automatik. Sceau tidak membuat perbandingan sedemikian dan tidak boleh digunakan untuk tujuan itu tanpa asas undang-undang yang khusus.</string>
     <string name="about_usage_privacy">Tiada data yang dibaca disimpan atau dihantar: semuanya dipadamkan daripada memori apabila anda keluar dari keputusan atau apabila apl beralih ke latar belakang.</string>
+    <string name="about_usage_no_warranty">Sceau disediakan tanpa sebarang jaminan. Keputusannya berkaitan dengan kesahihan cip dan data yang ditandatangani oleh negara pengeluar; ia tidak mempunyai nilai sebagai bukti dan tidak menunjukkan sama ada dokumen telah dilaporkan hilang atau dicuri.</string>
+    <string name="about_usage_not_official">Sceau bukan alat rasmi dan bukan perkhidmatan pengesahan identiti yang diperakui: ia tidak menggantikan semakan identiti yang diwajibkan oleh peraturan bagi profesion tertentu.</string>
 </resources>

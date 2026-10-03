@@ -370,3 +370,14 @@ Format : date, contexte, décision, justification, écart à la SPEC concerné.
   - onglet Passeport à gauche et sélectionné par défaut (`DocumentTab.PASSPORT` en tête de l'énumération, valeur par défaut d'`AccessForm`) ;
   - quand la date d'expiration atteint ses 8 chiffres, le clavier est masqué et le focus retiré, que la date soit valide ou non (une erreur reste affichée sous le champ). Seul le passage à 8 chiffres le déclenche : corriger un chiffre d'une date déjà complète ne referme pas le clavier en pleine saisie.
 - **Écart à la SPEC** : §5.1 mise à jour.
+
+## D30. Mentions de responsabilité dans l'écran À propos
+
+- **Date** : 2026-10-04.
+- **Contexte** : un utilisateur peut se fier au verdict « Authentique » pour conclure une transaction, ou un professionnel l'employer à la place d'un contrôle d'identité réglementé. Le README disait déjà que le verdict ne couvre pas la déclaration de perte ou de vol ; l'application ne le disait pas, et rien ne rappelait l'absence de garantie de la GPL.
+- **Décision** : deux paragraphes ajoutés à la section « Cadre d'usage » de l'écran À propos, dans les 45 langues :
+  - `about_usage_no_warranty` : Sceau est fourni sans aucune garantie ; le verdict porte sur l'authenticité de la puce et des données signées par l'État émetteur, n'a pas valeur de preuve et ne dit pas si le document a été déclaré perdu ou volé ;
+  - `about_usage_not_official` : Sceau n'est ni un outil officiel, ni un service de vérification d'identité certifié, et ne remplace pas les contrôles d'identité qu'une réglementation impose à certaines professions.
+  Le README reprend ces points et ajoute qu'un professionnel qui contrôle ses clients avec Sceau devient responsable de ce traitement au sens du RGPD.
+- **Justification** : l'exclusion de garantie de la GPL (articles 15 et 16) n'est visible que dans la licence ; la rappeler à l'écran, à côté du cadre d'usage, limite le risque qu'un verdict soit pris pour une attestation. Les traductions n'ont pas été relues par des locuteurs natifs.
+- **Écart à la SPEC** : §8, cadre d'usage, complété.

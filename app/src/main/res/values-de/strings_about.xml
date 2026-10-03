@@ -30,4 +30,6 @@
     <string name="about_usage_holder">Das Auslesen setzt voraus, dass die Inhaberin oder der Inhaber das Dokument selbst vorlegt und einwilligt.</string>
     <string name="about_usage_biometrics">Das Foto wird zu einem biometrischen Datum im Sinne der DSGVO, wenn es für einen automatisierten Gesichtsabgleich verwendet wird. Sceau führt keinen solchen Abgleich durch und darf ohne eigene Rechtsgrundlage nicht dafür verwendet werden.</string>
     <string name="about_usage_privacy">Ausgelesene Daten werden weder gespeichert noch gesendet: Beim Verlassen des Ergebnisses oder wenn die App in den Hintergrund wechselt, wird alles aus dem Arbeitsspeicher gelöscht.</string>
+    <string name="about_usage_no_warranty">Sceau wird ohne jede Gewährleistung bereitgestellt. Das Ergebnis betrifft die Echtheit des Chips und der vom ausstellenden Staat signierten Daten; es hat keine Beweiskraft und sagt nicht aus, ob das Dokument als verloren oder gestohlen gemeldet wurde.</string>
+    <string name="about_usage_not_official">Sceau ist weder ein amtliches Werkzeug noch ein zertifizierter Dienst zur Identitätsprüfung: Es ersetzt nicht die Identitätsprüfungen, die bestimmten Berufen gesetzlich vorgeschrieben sind.</string>
 </resources>
