@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="learn_intro_skip">Praleisti įvadą</string>
+    <string name="learn_intro_previous">Atgal</string>
+    <string name="learn_intro_next">Toliau</string>
+    <string name="learn_intro_start">Pradėti</string>
+    <string name="learn_intro_page">Puslapis %1$d iš %2$d</string>
+
+    <string name="learn_intro_chip_title">Lustas jūsų dokumente</string>
+    <string name="learn_intro_chip_body">Biometriniuose pasuose ir naujesnėse asmens tapatybės kortelėse yra bekontaktis lustas, atitinkantis tarptautinį standartą ICAO 9303.</string>
+    <string name="learn_intro_chip_icao">ICAO: Tarptautinė civilinės aviacijos organizacija, nustatanti kelionės dokumentų taisykles.</string>
+    <string name="learn_intro_chip_copy">Luste saugoma išspausdintos informacijos ir nuotraukos kopija, elektroniniu būdu pasirašyta dokumentą išdavusios valstybės.</string>
+
+    <string name="learn_intro_key_title">Raktas lustui atverti</string>
+    <string name="learn_intro_key_body">Be rakto lustas atsisako atsakyti. Raktas išspausdintas dokumente:</string>
+    <string name="learn_intro_key_can">CAN: 6 skaitmenų prieigos numeris, išspausdintas daugumos naujesnių asmens tapatybės kortelių priekinėje pusėje.</string>
+    <string name="learn_intro_key_mrz">MRZ: simbolių eilutės paso nuotraukos puslapio apačioje arba kortelės kitoje pusėje, iš kurių paimamas dokumento numeris, gimimo data ir galiojimo pabaigos data.</string>
+    <string name="learn_intro_key_channel">Vėliau visi duomenys perduodami šifruotu kanalu (PACE arba BAC – standarte numatyti protokolai): netoliese esantis asmuo, kuris nežino šio rakto, negali jų perskaityti.</string>
+
+    <string name="learn_intro_verify_title">Ką tikrina Sceau</string>
+    <string name="learn_intro_verify_signature">Valstybės parašą (Passive Authentication), remiantis į programą įtrauktais arba jūsų importuotais šalių sertifikatais.</string>
+    <string name="learn_intro_verify_clone">Ar lustas nėra kopija (Chip Authentication arba Active Authentication): jis turi įrodyti, kad turi slaptą raktą, kurio niekada neatskleidžia.</string>
+    <string name="learn_intro_verify_verdicts">Rezultatas – vienas iš keturių įvertinimų:</string>
+
+    <string name="learn_intro_privacy_title">Jūsų duomenys lieka čia</string>
+    <string name="learn_intro_privacy_offline">Viskas vyksta telefone: Sceau net neturi leidimo jungtis prie interneto.</string>
+    <string name="learn_intro_privacy_nothing_saved">Niekas neįrašoma: nuskaityti duomenys ištrinami, vos tik išeinate iš rezultato ekrano arba programa perjungiama į foninį režimą.</string>
+    <string name="learn_intro_privacy_screenshots">Ekrano kopijos užblokuotos visoje programoje.</string>
+
+    <string name="learn_about_section">Susipažinkite su Sceau</string>
+    <string name="learn_about_replay_intro">Peržiūrėti įvadą dar kartą</string>
+
+    <string name="learn_chip_title">Kas yra luste</string>
+    <string name="learn_chip_back">Atgal</string>
+    <string name="learn_chip_intro">Lustas informaciją saugo failuose: duomenų grupėse (DG1, DG2…) ir keliuose techniniuose failuose, kurių pavadinimas prasideda EF. Štai ką su jais daro Sceau.</string>
+
+    <string name="learn_chip_section_displayed">Nuskaitoma ir rodoma</string>
+    <string name="learn_chip_dg1">MRZ duomenys: dokumento tipas, pavardė, vardai, pilietybė, gimimo data, lytis, dokumento numeris, išdavusi valstybė ir galiojimo pabaigos data.</string>
+    <string name="learn_chip_dg2">Turėtojo nuotrauka.</string>
+    <string name="learn_chip_dg11">Jei valstybė juos įrašo: papildoma asmens informacija, pavyzdžiui, gimimo vieta ar adresas.</string>
+    <string name="learn_chip_dg12">Jei valstybė juos įrašo: informacija apie dokumentą, pavyzdžiui, išdavusi institucija ir išdavimo data, kartais dokumento atvaizdas.</string>
+
+    <string name="learn_chip_section_verification">Nuskaitoma tik patikrai</string>
+    <string name="learn_chip_verification_intro">Šiuose failuose nėra asmens duomenų: jie naudojami ryšiui su lustu palaikyti ir įrodyti, kad duomenys autentiški.</string>
+    <string name="learn_chip_ef_card_access">Lusto priimami prieigos protokolai, pavyzdžiui, PACE.</string>
+    <string name="learn_chip_ef_com">Esamų duomenų grupių sąrašas.</string>
+    <string name="learn_chip_ef_sod">Kiekvienos duomenų grupės kontrolinė suma, pasirašyta valstybės.</string>
+    <string name="learn_chip_dg14">Viešasis raktas, naudojamas Chip Authentication.</string>
+    <string name="learn_chip_dg15">Viešasis raktas, naudojamas Active Authentication.</string>
+    <string name="learn_chip_ef_card_security">Tik kai kuriuose dokumentuose (PACE-CAM): valstybės pasirašytas lusto raktas, patvirtinantis, kad lustas autentifikavosi atveriant kanalą.</string>
+
+    <string name="learn_chip_section_never">Niekada nenuskaitoma</string>
+    <string name="learn_chip_dg3">Pirštų atspaudai.</string>
+    <string name="learn_chip_dg4">Rainelės atvaizdas.</string>
+    <string name="learn_chip_eac">Europos dokumentuose šie du failai bet kuriuo atveju apsaugoti papildomu užraktu – EAC (Extended Access Control), kurį gali atverti tik įgaliotos institucijos.</string>
+    <string name="learn_chip_others">Kitos duomenų grupės (DG5–DG10, DG13 ir DG16: kiti atvaizdai, rankraštinis parašas, valstybei būdingi duomenys, asmenys, kuriuos reikia informuoti) taip pat nenuskaitomos.</string>
+
+    <string name="learn_chip_section_never_does">Ko Sceau nedaro</string>
+    <string name="learn_chip_no_storage">Neįrašo, nesiunčia ir neregistruoja žurnaluose jokių nuskaitytų duomenų: viskas lieka telefono atmintyje ir ištrinama išėjus iš rezultato ekrano.</string>
+    <string name="learn_chip_no_screenshot">Neleidžia nei ekrano kopijų, nei peržiūros naujausių programų sąraše.</string>
+    <string name="learn_chip_no_write">Neįrašo jokių duomenų į lustą: tik jį nuskaito.</string>
+    <string name="learn_chip_no_other_data">Nenuskaito nieko kito, išskyrus aukščiau išvardytus failus: jokios kitos lusto informacijos, kad ir kokia ji būtų, neprašoma.</string>
+</resources>

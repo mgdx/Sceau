@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="learn_intro_skip">Langkau pengenalan</string>
+    <string name="learn_intro_previous">Sebelumnya</string>
+    <string name="learn_intro_next">Seterusnya</string>
+    <string name="learn_intro_start">Mula</string>
+    <string name="learn_intro_page">Halaman %1$d daripada %2$d</string>
+
+    <string name="learn_intro_chip_title">Cip dalam dokumen anda</string>
+    <string name="learn_intro_chip_body">Pasport biometrik dan kad pengenalan terkini mengandungi cip tanpa sentuh yang mematuhi piawaian antarabangsa ICAO 9303.</string>
+    <string name="learn_intro_chip_icao">ICAO: Pertubuhan Penerbangan Awam Antarabangsa, yang menetapkan peraturan bagi dokumen perjalanan.</string>
+    <string name="learn_intro_chip_copy">Cip menyimpan salinan maklumat bercetak dan foto, yang ditandatangani secara elektronik oleh negara yang mengeluarkan dokumen tersebut.</string>
+
+    <string name="learn_intro_key_title">Kunci untuk membuka cip</string>
+    <string name="learn_intro_key_body">Tanpa kunci, cip enggan menjawab. Kunci ini dicetak pada dokumen:</string>
+    <string name="learn_intro_key_can">CAN: nombor akses 6 digit yang dicetak di bahagian depan kebanyakan kad pengenalan baharu.</string>
+    <string name="learn_intro_key_mrz">MRZ: baris aksara di bahagian bawah halaman foto pasport atau di belakang kad, yang memberikan nombor dokumen, tarikh lahir dan tarikh tamat tempoh.</string>
+    <string name="learn_intro_key_channel">Semua pertukaran data kemudiannya melalui saluran yang disulitkan (PACE atau BAC, protokol yang ditetapkan oleh piawaian): orang berdekatan yang tidak mengetahui kunci ini tidak dapat membacanya.</string>
+
+    <string name="learn_intro_verify_title">Perkara yang disemak oleh Sceau</string>
+    <string name="learn_intro_verify_signature">Tandatangan negara pengeluar (Passive Authentication), menggunakan sijil negara yang terbina dalam apl atau yang telah anda import.</string>
+    <string name="learn_intro_verify_clone">Bahawa cip itu bukan salinan (Chip Authentication atau Active Authentication): cip mesti membuktikan bahawa ia memegang kunci rahsia yang tidak pernah didedahkannya.</string>
+    <string name="learn_intro_verify_verdicts">Hasilnya ialah salah satu daripada empat keputusan:</string>
+
+    <string name="learn_intro_privacy_title">Data anda kekal di sini</string>
+    <string name="learn_intro_privacy_offline">Semuanya berlaku pada telefon: Sceau tidak mempunyai kebenaran untuk mengakses Internet pun.</string>
+    <string name="learn_intro_privacy_nothing_saved">Tiada apa-apa yang disimpan: data yang dibaca dipadamkan sebaik sahaja anda meninggalkan keputusan atau apl beralih ke latar belakang.</string>
+    <string name="learn_intro_privacy_screenshots">Tangkapan skrin disekat di seluruh apl.</string>
+
+    <string name="learn_about_section">Memahami Sceau</string>
+    <string name="learn_about_replay_intro">Lihat semula pengenalan</string>
+
+    <string name="learn_chip_title">Kandungan cip</string>
+    <string name="learn_chip_back">Kembali</string>
+    <string name="learn_chip_intro">Cip menyimpan maklumatnya dalam fail: kumpulan data (DG1, DG2…) dan beberapa fail teknikal yang namanya bermula dengan EF. Berikut ialah cara Sceau menggunakannya.</string>
+
+    <string name="learn_chip_section_displayed">Dibaca dan dipaparkan</string>
+    <string name="learn_chip_dg1">Data MRZ: jenis dokumen, nama keluarga, nama diberi, warganegara, tarikh lahir, jantina, nombor dokumen, negara pengeluar dan tarikh tamat tempoh.</string>
+    <string name="learn_chip_dg2">Foto pemegang.</string>
+    <string name="learn_chip_dg11">Jika negara merekodkannya: maklumat peribadi tambahan, seperti tempat lahir atau alamat.</string>
+    <string name="learn_chip_dg12">Jika negara merekodkannya: maklumat tentang dokumen, seperti pihak berkuasa pengeluar dan tarikh dikeluarkan, kadangkala imej dokumen.</string>
+
+    <string name="learn_chip_section_verification">Dibaca untuk semakan sahaja</string>
+    <string name="learn_chip_verification_intro">Fail ini tidak mengandungi data peribadi: fail ini digunakan untuk berkomunikasi dengan cip dan membuktikan bahawa data adalah tulen.</string>
+    <string name="learn_chip_ef_card_access">Protokol akses yang diterima oleh cip, seperti PACE.</string>
+    <string name="learn_chip_ef_com">Senarai kumpulan data yang ada.</string>
+    <string name="learn_chip_ef_sod">Cincangan setiap kumpulan data, ditandatangani oleh negara pengeluar.</string>
+    <string name="learn_chip_dg14">Kunci awam yang digunakan untuk Chip Authentication.</string>
+    <string name="learn_chip_dg15">Kunci awam yang digunakan untuk Active Authentication.</string>
+    <string name="learn_chip_ef_card_security">Pada sesetengah dokumen sahaja (PACE-CAM): kunci cip yang ditandatangani oleh negara pengeluar, yang mengesahkan bahawa cip telah mengesahkan dirinya semasa saluran dibuka.</string>
+
+    <string name="learn_chip_section_never">Tidak pernah dibaca</string>
+    <string name="learn_chip_dg3">Cap jari.</string>
+    <string name="learn_chip_dg4">Imej iris.</string>
+    <string name="learn_chip_eac">Pada dokumen Eropah, kedua-dua fail ini juga dilindungi oleh kunci tambahan, EAC (Extended Access Control), yang hanya boleh dibuka oleh pihak berkuasa yang diberi kuasa.</string>
+    <string name="learn_chip_others">Kumpulan data lain (DG5 hingga DG10, DG13 dan DG16: imej lain, tandatangan tulisan tangan, data khusus negara, orang untuk dihubungi) juga tidak dibaca.</string>
+
+    <string name="learn_chip_section_never_does">Perkara yang tidak dilakukan oleh Sceau</string>
+    <string name="learn_chip_no_storage">Sceau tidak menyimpan, menghantar atau merekodkan sebarang data yang dibaca: semuanya kekal dalam memori telefon dan dipadamkan apabila anda meninggalkan keputusan.</string>
+    <string name="learn_chip_no_screenshot">Sceau tidak membenarkan tangkapan skrin mahupun pratonton dalam apl terbaharu.</string>
+    <string name="learn_chip_no_write">Sceau tidak menulis sebarang data pada cip: ia hanya membacanya.</string>
+    <string name="learn_chip_no_other_data">Sceau tidak membaca apa-apa selain fail yang disenaraikan di atas: tiada maklumat lain daripada cip, walau apa pun jenisnya, diminta.</string>
+</resources>

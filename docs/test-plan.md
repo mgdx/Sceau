@@ -63,7 +63,7 @@ Pour chaque cas : cocher OK ou KO, et en cas de KO noter l'écart, les étapes e
 - **Étapes** :
   1. `adb install -r app-debug.apk`, puis lancer l'application.
   2. `adb shell dumpsys package io.github.mgdx.sceau | grep -A5 permission`.
-- **Attendu** : l'application démarre sur l'accueil, sans demande de permission à l'exécution. Seules `android.permission.NFC` et la permission interne `io.github.mgdx.sceau.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION` (décision D7) apparaissent ; aucune permission `INTERNET` ni `ACCESS_NETWORK_STATE`.
+- **Attendu** : l'application démarre sur l'introduction (premier lancement, TP-30), sans demande de permission à l'exécution. Seules `android.permission.NFC` et la permission interne `io.github.mgdx.sceau.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION` (décision D7) apparaissent ; aucune permission `INTERNET` ni `ACCESS_NETWORK_STATE`.
 - **Résultat** : ☐ OK ☐ KO — Notes :
 
 ### TP-02 NFC désactivé, puis réactivé
@@ -229,7 +229,7 @@ Pour toutes les erreurs, l'écran affiche sous le message le code technique comp
   1. `adb logcat -c`, puis une lecture complète d'une CNIe et d'un passeport, puis `adb logcat -d > log.txt`.
   2. Chercher dans `log.txt` le nom, le numéro de document, le CAN, la date de naissance (recherche locale, sans partager le fichier).
   3. `adb shell run-as io.github.mgdx.sceau ls -laR` : inventaire des fichiers de l'application.
-- **Attendu** : aucune donnée personnelle ni clé dans les journaux ; les seuls fichiers de l'application sont ceux du système et, le cas échéant, les Master Lists importées dans `files/trust/`. Aucun fichier dans `cache/`.
+- **Attendu** : aucune donnée personnelle ni clé dans les journaux ; les seuls fichiers de l'application sont ceux du système, `shared_prefs/sceau_preferences.xml` qui ne contient que l'indicateur `intro_seen` (D35) et, le cas échéant, les Master Lists importées dans `files/trust/`. Aucun fichier dans `cache/`.
 - **Résultat** : ☐ OK ☐ KO — Notes :
 
 ## F. Magasin de confiance
@@ -321,6 +321,52 @@ Pour toutes les erreurs, l'écran affiche sous le message le code technique comp
 - **Attendu** : étape 2 : les 5 étapes se cochent sans document ; résultat avec le bandeau « Document simulé — démonstration », verdict **Authentique**, portrait synthétique (silhouette, aucune photo de personne), identité SPECIMEN / MARIANNE, canal PACE, chaîne vers `CSCA-TEST-FRANCE`. Étape 3 : mêmes effacements qu'une lecture réelle (TP-13, TP-15). Étape 4 : aucun certificat de test dans le magasin réel. Étape 5 : l'entrée « Simuler une CNIe (démo) » n'existe pas dans l'APK release (décision D17).
 - **Résultat** : ☐ OK ☐ KO — Notes :
 
+## I. Introduction et pédagogie
+
+Pour revenir à un premier lancement : `adb shell pm clear $PKG` (efface aussi les Master Lists importées).
+
+### TP-30 Premier lancement : introduction, « Passer l'introduction » et retour arrière
+
+- **Préconditions** : application installée sans données (`pm clear`).
+- **Étapes** :
+  1. Lancer l'application : l'introduction s'affiche (4 pages : la puce, la clé d'accès, ce que vérifie Sceau, la confidentialité). Balayer d'une page à l'autre dans les deux sens, puis utiliser « Suivant » et « Précédent » (absent de la page 1) ; vérifier l'indicateur de page et, avec TalkBack, l'annonce « Page 2 sur 4 ».
+  2. Sur chacune des pages 1 à 3, le bouton « Passer l'introduction » est visible ; sur la page 4, il est remplacé par « Commencer ».
+  3. Toucher « Passer l'introduction » sur la page 2 : l'accueil s'affiche. Retour arrière : l'application se ferme (l'introduction n'est pas dans la pile). Relancer : l'accueil s'affiche directement.
+  4. `pm clear`, relancer, aller à la page 3, appuyer sur le retour arrière du système.
+  5. Relancer l'application.
+  6. `pm clear`, relancer, aller à la page 4, toucher « Commencer ».
+- **Attendu** : étape 4 : l'accueil s'affiche (le retour arrière fait comme « Passer l'introduction », jamais d'écran vide ni de sortie de l'application). Étape 5 : l'accueil, sans introduction. Étape 6 : l'accueil, et l'introduction ne revient plus aux lancements suivants. Mode sombre et police système agrandie (Réglages > Affichage > Taille de police au maximum) : textes lisibles, pages défilables, boutons passés à la ligne plutôt que tronqués.
+- **Résultat** : ☐ OK ☐ KO — Notes :
+
+### TP-31 Introduction rejouée depuis À propos
+
+- **Étapes** :
+  1. Menu → « À propos » → section « Comprendre Sceau » → « Revoir l'introduction ».
+  2. Toucher « Passer l'introduction ».
+  3. Rejouer l'introduction, aller à la page 4, toucher « Commencer ».
+  4. Rejouer l'introduction, appuyer sur le retour arrière.
+- **Attendu** : l'introduction repart de la page 1 ; aux étapes 2, 3 et 4, retour sur « À propos » (pas sur l'accueil), puis le retour arrière ramène à l'accueil.
+- **Résultat** : ☐ OK ☐ KO — Notes :
+
+### TP-32 Écran « Ce que contient la puce »
+
+- **Étapes** :
+  1. « À propos » → « Ce que contient la puce » ; faire défiler tout l'écran ; retour arrière.
+  2. Rejouer l'introduction, page 4 → « Ce que contient la puce » ; retour arrière.
+- **Attendu** : quatre sections (Lu et affiché : DG1, DG2, DG11, DG12 ; Lu pour la vérification seulement : EF.CardAccess, EF.COM, EF.SOD, DG14, DG15, EF.CardSecurity ; Jamais lu : DG3, DG4, autres groupes ; Ce que Sceau ne fait pas). Étape 1 : retour sur « À propos ». Étape 2 : retour sur la page 4 de l'introduction, toujours affichée.
+- **Résultat** : ☐ OK ☐ KO — Notes :
+
+### TP-33 Rotation et mort du processus pendant l'introduction
+
+- **Préconditions** : `pm clear`, application lancée sur l'introduction.
+- **Étapes** :
+  1. Aller à la page 3, tourner l'écran en paysage puis en portrait.
+  2. Sur la page 3, `KEYCODE_HOME`, puis `adb shell am kill $PKG`, puis rouvrir l'application depuis le multitâche.
+  3. Toucher « Passer l'introduction », tourner l'écran sur l'accueil.
+  4. `KEYCODE_HOME`, `am kill`, rouvrir depuis le multitâche.
+- **Attendu** : étape 1 : la page 3 reste affichée, contenu défilable en paysage, boutons visibles. Étape 2 : l'introduction réapparaît (page 3 ou page 1), sans plantage. Étapes 3 et 4 : l'accueil reste affiché, l'introduction ne revient pas.
+- **Résultat** : ☐ OK ☐ KO — Notes :
+
 ---
 
 ## Synthèse
@@ -356,5 +402,9 @@ Pour toutes les erreurs, l'écran affiche sous le message le code technique comp
 | TP-27 | Import d'un certificat CSCA seul | |
 | TP-28 | Certificats refusés | |
 | TP-29 | Suppression à l'unité | |
+| TP-30 | Premier lancement : introduction, « Passer l'introduction », retour arrière | |
+| TP-31 | Introduction rejouée depuis À propos | |
+| TP-32 | Écran « Ce que contient la puce » | |
+| TP-33 | Rotation et mort du processus pendant l'introduction | |
 
 Appareil : ………… Android : ………… Version de Sceau : ………… Date : ………… Testeur : …………

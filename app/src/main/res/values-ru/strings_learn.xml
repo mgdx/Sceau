@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="learn_intro_skip">Пропустить введение</string>
+    <string name="learn_intro_previous">Назад</string>
+    <string name="learn_intro_next">Далее</string>
+    <string name="learn_intro_start">Начать</string>
+    <string name="learn_intro_page">Страница %1$d из %2$d</string>
+
+    <string name="learn_intro_chip_title">Чип в вашем документе</string>
+    <string name="learn_intro_chip_body">Биометрические паспорта и современные удостоверения личности содержат бесконтактный чип, соответствующий международному стандарту ICAO 9303.</string>
+    <string name="learn_intro_chip_icao">ICAO: Международная организация гражданской авиации, которая устанавливает правила для проездных документов.</string>
+    <string name="learn_intro_chip_copy">Чип содержит копию напечатанных сведений и фотографии, подписанную электронной подписью государства, выдавшего документ.</string>
+
+    <string name="learn_intro_key_title">Ключ, чтобы открыть чип</string>
+    <string name="learn_intro_key_body">Без ключа чип отказывается отвечать. Этот ключ напечатан на документе:</string>
+    <string name="learn_intro_key_can">CAN: 6-значный номер доступа, напечатанный на лицевой стороне большинства новых ID-карт.</string>
+    <string name="learn_intro_key_mrz">MRZ: строки символов внизу страницы паспорта с фотографией или на обратной стороне карты, откуда берутся номер документа, дата рождения и дата окончания срока действия.</string>
+    <string name="learn_intro_key_channel">Затем весь обмен данными идет по зашифрованному каналу (PACE или BAC, протоколы, предусмотренные стандартом): человек поблизости, который не знает этого ключа, не сможет его прочитать.</string>
+
+    <string name="learn_intro_verify_title">Что проверяет Sceau</string>
+    <string name="learn_intro_verify_signature">Подпись государства (Passive Authentication) с помощью сертификатов стран, встроенных в приложение или импортированных вами.</string>
+    <string name="learn_intro_verify_clone">Что чип не является копией (Chip Authentication или Active Authentication): он должен доказать, что хранит секретный ключ, который никогда не раскрывает.</string>
+    <string name="learn_intro_verify_verdicts">Результат сводится к одному из четырех вердиктов:</string>
+
+    <string name="learn_intro_privacy_title">Ваши данные остаются здесь</string>
+    <string name="learn_intro_privacy_offline">Все происходит на телефоне: у Sceau даже нет разрешения на доступ к интернету.</string>
+    <string name="learn_intro_privacy_nothing_saved">Ничего не сохраняется: считанные данные удаляются, как только вы покидаете экран результата или приложение уходит в фоновый режим.</string>
+    <string name="learn_intro_privacy_screenshots">Скриншоты заблокированы во всем приложении.</string>
+
+    <string name="learn_about_section">Как устроен Sceau</string>
+    <string name="learn_about_replay_intro">Посмотреть введение снова</string>
+
+    <string name="learn_chip_title">Что хранится в чипе</string>
+    <string name="learn_chip_back">Назад</string>
+    <string name="learn_chip_intro">Чип хранит сведения в файлах: группах данных (DG1, DG2…) и нескольких технических файлах, имена которых начинаются с EF. Вот что Sceau с ними делает.</string>
+
+    <string name="learn_chip_section_displayed">Считывается и показывается</string>
+    <string name="learn_chip_dg1">Данные MRZ: тип документа, фамилия, имя, гражданство, дата рождения, пол, номер документа, государство выдачи и дата окончания срока действия.</string>
+    <string name="learn_chip_dg2">Фотография владельца.</string>
+    <string name="learn_chip_dg11">Если государство их записывает: дополнительные личные сведения, например место рождения или адрес.</string>
+    <string name="learn_chip_dg12">Если государство их записывает: сведения о документе, например орган и дата выдачи, иногда изображение документа.</string>
+
+    <string name="learn_chip_section_verification">Считывается только для проверки</string>
+    <string name="learn_chip_verification_intro">Эти файлы не содержат персональных данных: они нужны для обмена данными с чипом и для доказательства подлинности данных.</string>
+    <string name="learn_chip_ef_card_access">Протоколы доступа, которые принимает чип, например PACE.</string>
+    <string name="learn_chip_ef_com">Список имеющихся групп данных.</string>
+    <string name="learn_chip_ef_sod">Хеш каждой группы данных, подписанный государством.</string>
+    <string name="learn_chip_dg14">Открытый ключ для Chip Authentication.</string>
+    <string name="learn_chip_dg15">Открытый ключ для Active Authentication.</string>
+    <string name="learn_chip_ef_card_security">Только на некоторых документах (PACE-CAM): ключ чипа, подписанный государством, который подтверждает, что чип прошел аутентификацию при открытии канала.</string>
+
+    <string name="learn_chip_section_never">Никогда не считывается</string>
+    <string name="learn_chip_dg3">Отпечатки пальцев.</string>
+    <string name="learn_chip_dg4">Изображение радужной оболочки глаза.</string>
+    <string name="learn_chip_eac">На европейских документах эти два файла в любом случае защищены дополнительным замком — EAC (Extended Access Control), который могут открыть только уполномоченные органы.</string>
+    <string name="learn_chip_others">Остальные группы данных (DG5–DG10, DG13 и DG16: другие изображения, собственноручная подпись, данные, определяемые государством, контактные лица) тоже не считываются.</string>
+
+    <string name="learn_chip_section_never_does">Чего Sceau не делает</string>
+    <string name="learn_chip_no_storage">Приложение не сохраняет, не отправляет и не записывает в журнал никакие считанные данные: все остается в памяти телефона и удаляется при выходе из результата.</string>
+    <string name="learn_chip_no_screenshot">Оно не позволяет делать скриншоты и показывать превью в списке недавних приложений.</string>
+    <string name="learn_chip_no_write">Оно ничего не записывает на чип: только считывает его.</string>
+    <string name="learn_chip_no_other_data">Оно не считывает ничего, кроме перечисленных выше файлов: никакие другие сведения из чипа не запрашиваются.</string>
+</resources>

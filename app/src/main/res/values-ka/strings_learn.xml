@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="learn_intro_skip">შესავლის გამოტოვება</string>
+    <string name="learn_intro_previous">წინა</string>
+    <string name="learn_intro_next">შემდეგი</string>
+    <string name="learn_intro_start">დაწყება</string>
+    <string name="learn_intro_page">გვერდი %1$d %2$d-დან</string>
+
+    <string name="learn_intro_chip_title">ჩიპი თქვენს დოკუმენტში</string>
+    <string name="learn_intro_chip_body">ბიომეტრიულ პასპორტებსა და ახალ პირადობის მოწმობებში ჩაშენებულია უკონტაქტო ჩიპი, რომელიც შეესაბამება საერთაშორისო სტანდარტს ICAO 9303.</string>
+    <string name="learn_intro_chip_icao">ICAO: სამოქალაქო ავიაციის საერთაშორისო ორგანიზაცია, რომელიც სამგზავრო დოკუმენტების წესებს ადგენს.</string>
+    <string name="learn_intro_chip_copy">ჩიპი შეიცავს დაბეჭდილი ინფორმაციისა და ფოტოს ასლს, რომელიც ელექტრონულად არის ხელმოწერილი დოკუმენტის გამცემი სახელმწიფოს მიერ.</string>
+
+    <string name="learn_intro_key_title">გასაღები ჩიპის გასახსნელად</string>
+    <string name="learn_intro_key_body">გასაღების გარეშე ჩიპი პასუხს არ იძლევა. გასაღები დოკუმენტზეა დაბეჭდილი:</string>
+    <string name="learn_intro_key_can">CAN: ახალი პირადობის მოწმობების უმეტესობის წინა მხარეს დაბეჭდილი 6-ნიშნა წვდომის ნომერი.</string>
+    <string name="learn_intro_key_mrz">MRZ: სიმბოლოების სტრიქონები პასპორტის ფოტოიანი გვერდის ქვედა ნაწილში ან ბარათის უკანა მხარეს, საიდანაც აიღება დოკუმენტის ნომერი, დაბადების თარიღი და მოქმედების ვადა.</string>
+    <string name="learn_intro_key_channel">შემდეგ მთელი კომუნიკაცია დაშიფრულ არხზე გადის (PACE ან BAC, სტანდარტით გათვალისწინებული პროტოკოლები): ახლოს მყოფი ადამიანი, რომელმაც ეს გასაღები არ იცის, მას ვერ წაიკითხავს.</string>
+
+    <string name="learn_intro_verify_title">რას ამოწმებს Sceau</string>
+    <string name="learn_intro_verify_signature">სახელმწიფოს ხელმოწერას (Passive Authentication), აპში ჩაშენებული ან თქვენ მიერ იმპორტირებული ქვეყნების სერტიფიკატებით.</string>
+    <string name="learn_intro_verify_clone">რომ ჩიპი ასლი არ არის (Chip Authentication ან Active Authentication): ჩიპმა უნდა დაამტკიცოს, რომ მას აქვს საიდუმლო გასაღები, რომელსაც არასოდეს ამჟღავნებს.</string>
+    <string name="learn_intro_verify_verdicts">შედეგი ოთხი ვარიანტიდან ერთ-ერთია:</string>
+
+    <string name="learn_intro_privacy_title">თქვენი მონაცემები აქვე რჩება</string>
+    <string name="learn_intro_privacy_offline">ყველაფერი ტელეფონზე ხდება: Sceau-ს ინტერნეტზე წვდომის ნებართვაც კი არ აქვს.</string>
+    <string name="learn_intro_privacy_nothing_saved">არაფერი ინახება: წაკითხული მონაცემები იშლება, როგორც კი შედეგის ეკრანიდან გახვალთ ან აპი ფონურ რეჟიმში გადავა.</string>
+    <string name="learn_intro_privacy_screenshots">ეკრანის ანაბეჭდები მთელ აპში დაბლოკილია.</string>
+
+    <string name="learn_about_section">გაიცანით Sceau</string>
+    <string name="learn_about_replay_intro">შესავლის ხელახლა ნახვა</string>
+
+    <string name="learn_chip_title">რას შეიცავს ჩიპი</string>
+    <string name="learn_chip_back">უკან</string>
+    <string name="learn_chip_intro">ჩიპი ინფორმაციას ფაილებში ინახავს: მონაცემთა ჯგუფებში (DG1, DG2…) და რამდენიმე ტექნიკურ ფაილში, რომელთა სახელიც EF-ით იწყება. აი, რას აკეთებს მათთან Sceau.</string>
+
+    <string name="learn_chip_section_displayed">იკითხება და ჩანს</string>
+    <string name="learn_chip_dg1">MRZ-ის მონაცემები: დოკუმენტის ტიპი, გვარი, სახელი, მოქალაქეობა, დაბადების თარიღი, სქესი, დოკუმენტის ნომერი, გამცემი სახელმწიფო და მოქმედების ვადა.</string>
+    <string name="learn_chip_dg2">მფლობელის ფოტო.</string>
+    <string name="learn_chip_dg11">თუ სახელმწიფო მათ ჩაწერს: დამატებითი პირადი ინფორმაცია, მაგალითად, დაბადების ადგილი ან მისამართი.</string>
+    <string name="learn_chip_dg12">თუ სახელმწიფო მათ ჩაწერს: ინფორმაცია დოკუმენტის შესახებ, მაგალითად, გამცემი ორგანო და გაცემის თარიღი, ზოგჯერ დოკუმენტის გამოსახულებაც.</string>
+
+    <string name="learn_chip_section_verification">იკითხება მხოლოდ შემოწმებისთვის</string>
+    <string name="learn_chip_verification_intro">ეს ფაილები პერსონალურ მონაცემებს არ შეიცავს: ისინი გამოიყენება ჩიპთან კომუნიკაციისთვის და იმის დასამტკიცებლად, რომ მონაცემები ავთენტურია.</string>
+    <string name="learn_chip_ef_card_access">ჩიპის მიერ მიღებული წვდომის პროტოკოლები, მაგალითად, PACE.</string>
+    <string name="learn_chip_ef_com">არსებული მონაცემთა ჯგუფების სია.</string>
+    <string name="learn_chip_ef_sod">თითოეული მონაცემთა ჯგუფის ჰეში, ხელმოწერილი სახელმწიფოს მიერ.</string>
+    <string name="learn_chip_dg14">საჯარო გასაღები, რომელიც Chip Authentication-ისთვის გამოიყენება.</string>
+    <string name="learn_chip_dg15">საჯარო გასაღები, რომელიც Active Authentication-ისთვის გამოიყენება.</string>
+    <string name="learn_chip_ef_card_security">მხოლოდ ზოგიერთ დოკუმენტზე (PACE-CAM): ჩიპის გასაღები, ხელმოწერილი სახელმწიფოს მიერ, რომელიც ადასტურებს, რომ ჩიპმა არხის გახსნისას თავი ავთენტიფიცირა.</string>
+
+    <string name="learn_chip_section_never">არასოდეს იკითხება</string>
+    <string name="learn_chip_dg3">თითის ანაბეჭდები.</string>
+    <string name="learn_chip_dg4">თვალის ფერადი გარსის გამოსახულება.</string>
+    <string name="learn_chip_eac">ევროპულ დოკუმენტებზე ეს ორი ფაილი ისედაც დაცულია დამატებითი საკეტით, EAC (Extended Access Control), რომლის გახსნაც მხოლოდ უფლებამოსილ ორგანოებს შეუძლიათ.</string>
+    <string name="learn_chip_others">დანარჩენი მონაცემთა ჯგუფებიც (DG5-დან DG10-მდე, DG13 და DG16: სხვა გამოსახულებები, ხელნაწერი ხელმოწერა, სახელმწიფოს სპეციფიკური მონაცემები, შესატყობინებელი პირები) არ იკითხება.</string>
+
+    <string name="learn_chip_section_never_does">რას არ აკეთებს Sceau</string>
+    <string name="learn_chip_no_storage">ის არცერთ წაკითხულ მონაცემს არ ინახავს, არ აგზავნის და ჟურნალში არ წერს: ყველაფერი ტელეფონის მეხსიერებაში რჩება და შედეგის ეკრანიდან გასვლისას იშლება.</string>
+    <string name="learn_chip_no_screenshot">ის არ უშვებს არც ეკრანის ანაბეჭდს და არც გადახედვას ბოლოდროინდელ აპებში.</string>
+    <string name="learn_chip_no_write">ის ჩიპზე არანაირ მონაცემს არ წერს: მხოლოდ კითხულობს მას.</string>
+    <string name="learn_chip_no_other_data">ის ზემოთ ჩამოთვლილი ფაილების გარდა არაფერს კითხულობს: ჩიპს სხვა არანაირ ინფორმაციას არ სთხოვს, როგორიც არ უნდა იყოს ის.</string>
+</resources>

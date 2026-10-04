@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="learn_intro_skip">Прескокни го воведот</string>
+    <string name="learn_intro_previous">Претходно</string>
+    <string name="learn_intro_next">Следно</string>
+    <string name="learn_intro_start">Започни</string>
+    <string name="learn_intro_page">Страница %1$d од %2$d</string>
+
+    <string name="learn_intro_chip_title">Чип во вашиот документ</string>
+    <string name="learn_intro_chip_body">Биометриските пасоши и новите лични карти содржат бесконтактен чип, во согласност со меѓународниот стандард ICAO 9303.</string>
+    <string name="learn_intro_chip_icao">ICAO: Меѓународна организација за цивилно воздухопловство, која ги утврдува правилата за патните документи.</string>
+    <string name="learn_intro_chip_copy">Чипот содржи копија од отпечатените податоци и од фотографијата, електронски потпишана од државата што го издала документот.</string>
+
+    <string name="learn_intro_key_title">Клуч за отворање на чипот</string>
+    <string name="learn_intro_key_body">Без клуч, чипот одбива да одговори. Овој клуч е отпечатен на документот:</string>
+    <string name="learn_intro_key_can">CAN: 6-цифрен број за пристап, отпечатен на предната страна на повеќето нови лични карти.</string>
+    <string name="learn_intro_key_mrz">MRZ: редовите знаци на дното од страницата со фотографија во пасошот или на задната страна на картата, од кои се земаат бројот на документот, датумот на раѓање и датумот на истекување.</string>
+    <string name="learn_intro_key_channel">Комуникацијата потоа минува низ шифриран канал (PACE или BAC, протоколите предвидени со стандардот): лице во близина што не го знае овој клуч не може да ја прочита.</string>
+
+    <string name="learn_intro_verify_title">Што проверува Sceau</string>
+    <string name="learn_intro_verify_signature">Потписот на државата (Passive Authentication), со сертификатите на државите вградени во апликацијата или што сте ги увезле.</string>
+    <string name="learn_intro_verify_clone">Дека чипот не е копија (Chip Authentication или Active Authentication): тој мора да докаже дека поседува таен клуч што никогаш не го открива.</string>
+    <string name="learn_intro_verify_verdicts">Резултатот се сведува на четири исходи:</string>
+
+    <string name="learn_intro_privacy_title">Вашите податоци остануваат тука</string>
+    <string name="learn_intro_privacy_offline">Сè се случува на телефонот: Sceau нема ниту дозвола за пристап до интернет.</string>
+    <string name="learn_intro_privacy_nothing_saved">Ништо не се зачувува: прочитаните податоци се бришат штом ќе го напуштите резултатот или штом апликацијата ќе премине во заднина.</string>
+    <string name="learn_intro_privacy_screenshots">Снимките од екранот се блокирани во целата апликација.</string>
+
+    <string name="learn_about_section">Како работи Sceau</string>
+    <string name="learn_about_replay_intro">Повторно прикажи го воведот</string>
+
+    <string name="learn_chip_title">Што содржи чипот</string>
+    <string name="learn_chip_back">Назад</string>
+    <string name="learn_chip_intro">Чипот ги чува податоците во датотеки: групи податоци (DG1, DG2…) и неколку технички датотеки чие име почнува со EF. Еве што прави Sceau со нив.</string>
+
+    <string name="learn_chip_section_displayed">Прочитано и прикажано</string>
+    <string name="learn_chip_dg1">Податоците од MRZ: вид на документ, презиме, име, државјанство, датум на раѓање, пол, број на документот, држава на издавање и датум на истекување.</string>
+    <string name="learn_chip_dg2">Фотографијата на имателот.</string>
+    <string name="learn_chip_dg11">Ако државата ги внесува: дополнителни лични податоци, како местото на раѓање или адресата.</string>
+    <string name="learn_chip_dg12">Ако државата ги внесува: податоци за документот, како органот и датумот на издавање, понекогаш и слика од документот.</string>
+
+    <string name="learn_chip_section_verification">Прочитано само за проверка</string>
+    <string name="learn_chip_verification_intro">Овие датотеки не содржат лични податоци: служат за комуникација со чипот и за докажување дека податоците се автентични.</string>
+    <string name="learn_chip_ef_card_access">Протоколите за пристап што ги прифаќа чипот, како PACE.</string>
+    <string name="learn_chip_ef_com">Списокот на присутни групи податоци.</string>
+    <string name="learn_chip_ef_sod">Хашот на секоја група податоци, потпишан од државата.</string>
+    <string name="learn_chip_dg14">Јавниот клуч што се користи за Chip Authentication.</string>
+    <string name="learn_chip_dg15">Јавниот клуч што се користи за Active Authentication.</string>
+    <string name="learn_chip_ef_card_security">Само на некои документи (PACE-CAM): клучот на чипот потпишан од државата, кој потврдува дека чипот се автентицирал при отворањето на каналот.</string>
+
+    <string name="learn_chip_section_never">Никогаш не се чита</string>
+    <string name="learn_chip_dg3">Отпечатоците од прстите.</string>
+    <string name="learn_chip_dg4">Сликата од ирисот.</string>
+    <string name="learn_chip_eac">На европските документи, овие две датотеки во секој случај се заштитени со дополнителна брава, EAC (Extended Access Control), која можат да ја отворат само овластени органи.</string>
+    <string name="learn_chip_others">Другите групи податоци (DG5 до DG10, DG13 и DG16: други слики, своерачен потпис, податоци специфични за државата, лица за известување) исто така не се читаат.</string>
+
+    <string name="learn_chip_section_never_does">Што не прави Sceau</string>
+    <string name="learn_chip_no_storage">Не зачувува, не испраќа и не евидентира ниту еден прочитан податок: сè останува во меморијата на телефонот и се брише кога ќе го напуштите резултатот.</string>
+    <string name="learn_chip_no_screenshot">Не дозволува ниту снимки од екранот, ниту преглед во неодамнешните апликации.</string>
+    <string name="learn_chip_no_write">Не запишува никакви податоци на чипот: само го чита.</string>
+    <string name="learn_chip_no_other_data">Не чита ништо друго освен датотеките наведени погоре: не бара никакви други информации од чипот.</string>
+</resources>

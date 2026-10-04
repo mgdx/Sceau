@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="learn_intro_skip">Hoppa över introduktionen</string>
+    <string name="learn_intro_previous">Föregående</string>
+    <string name="learn_intro_next">Nästa</string>
+    <string name="learn_intro_start">Kom igång</string>
+    <string name="learn_intro_page">Sida %1$d av %2$d</string>
+
+    <string name="learn_intro_chip_title">Ett chip i din handling</string>
+    <string name="learn_intro_chip_body">Biometriska pass och nyare id-kort har ett kontaktlöst chip som följer den internationella standarden ICAO 9303.</string>
+    <string name="learn_intro_chip_icao">ICAO: Internationella civila luftfartsorganisationen, som fastställer reglerna för resehandlingar.</string>
+    <string name="learn_intro_chip_copy">Chippet innehåller en kopia av de tryckta uppgifterna och fotot, elektroniskt signerad av den stat som utfärdade handlingen.</string>
+
+    <string name="learn_intro_key_title">En nyckel för att öppna chippet</string>
+    <string name="learn_intro_key_body">Utan nyckel vägrar chippet att svara. Nyckeln står tryckt på handlingen:</string>
+    <string name="learn_intro_key_can">CAN: det sexsiffriga åtkomstnumret som står tryckt på framsidan av de flesta nyare id-kort.</string>
+    <string name="learn_intro_key_mrz">MRZ: teckenraderna längst ned på passets fotosida eller på kortets baksida, där dokumentnummer, födelsedatum och giltighetstid hämtas.</string>
+    <string name="learn_intro_key_channel">All kommunikation går sedan via en krypterad kanal (PACE eller BAC, de protokoll som standarden anger): ingen i närheten som inte känner till nyckeln kan läsa den.</string>
+
+    <string name="learn_intro_verify_title">Det här kontrollerar Sceau</string>
+    <string name="learn_intro_verify_signature">Den utfärdande statens signatur (Passive Authentication), med ländernas certifikat som finns inbyggda i appen eller som du har importerat.</string>
+    <string name="learn_intro_verify_clone">Att chippet inte är en kopia (Chip Authentication eller Active Authentication): det måste bevisa att det har en hemlig nyckel som det aldrig avslöjar.</string>
+    <string name="learn_intro_verify_verdicts">Resultatet blir ett av fyra utlåtanden:</string>
+
+    <string name="learn_intro_privacy_title">Dina uppgifter stannar här</string>
+    <string name="learn_intro_privacy_offline">Allt sker på telefonen: Sceau har inte ens behörighet att ansluta till internet.</string>
+    <string name="learn_intro_privacy_nothing_saved">Inget sparas: de lästa uppgifterna raderas så fort du lämnar resultatet eller appen hamnar i bakgrunden.</string>
+    <string name="learn_intro_privacy_screenshots">Skärmbilder är blockerade i hela appen.</string>
+
+    <string name="learn_about_section">Lär känna Sceau</string>
+    <string name="learn_about_replay_intro">Visa introduktionen igen</string>
+
+    <string name="learn_chip_title">Det här finns i chippet</string>
+    <string name="learn_chip_back">Tillbaka</string>
+    <string name="learn_chip_intro">Chippet lagrar uppgifterna i filer: datagrupper (DG1, DG2 …) och några tekniska filer vars namn börjar med EF. Så här använder Sceau dem.</string>
+
+    <string name="learn_chip_section_displayed">Läses och visas</string>
+    <string name="learn_chip_dg1">Uppgifterna i MRZ: typ av handling, efternamn, förnamn, medborgarskap, födelsedatum, kön, dokumentnummer, utfärdande stat och giltighetstid.</string>
+    <string name="learn_chip_dg2">Innehavarens foto.</string>
+    <string name="learn_chip_dg11">Om staten för in dem: ytterligare personuppgifter, till exempel födelseort eller adress.</string>
+    <string name="learn_chip_dg12">Om staten för in dem: uppgifter om handlingen, till exempel utfärdande myndighet och utfärdandedatum, ibland en bild av handlingen.</string>
+
+    <string name="learn_chip_section_verification">Läses bara för kontrollen</string>
+    <string name="learn_chip_verification_intro">De här filerna innehåller inga personuppgifter: de används för att kommunicera med chippet och bevisa att uppgifterna är äkta.</string>
+    <string name="learn_chip_ef_card_access">De åtkomstprotokoll som chippet godtar, till exempel PACE.</string>
+    <string name="learn_chip_ef_com">Listan över datagrupperna som finns.</string>
+    <string name="learn_chip_ef_sod">Hashvärdet för varje datagrupp, signerat av staten.</string>
+    <string name="learn_chip_dg14">Den publika nyckel som används för Chip Authentication.</string>
+    <string name="learn_chip_dg15">Den publika nyckel som används för Active Authentication.</string>
+    <string name="learn_chip_ef_card_security">Bara på vissa handlingar (PACE-CAM): chippets nyckel signerad av staten, som bekräftar att chippet autentiserade sig när kanalen öppnades.</string>
+
+    <string name="learn_chip_section_never">Läses aldrig</string>
+    <string name="learn_chip_dg3">Fingeravtrycken.</string>
+    <string name="learn_chip_dg4">Bilden av iris.</string>
+    <string name="learn_chip_eac">På europeiska handlingar skyddas de här två filerna dessutom av ett extra lås, EAC (Extended Access Control), som bara behöriga myndigheter kan öppna.</string>
+    <string name="learn_chip_others">De övriga datagrupperna (DG5 till DG10, DG13 och DG16: andra bilder, namnteckning, statsspecifika uppgifter, kontaktpersoner) läses inte heller.</string>
+
+    <string name="learn_chip_section_never_does">Det här gör Sceau inte</string>
+    <string name="learn_chip_no_storage">Appen sparar, skickar eller loggar inga lästa uppgifter: allt stannar i telefonens minne och raderas när du lämnar resultatet.</string>
+    <string name="learn_chip_no_screenshot">Appen tillåter varken skärmbilder eller förhandsvisning bland senaste appar.</string>
+    <string name="learn_chip_no_write">Appen skriver inga uppgifter till chippet: den läser bara.</string>
+    <string name="learn_chip_no_other_data">Appen läser inget annat än filerna ovan: inga andra uppgifter i chippet efterfrågas, oavsett vilka.</string>
+</resources>

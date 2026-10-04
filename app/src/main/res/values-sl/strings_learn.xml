@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="learn_intro_skip">Preskoči uvod</string>
+    <string name="learn_intro_previous">Nazaj</string>
+    <string name="learn_intro_next">Naprej</string>
+    <string name="learn_intro_start">Začni</string>
+    <string name="learn_intro_page">Stran %1$d od %2$d</string>
+
+    <string name="learn_intro_chip_title">Čip v vašem dokumentu</string>
+    <string name="learn_intro_chip_body">Biometrični potni listi in novejše osebne izkaznice vsebujejo brezstični čip, skladen z mednarodnim standardom ICAO 9303.</string>
+    <string name="learn_intro_chip_icao">ICAO: Mednarodna organizacija civilnega letalstva, ki določa pravila za potne listine.</string>
+    <string name="learn_intro_chip_copy">Čip vsebuje kopijo natisnjenih podatkov in fotografije, ki jo je elektronsko podpisala država, ki je dokument izdala.</string>
+
+    <string name="learn_intro_key_title">Ključ, ki odpre čip</string>
+    <string name="learn_intro_key_body">Brez ključa čip ne odgovori. Ključ je natisnjen na dokumentu:</string>
+    <string name="learn_intro_key_can">CAN: 6-mestna dostopna številka, natisnjena na sprednji strani večine novejših osebnih izkaznic.</string>
+    <string name="learn_intro_key_mrz">MRZ: vrstice znakov na dnu strani s fotografijo v potnem listu ali na hrbtni strani izkaznice, iz katerih izhajajo številka dokumenta, datum rojstva in datum veljavnosti.</string>
+    <string name="learn_intro_key_channel">Izmenjava podatkov nato poteka po šifriranem kanalu (PACE ali BAC, protokola, ki ju določa standard): oseba v bližini, ki ne pozna tega ključa, je ne more prebrati.</string>
+
+    <string name="learn_intro_verify_title">Kaj preveri Sceau</string>
+    <string name="learn_intro_verify_signature">Podpis države izdajateljice (Passive Authentication) s potrdili držav, ki so vgrajena v aplikacijo ali ste jih uvozili.</string>
+    <string name="learn_intro_verify_clone">Da čip ni kopija (Chip Authentication ali Active Authentication): dokazati mora, da ima skrivni ključ, ki ga nikoli ne razkrije.</string>
+    <string name="learn_intro_verify_verdicts">Rezultat je ena od štirih ocen:</string>
+
+    <string name="learn_intro_privacy_title">Vaši podatki ostanejo tukaj</string>
+    <string name="learn_intro_privacy_offline">Vse poteka v telefonu: Sceau nima niti dovoljenja za dostop do interneta.</string>
+    <string name="learn_intro_privacy_nothing_saved">Nič se ne shrani: prebrani podatki se izbrišejo takoj, ko zapustite rezultat ali se aplikacija premakne v ozadje.</string>
+    <string name="learn_intro_privacy_screenshots">Posnetki zaslona so blokirani v celotni aplikaciji.</string>
+
+    <string name="learn_about_section">Spoznajte Sceau</string>
+    <string name="learn_about_replay_intro">Znova prikaži uvod</string>
+
+    <string name="learn_chip_title">Kaj vsebuje čip</string>
+    <string name="learn_chip_back">Nazaj</string>
+    <string name="learn_chip_intro">Čip hrani podatke v datotekah: v podatkovnih skupinah (DG1, DG2 …) in nekaj tehničnih datotekah, katerih ime se začne z EF. Tako jih uporablja Sceau.</string>
+
+    <string name="learn_chip_section_displayed">Prebrano in prikazano</string>
+    <string name="learn_chip_dg1">Podatki iz MRZ: vrsta dokumenta, priimek, imena, državljanstvo, datum rojstva, spol, številka dokumenta, država izdajateljica in datum veljavnosti.</string>
+    <string name="learn_chip_dg2">Fotografija imetnika.</string>
+    <string name="learn_chip_dg11">Če jih država vpiše: dodatni osebni podatki, na primer kraj rojstva ali naslov.</string>
+    <string name="learn_chip_dg12">Če jih država vpiše: podatki o dokumentu, na primer izdajni organ in datum izdaje, včasih tudi slika dokumenta.</string>
+
+    <string name="learn_chip_section_verification">Prebrano samo za preverjanje</string>
+    <string name="learn_chip_verification_intro">Te datoteke ne vsebujejo osebnih podatkov: služijo za komunikacijo s čipom in kot dokaz, da so podatki pristni.</string>
+    <string name="learn_chip_ef_card_access">Protokoli dostopa, ki jih čip sprejema, na primer PACE.</string>
+    <string name="learn_chip_ef_com">Seznam podatkovnih skupin, ki so na čipu.</string>
+    <string name="learn_chip_ef_sod">Zgoščena vrednost vsake podatkovne skupine, ki jo je podpisala država.</string>
+    <string name="learn_chip_dg14">Javni ključ za Chip Authentication.</string>
+    <string name="learn_chip_dg15">Javni ključ za Active Authentication.</string>
+    <string name="learn_chip_ef_card_security">Samo na nekaterih dokumentih (PACE-CAM): ključ čipa, ki ga je podpisala država in ki potrjuje, da se je čip overil med vzpostavljanjem kanala.</string>
+
+    <string name="learn_chip_section_never">Nikoli prebrano</string>
+    <string name="learn_chip_dg3">Prstni odtisi.</string>
+    <string name="learn_chip_dg4">Slika šarenice.</string>
+    <string name="learn_chip_eac">Na evropskih dokumentih sta ti dve datoteki v vsakem primeru zaščiteni z dodatno ključavnico, EAC (Extended Access Control), ki jo lahko odprejo le pooblaščeni organi.</string>
+    <string name="learn_chip_others">Tudi druge podatkovne skupine (DG5 do DG10, DG13 in DG16: druge slike, lastnoročni podpis, podatki posamezne države, osebe, ki jih je treba obvestiti) se ne preberejo.</string>
+
+    <string name="learn_chip_section_never_does">Česa Sceau ne počne</string>
+    <string name="learn_chip_no_storage">Nobenega prebranega podatka ne shrani, pošlje ali zapiše v dnevnik: vse ostane v pomnilniku telefona in se izbriše, ko zapustite rezultat.</string>
+    <string name="learn_chip_no_screenshot">Ne dovoli posnetkov zaslona niti predogleda med nedavnimi aplikacijami.</string>
+    <string name="learn_chip_no_write">Na čip ne zapiše nobenih podatkov: samo bere ga.</string>
+    <string name="learn_chip_no_other_data">Ne bere ničesar drugega kot zgoraj navedene datoteke: s čipa ne zahteva nobenih drugih podatkov, ne glede na to, kakšni so.</string>
+</resources>

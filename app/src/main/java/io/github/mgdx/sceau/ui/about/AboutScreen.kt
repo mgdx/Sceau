@@ -68,6 +68,8 @@ private sealed interface EmbeddedUi {
 fun AboutScreen(
     repository: TrustStoreRepository,
     onBack: () -> Unit,
+    onReplayIntro: () -> Unit,
+    onOpenChipContents: () -> Unit,
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -129,6 +131,12 @@ fun AboutScreen(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(stringResource(R.string.about_tagline), style = MaterialTheme.typography.bodyLarge)
+            }
+
+            // Écrans pédagogiques (D35).
+            Section(stringResource(R.string.learn_about_section)) {
+                OutlinedButton(onClick = onOpenChipContents) { Text(stringResource(R.string.learn_chip_title)) }
+                OutlinedButton(onClick = onReplayIntro) { Text(stringResource(R.string.learn_about_replay_intro)) }
             }
 
             Section(stringResource(R.string.about_section_license)) {

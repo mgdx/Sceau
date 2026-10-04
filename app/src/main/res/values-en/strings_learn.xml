@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="learn_intro_skip">Skip introduction</string>
+    <string name="learn_intro_previous">Previous</string>
+    <string name="learn_intro_next">Next</string>
+    <string name="learn_intro_start">Get started</string>
+    <string name="learn_intro_page">Page %1$d of %2$d</string>
+
+    <string name="learn_intro_chip_title">A chip in your document</string>
+    <string name="learn_intro_chip_body">Biometric passports and recent identity cards contain a contactless chip that follows the international ICAO 9303 standard.</string>
+    <string name="learn_intro_chip_icao">ICAO: the International Civil Aviation Organization, which sets the rules for travel documents.</string>
+    <string name="learn_intro_chip_copy">The chip holds a copy of the printed information and the photo, electronically signed by the country that issued the document.</string>
+
+    <string name="learn_intro_key_title">A key to open the chip</string>
+    <string name="learn_intro_key_body">Without a key, the chip refuses to answer. The key is printed on the document:</string>
+    <string name="learn_intro_key_can">CAN: the 6-digit access number printed on the front of most recent identity cards.</string>
+    <string name="learn_intro_key_mrz">MRZ: the lines of characters at the bottom of the passport photo page or on the back of the card, which give the document number, date of birth and expiry date.</string>
+    <string name="learn_intro_key_channel">All exchanges then go through an encrypted channel (PACE or BAC, the protocols defined by the standard): someone nearby who does not know this key cannot read them.</string>
+
+    <string name="learn_intro_verify_title">What Sceau checks</string>
+    <string name="learn_intro_verify_signature">The issuing country’s signature (Passive Authentication), using the country certificates built into the app or that you have imported.</string>
+    <string name="learn_intro_verify_clone">That the chip is not a copy (Chip Authentication or Active Authentication): it must prove it holds a secret key that it never reveals.</string>
+    <string name="learn_intro_verify_verdicts">The result comes down to four verdicts:</string>
+
+    <string name="learn_intro_privacy_title">Your data stays here</string>
+    <string name="learn_intro_privacy_offline">Everything happens on the phone: Sceau does not even have permission to access the internet.</string>
+    <string name="learn_intro_privacy_nothing_saved">Nothing is saved: the data read is erased as soon as you leave the result or the app goes to the background.</string>
+    <string name="learn_intro_privacy_screenshots">Screenshots are blocked throughout the app.</string>
+
+    <string name="learn_about_section">Understanding Sceau</string>
+    <string name="learn_about_replay_intro">Replay the introduction</string>
+
+    <string name="learn_chip_title">What the chip contains</string>
+    <string name="learn_chip_back">Back</string>
+    <string name="learn_chip_intro">The chip stores its information in files: data groups (DG1, DG2…) and a few technical files whose names start with EF. Here is what Sceau does with them.</string>
+
+    <string name="learn_chip_section_displayed">Read and displayed</string>
+    <string name="learn_chip_dg1">The MRZ data: document type, surname, given names, nationality, date of birth, sex, document number, issuing country and expiry date.</string>
+    <string name="learn_chip_dg2">The holder’s photo.</string>
+    <string name="learn_chip_dg11">If the country records it: additional personal details, such as place of birth or address.</string>
+    <string name="learn_chip_dg12">If the country records it: details about the document, such as the issuing authority and date of issue, sometimes an image of the document.</string>
+
+    <string name="learn_chip_section_verification">Read for verification only</string>
+    <string name="learn_chip_verification_intro">These files contain no personal data: they are used to communicate with the chip and to prove that the data is authentic.</string>
+    <string name="learn_chip_ef_card_access">The access protocols the chip accepts, such as PACE.</string>
+    <string name="learn_chip_ef_com">The list of data groups present.</string>
+    <string name="learn_chip_ef_sod">The hash of each data group, signed by the issuing country.</string>
+    <string name="learn_chip_dg14">The public key used for Chip Authentication.</string>
+    <string name="learn_chip_dg15">The public key used for Active Authentication.</string>
+    <string name="learn_chip_ef_card_security">On some documents only (PACE-CAM): the chip’s key signed by the issuing country, which confirms that the chip authenticated itself while the channel was being opened.</string>
+
+    <string name="learn_chip_section_never">Never read</string>
+    <string name="learn_chip_dg3">Fingerprints.</string>
+    <string name="learn_chip_dg4">The iris image.</string>
+    <string name="learn_chip_eac">On European documents, these two files are protected by an extra lock anyway, EAC (Extended Access Control), which only authorized authorities can open.</string>
+    <string name="learn_chip_others">The other data groups (DG5 to DG10, DG13 and DG16: other images, handwritten signature, country-specific data, persons to notify) are not read either.</string>
+
+    <string name="learn_chip_section_never_does">What Sceau does not do</string>
+    <string name="learn_chip_no_storage">It does not save, send or log any data read: everything stays in the phone’s memory and is erased when you leave the result.</string>
+    <string name="learn_chip_no_screenshot">It allows neither screenshots nor a preview in recent apps.</string>
+    <string name="learn_chip_no_write">It writes no data to the chip: it only reads it.</string>
+    <string name="learn_chip_no_other_data">It reads nothing other than the files listed above: no other information on the chip, of any kind, is requested.</string>
+</resources>

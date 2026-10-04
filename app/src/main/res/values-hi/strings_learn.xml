@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="learn_intro_skip">परिचय छोड़ें</string>
+    <string name="learn_intro_previous">पीछे</string>
+    <string name="learn_intro_next">आगे</string>
+    <string name="learn_intro_start">शुरू करें</string>
+    <string name="learn_intro_page">%2$d में से पेज %1$d</string>
+
+    <string name="learn_intro_chip_title">आपके दस्तावेज़ में एक चिप</string>
+    <string name="learn_intro_chip_body">बायोमेट्रिक पासपोर्ट और नए पहचान पत्रों में एक कॉन्टैक्टलेस चिप होती है, जो अंतरराष्ट्रीय मानक ICAO 9303 के अनुरूप है।</string>
+    <string name="learn_intro_chip_icao">ICAO: अंतर्राष्ट्रीय नागर विमानन संगठन, जो यात्रा दस्तावेज़ों के नियम तय करता है।</string>
+    <string name="learn_intro_chip_copy">चिप में छपी हुई जानकारी और फ़ोटो की एक कॉपी होती है, जिस पर दस्तावेज़ जारी करने वाले देश के इलेक्ट्रॉनिक हस्ताक्षर होते हैं।</string>
+
+    <string name="learn_intro_key_title">चिप खोलने के लिए एक कुंजी</string>
+    <string name="learn_intro_key_body">कुंजी के बिना चिप जवाब नहीं देती। यह कुंजी दस्तावेज़ पर छपी होती है:</string>
+    <string name="learn_intro_key_can">CAN: ज़्यादातर नए पहचान पत्रों के सामने की ओर छपा 6 अंकों का ऐक्सेस नंबर।</string>
+    <string name="learn_intro_key_mrz">MRZ: पासपोर्ट के फ़ोटो वाले पेज के नीचे या कार्ड के पीछे की ओर अक्षरों की पंक्तियां, जिनसे दस्तावेज़ संख्या, जन्म तिथि और समाप्ति तिथि ली जाती है।</string>
+    <string name="learn_intro_key_channel">इसके बाद डेटा का सारा आदान-प्रदान एक एन्क्रिप्ट किए गए चैनल से होता है (PACE या BAC, मानक में तय प्रोटोकॉल): आस-पास मौजूद कोई व्यक्ति, जिसे यह कुंजी पता नहीं है, उसे पढ़ नहीं सकता।</string>
+
+    <string name="learn_intro_verify_title">Sceau क्या जांचता है</string>
+    <string name="learn_intro_verify_signature">जारीकर्ता देश के हस्ताक्षर (Passive Authentication), ऐप में शामिल या आपके इंपोर्ट किए गए देशों के प्रमाणपत्रों की मदद से।</string>
+    <string name="learn_intro_verify_clone">यह कि चिप कोई कॉपी नहीं है (Chip Authentication या Active Authentication): चिप को साबित करना होता है कि उसके पास एक ऐसी गुप्त कुंजी है जिसे वह कभी ज़ाहिर नहीं करती।</string>
+    <string name="learn_intro_verify_verdicts">नतीजा इन चार में से कोई एक होता है:</string>
+
+    <string name="learn_intro_privacy_title">आपका डेटा यहीं रहता है</string>
+    <string name="learn_intro_privacy_offline">सब कुछ फ़ोन पर ही होता है: Sceau के पास इंटरनेट इस्तेमाल करने की अनुमति तक नहीं है।</string>
+    <string name="learn_intro_privacy_nothing_saved">कुछ भी सेव नहीं किया जाता: नतीजे से बाहर निकलते ही या ऐप के बैकग्राउंड में जाते ही पढ़ा गया डेटा मिटा दिया जाता है।</string>
+    <string name="learn_intro_privacy_screenshots">पूरे ऐप में स्क्रीनशॉट लेने पर रोक है।</string>
+
+    <string name="learn_about_section">Sceau को समझें</string>
+    <string name="learn_about_replay_intro">परिचय फिर से देखें</string>
+
+    <string name="learn_chip_title">चिप में क्या होता है</string>
+    <string name="learn_chip_back">वापस जाएं</string>
+    <string name="learn_chip_intro">चिप अपनी जानकारी फ़ाइलों में रखती है: डेटा ग्रुप (DG1, DG2…) और कुछ तकनीकी फ़ाइलें, जिनका नाम EF से शुरू होता है। Sceau इनका क्या करता है, यह नीचे बताया गया है।</string>
+
+    <string name="learn_chip_section_displayed">पढ़ा और दिखाया जाता है</string>
+    <string name="learn_chip_dg1">MRZ का डेटा: दस्तावेज़ का प्रकार, उपनाम, दिया गया नाम, राष्ट्रीयता, जन्म तिथि, लिंग, दस्तावेज़ संख्या, जारीकर्ता देश और समाप्ति तिथि।</string>
+    <string name="learn_chip_dg2">धारक की फ़ोटो।</string>
+    <string name="learn_chip_dg11">अगर देश इसे दर्ज करता है: अतिरिक्त निजी जानकारी, जैसे जन्म स्थान या पता।</string>
+    <string name="learn_chip_dg12">अगर देश इसे दर्ज करता है: दस्तावेज़ से जुड़ी जानकारी, जैसे जारी करने वाला प्राधिकारी और जारी करने की तिथि, कभी-कभी दस्तावेज़ की इमेज भी।</string>
+
+    <string name="learn_chip_section_verification">सिर्फ़ पुष्टि के लिए पढ़ा जाता है</string>
+    <string name="learn_chip_verification_intro">इन फ़ाइलों में कोई निजी डेटा नहीं होता: इनसे चिप के साथ बातचीत होती है और यह साबित होता है कि डेटा असली है।</string>
+    <string name="learn_chip_ef_card_access">चिप जिन ऐक्सेस प्रोटोकॉल को स्वीकार करती है, जैसे PACE।</string>
+    <string name="learn_chip_ef_com">मौजूद डेटा ग्रुप की सूची।</string>
+    <string name="learn_chip_ef_sod">हर डेटा ग्रुप का हैश, जिस पर जारीकर्ता देश के हस्ताक्षर हैं।</string>
+    <string name="learn_chip_dg14">Chip Authentication के लिए इस्तेमाल होने वाली सार्वजनिक कुंजी।</string>
+    <string name="learn_chip_dg15">Active Authentication के लिए इस्तेमाल होने वाली सार्वजनिक कुंजी।</string>
+    <string name="learn_chip_ef_card_security">सिर्फ़ कुछ दस्तावेज़ों पर (PACE-CAM): जारीकर्ता देश के हस्ताक्षर वाली चिप की कुंजी, जिससे पुष्टि होती है कि चैनल खुलते समय चिप ने अपनी पहचान साबित की।</string>
+
+    <string name="learn_chip_section_never">कभी नहीं पढ़ा जाता</string>
+    <string name="learn_chip_dg3">उंगलियों के निशान।</string>
+    <string name="learn_chip_dg4">आइरिस (आंख की पुतली) की इमेज।</string>
+    <string name="learn_chip_eac">यूरोपीय दस्तावेज़ों पर ये दोनों फ़ाइलें वैसे भी एक अतिरिक्त लॉक, EAC (Extended Access Control), से सुरक्षित होती हैं, जिसे सिर्फ़ अधिकृत प्राधिकारी ही खोल सकते हैं।</string>
+    <string name="learn_chip_others">बाकी डेटा ग्रुप (DG5 से DG10, DG13 और DG16: दूसरी इमेज, हाथ से किए गए हस्ताक्षर, देश से जुड़ा डेटा, आपात स्थिति में सूचना पाने वाले लोग) भी नहीं पढ़े जाते।</string>
+
+    <string name="learn_chip_section_never_does">Sceau क्या नहीं करता</string>
+    <string name="learn_chip_no_storage">यह पढ़ा गया कोई भी डेटा न तो सेव करता है, न भेजता है और न ही लॉग करता है: सब कुछ फ़ोन की मेमोरी में रहता है और नतीजे से बाहर निकलते ही मिट जाता है।</string>
+    <string name="learn_chip_no_screenshot">यह न तो स्क्रीनशॉट लेने देता है और न ही हाल में इस्तेमाल किए गए ऐप में झलक दिखाता है।</string>
+    <string name="learn_chip_no_write">यह चिप पर कोई डेटा नहीं लिखता: सिर्फ़ उसे पढ़ता है।</string>
+    <string name="learn_chip_no_other_data">यह ऊपर बताई गई फ़ाइलों के अलावा कुछ नहीं पढ़ता: चिप से कोई और जानकारी, चाहे वह कुछ भी हो, नहीं मांगी जाती।</string>
+</resources>

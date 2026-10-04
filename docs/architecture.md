@@ -50,7 +50,7 @@ app/src/main/java/io/github/mgdx/sceau/
   session/                 SessionViewModel, ReadState, AccessForm (saisie de l'accueil, dates)
   trust/                   TrustStoreRepository
   demo/DemoCard            document simulé du mode démo (voir DemoMode ci-dessous)
-  ui/                      SceauNavHost, Routes, écrans home/, reading/, result/, trust/, about/
+  ui/                      SceauNavHost, Routes, écrans home/, reading/, result/, trust/, about/, learn/ (introduction, « Ce que contient la puce », D35)
   ui/common/SecureWindow   FLAG_SECURE compté par fenêtre
   ui/theme/                thème Material 3, palette du logo, mode sombre suivant le système
   jp2/Jpeg2000Decoder      décodage JPEG 2000 (JNI vers libsceau_jp2.so), appelé dans le seul processus isolé
@@ -167,7 +167,7 @@ Données sensibles : la clé d'accès (CAN ou MRZ) et le contenu de `Verificatio
 | Images décodées (bitmap) | écran de résultat | tant que l'écran est composé ; effacées par `wipeAndRecycle()`. Les tampons intermédiaires du décodage JPEG 2000 (copie native du flux, échantillons, tableau ARGB natif et Java, flux et pixels reçus ou envoyés par binder, des deux côtés) sont remis à zéro dès le bitmap construit ; le processus isolé est terminé après chaque image (D23) |
 | Master Lists importées | `filesDir/trust/` | jusqu'à « Supprimer les certificats importés » (données publiques) |
 
-Rien d'autre : aucune base, aucun fichier, aucun cache, aucun log, aucune préférence ne contient de donnée lue ni de clé. Le `SavedStateHandle` et le `Bundle` d'état de l'activité n'en contiennent pas non plus : après la mort du processus, l'application redémarre sur l'accueil, vide. La sauvegarde Android est désactivée (`allowBackup="false"`, et règles de sauvegarde et de transfert qui excluent tous les domaines).
+Rien d'autre : aucune base, aucun fichier, aucun cache, aucun log, aucune préférence ne contient de donnée lue ni de clé. Le `SavedStateHandle` et le `Bundle` d'état de l'activité n'en contiennent pas non plus : après la mort du processus, l'application redémarre sur l'accueil, vide, ou sur l'introduction tant qu'elle n'a pas été vue. La seule préférence écrite est l'indicateur `intro_seen` (`SharedPreferences` `sceau_preferences`, D35), un booléen sans donnée personnelle. La sauvegarde Android est désactivée (`allowBackup="false"`, et règles de sauvegarde et de transfert qui excluent tous les domaines).
 
 ### Quand elles sont effacées
 

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="learn_intro_skip">Bevezető kihagyása</string>
+    <string name="learn_intro_previous">Vissza</string>
+    <string name="learn_intro_next">Tovább</string>
+    <string name="learn_intro_start">Kezdés</string>
+    <string name="learn_intro_page">%1$d. oldal, összesen %2$d</string>
+
+    <string name="learn_intro_chip_title">Chip az okmányában</string>
+    <string name="learn_intro_chip_body">A biometrikus útlevelek és az újabb személyi igazolványok érintés nélküli chipet tartalmaznak, amely megfelel az ICAO 9303 nemzetközi szabványnak.</string>
+    <string name="learn_intro_chip_icao">ICAO: Nemzetközi Polgári Repülési Szervezet, amely az úti okmányok szabályait határozza meg.</string>
+    <string name="learn_intro_chip_copy">A chip a nyomtatott adatok és a fénykép másolatát tartalmazza, az okmányt kiállító állam elektronikus aláírásával.</string>
+
+    <string name="learn_intro_key_title">Kulcs a chip megnyitásához</string>
+    <string name="learn_intro_key_body">Kulcs nélkül a chip nem válaszol. A kulcs az okmányra van nyomtatva:</string>
+    <string name="learn_intro_key_can">CAN: a legtöbb újabb személyi igazolvány előlapjára nyomtatott 6 jegyű hozzáférési szám.</string>
+    <string name="learn_intro_key_mrz">MRZ: az útlevél fényképes oldalának alján vagy a kártya hátoldalán lévő karaktersorok, amelyekből az okmány száma, a születési dátum és a lejárati dátum származik.</string>
+    <string name="learn_intro_key_channel">A kommunikáció ezután titkosított csatornán zajlik (PACE vagy BAC, a szabványban előírt protokollok): aki a közelben van, de nem ismeri ezt a kulcsot, nem tudja elolvasni.</string>
+
+    <string name="learn_intro_verify_title">Mit ellenőriz a Sceau?</string>
+    <string name="learn_intro_verify_signature">Az állam aláírását (Passive Authentication), az alkalmazásba épített vagy az Ön által importált országtanúsítványok segítségével.</string>
+    <string name="learn_intro_verify_clone">Azt, hogy a chip nem másolat (Chip Authentication vagy Active Authentication): bizonyítania kell, hogy olyan titkos kulcsot őriz, amelyet soha nem fed fel.</string>
+    <string name="learn_intro_verify_verdicts">Az eredmény négyféle lehet:</string>
+
+    <string name="learn_intro_privacy_title">Az adatai itt maradnak</string>
+    <string name="learn_intro_privacy_offline">Minden a telefonon történik: a Sceau-nak még internet-hozzáférési engedélye sincs.</string>
+    <string name="learn_intro_privacy_nothing_saved">Semmi sem kerül mentésre: a beolvasott adatok törlődnek, amint elhagyja az eredményt, vagy az alkalmazás a háttérbe kerül.</string>
+    <string name="learn_intro_privacy_screenshots">A képernyőképek készítése az egész alkalmazásban le van tiltva.</string>
+
+    <string name="learn_about_section">A Sceau működése</string>
+    <string name="learn_about_replay_intro">A bevezető újbóli megtekintése</string>
+
+    <string name="learn_chip_title">Mit tartalmaz a chip?</string>
+    <string name="learn_chip_back">Vissza</string>
+    <string name="learn_chip_intro">A chip fájlokban tárolja az adatait: adatcsoportokban (DG1, DG2…) és néhány technikai fájlban, amelyek neve EF-fel kezdődik. Íme, mit kezd velük a Sceau.</string>
+
+    <string name="learn_chip_section_displayed">Beolvasva és megjelenítve</string>
+    <string name="learn_chip_dg1">Az MRZ adatai: okmány típusa, családi név, utónevek, állampolgárság, születési dátum, nem, okmányszám, kibocsátó állam és lejárati dátum.</string>
+    <string name="learn_chip_dg2">A tulajdonos fényképe.</string>
+    <string name="learn_chip_dg11">Ha az állam rögzíti: további személyes adatok, például a születési hely vagy a lakcím.</string>
+    <string name="learn_chip_dg12">Ha az állam rögzíti: az okmány adatai, például a kiállító hatóság és a kiállítás dátuma, néha az okmány képe is.</string>
+
+    <string name="learn_chip_section_verification">Csak ellenőrzéshez beolvasva</string>
+    <string name="learn_chip_verification_intro">Ezek a fájlok nem tartalmaznak személyes adatot: a chippel való kommunikációt szolgálják, és annak bizonyítását, hogy az adatok hitelesek.</string>
+    <string name="learn_chip_ef_card_access">A chip által elfogadott hozzáférési protokollok, például a PACE.</string>
+    <string name="learn_chip_ef_com">A meglévő adatcsoportok listája.</string>
+    <string name="learn_chip_ef_sod">Az egyes adatcsoportok hash-értéke, az állam aláírásával.</string>
+    <string name="learn_chip_dg14">A Chip Authentication során használt nyilvános kulcs.</string>
+    <string name="learn_chip_dg15">Az Active Authentication során használt nyilvános kulcs.</string>
+    <string name="learn_chip_ef_card_security">Csak egyes okmányokon (PACE-CAM): a chip kulcsa az állam aláírásával, amely igazolja, hogy a chip a csatorna megnyitása közben hitelesítette magát.</string>
+
+    <string name="learn_chip_section_never">Soha nincs beolvasva</string>
+    <string name="learn_chip_dg3">Az ujjlenyomatok.</string>
+    <string name="learn_chip_dg4">Az írisz képe.</string>
+    <string name="learn_chip_eac">Az európai okmányokon ezt a két fájlt egyébként is egy további zár, az EAC (Extended Access Control) védi, amelyet csak az arra jogosult hatóságok nyithatnak meg.</string>
+    <string name="learn_chip_others">A többi adatcsoportot (DG5–DG10, DG13 és DG16: további képek, saját kezű aláírás, az államra jellemző adatok, értesítendő személyek) sem olvassa be.</string>
+
+    <string name="learn_chip_section_never_does">Amit a Sceau nem tesz</string>
+    <string name="learn_chip_no_storage">Egyetlen beolvasott adatot sem ment, küld el vagy naplóz: minden a telefon memóriájában marad, és az eredmény elhagyásakor törlődik.</string>
+    <string name="learn_chip_no_screenshot">Nem engedi a képernyőképeket, és az előnézetet sem a legutóbbi alkalmazások között.</string>
+    <string name="learn_chip_no_write">Semmilyen adatot nem ír a chipre: csak olvassa.</string>
+    <string name="learn_chip_no_other_data">A fent felsorolt fájlokon kívül semmit sem olvas be: semmilyen más adatot nem kér a chiptől, bármi legyen is az.</string>
+</resources>

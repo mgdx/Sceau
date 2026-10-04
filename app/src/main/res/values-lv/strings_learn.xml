@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="learn_intro_skip">Izlaist ievadu</string>
+    <string name="learn_intro_previous">Atpakaļ</string>
+    <string name="learn_intro_next">Tālāk</string>
+    <string name="learn_intro_start">Sākt</string>
+    <string name="learn_intro_page">%1$d. lapa no %2$d</string>
+
+    <string name="learn_intro_chip_title">Mikroshēma jūsu dokumentā</string>
+    <string name="learn_intro_chip_body">Biometriskajās pasēs un jaunākajās personas apliecībās ir bezkontakta mikroshēma, kas atbilst starptautiskajam standartam ICAO 9303.</string>
+    <string name="learn_intro_chip_icao">ICAO: Starptautiskā Civilās aviācijas organizācija, kas nosaka ceļošanas dokumentu noteikumus.</string>
+    <string name="learn_intro_chip_copy">Mikroshēmā ir uzdrukātās informācijas un fotoattēla kopija, ko elektroniski parakstījusi dokumentu izdevusī valsts.</string>
+
+    <string name="learn_intro_key_title">Atslēga mikroshēmas atvēršanai</string>
+    <string name="learn_intro_key_body">Bez atslēgas mikroshēma atsakās atbildēt. Atslēga ir uzdrukāta uz dokumenta:</string>
+    <string name="learn_intro_key_can">CAN: 6 ciparu piekļuves numurs, kas uzdrukāts uz vairuma jaunāko personas apliecību priekšpuses.</string>
+    <string name="learn_intro_key_mrz">MRZ: rakstzīmju rindas pases fotoattēla lapas apakšā vai kartes otrā pusē, no kurām tiek ņemts dokumenta numurs, dzimšanas datums un derīguma termiņš.</string>
+    <string name="learn_intro_key_channel">Pēc tam visa saziņa notiek pa šifrētu kanālu (PACE vai BAC – standartā paredzētie protokoli): neviens tuvumā esošais, kurš nezina šo atslēgu, to nevar nolasīt.</string>
+
+    <string name="learn_intro_verify_title">Ko pārbauda Sceau</string>
+    <string name="learn_intro_verify_signature">Valsts parakstu (Passive Authentication), izmantojot lietotnē iebūvētos vai jūsu importētos valstu sertifikātus.</string>
+    <string name="learn_intro_verify_clone">Ka mikroshēma nav kopija (Chip Authentication vai Active Authentication): tai jāpierāda, ka tai ir slepena atslēga, ko tā nekad neatklāj.</string>
+    <string name="learn_intro_verify_verdicts">Rezultāts ir viens no četriem vērtējumiem:</string>
+
+    <string name="learn_intro_privacy_title">Jūsu dati paliek šeit</string>
+    <string name="learn_intro_privacy_offline">Viss notiek tālrunī: Sceau pat nav atļaujas piekļūt internetam.</string>
+    <string name="learn_intro_privacy_nothing_saved">Nekas netiek saglabāts: nolasītie dati tiek dzēsti, tiklīdz izejat no rezultāta vai lietotne tiek pārslēgta fonā.</string>
+    <string name="learn_intro_privacy_screenshots">Ekrānuzņēmumi visā lietotnē ir bloķēti.</string>
+
+    <string name="learn_about_section">Iepazīstiet Sceau</string>
+    <string name="learn_about_replay_intro">Skatīt ievadu vēlreiz</string>
+
+    <string name="learn_chip_title">Kas ir mikroshēmā</string>
+    <string name="learn_chip_back">Atpakaļ</string>
+    <string name="learn_chip_intro">Mikroshēma glabā informāciju failos: datu grupās (DG1, DG2…) un dažos tehniskajos failos, kuru nosaukums sākas ar EF. Lūk, ko ar tiem dara Sceau.</string>
+
+    <string name="learn_chip_section_displayed">Nolasīts un parādīts</string>
+    <string name="learn_chip_dg1">MRZ dati: dokumenta veids, uzvārds, vārdi, pilsonība, dzimšanas datums, dzimums, dokumenta numurs, izdevējvalsts un derīguma termiņš.</string>
+    <string name="learn_chip_dg2">Turētāja fotoattēls.</string>
+    <string name="learn_chip_dg11">Ja valsts tos ieraksta: papildu personas informācija, piemēram, dzimšanas vieta vai adrese.</string>
+    <string name="learn_chip_dg12">Ja valsts tos ieraksta: informācija par dokumentu, piemēram, izdevējiestāde un izdošanas datums, dažreiz arī dokumenta attēls.</string>
+
+    <string name="learn_chip_section_verification">Nolasīts tikai pārbaudei</string>
+    <string name="learn_chip_verification_intro">Šie faili nesatur nekādus personas datus: tie kalpo saziņai ar mikroshēmu un tam, lai pierādītu, ka dati ir autentiski.</string>
+    <string name="learn_chip_ef_card_access">Mikroshēmas pieņemtie piekļuves protokoli, piemēram, PACE.</string>
+    <string name="learn_chip_ef_com">Esošo datu grupu saraksts.</string>
+    <string name="learn_chip_ef_sod">Katras datu grupas nospiedums, ko parakstījusi valsts.</string>
+    <string name="learn_chip_dg14">Publiskā atslēga, ko izmanto Chip Authentication.</string>
+    <string name="learn_chip_dg15">Publiskā atslēga, ko izmanto Active Authentication.</string>
+    <string name="learn_chip_ef_card_security">Tikai dažos dokumentos (PACE-CAM): valsts parakstīta mikroshēmas atslēga, kas apliecina, ka mikroshēma ir autentificējusies kanāla atvēršanas laikā.</string>
+
+    <string name="learn_chip_section_never">Nekad netiek nolasīts</string>
+    <string name="learn_chip_dg3">Pirkstu nospiedumi.</string>
+    <string name="learn_chip_dg4">Varavīksnenes attēls.</string>
+    <string name="learn_chip_eac">Eiropas dokumentos šie divi faili jebkurā gadījumā ir aizsargāti ar papildu slēdzeni – EAC (Extended Access Control), ko var atvērt tikai pilnvarotas iestādes.</string>
+    <string name="learn_chip_others">Arī pārējās datu grupas (DG5–DG10, DG13 un DG16: citi attēli, rokraksta paraksts, valstij specifiski dati, personas, kuras jāinformē) netiek nolasītas.</string>
+
+    <string name="learn_chip_section_never_does">Ko Sceau nedara</string>
+    <string name="learn_chip_no_storage">Tā nesaglabā, nesūta un nereģistrē žurnālā nekādus nolasītos datus: viss paliek tālruņa atmiņā un tiek dzēsts, izejot no rezultāta.</string>
+    <string name="learn_chip_no_screenshot">Tā neļauj veidot ekrānuzņēmumus un rādīt priekšskatījumu nesen izmantoto lietotņu sarakstā.</string>
+    <string name="learn_chip_no_write">Tā neieraksta mikroshēmā nekādus datus: tikai to nolasa.</string>
+    <string name="learn_chip_no_other_data">Tā nenolasa neko citu kā vien iepriekš uzskaitītos failus: no mikroshēmas netiek pieprasīta nekāda cita informācija, lai kāda tā būtu.</string>
+</resources>

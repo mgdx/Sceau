@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="learn_intro_skip">ข้ามบทนำ</string>
+    <string name="learn_intro_previous">ก่อนหน้า</string>
+    <string name="learn_intro_next">ถัดไป</string>
+    <string name="learn_intro_start">เริ่มต้น</string>
+    <string name="learn_intro_page">หน้า %1$d จาก %2$d</string>
+
+    <string name="learn_intro_chip_title">ชิปในเอกสารของคุณ</string>
+    <string name="learn_intro_chip_body">หนังสือเดินทางไบโอเมตริกและบัตรประจำตัวรุ่นใหม่มีชิปแบบไร้สัมผัสที่เป็นไปตามมาตรฐานสากล ICAO 9303</string>
+    <string name="learn_intro_chip_icao">ICAO: องค์การการบินพลเรือนระหว่างประเทศ ซึ่งกำหนดกฎเกณฑ์ของเอกสารการเดินทาง</string>
+    <string name="learn_intro_chip_copy">ชิปเก็บสำเนาข้อมูลที่พิมพ์ไว้และรูปถ่าย ซึ่งลงลายมือชื่ออิเล็กทรอนิกส์โดยประเทศที่ออกเอกสาร</string>
+
+    <string name="learn_intro_key_title">กุญแจสำหรับเปิดชิป</string>
+    <string name="learn_intro_key_body">หากไม่มีกุญแจ ชิปจะไม่ตอบสนอง กุญแจนี้พิมพ์อยู่บนเอกสาร:</string>
+    <string name="learn_intro_key_can">CAN: หมายเลขเข้าถึง 6 หลักที่พิมพ์อยู่ด้านหน้าของบัตรประจำตัวรุ่นใหม่ส่วนใหญ่</string>
+    <string name="learn_intro_key_mrz">MRZ: บรรทัดตัวอักษรที่ด้านล่างของหน้ารูปถ่ายในหนังสือเดินทางหรือด้านหลังของบัตร ซึ่งเป็นที่มาของเลขที่เอกสาร วันเกิด และวันหมดอายุ</string>
+    <string name="learn_intro_key_channel">จากนั้นการสื่อสารทั้งหมดจะผ่านช่องทางที่เข้ารหัส (PACE หรือ BAC ซึ่งเป็นโปรโตคอลที่มาตรฐานกำหนด) คนที่อยู่ใกล้เคียงซึ่งไม่รู้กุญแจนี้จึงอ่านไม่ได้</string>
+
+    <string name="learn_intro_verify_title">สิ่งที่ Sceau ตรวจสอบ</string>
+    <string name="learn_intro_verify_signature">ลายมือชื่อของประเทศผู้ออก (Passive Authentication) โดยใช้ใบรับรองของประเทศต่างๆ ที่มีอยู่ในแอปหรือที่คุณนำเข้า</string>
+    <string name="learn_intro_verify_clone">ชิปไม่ใช่ของปลอมที่คัดลอกมา (Chip Authentication หรือ Active Authentication) ชิปต้องพิสูจน์ว่ามีกุญแจลับที่ไม่เคยเปิดเผยออกมา</string>
+    <string name="learn_intro_verify_verdicts">ผลลัพธ์มีได้สี่แบบ:</string>
+
+    <string name="learn_intro_privacy_title">ข้อมูลของคุณอยู่ที่นี่เท่านั้น</string>
+    <string name="learn_intro_privacy_offline">ทุกอย่างทำงานบนโทรศัพท์ Sceau ไม่มีแม้แต่สิทธิ์เข้าถึงอินเทอร์เน็ต</string>
+    <string name="learn_intro_privacy_nothing_saved">ไม่มีการบันทึกใดๆ ข้อมูลที่อ่านได้จะถูกล้างทันทีเมื่อคุณออกจากผลลัพธ์หรือเมื่อแอปทำงานในเบื้องหลัง</string>
+    <string name="learn_intro_privacy_screenshots">การจับภาพหน้าจอถูกบล็อกทั่วทั้งแอป</string>
+
+    <string name="learn_about_section">ทำความเข้าใจ Sceau</string>
+    <string name="learn_about_replay_intro">ดูบทนำอีกครั้ง</string>
+
+    <string name="learn_chip_title">ข้อมูลที่อยู่ในชิป</string>
+    <string name="learn_chip_back">กลับ</string>
+    <string name="learn_chip_intro">ชิปเก็บข้อมูลไว้ในไฟล์ ได้แก่ กลุ่มข้อมูล (DG1, DG2…) และไฟล์ทางเทคนิคบางไฟล์ซึ่งมีชื่อขึ้นต้นด้วย EF ต่อไปนี้คือสิ่งที่ Sceau ทำกับไฟล์เหล่านี้</string>
+
+    <string name="learn_chip_section_displayed">อ่านและแสดง</string>
+    <string name="learn_chip_dg1">ข้อมูลใน MRZ: ประเภทเอกสาร ชื่อสกุล ชื่อตัว สัญชาติ วันเกิด เพศ เลขที่เอกสาร ประเทศที่ออก และวันหมดอายุ</string>
+    <string name="learn_chip_dg2">รูปถ่ายของผู้ถือ</string>
+    <string name="learn_chip_dg11">หากประเทศบันทึกไว้: ข้อมูลส่วนบุคคลเพิ่มเติม เช่น สถานที่เกิดหรือที่อยู่</string>
+    <string name="learn_chip_dg12">หากประเทศบันทึกไว้: ข้อมูลเกี่ยวกับเอกสาร เช่น หน่วยงานที่ออกและวันที่ออก บางครั้งมีภาพของเอกสารด้วย</string>
+
+    <string name="learn_chip_section_verification">อ่านเพื่อการตรวจสอบเท่านั้น</string>
+    <string name="learn_chip_verification_intro">ไฟล์เหล่านี้ไม่มีข้อมูลส่วนบุคคล แต่ใช้สื่อสารกับชิปและพิสูจน์ว่าข้อมูลเป็นของแท้</string>
+    <string name="learn_chip_ef_card_access">โปรโตคอลการเข้าถึงที่ชิปรองรับ เช่น PACE</string>
+    <string name="learn_chip_ef_com">รายการกลุ่มข้อมูลที่มีอยู่</string>
+    <string name="learn_chip_ef_sod">ค่าแฮชของแต่ละกลุ่มข้อมูล ซึ่งลงลายมือชื่อโดยประเทศผู้ออก</string>
+    <string name="learn_chip_dg14">กุญแจสาธารณะที่ใช้สำหรับ Chip Authentication</string>
+    <string name="learn_chip_dg15">กุญแจสาธารณะที่ใช้สำหรับ Active Authentication</string>
+    <string name="learn_chip_ef_card_security">เฉพาะเอกสารบางประเภท (PACE-CAM): กุญแจของชิปที่ลงลายมือชื่อโดยประเทศผู้ออก ซึ่งยืนยันว่าชิปได้ยืนยันตัวตนแล้วระหว่างการเปิดช่องทาง</string>
+
+    <string name="learn_chip_section_never">ไม่อ่านเลย</string>
+    <string name="learn_chip_dg3">ลายนิ้วมือ</string>
+    <string name="learn_chip_dg4">ภาพม่านตา</string>
+    <string name="learn_chip_eac">สำหรับเอกสารของยุโรป ไฟล์ทั้งสองนี้ได้รับการป้องกันด้วยกุญแจล็อกเพิ่มเติมอยู่แล้ว คือ EAC (Extended Access Control) ซึ่งเปิดได้เฉพาะหน่วยงานที่ได้รับอนุญาตเท่านั้น</string>
+    <string name="learn_chip_others">กลุ่มข้อมูลอื่นๆ (DG5 ถึง DG10, DG13 และ DG16: ภาพอื่นๆ ลายมือชื่อที่เขียนด้วยมือ ข้อมูลเฉพาะของแต่ละประเทศ บุคคลที่ต้องแจ้งให้ทราบ) ก็ไม่ถูกอ่านเช่นกัน</string>
+
+    <string name="learn_chip_section_never_does">สิ่งที่ Sceau ไม่ทำ</string>
+    <string name="learn_chip_no_storage">ไม่บันทึก ไม่ส่ง และไม่เก็บบันทึกข้อมูลที่อ่านได้ ทุกอย่างอยู่ในหน่วยความจำของโทรศัพท์และถูกล้างเมื่อออกจากผลลัพธ์</string>
+    <string name="learn_chip_no_screenshot">ไม่อนุญาตให้จับภาพหน้าจอหรือแสดงตัวอย่างในรายการแอปล่าสุด</string>
+    <string name="learn_chip_no_write">ไม่เขียนข้อมูลใดๆ ลงในชิป ทำได้เพียงอ่านเท่านั้น</string>
+    <string name="learn_chip_no_other_data">ไม่อ่านสิ่งใดนอกเหนือจากไฟล์ที่ระบุไว้ข้างต้น และไม่ขอข้อมูลอื่นใดจากชิป ไม่ว่าจะเป็นข้อมูลประเภทใด</string>
+</resources>

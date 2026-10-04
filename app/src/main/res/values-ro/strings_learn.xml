@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="learn_intro_skip">Omiteți introducerea</string>
+    <string name="learn_intro_previous">Înapoi</string>
+    <string name="learn_intro_next">Înainte</string>
+    <string name="learn_intro_start">Începeți</string>
+    <string name="learn_intro_page">Pagina %1$d din %2$d</string>
+
+    <string name="learn_intro_chip_title">Un cip în documentul dvs.</string>
+    <string name="learn_intro_chip_body">Pașapoartele biometrice și cărțile de identitate recente conțin un cip fără contact, conform standardului internațional ICAO 9303.</string>
+    <string name="learn_intro_chip_icao">ICAO: Organizația Aviației Civile Internaționale, care stabilește regulile pentru documentele de călătorie.</string>
+    <string name="learn_intro_chip_copy">Cipul conține o copie a informațiilor tipărite și a fotografiei, semnată electronic de statul care a eliberat documentul.</string>
+
+    <string name="learn_intro_key_title">O cheie pentru a deschide cipul</string>
+    <string name="learn_intro_key_body">Fără cheie, cipul refuză să răspundă. Această cheie este tipărită pe document:</string>
+    <string name="learn_intro_key_can">CAN: numărul de acces de 6 cifre tipărit pe fața majorității cărților de identitate recente.</string>
+    <string name="learn_intro_key_mrz">MRZ: rândurile de caractere din partea de jos a paginii cu fotografia din pașaport sau de pe verso-ul cărții, din care provin numărul documentului, data nașterii și data expirării.</string>
+    <string name="learn_intro_key_channel">Comunicarea trece apoi printr-un canal criptat (PACE sau BAC, protocoalele prevăzute de standard): o persoană aflată în apropiere care nu cunoaște această cheie nu o poate citi.</string>
+
+    <string name="learn_intro_verify_title">Ce verifică Sceau</string>
+    <string name="learn_intro_verify_signature">Semnătura statului (Passive Authentication), cu certificatele țărilor integrate în aplicație sau pe care le-ați importat.</string>
+    <string name="learn_intro_verify_clone">Faptul că cipul nu este o copie (Chip Authentication sau Active Authentication): acesta trebuie să dovedească faptul că deține o cheie secretă pe care nu o dezvăluie niciodată.</string>
+    <string name="learn_intro_verify_verdicts">Rezultatul se rezumă la patru verdicte:</string>
+
+    <string name="learn_intro_privacy_title">Datele dvs. rămân aici</string>
+    <string name="learn_intro_privacy_offline">Totul se petrece pe telefon: Sceau nici măcar nu are permisiunea de a accesa internetul.</string>
+    <string name="learn_intro_privacy_nothing_saved">Nimic nu este salvat: datele citite sunt șterse imediat ce părăsiți rezultatul sau aplicația trece în fundal.</string>
+    <string name="learn_intro_privacy_screenshots">Capturile de ecran sunt blocate în toată aplicația.</string>
+
+    <string name="learn_about_section">Cum funcționează Sceau</string>
+    <string name="learn_about_replay_intro">Revedeți introducerea</string>
+
+    <string name="learn_chip_title">Ce conține cipul</string>
+    <string name="learn_chip_back">Înapoi</string>
+    <string name="learn_chip_intro">Cipul își păstrează informațiile în fișiere: grupuri de date (DG1, DG2…) și câteva fișiere tehnice al căror nume începe cu EF. Iată ce face Sceau cu ele.</string>
+
+    <string name="learn_chip_section_displayed">Citite și afișate</string>
+    <string name="learn_chip_dg1">Datele din MRZ: tipul documentului, nume, prenume, cetățenie, data nașterii, sex, numărul documentului, statul emitent și data expirării.</string>
+    <string name="learn_chip_dg2">Fotografia titularului.</string>
+    <string name="learn_chip_dg11">Dacă statul le înscrie: informații personale suplimentare, cum ar fi locul nașterii sau adresa.</string>
+    <string name="learn_chip_dg12">Dacă statul le înscrie: informații despre document, cum ar fi autoritatea emitentă și data eliberării, uneori o imagine a documentului.</string>
+
+    <string name="learn_chip_section_verification">Citite doar pentru verificare</string>
+    <string name="learn_chip_verification_intro">Aceste fișiere nu conțin date personale: ele servesc la comunicarea cu cipul și la dovedirea autenticității datelor.</string>
+    <string name="learn_chip_ef_card_access">Protocoalele de acces acceptate de cip, cum ar fi PACE.</string>
+    <string name="learn_chip_ef_com">Lista grupurilor de date prezente.</string>
+    <string name="learn_chip_ef_sod">Amprenta fiecărui grup de date, semnată de stat.</string>
+    <string name="learn_chip_dg14">Cheia publică folosită pentru Chip Authentication.</string>
+    <string name="learn_chip_dg15">Cheia publică folosită pentru Active Authentication.</string>
+    <string name="learn_chip_ef_card_security">Doar pe unele documente (PACE-CAM): cheia cipului semnată de stat, care confirmă că cipul s-a autentificat în timpul deschiderii canalului.</string>
+
+    <string name="learn_chip_section_never">Niciodată citite</string>
+    <string name="learn_chip_dg3">Amprentele digitale.</string>
+    <string name="learn_chip_dg4">Imaginea irisului.</string>
+    <string name="learn_chip_eac">Pe documentele europene, aceste două fișiere sunt oricum protejate de un lacăt suplimentar, EAC (Extended Access Control), pe care doar autoritățile abilitate îl pot deschide.</string>
+    <string name="learn_chip_others">Celelalte grupuri de date (DG5–DG10, DG13 și DG16: alte imagini, semnătura olografă, date specifice statului, persoane de contactat) nu sunt nici ele citite.</string>
+
+    <string name="learn_chip_section_never_does">Ce nu face Sceau</string>
+    <string name="learn_chip_no_storage">Nu salvează, nu trimite și nu jurnalizează nicio dată citită: totul rămâne în memoria telefonului și este șters când părăsiți rezultatul.</string>
+    <string name="learn_chip_no_screenshot">Nu permite nici capturi de ecran, nici previzualizare în aplicațiile recente.</string>
+    <string name="learn_chip_no_write">Nu scrie nicio dată pe cip: doar îl citește.</string>
+    <string name="learn_chip_no_other_data">Nu citește nimic altceva decât fișierele enumerate mai sus: nu este solicitată nicio altă informație de pe cip, oricare ar fi ea.</string>
+</resources>

@@ -1,2 +1,11 @@
 # Débordements de texte connus, relevés par TextOverflowTest (D28) : une ligne « langue|clé ».
 # Le test échoue si un débordement absent de cette liste apparaît, ou si une ligne ne se produit plus.
+# D35, écrans pédagogiques à 200 % de police : mots composés plus longs qu'une ligne de 300 dp,
+# coupés par Android faute de place (aucune troncature : le texte reste entier).
+is|learn_chip_dg11
+ka|learn_chip_no_screenshot
+ka|learn_intro_key_channel
+nl|learn_intro_chip_icao
+# D35, japonais à 100 % : hauteur relevée après la remise en page de la sémantique (voir D28),
+# texte de 3 lignes sans troncature dans sa boîte réelle.
+ja|learn_chip_ef_card_security
