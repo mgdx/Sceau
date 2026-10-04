@@ -18,6 +18,12 @@ enum class TrustSource {
 
     /** Master List importée par l'utilisateur. */
     IMPORTED_MASTER_LIST,
+
+    /**
+     * Certificat (CSCA auto-signé ou certificat de lien) importé seul par l'utilisateur : aucune
+     * signature d'État ne le garantit, c'est l'utilisateur qui lui accorde sa confiance (D33).
+     */
+    IMPORTED_CERTIFICATE,
 }
 
 /** Un CSCA (ou certificat de lien) connu, avec sa provenance. */
@@ -74,6 +80,16 @@ class InvalidMasterListException(
     cause: Throwable? = null,
 ) : Exception(code, cause)
 
+/**
+ * Certificat importé rejeté. [code] stable, sans donnée personnelle : `UNREADABLE` (pas un
+ * certificat X.509 unique, DER ou PEM, ou clé publique illisible), `NOT_CA` (ne peut pas signer
+ * de certificats), `BAD_SIGNATURE` (auto-signature invalide).
+ */
+class InvalidCertificateException(
+    val code: String,
+    cause: Throwable? = null,
+) : Exception(code, cause)
+
 object TrustStores {
     /**
      * Parse une Master List CMS (`.ml`, `.der`, `.p7b`) et vérifie sa signature avec le
@@ -82,9 +98,19 @@ object TrustStores {
     fun parseMasterList(bytes: ByteArray): MasterList = MasterListParser.parse(bytes).masterList
 
     /**
-     * Charge le magasin embarqué (ressources `trust/` du classpath) et le fusionne avec
-     * les Master Lists importées, fournies en octets bruts par l'app. Une Master List
-     * embarquée invalide lève [InvalidMasterListException] ; un import invalide est ignoré.
+     * Lit un certificat CSCA ou de lien importé seul, en DER ou en PEM (un seul certificat), et
+     * vérifie qu'il peut signer des certificats et, s'il se dit auto-signé, son auto-signature.
+     * Lève [InvalidCertificateException] sinon.
      */
-    fun load(importedMasterLists: List<ByteArray> = emptyList()): TrustStore = TrustStoreLoader.load(importedMasterLists)
+    fun parseCertificate(bytes: ByteArray): X509Certificate = CertificateParser.parse(bytes)
+
+    /**
+     * Charge le magasin embarqué (ressources `trust/` du classpath) et le fusionne avec
+     * les Master Lists et les certificats importés, fournis en octets bruts par l'app. Une Master
+     * List embarquée invalide lève [InvalidMasterListException] ; un import invalide est ignoré.
+     */
+    fun load(
+        importedMasterLists: List<ByteArray> = emptyList(),
+        importedCertificates: List<ByteArray> = emptyList(),
+    ): TrustStore = TrustStoreLoader.load(importedMasterLists, importedCertificates)
 }

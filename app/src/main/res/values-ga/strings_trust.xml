@@ -32,6 +32,7 @@
     <string name="trust_source_national">Foilseachán náisiúnta</string>
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Iompórtáilte</string>
+    <string name="trust_source_imported_certificate">Deimhniú iompórtáilte</string>
     <string name="trust_link_certificate">Deimhniú naisc</string>
 
     <!-- Recherche -->
@@ -40,7 +41,7 @@
     <string name="trust_search_no_result">Níl aon tír a mheaitseálann do chuardach.</string>
 
     <!-- Import -->
-    <string name="trust_import">Iompórtáil Master List</string>
+    <string name="trust_import">Iompórtáil Master List nó deimhniú</string>
     <string name="trust_busy">Fan go fóill…</string>
     <string name="trust_import_confirm_title">An Master List seo a iompórtáil?</string>
     <string name="trust_import_confirm_text">Tá a síniú bailí. Roimh iompórtáil, seiceáil go bhfuil méarlorg an tsínitheora mar an gcéanna leis an méarlorg a d’fhoilsigh an t-údarás eisiúna.</string>
@@ -71,10 +72,42 @@
     </plurals>
     <string name="trust_import_limit_size">Diúltaíodh don iompórtáil: rachadh na Master Lists iompórtáilte thar %1$d MB san iomlán. Scrios na deimhnithe iompórtáilte chun ceann eile a chur leis.</string>
 
+    <!-- Import d'un certificat seul (D33) -->
+    <string name="trust_import_certificate_confirm_title">An deimhniú seo a iompórtáil?</string>
+    <string name="trust_import_certificate_warning">Murab ionann agus Master List, níl síniú aon Stáit ag ráthú an chomhaid seo: is tusa a shocraíonn an bhfuil muinín agat as. Is féidir le deimhniú iompórtáilte aon doiciméad óna thír a chur i láthair mar dhoiciméad barántúil. Sula n-iompórtálann tú é, cuir a mhéarlorg i gcomparáid leis an méarlorg a d’fhoilsigh an Stát eisiúna.</string>
+    <string name="trust_import_certificate_type">Cineál</string>
+    <string name="trust_import_certificate_type_csca">CSCA féinsínithe</string>
+    <string name="trust_import_certificate_subject">Ábhar</string>
+    <string name="trust_import_certificate_country">Tír</string>
+    <string name="trust_import_certificate_validity">Bailíocht</string>
+    <string name="trust_import_certificate_done">Iompórtáladh an deimhniú.</string>
+    <string name="trust_import_certificate_invalid">Ní féidir an deimhniú seo a iompórtáil: ní ghlactar ach le CSCA féinsínithe nó le deimhniú naisc (%1$s).</string>
+    <string name="trust_import_unrecognized">Ní Master List é an comhad seo, ná deimhniú aonair DER nó PEM.</string>
+    <string name="trust_import_certificate_write_error">Níorbh fhéidir an deimhniú a shábháil.</string>
+    <string name="trust_import_certificate_too_large">Diúltaíodh don deimhniú: tá sé níos mó ná %1$d KB.</string>
+    <plurals name="trust_import_certificate_limit_count">
+        <item quantity="one">Diúltaíodh don iompórtáil: %1$d deimhniú iompórtáilte ar a mhéad. Scrios ceann acu chun ceann eile a chur leis.</item>
+        <item quantity="two">Diúltaíodh don iompórtáil: %1$d dheimhniú iompórtáilte ar a mhéad. Scrios ceann acu chun ceann eile a chur leis.</item>
+        <item quantity="few">Diúltaíodh don iompórtáil: %1$d dheimhniú iompórtáilte ar a mhéad. Scrios ceann acu chun ceann eile a chur leis.</item>
+        <item quantity="many">Diúltaíodh don iompórtáil: %1$d ndeimhniú iompórtáilte ar a mhéad. Scrios ceann acu chun ceann eile a chur leis.</item>
+        <item quantity="other">Diúltaíodh don iompórtáil: %1$d deimhniú iompórtáilte ar a mhéad. Scrios ceann acu chun ceann eile a chur leis.</item>
+    </plurals>
+
+    <!-- Éléments importés (D33) -->
+    <string name="trust_imported_title">Míreanna iompórtáilte</string>
+    <string name="trust_imported_master_list">Master List iompórtáilte</string>
+    <string name="trust_imported_signed_on">Sínithe ar %1$s</string>
+    <string name="trust_imported_unreadable">Comhad doléite, déanann an stór neamhaird de.</string>
+    <string name="trust_imported_delete">Scrios an mhír seo</string>
+    <string name="trust_imported_delete_title">An mhír iompórtáilte seo a scriosadh?</string>
+    <string name="trust_imported_delete_text">Ní úsáidfear a deimhnithe a thuilleadh chun doiciméid a fhíorú. Coinneofar na míreanna iompórtáilte eile agus na deimhnithe ionsuite.</string>
+    <string name="trust_imported_delete_done">Scriosadh an mhír iompórtáilte.</string>
+    <string name="trust_imported_delete_error">Níorbh fhéidir an mhír seo a scriosadh.</string>
+
     <!-- Suppression -->
     <string name="trust_delete_imported">Scrios na deimhnithe iompórtáilte</string>
     <string name="trust_delete_confirm_title">Na deimhnithe iompórtáilte a scriosadh?</string>
-    <string name="trust_delete_confirm_text">Scriosfar na Master Lists iompórtáilte. Coinneofar na deimhnithe atá ionsuite san aip.</string>
+    <string name="trust_delete_confirm_text">Scriosfar na Master Lists agus na deimhnithe iompórtáilte. Coinneofar na deimhnithe atá ionsuite san aip.</string>
     <string name="trust_delete_confirm">Scrios</string>
     <string name="trust_delete_done">Scriosadh na deimhnithe iompórtáilte.</string>
     <string name="trust_delete_error">Níorbh fhéidir na deimhnithe iompórtáilte a scriosadh.</string>

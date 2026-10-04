@@ -243,10 +243,11 @@ object CheckFormatting {
     fun dataGroupList(numbers: List<Int>): String = numbers.distinct().sorted().joinToString(", ") { "DG$it" }
 
     /**
-     * Vrai si la chaîne remonte à un CSCA importé par l'utilisateur : la carte du verdict
-     * le signale sans qu'il faille déplier le détail (audit V6).
+     * Vrai si la chaîne remonte à un CSCA importé par l'utilisateur, par une Master List ou seul
+     * (D33) : la carte du verdict le signale sans qu'il faille déplier le détail (audit V6).
      */
-    fun isImportedAnchor(chain: ChainInfo?): Boolean = chain?.cscaSource == TrustSource.IMPORTED_MASTER_LIST
+    fun isImportedAnchor(chain: ChainInfo?): Boolean =
+        chain?.cscaSource == TrustSource.IMPORTED_MASTER_LIST || chain?.cscaSource == TrustSource.IMPORTED_CERTIFICATE
 
     @StringRes
     fun sourceLabel(source: TrustSource): Int =
@@ -255,6 +256,7 @@ object CheckFormatting {
             TrustSource.NATIONAL -> R.string.result_detail_source_national
             TrustSource.EMBEDDED_MASTER_LIST -> R.string.result_detail_source_embedded
             TrustSource.IMPORTED_MASTER_LIST -> R.string.result_detail_source_imported
+            TrustSource.IMPORTED_CERTIFICATE -> R.string.trust_source_imported_certificate
         }
 
     /** Méthode de Chip Authentication : clé de DG14, ou PACE-CAM (décision D21). */

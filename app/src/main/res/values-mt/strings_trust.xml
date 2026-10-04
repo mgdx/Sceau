@@ -32,6 +32,7 @@
     <string name="trust_source_national">Pubblikazzjoni nazzjonali</string>
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Importat</string>
+    <string name="trust_source_imported_certificate">Ċertifikat importat</string>
     <string name="trust_link_certificate">Ċertifikat ta’ rabta</string>
 
     <!-- Recherche -->
@@ -40,7 +41,7 @@
     <string name="trust_search_no_result">L-ebda pajjiż ma jaqbel mat-tfittxija tiegħek.</string>
 
     <!-- Import -->
-    <string name="trust_import">Importa Master List</string>
+    <string name="trust_import">Importa Master List jew ċertifikat</string>
     <string name="trust_busy">Stenna ftit…</string>
     <string name="trust_import_confirm_title">Timporta din il-Master List?</string>
     <string name="trust_import_confirm_text">Il-firma tagħha hija valida. Qabel ma timportaha, iċċekkja li l-impronta tal-firmatarju taqbel ma’ dik ippubblikata mill-awtorità emittenti.</string>
@@ -71,10 +72,42 @@
     </plurals>
     <string name="trust_import_limit_size">Importazzjoni miċħuda: il-Master Lists importati kienu jaqbżu %1$d MB b’kollox. Ħassar iċ-ċertifikati importati biex iżżid oħra.</string>
 
+    <!-- Import d'un certificat seul (D33) -->
+    <string name="trust_import_certificate_confirm_title">Timporta dan iċ-ċertifikat?</string>
+    <string name="trust_import_certificate_warning">B’differenza minn Master List, l-ebda firma ta’ Stat ma tiggarantixxi dan il-fajl: int li tiddeċiedi jekk tafdahx. Ċertifikat importat jista’ jagħmel kwalunkwe dokument tal-pajjiż tiegħu jidher awtentiku. Qabel ma timportah, qabbel l-impronta tiegħu ma’ dik ippubblikata mill-Istat emittenti.</string>
+    <string name="trust_import_certificate_type">Tip</string>
+    <string name="trust_import_certificate_type_csca">CSCA awtoffirmat</string>
+    <string name="trust_import_certificate_subject">Suġġett</string>
+    <string name="trust_import_certificate_country">Pajjiż</string>
+    <string name="trust_import_certificate_validity">Validità</string>
+    <string name="trust_import_certificate_done">Ċertifikat importat.</string>
+    <string name="trust_import_certificate_invalid">Dan iċ-ċertifikat ma jistax jiġi importat: huma aċċettati biss CSCA awtoffirmat jew ċertifikat ta’ rabta (%1$s).</string>
+    <string name="trust_import_unrecognized">Dan il-fajl la huwa Master List u lanqas ċertifikat DER jew PEM wieħed.</string>
+    <string name="trust_import_certificate_write_error">Iċ-ċertifikat ma setax jiġi salvat.</string>
+    <string name="trust_import_certificate_too_large">Ċertifikat miċħud: jaqbeż %1$d KB.</string>
+    <plurals name="trust_import_certificate_limit_count">
+        <item quantity="one">Importazzjoni miċħuda: massimu ta’ %1$d ċertifikat importat. Ħassar wieħed biex iżżid ieħor.</item>
+        <item quantity="two">Importazzjoni miċħuda: massimu ta’ %1$d ċertifikati importati. Ħassar wieħed biex iżżid ieħor.</item>
+        <item quantity="few">Importazzjoni miċħuda: massimu ta’ %1$d ċertifikati importati. Ħassar wieħed biex iżżid ieħor.</item>
+        <item quantity="many">Importazzjoni miċħuda: massimu ta’ %1$d-il ċertifikat importat. Ħassar wieħed biex iżżid ieħor.</item>
+        <item quantity="other">Importazzjoni miċħuda: massimu ta’ %1$d ċertifikat importat. Ħassar wieħed biex iżżid ieħor.</item>
+    </plurals>
+
+    <!-- Éléments importés (D33) -->
+    <string name="trust_imported_title">Elementi importati</string>
+    <string name="trust_imported_master_list">Master List importata</string>
+    <string name="trust_imported_signed_on">Iffirmata fil-%1$s</string>
+    <string name="trust_imported_unreadable">Fajl li ma jinqarax, injorat mill-ħażna.</string>
+    <string name="trust_imported_delete">Ħassar dan l-element</string>
+    <string name="trust_imported_delete_title">Tħassar dan l-element importat?</string>
+    <string name="trust_imported_delete_text">Iċ-ċertifikati tiegħu ma jibqgħux jintużaw biex jivverifikaw id-dokumenti. L-elementi importati l-oħra u ċ-ċertifikati integrati jinżammu.</string>
+    <string name="trust_imported_delete_done">L-element importat tħassar.</string>
+    <string name="trust_imported_delete_error">Dan l-element ma setax jitħassar.</string>
+
     <!-- Suppression -->
     <string name="trust_delete_imported">Ħassar iċ-ċertifikati importati</string>
     <string name="trust_delete_confirm_title">Tħassar iċ-ċertifikati importati?</string>
-    <string name="trust_delete_confirm_text">Il-Master Lists importati se jitħassru. Iċ-ċertifikati integrati fl-app jinżammu.</string>
+    <string name="trust_delete_confirm_text">Il-Master Lists u ċ-ċertifikati importati se jitħassru. Iċ-ċertifikati integrati fl-app jinżammu.</string>
     <string name="trust_delete_confirm">Ħassar</string>
     <string name="trust_delete_done">Iċ-ċertifikati importati tħassru.</string>
     <string name="trust_delete_error">Iċ-ċertifikati importati ma setgħux jitħassru.</string>

@@ -24,7 +24,10 @@ internal object TrustStoreLoader {
             "5f28cb692fb346ba2d23674c8778f2810c24a35869e5b517de3abd67d5db20bd",
         )
 
-    fun load(importedMasterLists: List<ByteArray>): TrustStore {
+    fun load(
+        importedMasterLists: List<ByteArray>,
+        importedCertificates: List<ByteArray> = emptyList(),
+    ): TrustStore {
         val ants = mutableListOf<X509Certificate>()
         val national = mutableListOf<X509Certificate>()
         var embedded: MasterList? = null
@@ -59,15 +62,27 @@ internal object TrustStoreLoader {
                     null
                 }
             }
-        return merge(ants, national, embedded, imported)
+        val certificates =
+            importedCertificates.mapNotNull { bytes ->
+                try {
+                    CertificateParser.parse(bytes)
+                } catch (ignored: InvalidCertificateException) {
+                    null
+                }
+            }
+        return merge(ants, national, embedded, imported, certificates)
     }
 
-    /** Fusion par ordre de priorité : ANTS, publications nationales, Master List embarquée, imports. */
+    /**
+     * Fusion par ordre de priorité : ANTS, publications nationales, Master List embarquée,
+     * Master Lists importées, certificats importés. Un certificat déjà présent garde sa source.
+     */
     fun merge(
         ants: List<X509Certificate>,
         national: List<X509Certificate>,
         embedded: MasterList?,
         imported: List<MasterList>,
+        importedCertificates: List<X509Certificate> = emptyList(),
     ): TrustStore {
         val bySha256 = LinkedHashMap<String, TrustAnchor>()
 
@@ -82,6 +97,7 @@ internal object TrustStoreLoader {
         national.forEach { add(it, TrustSource.NATIONAL) }
         embedded?.certificates?.forEach { add(it, TrustSource.EMBEDDED_MASTER_LIST) }
         imported.forEach { list -> list.certificates.forEach { add(it, TrustSource.IMPORTED_MASTER_LIST) } }
+        importedCertificates.forEach { add(it, TrustSource.IMPORTED_CERTIFICATE) }
         return IndexedTrustStore(bySha256.values.toList(), embedded?.info)
     }
 

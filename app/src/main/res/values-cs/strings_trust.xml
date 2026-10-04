@@ -30,6 +30,7 @@
     <string name="trust_source_national">Národní zveřejnění</string>
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Importovaný</string>
+    <string name="trust_source_imported_certificate">Importovaný certifikát</string>
     <string name="trust_link_certificate">Propojovací certifikát</string>
 
     <!-- Recherche -->
@@ -38,7 +39,7 @@
     <string name="trust_search_no_result">Hledání neodpovídá žádná země.</string>
 
     <!-- Import -->
-    <string name="trust_import">Importovat Master List</string>
+    <string name="trust_import">Importovat Master List nebo certifikát</string>
     <string name="trust_busy">Čekejte prosím…</string>
     <string name="trust_import_confirm_title">Importovat tento seznam Master List?</string>
     <string name="trust_import_confirm_text">Jeho podpis je platný. Před importem ověřte, že otisk podepisujícího odpovídá otisku zveřejněnému vydávajícím orgánem.</string>
@@ -67,10 +68,41 @@
     </plurals>
     <string name="trust_import_limit_size">Import odmítnut: importované seznamy Master List by celkem přesáhly %1$d MB. Chcete-li přidat další, smažte importované certifikáty.</string>
 
+    <!-- Import d'un certificat seul (D33) -->
+    <string name="trust_import_certificate_confirm_title">Importovat tento certifikát?</string>
+    <string name="trust_import_certificate_warning">Na rozdíl od seznamu Master List tento soubor nezaručuje podpis žádného státu: rozhodnutí mu důvěřovat je na vás. Importovaný certifikát může způsobit, že jakýkoli doklad z jeho země bude uznán jako pravý. Před importem porovnejte jeho otisk s otiskem zveřejněným vydávajícím státem.</string>
+    <string name="trust_import_certificate_type">Typ</string>
+    <string name="trust_import_certificate_type_csca">CSCA podepsaný sám sebou</string>
+    <string name="trust_import_certificate_subject">Subjekt</string>
+    <string name="trust_import_certificate_country">Země</string>
+    <string name="trust_import_certificate_validity">Platnost</string>
+    <string name="trust_import_certificate_done">Certifikát byl importován.</string>
+    <string name="trust_import_certificate_invalid">Tento certifikát nelze importovat: přijímá se pouze CSCA podepsaný sám sebou nebo propojovací certifikát (%1$s).</string>
+    <string name="trust_import_unrecognized">Tento soubor není seznam Master List ani jediný certifikát DER nebo PEM.</string>
+    <string name="trust_import_certificate_write_error">Certifikát nelze uložit.</string>
+    <string name="trust_import_certificate_too_large">Certifikát odmítnut: je větší než %1$d KB.</string>
+    <plurals name="trust_import_certificate_limit_count">
+        <item quantity="one">Import odmítnut: nejvyšší počet importovaných certifikátů je %1$d. Chcete-li přidat další, jeden z nich smažte.</item>
+        <item quantity="few">Import odmítnut: nejvyšší počet importovaných certifikátů je %1$d. Chcete-li přidat další, jeden z nich smažte.</item>
+        <item quantity="many">Import odmítnut: nejvyšší počet importovaných certifikátů je %1$d. Chcete-li přidat další, jeden z nich smažte.</item>
+        <item quantity="other">Import odmítnut: nejvyšší počet importovaných certifikátů je %1$d. Chcete-li přidat další, jeden z nich smažte.</item>
+    </plurals>
+
+    <!-- Éléments importés (D33) -->
+    <string name="trust_imported_title">Importované položky</string>
+    <string name="trust_imported_master_list">Importovaný seznam Master List</string>
+    <string name="trust_imported_signed_on">Podepsán %1$s</string>
+    <string name="trust_imported_unreadable">Nečitelný soubor, při ověřování se nepoužívá.</string>
+    <string name="trust_imported_delete">Smazat tuto položku</string>
+    <string name="trust_imported_delete_title">Smazat tuto importovanou položku?</string>
+    <string name="trust_imported_delete_text">Její certifikáty se již nebudou používat k ověřování dokladů. Ostatní importované položky a vestavěné certifikáty zůstanou zachovány.</string>
+    <string name="trust_imported_delete_done">Importovaná položka byla smazána.</string>
+    <string name="trust_imported_delete_error">Tuto položku nelze smazat.</string>
+
     <!-- Suppression -->
     <string name="trust_delete_imported">Smazat importované certifikáty</string>
     <string name="trust_delete_confirm_title">Smazat importované certifikáty?</string>
-    <string name="trust_delete_confirm_text">Importované seznamy Master List budou smazány. Certifikáty vestavěné v aplikaci zůstanou zachovány.</string>
+    <string name="trust_delete_confirm_text">Importované seznamy Master List a certifikáty budou smazány. Certifikáty vestavěné v aplikaci zůstanou zachovány.</string>
     <string name="trust_delete_confirm">Smazat</string>
     <string name="trust_delete_done">Importované certifikáty byly smazány.</string>
     <string name="trust_delete_error">Importované certifikáty nelze smazat.</string>

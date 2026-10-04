@@ -150,6 +150,8 @@ Accessible depuis le menu de l'accueil :
 
 - Liste des CSCA connus, groupés par pays, avec nom du sujet, période de validité, empreinte SHA-256 et source.
 - Bouton « Importer une Master List » : ouvre le sélecteur de fichiers du système (`ACTION_OPEN_DOCUMENT`, sans permission persistante), accepte un fichier CMS (`.ml`, `.der`, `.p7b`) de 20 Mo au plus. La signature CMS est vérifiée avec le certificat signataire embarqué dans le fichier, dont l'empreinte est affichée à l'utilisateur pour confirmation avant import. Le dialogue de confirmation avertit qu'un certificat importé peut rendre authentique n'importe quel document de son pays, et qu'il ne faut importer qu'une liste de provenance sûre (audit V6). Les Master Lists importées sont stockées telles quelles dans le stockage interne de l'appli (`filesDir/trust/`, nom de fichier = SHA-256 du contenu, écriture atomique) et leurs CSCA marqués « importé ».
+- Le même bouton accepte un certificat CSCA auto-signé ou un certificat de lien isolé (DER ou PEM, un seul par fichier), reconnu automatiquement, avec un aperçu (sujet, pays, validité, empreinte SHA-256) et l'avertissement qu'aucune signature d'État ne le garantit ; stocké en DER dans `filesDir/trust/<sha256>.der`, marqué « Certificat importé » (D33).
+- Section « Éléments importés » : chaque Master List ou certificat importé, supprimable à l'unité après confirmation (D33).
 - Bouton « Supprimer les certificats importés ».
 
 Aucune donnée personnelle ne transite par cet écran.

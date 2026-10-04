@@ -30,6 +30,7 @@
     <string name="trust_source_national">Publikacja krajowa</string>
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Zaimportowany</string>
+    <string name="trust_source_imported_certificate">Zaimportowany certyfikat</string>
     <string name="trust_link_certificate">Certyfikat łączący</string>
 
     <!-- Recherche -->
@@ -38,7 +39,7 @@
     <string name="trust_search_no_result">Żaden kraj nie pasuje do wyszukiwania.</string>
 
     <!-- Import -->
-    <string name="trust_import">Importuj Master List</string>
+    <string name="trust_import">Importuj Master List lub certyfikat</string>
     <string name="trust_busy">Proszę czekać…</string>
     <string name="trust_import_confirm_title">Zaimportować tę Master List?</string>
     <string name="trust_import_confirm_text">Jej podpis jest ważny. Przed zaimportowaniem sprawdź, czy odcisk podpisującego zgadza się z odciskiem opublikowanym przez organ wydający.</string>
@@ -67,10 +68,41 @@
     </plurals>
     <string name="trust_import_limit_size">Import odrzucony: zaimportowane Master List przekroczyłyby łącznie %1$d MB. Usuń zaimportowane certyfikaty, aby dodać kolejną.</string>
 
+    <!-- Import d'un certificat seul (D33) -->
+    <string name="trust_import_certificate_confirm_title">Zaimportować ten certyfikat?</string>
+    <string name="trust_import_certificate_warning">W odróżnieniu od Master List tego pliku nie poświadcza podpis żadnego państwa: to Ty decydujesz, czy mu zaufać. Zaimportowany certyfikat może sprawić, że każdy dokument z jego kraju zostanie uznany za autentyczny. Przed zaimportowaniem porównaj jego odcisk z odciskiem opublikowanym przez państwo wydające.</string>
+    <string name="trust_import_certificate_type">Typ</string>
+    <string name="trust_import_certificate_type_csca">CSCA z podpisem własnym</string>
+    <string name="trust_import_certificate_subject">Podmiot</string>
+    <string name="trust_import_certificate_country">Kraj</string>
+    <string name="trust_import_certificate_validity">Ważność</string>
+    <string name="trust_import_certificate_done">Zaimportowano certyfikat.</string>
+    <string name="trust_import_certificate_invalid">Nie można zaimportować tego certyfikatu: akceptowany jest tylko CSCA z podpisem własnym lub certyfikat łączący (%1$s).</string>
+    <string name="trust_import_unrecognized">Ten plik nie jest ani Master List, ani pojedynczym certyfikatem DER lub PEM.</string>
+    <string name="trust_import_certificate_write_error">Nie udało się zapisać certyfikatu.</string>
+    <string name="trust_import_certificate_too_large">Certyfikat odrzucony: przekracza %1$d KB.</string>
+    <plurals name="trust_import_certificate_limit_count">
+        <item quantity="one">Import odrzucony: maksymalna liczba zaimportowanych certyfikatów to %1$d. Usuń jeden z nich, aby dodać kolejny.</item>
+        <item quantity="few">Import odrzucony: maksymalna liczba zaimportowanych certyfikatów to %1$d. Usuń jeden z nich, aby dodać kolejny.</item>
+        <item quantity="many">Import odrzucony: maksymalna liczba zaimportowanych certyfikatów to %1$d. Usuń jeden z nich, aby dodać kolejny.</item>
+        <item quantity="other">Import odrzucony: maksymalna liczba zaimportowanych certyfikatów to %1$d. Usuń jeden z nich, aby dodać kolejny.</item>
+    </plurals>
+
+    <!-- Éléments importés (D33) -->
+    <string name="trust_imported_title">Zaimportowane elementy</string>
+    <string name="trust_imported_master_list">Zaimportowana Master List</string>
+    <string name="trust_imported_signed_on">Podpisana %1$s</string>
+    <string name="trust_imported_unreadable">Nieczytelny plik, pomijany przy weryfikacji.</string>
+    <string name="trust_imported_delete">Usuń ten element</string>
+    <string name="trust_imported_delete_title">Usunąć ten zaimportowany element?</string>
+    <string name="trust_imported_delete_text">Jego certyfikaty nie będą już używane do weryfikacji dokumentów. Pozostałe zaimportowane elementy i wbudowane certyfikaty zostaną zachowane.</string>
+    <string name="trust_imported_delete_done">Usunięto zaimportowany element.</string>
+    <string name="trust_imported_delete_error">Nie udało się usunąć tego elementu.</string>
+
     <!-- Suppression -->
     <string name="trust_delete_imported">Usuń zaimportowane certyfikaty</string>
     <string name="trust_delete_confirm_title">Usunąć zaimportowane certyfikaty?</string>
-    <string name="trust_delete_confirm_text">Zaimportowane Master List zostaną usunięte. Certyfikaty wbudowane w aplikację zostaną zachowane.</string>
+    <string name="trust_delete_confirm_text">Zaimportowane Master List i certyfikaty zostaną usunięte. Certyfikaty wbudowane w aplikację zostaną zachowane.</string>
     <string name="trust_delete_confirm">Usuń</string>
     <string name="trust_delete_done">Usunięto zaimportowane certyfikaty.</string>
     <string name="trust_delete_error">Nie udało się usunąć zaimportowanych certyfikatów.</string>

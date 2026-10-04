@@ -28,6 +28,7 @@
     <string name="trust_source_national">פרסום לאומי</string>
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">מיובאת</string>
+    <string name="trust_source_imported_certificate">תעודה מיובאת</string>
     <string name="trust_link_certificate">תעודת קישור</string>
 
     <!-- Recherche -->
@@ -36,7 +37,7 @@
     <string name="trust_search_no_result">אין מדינה שתואמת לחיפוש.</string>
 
     <!-- Import -->
-    <string name="trust_import">ייבוא רשימת Master List</string>
+    <string name="trust_import">ייבוא רשימת Master List או תעודה</string>
     <string name="trust_busy">רק רגע…</string>
     <string name="trust_import_confirm_title">לייבא את רשימת ה-Master List הזו?</string>
     <string name="trust_import_confirm_text">החתימה שלה תקפה. לפני הייבוא, יש לוודא שטביעת האצבע של החותם תואמת לזו שפרסמה הרשות המנפיקה.</string>
@@ -63,10 +64,40 @@
     </plurals>
     <string name="trust_import_limit_size">הייבוא נדחה: הגודל הכולל של רשימות ה-Master List המיובאות יעלה על %1$d MB. כדי להוסיף רשימה אחרת, יש למחוק את התעודות המיובאות.</string>
 
+    <!-- Import d'un certificat seul (D33) -->
+    <string name="trust_import_certificate_confirm_title">לייבא את התעודה הזו?</string>
+    <string name="trust_import_certificate_warning">בניגוד לרשימת Master List, אין חתימה של מדינה שמבטיחה את הקובץ הזה: ההחלטה לתת בו אמון היא שלך. תעודה מיובאת יכולה לגרום לכל מסמך מהמדינה שלה להיראות אותנטי. לפני הייבוא, יש להשוות את טביעת האצבע שלה לזו שפרסמה המדינה המנפיקה.</string>
+    <string name="trust_import_certificate_type">סוג</string>
+    <string name="trust_import_certificate_type_csca">CSCA בחתימה עצמית</string>
+    <string name="trust_import_certificate_subject">נושא</string>
+    <string name="trust_import_certificate_country">מדינה</string>
+    <string name="trust_import_certificate_validity">תוקף</string>
+    <string name="trust_import_certificate_done">התעודה יובאה.</string>
+    <string name="trust_import_certificate_invalid">לא ניתן לייבא את התעודה הזו: מתקבלות רק תעודת CSCA בחתימה עצמית או תעודת קישור (%1$s).</string>
+    <string name="trust_import_unrecognized">הקובץ הזה אינו רשימת Master List וגם לא תעודת DER או PEM יחידה.</string>
+    <string name="trust_import_certificate_write_error">לא ניתן לשמור את התעודה.</string>
+    <string name="trust_import_certificate_too_large">התעודה נדחתה: היא גדולה מ-%1$d KB.</string>
+    <plurals name="trust_import_certificate_limit_count">
+        <item quantity="one">הייבוא נדחה: ניתן לייבא לכל היותר תעודה %1$d. כדי להוסיף תעודה אחרת, יש למחוק אחת.</item>
+        <item quantity="two">הייבוא נדחה: ניתן לייבא עד %1$d תעודות. כדי להוסיף תעודה אחרת, יש למחוק אחת.</item>
+        <item quantity="other">הייבוא נדחה: ניתן לייבא עד %1$d תעודות. כדי להוסיף תעודה אחרת, יש למחוק אחת.</item>
+    </plurals>
+
+    <!-- Éléments importés (D33) -->
+    <string name="trust_imported_title">פריטים מיובאים</string>
+    <string name="trust_imported_master_list">רשימת Master List מיובאת</string>
+    <string name="trust_imported_signed_on">נחתמה ב-%1$s</string>
+    <string name="trust_imported_unreadable">קובץ לא קריא, מאגר האמון מתעלם ממנו.</string>
+    <string name="trust_imported_delete">מחיקת הפריט הזה</string>
+    <string name="trust_imported_delete_title">למחוק את הפריט המיובא הזה?</string>
+    <string name="trust_imported_delete_text">התעודות שלו לא ישמשו עוד לאימות מסמכים. שאר הפריטים המיובאים והתעודות המובנות יישמרו.</string>
+    <string name="trust_imported_delete_done">הפריט המיובא נמחק.</string>
+    <string name="trust_imported_delete_error">לא ניתן למחוק את הפריט הזה.</string>
+
     <!-- Suppression -->
     <string name="trust_delete_imported">מחיקת התעודות המיובאות</string>
     <string name="trust_delete_confirm_title">למחוק את התעודות המיובאות?</string>
-    <string name="trust_delete_confirm_text">רשימות ה-Master List המיובאות יימחקו. התעודות המובנות באפליקציה יישמרו.</string>
+    <string name="trust_delete_confirm_text">רשימות ה-Master List והתעודות המיובאות יימחקו. התעודות המובנות באפליקציה יישמרו.</string>
     <string name="trust_delete_confirm">מחיקה</string>
     <string name="trust_delete_done">התעודות המיובאות נמחקו.</string>
     <string name="trust_delete_error">לא ניתן למחוק את התעודות המיובאות.</string>

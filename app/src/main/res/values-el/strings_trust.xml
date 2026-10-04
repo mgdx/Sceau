@@ -26,6 +26,7 @@
     <string name="trust_source_national">Εθνική δημοσίευση</string>
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Εισαγόμενο</string>
+    <string name="trust_source_imported_certificate">Εισαγόμενο πιστοποιητικό</string>
     <string name="trust_link_certificate">Πιστοποιητικό σύνδεσης</string>
 
     <!-- Recherche -->
@@ -34,7 +35,7 @@
     <string name="trust_search_no_result">Καμία χώρα δεν αντιστοιχεί στην αναζήτησή σας.</string>
 
     <!-- Import -->
-    <string name="trust_import">Εισαγωγή Master List</string>
+    <string name="trust_import">Εισαγωγή Master List ή πιστοποιητικού</string>
     <string name="trust_busy">Περιμένετε…</string>
     <string name="trust_import_confirm_title">Εισαγωγή αυτής της Master List;</string>
     <string name="trust_import_confirm_text">Η υπογραφή της είναι έγκυρη. Πριν από την εισαγωγή, βεβαιωθείτε ότι το αποτύπωμα του υπογράφοντος αντιστοιχεί σε αυτό που δημοσιεύει η αρχή έκδοσης.</string>
@@ -59,10 +60,39 @@
     </plurals>
     <string name="trust_import_limit_size">Η εισαγωγή απορρίφθηκε: οι εισαγόμενες Master List θα ξεπερνούσαν συνολικά τα %1$d MB. Διαγράψτε τα εισαγόμενα πιστοποιητικά για να προσθέσετε άλλη.</string>
 
+    <!-- Import d'un certificat seul (D33) -->
+    <string name="trust_import_certificate_confirm_title">Εισαγωγή αυτού του πιστοποιητικού;</string>
+    <string name="trust_import_certificate_warning">Σε αντίθεση με μια Master List, καμία υπογραφή κράτους δεν εγγυάται αυτό το αρχείο: εσείς αποφασίζετε αν θα το εμπιστευτείτε. Ένα εισαγόμενο πιστοποιητικό μπορεί να κάνει οποιοδήποτε έγγραφο της χώρας του να εμφανίζεται αυθεντικό. Πριν από την εισαγωγή, συγκρίνετε το αποτύπωμά του με αυτό που δημοσιεύει το κράτος έκδοσης.</string>
+    <string name="trust_import_certificate_type">Τύπος</string>
+    <string name="trust_import_certificate_type_csca">Αυτοϋπογεγραμμένο CSCA</string>
+    <string name="trust_import_certificate_subject">Υποκείμενο</string>
+    <string name="trust_import_certificate_country">Χώρα</string>
+    <string name="trust_import_certificate_validity">Ισχύς</string>
+    <string name="trust_import_certificate_done">Το πιστοποιητικό εισήχθη.</string>
+    <string name="trust_import_certificate_invalid">Δεν είναι δυνατή η εισαγωγή αυτού του πιστοποιητικού: γίνεται δεκτό μόνο αυτοϋπογεγραμμένο CSCA ή πιστοποιητικό σύνδεσης (%1$s).</string>
+    <string name="trust_import_unrecognized">Αυτό το αρχείο δεν είναι ούτε Master List ούτε μεμονωμένο πιστοποιητικό DER ή PEM.</string>
+    <string name="trust_import_certificate_write_error">Δεν ήταν δυνατή η αποθήκευση του πιστοποιητικού.</string>
+    <string name="trust_import_certificate_too_large">Το πιστοποιητικό απορρίφθηκε: υπερβαίνει τα %1$d KB.</string>
+    <plurals name="trust_import_certificate_limit_count">
+        <item quantity="one">Η εισαγωγή απορρίφθηκε: επιτρέπεται έως %1$d εισαγόμενο πιστοποιητικό. Διαγράψτε ένα για να προσθέσετε άλλο.</item>
+        <item quantity="other">Η εισαγωγή απορρίφθηκε: επιτρέπονται έως %1$d εισαγόμενα πιστοποιητικά. Διαγράψτε ένα για να προσθέσετε άλλο.</item>
+    </plurals>
+
+    <!-- Éléments importés (D33) -->
+    <string name="trust_imported_title">Εισαγόμενα στοιχεία</string>
+    <string name="trust_imported_master_list">Εισαγόμενη Master List</string>
+    <string name="trust_imported_signed_on">Υπογράφηκε στις %1$s</string>
+    <string name="trust_imported_unreadable">Μη αναγνώσιμο αρχείο, δεν λαμβάνεται υπόψη.</string>
+    <string name="trust_imported_delete">Διαγραφή αυτού του στοιχείου</string>
+    <string name="trust_imported_delete_title">Διαγραφή αυτού του εισαγόμενου στοιχείου;</string>
+    <string name="trust_imported_delete_text">Τα πιστοποιητικά του δεν θα χρησιμοποιούνται πλέον για την επαλήθευση εγγράφων. Τα άλλα εισαγόμενα στοιχεία και τα ενσωματωμένα πιστοποιητικά διατηρούνται.</string>
+    <string name="trust_imported_delete_done">Το εισαγόμενο στοιχείο διαγράφηκε.</string>
+    <string name="trust_imported_delete_error">Δεν ήταν δυνατή η διαγραφή αυτού του στοιχείου.</string>
+
     <!-- Suppression -->
     <string name="trust_delete_imported">Διαγραφή εισαγόμενων πιστοποιητικών</string>
     <string name="trust_delete_confirm_title">Διαγραφή εισαγόμενων πιστοποιητικών;</string>
-    <string name="trust_delete_confirm_text">Οι εισαγόμενες Master List θα διαγραφούν. Τα πιστοποιητικά που είναι ενσωματωμένα στην εφαρμογή διατηρούνται.</string>
+    <string name="trust_delete_confirm_text">Οι εισαγόμενες Master List και τα εισαγόμενα πιστοποιητικά θα διαγραφούν. Τα πιστοποιητικά που είναι ενσωματωμένα στην εφαρμογή διατηρούνται.</string>
     <string name="trust_delete_confirm">Διαγραφή</string>
     <string name="trust_delete_done">Τα εισαγόμενα πιστοποιητικά διαγράφηκαν.</string>
     <string name="trust_delete_error">Δεν ήταν δυνατή η διαγραφή των εισαγόμενων πιστοποιητικών.</string>

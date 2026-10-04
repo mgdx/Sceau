@@ -239,11 +239,11 @@ Pour toutes les erreurs, l'écran affiche sous le message le code technique comp
 - **Préconditions** : Master List italienne ou suédoise copiée sur le téléphone (`adb push … /sdcard/Download/`).
 - **Étapes** :
   1. Menu → « Magasin de confiance » : la liste s'affiche en moins de quelques secondes (magasin préchargé au démarrage, décision D16) ; noter le nombre de CSCA par pays (ANTS, Master List embarquée du BSI).
-  2. « Importer une Master List », choisir le fichier dans le sélecteur du système.
+  2. « Importer une Master List ou un certificat », choisir le fichier dans le sélecteur du système.
   3. Comparer l'empreinte SHA-256 du signataire affichée (avec son sujet, la date de signature et le nombre de certificats) à celle publiée par l'autorité émettrice, puis confirmer.
   4. Réimporter le même fichier.
   5. Tuer l'application (`adb shell am kill io.github.mgdx.sceau` après `KEYCODE_HOME`), la relancer, rouvrir le magasin.
-- **Attendu** : l'empreinte du signataire est affichée avant tout import, et « Annuler » n'importe rien ; après confirmation, message « Master List importée : N certificats », les nouveaux CSCA apparaissent, marqués « Importé » ; les CSCA embarqués sont inchangés (un certificat déjà présent garde sa source ANTS ou Master List). Le second import ne crée pas de doublon. Les CSCA importés sont toujours là après redémarrage (un fichier dans `files/trust/`).
+- **Attendu** : l'empreinte du signataire est affichée avant tout import, et « Annuler » n'importe rien ; après confirmation, message « Master List importée : N certificats », la liste apparaît dans la section « Éléments importés » (signataire, date de signature, nombre de certificats), les nouveaux CSCA apparaissent, marqués « Importé » ; les CSCA embarqués sont inchangés (un certificat déjà présent garde sa source ANTS ou Master List). Le second import ne crée pas de doublon. Les CSCA importés sont toujours là après redémarrage (un fichier dans `files/trust/`).
 - **Résultat** : ☐ OK ☐ KO — Notes :
 
 ### TP-18 Import d'une Master List invalide
@@ -263,6 +263,40 @@ Pour toutes les erreurs, l'écran affiche sous le message le code technique comp
   2. Importer la Master List qui contient son CSCA (TP-17), puis relire le document.
   3. « Supprimer les certificats importés », puis relire une troisième fois.
 - **Attendu** : étape 1 : **Émetteur inconnu** (gris), données affichées, ligne « Chaîne de certification » non disponible ; étape 2 : **Authentique** (ou « Signature valide, puce non vérifiée » si le document n'a ni DG14 ni DG15), chaîne vers un CSCA de source « importé » ; étape 3 : de nouveau **Émetteur inconnu**.
+- **Résultat** : ☐ OK ☐ KO — Notes :
+
+### TP-27 Import d'un certificat CSCA seul (D33)
+
+- **Préconditions** : aucun élément importé ; le CSCA de l'émetteur d'un document absent du magasin embarqué (voir Matériel), téléchargé depuis le site de l'État émetteur, copié sur le téléphone en DER (`.der`, `.cer` ou `.crt`) et, si possible, en PEM (`.pem`) ; son empreinte SHA-256 publiée par l'État, ou calculée sur le poste (`openssl x509 -in csca.pem -outform DER | sha256sum`).
+- **Étapes** :
+  1. Lire le document : **Émetteur inconnu**.
+  2. Magasin de confiance → « Importer une Master List ou un certificat », choisir le fichier DER.
+  3. Lire le dialogue, puis « Annuler ». Recommencer et confirmer.
+  4. Réimporter le même certificat, en PEM cette fois.
+  5. Relire le document.
+  6. Tuer l'application, la relancer, rouvrir le magasin.
+- **Attendu** : étape 3 : dialogue « Importer ce certificat ? » avec l'avertissement (aucune signature d'État ne garantit ce fichier, l'utilisateur lui accorde sa confiance, comparer l'empreinte), le type (« CSCA auto-signé » ou « Certificat de lien »), le sujet, le pays, la validité et l'empreinte SHA-256, identique à celle publiée ; « Annuler » n'importe rien. Après confirmation : message « Certificat importé. », section « Éléments importés » avec le sujet, le pays, la validité et l'empreinte ; dans la liste du pays, le certificat marqué « Certificat importé ». Étape 4 : aucun doublon (même empreinte du DER). Étape 5 : **Authentique** (ou « Signature valide, puce non vérifiée »), détail de la chaîne avec la source « Certificat importé ». Étape 6 : le certificat est toujours là (un fichier `<empreinte>.der` dans `files/trust/`).
+- **Résultat** : ☐ OK ☐ KO — Notes :
+
+### TP-28 Certificats refusés (D33)
+
+- **Étapes** : tenter l'import de :
+  1. un certificat de DS ou un certificat de site web (non CA) ;
+  2. un fichier PEM contenant deux certificats (par exemple une chaîne `fullchain.pem`) ;
+  3. un CSCA dont un octet de la signature est altéré (`cp csca.der bad.der && printf '\xff' | dd of=bad.der bs=1 seek=$(( $(stat -c %s csca.der) - 10 )) conv=notrunc`) ;
+  4. un texte quelconque renommé en `.pem`.
+- **Attendu** : aucun dialogue de confirmation, rien n'est importé, aucun plantage. Étape 1 : « Ce certificat ne peut pas être importé… (NOT_CA) » ; étape 3 : même message avec `BAD_SIGNATURE` ; étapes 2 et 4 : « Ce fichier n'est ni une Master List, ni un certificat DER ou PEM unique. »
+- **Résultat** : ☐ OK ☐ KO — Notes :
+
+### TP-29 Suppression à l'unité (D33)
+
+- **Préconditions** : une Master List (TP-17) et un certificat (TP-27) importés.
+- **Étapes** :
+  1. Dans « Éléments importés », toucher l'icône de suppression du certificat, puis « Annuler ».
+  2. Recommencer et confirmer.
+  3. Relire le document de TP-27.
+  4. Supprimer la Master List de la même manière, puis vérifier le bouton « Supprimer les certificats importés ».
+- **Attendu** : étape 1 : dialogue « Supprimer cet élément importé ? », rien n'est supprimé. Étape 2 : « Élément importé supprimé. », le certificat disparaît de la section et de la liste du pays ; la Master List reste. Étape 3 : **Émetteur inconnu** (sauf si la Master List importée contient aussi ce CSCA). Étape 4 : la section disparaît une fois vide, et le bouton « Supprimer les certificats importés » est désactivé.
 - **Résultat** : ☐ OK ☐ KO — Notes :
 
 ## G. Langue
@@ -319,5 +353,8 @@ Pour toutes les erreurs, l'écran affiche sous le message le code technique comp
 | TP-24 | Mode démo (debug) et absence en release | |
 | TP-25 | Carte d'identité lue par la MRZ | |
 | TP-26 | CIE italienne à DG12 erroné (anomalie connue) | |
+| TP-27 | Import d'un certificat CSCA seul | |
+| TP-28 | Certificats refusés | |
+| TP-29 | Suppression à l'unité | |
 
 Appareil : ………… Android : ………… Version de Sceau : ………… Date : ………… Testeur : …………

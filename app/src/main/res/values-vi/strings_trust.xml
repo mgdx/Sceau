@@ -24,6 +24,7 @@
     <string name="trust_source_national">Công bố quốc gia</string>
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Đã nhập</string>
+    <string name="trust_source_imported_certificate">Chứng chỉ đã nhập</string>
     <string name="trust_link_certificate">Chứng chỉ liên kết</string>
 
     <!-- Recherche -->
@@ -32,7 +33,7 @@
     <string name="trust_search_no_result">Không có quốc gia nào khớp với tìm kiếm.</string>
 
     <!-- Import -->
-    <string name="trust_import">Nhập Master List</string>
+    <string name="trust_import">Nhập Master List hoặc chứng chỉ</string>
     <string name="trust_busy">Vui lòng chờ…</string>
     <string name="trust_import_confirm_title">Nhập Master List này?</string>
     <string name="trust_import_confirm_text">Chữ ký của Master List hợp lệ. Trước khi nhập, hãy kiểm tra để chắc chắn rằng vân tay của bên ký trùng với vân tay do cơ quan cấp công bố.</string>
@@ -55,10 +56,38 @@
     </plurals>
     <string name="trust_import_limit_size">Không thể nhập: tổng dung lượng các Master List đã nhập sẽ vượt quá %1$d MB. Hãy xóa các chứng chỉ đã nhập để thêm Master List khác.</string>
 
+    <!-- Import d'un certificat seul (D33) -->
+    <string name="trust_import_certificate_confirm_title">Nhập chứng chỉ này?</string>
+    <string name="trust_import_certificate_warning">Không giống Master List, tệp này không được bảo đảm bằng chữ ký của bất kỳ quốc gia nào: chính bạn quyết định có tin cậy nó hay không. Chứng chỉ đã nhập có thể khiến mọi giấy tờ của quốc gia đó được xem là xác thực. Trước khi nhập, hãy so sánh vân tay của chứng chỉ với vân tay do quốc gia cấp công bố.</string>
+    <string name="trust_import_certificate_type">Loại</string>
+    <string name="trust_import_certificate_type_csca">CSCA tự ký</string>
+    <string name="trust_import_certificate_subject">Chủ thể</string>
+    <string name="trust_import_certificate_country">Quốc gia</string>
+    <string name="trust_import_certificate_validity">Hiệu lực</string>
+    <string name="trust_import_certificate_done">Đã nhập chứng chỉ.</string>
+    <string name="trust_import_certificate_invalid">Không thể nhập chứng chỉ này: chỉ chấp nhận CSCA tự ký hoặc chứng chỉ liên kết (%1$s).</string>
+    <string name="trust_import_unrecognized">Tệp này không phải là Master List, cũng không phải là một chứng chỉ DER hoặc PEM duy nhất.</string>
+    <string name="trust_import_certificate_write_error">Không thể lưu chứng chỉ.</string>
+    <string name="trust_import_certificate_too_large">Chứng chỉ bị từ chối: dung lượng vượt quá %1$d KB.</string>
+    <plurals name="trust_import_certificate_limit_count">
+        <item quantity="other">Không thể nhập: chỉ được nhập tối đa %1$d chứng chỉ. Hãy xóa một chứng chỉ để thêm chứng chỉ khác.</item>
+    </plurals>
+
+    <!-- Éléments importés (D33) -->
+    <string name="trust_imported_title">Mục đã nhập</string>
+    <string name="trust_imported_master_list">Master List đã nhập</string>
+    <string name="trust_imported_signed_on">Ký ngày %1$s</string>
+    <string name="trust_imported_unreadable">Tệp không đọc được, kho chứng chỉ tin cậy bỏ qua tệp này.</string>
+    <string name="trust_imported_delete">Xóa mục này</string>
+    <string name="trust_imported_delete_title">Xóa mục đã nhập này?</string>
+    <string name="trust_imported_delete_text">Các chứng chỉ của mục này sẽ không còn được dùng để xác minh giấy tờ. Các mục đã nhập khác và chứng chỉ tích hợp sẵn vẫn được giữ lại.</string>
+    <string name="trust_imported_delete_done">Đã xóa mục đã nhập.</string>
+    <string name="trust_imported_delete_error">Không thể xóa mục này.</string>
+
     <!-- Suppression -->
     <string name="trust_delete_imported">Xóa chứng chỉ đã nhập</string>
     <string name="trust_delete_confirm_title">Xóa các chứng chỉ đã nhập?</string>
-    <string name="trust_delete_confirm_text">Các Master List đã nhập sẽ bị xóa. Chứng chỉ tích hợp sẵn trong ứng dụng vẫn được giữ lại.</string>
+    <string name="trust_delete_confirm_text">Các Master List và chứng chỉ đã nhập sẽ bị xóa. Chứng chỉ tích hợp sẵn trong ứng dụng vẫn được giữ lại.</string>
     <string name="trust_delete_confirm">Xóa</string>
     <string name="trust_delete_done">Đã xóa các chứng chỉ đã nhập.</string>
     <string name="trust_delete_error">Không thể xóa các chứng chỉ đã nhập.</string>

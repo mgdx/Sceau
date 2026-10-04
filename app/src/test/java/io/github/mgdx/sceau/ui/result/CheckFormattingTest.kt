@@ -234,6 +234,8 @@ class CheckFormattingTest {
         fun chain(source: TrustSource?) =
             ChainInfo("CN=DS", "01", Instant.EPOCH, Instant.EPOCH, "SHA256withRSA", "CN=CSCA", "FR", "00", source, emptyList())
         assertTrue(CheckFormatting.isImportedAnchor(chain(TrustSource.IMPORTED_MASTER_LIST)))
+        assertTrue(CheckFormatting.isImportedAnchor(chain(TrustSource.IMPORTED_CERTIFICATE)))
+        assertFalse(CheckFormatting.isImportedAnchor(chain(TrustSource.NATIONAL)))
         assertFalse(CheckFormatting.isImportedAnchor(chain(TrustSource.ANTS)))
         assertFalse(CheckFormatting.isImportedAnchor(chain(TrustSource.EMBEDDED_MASTER_LIST)))
         assertFalse(CheckFormatting.isImportedAnchor(chain(null)))

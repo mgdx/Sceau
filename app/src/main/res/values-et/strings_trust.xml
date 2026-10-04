@@ -26,6 +26,7 @@
     <string name="trust_source_national">Riiklik avaldamine</string>
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Imporditud</string>
+    <string name="trust_source_imported_certificate">Imporditud sertifikaat</string>
     <string name="trust_link_certificate">Lingisertifikaat</string>
 
     <!-- Recherche -->
@@ -34,7 +35,7 @@
     <string name="trust_search_no_result">Otsingule ei vasta ükski riik.</string>
 
     <!-- Import -->
-    <string name="trust_import">Impordi Master List</string>
+    <string name="trust_import">Impordi Master List või sertifikaat</string>
     <string name="trust_busy">Palun oodake…</string>
     <string name="trust_import_confirm_title">Kas importida see Master List?</string>
     <string name="trust_import_confirm_text">Selle allkiri on kehtiv. Enne importimist kontrollige, et allkirjastaja sõrmejälg vastab väljaandva asutuse avaldatud sõrmejäljele.</string>
@@ -59,10 +60,39 @@
     </plurals>
     <string name="trust_import_limit_size">Import lükati tagasi: imporditud Master Listid ületaksid kokku %1$d MB. Uue lisamiseks kustutage imporditud sertifikaadid.</string>
 
+    <!-- Import d'un certificat seul (D33) -->
+    <string name="trust_import_certificate_confirm_title">Kas importida see sertifikaat?</string>
+    <string name="trust_import_certificate_warning">Erinevalt Master Listist ei taga seda faili ühegi riigi allkiri: selle usaldamise otsustate teie. Imporditud sertifikaat võib panna mis tahes selle riigi dokumendi ehtsana paistma. Enne importimist võrrelge selle sõrmejälge väljaandja riigi avaldatud sõrmejäljega.</string>
+    <string name="trust_import_certificate_type">Tüüp</string>
+    <string name="trust_import_certificate_type_csca">Iseallkirjastatud CSCA</string>
+    <string name="trust_import_certificate_subject">Subjekt</string>
+    <string name="trust_import_certificate_country">Riik</string>
+    <string name="trust_import_certificate_validity">Kehtivus</string>
+    <string name="trust_import_certificate_done">Sertifikaat imporditud.</string>
+    <string name="trust_import_certificate_invalid">Seda sertifikaati ei saa importida: lubatud on ainult iseallkirjastatud CSCA või lingisertifikaat (%1$s).</string>
+    <string name="trust_import_unrecognized">See fail ei ole Master List ega üksik DER- või PEM-sertifikaat.</string>
+    <string name="trust_import_certificate_write_error">Sertifikaati ei õnnestunud salvestada.</string>
+    <string name="trust_import_certificate_too_large">Sertifikaat lükati tagasi: see on suurem kui %1$d kB.</string>
+    <plurals name="trust_import_certificate_limit_count">
+        <item quantity="one">Import lükati tagasi: imporditud sertifikaate võib olla kõige rohkem %1$d. Uue lisamiseks kustutage üks neist.</item>
+        <item quantity="other">Import lükati tagasi: imporditud sertifikaate võib olla kõige rohkem %1$d. Uue lisamiseks kustutage üks neist.</item>
+    </plurals>
+
+    <!-- Éléments importés (D33) -->
+    <string name="trust_imported_title">Imporditud üksused</string>
+    <string name="trust_imported_master_list">Imporditud Master List</string>
+    <string name="trust_imported_signed_on">Allkirjastatud %1$s</string>
+    <string name="trust_imported_unreadable">Loetamatu fail, usaldushoidla eirab seda.</string>
+    <string name="trust_imported_delete">Kustuta see üksus</string>
+    <string name="trust_imported_delete_title">Kas kustutada see imporditud üksus?</string>
+    <string name="trust_imported_delete_text">Selle sertifikaate ei kasutata enam dokumentide kontrollimiseks. Teised imporditud üksused ja sisseehitatud sertifikaadid jäävad alles.</string>
+    <string name="trust_imported_delete_done">Imporditud üksus on kustutatud.</string>
+    <string name="trust_imported_delete_error">Seda üksust ei õnnestunud kustutada.</string>
+
     <!-- Suppression -->
     <string name="trust_delete_imported">Kustuta imporditud sertifikaadid</string>
     <string name="trust_delete_confirm_title">Kas kustutada imporditud sertifikaadid?</string>
-    <string name="trust_delete_confirm_text">Imporditud Master Listid kustutatakse. Rakendusse sisseehitatud sertifikaadid jäävad alles.</string>
+    <string name="trust_delete_confirm_text">Imporditud Master Listid ja sertifikaadid kustutatakse. Rakendusse sisseehitatud sertifikaadid jäävad alles.</string>
     <string name="trust_delete_confirm">Kustuta</string>
     <string name="trust_delete_done">Imporditud sertifikaadid on kustutatud.</string>
     <string name="trust_delete_error">Imporditud sertifikaate ei õnnestunud kustutada.</string>

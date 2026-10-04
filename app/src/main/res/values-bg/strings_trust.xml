@@ -26,6 +26,7 @@
     <string name="trust_source_national">Национална публикация</string>
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Импортиран</string>
+    <string name="trust_source_imported_certificate">Импортиран сертификат</string>
     <string name="trust_link_certificate">Свързващ сертификат</string>
 
     <!-- Recherche -->
@@ -34,7 +35,7 @@
     <string name="trust_search_no_result">Няма държава, която да отговаря на търсенето.</string>
 
     <!-- Import -->
-    <string name="trust_import">Импортиране на Master List</string>
+    <string name="trust_import">Импортиране на Master List или сертификат</string>
     <string name="trust_busy">Моля, изчакайте…</string>
     <string name="trust_import_confirm_title">Да се импортира ли този Master List?</string>
     <string name="trust_import_confirm_text">Подписът му е валиден. Преди да го импортирате, проверете дали отпечатъкът на подписващия съвпада с публикувания от издаващия орган.</string>
@@ -59,10 +60,39 @@
     </plurals>
     <string name="trust_import_limit_size">Импортирането е отказано: импортираните Master List биха надвишили общо %1$d МБ. Изтрийте импортираните сертификати, за да добавите друг.</string>
 
+    <!-- Import d'un certificat seul (D33) -->
+    <string name="trust_import_certificate_confirm_title">Да се импортира ли този сертификат?</string>
+    <string name="trust_import_certificate_warning">За разлика от Master List, този файл не е гарантиран с подпис на никоя държава: вие решавате дали да му се доверите. Импортиран сертификат може да направи автентичен всеки документ от своята държава. Преди да го импортирате, сравнете отпечатъка му с публикувания от издаващата държава.</string>
+    <string name="trust_import_certificate_type">Тип</string>
+    <string name="trust_import_certificate_type_csca">Самоподписан CSCA</string>
+    <string name="trust_import_certificate_subject">Субект</string>
+    <string name="trust_import_certificate_country">Държава</string>
+    <string name="trust_import_certificate_validity">Валидност</string>
+    <string name="trust_import_certificate_done">Сертификатът е импортиран.</string>
+    <string name="trust_import_certificate_invalid">Този сертификат не може да бъде импортиран: приема се само самоподписан CSCA или свързващ сертификат (%1$s).</string>
+    <string name="trust_import_unrecognized">Този файл не е нито Master List, нито единичен сертификат DER или PEM.</string>
+    <string name="trust_import_certificate_write_error">Сертификатът не може да бъде запазен.</string>
+    <string name="trust_import_certificate_too_large">Сертификатът е отхвърлен: надвишава %1$d КБ.</string>
+    <plurals name="trust_import_certificate_limit_count">
+        <item quantity="one">Импортирането е отказано: може да се импортира най-много %1$d сертификат. Изтрийте един, за да добавите друг.</item>
+        <item quantity="other">Импортирането е отказано: могат да се импортират най-много %1$d сертификата. Изтрийте един, за да добавите друг.</item>
+    </plurals>
+
+    <!-- Éléments importés (D33) -->
+    <string name="trust_imported_title">Импортирани елементи</string>
+    <string name="trust_imported_master_list">Импортиран Master List</string>
+    <string name="trust_imported_signed_on">Подписан на %1$s</string>
+    <string name="trust_imported_unreadable">Нечетлив файл, не се използва при проверката.</string>
+    <string name="trust_imported_delete">Изтриване на този елемент</string>
+    <string name="trust_imported_delete_title">Да се изтрие ли този импортиран елемент?</string>
+    <string name="trust_imported_delete_text">Сертификатите му вече няма да се използват за проверка на документи. Другите импортирани елементи и вградените сертификати се запазват.</string>
+    <string name="trust_imported_delete_done">Импортираният елемент е изтрит.</string>
+    <string name="trust_imported_delete_error">Този елемент не може да бъде изтрит.</string>
+
     <!-- Suppression -->
     <string name="trust_delete_imported">Изтриване на импортираните сертификати</string>
     <string name="trust_delete_confirm_title">Да се изтрият ли импортираните сертификати?</string>
-    <string name="trust_delete_confirm_text">Импортираните Master List ще бъдат изтрити. Сертификатите, вградени в приложението, се запазват.</string>
+    <string name="trust_delete_confirm_text">Импортираните Master List и сертификати ще бъдат изтрити. Сертификатите, вградени в приложението, се запазват.</string>
     <string name="trust_delete_confirm">Изтриване</string>
     <string name="trust_delete_done">Импортираните сертификати са изтрити.</string>
     <string name="trust_delete_error">Импортираните сертификати не могат да бъдат изтрити.</string>

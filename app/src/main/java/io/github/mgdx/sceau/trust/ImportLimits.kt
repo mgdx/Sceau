@@ -2,7 +2,7 @@ package io.github.mgdx.sceau.trust
 
 import io.github.mgdx.sceau.ui.trust.MAX_MASTER_LIST_BYTES
 
-/** Master List déjà importée : nom de fichier (empreinte du contenu) et taille en octets. */
+/** Master List ou certificat déjà importé : nom de fichier (empreinte du contenu) et taille en octets. */
 class ImportedFile(
     val name: String,
     val size: Long,
@@ -21,6 +21,12 @@ enum class ImportDecision {
 
     /** Refusé : la taille cumulée dépasserait [ImportLimits.MAX_IMPORTED_TOTAL_BYTES]. */
     TOO_LARGE_TOTAL,
+
+    /** Refusé : [ImportLimits.MAX_IMPORTED_CERTIFICATES] certificats déjà importés (D33). */
+    TOO_MANY_CERTIFICATES,
+
+    /** Refusé : certificat plus gros que [ImportLimits.MAX_CERTIFICATE_BYTES] (D33). */
+    CERTIFICATE_TOO_LARGE,
 }
 
 /** Import refusé par les limites ; le message ne contient qu'un code stable. */
@@ -29,9 +35,9 @@ class ImportLimitException(
 ) : Exception("IMPORT_LIMIT_${decision.name}")
 
 /**
- * Limites des Master Lists importées (décision D22) : toutes sont relues et fusionnées au
- * démarrage (D16), leur nombre et leur taille cumulée bornent donc la mémoire et le temps de
- * préchargement.
+ * Limites des Master Lists (décision D22) et des certificats importés (D33) : tous sont relus
+ * et fusionnés au démarrage (D16), leur nombre et leur taille bornent donc la mémoire et le
+ * temps de préchargement.
  */
 object ImportLimits {
     /** Nombre maximal de Master Lists importées. */
@@ -50,6 +56,28 @@ object ImportLimits {
             existing.any { it.name == name } -> ImportDecision.ALREADY_PRESENT
             existing.size >= MAX_IMPORTED_LISTS -> ImportDecision.TOO_MANY
             existing.sumOf { it.size } + size > MAX_IMPORTED_TOTAL_BYTES -> ImportDecision.TOO_LARGE_TOTAL
+            else -> ImportDecision.ALLOWED
+        }
+
+    /** Nombre maximal de certificats importés seuls (D33). */
+    const val MAX_IMPORTED_CERTIFICATES = 100
+
+    /** Taille maximale d'un certificat importé seul, en DER ou en PEM : 64 Kio (D33). */
+    const val MAX_CERTIFICATE_BYTES = 64 * 1024
+
+    /**
+     * Décide si un certificat nommé [name], de [size] octets (fichier tel que choisi par
+     * l'utilisateur), peut s'ajouter aux certificats [existing].
+     */
+    fun decideCertificate(
+        existing: List<ImportedFile>,
+        name: String,
+        size: Long,
+    ): ImportDecision =
+        when {
+            size > MAX_CERTIFICATE_BYTES -> ImportDecision.CERTIFICATE_TOO_LARGE
+            existing.any { it.name == name } -> ImportDecision.ALREADY_PRESENT
+            existing.size >= MAX_IMPORTED_CERTIFICATES -> ImportDecision.TOO_MANY_CERTIFICATES
             else -> ImportDecision.ALLOWED
         }
 }
