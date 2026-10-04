@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="learn_intro_skip">Sleppa kynningu</string>
+    <string name="learn_intro_previous">Til baka</string>
     <string name="learn_intro_next">Áfram</string>
     <string name="learn_intro_start">Byrja</string>
     <string name="learn_intro_page">Síða %1$d af %2$d</string>
@@ -12,13 +13,13 @@
 
     <string name="learn_intro_key_title">Lykill til að opna kubbinn</string>
     <string name="learn_intro_key_body">Án lykils neitar kubburinn að svara. Lykillinn er prentaður á skilríkin:</string>
-    <string name="learn_intro_key_can">CAN: 6 stafa aðgangsnúmer prentað á nafnskírteinið.</string>
-    <string name="learn_intro_key_mrz">MRZ: stafalínurnar neðst á myndasíðunni, sem gefa upp númer skilríkjanna, fæðingardag og gildistíma.</string>
-    <string name="learn_intro_key_channel">Öll samskipti fara síðan um dulkóðaða rás (PACE eða BAC, samskiptareglurnar sem staðallinn kveður á um): enginn í nágrenninu getur lesið þau.</string>
+    <string name="learn_intro_key_can">CAN: 6 stafa aðgangsnúmer prentað framan á flest nýleg nafnskírteini.</string>
+    <string name="learn_intro_key_mrz">MRZ: stafalínurnar neðst á myndasíðu vegabréfsins eða aftan á kortinu, sem gefa upp númer skilríkjanna, fæðingardag og gildistíma.</string>
+    <string name="learn_intro_key_channel">Öll samskipti fara síðan um dulkóðaða rás (PACE eða BAC, samskiptareglurnar sem staðallinn kveður á um): enginn í nágrenninu sem þekkir ekki þennan lykil getur lesið þau.</string>
 
     <string name="learn_intro_verify_title">Það sem Sceau sannprófar</string>
-    <string name="learn_intro_verify_signature">Undirskrift útgáfuríkisins (Passive Authentication), með vottorðum landa sem eru innbyggð í forritið.</string>
-    <string name="learn_intro_verify_clone">Að kubburinn sé ekki afrit (Chip Authentication eða Active Authentication): hann þarf að sanna að hann geymi leynilykil sem ekki er hægt að ná út.</string>
+    <string name="learn_intro_verify_signature">Undirskrift útgáfuríkisins (Passive Authentication), með vottorðum landa sem eru innbyggð í forritið eða sem þú hefur flutt inn.</string>
+    <string name="learn_intro_verify_clone">Að kubburinn sé ekki afrit (Chip Authentication eða Active Authentication): hann þarf að sanna að hann geymi leynilykil sem hann gefur aldrei upp.</string>
     <string name="learn_intro_verify_verdicts">Niðurstaðan er ein af fjórum:</string>
 
     <string name="learn_intro_privacy_title">Gögnin þín verða eftir hér</string>
@@ -31,32 +32,32 @@
 
     <string name="learn_chip_title">Hvað kubburinn geymir</string>
     <string name="learn_chip_back">Til baka</string>
-    <string name="learn_chip_intro">Kubburinn geymir upplýsingarnar í skrám: gagnahópum (DG1, DG2…) og nokkrum tækniskrám (EF). Svona notar Sceau þær.</string>
+    <string name="learn_chip_intro">Kubburinn geymir upplýsingarnar í skrám: gagnahópum (DG1, DG2…) og nokkrum tækniskrám sem bera heiti sem byrjar á EF. Svona notar Sceau þær.</string>
 
     <string name="learn_chip_section_displayed">Lesið og birt</string>
-    <string name="learn_chip_dg1">Gögn MRZ: kenninafn, eiginnöfn, ríkisfang, fæðingardagur, kyn, númer skilríkja, útgáfuríki og gildistími.</string>
+    <string name="learn_chip_dg1">Gögn MRZ: tegund skilríkja, kenninafn, eiginnöfn, ríkisfang, fæðingardagur, kyn, númer skilríkja, útgáfuríki og gildistími.</string>
     <string name="learn_chip_dg2">Mynd af handhafa.</string>
     <string name="learn_chip_dg11">Ef ríkið skráir þær: viðbótarpersónuupplýsingar, svo sem fæðingarstaður eða heimilisfang.</string>
-    <string name="learn_chip_dg12">Ef ríkið skráir þær: upplýsingar um skilríkin, svo sem útgáfuyfirvald og útgáfudagur.</string>
+    <string name="learn_chip_dg12">Ef ríkið skráir þær: upplýsingar um skilríkin, svo sem útgáfuyfirvald og útgáfudagur, stundum mynd af skilríkjunum.</string>
 
     <string name="learn_chip_section_verification">Aðeins lesið til sannprófunar</string>
-    <string name="learn_chip_verification_intro">Þessar skrár eru ekki birtar: þær eru notaðar til að sanna að gögnin séu ósvikin.</string>
+    <string name="learn_chip_verification_intro">Þessar skrár innihalda engar persónuupplýsingar: þær eru notaðar til að eiga samskipti við kubbinn og til að sanna að gögnin séu ósvikin.</string>
     <string name="learn_chip_ef_card_access">Aðgangsreglurnar sem kubburinn samþykkir, svo sem PACE.</string>
     <string name="learn_chip_ef_com">Listi yfir gagnahópana sem eru til staðar.</string>
     <string name="learn_chip_ef_sod">Tætigildi hvers gagnahóps, undirritað af ríkinu.</string>
     <string name="learn_chip_dg14">Dreifilykillinn sem notaður er fyrir Chip Authentication.</string>
     <string name="learn_chip_dg15">Dreifilykillinn sem notaður er fyrir Active Authentication.</string>
-    <string name="learn_chip_ef_card_security">Aðeins á sumum kortum: lykill kubbsins, undirritaður af ríkinu og sannprófaður meðan á PACE stendur.</string>
+    <string name="learn_chip_ef_card_security">Aðeins á sumum skilríkjum (PACE-CAM): lykill kubbsins, undirritaður af ríkinu, sem staðfestir að kubburinn hafi auðkennt sig meðan rásin var opnuð.</string>
 
     <string name="learn_chip_section_never">Aldrei lesið</string>
     <string name="learn_chip_dg3">Fingraför.</string>
     <string name="learn_chip_dg4">Mynd af lithimnu.</string>
-    <string name="learn_chip_eac">Þessar tvær skrár eru hvort sem er varðar með viðbótarlás, EAC (Extended Access Control), sem aðeins yfirvöld með heimild geta opnað.</string>
+    <string name="learn_chip_eac">Á evrópskum skilríkjum eru þessar tvær skrár hvort sem er varðar með viðbótarlás, EAC (Extended Access Control), sem aðeins yfirvöld með heimild geta opnað.</string>
     <string name="learn_chip_others">Hinir gagnahóparnir (DG5 til DG10, DG13 og DG16: aðrar myndir, eiginhandarundirskrift, gögn sem eru sértæk fyrir ríkið, fólk sem á að láta vita) eru ekki heldur lesnir.</string>
 
     <string name="learn_chip_section_never_does">Það sem Sceau gerir ekki</string>
     <string name="learn_chip_no_storage">Það vistar hvorki, sendir né skráir nein lesin gögn: allt er geymt í minni símans og því eytt þegar þú ferð af niðurstöðuskjánum.</string>
     <string name="learn_chip_no_screenshot">Það leyfir hvorki skjámyndir né forskoðun í nýlegum forritum.</string>
-    <string name="learn_chip_no_write">Það breytir engu á kubbnum: það les aðeins.</string>
-    <string name="learn_chip_no_other_data">Kubburinn geymir hvorki sakaskrá, heilsufarsupplýsingar né staðsetningu.</string>
+    <string name="learn_chip_no_write">Það skrifar engin gögn á kubbinn: það les hann aðeins.</string>
+    <string name="learn_chip_no_other_data">Það les ekkert annað en skrárnar sem taldar eru upp hér að ofan: ekki er beðið um neinar aðrar upplýsingar af kubbnum, hverjar sem þær eru.</string>
 </resources>

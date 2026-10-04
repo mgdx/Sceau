@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="learn_intro_skip">Aqbeż l-intro</string>
+    <string name="learn_intro_skip">Aqbeż l-introduzzjoni</string>
+    <string name="learn_intro_previous">Ta’ qabel</string>
     <string name="learn_intro_next">Li jmiss</string>
     <string name="learn_intro_start">Ibda</string>
     <string name="learn_intro_page">Paġna %1$d minn %2$d</string>
@@ -12,13 +13,13 @@
 
     <string name="learn_intro_key_title">Ċavetta biex tiftaħ iċ-ċippa</string>
     <string name="learn_intro_key_body">Mingħajr ċavetta, iċ-ċippa tirrifjuta li twieġeb. Din iċ-ċavetta hija stampata fuq id-dokument:</string>
-    <string name="learn_intro_key_can">CAN: numru ta’ aċċess ta’ 6 ċifri stampat fuq il-karta tal-identità.</string>
-    <string name="learn_intro_key_mrz">MRZ: il-linji ta’ karattri fil-qiegħ tal-paġna tar-ritratt, li minnhom jittieħdu n-numru tad-dokument, id-data tat-twelid u d-data ta’ skadenza.</string>
-    <string name="learn_intro_key_channel">Il-komunikazzjoni mbagħad tgħaddi minn kanal kriptat (PACE jew BAC, il-protokolli previsti mill-istandard): persuna fil-qrib ma tistax taqraha.</string>
+    <string name="learn_intro_key_can">CAN: numru ta’ aċċess ta’ 6 ċifri stampat fuq quddiem tal-biċċa l-kbira tal-karti tal-identità riċenti.</string>
+    <string name="learn_intro_key_mrz">MRZ: il-linji ta’ karattri fil-qiegħ tal-paġna tar-ritratt tal-passaport jew fuq wara tal-karta, li minnhom jittieħdu n-numru tad-dokument, id-data tat-twelid u d-data ta’ skadenza.</string>
+    <string name="learn_intro_key_channel">Il-komunikazzjoni mbagħad tgħaddi minn kanal kriptat (PACE jew BAC, il-protokolli previsti mill-istandard): persuna fil-qrib li ma tafx din iċ-ċavetta ma tistax taqraha.</string>
 
     <string name="learn_intro_verify_title">X’jivverifika Sceau</string>
-    <string name="learn_intro_verify_signature">Il-firma tal-Istat (Passive Authentication), bil-ċertifikati tal-pajjiżi integrati fl-app.</string>
-    <string name="learn_intro_verify_clone">Li ċ-ċippa mhijiex kopja (Chip Authentication jew Active Authentication): trid turi li għandha ċavetta sigrieta li ma tistax tiġi estratta.</string>
+    <string name="learn_intro_verify_signature">Il-firma tal-Istat (Passive Authentication), bil-ċertifikati tal-pajjiżi integrati fl-app jew li importajt int.</string>
+    <string name="learn_intro_verify_clone">Li ċ-ċippa mhijiex kopja (Chip Authentication jew Active Authentication): trid turi li għandha ċavetta sigrieta li qatt ma tiżvelaha.</string>
     <string name="learn_intro_verify_verdicts">Ir-riżultat huwa wieħed minn erba’ verdetti:</string>
 
     <string name="learn_intro_privacy_title">Id-data tiegħek tibqa’ hawn</string>
@@ -31,32 +32,32 @@
 
     <string name="learn_chip_title">X’fiha ċ-ċippa</string>
     <string name="learn_chip_back">Lura</string>
-    <string name="learn_chip_intro">Iċ-ċippa żżomm l-informazzjoni tagħha f’fajls: gruppi tad-data (DG1, DG2…) u xi fajls tekniċi (EF). Hawn x’jagħmel bihom Sceau.</string>
+    <string name="learn_chip_intro">Iċ-ċippa żżomm l-informazzjoni tagħha f’fajls: gruppi tad-data (DG1, DG2…) u xi fajls tekniċi li isimhom jibda b’EF. Hawn x’jagħmel bihom Sceau.</string>
 
     <string name="learn_chip_section_displayed">Moqri u muri</string>
-    <string name="learn_chip_dg1">Id-data tal-MRZ: kunjom, ismijiet, nazzjonalità, data tat-twelid, sess, numru tad-dokument, Stat emittenti u data ta’ skadenza.</string>
+    <string name="learn_chip_dg1">Id-data tal-MRZ: tip ta’ dokument, kunjom, ismijiet, nazzjonalità, data tat-twelid, sess, numru tad-dokument, Stat emittenti u data ta’ skadenza.</string>
     <string name="learn_chip_dg2">Ir-ritratt tad-detentur.</string>
     <string name="learn_chip_dg11">Jekk l-Istat idaħħalha: informazzjoni personali addizzjonali, bħall-post tat-twelid jew l-indirizz.</string>
-    <string name="learn_chip_dg12">Jekk l-Istat idaħħalha: informazzjoni dwar id-dokument, bħall-awtorità u d-data tal-ħruġ.</string>
+    <string name="learn_chip_dg12">Jekk l-Istat idaħħalha: informazzjoni dwar id-dokument, bħall-awtorità u d-data tal-ħruġ, xi drabi immaġni tad-dokument.</string>
 
     <string name="learn_chip_section_verification">Moqri għall-verifika biss</string>
-    <string name="learn_chip_verification_intro">Dawn il-fajls ma jintwerewx: iservu biex juru li d-data hija awtentika.</string>
+    <string name="learn_chip_verification_intro">Dawn il-fajls ma fihom l-ebda data personali: iservu biex jikkomunikaw maċ-ċippa u biex juru li d-data hija awtentika.</string>
     <string name="learn_chip_ef_card_access">Il-protokolli ta’ aċċess li taċċetta ċ-ċippa, bħal PACE.</string>
     <string name="learn_chip_ef_com">Il-lista tal-gruppi tad-data preżenti.</string>
     <string name="learn_chip_ef_sod">Il-hash ta’ kull grupp tad-data, iffirmat mill-Istat.</string>
     <string name="learn_chip_dg14">Iċ-ċavetta pubblika użata għall-Chip Authentication.</string>
     <string name="learn_chip_dg15">Iċ-ċavetta pubblika użata għall-Active Authentication.</string>
-    <string name="learn_chip_ef_card_security">Fuq xi karti biss: iċ-ċavetta taċ-ċippa ffirmata mill-Istat, ivverifikata waqt PACE.</string>
+    <string name="learn_chip_ef_card_security">Fuq xi dokumenti biss (PACE-CAM): iċ-ċavetta taċ-ċippa ffirmata mill-Istat, li tikkonferma li ċ-ċippa awtentikat ruħha waqt il-ftuħ tal-kanal.</string>
 
     <string name="learn_chip_section_never">Qatt ma jinqara</string>
     <string name="learn_chip_dg3">L-impronti tas-swaba’.</string>
     <string name="learn_chip_dg4">L-immaġni tal-iris.</string>
-    <string name="learn_chip_eac">Dawn iż-żewġ fajls huma protetti xorta waħda b’serratura addizzjonali, l-EAC (Extended Access Control), li jistgħu jiftħuha biss l-awtoritajiet awtorizzati.</string>
+    <string name="learn_chip_eac">Fuq id-dokumenti Ewropej, dawn iż-żewġ fajls huma protetti xorta waħda b’serratura addizzjonali, l-EAC (Extended Access Control), li jistgħu jiftħuha biss l-awtoritajiet awtorizzati.</string>
     <string name="learn_chip_others">Il-gruppi tad-data l-oħra (DG5 sa DG10, DG13 u DG16: immaġni oħra, firma bl-idejn, data speċifika għall-Istat, persuni li għandhom jiġu infurmati) lanqas ma jinqraw.</string>
 
     <string name="learn_chip_section_never_does">X’ma jagħmilx Sceau</string>
     <string name="learn_chip_no_storage">Ma jissejvja, ma jibgħat u ma jirreġistra l-ebda data moqrija: kollox jibqa’ fil-memorja tat-telefon u jitħassar meta toħroġ mir-riżultat.</string>
     <string name="learn_chip_no_screenshot">Ma jippermettix screenshots jew preview fl-apps riċenti.</string>
-    <string name="learn_chip_no_write">Ma jibdel xejn fuq iċ-ċippa: jaqra biss.</string>
-    <string name="learn_chip_no_other_data">Iċ-ċippa ma fihiex rekord kriminali, data tas-saħħa jew lok.</string>
+    <string name="learn_chip_no_write">Ma jikteb l-ebda data fuq iċ-ċippa: jaqraha biss.</string>
+    <string name="learn_chip_no_other_data">Ma jaqra xejn ħlief il-fajls elenkati hawn fuq: ma tintalab l-ebda informazzjoni oħra miċ-ċippa, ta’ kwalunkwe tip.</string>
 </resources>

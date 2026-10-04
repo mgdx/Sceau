@@ -121,7 +121,7 @@ object SceauIcons {
         )
     }
 
-    private fun icon(
+    internal fun icon(
         name: String,
         pathData: String,
     ): ImageVector =

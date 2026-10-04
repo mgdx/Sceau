@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Introduction du premier lancement (D35). -->
-    <string name="learn_intro_skip">Passer l’intro</string>
+    <string name="learn_intro_skip">Passer l’introduction</string>
+    <string name="learn_intro_previous">Précédent</string>
     <string name="learn_intro_next">Suivant</string>
     <string name="learn_intro_start">Commencer</string>
     <!-- Annonce de position, pas un pluriel : « Page 2 sur 4 ». -->
@@ -14,13 +15,13 @@
 
     <string name="learn_intro_key_title">Une clé pour ouvrir la puce</string>
     <string name="learn_intro_key_body">Sans clé, la puce refuse de répondre. Cette clé est imprimée sur le document :</string>
-    <string name="learn_intro_key_can">CAN : numéro d’accès de 6 chiffres imprimé sur la carte d’identité.</string>
-    <string name="learn_intro_key_mrz">MRZ : les lignes de caractères en bas de la page photo, d’où viennent le numéro du document, la date de naissance et la date d’expiration.</string>
-    <string name="learn_intro_key_channel">Les échanges passent ensuite par un canal chiffré (PACE ou BAC, les protocoles prévus par la norme) : une personne à proximité ne peut pas les lire.</string>
+    <string name="learn_intro_key_can">CAN : numéro d’accès de 6 chiffres imprimé au recto de la plupart des cartes d’identité récentes.</string>
+    <string name="learn_intro_key_mrz">MRZ : les lignes de caractères en bas de la page photo du passeport ou au dos de la carte, d’où viennent le numéro du document, la date de naissance et la date d’expiration.</string>
+    <string name="learn_intro_key_channel">Les échanges passent ensuite par un canal chiffré (PACE ou BAC, les protocoles prévus par la norme) : une personne à proximité qui ne connaît pas cette clé ne peut pas les lire.</string>
 
     <string name="learn_intro_verify_title">Ce que vérifie Sceau</string>
-    <string name="learn_intro_verify_signature">La signature de l’État (Passive Authentication), avec les certificats des pays embarqués dans l’application.</string>
-    <string name="learn_intro_verify_clone">Que la puce n’est pas une copie (Chip Authentication ou Active Authentication) : elle doit prouver qu’elle détient une clé secrète impossible à extraire.</string>
+    <string name="learn_intro_verify_signature">La signature de l’État (Passive Authentication), avec les certificats des pays embarqués dans l’application ou que vous avez importés.</string>
+    <string name="learn_intro_verify_clone">Que la puce n’est pas une copie (Chip Authentication ou Active Authentication) : elle doit prouver qu’elle détient une clé secrète qu’elle ne révèle jamais.</string>
     <string name="learn_intro_verify_verdicts">Le résultat tient en quatre verdicts :</string>
 
     <string name="learn_intro_privacy_title">Vos données restent ici</string>
@@ -35,34 +36,34 @@
     <!-- Écran « Ce que contient la puce ». -->
     <string name="learn_chip_title">Ce que contient la puce</string>
     <string name="learn_chip_back">Retour</string>
-    <string name="learn_chip_intro">La puce range ses informations dans des fichiers : des groupes de données (DG1, DG2…) et quelques fichiers techniques (EF). Voici ce que Sceau en fait.</string>
+    <string name="learn_chip_intro">La puce range ses informations dans des fichiers : des groupes de données (DG1, DG2…) et quelques fichiers techniques, dont le nom commence par EF. Voici ce que Sceau en fait.</string>
 
     <string name="learn_chip_section_displayed">Lu et affiché</string>
-    <string name="learn_chip_dg1">Les données de la MRZ : nom, prénoms, nationalité, date de naissance, sexe, numéro du document, État émetteur et date d’expiration.</string>
+    <string name="learn_chip_dg1">Les données de la MRZ : type de document, nom, prénoms, nationalité, date de naissance, sexe, numéro du document, État émetteur et date d’expiration.</string>
     <string name="learn_chip_dg2">La photo du titulaire.</string>
     <string name="learn_chip_dg11">Si l’État les inscrit : informations personnelles complémentaires, comme le lieu de naissance ou l’adresse.</string>
-    <string name="learn_chip_dg12">Si l’État les inscrit : informations sur le document, comme l’autorité et la date de délivrance.</string>
+    <string name="learn_chip_dg12">Si l’État les inscrit : informations sur le document, comme l’autorité et la date de délivrance, parfois une image du document.</string>
 
     <string name="learn_chip_section_verification">Lu pour la vérification seulement</string>
-    <string name="learn_chip_verification_intro">Ces fichiers ne sont pas affichés : ils servent à prouver que les données sont authentiques.</string>
+    <string name="learn_chip_verification_intro">Ces fichiers ne contiennent aucune donnée personnelle : ils servent à dialoguer avec la puce et à prouver que les données sont authentiques.</string>
     <string name="learn_chip_ef_card_access">Les protocoles d’accès acceptés par la puce, comme PACE.</string>
     <string name="learn_chip_ef_com">La liste des groupes de données présents.</string>
     <string name="learn_chip_ef_sod">L’empreinte de chaque groupe de données, signée par l’État.</string>
     <string name="learn_chip_dg14">La clé publique qui sert à la Chip Authentication.</string>
     <string name="learn_chip_dg15">La clé publique qui sert à l’Active Authentication.</string>
-    <string name="learn_chip_ef_card_security">Sur certaines cartes seulement : la clé de la puce signée par l’État, vérifiée pendant PACE.</string>
+    <string name="learn_chip_ef_card_security">Sur certains documents seulement (PACE-CAM) : la clé de la puce signée par l’État, qui confirme que la puce s’est authentifiée pendant l’ouverture du canal.</string>
 
     <string name="learn_chip_section_never">Jamais lu</string>
     <string name="learn_chip_dg3">Les empreintes digitales.</string>
     <string name="learn_chip_dg4">L’image de l’iris.</string>
-    <string name="learn_chip_eac">Ces deux fichiers sont de toute façon protégés par un verrou supplémentaire, l’EAC (Extended Access Control), que seules les autorités habilitées peuvent ouvrir.</string>
+    <string name="learn_chip_eac">Sur les documents européens, ces deux fichiers sont de toute façon protégés par un verrou supplémentaire, l’EAC (Extended Access Control), que seules les autorités habilitées peuvent ouvrir.</string>
     <string name="learn_chip_others">Les autres groupes de données (DG5 à DG10, DG13 et DG16 : autres images, signature manuscrite, données propres à l’État, personnes à prévenir) ne sont pas lus non plus.</string>
 
     <string name="learn_chip_section_never_does">Ce que Sceau ne fait pas</string>
     <string name="learn_chip_no_storage">Il n’enregistre, n’envoie ni ne journalise aucune donnée lue : tout reste dans la mémoire du téléphone, effacé en quittant le résultat.</string>
     <string name="learn_chip_no_screenshot">Il ne permet ni capture d’écran ni aperçu dans les applications récentes.</string>
-    <string name="learn_chip_no_write">Il ne modifie rien sur la puce : il ne fait que lire.</string>
-    <string name="learn_chip_no_other_data">La puce ne contient ni casier judiciaire, ni données de santé, ni position.</string>
+    <string name="learn_chip_no_write">Il n’écrit aucune donnée sur la puce : il ne fait que la lire.</string>
+    <string name="learn_chip_no_other_data">Il ne lit rien d’autre que les fichiers listés ci-dessus : aucune autre information de la puce, quelle qu’elle soit, n’est demandée.</string>
 
     <!-- Identifiants de fichiers ICAO, jamais traduits (D27). -->
     <string name="learn_chip_label_dg1" translatable="false">DG1</string>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="learn_intro_skip">Пропустити вступ</string>
+    <string name="learn_intro_previous">Назад</string>
     <string name="learn_intro_next">Далі</string>
     <string name="learn_intro_start">Почати</string>
     <string name="learn_intro_page">Сторінка %1$d з %2$d</string>
@@ -12,13 +13,13 @@
 
     <string name="learn_intro_key_title">Ключ, щоб відкрити чип</string>
     <string name="learn_intro_key_body">Без ключа чип не відповідає. Цей ключ надруковано на документі:</string>
-    <string name="learn_intro_key_can">CAN: 6-значний номер доступу, надрукований на ID-картці.</string>
-    <string name="learn_intro_key_mrz">MRZ: рядки символів унизу сторінки з фотографією, звідки беруться номер документа, дата народження та дата закінчення строку дії.</string>
-    <string name="learn_intro_key_channel">Далі обмін даними йде зашифрованим каналом (PACE або BAC — протоколи, передбачені стандартом): людина поруч не зможе його прочитати.</string>
+    <string name="learn_intro_key_can">CAN: 6-значний номер доступу, надрукований на лицьовому боці більшості нових ID-карток.</string>
+    <string name="learn_intro_key_mrz">MRZ: рядки символів унизу сторінки з фотографією в паспорті або на звороті картки, звідки беруться номер документа, дата народження та дата закінчення строку дії.</string>
+    <string name="learn_intro_key_channel">Далі обмін даними йде зашифрованим каналом (PACE або BAC — протоколи, передбачені стандартом): людина поруч, яка не знає цього ключа, не зможе його прочитати.</string>
 
     <string name="learn_intro_verify_title">Що перевіряє Sceau</string>
-    <string name="learn_intro_verify_signature">Підпис держави (Passive Authentication) за допомогою сертифікатів країн, вбудованих у застосунок.</string>
-    <string name="learn_intro_verify_clone">Що чип не є копією (Chip Authentication або Active Authentication): він має довести, що володіє секретним ключем, який неможливо витягти.</string>
+    <string name="learn_intro_verify_signature">Підпис держави (Passive Authentication) за допомогою сертифікатів країн, вбудованих у застосунок або імпортованих вами.</string>
+    <string name="learn_intro_verify_clone">Що чип не є копією (Chip Authentication або Active Authentication): він має довести, що володіє секретним ключем, який ніколи не розкриває.</string>
     <string name="learn_intro_verify_verdicts">Результат — один із чотирьох вердиктів:</string>
 
     <string name="learn_intro_privacy_title">Ваші дані залишаються тут</string>
@@ -31,32 +32,32 @@
 
     <string name="learn_chip_title">Що містить чип</string>
     <string name="learn_chip_back">Назад</string>
-    <string name="learn_chip_intro">Чип зберігає дані у файлах: групах даних (DG1, DG2…) і кількох технічних файлах (EF). Ось що Sceau з ними робить.</string>
+    <string name="learn_chip_intro">Чип зберігає дані у файлах: групах даних (DG1, DG2…) і кількох технічних файлах, назва яких починається з EF. Ось що Sceau з ними робить.</string>
 
     <string name="learn_chip_section_displayed">Зчитується й відображається</string>
-    <string name="learn_chip_dg1">Дані MRZ: прізвище, ім’я, громадянство, дата народження, стать, номер документа, держава видачі та дата закінчення строку дії.</string>
+    <string name="learn_chip_dg1">Дані MRZ: тип документа, прізвище, ім’я, громадянство, дата народження, стать, номер документа, держава видачі та дата закінчення строку дії.</string>
     <string name="learn_chip_dg2">Фотографія власника.</string>
     <string name="learn_chip_dg11">Якщо держава їх записує: додаткові особисті дані, як-от місце народження або адреса.</string>
-    <string name="learn_chip_dg12">Якщо держава їх записує: дані про документ, як-от орган, що видав, і дата видачі.</string>
+    <string name="learn_chip_dg12">Якщо держава їх записує: дані про документ, як-от орган, що видав, і дата видачі, іноді зображення документа.</string>
 
     <string name="learn_chip_section_verification">Зчитується лише для перевірки</string>
-    <string name="learn_chip_verification_intro">Ці файли не відображаються: вони потрібні, щоб довести справжність даних.</string>
+    <string name="learn_chip_verification_intro">Ці файли не містять жодних особистих даних: вони потрібні, щоб обмінюватися даними з чипом і довести справжність даних.</string>
     <string name="learn_chip_ef_card_access">Протоколи доступу, які підтримує чип, як-от PACE.</string>
     <string name="learn_chip_ef_com">Перелік наявних груп даних.</string>
     <string name="learn_chip_ef_sod">Хеш кожної групи даних, підписаний державою.</string>
     <string name="learn_chip_dg14">Відкритий ключ для Chip Authentication.</string>
     <string name="learn_chip_dg15">Відкритий ключ для Active Authentication.</string>
-    <string name="learn_chip_ef_card_security">Лише на деяких картках: ключ чипа, підписаний державою, який перевіряється під час PACE.</string>
+    <string name="learn_chip_ef_card_security">Лише на деяких документах (PACE-CAM): ключ чипа, підписаний державою, який підтверджує, що чип пройшов автентифікацію під час встановлення каналу.</string>
 
     <string name="learn_chip_section_never">Ніколи не зчитується</string>
     <string name="learn_chip_dg3">Відбитки пальців.</string>
     <string name="learn_chip_dg4">Зображення райдужної оболонки ока.</string>
-    <string name="learn_chip_eac">Ці два файли в будь-якому разі захищені додатковим замком — EAC (Extended Access Control), який можуть відкрити лише уповноважені органи.</string>
+    <string name="learn_chip_eac">На європейських документах ці два файли в будь-якому разі захищені додатковим замком — EAC (Extended Access Control), який можуть відкрити лише уповноважені органи.</string>
     <string name="learn_chip_others">Інші групи даних (DG5–DG10, DG13 і DG16: інші зображення, власноручний підпис, дані, специфічні для держави, особи, яких слід повідомити) також не зчитуються.</string>
 
     <string name="learn_chip_section_never_does">Чого Sceau не робить</string>
     <string name="learn_chip_no_storage">Не зберігає, не надсилає й не записує в журнал жодних зчитаних даних: усе залишається в пам’яті телефона й видаляється, коли ви закриваєте результат.</string>
     <string name="learn_chip_no_screenshot">Не дозволяє ні знімків екрана, ні попереднього перегляду в недавніх застосунках.</string>
-    <string name="learn_chip_no_write">Нічого не змінює на чипі: лише зчитує.</string>
-    <string name="learn_chip_no_other_data">Чип не містить ні відомостей про судимість, ні медичних даних, ні геолокації.</string>
+    <string name="learn_chip_no_write">Не записує на чип жодних даних: лише зчитує його.</string>
+    <string name="learn_chip_no_other_data">Не зчитує нічого, крім перелічених вище файлів: жодна інша інформація з чипа, хоч би якою вона була, не запитується.</string>
 </resources>

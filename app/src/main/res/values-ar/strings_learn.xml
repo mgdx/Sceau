@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="learn_intro_skip">تخطي المقدمة</string>
+    <string name="learn_intro_previous">السابق</string>
     <string name="learn_intro_next">التالي</string>
     <string name="learn_intro_start">ابدأ</string>
     <string name="learn_intro_page">الصفحة %1$d من %2$d</string>
@@ -12,13 +13,13 @@
 
     <string name="learn_intro_key_title">مفتاح لفتح الشريحة</string>
     <string name="learn_intro_key_body">من دون مفتاح، ترفض الشريحة الرد. هذا المفتاح مطبوع على الوثيقة:</string>
-    <string name="learn_intro_key_can">رقم CAN: رقم دخول من 6 أرقام مطبوع على بطاقة الهوية.</string>
-    <string name="learn_intro_key_mrz">منطقة MRZ: أسطر الأحرف أسفل صفحة الصورة، ومنها يُؤخذ رقم الوثيقة وتاريخ الميلاد وتاريخ الانتهاء.</string>
-    <string name="learn_intro_key_channel">بعد ذلك يمر تبادل البيانات عبر قناة مشفّرة (بروتوكول PACE أو BAC، وهما البروتوكولان اللذان ينص عليهما المعيار): لا يستطيع أي شخص قريب قراءته.</string>
+    <string name="learn_intro_key_can">رقم CAN: رقم دخول من 6 أرقام مطبوع على وجه معظم بطاقات الهوية الحديثة.</string>
+    <string name="learn_intro_key_mrz">منطقة MRZ: أسطر الأحرف أسفل صفحة الصورة في جواز السفر أو على ظهر البطاقة، ومنها يُؤخذ رقم الوثيقة وتاريخ الميلاد وتاريخ الانتهاء.</string>
+    <string name="learn_intro_key_channel">بعد ذلك يمر تبادل البيانات عبر قناة مشفّرة (بروتوكول PACE أو BAC، وهما البروتوكولان اللذان ينص عليهما المعيار): لا يستطيع شخص قريب لا يعرف هذا المفتاح قراءته.</string>
 
     <string name="learn_intro_verify_title">ما يتحقق منه Sceau</string>
-    <string name="learn_intro_verify_signature">توقيع الدولة (Passive Authentication)، باستخدام شهادات الدول المدمجة في التطبيق.</string>
-    <string name="learn_intro_verify_clone">أن الشريحة ليست نسخة (Chip Authentication أو Active Authentication): يجب أن تثبت أنها تملك مفتاحًا سريًا يستحيل استخراجه.</string>
+    <string name="learn_intro_verify_signature">توقيع الدولة (Passive Authentication)، باستخدام شهادات الدول المدمجة في التطبيق أو التي استوردتها.</string>
+    <string name="learn_intro_verify_clone">أن الشريحة ليست نسخة (Chip Authentication أو Active Authentication): يجب أن تثبت أنها تملك مفتاحًا سريًا لا تكشفه أبدًا.</string>
     <string name="learn_intro_verify_verdicts">تتلخص النتيجة في أحد أربعة أحكام:</string>
 
     <string name="learn_intro_privacy_title">بياناتك تبقى هنا</string>
@@ -31,32 +32,32 @@
 
     <string name="learn_chip_title">ما تحتويه الشريحة</string>
     <string name="learn_chip_back">رجوع</string>
-    <string name="learn_chip_intro">تحفظ الشريحة معلوماتها في ملفات: مجموعات بيانات (DG1، DG2…) وبعض الملفات التقنية (EF). إليك ما يفعله Sceau بها.</string>
+    <string name="learn_chip_intro">تحفظ الشريحة معلوماتها في ملفات: مجموعات بيانات (DG1، DG2…) وبعض الملفات التقنية التي تبدأ أسماؤها بـ EF. إليك ما يفعله Sceau بها.</string>
 
     <string name="learn_chip_section_displayed">تُقرأ وتُعرض</string>
-    <string name="learn_chip_dg1">بيانات منطقة MRZ: اسم العائلة، والأسماء الشخصية، والجنسية، وتاريخ الميلاد، والجنس، ورقم الوثيقة، ودولة الإصدار، وتاريخ الانتهاء.</string>
+    <string name="learn_chip_dg1">بيانات منطقة MRZ: نوع الوثيقة، واسم العائلة، والأسماء الشخصية، والجنسية، وتاريخ الميلاد، والجنس، ورقم الوثيقة، ودولة الإصدار، وتاريخ الانتهاء.</string>
     <string name="learn_chip_dg2">صورة حامل الوثيقة.</string>
     <string name="learn_chip_dg11">إن كانت الدولة تسجّلها: معلومات شخصية إضافية، مثل مكان الميلاد أو العنوان.</string>
-    <string name="learn_chip_dg12">إن كانت الدولة تسجّلها: معلومات عن الوثيقة، مثل جهة الإصدار وتاريخ الإصدار.</string>
+    <string name="learn_chip_dg12">إن كانت الدولة تسجّلها: معلومات عن الوثيقة، مثل جهة الإصدار وتاريخ الإصدار، وأحيانًا صورة للوثيقة.</string>
 
     <string name="learn_chip_section_verification">تُقرأ للتحقق فقط</string>
-    <string name="learn_chip_verification_intro">لا تُعرض هذه الملفات: فهي تُستخدم لإثبات أن البيانات أصلية.</string>
+    <string name="learn_chip_verification_intro">لا تحتوي هذه الملفات على أي بيانات شخصية: فهي تُستخدم للتواصل مع الشريحة ولإثبات أن البيانات أصلية.</string>
     <string name="learn_chip_ef_card_access">بروتوكولات الدخول التي تقبلها الشريحة، مثل PACE.</string>
     <string name="learn_chip_ef_com">قائمة مجموعات البيانات الموجودة.</string>
     <string name="learn_chip_ef_sod">بصمة كل مجموعة بيانات، موقَّعة من الدولة.</string>
     <string name="learn_chip_dg14">المفتاح العام المستخدم في Chip Authentication.</string>
     <string name="learn_chip_dg15">المفتاح العام المستخدم في Active Authentication.</string>
-    <string name="learn_chip_ef_card_security">في بعض البطاقات فقط: مفتاح الشريحة موقَّعًا من الدولة، ويُتحقق منه أثناء PACE.</string>
+    <string name="learn_chip_ef_card_security">في بعض الوثائق فقط (PACE-CAM): مفتاح الشريحة موقَّعًا من الدولة، وهو يؤكد أن الشريحة أثبتت هويتها أثناء فتح القناة.</string>
 
     <string name="learn_chip_section_never">لا تُقرأ أبدًا</string>
     <string name="learn_chip_dg3">بصمات الأصابع.</string>
     <string name="learn_chip_dg4">صورة القزحية.</string>
-    <string name="learn_chip_eac">هذان الملفان محميان على أي حال بقفل إضافي، هو EAC (Extended Access Control)، لا تستطيع فتحه إلا السلطات المخوَّلة.</string>
+    <string name="learn_chip_eac">في الوثائق الأوروبية، هذان الملفان محميان على أي حال بقفل إضافي، هو EAC (Extended Access Control)، لا تستطيع فتحه إلا السلطات المخوَّلة.</string>
     <string name="learn_chip_others">لا تُقرأ كذلك مجموعات البيانات الأخرى (من DG5 إلى DG10، وDG13 وDG16: صور أخرى، والتوقيع بخط اليد، وبيانات خاصة بالدولة، والأشخاص الذين يجب إبلاغهم).</string>
 
     <string name="learn_chip_section_never_does">ما لا يفعله Sceau</string>
     <string name="learn_chip_no_storage">لا يحفظ أي بيانات مقروءة ولا يرسلها ولا يسجّلها: يبقى كل شيء في ذاكرة الهاتف ويُمحى عند مغادرة النتيجة.</string>
     <string name="learn_chip_no_screenshot">لا يسمح بلقطات الشاشة ولا بالمعاينة في التطبيقات الحديثة.</string>
-    <string name="learn_chip_no_write">لا يغيّر أي شيء في الشريحة: يكتفي بالقراءة.</string>
-    <string name="learn_chip_no_other_data">لا تحتوي الشريحة على سجل جنائي ولا بيانات صحية ولا موقع.</string>
+    <string name="learn_chip_no_write">لا يكتب أي بيانات على الشريحة: يكتفي بقراءتها.</string>
+    <string name="learn_chip_no_other_data">لا يقرأ شيئًا غير الملفات المذكورة أعلاه: لا يطلب أي معلومات أخرى من الشريحة، مهما كانت.</string>
 </resources>

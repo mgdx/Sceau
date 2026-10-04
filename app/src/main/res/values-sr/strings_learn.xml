@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="learn_intro_skip">Прескочи увод</string>
+    <string name="learn_intro_previous">Назад</string>
     <string name="learn_intro_next">Даље</string>
     <string name="learn_intro_start">Почни</string>
     <string name="learn_intro_page">Страна %1$d од %2$d</string>
@@ -12,13 +13,13 @@
 
     <string name="learn_intro_key_title">Кључ за отварање чипа</string>
     <string name="learn_intro_key_body">Без кључа чип одбија да одговори. Тај кључ је одштампан на документу:</string>
-    <string name="learn_intro_key_can">CAN: шестоцифрени приступни број одштампан на личној карти.</string>
-    <string name="learn_intro_key_mrz">MRZ: редови знакова на дну стране са фотографијом, из којих се узимају број документа, датум рођења и датум истека важења.</string>
-    <string name="learn_intro_key_channel">Комуникација затим иде шифрованим каналом (PACE или BAC, протоколи предвиђени стандардом): особа у близини не може да је прочита.</string>
+    <string name="learn_intro_key_can">CAN: шестоцифрени приступни број одштампан на предњој страни већине новијих личних карата.</string>
+    <string name="learn_intro_key_mrz">MRZ: редови знакова на дну стране са фотографијом у пасошу или на полеђини личне карте, из којих се узимају број документа, датум рођења и датум истека важења.</string>
+    <string name="learn_intro_key_channel">Комуникација затим иде шифрованим каналом (PACE или BAC, протоколи предвиђени стандардом): особа у близини која не зна овај кључ не може да је прочита.</string>
 
     <string name="learn_intro_verify_title">Шта Sceau проверава</string>
-    <string name="learn_intro_verify_signature">Потпис државе (Passive Authentication), помоћу сертификата држава уграђених у апликацију.</string>
-    <string name="learn_intro_verify_clone">Да чип није копија (Chip Authentication или Active Authentication): мора да докаже да поседује тајни кључ који није могуће извући.</string>
+    <string name="learn_intro_verify_signature">Потпис државе (Passive Authentication), помоћу сертификата држава уграђених у апликацију или оних које сте увезли.</string>
+    <string name="learn_intro_verify_clone">Да чип није копија (Chip Authentication или Active Authentication): мора да докаже да поседује тајни кључ који никада не открива.</string>
     <string name="learn_intro_verify_verdicts">Резултат је једна од четири оцене:</string>
 
     <string name="learn_intro_privacy_title">Ваши подаци остају овде</string>
@@ -31,32 +32,32 @@
 
     <string name="learn_chip_title">Шта садржи чип</string>
     <string name="learn_chip_back">Назад</string>
-    <string name="learn_chip_intro">Чип чува податке у датотекама: групама података (DG1, DG2…) и неколико техничких датотека (EF). Ево шта Sceau ради са њима.</string>
+    <string name="learn_chip_intro">Чип чува податке у датотекама: групама података (DG1, DG2…) и неколико техничких датотека чији назив почиње са EF. Ево шта Sceau ради са њима.</string>
 
     <string name="learn_chip_section_displayed">Прочитано и приказано</string>
-    <string name="learn_chip_dg1">Подаци из MRZ: презиме, име, држављанство, датум рођења, пол, број документа, држава издавања и датум истека важења.</string>
+    <string name="learn_chip_dg1">Подаци из MRZ: врста документа, презиме, име, држављанство, датум рођења, пол, број документа, држава издавања и датум истека важења.</string>
     <string name="learn_chip_dg2">Фотографија носиоца.</string>
     <string name="learn_chip_dg11">Ако их држава уписује: додатни лични подаци, као што су место рођења или адреса.</string>
-    <string name="learn_chip_dg12">Ако их држава уписује: подаци о документу, као што су орган и датум издавања.</string>
+    <string name="learn_chip_dg12">Ако их држава уписује: подаци о документу, као што су орган и датум издавања, понекад и слика документа.</string>
 
     <string name="learn_chip_section_verification">Прочитано само ради провере</string>
-    <string name="learn_chip_verification_intro">Ове датотеке се не приказују: служе као доказ да су подаци аутентични.</string>
+    <string name="learn_chip_verification_intro">Ове датотеке не садрже никакве личне податке: служе за комуникацију са чипом и као доказ да су подаци аутентични.</string>
     <string name="learn_chip_ef_card_access">Протоколи приступа које чип прихвата, као што је PACE.</string>
     <string name="learn_chip_ef_com">Списак група података које постоје на чипу.</string>
     <string name="learn_chip_ef_sod">Хеш сваке групе података, који је потписала држава.</string>
     <string name="learn_chip_dg14">Јавни кључ који служи за Chip Authentication.</string>
     <string name="learn_chip_dg15">Јавни кључ који служи за Active Authentication.</string>
-    <string name="learn_chip_ef_card_security">Само на неким картама: кључ чипа који је потписала држава, проверен током PACE.</string>
+    <string name="learn_chip_ef_card_security">Само на неким документима (PACE-CAM): кључ чипа који је потписала држава, а који потврђује да се чип аутентификовао током успостављања канала.</string>
 
     <string name="learn_chip_section_never">Никада се не чита</string>
     <string name="learn_chip_dg3">Отисци прстију.</string>
     <string name="learn_chip_dg4">Слика дужице.</string>
-    <string name="learn_chip_eac">Ове две датотеке су у сваком случају заштићене додатном бравом, EAC (Extended Access Control), коју могу да отворе само овлашћени органи.</string>
+    <string name="learn_chip_eac">На европским документима ове две датотеке су у сваком случају заштићене додатном бравом, EAC (Extended Access Control), коју могу да отворе само овлашћени органи.</string>
     <string name="learn_chip_others">Ни остале групе података (DG5 до DG10, DG13 и DG16: друге слике, својеручни потпис, подаци специфични за државу, особе које треба обавестити) се не читају.</string>
 
     <string name="learn_chip_section_never_does">Шта Sceau не ради</string>
     <string name="learn_chip_no_storage">Не чува, не шаље и не бележи у дневник ниједан прочитани податак: све остаје у меморији телефона и брише се при изласку из резултата.</string>
     <string name="learn_chip_no_screenshot">Не дозвољава ни снимке екрана ни преглед међу недавним апликацијама.</string>
-    <string name="learn_chip_no_write">Ништа не мења на чипу: само чита.</string>
-    <string name="learn_chip_no_other_data">Чип не садржи ни казнену евиденцију, ни здравствене податке, ни локацију.</string>
+    <string name="learn_chip_no_write">Не уписује никакве податке на чип: само га чита.</string>
+    <string name="learn_chip_no_other_data">Не чита ништа осим горе наведених датотека: од чипа се не тражи никаква друга информација, ма каква она била.</string>
 </resources>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="learn_intro_skip">Saltar intro</string>
+    <string name="learn_intro_skip">Saltar a introdução</string>
+    <string name="learn_intro_previous">Anterior</string>
     <string name="learn_intro_next">Seguinte</string>
     <string name="learn_intro_start">Começar</string>
     <string name="learn_intro_page">Página %1$d de %2$d</string>
@@ -12,13 +13,13 @@
 
     <string name="learn_intro_key_title">Uma chave para abrir o chip</string>
     <string name="learn_intro_key_body">Sem chave, o chip recusa-se a responder. Esta chave está impressa no documento:</string>
-    <string name="learn_intro_key_can">CAN: número de acesso de 6 algarismos impresso no cartão de identidade.</string>
-    <string name="learn_intro_key_mrz">MRZ: as linhas de caracteres na parte inferior da página da fotografia, de onde vêm o número do documento, a data de nascimento e a data de validade.</string>
-    <string name="learn_intro_key_channel">As comunicações passam depois por um canal cifrado (PACE ou BAC, os protocolos previstos pela norma): uma pessoa próxima não as consegue ler.</string>
+    <string name="learn_intro_key_can">CAN: número de acesso de 6 algarismos impresso na frente da maioria dos cartões de identidade recentes.</string>
+    <string name="learn_intro_key_mrz">MRZ: as linhas de caracteres na parte inferior da página da fotografia do passaporte ou no verso do cartão, de onde vêm o número do documento, a data de nascimento e a data de validade.</string>
+    <string name="learn_intro_key_channel">As comunicações passam depois por um canal cifrado (PACE ou BAC, os protocolos previstos pela norma): uma pessoa próxima que não conheça esta chave não as consegue ler.</string>
 
     <string name="learn_intro_verify_title">O que o Sceau verifica</string>
-    <string name="learn_intro_verify_signature">A assinatura do Estado (Passive Authentication), com os certificados dos países integrados na aplicação.</string>
-    <string name="learn_intro_verify_clone">Que o chip não é uma cópia (Chip Authentication ou Active Authentication): tem de provar que possui uma chave secreta impossível de extrair.</string>
+    <string name="learn_intro_verify_signature">A assinatura do Estado (Passive Authentication), com os certificados dos países integrados na aplicação ou que importou.</string>
+    <string name="learn_intro_verify_clone">Que o chip não é uma cópia (Chip Authentication ou Active Authentication): tem de provar que possui uma chave secreta que nunca revela.</string>
     <string name="learn_intro_verify_verdicts">O resultado resume-se a quatro veredictos:</string>
 
     <string name="learn_intro_privacy_title">Os seus dados ficam aqui</string>
@@ -31,32 +32,32 @@
 
     <string name="learn_chip_title">O que o chip contém</string>
     <string name="learn_chip_back">Voltar</string>
-    <string name="learn_chip_intro">O chip guarda as informações em ficheiros: grupos de dados (DG1, DG2…) e alguns ficheiros técnicos (EF). Eis o que o Sceau faz com eles.</string>
+    <string name="learn_chip_intro">O chip guarda as informações em ficheiros: grupos de dados (DG1, DG2…) e alguns ficheiros técnicos cujo nome começa por EF. Eis o que o Sceau faz com eles.</string>
 
     <string name="learn_chip_section_displayed">Lido e apresentado</string>
-    <string name="learn_chip_dg1">Os dados da MRZ: apelidos, nomes próprios, nacionalidade, data de nascimento, sexo, número do documento, Estado emissor e data de validade.</string>
+    <string name="learn_chip_dg1">Os dados da MRZ: tipo de documento, apelidos, nomes próprios, nacionalidade, data de nascimento, sexo, número do documento, Estado emissor e data de validade.</string>
     <string name="learn_chip_dg2">A fotografia do titular.</string>
     <string name="learn_chip_dg11">Se o Estado as registar: informações pessoais complementares, como o local de nascimento ou a morada.</string>
-    <string name="learn_chip_dg12">Se o Estado as registar: informações sobre o documento, como a entidade emissora e a data de emissão.</string>
+    <string name="learn_chip_dg12">Se o Estado as registar: informações sobre o documento, como a entidade emissora e a data de emissão, por vezes uma imagem do documento.</string>
 
     <string name="learn_chip_section_verification">Lido apenas para verificação</string>
-    <string name="learn_chip_verification_intro">Estes ficheiros não são apresentados: servem para provar que os dados são autênticos.</string>
+    <string name="learn_chip_verification_intro">Estes ficheiros não contêm dados pessoais: servem para comunicar com o chip e para provar que os dados são autênticos.</string>
     <string name="learn_chip_ef_card_access">Os protocolos de acesso aceites pelo chip, como o PACE.</string>
     <string name="learn_chip_ef_com">A lista dos grupos de dados presentes.</string>
     <string name="learn_chip_ef_sod">O hash de cada grupo de dados, assinado pelo Estado.</string>
     <string name="learn_chip_dg14">A chave pública utilizada na Chip Authentication.</string>
     <string name="learn_chip_dg15">A chave pública utilizada na Active Authentication.</string>
-    <string name="learn_chip_ef_card_security">Apenas em alguns cartões: a chave do chip assinada pelo Estado, verificada durante o PACE.</string>
+    <string name="learn_chip_ef_card_security">Apenas em alguns documentos (PACE-CAM): a chave do chip assinada pelo Estado, que confirma que o chip se autenticou durante a abertura do canal.</string>
 
     <string name="learn_chip_section_never">Nunca lido</string>
     <string name="learn_chip_dg3">As impressões digitais.</string>
     <string name="learn_chip_dg4">A imagem da íris.</string>
-    <string name="learn_chip_eac">Estes dois ficheiros estão, de qualquer modo, protegidos por um bloqueio adicional, o EAC (Extended Access Control), que só as autoridades habilitadas podem abrir.</string>
+    <string name="learn_chip_eac">Nos documentos europeus, estes dois ficheiros estão, de qualquer modo, protegidos por um bloqueio adicional, o EAC (Extended Access Control), que só as autoridades habilitadas podem abrir.</string>
     <string name="learn_chip_others">Os restantes grupos de dados (DG5 a DG10, DG13 e DG16: outras imagens, assinatura manuscrita, dados próprios do Estado, pessoas a contactar) também não são lidos.</string>
 
     <string name="learn_chip_section_never_does">O que o Sceau não faz</string>
     <string name="learn_chip_no_storage">Não guarda, não envia nem regista nenhum dado lido: tudo fica na memória do telemóvel e é apagado ao sair do resultado.</string>
     <string name="learn_chip_no_screenshot">Não permite capturas de ecrã nem pré-visualização nas aplicações recentes.</string>
-    <string name="learn_chip_no_write">Não altera nada no chip: apenas lê.</string>
-    <string name="learn_chip_no_other_data">O chip não contém registo criminal, dados de saúde nem localização.</string>
+    <string name="learn_chip_no_write">Não escreve nenhum dado no chip: apenas o lê.</string>
+    <string name="learn_chip_no_other_data">Não lê nada além dos ficheiros indicados acima: não é pedida nenhuma outra informação do chip, seja ela qual for.</string>
 </resources>

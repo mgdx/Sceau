@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="learn_intro_skip">紹介をスキップ</string>
+    <string name="learn_intro_skip">説明をスキップ</string>
+    <string name="learn_intro_previous">前へ</string>
     <string name="learn_intro_next">次へ</string>
     <string name="learn_intro_start">始める</string>
     <string name="learn_intro_page">%1$d / %2$d ページ</string>
@@ -12,13 +13,13 @@
 
     <string name="learn_intro_key_title">IC チップを開く鍵</string>
     <string name="learn_intro_key_body">鍵がなければ、IC チップは応答しません。鍵は書類に印字されています：</string>
-    <string name="learn_intro_key_can">CAN：身分証明書に印字された 6 桁のアクセス番号。</string>
-    <string name="learn_intro_key_mrz">MRZ：顔写真ページの下部にある文字の行。文書番号、生年月日、有効期間満了日はここから取得します。</string>
-    <string name="learn_intro_key_channel">その後の通信は暗号化された通信路（規格で定められたプロトコルである PACE または BAC）を通るため、近くにいる人が読み取ることはできません。</string>
+    <string name="learn_intro_key_can">CAN：最近の身分証明書の多くで表面に印字されている 6 桁のアクセス番号。</string>
+    <string name="learn_intro_key_mrz">MRZ：パスポートの顔写真ページの下部、またはカードの裏面にある文字の行。文書番号、生年月日、有効期間満了日はここから取得します。</string>
+    <string name="learn_intro_key_channel">その後の通信は暗号化された通信路（規格で定められたプロトコルである PACE または BAC）を通るため、この鍵を知らない人が近くにいても読み取ることはできません。</string>
 
     <string name="learn_intro_verify_title">Sceau が検証すること</string>
-    <string name="learn_intro_verify_signature">発行国の署名（Passive Authentication）。アプリに内蔵された各国の証明書を使って検証します。</string>
-    <string name="learn_intro_verify_clone">IC チップが複製ではないこと（Chip Authentication または Active Authentication）。IC チップは、取り出すことのできない秘密鍵を持っていることを証明する必要があります。</string>
+    <string name="learn_intro_verify_signature">発行国の署名（Passive Authentication）。アプリに内蔵された各国の証明書、またはインポートした証明書を使って検証します。</string>
+    <string name="learn_intro_verify_clone">IC チップが複製ではないこと（Chip Authentication または Active Authentication）。IC チップは、決して外部に明かさない秘密鍵を持っていることを証明する必要があります。</string>
     <string name="learn_intro_verify_verdicts">結果は次の 4 つの判定のいずれかになります：</string>
 
     <string name="learn_intro_privacy_title">データはこの端末から出ません</string>
@@ -27,36 +28,36 @@
     <string name="learn_intro_privacy_screenshots">アプリ全体でスクリーンショットはブロックされます。</string>
 
     <string name="learn_about_section">Sceau のしくみ</string>
-    <string name="learn_about_replay_intro">紹介をもう一度見る</string>
+    <string name="learn_about_replay_intro">説明をもう一度見る</string>
 
     <string name="learn_chip_title">IC チップの中身</string>
     <string name="learn_chip_back">戻る</string>
-    <string name="learn_chip_intro">IC チップは情報をファイルに格納しています。データグループ（DG1、DG2…）といくつかの技術的なファイル（EF）です。Sceau での扱いは次のとおりです。</string>
+    <string name="learn_chip_intro">IC チップは情報をファイルに格納しています。データグループ（DG1、DG2…）と、名前が EF で始まるいくつかの技術的なファイルです。Sceau での扱いは次のとおりです。</string>
 
     <string name="learn_chip_section_displayed">読み取って表示</string>
-    <string name="learn_chip_dg1">MRZ のデータ：姓、名、国籍、生年月日、性別、文書番号、発行国、有効期間満了日。</string>
+    <string name="learn_chip_dg1">MRZ のデータ：文書の種類、姓、名、国籍、生年月日、性別、文書番号、発行国、有効期間満了日。</string>
     <string name="learn_chip_dg2">所持者の顔写真。</string>
     <string name="learn_chip_dg11">国が記録している場合：出生地や住所など、追加の個人情報。</string>
-    <string name="learn_chip_dg12">国が記録している場合：発行官庁や発行年月日など、書類に関する情報。</string>
+    <string name="learn_chip_dg12">国が記録している場合：発行官庁や発行年月日など、書類に関する情報。書類の画像が含まれることもあります。</string>
 
     <string name="learn_chip_section_verification">検証のためだけに読み取り</string>
-    <string name="learn_chip_verification_intro">これらのファイルは表示されません。データが真正であることを証明するために使います。</string>
+    <string name="learn_chip_verification_intro">これらのファイルに個人データは含まれていません。IC チップとの通信と、データが真正であることの証明に使います。</string>
     <string name="learn_chip_ef_card_access">IC チップが受け付けるアクセスプロトコル（PACE など）。</string>
     <string name="learn_chip_ef_com">記録されているデータグループの一覧。</string>
     <string name="learn_chip_ef_sod">各データグループのハッシュ値。発行国が署名しています。</string>
     <string name="learn_chip_dg14">Chip Authentication に使う公開鍵。</string>
     <string name="learn_chip_dg15">Active Authentication に使う公開鍵。</string>
-    <string name="learn_chip_ef_card_security">一部のカードのみ：発行国が署名した IC チップの鍵。PACE の際に検証します。</string>
+    <string name="learn_chip_ef_card_security">一部の書類のみ（PACE-CAM）：発行国が署名した IC チップの鍵。通信路を開く際に IC チップが認証を済ませたことを確認できます。</string>
 
     <string name="learn_chip_section_never">読み取らない</string>
     <string name="learn_chip_dg3">指紋。</string>
     <string name="learn_chip_dg4">虹彩の画像。</string>
-    <string name="learn_chip_eac">この 2 つのファイルは、いずれにしても追加のロックである EAC（Extended Access Control）で保護されており、権限を持つ当局しか開けません。</string>
+    <string name="learn_chip_eac">ヨーロッパの書類では、この 2 つのファイルはいずれにしても追加のロックである EAC（Extended Access Control）で保護されており、権限を持つ当局しか開けません。</string>
     <string name="learn_chip_others">その他のデータグループ（DG5～DG10、DG13、DG16：その他の画像、自筆署名、国独自のデータ、緊急連絡先）も読み取りません。</string>
 
     <string name="learn_chip_section_never_does">Sceau がしないこと</string>
     <string name="learn_chip_no_storage">読み取ったデータを保存、送信、ログ記録することは一切ありません。すべてスマートフォンのメモリ内にとどまり、結果画面を閉じると消去されます。</string>
     <string name="learn_chip_no_screenshot">スクリーンショットも、最近使ったアプリでのプレビュー表示もできません。</string>
-    <string name="learn_chip_no_write">IC チップの内容は一切変更しません。読み取るだけです。</string>
-    <string name="learn_chip_no_other_data">IC チップには、犯罪歴、健康情報、位置情報は含まれていません。</string>
+    <string name="learn_chip_no_write">IC チップにデータを書き込むことはありません。読み取るだけです。</string>
+    <string name="learn_chip_no_other_data">上記のファイル以外は何も読み取りません。IC チップにそれ以外の情報を要求することは一切ありません。</string>
 </resources>

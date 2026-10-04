@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,8 +37,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import io.github.mgdx.sceau.R
@@ -55,7 +58,7 @@ internal enum class IntroPage {
 /**
  * Introduction du premier lancement (D35), rejouable depuis l'écran À propos.
  *
- * « Passer l'intro » (toutes les pages sauf la dernière), « Commencer » (dernière page) et le
+ * « Passer l'introduction » (toutes les pages sauf la dernière), « Commencer » (dernière page) et le
  * retour arrière du système appellent tous [onFinish], qui mémorise l'introduction comme vue et
  * quitte l'écran : vers l'accueil au premier lancement, vers À propos quand elle est rejouée.
  */
@@ -95,17 +98,27 @@ fun IntroScreen(
                         .align(Alignment.CenterHorizontally)
                         .padding(vertical = 8.dp),
             )
-            Row(
+            // FlowRow : à grande taille de police, les boutons passent à la ligne au lieu d'être
+            // tronqués ; l'espaceur pousse Précédent et Suivant à droite de leur ligne.
+            FlowRow(
                 modifier =
                     Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                itemVerticalAlignment = Alignment.CenterVertically,
             ) {
                 if (!isLastPage) {
                     TextButton(onClick = onFinish) { Text(stringResource(R.string.learn_intro_skip)) }
                 }
                 Spacer(Modifier.weight(1f))
+                if (pagerState.currentPage > 0) {
+                    // Navigation sans balayage (accès par contacteur, TalkBack).
+                    OutlinedButton(
+                        onClick = { scope.launch { pagerState.animateScrollToPage(pagerState.currentPage - 1) } },
+                    ) { Text(stringResource(R.string.learn_intro_previous)) }
+                }
                 if (isLastPage) {
                     Button(onClick = onFinish) { Text(stringResource(R.string.learn_intro_start)) }
                 } else {
@@ -221,7 +234,12 @@ private fun PageIndicator(
 ) {
     val description = stringResource(R.string.learn_intro_page, current + 1, count)
     Row(
-        modifier = modifier.semantics(mergeDescendants = true) { contentDescription = description },
+        modifier =
+            modifier.semantics(mergeDescendants = true) {
+                contentDescription = description
+                // TalkBack annonce chaque changement de page, balayage compris.
+                liveRegion = LiveRegionMode.Polite
+            },
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {

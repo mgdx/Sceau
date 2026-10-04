@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="learn_intro_skip">Přeskočit úvod</string>
+    <string name="learn_intro_previous">Předchozí</string>
     <string name="learn_intro_next">Další</string>
     <string name="learn_intro_start">Začít</string>
     <string name="learn_intro_page">Strana %1$d z %2$d</string>
@@ -12,13 +13,13 @@
 
     <string name="learn_intro_key_title">Klíč k otevření čipu</string>
     <string name="learn_intro_key_body">Bez klíče čip odmítne odpovídat. Klíč je vytištěný na dokladu:</string>
-    <string name="learn_intro_key_can">CAN: šestimístné přístupové číslo vytištěné na občanském průkazu.</string>
-    <string name="learn_intro_key_mrz">MRZ: řádky znaků ve spodní části strany s fotografií, ze kterých se získá číslo dokladu, datum narození a datum konce platnosti.</string>
-    <string name="learn_intro_key_channel">Veškerá komunikace pak probíhá šifrovaným kanálem (PACE nebo BAC, protokoly stanovené normou): nikdo poblíž ji nemůže přečíst.</string>
+    <string name="learn_intro_key_can">CAN: šestimístné přístupové číslo vytištěné na přední straně většiny novějších občanských průkazů.</string>
+    <string name="learn_intro_key_mrz">MRZ: řádky znaků ve spodní části strany s fotografií v pasu nebo na zadní straně průkazu, ze kterých se získá číslo dokladu, datum narození a datum konce platnosti.</string>
+    <string name="learn_intro_key_channel">Veškerá komunikace pak probíhá šifrovaným kanálem (PACE nebo BAC, protokoly stanovené normou): nikdo poblíž, kdo tento klíč nezná, ji nemůže přečíst.</string>
 
     <string name="learn_intro_verify_title">Co Sceau ověřuje</string>
-    <string name="learn_intro_verify_signature">Podpis státu (Passive Authentication) pomocí certifikátů zemí vestavěných v aplikaci.</string>
-    <string name="learn_intro_verify_clone">Že čip není kopie (Chip Authentication nebo Active Authentication): musí prokázat, že má tajný klíč, který z něj nelze získat.</string>
+    <string name="learn_intro_verify_signature">Podpis státu (Passive Authentication) pomocí certifikátů zemí vestavěných v aplikaci nebo těch, které jste importovali.</string>
+    <string name="learn_intro_verify_clone">Že čip není kopie (Chip Authentication nebo Active Authentication): musí prokázat, že má tajný klíč, který nikdy neprozradí.</string>
     <string name="learn_intro_verify_verdicts">Výsledkem je jeden ze čtyř verdiktů:</string>
 
     <string name="learn_intro_privacy_title">Vaše data zůstávají tady</string>
@@ -31,32 +32,32 @@
 
     <string name="learn_chip_title">Co obsahuje čip</string>
     <string name="learn_chip_back">Zpět</string>
-    <string name="learn_chip_intro">Čip ukládá informace do souborů: datových skupin (DG1, DG2…) a několika technických souborů (EF). Tady je, co s nimi Sceau dělá.</string>
+    <string name="learn_chip_intro">Čip ukládá informace do souborů: datových skupin (DG1, DG2…) a několika technických souborů, jejichž název začíná na EF. Tady je, co s nimi Sceau dělá.</string>
 
     <string name="learn_chip_section_displayed">Přečteno a zobrazeno</string>
-    <string name="learn_chip_dg1">Údaje z MRZ: příjmení, jména, státní občanství, datum narození, pohlaví, číslo dokladu, vydávající stát a datum konce platnosti.</string>
+    <string name="learn_chip_dg1">Údaje z MRZ: typ dokladu, příjmení, jména, státní občanství, datum narození, pohlaví, číslo dokladu, vydávající stát a datum konce platnosti.</string>
     <string name="learn_chip_dg2">Fotografie držitele.</string>
     <string name="learn_chip_dg11">Pokud je stát uvádí: další osobní údaje, například místo narození nebo adresa.</string>
-    <string name="learn_chip_dg12">Pokud je stát uvádí: údaje o dokladu, například vydávající úřad a datum vydání.</string>
+    <string name="learn_chip_dg12">Pokud je stát uvádí: údaje o dokladu, například vydávající úřad a datum vydání, někdy i obrázek dokladu.</string>
 
     <string name="learn_chip_section_verification">Přečteno jen pro ověření</string>
-    <string name="learn_chip_verification_intro">Tyto soubory se nezobrazují: slouží k prokázání pravosti údajů.</string>
+    <string name="learn_chip_verification_intro">Tyto soubory neobsahují žádné osobní údaje: slouží ke komunikaci s čipem a k prokázání pravosti údajů.</string>
     <string name="learn_chip_ef_card_access">Přístupové protokoly, které čip podporuje, například PACE.</string>
     <string name="learn_chip_ef_com">Seznam přítomných datových skupin.</string>
     <string name="learn_chip_ef_sod">Otisk každé datové skupiny, podepsaný státem.</string>
     <string name="learn_chip_dg14">Veřejný klíč pro Chip Authentication.</string>
     <string name="learn_chip_dg15">Veřejný klíč pro Active Authentication.</string>
-    <string name="learn_chip_ef_card_security">Jen u některých karet: klíč čipu podepsaný státem, ověřovaný během PACE.</string>
+    <string name="learn_chip_ef_card_security">Jen u některých dokladů (PACE-CAM): klíč čipu podepsaný státem, který potvrzuje, že se čip ověřil během otevírání kanálu.</string>
 
     <string name="learn_chip_section_never">Nikdy nečteno</string>
     <string name="learn_chip_dg3">Otisky prstů.</string>
     <string name="learn_chip_dg4">Snímek duhovky.</string>
-    <string name="learn_chip_eac">Tyto dva soubory jsou navíc chráněny dalším zámkem, EAC (Extended Access Control), který mohou otevřít jen oprávněné úřady.</string>
+    <string name="learn_chip_eac">U evropských dokladů jsou tyto dva soubory navíc chráněny dalším zámkem, EAC (Extended Access Control), který mohou otevřít jen oprávněné úřady.</string>
     <string name="learn_chip_others">Ostatní datové skupiny (DG5 až DG10, DG13 a DG16: další obrázky, vlastnoruční podpis, údaje specifické pro stát, osoby k vyrozumění) se také nečtou.</string>
 
     <string name="learn_chip_section_never_does">Co Sceau nedělá</string>
     <string name="learn_chip_no_storage">Neukládá, neodesílá ani nezaznamenává žádná přečtená data: vše zůstává v paměti telefonu a po opuštění výsledku se vymaže.</string>
     <string name="learn_chip_no_screenshot">Neumožňuje snímky obrazovky ani náhled v nedávných aplikacích.</string>
-    <string name="learn_chip_no_write">Na čipu nic nemění: pouze čte.</string>
-    <string name="learn_chip_no_other_data">Čip neobsahuje rejstřík trestů, zdravotní údaje ani polohu.</string>
+    <string name="learn_chip_no_write">Na čip nezapisuje žádná data: pouze z něj čte.</string>
+    <string name="learn_chip_no_other_data">Nečte nic jiného než výše uvedené soubory: žádné jiné informace z čipu, ať jsou jakékoli, nepožaduje.</string>
 </resources>

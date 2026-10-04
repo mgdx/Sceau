@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="learn_intro_skip">Scipeáil an réamhrá</string>
+    <string name="learn_intro_previous">Siar</string>
     <string name="learn_intro_next">Ar aghaidh</string>
     <string name="learn_intro_start">Tosaigh</string>
     <string name="learn_intro_page">Leathanach %1$d de %2$d</string>
@@ -12,13 +13,13 @@
 
     <string name="learn_intro_key_title">Eochair chun an tsliseog a oscailt</string>
     <string name="learn_intro_key_body">Gan eochair, diúltaíonn an tsliseog freagra a thabhairt. Tá an eochair clóite ar an gcáipéis:</string>
-    <string name="learn_intro_key_can">CAN: uimhir rochtana 6 dhigit atá clóite ar an gcárta aitheantais.</string>
-    <string name="learn_intro_key_mrz">MRZ: na línte carachtar ag bun an leathanaigh grianghraf, a dtagann uimhir na cáipéise, an dáta breithe agus an dáta éaga uathu.</string>
-    <string name="learn_intro_key_channel">Ina dhiaidh sin, téann an chumarsáid trí chainéal criptithe (PACE nó BAC, na prótacail atá leagtha síos sa chaighdeán): ní féidir le duine in aice láimhe í a léamh.</string>
+    <string name="learn_intro_key_can">CAN: uimhir rochtana 6 dhigit atá clóite ar thaobh tosaigh fhormhór na gcártaí aitheantais nua.</string>
+    <string name="learn_intro_key_mrz">MRZ: na línte carachtar ag bun leathanach grianghraf an phas nó ar chúl an chárta, a dtagann uimhir na cáipéise, an dáta breithe agus an dáta éaga uathu.</string>
+    <string name="learn_intro_key_channel">Ina dhiaidh sin, téann an chumarsáid trí chainéal criptithe (PACE nó BAC, na prótacail atá leagtha síos sa chaighdeán): ní féidir le duine in aice láimhe nach bhfuil an eochair seo aige í a léamh.</string>
 
     <string name="learn_intro_verify_title">An méid a fhíoraíonn Sceau</string>
-    <string name="learn_intro_verify_signature">Síniú an Stáit (Passive Authentication), le deimhnithe na dtíortha atá ionsuite san aip.</string>
-    <string name="learn_intro_verify_clone">Nach cóip í an tsliseog (Chip Authentication nó Active Authentication): caithfidh sí a chruthú go bhfuil eochair rúnda aici nach féidir a bhaint amach.</string>
+    <string name="learn_intro_verify_signature">Síniú an Stáit (Passive Authentication), le deimhnithe na dtíortha atá ionsuite san aip nó a d’iompórtáil tú.</string>
+    <string name="learn_intro_verify_clone">Nach cóip í an tsliseog (Chip Authentication nó Active Authentication): caithfidh sí a chruthú go bhfuil eochair rúnda aici nach nochtann sí riamh.</string>
     <string name="learn_intro_verify_verdicts">Is ceann de cheithre bhreithiúnas é an toradh:</string>
 
     <string name="learn_intro_privacy_title">Fanann do shonraí anseo</string>
@@ -31,32 +32,32 @@
 
     <string name="learn_chip_title">A bhfuil ar an tsliseog</string>
     <string name="learn_chip_back">Siar</string>
-    <string name="learn_chip_intro">Coinníonn an tsliseog a cuid faisnéise i gcomhaid: grúpaí sonraí (DG1, DG2…) agus roinnt comhad teicniúil (EF). Seo an méid a dhéanann Sceau leo.</string>
+    <string name="learn_chip_intro">Coinníonn an tsliseog a cuid faisnéise i gcomhaid: grúpaí sonraí (DG1, DG2…) agus roinnt comhad teicniúil a dtosaíonn a n-ainm le EF. Seo an méid a dhéanann Sceau leo.</string>
 
     <string name="learn_chip_section_displayed">Léite agus taispeánta</string>
-    <string name="learn_chip_dg1">Sonraí an MRZ: sloinne, réamhainmneacha, náisiúntacht, dáta breithe, gnéas, uimhir na cáipéise, Stát eisiúna agus dáta éaga.</string>
+    <string name="learn_chip_dg1">Sonraí an MRZ: cineál cáipéise, sloinne, réamhainmneacha, náisiúntacht, dáta breithe, gnéas, uimhir na cáipéise, Stát eisiúna agus dáta éaga.</string>
     <string name="learn_chip_dg2">Grianghraf an tsealbhóra.</string>
     <string name="learn_chip_dg11">Má thaifeadann an Stát iad: faisnéis phearsanta bhreise, mar an áit bhreithe nó an seoladh.</string>
-    <string name="learn_chip_dg12">Má thaifeadann an Stát iad: faisnéis faoin gcáipéis, mar an t-údarás eisiúna agus an dáta eisiúna.</string>
+    <string name="learn_chip_dg12">Má thaifeadann an Stát iad: faisnéis faoin gcáipéis, mar an t-údarás eisiúna agus an dáta eisiúna, agus uaireanta íomhá den cháipéis.</string>
 
     <string name="learn_chip_section_verification">Léite le haghaidh fíoraithe amháin</string>
-    <string name="learn_chip_verification_intro">Ní thaispeántar na comhaid seo: úsáidtear iad chun a chruthú go bhfuil na sonraí barántúil.</string>
+    <string name="learn_chip_verification_intro">Níl aon sonraí pearsanta sna comhaid seo: úsáidtear iad chun cumarsáid a dhéanamh leis an tsliseog agus chun a chruthú go bhfuil na sonraí barántúil.</string>
     <string name="learn_chip_ef_card_access">Na prótacail rochtana a ghlacann an tsliseog leo, mar PACE.</string>
     <string name="learn_chip_ef_com">Liosta na ngrúpaí sonraí atá ann.</string>
     <string name="learn_chip_ef_sod">Hais gach grúpa sonraí, sínithe ag an Stát.</string>
     <string name="learn_chip_dg14">An eochair phoiblí a úsáidtear le haghaidh Chip Authentication.</string>
     <string name="learn_chip_dg15">An eochair phoiblí a úsáidtear le haghaidh Active Authentication.</string>
-    <string name="learn_chip_ef_card_security">Ar chártaí áirithe amháin: eochair na sliseoige sínithe ag an Stát, fíoraithe le linn PACE.</string>
+    <string name="learn_chip_ef_card_security">Ar cháipéisí áirithe amháin (PACE-CAM): eochair na sliseoige sínithe ag an Stát, a dheimhníonn gur fhíordheimhnigh an tsliseog í féin le linn oscailt an chainéil.</string>
 
     <string name="learn_chip_section_never">Ní léitear riamh</string>
     <string name="learn_chip_dg3">Na méarloirg.</string>
     <string name="learn_chip_dg4">Íomhá an imrisc.</string>
-    <string name="learn_chip_eac">Ar aon nós, tá an dá chomhad seo cosanta ag glas breise, EAC (Extended Access Control), nach féidir ach le húdaráis údaraithe a oscailt.</string>
+    <string name="learn_chip_eac">Ar cháipéisí Eorpacha, tá an dá chomhad seo cosanta ar aon nós ag glas breise, EAC (Extended Access Control), nach féidir ach le húdaráis údaraithe a oscailt.</string>
     <string name="learn_chip_others">Ní léitear na grúpaí sonraí eile ach oiread (DG5 go DG10, DG13 agus DG16: íomhánna eile, síniú lámhscríofa, sonraí a bhaineann leis an Stát, daoine le cur ar an eolas).</string>
 
     <string name="learn_chip_section_never_does">An méid nach ndéanann Sceau</string>
     <string name="learn_chip_no_storage">Ní shábhálann sé, ní sheolann sé agus ní logálann sé aon sonraí a léitear: fanann gach rud i gcuimhne an fhóin agus scriostar é nuair a fhágann tú an toradh.</string>
     <string name="learn_chip_no_screenshot">Ní cheadaíonn sé seatanna scáileáin ná réamhamharc sna haipeanna le déanaí.</string>
-    <string name="learn_chip_no_write">Ní athraíonn sé aon rud ar an tsliseog: ní dhéanann sé ach léamh.</string>
-    <string name="learn_chip_no_other_data">Níl taifead coiriúil, sonraí sláinte ná suíomh ar an tsliseog.</string>
+    <string name="learn_chip_no_write">Ní scríobhann sé aon sonraí ar an tsliseog: ní dhéanann sé ach í a léamh.</string>
+    <string name="learn_chip_no_other_data">Ní léann sé aon rud seachas na comhaid atá liostaithe thuas: ní iarrtar aon fhaisnéis eile ón tsliseog, cibé cineál í.</string>
 </resources>
