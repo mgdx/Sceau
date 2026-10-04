@@ -3,6 +3,8 @@
     <string name="scan_title">สแกน MRZ</string>
     <string name="scan_back">กลับ</string>
     <string name="scan_instruction">วางแถวตัวอักษรที่ด้านล่างของหน้าให้อยู่ในกรอบ</string>
+    <string name="scan_specimen_passport">ตัวอย่าง: แถวตัวอักษรที่ด้านล่างของหน้าหนังสือเดินทาง</string>
+    <string name="scan_specimen_id_card">ตัวอย่าง: แถวตัวอักษรที่ด้านหลังของบัตรประจำตัว</string>
     <string name="scan_status_searching">กำลังค้นหา MRZ…</string>
     <string name="scan_status_seen">พบ MRZ แล้ว กำลังอ่าน ถือเอกสารให้นิ่ง</string>
     <string name="scan_status_unsupported">เลขที่เอกสารนี้ยาวเกินกว่าจะอ่านโดยอัตโนมัติได้ ป้อนข้อมูลด้วยตนเอง</string>

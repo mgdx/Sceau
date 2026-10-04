@@ -3,6 +3,8 @@
     <string name="scan_title">Skanni MRZ</string>
     <string name="scan_back">Tagasi</string>
     <string name="scan_instruction">Asetage lehe allosas olevad märgiread raami sisse</string>
+    <string name="scan_specimen_passport">Näide: passi lehe allosas olevad märgiread</string>
+    <string name="scan_specimen_id_card">Näide: ID-kaardi tagaküljel olevad märgiread</string>
     <string name="scan_status_searching">MRZ otsimine…</string>
     <string name="scan_status_seen">MRZ leitud, lugemine käib. Hoidke dokumenti paigal.</string>
     <string name="scan_status_unsupported">See dokumendinumber on automaatseks lugemiseks liiga pikk. Sisestage andmed käsitsi.</string>

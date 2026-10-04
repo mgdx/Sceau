@@ -3,6 +3,8 @@
     <string name="scan_title">مسح MRZ ضوئيًا</string>
     <string name="scan_back">رجوع</string>
     <string name="scan_instruction">ضع أسطر الأحرف الموجودة أسفل الصفحة داخل الإطار</string>
+    <string name="scan_specimen_passport">مثال: أسطر الأحرف أسفل صفحة جواز السفر</string>
+    <string name="scan_specimen_id_card">مثال: أسطر الأحرف على ظهر بطاقة الهوية</string>
     <string name="scan_status_searching">جارٍ البحث عن MRZ…</string>
     <string name="scan_status_seen">تم العثور على MRZ، جارٍ القراءة. أبقِ الوثيقة ثابتة.</string>
     <string name="scan_status_unsupported">رقم الوثيقة هذا أطول من أن يُقرأ تلقائيًا. أدخل البيانات يدويًا.</string>

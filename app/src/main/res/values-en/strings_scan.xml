@@ -3,6 +3,8 @@
     <string name="scan_title">Scan MRZ</string>
     <string name="scan_back">Back</string>
     <string name="scan_instruction">Fit the lines of characters at the bottom of the page inside the frame</string>
+    <string name="scan_specimen_passport">Example: the lines of characters at the bottom of a passport page</string>
+    <string name="scan_specimen_id_card">Example: the lines of characters on the back of an ID card</string>
     <string name="scan_status_searching">Looking for the MRZ…</string>
     <string name="scan_status_seen">MRZ found, reading. Keep the document still.</string>
     <string name="scan_status_unsupported">This document number is too long to be read automatically. Enter the data manually.</string>

@@ -3,6 +3,8 @@
     <string name="scan_title">Scan an MRZ</string>
     <string name="scan_back">Siar</string>
     <string name="scan_instruction">Cuir línte na gcarachtar ag bun an leathanaigh laistigh den fhráma</string>
+    <string name="scan_specimen_passport">Sampla: línte na gcarachtar ag bun leathanach pas</string>
+    <string name="scan_specimen_id_card">Sampla: línte na gcarachtar ar chúl cárta aitheantais</string>
     <string name="scan_status_searching">An MRZ á lorg…</string>
     <string name="scan_status_seen">MRZ aimsithe, á léamh. Coinnigh an cháipéis gan corraí.</string>
     <string name="scan_status_unsupported">Tá uimhir na cáipéise seo rófhada le léamh go huathoibríoch. Iontráil na sonraí de láimh.</string>

@@ -3,6 +3,8 @@
     <string name="scan_title">MRZ をスキャン</string>
     <string name="scan_back">戻る</string>
     <string name="scan_instruction">ページ下部の文字列を枠内に収めてください</string>
+    <string name="scan_specimen_passport">例：パスポートのページ下部の文字列</string>
+    <string name="scan_specimen_id_card">例：身分証明書の裏面の文字列</string>
     <string name="scan_status_searching">MRZ を探しています…</string>
     <string name="scan_status_seen">MRZ を検出しました。読み取り中です。書類を動かさないでください。</string>
     <string name="scan_status_unsupported">この文書番号は長すぎるため自動で読み取れません。データを手動で入力してください。</string>

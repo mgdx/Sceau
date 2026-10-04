@@ -3,6 +3,8 @@
     <string name="scan_title">Nuskenuoti MRZ</string>
     <string name="scan_back">Atgal</string>
     <string name="scan_instruction">Puslapio apačioje esančias simbolių eilutes įstatykite į rėmelį</string>
+    <string name="scan_specimen_passport">Pavyzdys: simbolių eilutės paso puslapio apačioje</string>
+    <string name="scan_specimen_id_card">Pavyzdys: simbolių eilutės asmens tapatybės kortelės kitoje pusėje</string>
     <string name="scan_status_searching">Ieškoma MRZ…</string>
     <string name="scan_status_seen">MRZ rasta, skaitoma. Laikykite dokumentą nejudindami.</string>
     <string name="scan_status_unsupported">Šis dokumento numeris per ilgas, kad būtų nuskaitytas automatiškai. Įveskite duomenis rankiniu būdu.</string>

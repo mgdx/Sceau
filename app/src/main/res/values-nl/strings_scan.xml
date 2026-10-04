@@ -3,6 +3,8 @@
     <string name="scan_title">MRZ scannen</string>
     <string name="scan_back">Terug</string>
     <string name="scan_instruction">Plaats de tekenregels onder aan de pagina in het kader</string>
+    <string name="scan_specimen_passport">Voorbeeld: de tekenregels onder aan de pagina van een paspoort</string>
+    <string name="scan_specimen_id_card">Voorbeeld: de tekenregels op de achterkant van een identiteitskaart</string>
     <string name="scan_status_searching">MRZ zoeken…</string>
     <string name="scan_status_seen">MRZ gevonden, bezig met lezen. Houd het document stil.</string>
     <string name="scan_status_unsupported">Dit documentnummer is te lang om automatisch te worden gelezen. Voer de gegevens handmatig in.</string>

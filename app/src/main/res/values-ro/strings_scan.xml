@@ -3,6 +3,8 @@
     <string name="scan_title">Scanați MRZ</string>
     <string name="scan_back">Înapoi</string>
     <string name="scan_instruction">Încadrați rândurile de caractere din partea de jos a paginii</string>
+    <string name="scan_specimen_passport">Exemplu: rândurile de caractere din partea de jos a paginii unui pașaport</string>
+    <string name="scan_specimen_id_card">Exemplu: rândurile de caractere de pe spatele unei cărți de identitate</string>
     <string name="scan_status_searching">Se caută MRZ…</string>
     <string name="scan_status_seen">MRZ detectată, se citește. Țineți documentul nemișcat.</string>
     <string name="scan_status_unsupported">Acest număr de document este prea lung pentru a fi citit automat. Introduceți datele manual.</string>

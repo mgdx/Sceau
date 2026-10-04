@@ -3,6 +3,8 @@
     <string name="scan_title">Skano MRZ-në</string>
     <string name="scan_back">Prapa</string>
     <string name="scan_instruction">Vendos brenda kornizës rreshtat e karaktereve në fund të faqes</string>
+    <string name="scan_specimen_passport">Shembull: rreshtat e karaktereve në fund të faqes së pasaportës</string>
+    <string name="scan_specimen_id_card">Shembull: rreshtat e karaktereve në pjesën e pasme të letërnjoftimit</string>
     <string name="scan_status_searching">Po kërkohet MRZ-ja…</string>
     <string name="scan_status_seen">MRZ-ja u gjet, po lexohet. Mbaje dokumentin të palëvizur.</string>
     <string name="scan_status_unsupported">Ky numër dokumenti është shumë i gjatë për t’u lexuar automatikisht. Fut të dhënat me dorë.</string>

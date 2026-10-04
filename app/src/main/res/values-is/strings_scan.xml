@@ -3,6 +3,8 @@
     <string name="scan_title">Skanna MRZ</string>
     <string name="scan_back">Til baka</string>
     <string name="scan_instruction">Settu stafalínurnar neðst á síðunni inn í rammann</string>
+    <string name="scan_specimen_passport">Dæmi: stafalínurnar neðst á síðu vegabréfs</string>
+    <string name="scan_specimen_id_card">Dæmi: stafalínurnar aftan á nafnskírteini</string>
     <string name="scan_status_searching">Leitar að MRZ…</string>
     <string name="scan_status_seen">MRZ fundið, les. Haltu skilríkinu kyrru.</string>
     <string name="scan_status_unsupported">Þetta skilríkisnúmer er of langt til að lesa það sjálfkrafa. Sláðu gögnin inn handvirkt.</string>

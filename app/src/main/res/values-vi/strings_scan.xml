@@ -3,6 +3,8 @@
     <string name="scan_title">Quét MRZ</string>
     <string name="scan_back">Quay lại</string>
     <string name="scan_instruction">Đặt các dòng ký tự ở cuối trang vào trong khung</string>
+    <string name="scan_specimen_passport">Ví dụ: các dòng ký tự ở cuối trang hộ chiếu</string>
+    <string name="scan_specimen_id_card">Ví dụ: các dòng ký tự ở mặt sau thẻ căn cước</string>
     <string name="scan_status_searching">Đang tìm MRZ…</string>
     <string name="scan_status_seen">Đã thấy MRZ, đang đọc. Giữ yên giấy tờ.</string>
     <string name="scan_status_unsupported">Số giấy tờ này quá dài để đọc tự động. Hãy nhập dữ liệu theo cách thủ công.</string>

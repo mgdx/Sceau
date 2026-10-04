@@ -29,10 +29,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -84,6 +87,7 @@ import io.github.mgdx.sceau.R
 import io.github.mgdx.sceau.mrz.MrzKeyFields
 import io.github.mgdx.sceau.mrz.MrzScanResult
 import io.github.mgdx.sceau.mrz.MrzScanner
+import io.github.mgdx.sceau.session.DocumentTab
 import io.github.mgdx.sceau.session.SessionViewModel
 import io.github.mgdx.sceau.ui.common.SceauIcons
 import kotlinx.coroutines.CancellationException
@@ -121,6 +125,8 @@ fun MrzScanScreen(
     session: SessionViewModel,
     onDone: () -> Unit,
 ) {
+    // Onglet Passeport : page de passeport ; onglet Carte d'identité (segment MRZ, D31) : carte TD1.
+    val specimen = if (session.form.tab == DocumentTab.PASSPORT) SpecimenKind.PASSPORT else SpecimenKind.ID_CARD
     val context = LocalContext.current
     val activity = LocalActivity.current
     var permission by remember {
@@ -181,6 +187,7 @@ fun MrzScanScreen(
 
             CameraPermission.GRANTED -> {
                 ScanContent(
+                    specimen = specimen,
                     cameraActive = !success,
                     status = status,
                     onStatus = { if (!success) status = it },
@@ -237,6 +244,7 @@ internal fun MrzScanScaffold(
 /** Aperçu, cadre de visée, consigne, état et torche. */
 @Composable
 private fun ScanContent(
+    specimen: SpecimenKind,
     cameraActive: Boolean,
     status: StatusLine,
     onStatus: (StatusLine) -> Unit,
@@ -250,6 +258,7 @@ private fun ScanContent(
     ScanViewfinderLayout(
         geometry = geometry,
         status = status,
+        specimen = specimen,
         onManualEntry = onManualEntry,
         modifier =
             Modifier.onSizeChanged { size ->
@@ -280,18 +289,26 @@ private fun ScanContent(
 
 /**
  * Partie purement visuelle du scan, affichable sans caméra (D28) : [preview] en fond, cadre de
- * visée, consigne, ligne d'état, [torch] et bouton de saisie manuelle.
+ * visée, consigne accompagnée du document [specimen], ligne d'état, [torch] et bouton de saisie
+ * manuelle.
+ *
+ * L'illustration accompagne la recherche, la MRZ vue et le succès (l'écran se ferme aussitôt,
+ * sans saut de mise en page). Elle est masquée sur les erreurs, où le remède n'est plus de
+ * mieux cadrer mais de passer à la saisie manuelle : le message et son bouton gardent la place.
  */
 @Composable
 internal fun ScanViewfinderLayout(
     geometry: ViewfinderGeometry?,
     status: StatusLine,
+    specimen: SpecimenKind,
     onManualEntry: () -> Unit,
     modifier: Modifier = Modifier,
     preview: @Composable () -> Unit = {},
     torch: @Composable () -> Unit = {},
 ) {
-    Box(modifier = modifier.fillMaxSize()) {
+    BoxWithConstraints(modifier = modifier.fillMaxSize()) {
+        val showSpecimen = status == StatusLine.SEARCHING || status == StatusLine.SEEN || status == StatusLine.SUCCESS
+        val specimenWidth = if (maxWidth >= WIDE_PANEL) SPECIMEN_WIDTH_WIDE else SPECIMEN_WIDTH_COMPACT
         preview()
         ViewfinderOverlay(geometry)
         Column(
@@ -303,12 +320,21 @@ internal fun ScanViewfinderLayout(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            Text(
-                text = stringResource(R.string.scan_instruction),
-                color = Color.White,
-                style = MaterialTheme.typography.titleMedium,
-                textAlign = TextAlign.Center,
-            )
+            // Illustration à côté de la consigne : la hauteur du panneau n'augmente presque pas,
+            // et le panneau ne remonte pas sur le cadre de visée, même sur un petit écran.
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                if (showSpecimen) MrzSpecimenIllustration(specimen, Modifier.width(specimenWidth))
+                Text(
+                    text = stringResource(R.string.scan_instruction),
+                    color = Color.White,
+                    style = MaterialTheme.typography.titleMedium,
+                    textAlign = if (showSpecimen) TextAlign.Start else TextAlign.Center,
+                    modifier = Modifier.weight(1f, fill = false),
+                )
+            }
             Text(
                 text = stringResource(statusText(status)),
                 color = Color.White,
@@ -441,17 +467,17 @@ private fun ViewfinderOverlay(geometry: ViewfinderGeometry?) {
     Canvas(modifier = Modifier.fillMaxSize()) {
         val g = geometry ?: return@Canvas
         val frame = Rect(g.left * size.width, g.top * size.height, g.right * size.width, g.bottom * size.height)
-        val corner = CornerRadius(12.dp.toPx())
+        val corner = CornerRadius(VIEWFINDER_CORNER.toPx())
         val path = Path().apply { addRoundRect(RoundRect(frame, corner)) }
         clipPath(path, clipOp = ClipOp.Difference) {
             drawRect(Color.Black.copy(alpha = SCRIM_ALPHA))
         }
         drawRoundRect(
-            color = Color.White,
+            color = VIEWFINDER_COLOR,
             topLeft = frame.topLeft,
             size = frame.size,
             cornerRadius = corner,
-            style = Stroke(width = 3.dp.toPx()),
+            style = Stroke(width = VIEWFINDER_STROKE.toPx()),
         )
     }
 }
@@ -550,3 +576,13 @@ private fun openAppSettings(context: Context) {
 private const val ANALYSIS_WIDTH = 1280
 private const val ANALYSIS_HEIGHT = 720
 private const val SCRIM_ALPHA = 0.6f
+
+/** Trait du cadre de visée, repris à l'échelle par [MrzSpecimenIllustration]. */
+internal val VIEWFINDER_COLOR = Color.White
+internal val VIEWFINDER_STROKE = 3.dp
+internal val VIEWFINDER_CORNER = 12.dp
+
+/** Largeur de l'illustration du document, selon la largeur disponible pour la consigne. */
+private val SPECIMEN_WIDTH_COMPACT = 120.dp
+private val SPECIMEN_WIDTH_WIDE = 160.dp
+private val WIDE_PANEL = 480.dp
