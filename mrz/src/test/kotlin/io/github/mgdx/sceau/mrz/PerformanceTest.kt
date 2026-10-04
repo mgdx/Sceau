@@ -17,6 +17,30 @@ class PerformanceTest {
                 Scene(MrzFormat.TD3, seed = 1, width = 1280, height = 400, angleDegrees = 3.0, noiseSigma = 5.0),
                 Scene(MrzFormat.TD1, seed = 2, width = 1280, height = 720, angleDegrees = -4.0, rotationDegrees = 90),
             ).map { SceneRenderer.render(it).frame }
+        assertAverage(recognizer, frames)
+    }
+
+    /** Recadrage du cadre de visée en 1920 × 1080 portrait (lot I2) : 1080 × 323, pas d'environ 20 px. */
+    @Test
+    fun averageTimePerDeviceCrop() {
+        val recognizer = TemplateLineRecognizer()
+        val frames =
+            (1L..4L).map { seed ->
+                val format = if (seed % 2 == 0L) MrzFormat.TD1 else MrzFormat.TD3
+                val chars = if (format == MrzFormat.TD1) 30 else 44
+                val scene = DeviceSceneRenderer.randomScene(format, seed, 18f to 22f)
+                DeviceSceneRenderer
+                    .render(
+                        scene.copy(pitch = 1080 * 0.85f / chars, mrzFraction = 0.85f, aspect = 1080f / 323, glare = 0),
+                    ).frame
+            }
+        assertAverage(recognizer, frames)
+    }
+
+    private fun assertAverage(
+        recognizer: TemplateLineRecognizer,
+        frames: List<LumaFrame>,
+    ) {
         repeat(WARM_UP) { frames.forEach { assertNotNull(recognizer.recognize(it)) } }
         val start = System.nanoTime()
         repeat(RUNS) { frames.forEach { recognizer.recognize(it) } }

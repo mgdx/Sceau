@@ -314,6 +314,19 @@ class MrzFieldDecoderTest {
     }
 
     @Test
+    fun `cellule sans contraste dans un champ cle refusee`() {
+        // Cellule effacée (reflet) : scores nuls à égalité, candidats arbitraires. Même si le
+        // premier est la bonne lecture, rien ne le désigne : refus.
+        for (position in listOf(3, 9, 15, 25, 43)) {
+            val line =
+                glyphs(Specimens.TD3_LINE2).mapIndexed { i, g ->
+                    if (i == position) GlyphCandidates(listOf(Specimens.TD3_LINE2[i] to 0f, 'A' to 0f, 'B' to 0f)) else g
+                }
+            assertRefused(RecognizedMrz(MrzFormat.TD3, listOf(line)))
+        }
+    }
+
+    @Test
     fun `MRZ ambigue partout reste bornee`() {
         val line = Specimens.TD3_LINE2.map { c -> GlyphCandidates(listOf(c to 0.5f, '8' to 0.49f, 'B' to 0.48f)) }
         val start = System.nanoTime()

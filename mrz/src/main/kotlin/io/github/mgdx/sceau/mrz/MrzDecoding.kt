@@ -128,6 +128,13 @@ internal object MrzDecoding {
     /** Écart de coût en deçà duquel deux résultats différents sont jugés aussi probables l'un que l'autre. */
     const val RESULT_MARGIN = 0.05f
 
+    /**
+     * Score de rang 1 minimal d'une position clé (numéro, dates, leurs chiffres de contrôle,
+     * chiffre composite). En deçà, la cellule ne porte pas d'information (effacée par un reflet,
+     * hors de l'image) : ses candidats sont arbitraires et le décodage ne doit pas les essayer.
+     */
+    const val MIN_RELIABLE_SCORE = 0.3f
+
     /** Écart retenu quand un score n'est pas un nombre fini. */
     private const val UNRELIABLE_GAP = 1f
     private const val MAX_RAW_OPTIONS = 4
@@ -263,7 +270,26 @@ internal object MrzDecoding {
             }
         }
         if (recognized.format == MrzFormat.TD1 && isExtendedNumber(lines[0])) return decodeExtended(layout, lines)
+        if (!keyPositionsReliable(layout, lines)) return Decoded.Invalid
         return decodeStandard(recognized.format, layout, lines)
+    }
+
+    /**
+     * Faux si une position des champs clés a un score de rang 1 inférieur à
+     * [MIN_RELIABLE_SCORE]. Une cellule sans contraste rend des scores nuls à égalité et des
+     * candidats arbitraires (`A`, `B`…) : sans ce contrôle, le chiffre de contrôle laisse passer
+     * une lecture inventée une fois sur dix. Un score non fini relève de [UNRELIABLE_GAP].
+     */
+    private fun keyPositionsReliable(
+        layout: Layout,
+        lines: List<List<GlyphCandidates>>,
+    ): Boolean {
+        fun reliable(glyph: GlyphCandidates): Boolean = !(glyph.ranked[0].second < MIN_RELIABLE_SCORE)
+        for (index in intArrayOf(layout.numberField, layout.birthField, layout.expiryField)) {
+            val spec = layout.fields[index]
+            for (i in spec.kinds.indices) if (!reliable(lines[spec.line][spec.from + i])) return false
+        }
+        return reliable(lines[layout.compositeLine][layout.compositeIndex])
     }
 
     private fun isExtendedNumber(line1: List<GlyphCandidates>): Boolean =
