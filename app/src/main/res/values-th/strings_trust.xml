@@ -24,6 +24,7 @@
     <string name="trust_source_national">เผยแพร่โดยประเทศผู้ออก</string>
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">นำเข้า</string>
+    <string name="trust_source_imported_certificate">ใบรับรองที่นำเข้า</string>
     <string name="trust_link_certificate">ใบรับรองเชื่อมโยง</string>
 
     <!-- Recherche -->
@@ -32,7 +33,7 @@
     <string name="trust_search_no_result">ไม่มีประเทศที่ตรงกับการค้นหา</string>
 
     <!-- Import -->
-    <string name="trust_import">นำเข้า Master List</string>
+    <string name="trust_import">นำเข้า Master List หรือใบรับรอง</string>
     <string name="trust_busy">โปรดรอสักครู่…</string>
     <string name="trust_import_confirm_title">นำเข้า Master List นี้ใช่ไหม</string>
     <string name="trust_import_confirm_text">ลายมือชื่อถูกต้อง ก่อนนำเข้า โปรดตรวจสอบว่าลายนิ้วมือของผู้ลงนามตรงกับที่หน่วยงานผู้ออกเผยแพร่ไว้</string>
@@ -55,10 +56,38 @@
     </plurals>
     <string name="trust_import_limit_size">ปฏิเสธการนำเข้า: Master List ที่นำเข้าจะมีขนาดรวมเกิน %1$d MB ลบใบรับรองที่นำเข้าก่อนเพิ่มรายการใหม่</string>
 
+    <!-- Import d'un certificat seul (D33) -->
+    <string name="trust_import_certificate_confirm_title">นำเข้าใบรับรองนี้ใช่ไหม</string>
+    <string name="trust_import_certificate_warning">ไฟล์นี้ไม่มีลายมือชื่อของประเทศใดรับรองเหมือน Master List คุณเป็นผู้ตัดสินใจเองว่าจะเชื่อถือไฟล์นี้หรือไม่ ใบรับรองที่นำเข้าอาจทำให้เอกสารใดก็ได้จากประเทศนั้นถูกถือว่าเป็นของแท้ ก่อนนำเข้า โปรดเทียบลายนิ้วมือของใบรับรองกับที่ประเทศผู้ออกเผยแพร่ไว้</string>
+    <string name="trust_import_certificate_type">ประเภท</string>
+    <string name="trust_import_certificate_type_csca">CSCA ที่ลงนามด้วยตนเอง</string>
+    <string name="trust_import_certificate_subject">ผู้ถือ</string>
+    <string name="trust_import_certificate_country">ประเทศ</string>
+    <string name="trust_import_certificate_validity">ระยะเวลาที่ใช้ได้</string>
+    <string name="trust_import_certificate_done">นำเข้าใบรับรองแล้ว</string>
+    <string name="trust_import_certificate_invalid">นำเข้าใบรับรองนี้ไม่ได้ รับเฉพาะ CSCA ที่ลงนามด้วยตนเองหรือใบรับรองเชื่อมโยงเท่านั้น (%1$s)</string>
+    <string name="trust_import_unrecognized">ไฟล์นี้ไม่ใช่ Master List และไม่ใช่ใบรับรอง DER หรือ PEM เดี่ยว</string>
+    <string name="trust_import_certificate_write_error">บันทึกใบรับรองไม่ได้</string>
+    <string name="trust_import_certificate_too_large">ปฏิเสธใบรับรอง: ขนาดเกิน %1$d KB</string>
+    <plurals name="trust_import_certificate_limit_count">
+        <item quantity="other">ปฏิเสธการนำเข้า: นำเข้าใบรับรองได้ไม่เกิน %1$d รายการ ลบรายการใดรายการหนึ่งก่อนเพิ่มรายการใหม่</item>
+    </plurals>
+
+    <!-- Éléments importés (D33) -->
+    <string name="trust_imported_title">รายการที่นำเข้า</string>
+    <string name="trust_imported_master_list">Master List ที่นำเข้า</string>
+    <string name="trust_imported_signed_on">ลงนามเมื่อ %1$s</string>
+    <string name="trust_imported_unreadable">อ่านไฟล์ไม่ได้ คลังใบรับรองจึงข้ามไฟล์นี้</string>
+    <string name="trust_imported_delete">ลบรายการนี้</string>
+    <string name="trust_imported_delete_title">ลบรายการที่นำเข้านี้ใช่ไหม</string>
+    <string name="trust_imported_delete_text">ใบรับรองในรายการนี้จะไม่ถูกใช้ตรวจสอบเอกสารอีก ส่วนรายการที่นำเข้าอื่นๆ และใบรับรองที่มีในแอปจะยังคงอยู่</string>
+    <string name="trust_imported_delete_done">ลบรายการที่นำเข้าแล้ว</string>
+    <string name="trust_imported_delete_error">ลบรายการนี้ไม่ได้</string>
+
     <!-- Suppression -->
     <string name="trust_delete_imported">ลบใบรับรองที่นำเข้า</string>
     <string name="trust_delete_confirm_title">ลบใบรับรองที่นำเข้าใช่ไหม</string>
-    <string name="trust_delete_confirm_text">ระบบจะลบ Master List ที่นำเข้า ส่วนใบรับรองที่มีในแอปจะยังคงอยู่</string>
+    <string name="trust_delete_confirm_text">ระบบจะลบ Master List และใบรับรองที่นำเข้า ส่วนใบรับรองที่มีในแอปจะยังคงอยู่</string>
     <string name="trust_delete_confirm">ลบ</string>
     <string name="trust_delete_done">ลบใบรับรองที่นำเข้าแล้ว</string>
     <string name="trust_delete_error">ลบใบรับรองที่นำเข้าไม่ได้</string>

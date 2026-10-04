@@ -30,6 +30,7 @@
     <string name="trust_source_national">Nacionalna objava</string>
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Uvoženo</string>
+    <string name="trust_source_imported_certificate">Uvoženo potrdilo</string>
     <string name="trust_link_certificate">Povezovalno potrdilo</string>
 
     <!-- Recherche -->
@@ -38,7 +39,7 @@
     <string name="trust_search_no_result">Nobena država se ne ujema z iskanjem.</string>
 
     <!-- Import -->
-    <string name="trust_import">Uvozi Master List</string>
+    <string name="trust_import">Uvozi Master List ali potrdilo</string>
     <string name="trust_busy">Počakajte …</string>
     <string name="trust_import_confirm_title">Želite uvoziti ta seznam Master List?</string>
     <string name="trust_import_confirm_text">Njegov podpis je veljaven. Pred uvozom preverite, ali se prstni odtis podpisnika ujema s tistim, ki ga je objavil izdajatelj.</string>
@@ -67,10 +68,41 @@
     </plurals>
     <string name="trust_import_limit_size">Uvoz zavrnjen: uvoženi seznami Master List bi skupaj presegli %1$d MB. Če želite dodati novega, izbrišite uvožena potrdila.</string>
 
+    <!-- Import d'un certificat seul (D33) -->
+    <string name="trust_import_certificate_confirm_title">Želite uvoziti to potrdilo?</string>
+    <string name="trust_import_certificate_warning">Za razliko od seznama Master List te datoteke ne jamči podpis nobene države: sami se odločite, ali ji boste zaupali. Uvoženo potrdilo lahko kateri koli dokument iz svoje države prikaže kot pristen. Pred uvozom primerjajte njegov prstni odtis s tistim, ki ga je objavila država izdajateljica.</string>
+    <string name="trust_import_certificate_type">Vrsta</string>
+    <string name="trust_import_certificate_type_csca">Samopodpisano potrdilo CSCA</string>
+    <string name="trust_import_certificate_subject">Subjekt</string>
+    <string name="trust_import_certificate_country">Država</string>
+    <string name="trust_import_certificate_validity">Veljavnost</string>
+    <string name="trust_import_certificate_done">Potrdilo je uvoženo.</string>
+    <string name="trust_import_certificate_invalid">Tega potrdila ni mogoče uvoziti: sprejme se samo samopodpisano potrdilo CSCA ali povezovalno potrdilo (%1$s).</string>
+    <string name="trust_import_unrecognized">Ta datoteka ni niti seznam Master List niti posamezno potrdilo DER ali PEM.</string>
+    <string name="trust_import_certificate_write_error">Potrdila ni mogoče shraniti.</string>
+    <string name="trust_import_certificate_too_large">Potrdilo zavrnjeno: presega %1$d KB.</string>
+    <plurals name="trust_import_certificate_limit_count">
+        <item quantity="one">Uvoz zavrnjen: največje število uvoženih potrdil je %1$d. Če želite dodati novo, izbrišite eno od njih.</item>
+        <item quantity="two">Uvoz zavrnjen: največje število uvoženih potrdil je %1$d. Če želite dodati novo, izbrišite eno od njih.</item>
+        <item quantity="few">Uvoz zavrnjen: največje število uvoženih potrdil je %1$d. Če želite dodati novo, izbrišite eno od njih.</item>
+        <item quantity="other">Uvoz zavrnjen: največje število uvoženih potrdil je %1$d. Če želite dodati novo, izbrišite eno od njih.</item>
+    </plurals>
+
+    <!-- Éléments importés (D33) -->
+    <string name="trust_imported_title">Uvoženi elementi</string>
+    <string name="trust_imported_master_list">Uvoženi seznam Master List</string>
+    <string name="trust_imported_signed_on">Podpisan %1$s</string>
+    <string name="trust_imported_unreadable">Neberljiva datoteka, pri preverjanju se ne uporablja.</string>
+    <string name="trust_imported_delete">Izbriši ta element</string>
+    <string name="trust_imported_delete_title">Želite izbrisati ta uvoženi element?</string>
+    <string name="trust_imported_delete_text">Njegova potrdila se ne bodo več uporabljala za preverjanje dokumentov. Drugi uvoženi elementi in vgrajena potrdila bodo ohranjeni.</string>
+    <string name="trust_imported_delete_done">Uvoženi element je izbrisan.</string>
+    <string name="trust_imported_delete_error">Tega elementa ni mogoče izbrisati.</string>
+
     <!-- Suppression -->
     <string name="trust_delete_imported">Izbriši uvožena potrdila</string>
     <string name="trust_delete_confirm_title">Želite izbrisati uvožena potrdila?</string>
-    <string name="trust_delete_confirm_text">Uvoženi seznami Master List bodo izbrisani. Potrdila, vgrajena v aplikacijo, bodo ohranjena.</string>
+    <string name="trust_delete_confirm_text">Uvoženi seznami Master List in potrdila bodo izbrisani. Potrdila, vgrajena v aplikacijo, bodo ohranjena.</string>
     <string name="trust_delete_confirm">Izbriši</string>
     <string name="trust_delete_done">Uvožena potrdila so izbrisana.</string>
     <string name="trust_delete_error">Uvoženih potrdil ni mogoče izbrisati.</string>

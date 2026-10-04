@@ -24,6 +24,7 @@
     <string name="trust_source_national">本國發布</string>
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">已匯入</string>
+    <string name="trust_source_imported_certificate">已匯入的憑證</string>
     <string name="trust_link_certificate">連結憑證</string>
 
     <!-- Recherche -->
@@ -32,7 +33,7 @@
     <string name="trust_search_no_result">沒有符合搜尋內容的國家/地區。</string>
 
     <!-- Import -->
-    <string name="trust_import">匯入 Master List</string>
+    <string name="trust_import">匯入 Master List 或憑證</string>
     <string name="trust_busy">請稍候…</string>
     <string name="trust_import_confirm_title">要匯入這份 Master List 嗎？</string>
     <string name="trust_import_confirm_text">其簽章有效。匯入前，請確認簽署者的指紋與核發機關公布的指紋相符。</string>
@@ -55,10 +56,38 @@
     </plurals>
     <string name="trust_import_limit_size">匯入遭拒：已匯入的 Master List 總計將超過 %1$d MB。請先刪除已匯入的憑證，再新增其他 Master List。</string>
 
+    <!-- Import d'un certificat seul (D33) -->
+    <string name="trust_import_certificate_confirm_title">要匯入這個憑證嗎？</string>
+    <string name="trust_import_certificate_warning">與 Master List 不同，這個檔案沒有任何國家的簽章背書：是否信任它由你自行決定。匯入的憑證可能讓所屬國家/地區的任何證件都被判定為真實。匯入前，請將其指紋與核發國公布的指紋進行比對。</string>
+    <string name="trust_import_certificate_type">類型</string>
+    <string name="trust_import_certificate_type_csca">自我簽署的 CSCA</string>
+    <string name="trust_import_certificate_subject">主體</string>
+    <string name="trust_import_certificate_country">國家/地區</string>
+    <string name="trust_import_certificate_validity">有效期間</string>
+    <string name="trust_import_certificate_done">已匯入憑證。</string>
+    <string name="trust_import_certificate_invalid">無法匯入這個憑證：僅接受自我簽署的 CSCA 或連結憑證（%1$s）。</string>
+    <string name="trust_import_unrecognized">這個檔案既不是 Master List，也不是單一 DER 或 PEM 憑證。</string>
+    <string name="trust_import_certificate_write_error">無法儲存憑證。</string>
+    <string name="trust_import_certificate_too_large">憑證遭拒：超過 %1$d KB。</string>
+    <plurals name="trust_import_certificate_limit_count">
+        <item quantity="other">匯入遭拒：最多只能匯入 %1$d 個憑證。請先刪除一個，再新增其他憑證。</item>
+    </plurals>
+
+    <!-- Éléments importés (D33) -->
+    <string name="trust_imported_title">已匯入的項目</string>
+    <string name="trust_imported_master_list">已匯入的 Master List</string>
+    <string name="trust_imported_signed_on">簽署日期：%1$s</string>
+    <string name="trust_imported_unreadable">檔案無法讀取，已遭信任存放區忽略。</string>
+    <string name="trust_imported_delete">刪除這個項目</string>
+    <string name="trust_imported_delete_title">要刪除這個匯入項目嗎？</string>
+    <string name="trust_imported_delete_text">其中的憑證將不再用於驗證證件。其他匯入項目和內建憑證會保留。</string>
+    <string name="trust_imported_delete_done">已刪除匯入項目。</string>
+    <string name="trust_imported_delete_error">無法刪除這個項目。</string>
+
     <!-- Suppression -->
     <string name="trust_delete_imported">刪除已匯入的憑證</string>
     <string name="trust_delete_confirm_title">要刪除已匯入的憑證嗎？</string>
-    <string name="trust_delete_confirm_text">已匯入的 Master List 將會刪除。應用程式內建的憑證會保留。</string>
+    <string name="trust_delete_confirm_text">已匯入的 Master List 和憑證將會刪除。應用程式內建的憑證會保留。</string>
     <string name="trust_delete_confirm">刪除</string>
     <string name="trust_delete_done">已刪除匯入的憑證。</string>
     <string name="trust_delete_error">無法刪除已匯入的憑證。</string>

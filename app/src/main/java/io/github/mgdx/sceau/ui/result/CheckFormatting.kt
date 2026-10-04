@@ -251,6 +251,7 @@ object CheckFormatting {
             TrustSource.NATIONAL -> R.string.result_detail_source_national
             TrustSource.EMBEDDED_MASTER_LIST -> R.string.result_detail_source_embedded
             TrustSource.IMPORTED_MASTER_LIST -> R.string.result_detail_source_imported
+            TrustSource.IMPORTED_CERTIFICATE -> R.string.trust_source_imported_certificate
         }
 
     /** Méthode de Chip Authentication : clé de DG14, ou PACE-CAM (décision D21). */

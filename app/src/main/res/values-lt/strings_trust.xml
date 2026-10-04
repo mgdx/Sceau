@@ -30,6 +30,7 @@
     <string name="trust_source_national">Nacionalinis leidinys</string>
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Importuotas</string>
+    <string name="trust_source_imported_certificate">Importuotas sertifikatas</string>
     <string name="trust_link_certificate">Susiejimo sertifikatas</string>
 
     <!-- Recherche -->
@@ -38,7 +39,7 @@
     <string name="trust_search_no_result">Paieškos atitinkančių šalių nėra.</string>
 
     <!-- Import -->
-    <string name="trust_import">Importuoti Master List</string>
+    <string name="trust_import">Importuoti Master List arba sertifikatą</string>
     <string name="trust_busy">Palaukite…</string>
     <string name="trust_import_confirm_title">Importuoti šį Master List?</string>
     <string name="trust_import_confirm_text">Jo parašas galioja. Prieš importuodami patikrinkite, ar pasirašančiojo kontrolinė suma sutampa su ta, kurią paskelbė išduodančioji institucija.</string>
@@ -67,10 +68,41 @@
     </plurals>
     <string name="trust_import_limit_size">Importuoti neleidžiama: importuotų Master List bendras dydis viršytų %1$d MB. Ištrinkite importuotus sertifikatus, kad pridėtumėte kitą.</string>
 
+    <!-- Import d'un certificat seul (D33) -->
+    <string name="trust_import_certificate_confirm_title">Importuoti šį sertifikatą?</string>
+    <string name="trust_import_certificate_warning">Kitaip nei Master List, šio failo negarantuoja jokios valstybės parašas: pasitikėti juo nusprendžiate jūs. Importuotas sertifikatas gali bet kurį jo šalies dokumentą parodyti kaip autentišką. Prieš importuodami palyginkite jo kontrolinę sumą su ta, kurią paskelbė išdavusi valstybė.</string>
+    <string name="trust_import_certificate_type">Tipas</string>
+    <string name="trust_import_certificate_type_csca">Savarankiškai pasirašytas CSCA</string>
+    <string name="trust_import_certificate_subject">Subjektas</string>
+    <string name="trust_import_certificate_country">Šalis</string>
+    <string name="trust_import_certificate_validity">Galiojimas</string>
+    <string name="trust_import_certificate_done">Sertifikatas importuotas.</string>
+    <string name="trust_import_certificate_invalid">Šio sertifikato importuoti negalima: priimamas tik savarankiškai pasirašytas CSCA arba susiejimo sertifikatas (%1$s).</string>
+    <string name="trust_import_unrecognized">Šis failas nėra nei Master List, nei vienas DER ar PEM sertifikatas.</string>
+    <string name="trust_import_certificate_write_error">Nepavyko išsaugoti sertifikato.</string>
+    <string name="trust_import_certificate_too_large">Sertifikatas atmestas: jis didesnis nei %1$d KB.</string>
+    <plurals name="trust_import_certificate_limit_count">
+        <item quantity="one">Importuoti neleidžiama: galima importuoti ne daugiau kaip %1$d sertifikatą. Ištrinkite vieną, kad pridėtumėte kitą.</item>
+        <item quantity="few">Importuoti neleidžiama: galima importuoti ne daugiau kaip %1$d sertifikatus. Ištrinkite vieną, kad pridėtumėte kitą.</item>
+        <item quantity="many">Importuoti neleidžiama: galima importuoti ne daugiau kaip %1$d sertifikato. Ištrinkite vieną, kad pridėtumėte kitą.</item>
+        <item quantity="other">Importuoti neleidžiama: galima importuoti ne daugiau kaip %1$d sertifikatų. Ištrinkite vieną, kad pridėtumėte kitą.</item>
+    </plurals>
+
+    <!-- Éléments importés (D33) -->
+    <string name="trust_imported_title">Importuoti elementai</string>
+    <string name="trust_imported_master_list">Importuotas Master List</string>
+    <string name="trust_imported_signed_on">Pasirašytas %1$s</string>
+    <string name="trust_imported_unreadable">Neįskaitomas failas, saugykla jį ignoruoja.</string>
+    <string name="trust_imported_delete">Ištrinti šį elementą</string>
+    <string name="trust_imported_delete_title">Ištrinti šį importuotą elementą?</string>
+    <string name="trust_imported_delete_text">Jo sertifikatai nebebus naudojami dokumentams tikrinti. Kiti importuoti elementai ir integruoti sertifikatai paliekami.</string>
+    <string name="trust_imported_delete_done">Importuotas elementas ištrintas.</string>
+    <string name="trust_imported_delete_error">Nepavyko ištrinti šio elemento.</string>
+
     <!-- Suppression -->
     <string name="trust_delete_imported">Ištrinti importuotus sertifikatus</string>
     <string name="trust_delete_confirm_title">Ištrinti importuotus sertifikatus?</string>
-    <string name="trust_delete_confirm_text">Importuoti Master List bus ištrinti. Programoje integruoti sertifikatai paliekami.</string>
+    <string name="trust_delete_confirm_text">Importuoti Master List ir sertifikatai bus ištrinti. Programoje integruoti sertifikatai paliekami.</string>
     <string name="trust_delete_confirm">Ištrinti</string>
     <string name="trust_delete_done">Importuoti sertifikatai ištrinti.</string>
     <string name="trust_delete_error">Nepavyko ištrinti importuotų sertifikatų.</string>

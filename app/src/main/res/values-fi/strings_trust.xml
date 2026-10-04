@@ -26,6 +26,7 @@
     <string name="trust_source_national">Kansallinen julkaisu</string>
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Tuotu</string>
+    <string name="trust_source_imported_certificate">Tuotu varmenne</string>
     <string name="trust_link_certificate">Linkkivarmenne</string>
 
     <!-- Recherche -->
@@ -34,7 +35,7 @@
     <string name="trust_search_no_result">Hakuasi vastaavaa maata ei löytynyt.</string>
 
     <!-- Import -->
-    <string name="trust_import">Tuo Master List</string>
+    <string name="trust_import">Tuo Master List tai varmenne</string>
     <string name="trust_busy">Odota…</string>
     <string name="trust_import_confirm_title">Tuodaanko tämä Master List?</string>
     <string name="trust_import_confirm_text">Sen allekirjoitus on kelvollinen. Varmista ennen tuontia, että allekirjoittajan sormenjälki vastaa myöntävän viranomaisen julkaisemaa sormenjälkeä.</string>
@@ -59,10 +60,39 @@
     </plurals>
     <string name="trust_import_limit_size">Tuonti hylättiin: tuotujen Master Listien yhteiskoko ylittäisi %1$d Mt. Poista tuodut varmenteet, jos haluat lisätä uuden.</string>
 
+    <!-- Import d'un certificat seul (D33) -->
+    <string name="trust_import_certificate_confirm_title">Tuodaanko tämä varmenne?</string>
+    <string name="trust_import_certificate_warning">Toisin kuin Master Listiä, tätä tiedostoa ei takaa minkään valtion allekirjoitus: päätät itse, luotatko siihen. Tuotu varmenne voi saada minkä tahansa sen maan asiakirjan näyttämään aidolta. Vertaa ennen tuontia sen sormenjälkeä myöntäjävaltion julkaisemaan sormenjälkeen.</string>
+    <string name="trust_import_certificate_type">Tyyppi</string>
+    <string name="trust_import_certificate_type_csca">Itse allekirjoitettu CSCA</string>
+    <string name="trust_import_certificate_subject">Subjekti</string>
+    <string name="trust_import_certificate_country">Maa</string>
+    <string name="trust_import_certificate_validity">Voimassaolo</string>
+    <string name="trust_import_certificate_done">Varmenne tuotu.</string>
+    <string name="trust_import_certificate_invalid">Tätä varmennetta ei voi tuoda: vain itse allekirjoitettu CSCA tai linkkivarmenne hyväksytään (%1$s).</string>
+    <string name="trust_import_unrecognized">Tiedosto ei ole Master List eikä yksittäinen DER- tai PEM-varmenne.</string>
+    <string name="trust_import_certificate_write_error">Varmenteen tallentaminen epäonnistui.</string>
+    <string name="trust_import_certificate_too_large">Varmenne hylättiin: se on yli %1$d kt.</string>
+    <plurals name="trust_import_certificate_limit_count">
+        <item quantity="one">Tuonti hylättiin: enintään %1$d tuotu varmenne. Poista yksi, jos haluat lisätä uuden.</item>
+        <item quantity="other">Tuonti hylättiin: enintään %1$d tuotua varmennetta. Poista yksi, jos haluat lisätä uuden.</item>
+    </plurals>
+
+    <!-- Éléments importés (D33) -->
+    <string name="trust_imported_title">Tuodut kohteet</string>
+    <string name="trust_imported_master_list">Tuotu Master List</string>
+    <string name="trust_imported_signed_on">Allekirjoitettu %1$s</string>
+    <string name="trust_imported_unreadable">Tiedostoa ei voi lukea, joten sitä ei käytetä.</string>
+    <string name="trust_imported_delete">Poista tämä kohde</string>
+    <string name="trust_imported_delete_title">Poistetaanko tämä tuotu kohde?</string>
+    <string name="trust_imported_delete_text">Sen varmenteita ei enää käytetä asiakirjojen tarkistamiseen. Muut tuodut kohteet ja sisäänrakennetut varmenteet säilyvät.</string>
+    <string name="trust_imported_delete_done">Tuotu kohde poistettu.</string>
+    <string name="trust_imported_delete_error">Kohteen poistaminen epäonnistui.</string>
+
     <!-- Suppression -->
     <string name="trust_delete_imported">Poista tuodut varmenteet</string>
     <string name="trust_delete_confirm_title">Poistetaanko tuodut varmenteet?</string>
-    <string name="trust_delete_confirm_text">Tuodut Master Listit poistetaan. Sovellukseen sisäänrakennetut varmenteet säilyvät.</string>
+    <string name="trust_delete_confirm_text">Tuodut Master Listit ja varmenteet poistetaan. Sovellukseen sisäänrakennetut varmenteet säilyvät.</string>
     <string name="trust_delete_confirm">Poista</string>
     <string name="trust_delete_done">Tuodut varmenteet poistettu.</string>
     <string name="trust_delete_error">Tuotujen varmenteiden poistaminen epäonnistui.</string>

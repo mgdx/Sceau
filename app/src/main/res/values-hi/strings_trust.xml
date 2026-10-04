@@ -26,6 +26,7 @@
     <string name="trust_source_national">राष्ट्रीय प्रकाशन</string>
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">इंपोर्ट किया गया</string>
+    <string name="trust_source_imported_certificate">इंपोर्ट किया गया प्रमाणपत्र</string>
     <string name="trust_link_certificate">लिंक प्रमाणपत्र</string>
 
     <!-- Recherche -->
@@ -34,7 +35,7 @@
     <string name="trust_search_no_result">आपकी खोज से कोई देश मेल नहीं खाता।</string>
 
     <!-- Import -->
-    <string name="trust_import">Master List इंपोर्ट करें</string>
+    <string name="trust_import">Master List या प्रमाणपत्र इंपोर्ट करें</string>
     <string name="trust_busy">कृपया इंतज़ार करें…</string>
     <string name="trust_import_confirm_title">यह Master List इंपोर्ट करें?</string>
     <string name="trust_import_confirm_text">इसका हस्ताक्षर मान्य है। इंपोर्ट करने से पहले पक्का करें कि हस्ताक्षरकर्ता का फ़िंगरप्रिंट, जारी करने वाले प्राधिकारी के प्रकाशित फ़िंगरप्रिंट से मेल खाता है।</string>
@@ -59,10 +60,39 @@
     </plurals>
     <string name="trust_import_limit_size">इंपोर्ट अस्वीकार किया गया: इंपोर्ट की गई Master List कुल मिलाकर %1$d MB से ज़्यादा हो जाएंगी। दूसरी जोड़ने के लिए इंपोर्ट किए गए प्रमाणपत्र मिटाएं।</string>
 
+    <!-- Import d'un certificat seul (D33) -->
+    <string name="trust_import_certificate_confirm_title">यह प्रमाणपत्र इंपोर्ट करें?</string>
+    <string name="trust_import_certificate_warning">Master List के विपरीत, इस फ़ाइल की गारंटी किसी देश का हस्ताक्षर नहीं देता: इस पर भरोसा करने का फ़ैसला आपका है। इंपोर्ट किया गया प्रमाणपत्र उसके देश के किसी भी दस्तावेज़ को असली दिखा सकता है। इंपोर्ट करने से पहले, इसके फ़िंगरप्रिंट की तुलना जारीकर्ता देश के प्रकाशित फ़िंगरप्रिंट से करें।</string>
+    <string name="trust_import_certificate_type">प्रकार</string>
+    <string name="trust_import_certificate_type_csca">स्व-हस्ताक्षरित CSCA</string>
+    <string name="trust_import_certificate_subject">विषय</string>
+    <string name="trust_import_certificate_country">देश</string>
+    <string name="trust_import_certificate_validity">वैधता</string>
+    <string name="trust_import_certificate_done">प्रमाणपत्र इंपोर्ट किया गया।</string>
+    <string name="trust_import_certificate_invalid">यह प्रमाणपत्र इंपोर्ट नहीं किया जा सकता: सिर्फ़ स्व-हस्ताक्षरित CSCA या लिंक प्रमाणपत्र स्वीकार किए जाते हैं (%1$s)।</string>
+    <string name="trust_import_unrecognized">यह फ़ाइल न तो Master List है, न ही कोई एकल DER या PEM प्रमाणपत्र।</string>
+    <string name="trust_import_certificate_write_error">प्रमाणपत्र सेव नहीं किया जा सका।</string>
+    <string name="trust_import_certificate_too_large">प्रमाणपत्र अस्वीकार किया गया: यह %1$d KB से बड़ा है।</string>
+    <plurals name="trust_import_certificate_limit_count">
+        <item quantity="one">इंपोर्ट अस्वीकार किया गया: ज़्यादा से ज़्यादा %1$d प्रमाणपत्र इंपोर्ट किया जा सकता है। दूसरा जोड़ने के लिए कोई एक मिटाएं।</item>
+        <item quantity="other">इंपोर्ट अस्वीकार किया गया: ज़्यादा से ज़्यादा %1$d प्रमाणपत्र इंपोर्ट किए जा सकते हैं। दूसरा जोड़ने के लिए कोई एक मिटाएं।</item>
+    </plurals>
+
+    <!-- Éléments importés (D33) -->
+    <string name="trust_imported_title">इंपोर्ट किए गए आइटम</string>
+    <string name="trust_imported_master_list">इंपोर्ट की गई Master List</string>
+    <string name="trust_imported_signed_on">%1$s को हस्ताक्षरित</string>
+    <string name="trust_imported_unreadable">फ़ाइल पढ़ी नहीं जा सकती, ट्रस्ट स्टोर इसे अनदेखा करता है।</string>
+    <string name="trust_imported_delete">यह आइटम मिटाएं</string>
+    <string name="trust_imported_delete_title">इंपोर्ट किया गया यह आइटम मिटाएं?</string>
+    <string name="trust_imported_delete_text">इसके प्रमाणपत्रों से अब दस्तावेज़ों की पुष्टि नहीं की जाएगी। इंपोर्ट किए गए दूसरे आइटम और ऐप में शामिल प्रमाणपत्र बने रहेंगे।</string>
+    <string name="trust_imported_delete_done">इंपोर्ट किया गया आइटम मिटा दिया गया।</string>
+    <string name="trust_imported_delete_error">यह आइटम मिटाया नहीं जा सका।</string>
+
     <!-- Suppression -->
     <string name="trust_delete_imported">इंपोर्ट किए गए प्रमाणपत्र मिटाएं</string>
     <string name="trust_delete_confirm_title">इंपोर्ट किए गए प्रमाणपत्र मिटाएं?</string>
-    <string name="trust_delete_confirm_text">इंपोर्ट की गई Master List मिटा दी जाएंगी। ऐप में शामिल प्रमाणपत्र बने रहेंगे।</string>
+    <string name="trust_delete_confirm_text">इंपोर्ट की गई Master List और प्रमाणपत्र मिटा दिए जाएंगे। ऐप में शामिल प्रमाणपत्र बने रहेंगे।</string>
     <string name="trust_delete_confirm">मिटाएं</string>
     <string name="trust_delete_done">इंपोर्ट किए गए प्रमाणपत्र मिटा दिए गए।</string>
     <string name="trust_delete_error">इंपोर्ट किए गए प्रमाणपत्र मिटाए नहीं जा सके।</string>

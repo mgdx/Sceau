@@ -34,6 +34,7 @@
     <string name="trust_source_national">نشر وطني</string>
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">مستوردة</string>
+    <string name="trust_source_imported_certificate">شهادة مستوردة</string>
     <string name="trust_link_certificate">شهادة ربط</string>
 
     <!-- Recherche -->
@@ -42,7 +43,7 @@
     <string name="trust_search_no_result">لا يوجد بلد يطابق بحثك.</string>
 
     <!-- Import -->
-    <string name="trust_import">استيراد قائمة Master List</string>
+    <string name="trust_import">استيراد قائمة Master List أو شهادة</string>
     <string name="trust_busy">يُرجى الانتظار…</string>
     <string name="trust_import_confirm_title">هل تريد استيراد قائمة Master List هذه؟</string>
     <string name="trust_import_confirm_text">توقيعها صالح. قبل استيرادها، تحقق من أن بصمة الموقِّع تطابق البصمة التي نشرتها الجهة المُصدِرة.</string>
@@ -75,10 +76,43 @@
     </plurals>
     <string name="trust_import_limit_size">تم رفض الاستيراد: سيتجاوز الحجم الإجمالي لقوائم Master List المستوردة %1$d ميغابايت. احذف الشهادات المستوردة لإضافة قائمة أخرى.</string>
 
+    <!-- Import d'un certificat seul (D33) -->
+    <string name="trust_import_certificate_confirm_title">هل تريد استيراد هذه الشهادة؟</string>
+    <string name="trust_import_certificate_warning">على عكس قائمة Master List، لا يضمن توقيعُ أي دولة هذا الملف: أنت من يقرر منحه ثقتك. يمكن لشهادة مستوردة أن تجعل أي وثيقة من بلدها تبدو أصلية. قبل استيرادها، قارن بصمتها بالبصمة التي نشرتها دولة الإصدار.</string>
+    <string name="trust_import_certificate_type">النوع</string>
+    <string name="trust_import_certificate_type_csca">CSCA موقَّعة ذاتيًا</string>
+    <string name="trust_import_certificate_subject">الموضوع</string>
+    <string name="trust_import_certificate_country">البلد</string>
+    <string name="trust_import_certificate_validity">الصلاحية</string>
+    <string name="trust_import_certificate_done">تم استيراد الشهادة.</string>
+    <string name="trust_import_certificate_invalid">لا يمكن استيراد هذه الشهادة: لا تُقبل إلا شهادة CSCA موقَّعة ذاتيًا أو شهادة ربط (%1$s).</string>
+    <string name="trust_import_unrecognized">هذا الملف ليس قائمة Master List ولا شهادة DER أو PEM واحدة.</string>
+    <string name="trust_import_certificate_write_error">تعذّر حفظ الشهادة.</string>
+    <string name="trust_import_certificate_too_large">تم رفض الشهادة: حجمها يتجاوز %1$d كيلوبايت.</string>
+    <plurals name="trust_import_certificate_limit_count">
+        <item quantity="zero">تم رفض الاستيراد: الحد الأقصى للشهادات المستوردة هو %1$d. احذف إحداها لإضافة شهادة أخرى.</item>
+        <item quantity="one">تم رفض الاستيراد: الحد الأقصى للشهادات المستوردة هو %1$d. احذف إحداها لإضافة شهادة أخرى.</item>
+        <item quantity="two">تم رفض الاستيراد: الحد الأقصى للشهادات المستوردة هو %1$d. احذف إحداها لإضافة شهادة أخرى.</item>
+        <item quantity="few">تم رفض الاستيراد: الحد الأقصى للشهادات المستوردة هو %1$d. احذف إحداها لإضافة شهادة أخرى.</item>
+        <item quantity="many">تم رفض الاستيراد: الحد الأقصى للشهادات المستوردة هو %1$d. احذف إحداها لإضافة شهادة أخرى.</item>
+        <item quantity="other">تم رفض الاستيراد: الحد الأقصى للشهادات المستوردة هو %1$d. احذف إحداها لإضافة شهادة أخرى.</item>
+    </plurals>
+
+    <!-- Éléments importés (D33) -->
+    <string name="trust_imported_title">العناصر المستوردة</string>
+    <string name="trust_imported_master_list">قائمة Master List مستوردة</string>
+    <string name="trust_imported_signed_on">موقَّعة في %1$s</string>
+    <string name="trust_imported_unreadable">ملف غير مقروء، يتجاهله مخزن الثقة.</string>
+    <string name="trust_imported_delete">حذف هذا العنصر</string>
+    <string name="trust_imported_delete_title">هل تريد حذف هذا العنصر المستورد؟</string>
+    <string name="trust_imported_delete_text">لن تُستخدم شهاداته بعد الآن للتحقق من الوثائق. سيتم الاحتفاظ بالعناصر المستوردة الأخرى وبالشهادات المدمجة.</string>
+    <string name="trust_imported_delete_done">تم حذف العنصر المستورد.</string>
+    <string name="trust_imported_delete_error">تعذّر حذف هذا العنصر.</string>
+
     <!-- Suppression -->
     <string name="trust_delete_imported">حذف الشهادات المستوردة</string>
     <string name="trust_delete_confirm_title">هل تريد حذف الشهادات المستوردة؟</string>
-    <string name="trust_delete_confirm_text">سيتم حذف قوائم Master List المستوردة. أما الشهادات المدمجة في التطبيق فسيتم الاحتفاظ بها.</string>
+    <string name="trust_delete_confirm_text">سيتم حذف قوائم Master List والشهادات المستوردة. أما الشهادات المدمجة في التطبيق فسيتم الاحتفاظ بها.</string>
     <string name="trust_delete_confirm">حذف</string>
     <string name="trust_delete_done">تم حذف الشهادات المستوردة.</string>
     <string name="trust_delete_error">تعذّر حذف الشهادات المستوردة.</string>

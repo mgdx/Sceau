@@ -66,13 +66,18 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import io.github.mgdx.sceau.R
+import io.github.mgdx.sceau.core.trust.InvalidCertificateException
 import io.github.mgdx.sceau.core.trust.InvalidMasterListException
 import io.github.mgdx.sceau.core.trust.MasterListInfo
 import io.github.mgdx.sceau.core.trust.TrustSource
+import io.github.mgdx.sceau.trust.CertificateSummary
 import io.github.mgdx.sceau.trust.ImportDecision
 import io.github.mgdx.sceau.trust.ImportLimitException
 import io.github.mgdx.sceau.trust.ImportLimits
+import io.github.mgdx.sceau.trust.ImportPreview
+import io.github.mgdx.sceau.trust.ImportedItem
 import io.github.mgdx.sceau.trust.TrustStoreRepository
+import io.github.mgdx.sceau.trust.UnrecognizedFileException
 import io.github.mgdx.sceau.ui.common.SceauIcons
 import io.github.mgdx.sceau.ui.result.Countries
 import io.github.mgdx.sceau.ui.result.currentLocale
@@ -85,13 +90,19 @@ import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.time.LocalDate
 
-/** Types MIME proposés au sélecteur : Master Lists CMS (`.ml`, `.der`, `.p7b`), et tout fichier en repli. */
-private val MASTER_LIST_TYPES =
+/**
+ * Types MIME proposés au sélecteur : Master Lists CMS (`.ml`, `.der`, `.p7b`), certificats
+ * (`.der`, `.cer`, `.crt`, `.pem`, D33), et tout fichier en repli.
+ */
+private val IMPORT_TYPES =
     arrayOf(
         "application/octet-stream",
         "application/pkcs7-mime",
         "application/pkcs7-signature",
         "application/x-pkcs7-certificates",
+        "application/pkix-cert",
+        "application/x-x509-ca-cert",
+        "application/x-pem-file",
         "*/*",
     )
 
@@ -103,15 +114,11 @@ private sealed interface StoreUi {
     class Loaded(
         val groups: List<CountryGroup>,
         val total: Int,
-        val hasImported: Boolean,
-    ) : StoreUi
+        val imported: List<ImportedItem>,
+    ) : StoreUi {
+        val hasImported: Boolean get() = imported.isNotEmpty()
+    }
 }
-
-/** Master List vérifiée, en attente de confirmation. Ses octets ne sont pas des données personnelles. */
-private class PendingImport(
-    val bytes: ByteArray,
-    val info: MasterListInfo,
-)
 
 /** Écran « Magasin de confiance » (SPEC §5.4). */
 @OptIn(ExperimentalMaterial3Api::class)
@@ -129,8 +136,9 @@ fun TrustStoreScreen(
     var reloadKey by remember { mutableIntStateOf(0) }
     var store by remember { mutableStateOf<StoreUi>(StoreUi.Loading) }
     var busy by remember { mutableStateOf(false) }
-    var pending by remember { mutableStateOf<PendingImport?>(null) }
+    var pending by remember { mutableStateOf<ImportPreview?>(null) }
     var confirmDelete by remember { mutableStateOf(false) }
+    var toRemove by remember { mutableStateOf<ImportedItem?>(null) }
     val expanded = remember { mutableStateMapOf<String, Boolean>() }
     var query by rememberSaveable { mutableStateOf("") }
 
@@ -139,12 +147,13 @@ fun TrustStoreScreen(
         store =
             try {
                 val trustStore = repository.get()
+                val imported = repository.importedItems()
                 withContext(Dispatchers.Default) {
                     val anchors = trustStore.anchors
                     StoreUi.Loaded(
                         groups = groupByCountry(anchors, locale),
                         total = anchors.size,
-                        hasImported = anchors.any { it.source == TrustSource.IMPORTED_MASTER_LIST },
+                        imported = imported,
                     )
                 }
             } catch (e: CancellationException) {
@@ -171,9 +180,9 @@ fun TrustStoreScreen(
                             context.contentResolver.openInputStream(uri)?.use { readAtMost(it, MAX_MASTER_LIST_BYTES) }
                                 ?: throw IOException("OPEN")
                         }
-                    // Limites vérifiées avant l'analyse et la confirmation (D22).
-                    repository.checkImportAllowed(bytes)
-                    pending = PendingImport(bytes, repository.preview(bytes).info)
+                    // Master List ou certificat seul, reconnu automatiquement (D33) ; limites
+                    // vérifiées avant la confirmation (D22).
+                    pending = repository.previewImport(bytes)
                 } catch (e: CancellationException) {
                     throw e
                 } catch (e: ImportLimitException) {
@@ -182,6 +191,10 @@ fun TrustStoreScreen(
                     showMessage(resources.getString(R.string.trust_import_too_large))
                 } catch (e: InvalidMasterListException) {
                     showMessage(resources.getString(R.string.trust_import_invalid, e.code))
+                } catch (e: InvalidCertificateException) {
+                    showMessage(resources.getString(R.string.trust_import_certificate_invalid, e.code))
+                } catch (_: UnrecognizedFileException) {
+                    showMessage(resources.getString(R.string.trust_import_unrecognized))
                 } catch (_: Exception) {
                     showMessage(resources.getString(R.string.trust_import_read_error))
                 } catch (_: NotImplementedError) {
@@ -223,8 +236,9 @@ fun TrustStoreScreen(
                     onQueryChange = { query = it },
                     busy = busy,
                     expanded = expanded,
-                    onImport = { launcher.launch(MASTER_LIST_TYPES) },
+                    onImport = { launcher.launch(IMPORT_TYPES) },
                     onDelete = { confirmDelete = true },
+                    onRemove = { toRemove = it },
                     contentPadding = padding,
                 )
             }
@@ -232,36 +246,85 @@ fun TrustStoreScreen(
     }
 
     pending?.let { request ->
-        ImportConfirmDialog(
-            info = request.info,
-            onConfirm = {
-                pending = null
-                scope.launch {
-                    busy = true
-                    try {
-                        repository.import(request.bytes)
-                        showMessage(
-                            resources.getQuantityString(
-                                R.plurals.trust_import_done,
-                                request.info.certificateCount,
-                                request.info.certificateCount,
-                            ),
-                        )
-                        reloadKey++
-                    } catch (e: CancellationException) {
-                        throw e
-                    } catch (e: ImportLimitException) {
-                        showMessage(importLimitMessage(resources, e.decision))
-                    } catch (e: InvalidMasterListException) {
-                        showMessage(resources.getString(R.string.trust_import_invalid, e.code))
-                    } catch (_: Exception) {
-                        showMessage(resources.getString(R.string.trust_import_write_error))
-                    } finally {
-                        busy = false
+        val onConfirm: () -> Unit = {
+            pending = null
+            scope.launch {
+                busy = true
+                try {
+                    when (request) {
+                        is ImportPreview.MasterList -> {
+                            repository.import(request.bytes)
+                            showMessage(
+                                resources.getQuantityString(
+                                    R.plurals.trust_import_done,
+                                    request.info.certificateCount,
+                                    request.info.certificateCount,
+                                ),
+                            )
+                        }
+
+                        is ImportPreview.Certificate -> {
+                            repository.importCertificate(request.bytes)
+                            showMessage(resources.getString(R.string.trust_import_certificate_done))
+                        }
                     }
+                    reloadKey++
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: ImportLimitException) {
+                    showMessage(importLimitMessage(resources, e.decision))
+                } catch (e: InvalidMasterListException) {
+                    showMessage(resources.getString(R.string.trust_import_invalid, e.code))
+                } catch (e: InvalidCertificateException) {
+                    showMessage(resources.getString(R.string.trust_import_certificate_invalid, e.code))
+                } catch (_: Exception) {
+                    val error =
+                        if (request is ImportPreview.Certificate) {
+                            R.string.trust_import_certificate_write_error
+                        } else {
+                            R.string.trust_import_write_error
+                        }
+                    showMessage(resources.getString(error))
+                } finally {
+                    busy = false
                 }
+            }
+        }
+        when (request) {
+            is ImportPreview.MasterList -> ImportConfirmDialog(request.info, onConfirm, onDismiss = { pending = null })
+            is ImportPreview.Certificate -> CertificateConfirmDialog(request.summary, onConfirm, onDismiss = { pending = null })
+        }
+    }
+
+    toRemove?.let { item ->
+        AlertDialog(
+            onDismissRequest = { toRemove = null },
+            title = { Text(stringResource(R.string.trust_imported_delete_title)) },
+            text = { Text(stringResource(R.string.trust_imported_delete_text)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        toRemove = null
+                        scope.launch {
+                            busy = true
+                            try {
+                                repository.removeImported(item.id)
+                                showMessage(resources.getString(R.string.trust_imported_delete_done))
+                                reloadKey++
+                            } catch (e: CancellationException) {
+                                throw e
+                            } catch (_: Exception) {
+                                showMessage(resources.getString(R.string.trust_imported_delete_error))
+                            } finally {
+                                busy = false
+                            }
+                        }
+                    },
+                ) { Text(stringResource(R.string.trust_delete_confirm)) }
             },
-            onDismiss = { pending = null },
+            dismissButton = {
+                TextButton(onClick = { toRemove = null }) { Text(stringResource(R.string.trust_cancel)) }
+            },
         )
     }
 
@@ -298,22 +361,39 @@ fun TrustStoreScreen(
     }
 }
 
-/** Message d'un import refusé par les limites de [ImportLimits] (D22). */
+/** Message d'un import refusé par les limites de [ImportLimits] (D22, D33). */
 private fun importLimitMessage(
     resources: Resources,
     decision: ImportDecision,
 ): String =
-    if (decision == ImportDecision.TOO_LARGE_TOTAL) {
-        resources.getString(R.string.trust_import_limit_size, ImportLimits.MAX_IMPORTED_TOTAL_BYTES / BYTES_PER_MB)
-    } else {
-        resources.getQuantityString(
-            R.plurals.trust_import_limit_count,
-            ImportLimits.MAX_IMPORTED_LISTS,
-            ImportLimits.MAX_IMPORTED_LISTS,
-        )
+    when (decision) {
+        ImportDecision.TOO_LARGE_TOTAL -> {
+            resources.getString(R.string.trust_import_limit_size, ImportLimits.MAX_IMPORTED_TOTAL_BYTES / BYTES_PER_MB)
+        }
+
+        ImportDecision.TOO_MANY_CERTIFICATES -> {
+            resources.getQuantityString(
+                R.plurals.trust_import_certificate_limit_count,
+                ImportLimits.MAX_IMPORTED_CERTIFICATES,
+                ImportLimits.MAX_IMPORTED_CERTIFICATES,
+            )
+        }
+
+        ImportDecision.CERTIFICATE_TOO_LARGE -> {
+            resources.getString(R.string.trust_import_certificate_too_large, ImportLimits.MAX_CERTIFICATE_BYTES / BYTES_PER_KB)
+        }
+
+        else -> {
+            resources.getQuantityString(
+                R.plurals.trust_import_limit_count,
+                ImportLimits.MAX_IMPORTED_LISTS,
+                ImportLimits.MAX_IMPORTED_LISTS,
+            )
+        }
     }
 
 private const val BYTES_PER_MB = 1024L * 1024L
+private const val BYTES_PER_KB = 1024
 
 @Composable
 private fun CenteredMessage(
@@ -340,6 +420,7 @@ private fun StoreList(
     expanded: SnapshotStateMap<String, Boolean>,
     onImport: () -> Unit,
     onDelete: () -> Unit,
+    onRemove: (ImportedItem) -> Unit,
     contentPadding: PaddingValues,
 ) {
     val formatDate = rememberDateFormatter()
@@ -361,6 +442,7 @@ private fun StoreList(
                 item(key = "header") {
                     StoreHeader(store, busy, onImport, onDelete)
                 }
+                importedItems(store.imported, busy, formatDate, onRemove)
             }
             if (groups.isEmpty()) {
                 item(key = "empty") {
@@ -549,6 +631,7 @@ private fun sourceBadge(source: TrustSource): Int =
         TrustSource.NATIONAL -> R.string.trust_source_national
         TrustSource.EMBEDDED_MASTER_LIST -> R.string.trust_source_master_list
         TrustSource.IMPORTED_MASTER_LIST -> R.string.trust_source_imported
+        TrustSource.IMPORTED_CERTIFICATE -> R.string.trust_source_imported_certificate
     }
 
 @Composable
@@ -617,4 +700,181 @@ private fun DialogField(
         Text(label, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         value()
     }
+}
+
+/** Section « Éléments importés » (D33) : une ligne par Master List ou certificat, supprimable à l'unité. */
+private fun LazyListScope.importedItems(
+    items: List<ImportedItem>,
+    busy: Boolean,
+    formatDate: (LocalDate) -> String,
+    onRemove: (ImportedItem) -> Unit,
+) {
+    if (items.isEmpty()) return
+    item(key = "imported-title") {
+        Text(
+            text = stringResource(R.string.trust_imported_title),
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(horizontal = 16.dp).semantics { heading() },
+        )
+    }
+    items(items, key = { "imported:${it.id}" }, contentType = { "imported" }) { item ->
+        ImportedItemRow(item, busy, formatDate) { onRemove(item) }
+    }
+    item(key = "imported-end") { Spacer(Modifier.padding(bottom = 16.dp)) }
+}
+
+@Composable
+private fun ImportedItemRow(
+    item: ImportedItem,
+    busy: Boolean,
+    formatDate: (LocalDate) -> String,
+    onRemove: () -> Unit,
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 4.dp, top = 8.dp, bottom = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            when (item) {
+                is ImportedItem.MasterListItem -> MasterListItemContent(item.info, formatDate)
+                is ImportedItem.CertificateItem -> CertificateItemContent(item.summary, formatDate)
+            }
+        }
+        IconButton(onClick = onRemove, enabled = !busy) {
+            Icon(SceauIcons.Delete, contentDescription = stringResource(R.string.trust_imported_delete))
+        }
+    }
+    HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+}
+
+@Composable
+private fun MasterListItemContent(
+    info: MasterListInfo?,
+    formatDate: (LocalDate) -> String,
+) {
+    Badge(stringResource(R.string.trust_imported_master_list))
+    if (info == null) {
+        UnreadableItem()
+        return
+    }
+    Text(info.signerSubject, style = MaterialTheme.typography.bodyMedium)
+    val details =
+        listOfNotNull(
+            info.signingTime?.let { stringResource(R.string.trust_imported_signed_on, formatDate(it.toUtcDate())) },
+            pluralStringResource(R.plurals.trust_country_count, info.certificateCount, info.certificateCount),
+        )
+    details.forEach { line ->
+        Text(line, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+    }
+}
+
+@Composable
+private fun CertificateItemContent(
+    summary: CertificateSummary?,
+    formatDate: (LocalDate) -> String,
+) {
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Badge(stringResource(R.string.trust_source_imported_certificate))
+        if (summary?.isLink == true) Badge(stringResource(R.string.trust_link_certificate))
+    }
+    if (summary == null) {
+        UnreadableItem()
+        return
+    }
+    Text(summary.subject, style = MaterialTheme.typography.bodyMedium)
+    Text(
+        text = countryLabel(summary.country),
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+    )
+    Text(
+        text = stringResource(R.string.trust_validity, formatDate(summary.notBefore.toUtcDate()), formatDate(summary.notAfter.toUtcDate())),
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+    )
+    SelectionContainer {
+        Text(
+            text = formatFingerprint(summary.sha256),
+            style = MaterialTheme.typography.bodySmall,
+            fontFamily = FontFamily.Monospace,
+        )
+    }
+}
+
+@Composable
+private fun UnreadableItem() {
+    Text(
+        text = stringResource(R.string.trust_imported_unreadable),
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.error,
+    )
+}
+
+/** Nom localisé du pays [alpha2], le code seul s'il est inconnu, ou « Pays non indiqué ». */
+@Composable
+private fun countryLabel(alpha2: String): String {
+    if (alpha2.isEmpty()) return stringResource(R.string.trust_country_unknown)
+    return Countries.displayName(alpha2, currentLocale()) ?: alpha2
+}
+
+@Composable
+private fun CertificateConfirmDialog(
+    summary: CertificateSummary,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    val formatDate = rememberDateFormatter()
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.trust_import_certificate_confirm_title)) },
+        text = {
+            Column(
+                modifier = Modifier.verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Text(
+                    text = stringResource(R.string.trust_import_certificate_warning),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.error,
+                )
+                DialogField(stringResource(R.string.trust_import_certificate_type)) {
+                    Text(
+                        text =
+                            stringResource(
+                                if (summary.isLink) R.string.trust_link_certificate else R.string.trust_import_certificate_type_csca,
+                            ),
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                }
+                DialogField(stringResource(R.string.trust_import_certificate_subject)) {
+                    Text(summary.subject, style = MaterialTheme.typography.bodyMedium)
+                }
+                DialogField(stringResource(R.string.trust_import_certificate_country)) {
+                    Text(countryLabel(summary.country), style = MaterialTheme.typography.bodyMedium)
+                }
+                DialogField(stringResource(R.string.trust_import_certificate_validity)) {
+                    Text(
+                        text =
+                            stringResource(
+                                R.string.trust_validity,
+                                formatDate(summary.notBefore.toUtcDate()),
+                                formatDate(summary.notAfter.toUtcDate()),
+                            ),
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                }
+                DialogField(stringResource(R.string.trust_fingerprint)) {
+                    SelectionContainer {
+                        Text(
+                            text = formatFingerprint(summary.sha256),
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontFamily = FontFamily.Monospace,
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = { TextButton(onClick = onConfirm) { Text(stringResource(R.string.trust_import_confirm)) } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.trust_cancel)) } },
+    )
 }

@@ -177,6 +177,50 @@ Un certificat illisible à l'intérieur d'une liste valide est ignoré et ne fai
 liste. Les certificats sont lus par BouncyCastle, qui accepte les clés EC à paramètres de
 courbe explicites et les numéros de série négatifs, présents dans les listes réelles.
 
+### Import d'un certificat seul (D33)
+
+Le même bouton, « Importer une Master List ou un certificat », accepte aussi un certificat CSCA
+auto-signé ou un certificat de lien isolé, tel que certains États le publient sur leur site
+(`.der`, `.cer`, `.crt` ou `.pem`, un seul certificat par fichier, 64 Kio au plus). Le type du
+fichier est reconnu automatiquement : un fichier de 64 Kio au plus est d'abord lu comme
+certificat ; s'il n'en est pas un, il est traité comme une Master List.
+
+Contrairement à une Master List, **aucune signature d'État ne garantit un certificat isolé** :
+c'est l'utilisateur qui lui accorde sa confiance. Le dialogue de confirmation le dit, et montre le
+sujet, le pays, la validité et l'empreinte SHA-256 du certificat, à comparer avec celle publiée
+par l'État. `TrustStores.parseCertificate` (`:core`) contrôle :
+
+| Code (`InvalidCertificateException.code`) | Cause |
+|---|---|
+| `UNREADABLE` | Pas exactement un certificat X.509 (DER sans octet superflu, ou PEM avec un seul bloc `CERTIFICATE` et aucun autre bloc), ou clé publique illisible. |
+| `NOT_CA` | `basicConstraints` absent ou sans cA=TRUE, ou `keyUsage` présent sans keyCertSign. |
+| `BAD_SIGNATURE` | Certificat qui se présente comme auto-signé (sujet égal à l'émetteur, Authority Key Identifier absent ou égal au Subject Key Identifier) dont l'auto-signature ne se vérifie pas. |
+
+La signature d'un certificat de lien n'est pas vérifiable à l'import (elle est faite par
+l'ancienne clé du CSCA) : elle l'est à la construction de la chaîne, comme pour tout certificat du
+magasin, qui n'ancre une chaîne que sur un CSCA auto-signé. Importer un lien seul n'apporte donc
+rien tant que le CSCA qui l'a signé n'est pas connu.
+
+Stockage : `filesDir/trust/<SHA-256 du DER>.der`, en DER (un PEM est converti avant écriture),
+à côté des `<SHA-256>.ml` des Master Lists ; écriture atomique, certificat revérifié juste avant
+l'écriture. Au chargement, un certificat importé devenu invalide est ignoré. Les certificats
+importés portent la source `IMPORTED_CERTIFICATE`, distincte de `IMPORTED_MASTER_LIST`, et
+passent après toutes les autres sources : un certificat déjà présent (ANTS, publication
+nationale, Master List embarquée ou importée) garde sa source d'origine. Ils s'affichent
+« Certificat importé ».
+
+Limites (`ImportLimits`, D22 et D33) : 100 certificats importés au plus, 64 Kio par fichier ; ils
+ne comptent pas dans les limites des Master Lists (10 listes, 40 Mo cumulés).
+
+### Éléments importés et suppression
+
+L'écran « Magasin de confiance » liste chaque élément importé : Master List (signataire, date de
+signature, nombre de certificats) ou certificat (sujet, pays, validité, empreinte). Chacun se
+supprime à l'unité, après confirmation ; le bouton « Supprimer les certificats importés » efface
+toujours tout, Master Lists et certificats. Un fichier importé devenu illisible reste listé pour
+pouvoir être supprimé. L'identifiant d'un élément est son nom de fichier ; la suppression refuse
+tout identifiant qui n'est pas `<64 chiffres hexadécimaux minuscules>.ml` ou `.der`.
+
 ## Procédure de mise à jour (à chaque release)
 
 ### Script

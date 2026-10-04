@@ -26,6 +26,7 @@
     <string name="trust_source_national">Nationale publicatie</string>
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Geïmporteerd</string>
+    <string name="trust_source_imported_certificate">Geïmporteerd certificaat</string>
     <string name="trust_link_certificate">Koppelingscertificaat</string>
 
     <!-- Recherche -->
@@ -34,7 +35,7 @@
     <string name="trust_search_no_result">Geen land komt overeen met je zoekopdracht.</string>
 
     <!-- Import -->
-    <string name="trust_import">Master List importeren</string>
+    <string name="trust_import">Master List of certificaat importeren</string>
     <string name="trust_busy">Even geduld…</string>
     <string name="trust_import_confirm_title">Deze Master List importeren?</string>
     <string name="trust_import_confirm_text">De handtekening is geldig. Controleer vóór het importeren of de vingerafdruk van de ondertekenaar overeenkomt met die van de uitgevende instantie.</string>
@@ -59,10 +60,39 @@
     </plurals>
     <string name="trust_import_limit_size">Import geweigerd: de geïmporteerde Master Lists zouden samen groter zijn dan %1$d MB. Verwijder de geïmporteerde certificaten om een andere toe te voegen.</string>
 
+    <!-- Import d'un certificat seul (D33) -->
+    <string name="trust_import_certificate_confirm_title">Dit certificaat importeren?</string>
+    <string name="trust_import_certificate_warning">Anders dan bij een Master List staat er geen handtekening van een staat garant voor dit bestand: jij besluit het te vertrouwen. Een geïmporteerd certificaat kan elk document uit het betreffende land als echt laten doorgaan. Vergelijk vóór het importeren de vingerafdruk met die van de uitgevende staat.</string>
+    <string name="trust_import_certificate_type">Type</string>
+    <string name="trust_import_certificate_type_csca">Zelfondertekend CSCA</string>
+    <string name="trust_import_certificate_subject">Onderwerp</string>
+    <string name="trust_import_certificate_country">Land</string>
+    <string name="trust_import_certificate_validity">Geldigheid</string>
+    <string name="trust_import_certificate_done">Certificaat geïmporteerd.</string>
+    <string name="trust_import_certificate_invalid">Dit certificaat kan niet worden geïmporteerd: alleen een zelfondertekend CSCA of een koppelingscertificaat wordt geaccepteerd (%1$s).</string>
+    <string name="trust_import_unrecognized">Dit bestand is geen Master List en ook geen afzonderlijk DER- of PEM-certificaat.</string>
+    <string name="trust_import_certificate_write_error">Kan het certificaat niet opslaan.</string>
+    <string name="trust_import_certificate_too_large">Certificaat geweigerd: het is groter dan %1$d kB.</string>
+    <plurals name="trust_import_certificate_limit_count">
+        <item quantity="one">Import geweigerd: maximaal %1$d geïmporteerd certificaat. Verwijder er een om een ander toe te voegen.</item>
+        <item quantity="other">Import geweigerd: maximaal %1$d geïmporteerde certificaten. Verwijder er een om een ander toe te voegen.</item>
+    </plurals>
+
+    <!-- Éléments importés (D33) -->
+    <string name="trust_imported_title">Geïmporteerde items</string>
+    <string name="trust_imported_master_list">Geïmporteerde Master List</string>
+    <string name="trust_imported_signed_on">Ondertekend op %1$s</string>
+    <string name="trust_imported_unreadable">Onleesbaar bestand, genegeerd door de vertrouwensopslag.</string>
+    <string name="trust_imported_delete">Dit item verwijderen</string>
+    <string name="trust_imported_delete_title">Dit geïmporteerde item verwijderen?</string>
+    <string name="trust_imported_delete_text">De certificaten ervan worden niet meer gebruikt om documenten te controleren. De andere geïmporteerde items en de ingebouwde certificaten blijven behouden.</string>
+    <string name="trust_imported_delete_done">Geïmporteerd item verwijderd.</string>
+    <string name="trust_imported_delete_error">Kan dit item niet verwijderen.</string>
+
     <!-- Suppression -->
     <string name="trust_delete_imported">Geïmporteerde certificaten verwijderen</string>
     <string name="trust_delete_confirm_title">Geïmporteerde certificaten verwijderen?</string>
-    <string name="trust_delete_confirm_text">De geïmporteerde Master Lists worden verwijderd. De in de app ingebouwde certificaten blijven behouden.</string>
+    <string name="trust_delete_confirm_text">De geïmporteerde Master Lists en certificaten worden verwijderd. De in de app ingebouwde certificaten blijven behouden.</string>
     <string name="trust_delete_confirm">Verwijderen</string>
     <string name="trust_delete_done">Geïmporteerde certificaten verwijderd.</string>
     <string name="trust_delete_error">Kan de geïmporteerde certificaten niet verwijderen.</string>
