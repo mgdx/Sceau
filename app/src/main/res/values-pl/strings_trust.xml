@@ -32,6 +32,11 @@
     <string name="trust_source_imported">Zaimportowany</string>
     <string name="trust_link_certificate">Certyfikat łączący</string>
 
+    <!-- Recherche -->
+    <string name="trust_search_hint">Szukaj kraju</string>
+    <string name="trust_search_clear">Wyczyść wyszukiwanie</string>
+    <string name="trust_search_no_result">Żaden kraj nie pasuje do wyszukiwania.</string>
+
     <!-- Import -->
     <string name="trust_import">Importuj Master List</string>
     <string name="trust_busy">Proszę czekać…</string>

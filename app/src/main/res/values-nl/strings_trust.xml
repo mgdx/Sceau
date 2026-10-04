@@ -28,6 +28,11 @@
     <string name="trust_source_imported">Geïmporteerd</string>
     <string name="trust_link_certificate">Koppelingscertificaat</string>
 
+    <!-- Recherche -->
+    <string name="trust_search_hint">Land zoeken</string>
+    <string name="trust_search_clear">Zoekopdracht wissen</string>
+    <string name="trust_search_no_result">Geen land komt overeen met je zoekopdracht.</string>
+
     <!-- Import -->
     <string name="trust_import">Master List importeren</string>
     <string name="trust_busy">Even geduld…</string>

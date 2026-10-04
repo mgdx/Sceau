@@ -26,6 +26,11 @@
     <string name="trust_source_imported">已匯入</string>
     <string name="trust_link_certificate">連結憑證</string>
 
+    <!-- Recherche -->
+    <string name="trust_search_hint">搜尋國家/地區</string>
+    <string name="trust_search_clear">清除搜尋內容</string>
+    <string name="trust_search_no_result">沒有符合搜尋內容的國家/地區。</string>
+
     <!-- Import -->
     <string name="trust_import">匯入 Master List</string>
     <string name="trust_busy">請稍候…</string>

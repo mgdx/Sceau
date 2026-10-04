@@ -30,6 +30,11 @@
     <string name="trust_source_imported">מיובאת</string>
     <string name="trust_link_certificate">תעודת קישור</string>
 
+    <!-- Recherche -->
+    <string name="trust_search_hint">חיפוש מדינה</string>
+    <string name="trust_search_clear">ניקוי החיפוש</string>
+    <string name="trust_search_no_result">אין מדינה שתואמת לחיפוש.</string>
+
     <!-- Import -->
     <string name="trust_import">ייבוא רשימת Master List</string>
     <string name="trust_busy">רק רגע…</string>

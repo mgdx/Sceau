@@ -28,6 +28,11 @@
     <string name="trust_source_imported">E importuar</string>
     <string name="trust_link_certificate">Certifikatë lidhëse</string>
 
+    <!-- Recherche -->
+    <string name="trust_search_hint">Kërko një shtet</string>
+    <string name="trust_search_clear">Pastro kërkimin</string>
+    <string name="trust_search_no_result">Asnjë shtet nuk përputhet me kërkimin.</string>
+
     <!-- Import -->
     <string name="trust_import">Importo një Master List</string>
     <string name="trust_busy">Prit pak…</string>

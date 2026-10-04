@@ -4,6 +4,7 @@ import io.github.mgdx.sceau.core.trust.TrustAnchor
 import io.github.mgdx.sceau.core.trust.TrustSource
 import io.github.mgdx.sceau.ui.result.Countries
 import java.text.Collator
+import java.text.Normalizer
 import java.time.Instant
 import java.util.Locale
 
@@ -27,7 +28,42 @@ class CountryGroup(
     val anchors: List<AnchorRow>,
 ) {
     val key: String get() = "country:$alpha2"
+
+    /** Nom localisé normalisé par [searchForm], calculé une fois pour la recherche. */
+    internal val searchName: String? = displayName?.let(::searchForm)
+
+    /** Code ISO 3166-1 alpha-3, accepté par la recherche comme le code alpha-2. */
+    internal val alpha3: String? = alpha2.takeIf { it.isNotEmpty() }?.let(Countries::alpha3)
 }
+
+/**
+ * Garde les pays dont le nom localisé contient [query], sans tenir compte de la casse ni des
+ * accents, ou dont le code ISO alpha-2 ou alpha-3 est exactement [query]. Une requête vide
+ * ou blanche rend la liste entière.
+ */
+fun filterGroups(
+    groups: List<CountryGroup>,
+    query: String,
+): List<CountryGroup> {
+    val needle = searchForm(query)
+    if (needle.isEmpty()) return groups
+    val code = needle.uppercase(Locale.ROOT)
+    return groups.filter { group ->
+        group.searchName?.contains(needle) == true || code == group.alpha2 || code == group.alpha3
+    }
+}
+
+/** Forme de comparaison : décomposée, sans diacritiques, en minuscules, espaces réduits. */
+private fun searchForm(text: String): String =
+    Normalizer
+        .normalize(text, Normalizer.Form.NFD)
+        .replace(DIACRITICS, "")
+        .lowercase(Locale.ROOT)
+        .trim()
+        .replace(BLANKS, " ")
+
+private val DIACRITICS = Regex("\\p{Mn}+")
+private val BLANKS = Regex("\\s+")
 
 /**
  * Regroupe les ancres par pays, triés par nom localisé (pays sans nom connu à la fin),

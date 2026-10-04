@@ -28,6 +28,11 @@
     <string name="trust_source_imported">Importiert</string>
     <string name="trust_link_certificate">Link-Zertifikat</string>
 
+    <!-- Recherche -->
+    <string name="trust_search_hint">Land suchen</string>
+    <string name="trust_search_clear">Suche löschen</string>
+    <string name="trust_search_no_result">Kein Land entspricht Ihrer Suche.</string>
+
     <!-- Import -->
     <string name="trust_import">Master List importieren</string>
     <string name="trust_busy">Bitte warten…</string>

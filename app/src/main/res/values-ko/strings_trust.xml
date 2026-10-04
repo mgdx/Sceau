@@ -26,6 +26,11 @@
     <string name="trust_source_imported">가져옴</string>
     <string name="trust_link_certificate">링크 인증서</string>
 
+    <!-- Recherche -->
+    <string name="trust_search_hint">국가 검색</string>
+    <string name="trust_search_clear">검색어 지우기</string>
+    <string name="trust_search_no_result">검색과 일치하는 국가가 없습니다.</string>
+
     <!-- Import -->
     <string name="trust_import">Master List 가져오기</string>
     <string name="trust_busy">잠시 기다려 주세요…</string>

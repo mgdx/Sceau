@@ -28,6 +28,11 @@
     <string name="trust_source_imported">იმპორტირებული</string>
     <string name="trust_link_certificate">დამაკავშირებელი სერტიფიკატი</string>
 
+    <!-- Recherche -->
+    <string name="trust_search_hint">ქვეყნის ძიება</string>
+    <string name="trust_search_clear">ძიების გასუფთავება</string>
+    <string name="trust_search_no_result">თქვენს ძიებას არცერთი ქვეყანა არ შეესაბამება.</string>
+
     <!-- Import -->
     <string name="trust_import">Master List-ის იმპორტი</string>
     <string name="trust_busy">გთხოვთ, მოიცადოთ…</string>

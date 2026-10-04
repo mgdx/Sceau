@@ -28,6 +28,11 @@
     <string name="trust_source_imported">İçe aktarıldı</string>
     <string name="trust_link_certificate">Bağlantı sertifikası</string>
 
+    <!-- Recherche -->
+    <string name="trust_search_hint">Ülke ara</string>
+    <string name="trust_search_clear">Aramayı temizle</string>
+    <string name="trust_search_no_result">Aramanızla eşleşen ülke yok.</string>
+
     <!-- Import -->
     <string name="trust_import">Master List içe aktar</string>
     <string name="trust_busy">Lütfen bekleyin…</string>

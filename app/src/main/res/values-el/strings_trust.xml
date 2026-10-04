@@ -28,6 +28,11 @@
     <string name="trust_source_imported">Εισαγόμενο</string>
     <string name="trust_link_certificate">Πιστοποιητικό σύνδεσης</string>
 
+    <!-- Recherche -->
+    <string name="trust_search_hint">Αναζήτηση χώρας</string>
+    <string name="trust_search_clear">Διαγραφή αναζήτησης</string>
+    <string name="trust_search_no_result">Καμία χώρα δεν αντιστοιχεί στην αναζήτησή σας.</string>
+
     <!-- Import -->
     <string name="trust_import">Εισαγωγή Master List</string>
     <string name="trust_busy">Περιμένετε…</string>

@@ -32,6 +32,11 @@
     <string name="trust_source_imported">Імпортовано</string>
     <string name="trust_link_certificate">Сполучний сертифікат</string>
 
+    <!-- Recherche -->
+    <string name="trust_search_hint">Пошук країни</string>
+    <string name="trust_search_clear">Очистити пошук</string>
+    <string name="trust_search_no_result">Немає країн, що відповідають запиту.</string>
+
     <!-- Import -->
     <string name="trust_import">Імпортувати Master List</string>
     <string name="trust_busy">Зачекайте…</string>

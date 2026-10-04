@@ -32,6 +32,11 @@
     <string name="trust_source_imported">Импортирован</string>
     <string name="trust_link_certificate">Связующий сертификат</string>
 
+    <!-- Recherche -->
+    <string name="trust_search_hint">Поиск страны</string>
+    <string name="trust_search_clear">Очистить поиск</string>
+    <string name="trust_search_no_result">Нет стран, соответствующих запросу.</string>
+
     <!-- Import -->
     <string name="trust_import">Импортировать Master List</string>
     <string name="trust_busy">Подождите…</string>

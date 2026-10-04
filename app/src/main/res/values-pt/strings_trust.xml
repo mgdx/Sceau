@@ -30,6 +30,11 @@
     <string name="trust_source_imported">Importado</string>
     <string name="trust_link_certificate">Certificado de ligação</string>
 
+    <!-- Recherche -->
+    <string name="trust_search_hint">Pesquisar um país</string>
+    <string name="trust_search_clear">Limpar pesquisa</string>
+    <string name="trust_search_no_result">Nenhum país corresponde à pesquisa.</string>
+
     <!-- Import -->
     <string name="trust_import">Importar uma Master List</string>
     <string name="trust_busy">Aguarde…</string>

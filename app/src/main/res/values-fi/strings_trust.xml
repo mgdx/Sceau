@@ -28,6 +28,11 @@
     <string name="trust_source_imported">Tuotu</string>
     <string name="trust_link_certificate">Linkkivarmenne</string>
 
+    <!-- Recherche -->
+    <string name="trust_search_hint">Hae maata</string>
+    <string name="trust_search_clear">Tyhjennä haku</string>
+    <string name="trust_search_no_result">Hakuasi vastaavaa maata ei löytynyt.</string>
+
     <!-- Import -->
     <string name="trust_import">Tuo Master List</string>
     <string name="trust_busy">Odota…</string>

@@ -32,6 +32,11 @@
     <string name="trust_source_imported">Importuotas</string>
     <string name="trust_link_certificate">Susiejimo sertifikatas</string>
 
+    <!-- Recherche -->
+    <string name="trust_search_hint">Ieškoti šalies</string>
+    <string name="trust_search_clear">Išvalyti paiešką</string>
+    <string name="trust_search_no_result">Paieškos atitinkančių šalių nėra.</string>
+
     <!-- Import -->
     <string name="trust_import">Importuoti Master List</string>
     <string name="trust_busy">Palaukite…</string>

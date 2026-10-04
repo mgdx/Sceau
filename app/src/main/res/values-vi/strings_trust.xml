@@ -26,6 +26,11 @@
     <string name="trust_source_imported">Đã nhập</string>
     <string name="trust_link_certificate">Chứng chỉ liên kết</string>
 
+    <!-- Recherche -->
+    <string name="trust_search_hint">Tìm quốc gia</string>
+    <string name="trust_search_clear">Xóa tìm kiếm</string>
+    <string name="trust_search_no_result">Không có quốc gia nào khớp với tìm kiếm.</string>
+
     <!-- Import -->
     <string name="trust_import">Nhập Master List</string>
     <string name="trust_busy">Vui lòng chờ…</string>

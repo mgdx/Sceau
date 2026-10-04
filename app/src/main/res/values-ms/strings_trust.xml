@@ -26,6 +26,11 @@
     <string name="trust_source_imported">Diimport</string>
     <string name="trust_link_certificate">Sijil pautan</string>
 
+    <!-- Recherche -->
+    <string name="trust_search_hint">Cari negara</string>
+    <string name="trust_search_clear">Kosongkan carian</string>
+    <string name="trust_search_no_result">Tiada negara yang sepadan dengan carian anda.</string>
+
     <!-- Import -->
     <string name="trust_import">Import Master List</string>
     <string name="trust_busy">Sila tunggu…</string>

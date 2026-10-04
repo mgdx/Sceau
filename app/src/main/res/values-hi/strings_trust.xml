@@ -28,6 +28,11 @@
     <string name="trust_source_imported">इंपोर्ट किया गया</string>
     <string name="trust_link_certificate">लिंक प्रमाणपत्र</string>
 
+    <!-- Recherche -->
+    <string name="trust_search_hint">देश खोजें</string>
+    <string name="trust_search_clear">खोज साफ़ करें</string>
+    <string name="trust_search_no_result">आपकी खोज से कोई देश मेल नहीं खाता।</string>
+
     <!-- Import -->
     <string name="trust_import">Master List इंपोर्ट करें</string>
     <string name="trust_busy">कृपया इंतज़ार करें…</string>

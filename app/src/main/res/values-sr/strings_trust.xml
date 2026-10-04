@@ -30,6 +30,11 @@
     <string name="trust_source_imported">Увезено</string>
     <string name="trust_link_certificate">Повезујући сертификат</string>
 
+    <!-- Recherche -->
+    <string name="trust_search_hint">Претражи државу</string>
+    <string name="trust_search_clear">Обриши претрагу</string>
+    <string name="trust_search_no_result">Ниједна држава не одговара претрази.</string>
+
     <!-- Import -->
     <string name="trust_import">Увези Master List</string>
     <string name="trust_busy">Сачекајте…</string>

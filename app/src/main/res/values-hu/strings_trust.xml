@@ -28,6 +28,11 @@
     <string name="trust_source_imported">Importált</string>
     <string name="trust_link_certificate">Összekötő tanúsítvány</string>
 
+    <!-- Recherche -->
+    <string name="trust_search_hint">Ország keresése</string>
+    <string name="trust_search_clear">Keresés törlése</string>
+    <string name="trust_search_no_result">Egyetlen ország sem felel meg a keresésnek.</string>
+
     <!-- Import -->
     <string name="trust_import">Master List importálása</string>
     <string name="trust_busy">Kérjük, várjon…</string>

@@ -50,4 +50,28 @@ class TrustFormattingTest {
         // Source d'abord (ANTS avant Master List), puis le plus récent en premier.
         assertEquals(listOf("c", "b", "a"), groups[1].anchors.map { it.sha256 })
     }
+
+    @Test
+    fun `recherche par nom sans casse ni accents, par code alpha-2 ou alpha-3`() {
+        val groups =
+            groupRows(
+                listOf(
+                    "FR" to row("a", TrustSource.ANTS, 1),
+                    "DE" to row("b", TrustSource.EMBEDDED_MASTER_LIST, 1),
+                    "EE" to row("c", TrustSource.EMBEDDED_MASTER_LIST, 1),
+                    "" to row("d", TrustSource.IMPORTED_MASTER_LIST, 1),
+                ),
+                Locale.FRENCH,
+            )
+
+        fun search(query: String) = filterGroups(groups, query).map { it.alpha2 }
+
+        assertEquals(listOf("DE", "EE", "FR", ""), search("  "))
+        assertEquals(listOf("DE"), search("ALLEM"))
+        assertEquals(listOf("EE"), search("estonie"))
+        assertEquals(listOf("EE"), search("Éston"))
+        assertEquals(listOf("FR"), search("fr"))
+        assertEquals(listOf("DE"), search("deu"))
+        assertEquals(emptyList<String>(), search("zzz"))
+    }
 }

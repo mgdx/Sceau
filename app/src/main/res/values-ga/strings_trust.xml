@@ -34,6 +34,11 @@
     <string name="trust_source_imported">Iompórtáilte</string>
     <string name="trust_link_certificate">Deimhniú naisc</string>
 
+    <!-- Recherche -->
+    <string name="trust_search_hint">Cuardaigh tír</string>
+    <string name="trust_search_clear">Glan an cuardach</string>
+    <string name="trust_search_no_result">Níl aon tír a mheaitseálann do chuardach.</string>
+
     <!-- Import -->
     <string name="trust_import">Iompórtáil Master List</string>
     <string name="trust_busy">Fan go fóill…</string>

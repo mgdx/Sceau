@@ -26,6 +26,11 @@
     <string name="trust_source_imported">インポート済み</string>
     <string name="trust_link_certificate">リンク証明書</string>
 
+    <!-- Recherche -->
+    <string name="trust_search_hint">国を検索</string>
+    <string name="trust_search_clear">検索をクリア</string>
+    <string name="trust_search_no_result">検索に一致する国はありません。</string>
+
     <!-- Import -->
     <string name="trust_import">Master List をインポート</string>
     <string name="trust_busy">お待ちください…</string>

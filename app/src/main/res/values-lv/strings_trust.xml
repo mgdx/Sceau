@@ -30,6 +30,11 @@
     <string name="trust_source_imported">Importēts</string>
     <string name="trust_link_certificate">Saites sertifikāts</string>
 
+    <!-- Recherche -->
+    <string name="trust_search_hint">Meklēt valsti</string>
+    <string name="trust_search_clear">Notīrīt meklēšanu</string>
+    <string name="trust_search_no_result">Meklēšanai neatbilst neviena valsts.</string>
+
     <!-- Import -->
     <string name="trust_import">Importēt Master List</string>
     <string name="trust_busy">Lūdzu, uzgaidiet…</string>

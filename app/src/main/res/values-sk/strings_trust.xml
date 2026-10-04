@@ -32,6 +32,11 @@
     <string name="trust_source_imported">Importovaný</string>
     <string name="trust_link_certificate">Prepojovací certifikát</string>
 
+    <!-- Recherche -->
+    <string name="trust_search_hint">Hľadať krajinu</string>
+    <string name="trust_search_clear">Vymazať vyhľadávanie</string>
+    <string name="trust_search_no_result">Vyhľadávaniu nezodpovedá žiadna krajina.</string>
+
     <!-- Import -->
     <string name="trust_import">Importovať Master List</string>
     <string name="trust_busy">Čakajte, prosím…</string>

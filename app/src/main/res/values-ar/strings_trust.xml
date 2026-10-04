@@ -36,6 +36,11 @@
     <string name="trust_source_imported">مستوردة</string>
     <string name="trust_link_certificate">شهادة ربط</string>
 
+    <!-- Recherche -->
+    <string name="trust_search_hint">البحث عن بلد</string>
+    <string name="trust_search_clear">محو البحث</string>
+    <string name="trust_search_no_result">لا يوجد بلد يطابق بحثك.</string>
+
     <!-- Import -->
     <string name="trust_import">استيراد قائمة Master List</string>
     <string name="trust_busy">يُرجى الانتظار…</string>

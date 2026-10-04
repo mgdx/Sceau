@@ -26,6 +26,11 @@
     <string name="trust_source_imported">นำเข้า</string>
     <string name="trust_link_certificate">ใบรับรองเชื่อมโยง</string>
 
+    <!-- Recherche -->
+    <string name="trust_search_hint">ค้นหาประเทศ</string>
+    <string name="trust_search_clear">ล้างการค้นหา</string>
+    <string name="trust_search_no_result">ไม่มีประเทศที่ตรงกับการค้นหา</string>
+
     <!-- Import -->
     <string name="trust_import">นำเข้า Master List</string>
     <string name="trust_busy">โปรดรอสักครู่…</string>

@@ -28,6 +28,11 @@
     <string name="trust_source_imported">Импортиран</string>
     <string name="trust_link_certificate">Свързващ сертификат</string>
 
+    <!-- Recherche -->
+    <string name="trust_search_hint">Търсене на държава</string>
+    <string name="trust_search_clear">Изчистване на търсенето</string>
+    <string name="trust_search_no_result">Няма държава, която да отговаря на търсенето.</string>
+
     <!-- Import -->
     <string name="trust_import">Импортиране на Master List</string>
     <string name="trust_busy">Моля, изчакайте…</string>

@@ -30,6 +30,11 @@
     <string name="trust_source_imported">Importat</string>
     <string name="trust_link_certificate">Certificat de legătură</string>
 
+    <!-- Recherche -->
+    <string name="trust_search_hint">Căutați o țară</string>
+    <string name="trust_search_clear">Ștergeți căutarea</string>
+    <string name="trust_search_no_result">Nicio țară nu corespunde căutării.</string>
+
     <!-- Import -->
     <string name="trust_import">Importați o Master List</string>
     <string name="trust_busy">Așteptați…</string>

@@ -28,6 +28,11 @@
     <string name="trust_source_imported">Imporditud</string>
     <string name="trust_link_certificate">Lingisertifikaat</string>
 
+    <!-- Recherche -->
+    <string name="trust_search_hint">Otsi riiki</string>
+    <string name="trust_search_clear">Tühjenda otsing</string>
+    <string name="trust_search_no_result">Otsingule ei vasta ükski riik.</string>
+
     <!-- Import -->
     <string name="trust_import">Impordi Master List</string>
     <string name="trust_busy">Palun oodake…</string>

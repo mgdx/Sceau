@@ -85,6 +85,11 @@ object Countries {
             .split(Regex("\\s+"))
             .associate { it.substringBefore('=') to it.substringAfter('=') }
 
+    private val alpha3ByAlpha2: Map<String, String> by lazy { iso.entries.associate { (a3, a2) -> a2 to a3 } }
+
+    /** Code ISO 3166-1 alpha-3 d'un pays désigné par son code alpha-2, ou null s'il est inconnu. */
+    fun alpha3(alpha2: String): String? = alpha3ByAlpha2[alpha2.trim().uppercase(Locale.ROOT)]
+
     /** Résout un code ICAO (ex. "FRA", "D<<", "GBD") ; les « < » de remplissage sont ignorés. */
     fun fromIcao(icaoCode: String): CountryRef {
         val code = icaoCode.replace("<", "").trim().uppercase(Locale.ROOT)

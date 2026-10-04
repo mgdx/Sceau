@@ -17,8 +17,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
@@ -30,6 +34,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -45,17 +50,20 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import io.github.mgdx.sceau.R
 import io.github.mgdx.sceau.core.trust.InvalidMasterListException
@@ -124,6 +132,7 @@ fun TrustStoreScreen(
     var pending by remember { mutableStateOf<PendingImport?>(null) }
     var confirmDelete by remember { mutableStateOf(false) }
     val expanded = remember { mutableStateMapOf<String, Boolean>() }
+    var query by rememberSaveable { mutableStateOf("") }
 
     LaunchedEffect(reloadKey, locale) {
         store = StoreUi.Loading
@@ -210,6 +219,8 @@ fun TrustStoreScreen(
             is StoreUi.Loaded -> {
                 StoreList(
                     store = current,
+                    query = query,
+                    onQueryChange = { query = it },
                     busy = busy,
                     expanded = expanded,
                     onImport = { launcher.launch(MASTER_LIST_TYPES) },
@@ -323,6 +334,8 @@ private fun CenteredMessage(
 @Composable
 private fun StoreList(
     store: StoreUi.Loaded,
+    query: String,
+    onQueryChange: (String) -> Unit,
     busy: Boolean,
     expanded: SnapshotStateMap<String, Boolean>,
     onImport: () -> Unit,
@@ -330,31 +343,82 @@ private fun StoreList(
     contentPadding: PaddingValues,
 ) {
     val formatDate = rememberDateFormatter()
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = contentPadding,
-    ) {
-        item(key = "header") {
-            StoreHeader(store, busy, onImport, onDelete)
-        }
-        if (store.groups.isEmpty()) {
-            item(key = "empty") {
-                Text(
-                    text = stringResource(R.string.trust_empty),
-                    modifier = Modifier.padding(16.dp),
-                    style = MaterialTheme.typography.bodyLarge,
-                )
-            }
-        }
-        store.groups.forEach { group ->
-            val isExpanded = expanded[group.key] == true
-            stickyHeader(key = group.key, contentType = "country") {
-                CountryHeader(group, isExpanded) { expanded[group.key] = !isExpanded }
-            }
-            if (isExpanded) {
-                items(group.anchors, key = { it.key }, contentType = { "anchor" }) { anchor ->
-                    AnchorItem(anchor, formatDate)
+    val groups = remember(store, query) { filterGroups(store.groups, query) }
+    val searching = query.isNotBlank()
+    // Sans cela, la liste garde l'élément qui était en tête et masque l'en-tête rétabli.
+    val listState = rememberLazyListState()
+    LaunchedEffect(query) { listState.scrollToItem(0) }
+    Column(modifier = Modifier.fillMaxSize().padding(top = contentPadding.calculateTopPadding())) {
+        // Hors de la liste pour rester visible quand on la fait défiler.
+        SearchField(query, onQueryChange)
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth().weight(1f),
+            state = listState,
+            contentPadding = PaddingValues(bottom = contentPadding.calculateBottomPadding()),
+        ) {
+            // Pendant une recherche, les résultats viennent juste sous le champ.
+            if (!searching) {
+                item(key = "header") {
+                    StoreHeader(store, busy, onImport, onDelete)
                 }
+            }
+            if (groups.isEmpty()) {
+                item(key = "empty") {
+                    Text(
+                        text =
+                            if (store.groups.isEmpty()) {
+                                stringResource(R.string.trust_empty)
+                            } else {
+                                stringResource(R.string.trust_search_no_result)
+                            },
+                        modifier = Modifier.padding(16.dp),
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                }
+            }
+            countryItems(groups, expanded, formatDate)
+        }
+    }
+}
+
+@Composable
+private fun SearchField(
+    query: String,
+    onQueryChange: (String) -> Unit,
+) {
+    val focusManager = LocalFocusManager.current
+    OutlinedTextField(
+        value = query,
+        onValueChange = onQueryChange,
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+        placeholder = { Text(stringResource(R.string.trust_search_hint)) },
+        leadingIcon = { Icon(SceauIcons.Search, contentDescription = null) },
+        trailingIcon = {
+            if (query.isNotEmpty()) {
+                IconButton(onClick = { onQueryChange("") }) {
+                    Icon(SceauIcons.Close, contentDescription = stringResource(R.string.trust_search_clear))
+                }
+            }
+        },
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+        keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus() }),
+    )
+}
+
+private fun LazyListScope.countryItems(
+    groups: List<CountryGroup>,
+    expanded: SnapshotStateMap<String, Boolean>,
+    formatDate: (LocalDate) -> String,
+) {
+    groups.forEach { group ->
+        val isExpanded = expanded[group.key] == true
+        stickyHeader(key = group.key, contentType = "country") {
+            CountryHeader(group, isExpanded) { expanded[group.key] = !isExpanded }
+        }
+        if (isExpanded) {
+            items(group.anchors, key = { it.key }, contentType = { "anchor" }) { anchor ->
+                AnchorItem(anchor, formatDate)
             }
         }
     }

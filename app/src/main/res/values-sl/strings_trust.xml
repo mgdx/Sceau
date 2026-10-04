@@ -32,6 +32,11 @@
     <string name="trust_source_imported">Uvoženo</string>
     <string name="trust_link_certificate">Povezovalno potrdilo</string>
 
+    <!-- Recherche -->
+    <string name="trust_search_hint">Iskanje države</string>
+    <string name="trust_search_clear">Počisti iskanje</string>
+    <string name="trust_search_no_result">Nobena država se ne ujema z iskanjem.</string>
+
     <!-- Import -->
     <string name="trust_import">Uvozi Master List</string>
     <string name="trust_busy">Počakajte …</string>
