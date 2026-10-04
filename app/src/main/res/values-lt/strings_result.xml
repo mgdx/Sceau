@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">Nesutampančios kontrolinės sumos: %1$s</string>
     <string name="result_detail_dg_all_match">Visos kontrolinės sumos sutampa.</string>
     <string name="result_detail_dg_missing">Nurodytos, bet lusto nepateiktos duomenų grupės: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: išdavėjo paskelbta žinoma anomalija, duomenys atmesti</string>
     <string name="result_detail_unsupported">Algoritmas nepalaikomas: %1$s</string>
     <string name="result_detail_error">Techninė klaida: %1$s</string>
     <string name="result_detail_no_dg14">Dokumente nėra DG14: lustas šios patikros nesiūlo.</string>

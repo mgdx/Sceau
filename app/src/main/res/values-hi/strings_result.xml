@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">मेल न खाने वाले हैश: %1$s</string>
     <string name="result_detail_dg_all_match">सभी हैश मेल खाते हैं।</string>
     <string name="result_detail_dg_missing">ये डेटा ग्रुप घोषित हैं, लेकिन चिप ने नहीं दिए: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: जारीकर्ता द्वारा प्रकाशित ज्ञात विसंगति, डेटा हटाया गया</string>
     <string name="result_detail_unsupported">एल्गोरिदम समर्थित नहीं है: %1$s</string>
     <string name="result_detail_error">तकनीकी गड़बड़ी: %1$s</string>
     <string name="result_detail_no_dg14">दस्तावेज़ में DG14 नहीं है: चिप में यह जांच उपलब्ध नहीं है।</string>

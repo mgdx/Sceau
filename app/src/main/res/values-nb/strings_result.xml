@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">Fingeravtrykk som ikke samsvarer: %1$s</string>
     <string name="result_detail_dg_all_match">Alle fingeravtrykk samsvarer.</string>
     <string name="result_detail_dg_missing">Datagrupper som er oppgitt, men ikke levert av brikken: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: kjent avvik publisert av utstederen, data forkastet</string>
     <string name="result_detail_unsupported">Algoritmen støttes ikke: %1$s</string>
     <string name="result_detail_error">Teknisk feil: %1$s</string>
     <string name="result_detail_no_dg14">Dokumentet inneholder ikke DG14: brikken tilbyr ikke denne kontrollen.</string>

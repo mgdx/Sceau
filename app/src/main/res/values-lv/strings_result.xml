@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">Nesakrītoši nospiedumi: %1$s</string>
     <string name="result_detail_dg_all_match">Visi nospiedumi sakrīt.</string>
     <string name="result_detail_dg_missing">Datu grupas, kas norādītas, bet mikroshēmā nav pieejamas: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: izdevēja publicēta zināma anomālija, dati atmesti</string>
     <string name="result_detail_unsupported">Algoritms netiek atbalstīts: %1$s</string>
     <string name="result_detail_error">Tehniska kļūda: %1$s</string>
     <string name="result_detail_no_dg14">Dokumentā nav DG14: mikroshēma nepiedāvā šo pārbaudi.</string>

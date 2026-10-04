@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">일치하지 않는 해시: %1$s</string>
     <string name="result_detail_dg_all_match">모든 해시가 일치합니다.</string>
     <string name="result_detail_dg_missing">명시되었으나 칩이 제공하지 않은 데이터 그룹: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: 발급기관이 공개한 알려진 이상, 데이터 제외됨</string>
     <string name="result_detail_unsupported">지원되지 않는 알고리즘: %1$s</string>
     <string name="result_detail_error">기술 오류: %1$s</string>
     <string name="result_detail_no_dg14">이 신분증에는 DG14가 없습니다. 칩이 이 검증을 지원하지 않습니다.</string>

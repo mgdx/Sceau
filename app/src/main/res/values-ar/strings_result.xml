@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">بصمات غير مطابقة: %1$s</string>
     <string name="result_detail_dg_all_match">جميع البصمات مطابقة.</string>
     <string name="result_detail_dg_missing">مجموعات بيانات مُعلَنة لكن الشريحة لم توفرها: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: خلل معروف نشرته جهة الإصدار، تم استبعاد البيانات</string>
     <string name="result_detail_unsupported">خوارزمية غير متوافقة: %1$s</string>
     <string name="result_detail_error">خطأ تقني: %1$s</string>
     <string name="result_detail_no_dg14">لا تحتوي الوثيقة على DG14: لا توفر الشريحة عملية التحقق هذه.</string>

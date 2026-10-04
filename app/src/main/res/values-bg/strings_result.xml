@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">Несъответстващи хешове: %1$s</string>
     <string name="result_detail_dg_all_match">Всички хешове съответстват.</string>
     <string name="result_detail_dg_missing">Групи данни, обявени, но непредоставени от чипа: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: известна аномалия, публикувана от издателя, данните са изключени</string>
     <string name="result_detail_unsupported">Неподдържан алгоритъм: %1$s</string>
     <string name="result_detail_error">Техническа грешка: %1$s</string>
     <string name="result_detail_no_dg14">Документът не съдържа DG14: чипът не предлага тази проверка.</string>

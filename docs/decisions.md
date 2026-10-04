@@ -405,3 +405,19 @@ Format : date, contexte, décision, justification, écart à la SPEC concerné.
 - **Conservé** : la correction de `docs/architecture.md` §4 et de TP-16 sur `FLAG_SECURE`, déjà posé sur toute l'activité avant ce travail.
 - **Écart à la SPEC** : aucun.
 
+
+## D34. Anomalies connues des émetteurs : règle codée en dur, cas italien
+
+- **Date** : 2026-10-04 (décisions de l'utilisateur : règle codée en dur, puis critère large).
+- **Contexte** : l'Italie publie une Deviation List (ICAO 9303-12, `id-icao-DeviationList`, `docs/trust-sources.md` §2.4) : 346 275 cartes d'identité CIE 3.0 portent un DG12 dont l'empreinte ne correspond pas au SOD, et dont la date de délivrance vaut le 2015-12-05. Sceau donnait « Échec » sur ces cartes authentiques.
+- **Décision** :
+  - **règle codée en dur, sans fichier embarqué** : le TDDL (SHA-256 `1219d8c74a7acf13c55e265fa8125230167160f4f999b64b28644275a084d31d`, signé le 2018-05-30) a été téléchargé, sa signature CMS vérifiée jusqu'au CSCA03 italien, puis décodé ; il n'est pas embarqué. La source italienne est classée B pour la réutilisation (`docs/trust-sources.md`), et ses 346 275 numéros de document, qui ne forment pas de plages, pèseraient de 125 Ko à 3 Mo : ils ne sont pas repris ;
+  - **registre générique** `KnownDeviations` (`core/…/verify/KnownDeviations.kt`), interne, injecté dans `PassiveAuthenticator` (registre réel par défaut, autre registre dans les tests). Chaque règle porte un identifiant stable sans donnée personnelle (`KnownDeviation`, ici `IT-CIE3-DG12`), sa source, la date et l'empreinte SHA-256 de la liste publiée ;
+  - **critère italien**, plus large que la liste, tous cumulatifs : CSCA de pays IT ; État émetteur `ITA` et code de document commençant par `C` (le type `C` de la liste : premier caractère du code MRZ de la carte) dans DG1 ; numéro de la forme `CA` + 5 chiffres + 2 lettres, celle de tous les numéros listés ; signingTime du SOD présent et compris entre le 2017-09-01 et le 2018-03-05. Cette marge d'un mois autour de la période de délivrance de la liste (2017-10-01 au 2018-02-05) couvre l'écart entre la signature du SOD, à la personnalisation, et la date de délivrance retenue par l'émetteur. Restriction facultative sur une donnée non vérifiée : un DG12 lisible dont la date de délivrance n'est pas le 2015-12-05 n'est pas couvert. Cette donnée ne sert qu'à restreindre la règle, jamais à l'étendre ;
+  - **garde-fous** :
+    - une règle ne peut viser que DG11 ou DG12 : le constructeur la refuse sur tout autre DG, et l'application filtre de nouveau. Un écart sur DG1, DG2, DG14, DG15 ou EF.CardSecurity n'est jamais toléré ;
+    - une anomalie n'est recherchée que si la signature du SOD et la chaîne sont valides (`OK`), l'empreinte de DG1 vérifiée et aucun DG signé manquant. Le critère ne porte donc que sur des éléments signés ;
+    - une anomalie n'est signalée que si le DG visé est réellement en écart ;
+  - **effet** : le DG toléré quitte `DataGroupHashes.mismatched` et figure dans `DataGroupHashes.deviations` ; la ligne « Empreintes » le signale (« anomalie connue publiée par l'émetteur, données écartées »). Le DG est écarté (`PassiveAuthResult.discardedDataGroups`) : `ReadingSession` le retire de `DocumentData` et remet ses octets et ses images à zéro. La date de délivrance de DG12 n'est pas utilisée pour la validité du DS, qui retombe sur signingTime. Le verdict se calcule normalement : « Authentique » si le reste est bon.
+- **Justification** : la portée est plus large que la liste, sans risque pour le verdict. Seul DG12, données complémentaires sans rôle dans la vérification, voit son écart toléré, et il n'est alors ni affiché ni utilisé. Les éléments qui fondent le verdict (SOD, chaîne, DG1, DG2, DG14, DG15) restent vérifiés sans exception. Coder la règle évite d'embarquer un fichier de réutilisation incertaine.
+- **Écart à la SPEC** : §6.1 étape 5 (une empreinte DG12 fausse donnait toujours « Échec ») précisée par cette exception bornée.

@@ -88,9 +88,16 @@ class TestDocument(
         /** État émetteur de DG1 (code ICAO à trois lettres) ; par défaut le pays fictif des spécimens. */
         var issuingState: String = TestDataGroups.SPECIMEN_STATE
 
+        /** Numéro du document dans DG1. */
+        var documentNumber: String = TestDataGroups.SPECIMEN_DOCUMENT_NUMBER
+
+        /** DG supplémentaires (DG11, DG12…), signés dans le SOD comme les autres. */
+        var extraDataGroups: Map<Int, ByteArray> = emptyMap()
+
         fun build(): TestDocument {
             val groups = sortedMapOf<Int, ByteArray>()
-            groups[1] = TestDataGroups.dg1(documentCode, dateOfExpiry, issuingState)
+            groups[1] = TestDataGroups.dg1(documentCode, dateOfExpiry, issuingState, documentNumber)
+            groups.putAll(extraDataGroups)
             groups[2] = TestDataGroups.dg2(pki)
             val caKeys = if (chipAuthentication) pki.generateEc(TestPki.CURVE) else null
             val aaKeys =
@@ -122,25 +129,42 @@ class TestDocument(
 object TestDataGroups {
     private val YYMMDD = DateTimeFormatter.ofPattern("yyMMdd")
 
-    /** DG1 valide (MRZ TD3) construit avec JMRTD. */
+    /** DG1 valide construit avec JMRTD : MRZ TD1 (carte) pour un code « A », « C » ou « I », TD3 sinon. */
     fun dg1(
         documentCode: String = "P",
         dateOfExpiry: LocalDate = TestDocument.DEFAULT_DATE_OF_EXPIRY,
         issuingState: String = SPECIMEN_STATE,
+        documentNumber: String = SPECIMEN_DOCUMENT_NUMBER,
     ): ByteArray {
         val mrz =
-            MRZInfo.createTD3MRZInfo(
-                documentCode,
-                issuingState,
-                "ERIKSSON",
-                "ANNA MARIA",
-                "L898902C3",
-                "UTO",
-                "740812",
-                Gender.FEMALE,
-                dateOfExpiry.format(YYMMDD),
-                "",
-            )
+            if (documentCode.first() in "ACI") {
+                MRZInfo.createTD1MRZInfo(
+                    documentCode,
+                    issuingState,
+                    documentNumber,
+                    "",
+                    "740812",
+                    Gender.FEMALE,
+                    dateOfExpiry.format(YYMMDD),
+                    "UTO",
+                    "",
+                    "ERIKSSON",
+                    "ANNA MARIA",
+                )
+            } else {
+                MRZInfo.createTD3MRZInfo(
+                    documentCode,
+                    issuingState,
+                    "ERIKSSON",
+                    "ANNA MARIA",
+                    documentNumber,
+                    "UTO",
+                    "740812",
+                    Gender.FEMALE,
+                    dateOfExpiry.format(YYMMDD),
+                    "",
+                )
+            }
         return DG1File(mrz).encoded
     }
 
@@ -152,6 +176,9 @@ object TestDataGroups {
 
     /** Pays fictif des spécimens ICAO 9303 (Utopia). */
     const val SPECIMEN_STATE = "UTO"
+
+    /** Numéro de document du spécimen ICAO 9303. */
+    const val SPECIMEN_DOCUMENT_NUMBER = "L898902C3"
 
     private const val DG2_TAG = 0x75
     private const val DG2_PAYLOAD = 512
