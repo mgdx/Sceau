@@ -44,3 +44,10 @@ Vocabulaire des réglages Android en malais (Malaisie) et des passeports malaisi
 | RGPD | GDPR | |
 | Mo | MB | |
 | CAN, MRZ, Master List, etc. | inchangés | termes ICAO jamais traduits |
+| caméra | kamera |  |
+| scanner (la MRZ) | imbas (bouton : « Imbas MRZ ») |  |
+| lampe torche | lampu suluh |  |
+| cadre de visée | bingkai |  |
+| Autoriser (permission) | Benarkan | Vocabulaire Android |
+| réglages de l’application | tetapan apl | Vocabulaire Android |
+| saisie manuelle | masukkan secara manual |  |

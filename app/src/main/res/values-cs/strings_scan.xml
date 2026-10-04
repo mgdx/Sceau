@@ -6,7 +6,7 @@
     <string name="scan_status_searching">Hledání MRZ…</string>
     <string name="scan_status_seen">MRZ nalezena, probíhá čtení. Držte doklad v klidu.</string>
     <string name="scan_status_unsupported">Toto číslo dokladu je příliš dlouhé pro automatické čtení. Zadejte údaje ručně.</string>
-    <string name="scan_status_success">MRZ načtena. Před zahájením čtení zkontrolujte pole.</string>
+    <string name="scan_status_success">MRZ naskenována. Před přečtením čipu zkontrolujte pole.</string>
     <string name="scan_camera_unavailable">Fotoaparát není k dispozici. Údaje můžete stále zadat ručně.</string>
     <string name="scan_torch_on">Zapnout svítilnu</string>
     <string name="scan_torch_off">Vypnout svítilnu</string>

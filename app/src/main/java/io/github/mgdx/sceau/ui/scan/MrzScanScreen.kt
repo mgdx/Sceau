@@ -28,6 +28,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -105,7 +106,7 @@ private enum class CameraPermission {
 }
 
 /** Ce qu'affiche la ligne d'état sous le cadre. */
-private enum class StatusLine { SEARCHING, SEEN, UNSUPPORTED, SUCCESS, CAMERA_UNAVAILABLE }
+internal enum class StatusLine { SEARCHING, SEEN, UNSUPPORTED, SUCCESS, CAMERA_UNAVAILABLE }
 
 /** Délai entre le succès et le retour à l'accueil, le temps de l'annonce TalkBack. */
 private const val SUCCESS_DELAY_MILLIS = 900L
@@ -115,7 +116,6 @@ private const val SUCCESS_DELAY_MILLIS = 900L
  * torche. Au succès, transmet les champs à [session] puis appelle [onDone]. Le résultat ne
  * passe ni par l'état sauvegardé ni par la navigation.
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MrzScanScreen(
     session: SessionViewModel,
@@ -171,12 +171,52 @@ fun MrzScanScreen(
         }
     }
 
+    MrzScanScaffold(onBack = onDone) {
+        val effective =
+            if (permission == CameraPermission.UNKNOWN && requested) CameraPermission.DENIED else permission
+        when (effective) {
+            CameraPermission.UNKNOWN -> {
+                Unit
+            }
+
+            CameraPermission.GRANTED -> {
+                ScanContent(
+                    cameraActive = !success,
+                    status = status,
+                    onStatus = { if (!success) status = it },
+                    onFound = onFound,
+                    onManualEntry = onDone,
+                )
+            }
+
+            CameraPermission.DENIED, CameraPermission.PERMANENTLY_DENIED -> {
+                PermissionPanel(
+                    permanentlyDenied = effective == CameraPermission.PERMANENTLY_DENIED,
+                    onRequest = { launcher.launch(Manifest.permission.CAMERA) },
+                    onOpenSettings = { openAppSettings(context) },
+                    onBack = onDone,
+                )
+            }
+        }
+    }
+}
+
+/**
+ * Barre d'application et fond noir de l'écran de scan, sans caméra : réutilisés par le contrôle
+ * des débordements de texte (D28), qui affiche chaque état de l'écran sous Robolectric.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+internal fun MrzScanScaffold(
+    onBack: () -> Unit,
+    content: @Composable BoxScope.() -> Unit,
+) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.scan_title)) },
                 navigationIcon = {
-                    IconButton(onClick = onDone) {
+                    IconButton(onClick = onBack) {
                         Icon(SceauIcons.ArrowBack, contentDescription = stringResource(R.string.scan_back))
                     }
                 },
@@ -189,34 +229,8 @@ fun MrzScanScreen(
                     .fillMaxSize()
                     .padding(padding)
                     .background(Color.Black),
-        ) {
-            val effective =
-                if (permission == CameraPermission.UNKNOWN && requested) CameraPermission.DENIED else permission
-            when (effective) {
-                CameraPermission.UNKNOWN -> {
-                    Unit
-                }
-
-                CameraPermission.GRANTED -> {
-                    ScanContent(
-                        cameraActive = !success,
-                        status = status,
-                        onStatus = { if (!success) status = it },
-                        onFound = onFound,
-                        onManualEntry = onDone,
-                    )
-                }
-
-                CameraPermission.DENIED, CameraPermission.PERMANENTLY_DENIED -> {
-                    PermissionPanel(
-                        permanentlyDenied = effective == CameraPermission.PERMANENTLY_DENIED,
-                        onRequest = { launcher.launch(Manifest.permission.CAMERA) },
-                        onOpenSettings = { openAppSettings(context) },
-                        onBack = onDone,
-                    )
-                }
-            }
-        }
+            content = content,
+        )
     }
 }
 
@@ -233,26 +247,52 @@ private fun ScanContent(
     var geometry by remember { mutableStateOf<ViewfinderGeometry?>(null) }
     var camera by remember { mutableStateOf<Camera?>(null) }
 
-    Box(
+    ScanViewfinderLayout(
+        geometry = geometry,
+        status = status,
+        onManualEntry = onManualEntry,
         modifier =
-            Modifier
-                .fillMaxSize()
-                .onSizeChanged { size ->
-                    if (size.width > 0 && size.height > 0) {
-                        val g = ScanGeometry.viewfinderFor(size.width, size.height)
-                        viewfinder.set(g)
-                        geometry = g
-                    }
-                },
-    ) {
-        if (cameraActive) {
-            CameraPreview(
-                viewfinder = viewfinder,
-                onCamera = { camera = it },
-                onStatus = onStatus,
-                onFound = onFound,
-            )
-        }
+            Modifier.onSizeChanged { size ->
+                if (size.width > 0 && size.height > 0) {
+                    val g = ScanGeometry.viewfinderFor(size.width, size.height)
+                    viewfinder.set(g)
+                    geometry = g
+                }
+            },
+        preview = {
+            if (cameraActive) {
+                CameraPreview(
+                    viewfinder = viewfinder,
+                    onCamera = { camera = it },
+                    onStatus = onStatus,
+                    onFound = onFound,
+                )
+            }
+        },
+        torch = {
+            val activeCamera = camera
+            if (cameraActive && activeCamera != null && activeCamera.cameraInfo.hasFlashUnit()) {
+                TorchButton(activeCamera)
+            }
+        },
+    )
+}
+
+/**
+ * Partie purement visuelle du scan, affichable sans caméra (D28) : [preview] en fond, cadre de
+ * visée, consigne, ligne d'état, [torch] et bouton de saisie manuelle.
+ */
+@Composable
+internal fun ScanViewfinderLayout(
+    geometry: ViewfinderGeometry?,
+    status: StatusLine,
+    onManualEntry: () -> Unit,
+    modifier: Modifier = Modifier,
+    preview: @Composable () -> Unit = {},
+    torch: @Composable () -> Unit = {},
+) {
+    Box(modifier = modifier.fillMaxSize()) {
+        preview()
         ViewfinderOverlay(geometry)
         Column(
             modifier =
@@ -276,10 +316,7 @@ private fun ScanContent(
                 textAlign = TextAlign.Center,
                 modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
             )
-            val activeCamera = camera
-            if (cameraActive && activeCamera != null && activeCamera.cameraInfo.hasFlashUnit()) {
-                TorchButton(activeCamera)
-            }
+            torch()
             if (status == StatusLine.UNSUPPORTED || status == StatusLine.CAMERA_UNAVAILABLE) {
                 Button(onClick = onManualEntry) { Text(stringResource(R.string.scan_manual_entry)) }
             }
@@ -442,7 +479,7 @@ private fun TorchButton(camera: Camera) {
 
 /** Permission refusée : explication, nouvelle demande ou réglages, retour à la saisie manuelle. */
 @Composable
-private fun PermissionPanel(
+internal fun PermissionPanel(
     permanentlyDenied: Boolean,
     onRequest: () -> Unit,
     onOpenSettings: () -> Unit,

@@ -6,7 +6,7 @@
     <string name="scan_status_searching">Søger efter MRZ…</string>
     <string name="scan_status_seen">MRZ fundet, læser. Hold dokumentet stille.</string>
     <string name="scan_status_unsupported">Dette dokumentnummer er for langt til at blive læst automatisk. Indtast oplysningerne manuelt.</string>
-    <string name="scan_status_success">MRZ læst. Kontrollér felterne, før du starter læsningen.</string>
+    <string name="scan_status_success">MRZ scannet. Kontrollér felterne, før chippen læses.</string>
     <string name="scan_camera_unavailable">Kameraet er ikke tilgængeligt. Du kan stadig indtaste oplysningerne manuelt.</string>
     <string name="scan_torch_on">Tænd lommelygten</string>
     <string name="scan_torch_off">Sluk lommelygten</string>

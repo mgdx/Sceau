@@ -6,7 +6,7 @@
     <string name="scan_status_searching">Etsitään MRZ:aa…</string>
     <string name="scan_status_seen">MRZ löytyi, luetaan. Pidä asiakirja paikallaan.</string>
     <string name="scan_status_unsupported">Tämä asiakirjan numero on liian pitkä luettavaksi automaattisesti. Anna tiedot käsin.</string>
-    <string name="scan_status_success">MRZ luettu. Tarkista kentät ennen lukemisen aloittamista.</string>
+    <string name="scan_status_success">MRZ skannattu. Tarkista kentät ennen sirun lukemista.</string>
     <string name="scan_camera_unavailable">Kamera ei ole käytettävissä. Voit edelleen antaa tiedot käsin.</string>
     <string name="scan_torch_on">Laita taskulamppu päälle</string>
     <string name="scan_torch_off">Sammuta taskulamppu</string>

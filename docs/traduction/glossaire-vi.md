@@ -44,3 +44,10 @@ Vocabulaire des réglages Android en vietnamien et des passeports / cartes d'ide
 | RGPD | GDPR | |
 | Mo | MB | |
 | CAN, MRZ, Master List, etc. | inchangés | termes ICAO jamais traduits |
+| caméra | máy ảnh |  |
+| scanner (la MRZ) | quét (bouton : « Quét MRZ ») |  |
+| lampe torche | đèn pin |  |
+| cadre de visée | khung |  |
+| Autoriser (permission) | Cho phép | Vocabulaire Android |
+| réglages de l’application | cài đặt ứng dụng | Vocabulaire Android |
+| saisie manuelle | nhập thủ công |  |

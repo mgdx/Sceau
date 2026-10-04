@@ -43,3 +43,10 @@ Registre です・ます des réglages système. Espace entre kana/kanji et mots
 | RGPD | 一般データ保護規則（GDPR） | |
 | CAN | CAN（カードアクセス番号） | glose seulement dans l’aide du champ |
 | JJ / MM / AAAA | DD / MM / YYYY | gabarit usuel des formulaires numériques |
+| caméra | カメラ | |
+| scanner (la MRZ) | スキャン | 読み取る reste réservé à la puce |
+| lampe torche | ライト | nom de la tuile des réglages rapides |
+| cadre de visée | 枠 | |
+| Autoriser (permission) | 許可 | Vocabulaire Android |
+| réglages de l’application | アプリの設定 | Vocabulaire Android |
+| saisie manuelle | 手動で入力 | |

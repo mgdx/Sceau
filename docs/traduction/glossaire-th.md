@@ -44,3 +44,10 @@ Vocabulaire des réglages Android en thaï et des passeports thaïlandais. Pas d
 | RGPD | GDPR | |
 | Mo | MB | |
 | CAN, MRZ, Master List, etc. | inchangés | termes ICAO jamais traduits |
+| caméra | กล้อง | |
+| scanner (la MRZ) | สแกน | |
+| lampe torche | ไฟฉาย | |
+| cadre de visée | กรอบ | |
+| Autoriser (permission) | อนุญาต | Vocabulaire Android |
+| réglages de l'application | การตั้งค่าแอป | Vocabulaire Android |
+| saisie manuelle | ป้อนด้วยตนเอง | |

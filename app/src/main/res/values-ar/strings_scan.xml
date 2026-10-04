@@ -6,7 +6,7 @@
     <string name="scan_status_searching">جارٍ البحث عن MRZ…</string>
     <string name="scan_status_seen">تم العثور على MRZ، جارٍ القراءة. أبقِ الوثيقة ثابتة.</string>
     <string name="scan_status_unsupported">رقم الوثيقة هذا أطول من أن يُقرأ تلقائيًا. أدخل البيانات يدويًا.</string>
-    <string name="scan_status_success">تمت قراءة MRZ. تحقّق من الحقول قبل بدء القراءة.</string>
+    <string name="scan_status_success">تم مسح MRZ. تحقّق من الحقول قبل قراءة الشريحة.</string>
     <string name="scan_camera_unavailable">الكاميرا غير متاحة. لا يزال بإمكانك إدخال البيانات يدويًا.</string>
     <string name="scan_torch_on">تشغيل المصباح</string>
     <string name="scan_torch_off">إيقاف المصباح</string>

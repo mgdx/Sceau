@@ -42,3 +42,10 @@
 | RGPD | Загальний регламент ЄС про захист даних (GDPR) | Pas d’acronyme ukrainien usuel |
 | Master List | Master List | Invariable, masculin (« імпортований Master List ») |
 | application | застосунок | Terme officiel Android uk |
+| caméra | камера | Nom Android de la permission |
+| scanner (la MRZ) | сканувати / відскановано | « зчитувати » réservé à la puce |
+| lampe torche | ліхтарик | Réglages rapides Android |
+| cadre de visée | рамка |  |
+| Autoriser (permission) | Дозволити | Vocabulaire Android |
+| réglages de l’application | налаштування застосунку | Vocabulaire Android |
+| saisie manuelle | ввести вручну |  |

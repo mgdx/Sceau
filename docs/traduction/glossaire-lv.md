@@ -41,3 +41,10 @@
 | RGPD | VDAR | Vispārīgā datu aizsardzības regula |
 | Master List | Master List | Terme ICAO non traduit, invariable |
 | CAN, MRZ, PACE, BAC, SOD, DS, CSCA | inchangés | Acronymes ICAO |
+| caméra | kamera | |
+| scanner (la MRZ) | skenēt (MRZ skenēšana) | « nolasīt » reste réservé à la lecture (puce, MRZ lue) |
+| lampe torche | lukturītis | |
+| cadre de visée | rāmis | |
+| Autoriser (permission) | Atļaut | Vocabulaire Android |
+| réglages de l'application | lietotnes iestatījumi | Vocabulaire Android |
+| saisie manuelle | ievadīt manuāli | |

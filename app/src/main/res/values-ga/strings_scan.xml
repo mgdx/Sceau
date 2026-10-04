@@ -6,7 +6,7 @@
     <string name="scan_status_searching">An MRZ á lorg…</string>
     <string name="scan_status_seen">MRZ aimsithe, á léamh. Coinnigh an cháipéis gan corraí.</string>
     <string name="scan_status_unsupported">Tá uimhir na cáipéise seo rófhada le léamh go huathoibríoch. Iontráil na sonraí de láimh.</string>
-    <string name="scan_status_success">MRZ léite. Seiceáil na réimsí sula dtosaíonn tú an léamh.</string>
+    <string name="scan_status_success">MRZ scanta. Seiceáil na réimsí sula léann tú an tsliseog.</string>
     <string name="scan_camera_unavailable">Níl an ceamara ar fáil. Is féidir na sonraí a iontráil de láimh fós.</string>
     <string name="scan_torch_on">Cas air an tóirse</string>
     <string name="scan_torch_off">Cas as an tóirse</string>

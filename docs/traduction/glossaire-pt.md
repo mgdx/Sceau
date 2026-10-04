@@ -45,3 +45,10 @@ Termes clés de l’interface de Sceau. Les acronymes ICAO (CAN, MRZ, PACE, BAC,
 | JJ / MM / AAAA | DD / MM / AAAA | gabarits de saisie |
 | RGPD | RGPD | it/ro : sigle d’usage courant |
 | canal sécurisé | canal seguro |  |
+| caméra | câmara |  |
+| scanner (la MRZ) | digitalizar (bouton : « Digitalizar MRZ ») |  |
+| lampe torche | lanterna |  |
+| cadre de visée | moldura |  |
+| Autoriser (permission) | Permitir | Vocabulaire Android |
+| réglages de l’application | definições da aplicação | Vocabulaire Android |
+| saisie manuelle | introduzir manualmente |  |

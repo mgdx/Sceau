@@ -26,6 +26,6 @@
     <string name="home_nfc_absent">Tento telefon nemá NFC: nemůže číst čipy dokladů totožnosti.</string>
     <string name="home_menu_demo">Simulovat francouzský občanský průkaz (ukázka)</string>
     <string name="home_scan_mrz">Naskenovat MRZ</string>
-    <string name="home_mrz_scanned">MRZ načtena: před přečtením čipu zkontrolujte pole</string>
+    <string name="home_mrz_scanned">MRZ naskenována: před přečtením čipu zkontrolujte pole</string>
     <string name="home_menu_demo_mrz_scan">Simulovat skenování MRZ (ukázka)</string>
 </resources>

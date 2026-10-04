@@ -39,3 +39,10 @@ Termes clés de l’interface de Sceau. Restent tels quels : CAN, MRZ, PACE, BAC
 | nom / prénoms | mbiemri / emri | libellés des documents albanais |
 | RGPD | GDPR | nom complet donné une fois : Rregullorja e Përgjithshme për Mbrojtjen e të Dhënave |
 | JJ / MM / AAAA | DD / MM / VVVV | ditë / muaj / vit |
+| caméra | kamerë |  |
+| scanner (la MRZ) | skano (bouton : « Skano MRZ-në ») |  |
+| lampe torche | elektrik dore |  |
+| cadre de visée | kornizë |  |
+| Autoriser (permission) | Lejo | Vocabulaire Android |
+| réglages de l’application | cilësimet e aplikacionit | Vocabulaire Android |
+| saisie manuelle | fut me dorë |  |

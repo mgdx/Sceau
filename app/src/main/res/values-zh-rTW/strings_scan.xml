@@ -6,7 +6,7 @@
     <string name="scan_status_searching">正在尋找 MRZ…</string>
     <string name="scan_status_seen">已找到 MRZ，正在辨識。請保持證件不動。</string>
     <string name="scan_status_unsupported">這個證件號碼過長，無法自動辨識。請手動輸入資料。</string>
-    <string name="scan_status_success">已辨識 MRZ。請在開始讀取前檢查各欄位。</string>
+    <string name="scan_status_success">已掃描 MRZ。讀取晶片前請核對各欄位。</string>
     <string name="scan_camera_unavailable">無法使用相機。你仍可手動輸入資料。</string>
     <string name="scan_torch_on">開啟手電筒</string>
     <string name="scan_torch_off">關閉手電筒</string>

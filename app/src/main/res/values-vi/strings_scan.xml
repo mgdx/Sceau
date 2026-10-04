@@ -6,7 +6,7 @@
     <string name="scan_status_searching">Đang tìm MRZ…</string>
     <string name="scan_status_seen">Đã thấy MRZ, đang đọc. Giữ yên giấy tờ.</string>
     <string name="scan_status_unsupported">Số giấy tờ này quá dài để đọc tự động. Hãy nhập dữ liệu theo cách thủ công.</string>
-    <string name="scan_status_success">Đã đọc MRZ. Hãy kiểm tra các trường trước khi bắt đầu đọc.</string>
+    <string name="scan_status_success">Đã quét MRZ. Hãy kiểm tra các trường trước khi đọc chip.</string>
     <string name="scan_camera_unavailable">Không dùng được máy ảnh. Bạn vẫn có thể nhập dữ liệu theo cách thủ công.</string>
     <string name="scan_torch_on">Bật đèn pin</string>
     <string name="scan_torch_off">Tắt đèn pin</string>

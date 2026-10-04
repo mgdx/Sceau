@@ -39,3 +39,10 @@ Termes clés de l’interface de Sceau. Restent tels quels : CAN, MRZ, PACE, BAC
 | nom / prénoms | sukunimi / etunimet | libellés du passeport finlandais |
 | RGPD | tietosuoja-asetus (GDPR) |  |
 | JJ / MM / AAAA | PP / KK / VVVV |  |
+| caméra | kamera |  |
+| scanner (la MRZ) | skannata (MRZ:n skannaus) |  |
+| lampe torche | taskulamppu |  |
+| cadre de visée | kehys |  |
+| Autoriser (permission) | Salli | Vocabulaire Android |
+| réglages de l'application | sovelluksen asetukset | Vocabulaire Android |
+| saisie manuelle | antaa käsin |  |

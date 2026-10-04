@@ -37,3 +37,10 @@
 | RGPD | GDPR (Општата регулатива за заштита на податоците) | pas d’acronyme local établi |
 | Master List | Master List | invariable, traité au féminin (листа) |
 | JJ / MM / AAAA | ДД / ММ / ГГГГ | |
+| caméra | камера | Nom Android de la permission |
+| scanner (la MRZ) | скенирај / скенирање | MRZ au féminin (MRZ е скенирана) |
+| lampe torche | фенерче | Réglages rapides Android |
+| cadre de visée | рамка |  |
+| Autoriser (permission) | Дозволи | Vocabulaire Android |
+| réglages de l’application | поставки на апликацијата | Vocabulaire Android |
+| saisie manuelle | внеси рачно |  |

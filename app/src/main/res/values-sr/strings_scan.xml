@@ -6,7 +6,7 @@
     <string name="scan_status_searching">Тражење MRZ-а…</string>
     <string name="scan_status_seen">MRZ је пронађен, читање је у току. Држите документ мирно.</string>
     <string name="scan_status_unsupported">Овај број документа је предугачак за аутоматско читање. Унесите податке ручно.</string>
-    <string name="scan_status_success">MRZ је прочитан. Проверите поља пре покретања читања.</string>
+    <string name="scan_status_success">MRZ је скениран. Проверите поља пре читања чипа.</string>
     <string name="scan_camera_unavailable">Камера није доступна. Податке и даље можете да унесете ручно.</string>
     <string name="scan_torch_on">Укључи батеријску лампу</string>
     <string name="scan_torch_off">Искључи батеријску лампу</string>

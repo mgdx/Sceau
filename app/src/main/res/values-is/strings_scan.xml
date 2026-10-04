@@ -6,7 +6,7 @@
     <string name="scan_status_searching">Leitar að MRZ…</string>
     <string name="scan_status_seen">MRZ fundið, les. Haltu skilríkinu kyrru.</string>
     <string name="scan_status_unsupported">Þetta skilríkisnúmer er of langt til að lesa það sjálfkrafa. Sláðu gögnin inn handvirkt.</string>
-    <string name="scan_status_success">MRZ lesið. Athugaðu reitina áður en þú hefur lesturinn.</string>
+    <string name="scan_status_success">MRZ skannað. Athugaðu reitina áður en kubburinn er lesinn.</string>
     <string name="scan_camera_unavailable">Myndavél ekki tiltæk. Áfram er hægt að slá gögnin inn handvirkt.</string>
     <string name="scan_torch_on">Kveikja á vasaljósi</string>
     <string name="scan_torch_off">Slökkva á vasaljósi</string>

@@ -40,3 +40,10 @@ Référence de vocabulaire pour `app/src/main/res/values-tr/`.
 | JJ / MM / AAAA | GG / AA / YYYY | Gün / Ay / Yıl |
 | RGPD | Genel Veri Koruma Tüzüğü (GDPR) |  |
 | Master List, CAN, MRZ, DS, CSCA, SOD, DGn | inchangés | suffixes après apostrophe typographique (Master List’ler, DG12’den) |
+| caméra | kamera |  |
+| scanner (la MRZ) | taramak (bouton : « MRZ’yi tara ») |  |
+| lampe torche | el feneri |  |
+| cadre de visée | çerçeve |  |
+| Autoriser (permission) | İzin ver | Vocabulaire Android |
+| réglages de l’application | uygulama ayarları | Vocabulaire Android |
+| saisie manuelle | elle girmek |  |

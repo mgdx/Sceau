@@ -6,7 +6,7 @@
     <string name="scan_status_searching">Looking for the MRZ…</string>
     <string name="scan_status_seen">MRZ found, reading. Keep the document still.</string>
     <string name="scan_status_unsupported">This document number is too long to be read automatically. Enter the data manually.</string>
-    <string name="scan_status_success">MRZ read. Check the fields before you start reading.</string>
+    <string name="scan_status_success">MRZ scanned. Check the fields before reading the chip.</string>
     <string name="scan_camera_unavailable">Camera unavailable. You can still enter the data manually.</string>
     <string name="scan_torch_on">Turn on flashlight</string>
     <string name="scan_torch_off">Turn off flashlight</string>

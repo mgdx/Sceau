@@ -6,7 +6,7 @@
     <string name="scan_status_searching">Търсене на MRZ…</string>
     <string name="scan_status_seen">MRZ е открита, чете се. Дръжте документа неподвижно.</string>
     <string name="scan_status_unsupported">Този номер на документ е твърде дълъг за автоматично четене. Въведете данните ръчно.</string>
-    <string name="scan_status_success">MRZ е прочетена. Проверете полетата, преди да започнете четенето.</string>
+    <string name="scan_status_success">MRZ е сканирана. Проверете полетата, преди да прочетете чипа.</string>
     <string name="scan_camera_unavailable">Камерата не е налична. Все още можете да въведете данните ръчно.</string>
     <string name="scan_torch_on">Включване на фенерчето</string>
     <string name="scan_torch_off">Изключване на фенерчето</string>

@@ -41,3 +41,10 @@
 | JJ / MM / AAAA | PP / KK / AAAA | päev, kuu, aasta |
 | RGPD | isikuandmete kaitse üldmäärus (IKÜM) | |
 | Master List | Master List | Jamais traduit ; se décline avec suffixe (Master Listi, Master Listid) |
+| caméra | kaamera | |
+| scanner (la MRZ) | skannima (MRZ skannimine) | |
+| lampe torche | taskulamp | |
+| cadre de visée | raam | |
+| Autoriser (permission) | Luba | Vocabulaire Android |
+| réglages de l'application | rakenduse seaded | Vocabulaire Android |
+| saisie manuelle | käsitsi sisestamine | |

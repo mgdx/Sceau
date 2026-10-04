@@ -6,7 +6,7 @@
     <string name="scan_status_searching">MRZ otsimine…</string>
     <string name="scan_status_seen">MRZ leitud, lugemine käib. Hoidke dokumenti paigal.</string>
     <string name="scan_status_unsupported">See dokumendinumber on automaatseks lugemiseks liiga pikk. Sisestage andmed käsitsi.</string>
-    <string name="scan_status_success">MRZ loetud. Enne lugemise alustamist kontrollige välju.</string>
+    <string name="scan_status_success">MRZ skannitud. Enne kiibi lugemist kontrollige välju.</string>
     <string name="scan_camera_unavailable">Kaamera pole saadaval. Andmeid saab endiselt käsitsi sisestada.</string>
     <string name="scan_torch_on">Lülita taskulamp sisse</string>
     <string name="scan_torch_off">Lülita taskulamp välja</string>

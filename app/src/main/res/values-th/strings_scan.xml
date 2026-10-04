@@ -6,7 +6,7 @@
     <string name="scan_status_searching">กำลังค้นหา MRZ…</string>
     <string name="scan_status_seen">พบ MRZ แล้ว กำลังอ่าน ถือเอกสารให้นิ่ง</string>
     <string name="scan_status_unsupported">เลขที่เอกสารนี้ยาวเกินกว่าจะอ่านโดยอัตโนมัติได้ ป้อนข้อมูลด้วยตนเอง</string>
-    <string name="scan_status_success">อ่าน MRZ แล้ว ตรวจสอบช่องต่างๆ ก่อนเริ่มอ่าน</string>
+    <string name="scan_status_success">สแกน MRZ แล้ว ตรวจสอบช่องข้อมูลก่อนอ่านชิป</string>
     <string name="scan_camera_unavailable">ใช้กล้องไม่ได้ คุณยังป้อนข้อมูลด้วยตนเองได้</string>
     <string name="scan_torch_on">เปิดไฟฉาย</string>
     <string name="scan_torch_off">ปิดไฟฉาย</string>
