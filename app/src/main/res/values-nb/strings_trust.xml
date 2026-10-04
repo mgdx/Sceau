@@ -78,6 +78,19 @@
         <item quantity="other">Import avvist: maks. %1$d importerte sertifikater. Slett ett for å legge til et annet.</item>
     </plurals>
 
+    <!-- Doublons à l'import (D33) -->
+    <string name="trust_import_duplicate_certificate">Dette sertifikatet er allerede importert.</string>
+    <string name="trust_import_duplicate_known_ants">Dette sertifikatet finnes allerede i tillitslageret (kilde: ANTS). Det er ingenting å importere.</string>
+    <string name="trust_import_duplicate_known_national">Dette sertifikatet finnes allerede i tillitslageret (kilde: nasjonal publisering). Det er ingenting å importere.</string>
+    <string name="trust_import_duplicate_known_embedded_master_list">Dette sertifikatet finnes allerede i tillitslageret (kilde: innebygd Master List). Det er ingenting å importere.</string>
+    <string name="trust_import_duplicate_known_imported_master_list">Dette sertifikatet finnes allerede i tillitslageret (kilde: importert Master List). Det er ingenting å importere.</string>
+    <string name="trust_import_duplicate_master_list">Denne Master List er allerede importert.</string>
+    <string name="trust_import_duplicate_embedded_master_list">Denne Master List er identisk med den som er innebygd i appen. Det er ingenting å importere.</string>
+    <plurals name="trust_import_new_certificates">
+        <item quantity="one">%1$d nytt sertifikat av %2$d</item>
+        <item quantity="other">%1$d nye sertifikater av %2$d</item>
+    </plurals>
+
     <!-- Éléments importés (D33) -->
     <string name="trust_imported_title">Importerte elementer</string>
     <string name="trust_imported_master_list">Importert Master List</string>

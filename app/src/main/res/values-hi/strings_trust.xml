@@ -78,6 +78,19 @@
         <item quantity="other">इंपोर्ट अस्वीकार किया गया: ज़्यादा से ज़्यादा %1$d प्रमाणपत्र इंपोर्ट किए जा सकते हैं। दूसरा जोड़ने के लिए कोई एक मिटाएं।</item>
     </plurals>
 
+    <!-- Doublons à l'import (D33) -->
+    <string name="trust_import_duplicate_certificate">यह प्रमाणपत्र पहले ही इंपोर्ट किया जा चुका है।</string>
+    <string name="trust_import_duplicate_known_ants">यह प्रमाणपत्र पहले से ट्रस्ट स्टोर में है (स्रोत: ANTS)। इंपोर्ट करने के लिए कुछ नहीं है।</string>
+    <string name="trust_import_duplicate_known_national">यह प्रमाणपत्र पहले से ट्रस्ट स्टोर में है (स्रोत: राष्ट्रीय प्रकाशन)। इंपोर्ट करने के लिए कुछ नहीं है।</string>
+    <string name="trust_import_duplicate_known_embedded_master_list">यह प्रमाणपत्र पहले से ट्रस्ट स्टोर में है (स्रोत: ऐप में शामिल Master List)। इंपोर्ट करने के लिए कुछ नहीं है।</string>
+    <string name="trust_import_duplicate_known_imported_master_list">यह प्रमाणपत्र पहले से ट्रस्ट स्टोर में है (स्रोत: इंपोर्ट की गई Master List)। इंपोर्ट करने के लिए कुछ नहीं है।</string>
+    <string name="trust_import_duplicate_master_list">यह Master List पहले ही इंपोर्ट की जा चुकी है।</string>
+    <string name="trust_import_duplicate_embedded_master_list">यह Master List ऐप में शामिल Master List जैसी ही है। इंपोर्ट करने के लिए कुछ नहीं है।</string>
+    <plurals name="trust_import_new_certificates">
+        <item quantity="one">%2$d में से %1$d नए प्रमाणपत्र</item>
+        <item quantity="other">%2$d में से %1$d नए प्रमाणपत्र</item>
+    </plurals>
+
     <!-- Éléments importés (D33) -->
     <string name="trust_imported_title">इंपोर्ट किए गए आइटम</string>
     <string name="trust_imported_master_list">इंपोर्ट की गई Master List</string>

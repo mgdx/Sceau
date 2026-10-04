@@ -73,6 +73,18 @@
         <item quantity="other">Import ditolak: maksimum %1$d sijil boleh diimport. Padamkan satu sijil untuk menambah sijil lain.</item>
     </plurals>
 
+    <!-- Doublons à l'import (D33) -->
+    <string name="trust_import_duplicate_certificate">Sijil ini sudah diimport.</string>
+    <string name="trust_import_duplicate_known_ants">Sijil ini sudah ada dalam stor sijil dipercayai (sumber: ANTS). Tiada apa-apa untuk diimport.</string>
+    <string name="trust_import_duplicate_known_national">Sijil ini sudah ada dalam stor sijil dipercayai (sumber: terbitan kebangsaan). Tiada apa-apa untuk diimport.</string>
+    <string name="trust_import_duplicate_known_embedded_master_list">Sijil ini sudah ada dalam stor sijil dipercayai (sumber: Master List terbina dalam). Tiada apa-apa untuk diimport.</string>
+    <string name="trust_import_duplicate_known_imported_master_list">Sijil ini sudah ada dalam stor sijil dipercayai (sumber: Master List diimport). Tiada apa-apa untuk diimport.</string>
+    <string name="trust_import_duplicate_master_list">Master List ini sudah diimport.</string>
+    <string name="trust_import_duplicate_embedded_master_list">Master List ini sama dengan Master List terbina dalam apl. Tiada apa-apa untuk diimport.</string>
+    <plurals name="trust_import_new_certificates">
+        <item quantity="other">%1$d sijil baharu daripada %2$d</item>
+    </plurals>
+
     <!-- Éléments importés (D33) -->
     <string name="trust_imported_title">Item yang diimport</string>
     <string name="trust_imported_master_list">Master List diimport</string>

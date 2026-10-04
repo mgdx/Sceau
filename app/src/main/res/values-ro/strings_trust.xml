@@ -83,6 +83,20 @@
         <item quantity="other">Import refuzat: se pot importa cel mult %1$d de certificate. Ștergeți unul pentru a adăuga altul.</item>
     </plurals>
 
+    <!-- Doublons à l'import (D33) -->
+    <string name="trust_import_duplicate_certificate">Acest certificat a fost deja importat.</string>
+    <string name="trust_import_duplicate_known_ants">Acest certificat se află deja în depozitul de încredere (sursă: ANTS). Nu există nimic de importat.</string>
+    <string name="trust_import_duplicate_known_national">Acest certificat se află deja în depozitul de încredere (sursă: publicare națională). Nu există nimic de importat.</string>
+    <string name="trust_import_duplicate_known_embedded_master_list">Acest certificat se află deja în depozitul de încredere (sursă: Master List integrată). Nu există nimic de importat.</string>
+    <string name="trust_import_duplicate_known_imported_master_list">Acest certificat se află deja în depozitul de încredere (sursă: Master List importată). Nu există nimic de importat.</string>
+    <string name="trust_import_duplicate_master_list">Această Master List a fost deja importată.</string>
+    <string name="trust_import_duplicate_embedded_master_list">Această Master List este identică cu cea integrată în aplicație. Nu există nimic de importat.</string>
+    <plurals name="trust_import_new_certificates">
+        <item quantity="one">%1$d certificat nou din %2$d</item>
+        <item quantity="few">%1$d certificate noi din %2$d</item>
+        <item quantity="other">%1$d de certificate noi din %2$d</item>
+    </plurals>
+
     <!-- Éléments importés (D33) -->
     <string name="trust_imported_title">Elemente importate</string>
     <string name="trust_imported_master_list">Master List importată</string>

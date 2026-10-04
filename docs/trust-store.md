@@ -212,6 +212,22 @@ nationale, Master List embarquée ou importée) garde sa source d'origine. Ils s
 Limites (`ImportLimits`, D22 et D33) : 100 certificats importés au plus, 64 Kio par fichier ; ils
 ne comptent pas dans les limites des Master Lists (10 listes, 40 Mo cumulés).
 
+### Doublons à l'import (D33)
+
+Un fichier qui n'apporterait rien est refusé dès l'aperçu, sans dialogue de confirmation et sans
+rien écrire (`DuplicateImportException`, logique dans `trust/ImportDuplicates`) :
+
+| Fichier choisi | Détection | Message |
+|---|---|---|
+| Certificat déjà importé seul, en DER ou en PEM | SHA-256 du DER = nom d'un `<empreinte>.der` importé | « Ce certificat est déjà importé. » |
+| Certificat déjà dans le magasin | SHA-256 du DER parmi `TrustStore.anchors` | « Ce certificat figure déjà dans le magasin de confiance (source : …) : il n'y a rien à importer. », avec la source ANTS, publication nationale, Master List embarquée ou Master List importée |
+| Master List déjà importée | SHA-256 du fichier = nom d'un `<empreinte>.ml` importé | « Cette Master List est déjà importée. » |
+| Master List identique à la Master List embarquée | SHA-256 du fichier = celui de la ressource `.ml` de `:core` | « Cette Master List est identique à celle embarquée dans l'application : il n'y a rien à importer. » |
+
+Une Master List différente reste importable même si tous ses certificats sont déjà connus (elle
+peut être plus récente) ; le dialogue de confirmation indique combien de ses certificats sont
+absents du magasin actuel, par exemple « 12 nouveaux certificats sur 590 ».
+
 ### Éléments importés et suppression
 
 L'écran « Magasin de confiance » liste chaque élément importé : Master List (signataire, date de

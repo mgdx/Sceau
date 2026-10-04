@@ -93,6 +93,22 @@
         <item quantity="other">Diúltaíodh don iompórtáil: %1$d deimhniú iompórtáilte ar a mhéad. Scrios ceann acu chun ceann eile a chur leis.</item>
     </plurals>
 
+    <!-- Doublons à l'import (D33) -->
+    <string name="trust_import_duplicate_certificate">Tá an deimhniú seo iompórtáilte cheana.</string>
+    <string name="trust_import_duplicate_known_ants">Tá an deimhniú seo sa stór iontaobhais cheana (foinse: ANTS). Níl aon rud le hiompórtáil.</string>
+    <string name="trust_import_duplicate_known_national">Tá an deimhniú seo sa stór iontaobhais cheana (foinse: foilseachán náisiúnta). Níl aon rud le hiompórtáil.</string>
+    <string name="trust_import_duplicate_known_embedded_master_list">Tá an deimhniú seo sa stór iontaobhais cheana (foinse: Master List ionsuite). Níl aon rud le hiompórtáil.</string>
+    <string name="trust_import_duplicate_known_imported_master_list">Tá an deimhniú seo sa stór iontaobhais cheana (foinse: Master List iompórtáilte). Níl aon rud le hiompórtáil.</string>
+    <string name="trust_import_duplicate_master_list">Tá an Master List seo iompórtáilte cheana.</string>
+    <string name="trust_import_duplicate_embedded_master_list">Is ionann an Master List seo agus an ceann atá ionsuite san aip. Níl aon rud le hiompórtáil.</string>
+    <plurals name="trust_import_new_certificates">
+        <item quantity="one">Deimhnithe nua: %1$d as %2$d</item>
+        <item quantity="two">Deimhnithe nua: %1$d as %2$d</item>
+        <item quantity="few">Deimhnithe nua: %1$d as %2$d</item>
+        <item quantity="many">Deimhnithe nua: %1$d as %2$d</item>
+        <item quantity="other">Deimhnithe nua: %1$d as %2$d</item>
+    </plurals>
+
     <!-- Éléments importés (D33) -->
     <string name="trust_imported_title">Míreanna iompórtáilte</string>
     <string name="trust_imported_master_list">Master List iompórtáilte</string>

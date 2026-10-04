@@ -73,6 +73,18 @@
         <item quantity="other">匯入遭拒：最多只能匯入 %1$d 個憑證。請先刪除一個，再新增其他憑證。</item>
     </plurals>
 
+    <!-- Doublons à l'import (D33) -->
+    <string name="trust_import_duplicate_certificate">此憑證已匯入。</string>
+    <string name="trust_import_duplicate_known_ants">此憑證已在信任存放區中（來源：ANTS），無需匯入。</string>
+    <string name="trust_import_duplicate_known_national">此憑證已在信任存放區中（來源：本國發布），無需匯入。</string>
+    <string name="trust_import_duplicate_known_embedded_master_list">此憑證已在信任存放區中（來源：內建 Master List），無需匯入。</string>
+    <string name="trust_import_duplicate_known_imported_master_list">此憑證已在信任存放區中（來源：已匯入的 Master List），無需匯入。</string>
+    <string name="trust_import_duplicate_master_list">此 Master List 已匯入。</string>
+    <string name="trust_import_duplicate_embedded_master_list">此 Master List 與應用程式內建的相同，無需匯入。</string>
+    <plurals name="trust_import_new_certificates">
+        <item quantity="other">新憑證 %1$d 個（共 %2$d 個）</item>
+    </plurals>
+
     <!-- Éléments importés (D33) -->
     <string name="trust_imported_title">已匯入的項目</string>
     <string name="trust_imported_master_list">已匯入的 Master List</string>

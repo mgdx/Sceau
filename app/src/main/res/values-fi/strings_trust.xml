@@ -78,6 +78,19 @@
         <item quantity="other">Tuonti hylättiin: enintään %1$d tuotua varmennetta. Poista yksi, jos haluat lisätä uuden.</item>
     </plurals>
 
+    <!-- Doublons à l'import (D33) -->
+    <string name="trust_import_duplicate_certificate">Tämä varmenne on jo tuotu.</string>
+    <string name="trust_import_duplicate_known_ants">Tämä varmenne on jo luotetuissa varmenteissa (lähde: ANTS). Tuotavaa ei ole.</string>
+    <string name="trust_import_duplicate_known_national">Tämä varmenne on jo luotetuissa varmenteissa (lähde: kansallinen julkaisu). Tuotavaa ei ole.</string>
+    <string name="trust_import_duplicate_known_embedded_master_list">Tämä varmenne on jo luotetuissa varmenteissa (lähde: sovellukseen sisältyvä Master List). Tuotavaa ei ole.</string>
+    <string name="trust_import_duplicate_known_imported_master_list">Tämä varmenne on jo luotetuissa varmenteissa (lähde: tuotu Master List). Tuotavaa ei ole.</string>
+    <string name="trust_import_duplicate_master_list">Tämä Master List on jo tuotu.</string>
+    <string name="trust_import_duplicate_embedded_master_list">Tämä Master List on sama kuin sovellukseen sisältyvä. Tuotavaa ei ole.</string>
+    <plurals name="trust_import_new_certificates">
+        <item quantity="one">%1$d uusi varmenne (yhteensä %2$d)</item>
+        <item quantity="other">%1$d uutta varmennetta (yhteensä %2$d)</item>
+    </plurals>
+
     <!-- Éléments importés (D33) -->
     <string name="trust_imported_title">Tuodut kohteet</string>
     <string name="trust_imported_master_list">Tuotu Master List</string>

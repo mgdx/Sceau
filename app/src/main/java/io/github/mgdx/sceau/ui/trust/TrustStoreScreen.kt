@@ -71,6 +71,8 @@ import io.github.mgdx.sceau.core.trust.InvalidMasterListException
 import io.github.mgdx.sceau.core.trust.MasterListInfo
 import io.github.mgdx.sceau.core.trust.TrustSource
 import io.github.mgdx.sceau.trust.CertificateSummary
+import io.github.mgdx.sceau.trust.Duplicate
+import io.github.mgdx.sceau.trust.DuplicateImportException
 import io.github.mgdx.sceau.trust.ImportDecision
 import io.github.mgdx.sceau.trust.ImportLimitException
 import io.github.mgdx.sceau.trust.ImportLimits
@@ -185,6 +187,8 @@ fun TrustStoreScreen(
                     pending = repository.previewImport(bytes)
                 } catch (e: CancellationException) {
                     throw e
+                } catch (e: DuplicateImportException) {
+                    showMessage(duplicateMessage(resources, e.duplicate))
                 } catch (e: ImportLimitException) {
                     showMessage(importLimitMessage(resources, e.decision))
                 } catch (_: FileTooLargeException) {
@@ -271,6 +275,8 @@ fun TrustStoreScreen(
                     reloadKey++
                 } catch (e: CancellationException) {
                     throw e
+                } catch (e: DuplicateImportException) {
+                    showMessage(duplicateMessage(resources, e.duplicate))
                 } catch (e: ImportLimitException) {
                     showMessage(importLimitMessage(resources, e.decision))
                 } catch (e: InvalidMasterListException) {
@@ -291,8 +297,16 @@ fun TrustStoreScreen(
             }
         }
         when (request) {
-            is ImportPreview.MasterList -> ImportConfirmDialog(request.info, onConfirm, onDismiss = { pending = null })
-            is ImportPreview.Certificate -> CertificateConfirmDialog(request.summary, onConfirm, onDismiss = { pending = null })
+            is ImportPreview.MasterList -> {
+                ImportConfirmDialog(request.info, request.newCertificates, onConfirm, onDismiss = {
+                    pending =
+                        null
+                })
+            }
+
+            is ImportPreview.Certificate -> {
+                CertificateConfirmDialog(request.summary, onConfirm, onDismiss = { pending = null })
+            }
         }
     }
 
@@ -391,6 +405,37 @@ private fun importLimitMessage(
             )
         }
     }
+
+/** Message d'un fichier déjà présent dans le magasin, refusé dès l'aperçu (D33). */
+private fun duplicateMessage(
+    resources: Resources,
+    duplicate: Duplicate,
+): String =
+    resources.getString(
+        when (duplicate) {
+            Duplicate.ImportedCertificate -> {
+                R.string.trust_import_duplicate_certificate
+            }
+
+            Duplicate.ImportedMasterList -> {
+                R.string.trust_import_duplicate_master_list
+            }
+
+            Duplicate.EmbeddedMasterList -> {
+                R.string.trust_import_duplicate_embedded_master_list
+            }
+
+            is Duplicate.KnownCertificate -> {
+                when (duplicate.source) {
+                    TrustSource.ANTS -> R.string.trust_import_duplicate_known_ants
+                    TrustSource.NATIONAL -> R.string.trust_import_duplicate_known_national
+                    TrustSource.EMBEDDED_MASTER_LIST -> R.string.trust_import_duplicate_known_embedded_master_list
+                    TrustSource.IMPORTED_MASTER_LIST -> R.string.trust_import_duplicate_known_imported_master_list
+                    TrustSource.IMPORTED_CERTIFICATE -> R.string.trust_import_duplicate_certificate
+                }
+            }
+        },
+    )
 
 private const val BYTES_PER_MB = 1024L * 1024L
 private const val BYTES_PER_KB = 1024
@@ -648,6 +693,7 @@ private fun Badge(text: String) {
 @Composable
 private fun ImportConfirmDialog(
     info: MasterListInfo,
+    newCertificates: Int,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
 ) {
@@ -682,7 +728,16 @@ private fun ImportConfirmDialog(
                     )
                 }
                 DialogField(stringResource(R.string.trust_import_certificate_count)) {
-                    Text(info.certificateCount.toString(), style = MaterialTheme.typography.bodyMedium)
+                    Text(
+                        text =
+                            pluralStringResource(
+                                R.plurals.trust_import_new_certificates,
+                                newCertificates,
+                                newCertificates,
+                                info.certificateCount,
+                            ),
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
                 }
             }
         },

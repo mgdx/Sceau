@@ -83,6 +83,20 @@
         <item quantity="other">Importación rechazada: solo se pueden importar %1$d certificados como máximo. Elimina uno para añadir otro.</item>
     </plurals>
 
+    <!-- Doublons à l'import (D33) -->
+    <string name="trust_import_duplicate_certificate">Este certificado ya está importado.</string>
+    <string name="trust_import_duplicate_known_ants">Este certificado ya figura en el almacén de confianza (fuente: ANTS): no hay nada que importar.</string>
+    <string name="trust_import_duplicate_known_national">Este certificado ya figura en el almacén de confianza (fuente: publicación nacional): no hay nada que importar.</string>
+    <string name="trust_import_duplicate_known_embedded_master_list">Este certificado ya figura en el almacén de confianza (fuente: Master List integrada): no hay nada que importar.</string>
+    <string name="trust_import_duplicate_known_imported_master_list">Este certificado ya figura en el almacén de confianza (fuente: Master List importada): no hay nada que importar.</string>
+    <string name="trust_import_duplicate_master_list">Esta Master List ya está importada.</string>
+    <string name="trust_import_duplicate_embedded_master_list">Esta Master List es idéntica a la integrada en la aplicación: no hay nada que importar.</string>
+    <plurals name="trust_import_new_certificates">
+        <item quantity="one">%1$d certificado nuevo de %2$d</item>
+        <item quantity="many">%1$d certificados nuevos de %2$d</item>
+        <item quantity="other">%1$d certificados nuevos de %2$d</item>
+    </plurals>
+
     <!-- Éléments importés (D33) -->
     <string name="trust_imported_title">Elementos importados</string>
     <string name="trust_imported_master_list">Master List importada</string>

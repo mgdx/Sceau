@@ -73,6 +73,18 @@
         <item quantity="other">가져오기가 거부되었습니다. 인증서는 최대 %1$d개까지 가져올 수 있습니다. 다른 인증서를 추가하려면 하나를 삭제하세요.</item>
     </plurals>
 
+    <!-- Doublons à l'import (D33) -->
+    <string name="trust_import_duplicate_certificate">이 인증서는 이미 가져왔습니다.</string>
+    <string name="trust_import_duplicate_known_ants">이 인증서는 이미 신뢰 저장소에 있습니다(출처: ANTS). 가져올 항목이 없습니다.</string>
+    <string name="trust_import_duplicate_known_national">이 인증서는 이미 신뢰 저장소에 있습니다(출처: 국가 공개). 가져올 항목이 없습니다.</string>
+    <string name="trust_import_duplicate_known_embedded_master_list">이 인증서는 이미 신뢰 저장소에 있습니다(출처: 내장 Master List). 가져올 항목이 없습니다.</string>
+    <string name="trust_import_duplicate_known_imported_master_list">이 인증서는 이미 신뢰 저장소에 있습니다(출처: 가져온 Master List). 가져올 항목이 없습니다.</string>
+    <string name="trust_import_duplicate_master_list">이 Master List는 이미 가져왔습니다.</string>
+    <string name="trust_import_duplicate_embedded_master_list">이 Master List는 앱에 내장된 것과 같습니다. 가져올 항목이 없습니다.</string>
+    <plurals name="trust_import_new_certificates">
+        <item quantity="other">전체 %2$d개 중 새 인증서 %1$d개</item>
+    </plurals>
+
     <!-- Éléments importés (D33) -->
     <string name="trust_imported_title">가져온 항목</string>
     <string name="trust_imported_master_list">가져온 Master List</string>

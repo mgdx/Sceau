@@ -88,6 +88,21 @@
         <item quantity="other">Import odmietnutý: najvyšší počet importovaných certifikátov je %1$d. Ak chcete pridať ďalší, jeden z nich odstráňte.</item>
     </plurals>
 
+    <!-- Doublons à l'import (D33) -->
+    <string name="trust_import_duplicate_certificate">Tento certifikát už bol importovaný.</string>
+    <string name="trust_import_duplicate_known_ants">Tento certifikát už je medzi dôveryhodnými certifikátmi (zdroj: ANTS). Nie je čo importovať.</string>
+    <string name="trust_import_duplicate_known_national">Tento certifikát už je medzi dôveryhodnými certifikátmi (zdroj: národné zverejnenie). Nie je čo importovať.</string>
+    <string name="trust_import_duplicate_known_embedded_master_list">Tento certifikát už je medzi dôveryhodnými certifikátmi (zdroj: vstavaný zoznam Master List). Nie je čo importovať.</string>
+    <string name="trust_import_duplicate_known_imported_master_list">Tento certifikát už je medzi dôveryhodnými certifikátmi (zdroj: importovaný zoznam Master List). Nie je čo importovať.</string>
+    <string name="trust_import_duplicate_master_list">Tento zoznam Master List už bol importovaný.</string>
+    <string name="trust_import_duplicate_embedded_master_list">Tento zoznam Master List je zhodný so zoznamom vstavaným v aplikácii. Nie je čo importovať.</string>
+    <plurals name="trust_import_new_certificates">
+        <item quantity="one">%1$d nový certifikát z %2$d</item>
+        <item quantity="few">%1$d nové certifikáty z %2$d</item>
+        <item quantity="many">%1$d nového certifikátu z %2$d</item>
+        <item quantity="other">%1$d nových certifikátov z %2$d</item>
+    </plurals>
+
     <!-- Éléments importés (D33) -->
     <string name="trust_imported_title">Importované položky</string>
     <string name="trust_imported_master_list">Importovaný zoznam Master List</string>

@@ -88,6 +88,21 @@
         <item quantity="other">Імпорт відхилено: можна імпортувати щонайбільше %1$d сертифіката. Видаліть один, щоб додати інший.</item>
     </plurals>
 
+    <!-- Doublons à l'import (D33) -->
+    <string name="trust_import_duplicate_certificate">Цей сертифікат уже імпортовано.</string>
+    <string name="trust_import_duplicate_known_ants">Цей сертифікат уже є у сховищі сертифікатів (джерело: ANTS). Немає чого імпортувати.</string>
+    <string name="trust_import_duplicate_known_national">Цей сертифікат уже є у сховищі сертифікатів (джерело: національна публікація). Немає чого імпортувати.</string>
+    <string name="trust_import_duplicate_known_embedded_master_list">Цей сертифікат уже є у сховищі сертифікатів (джерело: вбудований Master List). Немає чого імпортувати.</string>
+    <string name="trust_import_duplicate_known_imported_master_list">Цей сертифікат уже є у сховищі сертифікатів (джерело: імпортований Master List). Немає чого імпортувати.</string>
+    <string name="trust_import_duplicate_master_list">Цей Master List уже імпортовано.</string>
+    <string name="trust_import_duplicate_embedded_master_list">Цей Master List збігається з вбудованим у застосунок. Немає чого імпортувати.</string>
+    <plurals name="trust_import_new_certificates">
+        <item quantity="one">%1$d новий сертифікат із %2$d</item>
+        <item quantity="few">%1$d нові сертифікати із %2$d</item>
+        <item quantity="many">%1$d нових сертифікатів із %2$d</item>
+        <item quantity="other">%1$d нового сертифіката із %2$d</item>
+    </plurals>
+
     <!-- Éléments importés (D33) -->
     <string name="trust_imported_title">Імпортовані елементи</string>
     <string name="trust_imported_master_list">Імпортований Master List</string>

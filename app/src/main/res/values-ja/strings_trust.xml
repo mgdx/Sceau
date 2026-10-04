@@ -73,6 +73,18 @@
         <item quantity="other">インポートできません。インポートできる証明書は %1$d 件までです。別の証明書を追加するには、いずれかを削除してください。</item>
     </plurals>
 
+    <!-- Doublons à l'import (D33) -->
+    <string name="trust_import_duplicate_certificate">この証明書はすでにインポートされています。</string>
+    <string name="trust_import_duplicate_known_ants">この証明書はすでに信頼ストアにあります（ソース: ANTS）。インポートするものはありません。</string>
+    <string name="trust_import_duplicate_known_national">この証明書はすでに信頼ストアにあります（ソース: 各国の公開）。インポートするものはありません。</string>
+    <string name="trust_import_duplicate_known_embedded_master_list">この証明書はすでに信頼ストアにあります（ソース: 内蔵の Master List）。インポートするものはありません。</string>
+    <string name="trust_import_duplicate_known_imported_master_list">この証明書はすでに信頼ストアにあります（ソース: インポートした Master List）。インポートするものはありません。</string>
+    <string name="trust_import_duplicate_master_list">この Master List はすでにインポートされています。</string>
+    <string name="trust_import_duplicate_embedded_master_list">この Master List はアプリに内蔵されているものと同じです。インポートするものはありません。</string>
+    <plurals name="trust_import_new_certificates">
+        <item quantity="other">新しい証明書 %1$d 件（全 %2$d 件中）</item>
+    </plurals>
+
     <!-- Éléments importés (D33) -->
     <string name="trust_imported_title">インポートした項目</string>
     <string name="trust_imported_master_list">インポートした Master List</string>

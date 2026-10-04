@@ -73,6 +73,18 @@
         <item quantity="other">导入被拒绝：最多只能导入 %1$d 个证书。请先删除一个，再添加新的证书。</item>
     </plurals>
 
+    <!-- Doublons à l'import (D33) -->
+    <string name="trust_import_duplicate_certificate">此证书已导入。</string>
+    <string name="trust_import_duplicate_known_ants">此证书已在信任存储中（来源：ANTS），无需导入。</string>
+    <string name="trust_import_duplicate_known_national">此证书已在信任存储中（来源：本国发布），无需导入。</string>
+    <string name="trust_import_duplicate_known_embedded_master_list">此证书已在信任存储中（来源：内置 Master List），无需导入。</string>
+    <string name="trust_import_duplicate_known_imported_master_list">此证书已在信任存储中（来源：已导入的 Master List），无需导入。</string>
+    <string name="trust_import_duplicate_master_list">此 Master List 已导入。</string>
+    <string name="trust_import_duplicate_embedded_master_list">此 Master List 与应用内置的相同，无需导入。</string>
+    <plurals name="trust_import_new_certificates">
+        <item quantity="other">新证书 %1$d 个（共 %2$d 个）</item>
+    </plurals>
+
     <!-- Éléments importés (D33) -->
     <string name="trust_imported_title">已导入的项目</string>
     <string name="trust_imported_master_list">已导入的 Master List</string>

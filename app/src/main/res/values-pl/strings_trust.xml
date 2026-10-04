@@ -88,6 +88,21 @@
         <item quantity="other">Import odrzucony: maksymalna liczba zaimportowanych certyfikatów to %1$d. Usuń jeden z nich, aby dodać kolejny.</item>
     </plurals>
 
+    <!-- Doublons à l'import (D33) -->
+    <string name="trust_import_duplicate_certificate">Ten certyfikat został już zaimportowany.</string>
+    <string name="trust_import_duplicate_known_ants">Ten certyfikat jest już wśród zaufanych certyfikatów (źródło: ANTS). Nie ma nic do zaimportowania.</string>
+    <string name="trust_import_duplicate_known_national">Ten certyfikat jest już wśród zaufanych certyfikatów (źródło: publikacja krajowa). Nie ma nic do zaimportowania.</string>
+    <string name="trust_import_duplicate_known_embedded_master_list">Ten certyfikat jest już wśród zaufanych certyfikatów (źródło: wbudowana Master List). Nie ma nic do zaimportowania.</string>
+    <string name="trust_import_duplicate_known_imported_master_list">Ten certyfikat jest już wśród zaufanych certyfikatów (źródło: zaimportowana Master List). Nie ma nic do zaimportowania.</string>
+    <string name="trust_import_duplicate_master_list">Ta Master List została już zaimportowana.</string>
+    <string name="trust_import_duplicate_embedded_master_list">Ta Master List jest identyczna z listą wbudowaną w aplikację. Nie ma nic do zaimportowania.</string>
+    <plurals name="trust_import_new_certificates">
+        <item quantity="one">%1$d nowy certyfikat z %2$d</item>
+        <item quantity="few">%1$d nowe certyfikaty z %2$d</item>
+        <item quantity="many">%1$d nowych certyfikatów z %2$d</item>
+        <item quantity="other">%1$d nowego certyfikatu z %2$d</item>
+    </plurals>
+
     <!-- Éléments importés (D33) -->
     <string name="trust_imported_title">Zaimportowane elementy</string>
     <string name="trust_imported_master_list">Zaimportowana Master List</string>
