@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="learn_intro_skip">略過簡介</string>
+    <string name="learn_intro_next">下一步</string>
+    <string name="learn_intro_start">開始使用</string>
+    <string name="learn_intro_page">第 %1$d 頁，共 %2$d 頁</string>
+
+    <string name="learn_intro_chip_title">證件裡的晶片</string>
+    <string name="learn_intro_chip_body">晶片護照和新式身分證內建非接觸式晶片，符合國際標準 ICAO 9303。</string>
+    <string name="learn_intro_chip_icao">ICAO：國際民用航空組織，負責制定旅行證件的規範。</string>
+    <string name="learn_intro_chip_copy">晶片存有證件上印刷資料和相片的副本，並由核發證件的國家加上電子簽章。</string>
+
+    <string name="learn_intro_key_title">開啟晶片的金鑰</string>
+    <string name="learn_intro_key_body">沒有金鑰，晶片就不會回應。這組金鑰就印在證件上：</string>
+    <string name="learn_intro_key_can">CAN：印在身分證上的 6 位數存取碼。</string>
+    <string name="learn_intro_key_mrz">MRZ：相片頁底部的幾行字元，證件號碼、出生日期和效期截止日期都取自這裡。</string>
+    <string name="learn_intro_key_channel">之後的所有通訊都會經過加密通道（PACE 或 BAC，即標準規定的通訊協定）：附近的人無法讀取。</string>
+
+    <string name="learn_intro_verify_title">Sceau 會驗證什麼</string>
+    <string name="learn_intro_verify_signature">國家的簽章（Passive Authentication），使用應用程式內建的各國憑證驗證。</string>
+    <string name="learn_intro_verify_clone">晶片不是複製品（Chip Authentication 或 Active Authentication）：晶片必須證明自己持有無法擷取的私密金鑰。</string>
+    <string name="learn_intro_verify_verdicts">結果分為四種：</string>
+
+    <string name="learn_intro_privacy_title">你的資料只留在這裡</string>
+    <string name="learn_intro_privacy_offline">一切都在手機上完成：Sceau 甚至沒有存取網際網路的權限。</string>
+    <string name="learn_intro_privacy_nothing_saved">不會儲存任何內容：離開結果畫面或應用程式切換到背景時，讀取的資料會立即清除。</string>
+    <string name="learn_intro_privacy_screenshots">整個應用程式都禁止擷取螢幕畫面。</string>
+
+    <string name="learn_about_section">認識 Sceau</string>
+    <string name="learn_about_replay_intro">重新查看簡介</string>
+
+    <string name="learn_chip_title">晶片裡有什麼</string>
+    <string name="learn_chip_back">返回</string>
+    <string name="learn_chip_intro">晶片將資料存放在檔案中：資料組（DG1、DG2…）和幾個技術檔案（EF）。以下說明 Sceau 如何處理這些檔案。</string>
+
+    <string name="learn_chip_section_displayed">讀取並顯示</string>
+    <string name="learn_chip_dg1">MRZ 中的資料：姓、名、國籍、出生日期、性別、證件號碼、核發國和效期截止日期。</string>
+    <string name="learn_chip_dg2">持有人的相片。</string>
+    <string name="learn_chip_dg11">若核發國有寫入：其他個人資料，例如出生地或地址。</string>
+    <string name="learn_chip_dg12">若核發國有寫入：證件相關資料，例如發照機關和發照日期。</string>
+
+    <string name="learn_chip_section_verification">僅為驗證而讀取</string>
+    <string name="learn_chip_verification_intro">這些檔案不會顯示：它們用來證明資料是真實的。</string>
+    <string name="learn_chip_ef_card_access">晶片接受的存取通訊協定，例如 PACE。</string>
+    <string name="learn_chip_ef_com">晶片中現有資料組的清單。</string>
+    <string name="learn_chip_ef_sod">每個資料組的雜湊值，由核發國簽章。</string>
+    <string name="learn_chip_dg14">用於 Chip Authentication 的公開金鑰。</string>
+    <string name="learn_chip_dg15">用於 Active Authentication 的公開金鑰。</string>
+    <string name="learn_chip_ef_card_security">僅部分證件才有：由核發國簽章的晶片金鑰，在 PACE 期間驗證。</string>
+
+    <string name="learn_chip_section_never">一律不讀取</string>
+    <string name="learn_chip_dg3">指紋。</string>
+    <string name="learn_chip_dg4">虹膜影像。</string>
+    <string name="learn_chip_eac">無論如何，這兩個檔案都另有一道鎖保護，也就是 EAC（Extended Access Control），只有獲得授權的機關才能開啟。</string>
+    <string name="learn_chip_others">其他資料組（DG5 至 DG10、DG13 和 DG16：其他影像、親筆簽名、各國特有資料、緊急聯絡人）也不會讀取。</string>
+
+    <string name="learn_chip_section_never_does">Sceau 不會做的事</string>
+    <string name="learn_chip_no_storage">不會儲存、傳送或記錄任何讀取的資料：所有資料都只留在手機記憶體中，離開結果畫面時即會清除。</string>
+    <string name="learn_chip_no_screenshot">不允許擷取螢幕畫面，也不會在最近使用的應用程式中顯示預覽。</string>
+    <string name="learn_chip_no_write">不會修改晶片上的任何內容：只會讀取。</string>
+    <string name="learn_chip_no_other_data">晶片中沒有犯罪紀錄、健康資料或位置資訊。</string>
+</resources>

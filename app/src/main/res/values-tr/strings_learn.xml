@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="learn_intro_skip">Tanıtımı atla</string>
+    <string name="learn_intro_next">İleri</string>
+    <string name="learn_intro_start">Başla</string>
+    <string name="learn_intro_page">Sayfa %1$d / %2$d</string>
+
+    <string name="learn_intro_chip_title">Belgenizde bir çip var</string>
+    <string name="learn_intro_chip_body">Biyometrik pasaportlar ve yeni kimlik kartları, uluslararası ICAO 9303 standardına uygun temassız bir çip içerir.</string>
+    <string name="learn_intro_chip_icao">ICAO: Seyahat belgelerinin kurallarını belirleyen Uluslararası Sivil Havacılık Örgütü.</string>
+    <string name="learn_intro_chip_copy">Çip, basılı bilgilerin ve fotoğrafın bir kopyasını içerir; bu kopya, belgeyi düzenleyen devlet tarafından elektronik olarak imzalanmıştır.</string>
+
+    <string name="learn_intro_key_title">Çipi açmak için bir anahtar</string>
+    <string name="learn_intro_key_body">Anahtar olmadan çip yanıt vermez. Bu anahtar belgenin üzerinde basılıdır:</string>
+    <string name="learn_intro_key_can">CAN: Kimlik kartının üzerinde basılı 6 haneli erişim numarası.</string>
+    <string name="learn_intro_key_mrz">MRZ: Fotoğraflı sayfanın altındaki karakter satırları; belge numarası, doğum tarihi ve son geçerlilik tarihi buradan alınır.</string>
+    <string name="learn_intro_key_channel">Ardından tüm iletişim şifreli bir kanaldan geçer (standardın öngördüğü PACE veya BAC protokolleri): Yakındaki biri bunu okuyamaz.</string>
+
+    <string name="learn_intro_verify_title">Sceau neleri doğrular</string>
+    <string name="learn_intro_verify_signature">Devletin imzasını (Passive Authentication), uygulamada yerleşik ülke sertifikalarıyla.</string>
+    <string name="learn_intro_verify_clone">Çipin bir kopya olmadığını (Chip Authentication veya Active Authentication): Çip, dışarı çıkarılamayan gizli bir anahtara sahip olduğunu kanıtlamalıdır.</string>
+    <string name="learn_intro_verify_verdicts">Sonuç dört karardan biridir:</string>
+
+    <string name="learn_intro_privacy_title">Verileriniz burada kalır</string>
+    <string name="learn_intro_privacy_offline">Her şey telefonda gerçekleşir: Sceau’nun internete erişim izni bile yoktur.</string>
+    <string name="learn_intro_privacy_nothing_saved">Hiçbir şey kaydedilmez: Okunan veriler, sonuç ekranından çıktığınız veya uygulama arka plana alındığı anda silinir.</string>
+    <string name="learn_intro_privacy_screenshots">Uygulamanın tamamında ekran görüntüsü almak engellenmiştir.</string>
+
+    <string name="learn_about_section">Sceau’yu tanıyın</string>
+    <string name="learn_about_replay_intro">Tanıtımı yeniden göster</string>
+
+    <string name="learn_chip_title">Çipte neler var</string>
+    <string name="learn_chip_back">Geri</string>
+    <string name="learn_chip_intro">Çip bilgileri dosyalarda saklar: veri grupları (DG1, DG2…) ve birkaç teknik dosya (EF). Sceau’nun bunlarla ne yaptığı aşağıda.</string>
+
+    <string name="learn_chip_section_displayed">Okunur ve gösterilir</string>
+    <string name="learn_chip_dg1">MRZ verileri: soyadı, adları, uyruğu, doğum tarihi, cinsiyet, belge numarası, düzenleyen devlet ve son geçerlilik tarihi.</string>
+    <string name="learn_chip_dg2">Belge sahibinin fotoğrafı.</string>
+    <string name="learn_chip_dg11">Devlet kaydediyorsa: doğum yeri veya adres gibi ek kişisel bilgiler.</string>
+    <string name="learn_chip_dg12">Devlet kaydediyorsa: düzenleyen makam ve düzenlenme tarihi gibi belgeye ilişkin bilgiler.</string>
+
+    <string name="learn_chip_section_verification">Yalnızca doğrulama için okunur</string>
+    <string name="learn_chip_verification_intro">Bu dosyalar gösterilmez: Verilerin orijinal olduğunu kanıtlamaya yarar.</string>
+    <string name="learn_chip_ef_card_access">Çipin kabul ettiği erişim protokolleri (ör. PACE).</string>
+    <string name="learn_chip_ef_com">Mevcut veri gruplarının listesi.</string>
+    <string name="learn_chip_ef_sod">Her veri grubunun devlet tarafından imzalanmış özeti (hash).</string>
+    <string name="learn_chip_dg14">Chip Authentication için kullanılan açık anahtar.</string>
+    <string name="learn_chip_dg15">Active Authentication için kullanılan açık anahtar.</string>
+    <string name="learn_chip_ef_card_security">Yalnızca bazı kartlarda: Çipin devlet tarafından imzalanmış anahtarı; PACE sırasında doğrulanır.</string>
+
+    <string name="learn_chip_section_never">Hiçbir zaman okunmaz</string>
+    <string name="learn_chip_dg3">Parmak izleri.</string>
+    <string name="learn_chip_dg4">İris görüntüsü.</string>
+    <string name="learn_chip_eac">Bu iki dosya zaten ek bir kilitle, yalnızca yetkili makamların açabildiği EAC (Extended Access Control) ile korunur.</string>
+    <string name="learn_chip_others">Diğer veri grupları da (DG5–DG10, DG13 ve DG16: diğer görüntüler, el yazısı imza, devlete özgü veriler, haber verilecek kişiler) okunmaz.</string>
+
+    <string name="learn_chip_section_never_does">Sceau’nun yapmadıkları</string>
+    <string name="learn_chip_no_storage">Okunan hiçbir veriyi kaydetmez, göndermez veya günlüğe yazmaz: Her şey telefonun belleğinde kalır ve sonuç ekranından çıkınca silinir.</string>
+    <string name="learn_chip_no_screenshot">Ekran görüntüsüne de, son uygulamalarda önizlemeye de izin vermez.</string>
+    <string name="learn_chip_no_write">Çipte hiçbir şeyi değiştirmez: Yalnızca okur.</string>
+    <string name="learn_chip_no_other_data">Çipte adli sicil kaydı, sağlık verisi veya konum bilgisi bulunmaz.</string>
+</resources>

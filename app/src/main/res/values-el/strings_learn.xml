@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="learn_intro_skip">Παράβλεψη εισαγωγής</string>
+    <string name="learn_intro_next">Επόμενο</string>
+    <string name="learn_intro_start">Έναρξη</string>
+    <string name="learn_intro_page">Σελίδα %1$d από %2$d</string>
+
+    <string name="learn_intro_chip_title">Ένα τσιπ στο έγγραφό σας</string>
+    <string name="learn_intro_chip_body">Τα βιομετρικά διαβατήρια και τα νεότερα δελτία ταυτότητας περιέχουν ανέπαφο τσιπ, σύμφωνο με το διεθνές πρότυπο ICAO 9303.</string>
+    <string name="learn_intro_chip_icao">ICAO: Διεθνής Οργάνωση Πολιτικής Αεροπορίας, που ορίζει τους κανόνες για τα ταξιδιωτικά έγγραφα.</string>
+    <string name="learn_intro_chip_copy">Το τσιπ περιέχει αντίγραφο των τυπωμένων στοιχείων και της φωτογραφίας, υπογεγραμμένο ηλεκτρονικά από το κράτος που εξέδωσε το έγγραφο.</string>
+
+    <string name="learn_intro_key_title">Ένα κλειδί για να ανοίξει το τσιπ</string>
+    <string name="learn_intro_key_body">Χωρίς κλειδί, το τσιπ αρνείται να απαντήσει. Το κλειδί είναι τυπωμένο στο έγγραφο:</string>
+    <string name="learn_intro_key_can">CAN: εξαψήφιος αριθμός πρόσβασης τυπωμένος στο δελτίο ταυτότητας.</string>
+    <string name="learn_intro_key_mrz">MRZ: οι γραμμές χαρακτήρων στο κάτω μέρος της σελίδας με τη φωτογραφία, από τις οποίες προκύπτουν ο αριθμός του εγγράφου, η ημερομηνία γέννησης και η ημερομηνία λήξης.</string>
+    <string name="learn_intro_key_channel">Στη συνέχεια, η επικοινωνία περνά από κρυπτογραφημένο κανάλι (PACE ή BAC, τα πρωτόκολλα που προβλέπει το πρότυπο): κάποιος κοντά σας δεν μπορεί να τη διαβάσει.</string>
+
+    <string name="learn_intro_verify_title">Τι ελέγχει το Sceau</string>
+    <string name="learn_intro_verify_signature">Την υπογραφή του κράτους (Passive Authentication), με τα πιστοποιητικά χωρών που είναι ενσωματωμένα στην εφαρμογή.</string>
+    <string name="learn_intro_verify_clone">Ότι το τσιπ δεν είναι αντίγραφο (Chip Authentication ή Active Authentication): πρέπει να αποδείξει ότι διαθέτει μυστικό κλειδί που δεν μπορεί να εξαχθεί.</string>
+    <string name="learn_intro_verify_verdicts">Το αποτέλεσμα είναι μία από τέσσερις ετυμηγορίες:</string>
+
+    <string name="learn_intro_privacy_title">Τα δεδομένα σας μένουν εδώ</string>
+    <string name="learn_intro_privacy_offline">Όλα γίνονται στο τηλέφωνο: το Sceau δεν έχει καν άδεια πρόσβασης στο διαδίκτυο.</string>
+    <string name="learn_intro_privacy_nothing_saved">Τίποτα δεν αποθηκεύεται: τα δεδομένα που διαβάστηκαν διαγράφονται μόλις φύγετε από το αποτέλεσμα ή η εφαρμογή μεταβεί στο παρασκήνιο.</string>
+    <string name="learn_intro_privacy_screenshots">Τα στιγμιότυπα οθόνης είναι αποκλεισμένα σε όλη την εφαρμογή.</string>
+
+    <string name="learn_about_section">Κατανόηση του Sceau</string>
+    <string name="learn_about_replay_intro">Επανάληψη εισαγωγής</string>
+
+    <string name="learn_chip_title">Τι περιέχει το τσιπ</string>
+    <string name="learn_chip_back">Πίσω</string>
+    <string name="learn_chip_intro">Το τσιπ αποθηκεύει τις πληροφορίες του σε αρχεία: ομάδες δεδομένων (DG1, DG2…) και μερικά τεχνικά αρχεία (EF). Δείτε τι κάνει το Sceau με αυτά.</string>
+
+    <string name="learn_chip_section_displayed">Διαβάζεται και εμφανίζεται</string>
+    <string name="learn_chip_dg1">Τα δεδομένα της MRZ: επώνυμο, όνομα, υπηκοότητα, ημερομηνία γέννησης, φύλο, αριθμός εγγράφου, κράτος έκδοσης και ημερομηνία λήξης.</string>
+    <string name="learn_chip_dg2">Η φωτογραφία του κατόχου.</string>
+    <string name="learn_chip_dg11">Αν τις καταχωρίζει το κράτος: πρόσθετες προσωπικές πληροφορίες, όπως τόπος γέννησης ή διεύθυνση.</string>
+    <string name="learn_chip_dg12">Αν τις καταχωρίζει το κράτος: πληροφορίες για το έγγραφο, όπως η αρχή και η ημερομηνία έκδοσης.</string>
+
+    <string name="learn_chip_section_verification">Διαβάζεται μόνο για επαλήθευση</string>
+    <string name="learn_chip_verification_intro">Αυτά τα αρχεία δεν εμφανίζονται: χρησιμεύουν για να αποδειχθεί ότι τα δεδομένα είναι γνήσια.</string>
+    <string name="learn_chip_ef_card_access">Τα πρωτόκολλα πρόσβασης που δέχεται το τσιπ, όπως το PACE.</string>
+    <string name="learn_chip_ef_com">Η λίστα με τις ομάδες δεδομένων που υπάρχουν.</string>
+    <string name="learn_chip_ef_sod">Το αποτύπωμα κάθε ομάδας δεδομένων, υπογεγραμμένο από το κράτος.</string>
+    <string name="learn_chip_dg14">Το δημόσιο κλειδί για το Chip Authentication.</string>
+    <string name="learn_chip_dg15">Το δημόσιο κλειδί για το Active Authentication.</string>
+    <string name="learn_chip_ef_card_security">Μόνο σε ορισμένες κάρτες: το κλειδί του τσιπ υπογεγραμμένο από το κράτος, που ελέγχεται κατά το PACE.</string>
+
+    <string name="learn_chip_section_never">Δεν διαβάζεται ποτέ</string>
+    <string name="learn_chip_dg3">Τα δακτυλικά αποτυπώματα.</string>
+    <string name="learn_chip_dg4">Η εικόνα της ίριδας.</string>
+    <string name="learn_chip_eac">Αυτά τα δύο αρχεία προστατεύονται ούτως ή άλλως από μια πρόσθετη κλειδαριά, το EAC (Extended Access Control), που μόνο οι εξουσιοδοτημένες αρχές μπορούν να ανοίξουν.</string>
+    <string name="learn_chip_others">Οι υπόλοιπες ομάδες δεδομένων (DG5 έως DG10, DG13 και DG16: άλλες εικόνες, ιδιόχειρη υπογραφή, δεδομένα ειδικά για κάθε κράτος, πρόσωπα προς ειδοποίηση) δεν διαβάζονται επίσης.</string>
+
+    <string name="learn_chip_section_never_does">Τι δεν κάνει το Sceau</string>
+    <string name="learn_chip_no_storage">Δεν αποθηκεύει, δεν στέλνει και δεν καταγράφει κανένα δεδομένο που διαβάζει: όλα μένουν στη μνήμη του τηλεφώνου και διαγράφονται όταν φύγετε από το αποτέλεσμα.</string>
+    <string name="learn_chip_no_screenshot">Δεν επιτρέπει ούτε στιγμιότυπα οθόνης ούτε προεπισκόπηση στις πρόσφατες εφαρμογές.</string>
+    <string name="learn_chip_no_write">Δεν αλλάζει τίποτα στο τσιπ: μόνο διαβάζει.</string>
+    <string name="learn_chip_no_other_data">Το τσιπ δεν περιέχει ποινικό μητρώο, δεδομένα υγείας ή τοποθεσία.</string>
+</resources>

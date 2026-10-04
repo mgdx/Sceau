@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="learn_intro_skip">跳过介绍</string>
+    <string name="learn_intro_next">下一步</string>
+    <string name="learn_intro_start">开始</string>
+    <string name="learn_intro_page">第 %1$d 页，共 %2$d 页</string>
+
+    <string name="learn_intro_chip_title">证件里的芯片</string>
+    <string name="learn_intro_chip_body">生物识别护照和新式身份证内含一枚非接触式芯片，符合国际标准 ICAO 9303。</string>
+    <string name="learn_intro_chip_icao">ICAO：国际民用航空组织，负责制定旅行证件的规则。</string>
+    <string name="learn_intro_chip_copy">芯片中存有证件上印刷信息和照片的副本，并由签发证件的国家进行电子签名。</string>
+
+    <string name="learn_intro_key_title">打开芯片的密钥</string>
+    <string name="learn_intro_key_body">没有密钥，芯片就不会响应。这个密钥就印在证件上：</string>
+    <string name="learn_intro_key_can">CAN：印在身份证上的 6 位访问号码。</string>
+    <string name="learn_intro_key_mrz">MRZ：照片页底部的几行字符，从中可得到证件号码、出生日期和有效期。</string>
+    <string name="learn_intro_key_channel">之后的所有通信都经过加密通道（PACE 或 BAC，即标准规定的协议）：附近的人无法读取。</string>
+
+    <string name="learn_intro_verify_title">Sceau 验证什么</string>
+    <string name="learn_intro_verify_signature">国家的签名（Passive Authentication），使用应用内置的各国证书进行验证。</string>
+    <string name="learn_intro_verify_clone">芯片不是复制品（Chip Authentication 或 Active Authentication）：芯片必须证明它持有一个无法提取的私密密钥。</string>
+    <string name="learn_intro_verify_verdicts">结果分为四种：</string>
+
+    <string name="learn_intro_privacy_title">数据只留在这里</string>
+    <string name="learn_intro_privacy_offline">一切都在手机上完成：Sceau 甚至没有访问互联网的权限。</string>
+    <string name="learn_intro_privacy_nothing_saved">不保存任何内容：退出结果页面或应用切换到后台时，读取的数据会立即清除。</string>
+    <string name="learn_intro_privacy_screenshots">整个应用都禁止截屏。</string>
+
+    <string name="learn_about_section">了解 Sceau</string>
+    <string name="learn_about_replay_intro">重新查看介绍</string>
+
+    <string name="learn_chip_title">芯片里有什么</string>
+    <string name="learn_chip_back">返回</string>
+    <string name="learn_chip_intro">芯片将信息存放在文件中：数据组（DG1、DG2…）和几个技术文件（EF）。以下是 Sceau 对它们的处理方式。</string>
+
+    <string name="learn_chip_section_displayed">读取并显示</string>
+    <string name="learn_chip_dg1">MRZ 中的数据：姓、名、国籍、出生日期、性别、证件号码、签发国和有效期。</string>
+    <string name="learn_chip_dg2">持证人的照片。</string>
+    <string name="learn_chip_dg11">如果签发国写入了这些信息：其他个人信息，例如出生地或地址。</string>
+    <string name="learn_chip_dg12">如果签发国写入了这些信息：证件相关信息，例如签发机关和签发日期。</string>
+
+    <string name="learn_chip_section_verification">仅为验证而读取</string>
+    <string name="learn_chip_verification_intro">这些文件不会显示：它们用于证明数据真实可信。</string>
+    <string name="learn_chip_ef_card_access">芯片接受的访问协议，例如 PACE。</string>
+    <string name="learn_chip_ef_com">芯片中现有数据组的列表。</string>
+    <string name="learn_chip_ef_sod">每个数据组的哈希值，由签发国签名。</string>
+    <string name="learn_chip_dg14">用于 Chip Authentication 的公钥。</string>
+    <string name="learn_chip_dg15">用于 Active Authentication 的公钥。</string>
+    <string name="learn_chip_ef_card_security">仅部分证件有：由签发国签名的芯片密钥，在 PACE 过程中验证。</string>
+
+    <string name="learn_chip_section_never">从不读取</string>
+    <string name="learn_chip_dg3">指纹。</string>
+    <string name="learn_chip_dg4">虹膜图像。</string>
+    <string name="learn_chip_eac">无论如何，这两个文件都受另一把锁保护，即 EAC（Extended Access Control），只有获得授权的机关才能打开。</string>
+    <string name="learn_chip_others">其他数据组（DG5 至 DG10、DG13 和 DG16：其他图像、手写签名、国家特有数据、紧急联系人）也不会读取。</string>
+
+    <string name="learn_chip_section_never_does">Sceau 不会做的事</string>
+    <string name="learn_chip_no_storage">不会保存、发送或记录任何读取的数据：所有数据都只留在手机内存中，退出结果页面时即被清除。</string>
+    <string name="learn_chip_no_screenshot">不允许截屏，也不会在最近使用的应用中显示预览。</string>
+    <string name="learn_chip_no_write">不会修改芯片上的任何内容：只读取。</string>
+    <string name="learn_chip_no_other_data">芯片中不含犯罪记录、健康数据或位置信息。</string>
+</resources>

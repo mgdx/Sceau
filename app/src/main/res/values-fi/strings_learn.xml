@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="learn_intro_skip">Ohita esittely</string>
+    <string name="learn_intro_next">Seuraava</string>
+    <string name="learn_intro_start">Aloita</string>
+    <string name="learn_intro_page">Sivu %1$d/%2$d</string>
+
+    <string name="learn_intro_chip_title">Siru asiakirjassasi</string>
+    <string name="learn_intro_chip_body">Biometrisissä passeissa ja uusissa henkilökorteissa on etäluettava siru, joka noudattaa kansainvälistä ICAO 9303 -standardia.</string>
+    <string name="learn_intro_chip_icao">ICAO: Kansainvälinen siviili-ilmailujärjestö, joka laatii matkustusasiakirjojen säännöt.</string>
+    <string name="learn_intro_chip_copy">Sirulla on kopio painetuista tiedoista ja kuvasta, ja asiakirjan myöntänyt valtio on allekirjoittanut sen sähköisesti.</string>
+
+    <string name="learn_intro_key_title">Avain sirun avaamiseen</string>
+    <string name="learn_intro_key_body">Ilman avainta siru ei vastaa. Avain on painettu asiakirjaan:</string>
+    <string name="learn_intro_key_can">CAN: henkilökorttiin painettu 6-numeroinen käyttönumero.</string>
+    <string name="learn_intro_key_mrz">MRZ: kuvasivun alareunan merkkirivit, joista saadaan asiakirjan numero, syntymäaika ja voimassaolon päättymispäivä.</string>
+    <string name="learn_intro_key_channel">Sen jälkeen tiedonsiirto kulkee salatun kanavan kautta (PACE tai BAC, standardin määrittämät protokollat): lähellä oleva henkilö ei voi lukea sitä.</string>
+
+    <string name="learn_intro_verify_title">Mitä Sceau tarkistaa</string>
+    <string name="learn_intro_verify_signature">Valtion allekirjoituksen (Passive Authentication) sovellukseen sisältyvien maiden varmenteiden avulla.</string>
+    <string name="learn_intro_verify_clone">Että siru ei ole kopio (Chip Authentication tai Active Authentication): sirun on todistettava, että sillä on salainen avain, jota ei voi siltä poimia.</string>
+    <string name="learn_intro_verify_verdicts">Tulos on yksi neljästä arviosta:</string>
+
+    <string name="learn_intro_privacy_title">Tietosi pysyvät täällä</string>
+    <string name="learn_intro_privacy_offline">Kaikki tapahtuu puhelimessa: Sceaulla ei ole edes lupaa käyttää internetiä.</string>
+    <string name="learn_intro_privacy_nothing_saved">Mitään ei tallenneta: luetut tiedot poistetaan heti, kun poistut tuloksesta tai sovellus siirtyy taustalle.</string>
+    <string name="learn_intro_privacy_screenshots">Kuvakaappaukset on estetty koko sovelluksessa.</string>
+
+    <string name="learn_about_section">Näin Sceau toimii</string>
+    <string name="learn_about_replay_intro">Näytä esittely uudelleen</string>
+
+    <string name="learn_chip_title">Mitä siru sisältää</string>
+    <string name="learn_chip_back">Takaisin</string>
+    <string name="learn_chip_intro">Siru säilyttää tietonsa tiedostoissa: tietoryhmissä (DG1, DG2…) ja muutamassa teknisessä tiedostossa (EF). Tässä on, mitä Sceau tekee niillä.</string>
+
+    <string name="learn_chip_section_displayed">Luetaan ja näytetään</string>
+    <string name="learn_chip_dg1">MRZ:n tiedot: sukunimi, etunimet, kansalaisuus, syntymäaika, sukupuoli, asiakirjan numero, myöntäjävaltio ja voimassaolon päättymispäivä.</string>
+    <string name="learn_chip_dg2">Haltijan kuva.</string>
+    <string name="learn_chip_dg11">Jos valtio tallentaa ne: muita henkilötietoja, kuten syntymäpaikka tai osoite.</string>
+    <string name="learn_chip_dg12">Jos valtio tallentaa ne: tietoja asiakirjasta, kuten myöntäjä ja myöntämispäivä.</string>
+
+    <string name="learn_chip_section_verification">Luetaan vain tarkistusta varten</string>
+    <string name="learn_chip_verification_intro">Näitä tiedostoja ei näytetä: niillä todistetaan, että tiedot ovat aitoja.</string>
+    <string name="learn_chip_ef_card_access">Sirun hyväksymät käyttöprotokollat, kuten PACE.</string>
+    <string name="learn_chip_ef_com">Luettelo sirulla olevista tietoryhmistä.</string>
+    <string name="learn_chip_ef_sod">Kunkin tietoryhmän tiiviste valtion allekirjoittamana.</string>
+    <string name="learn_chip_dg14">Julkinen avain, jota käytetään Chip Authenticationissa.</string>
+    <string name="learn_chip_dg15">Julkinen avain, jota käytetään Active Authenticationissa.</string>
+    <string name="learn_chip_ef_card_security">Vain joissakin korteissa: valtion allekirjoittama sirun avain, joka tarkistetaan PACEn aikana.</string>
+
+    <string name="learn_chip_section_never">Ei lueta koskaan</string>
+    <string name="learn_chip_dg3">Sormenjäljet.</string>
+    <string name="learn_chip_dg4">Iiriskuva.</string>
+    <string name="learn_chip_eac">Nämä kaksi tiedostoa on joka tapauksessa suojattu lisälukolla, EAC:lla (Extended Access Control), jonka voivat avata vain valtuutetut viranomaiset.</string>
+    <string name="learn_chip_others">Muita tietoryhmiä (DG5–DG10, DG13 ja DG16: muut kuvat, käsin kirjoitettu allekirjoitus, valtiokohtaiset tiedot, ilmoitettavat henkilöt) ei myöskään lueta.</string>
+
+    <string name="learn_chip_section_never_does">Mitä Sceau ei tee</string>
+    <string name="learn_chip_no_storage">Se ei tallenna, lähetä eikä kirjaa lokiin luettuja tietoja: kaikki pysyy puhelimen muistissa ja poistetaan, kun poistut tuloksesta.</string>
+    <string name="learn_chip_no_screenshot">Se ei salli kuvakaappauksia eikä esikatselua viimeaikaisissa sovelluksissa.</string>
+    <string name="learn_chip_no_write">Se ei muuta sirulla mitään: se vain lukee.</string>
+    <string name="learn_chip_no_other_data">Sirulla ei ole rikosrekisteriä, terveystietoja eikä sijaintia.</string>
+</resources>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="learn_intro_skip">דילוג על המבוא</string>
+    <string name="learn_intro_next">הבא</string>
+    <string name="learn_intro_start">התחלה</string>
+    <string name="learn_intro_page">עמוד %1$d מתוך %2$d</string>
+
+    <string name="learn_intro_chip_title">שבב בתוך המסמך</string>
+    <string name="learn_intro_chip_body">דרכונים ביומטריים ותעודות זהות חדשות מכילים שבב ללא מגע, התואם לתקן הבינלאומי ICAO 9303.</string>
+    <string name="learn_intro_chip_icao">ICAO: ארגון התעופה האזרחית הבינלאומי, שקובע את הכללים למסמכי נסיעה.</string>
+    <string name="learn_intro_chip_copy">השבב מכיל עותק של הפרטים המודפסים ושל התמונה, חתום באופן אלקטרוני על ידי המדינה שהנפיקה את המסמך.</string>
+
+    <string name="learn_intro_key_title">מפתח לפתיחת השבב</string>
+    <string name="learn_intro_key_body">בלי מפתח, השבב מסרב לענות. המפתח מודפס על המסמך:</string>
+    <string name="learn_intro_key_can">CAN: מספר גישה בן 6 ספרות המודפס על תעודת הזהות.</string>
+    <string name="learn_intro_key_mrz">MRZ: שורות התווים בתחתית עמוד התמונה, שמהן נלקחים מספר המסמך, תאריך הלידה ותאריך התפוגה.</string>
+    <string name="learn_intro_key_channel">לאחר מכן כל התקשורת עוברת בערוץ מוצפן (PACE או BAC, הפרוטוקולים שמוגדרים בתקן): מי שנמצא בקרבת מקום לא יכול לקרוא אותה.</string>
+
+    <string name="learn_intro_verify_title">מה Sceau בודקת</string>
+    <string name="learn_intro_verify_signature">החתימה של המדינה (Passive Authentication), בעזרת תעודות המדינות המובנות באפליקציה.</string>
+    <string name="learn_intro_verify_clone">שהשבב אינו עותק (Chip Authentication או Active Authentication): עליו להוכיח שהוא מחזיק מפתח סודי שאי אפשר לחלץ.</string>
+    <string name="learn_intro_verify_verdicts">התוצאה היא אחת מארבע אפשרויות:</string>
+
+    <string name="learn_intro_privacy_title">המידע נשאר כאן</string>
+    <string name="learn_intro_privacy_offline">הכול מתבצע בטלפון: ל-Sceau אין אפילו הרשאת גישה לאינטרנט.</string>
+    <string name="learn_intro_privacy_nothing_saved">שום דבר לא נשמר: המידע שנקרא נמחק מיד ביציאה ממסך התוצאה או כשהאפליקציה עוברת לרקע.</string>
+    <string name="learn_intro_privacy_screenshots">צילומי מסך חסומים בכל האפליקציה.</string>
+
+    <string name="learn_about_section">איך Sceau עובדת</string>
+    <string name="learn_about_replay_intro">צפייה חוזרת במבוא</string>
+
+    <string name="learn_chip_title">מה יש בשבב</string>
+    <string name="learn_chip_back">חזרה</string>
+    <string name="learn_chip_intro">השבב שומר את המידע בקבצים: קבוצות נתונים (DG1, DG2…) וכמה קבצים טכניים (EF). כך Sceau משתמשת בהם.</string>
+
+    <string name="learn_chip_section_displayed">נקרא ומוצג</string>
+    <string name="learn_chip_dg1">נתוני ה-MRZ: שם משפחה, שמות פרטיים, אזרחות, תאריך לידה, מין, מספר המסמך, המדינה המנפיקה ותאריך התפוגה.</string>
+    <string name="learn_chip_dg2">התמונה של בעל המסמך.</string>
+    <string name="learn_chip_dg11">אם המדינה רושמת אותם: פרטים אישיים נוספים, כמו מקום הלידה או הכתובת.</string>
+    <string name="learn_chip_dg12">אם המדינה רושמת אותם: פרטים על המסמך, כמו הרשות המנפיקה ותאריך ההנפקה.</string>
+
+    <string name="learn_chip_section_verification">נקרא לצורך אימות בלבד</string>
+    <string name="learn_chip_verification_intro">הקבצים האלה לא מוצגים: הם משמשים להוכחה שהנתונים אותנטיים.</string>
+    <string name="learn_chip_ef_card_access">פרוטוקולי הגישה שהשבב מקבל, כמו PACE.</string>
+    <string name="learn_chip_ef_com">רשימת קבוצות הנתונים הקיימות.</string>
+    <string name="learn_chip_ef_sod">ערך הגיבוב (hash) של כל קבוצת נתונים, חתום על ידי המדינה.</string>
+    <string name="learn_chip_dg14">המפתח הציבורי שמשמש ל-Chip Authentication.</string>
+    <string name="learn_chip_dg15">המפתח הציבורי שמשמש ל-Active Authentication.</string>
+    <string name="learn_chip_ef_card_security">רק בחלק מהכרטיסים: המפתח של השבב, חתום על ידי המדינה ונבדק במהלך PACE.</string>
+
+    <string name="learn_chip_section_never">אף פעם לא נקרא</string>
+    <string name="learn_chip_dg3">טביעות האצבע.</string>
+    <string name="learn_chip_dg4">תמונת הקשתית.</string>
+    <string name="learn_chip_eac">שני הקבצים האלה מוגנים בכל מקרה במנעול נוסף, EAC (Extended Access Control), שרק רשויות מוסמכות יכולות לפתוח.</string>
+    <string name="learn_chip_others">גם שאר קבוצות הנתונים (DG5 עד DG10, DG13 ו-DG16: תמונות נוספות, חתימה בכתב יד, נתונים ייחודיים למדינה, אנשים שיש להודיע להם) לא נקראות.</string>
+
+    <string name="learn_chip_section_never_does">מה Sceau לא עושה</string>
+    <string name="learn_chip_no_storage">היא לא שומרת, לא שולחת ולא מתעדת ביומן שום מידע שנקרא: הכול נשאר בזיכרון הטלפון ונמחק ביציאה ממסך התוצאה.</string>
+    <string name="learn_chip_no_screenshot">היא לא מאפשרת צילומי מסך או תצוגה מקדימה במסך האפליקציות האחרונות.</string>
+    <string name="learn_chip_no_write">היא לא משנה דבר בשבב: היא רק קוראת.</string>
+    <string name="learn_chip_no_other_data">השבב לא מכיל רישום פלילי, נתוני בריאות או מיקום.</string>
+</resources>

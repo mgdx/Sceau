@@ -405,3 +405,18 @@ Format : date, contexte, décision, justification, écart à la SPEC concerné.
 - **Conservé** : la correction de `docs/architecture.md` §4 et de TP-16 sur `FLAG_SECURE`, déjà posé sur toute l'activité avant ce travail.
 - **Écart à la SPEC** : aucun.
 
+## D35. Introduction au premier lancement et écran « Ce que contient la puce »
+
+- **Date** : 2026-10-04 (demande de l'utilisateur).
+- **Contexte** : l'utilisateur d'une application qui lit sa pièce d'identité veut savoir ce qu'elle lit, ce qu'elle vérifie et ce qu'elle garde. Rien ne l'expliquait avant le résultat, et l'écran À propos parle surtout de licence et de magasin de confiance.
+- **Décision** :
+  - nouveau paquet `ui/learn` : introduction en 4 pages balayables (`HorizontalPager`, indicateur de page annoncé « Page 2 sur 4 ») : la puce ICAO 9303 et sa copie signée des données ; la clé d'accès (CAN ou MRZ) et le canal chiffré PACE ou BAC ; ce que vérifie Sceau (Passive Authentication, Chip ou Active Authentication) et les quatre verdicts, avec les libellés et explications de l'écran de résultat (`result_verdict_*`) pour rester identiques ; la confidentialité (aucune permission Internet, rien d'enregistré, effacement, captures bloquées) ;
+  - boutons « Passer l'intro » sur toutes les pages sauf la dernière, « Suivant », et « Commencer » sur la dernière (précision de l'utilisateur) ; ces deux boutons et le retour arrière du système marquent l'introduction comme vue et quittent l'écran : vers l'accueil au premier lancement (l'introduction est retirée de la pile, jamais d'écran vide ni de sortie de l'application), vers À propos quand elle est rejouée ;
+  - indicateur `intro_seen` dans les `SharedPreferences` (`sceau_preferences`, `IntroPreferences`), sans dépendance nouvelle (DataStore n'est pas dans le projet). C'est la seule préférence de l'application : un booléen, ni donnée lue ni clé, ce que SPEC §8 n'interdit pas ; la sauvegarde Android étant désactivée, il ne quitte pas le téléphone. La destination de départ (introduction ou accueil) est lue une fois par création de l'activité ; après une rotation ou la mort du processus, la pile de navigation restaurée prime ;
+  - écran « Ce que contient la puce » (route `chip_contents`), ouvert depuis À propos et depuis la dernière page de l'introduction : lu et affiché (DG1, DG2, DG11, DG12), lu pour la vérification seulement (EF.CardAccess, EF.COM, EF.SOD, DG14, DG15, et EF.CardSecurity avec PACE-CAM seulement), jamais lu (DG3, DG4, protégés par EAC ; DG5 à DG10, DG13, DG16), et ce que Sceau ne fait pas. La liste suit exactement les fichiers que demande `:core` (`DocumentReader`, `SecureChannel`, `docs/protocol.md` §2) ;
+  - écran À propos : une section « Comprendre Sceau » avec deux boutons, « Ce que contient la puce » et « Revoir l'introduction » ;
+  - chaînes dans `strings_learn.xml` (D5), y compris les deux entrées d'À propos, dans les 45 langues ; les identifiants de fichiers (DG1, EF.SOD…) sont `translatable="false"`. Icônes : `SceauIcons` et trois tracés Material redessinés dans `LearnIcons` (cadenas, bouclier, nuage barré), aucun fichier binaire ;
+  - `TextOverflowTest` (D28) rend aussi les 4 pages de l'introduction et l'écran « Ce que contient la puce » dans toutes les langues.
+- **Justification** : une introduction courte, passable et rejouable rassure sans gêner l'utilisateur pressé ; le détail fichier par fichier est rangé dans un écran à part pour qui veut vérifier. Le contenu ne promet rien que le code ne fasse.
+- **Limite** : traductions faites sans relecture par des locuteurs natifs (comme D27).
+- **Écart à la SPEC** : §5.6 ajoutée ; §8 précisé (une préférence non personnelle).

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="learn_intro_skip">Kapërce hyrjen</string>
+    <string name="learn_intro_next">Para</string>
+    <string name="learn_intro_start">Fillo</string>
+    <string name="learn_intro_page">Faqja %1$d nga %2$d</string>
+
+    <string name="learn_intro_chip_title">Një çip në dokumentin tënd</string>
+    <string name="learn_intro_chip_body">Pasaportat biometrike dhe letërnjoftimet e reja kanë një çip pa kontakt, në përputhje me standardin ndërkombëtar ICAO 9303.</string>
+    <string name="learn_intro_chip_icao">ICAO: Organizata Ndërkombëtare e Aviacionit Civil, që përcakton rregullat për dokumentet e udhëtimit.</string>
+    <string name="learn_intro_chip_copy">Çipi përmban një kopje të të dhënave të shtypura dhe të fotografisë, të nënshkruar elektronikisht nga shteti që e ka lëshuar dokumentin.</string>
+
+    <string name="learn_intro_key_title">Një çelës për të hapur çipin</string>
+    <string name="learn_intro_key_body">Pa çelës, çipi nuk përgjigjet. Ky çelës është i shtypur në dokument:</string>
+    <string name="learn_intro_key_can">CAN: numri i aksesit me 6 shifra, i shtypur në letërnjoftim.</string>
+    <string name="learn_intro_key_mrz">MRZ: rreshtat me karaktere në fund të faqes me fotografi, prej nga merren numri i dokumentit, data e lindjes dhe data e skadimit.</string>
+    <string name="learn_intro_key_channel">Më pas komunikimi kalon nëpër një kanal të enkriptuar (PACE ose BAC, protokollet e parashikuara nga standardi): dikush afër nuk mund ta lexojë.</string>
+
+    <string name="learn_intro_verify_title">Çfarë verifikon Sceau</string>
+    <string name="learn_intro_verify_signature">Nënshkrimin e shtetit (Passive Authentication), me certifikatat e vendeve të përfshira në aplikacion.</string>
+    <string name="learn_intro_verify_clone">Që çipi nuk është kopje (Chip Authentication ose Active Authentication): ai duhet të provojë se ka një çelës sekret që nuk mund të nxirret.</string>
+    <string name="learn_intro_verify_verdicts">Rezultati është një nga katër vlerësime:</string>
+
+    <string name="learn_intro_privacy_title">Të dhënat e tua mbeten këtu</string>
+    <string name="learn_intro_privacy_offline">Gjithçka ndodh në telefon: Sceau nuk ka as lejen për t’u lidhur me internetin.</string>
+    <string name="learn_intro_privacy_nothing_saved">Asgjë nuk ruhet: të dhënat e lexuara fshihen sapo del nga rezultati ose kur aplikacioni kalon në sfond.</string>
+    <string name="learn_intro_privacy_screenshots">Pamjet e ekranit janë të bllokuara në të gjithë aplikacionin.</string>
+
+    <string name="learn_about_section">Njih Sceau</string>
+    <string name="learn_about_replay_intro">Shiko sërish hyrjen</string>
+
+    <string name="learn_chip_title">Çfarë përmban çipi</string>
+    <string name="learn_chip_back">Prapa</string>
+    <string name="learn_chip_intro">Çipi i ruan të dhënat në skedarë: grupe të dhënash (DG1, DG2…) dhe disa skedarë teknikë (EF). Ja çfarë bën Sceau me to.</string>
+
+    <string name="learn_chip_section_displayed">Lexohen dhe shfaqen</string>
+    <string name="learn_chip_dg1">Të dhënat e MRZ: mbiemri, emri, shtetësia, data e lindjes, gjinia, numri i dokumentit, shteti lëshues dhe data e skadimit.</string>
+    <string name="learn_chip_dg2">Fotografia e mbajtësit.</string>
+    <string name="learn_chip_dg11">Nëse shteti i regjistron: të dhëna personale shtesë, si vendi i lindjes ose adresa.</string>
+    <string name="learn_chip_dg12">Nëse shteti i regjistron: të dhëna për dokumentin, si autoriteti dhe data e lëshimit.</string>
+
+    <string name="learn_chip_section_verification">Lexohen vetëm për verifikim</string>
+    <string name="learn_chip_verification_intro">Këta skedarë nuk shfaqen: ata shërbejnë për të provuar që të dhënat janë autentike.</string>
+    <string name="learn_chip_ef_card_access">Protokollet e aksesit që pranon çipi, si PACE.</string>
+    <string name="learn_chip_ef_com">Lista e grupeve të të dhënave që ndodhen në çip.</string>
+    <string name="learn_chip_ef_sod">Gjurma e çdo grupi të dhënash, e nënshkruar nga shteti.</string>
+    <string name="learn_chip_dg14">Çelësi publik që përdoret për Chip Authentication.</string>
+    <string name="learn_chip_dg15">Çelësi publik që përdoret për Active Authentication.</string>
+    <string name="learn_chip_ef_card_security">Vetëm në disa karta: çelësi i çipit i nënshkruar nga shteti, që verifikohet gjatë PACE.</string>
+
+    <string name="learn_chip_section_never">Nuk lexohen kurrë</string>
+    <string name="learn_chip_dg3">Shenjat e gishtave.</string>
+    <string name="learn_chip_dg4">Imazhi i irisit.</string>
+    <string name="learn_chip_eac">Gjithsesi, këta dy skedarë mbrohen nga një kyç shtesë, EAC (Extended Access Control), që mund ta hapin vetëm autoritetet e autorizuara.</string>
+    <string name="learn_chip_others">As grupet e tjera të të dhënave (DG5 deri DG10, DG13 dhe DG16: imazhe të tjera, nënshkrimi me dorë, të dhëna të veçanta të shtetit, persona për t’u njoftuar) nuk lexohen.</string>
+
+    <string name="learn_chip_section_never_does">Çfarë nuk bën Sceau</string>
+    <string name="learn_chip_no_storage">Nuk ruan, nuk dërgon dhe nuk regjistron në ditar asnjë të dhënë të lexuar: gjithçka mbetet në memorien e telefonit dhe fshihet kur del nga rezultati.</string>
+    <string name="learn_chip_no_screenshot">Nuk lejon as pamje ekrani, as pamje paraprake te aplikacionet e fundit.</string>
+    <string name="learn_chip_no_write">Nuk ndryshon asgjë në çip: vetëm lexon.</string>
+    <string name="learn_chip_no_other_data">Çipi nuk përmban as precedentë penalë, as të dhëna shëndetësore, as vendndodhje.</string>
+</resources>

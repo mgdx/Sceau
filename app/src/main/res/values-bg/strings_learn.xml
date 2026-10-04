@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="learn_intro_skip">Пропускане на увода</string>
+    <string name="learn_intro_next">Напред</string>
+    <string name="learn_intro_start">Начало</string>
+    <string name="learn_intro_page">Страница %1$d от %2$d</string>
+
+    <string name="learn_intro_chip_title">Чип във вашия документ</string>
+    <string name="learn_intro_chip_body">Биометричните паспорти и новите лични карти съдържат безконтактен чип, отговарящ на международния стандарт ICAO 9303.</string>
+    <string name="learn_intro_chip_icao">ICAO: Международната организация за гражданско въздухоплаване (ИКАО), която определя правилата за документите за пътуване.</string>
+    <string name="learn_intro_chip_copy">Чипът съдържа копие на отпечатаните данни и снимката, електронно подписано от държавата, издала документа.</string>
+
+    <string name="learn_intro_key_title">Ключ за отваряне на чипа</string>
+    <string name="learn_intro_key_body">Без ключ чипът отказва да отговори. Ключът е отпечатан върху документа:</string>
+    <string name="learn_intro_key_can">CAN: 6-цифрен номер за достъп, отпечатан върху личната карта.</string>
+    <string name="learn_intro_key_mrz">MRZ: редовете със знаци в долната част на страницата със снимката, от които се вземат номерът на документа, датата на раждане и датата на изтичане.</string>
+    <string name="learn_intro_key_channel">След това обменът минава през шифрован канал (PACE или BAC, протоколите, предвидени в стандарта): човек наблизо не може да го прочете.</string>
+
+    <string name="learn_intro_verify_title">Какво проверява Sceau</string>
+    <string name="learn_intro_verify_signature">Подписът на държавата (Passive Authentication) със сертификатите на държавите, вградени в приложението.</string>
+    <string name="learn_intro_verify_clone">Че чипът не е копие (Chip Authentication или Active Authentication): той трябва да докаже, че притежава таен ключ, който не може да бъде извлечен.</string>
+    <string name="learn_intro_verify_verdicts">Резултатът е една от четири оценки:</string>
+
+    <string name="learn_intro_privacy_title">Данните ви остават тук</string>
+    <string name="learn_intro_privacy_offline">Всичко става в телефона: Sceau няма дори разрешение за достъп до интернет.</string>
+    <string name="learn_intro_privacy_nothing_saved">Нищо не се запазва: прочетените данни се изтриват веднага щом излезете от резултата или приложението премине във фонов режим.</string>
+    <string name="learn_intro_privacy_screenshots">Екранните снимки са блокирани в цялото приложение.</string>
+
+    <string name="learn_about_section">Как работи Sceau</string>
+    <string name="learn_about_replay_intro">Повторен преглед на увода</string>
+
+    <string name="learn_chip_title">Какво съдържа чипът</string>
+    <string name="learn_chip_back">Назад</string>
+    <string name="learn_chip_intro">Чипът съхранява информацията си във файлове: групи данни (DG1, DG2…) и няколко технически файла (EF). Ето какво прави Sceau с тях.</string>
+
+    <string name="learn_chip_section_displayed">Прочетено и показано</string>
+    <string name="learn_chip_dg1">Данните от MRZ: фамилия, имена, гражданство, дата на раждане, пол, номер на документа, издаваща държава и дата на изтичане.</string>
+    <string name="learn_chip_dg2">Снимката на притежателя.</string>
+    <string name="learn_chip_dg11">Ако държавата ги вписва: допълнителни лични данни, като място на раждане или адрес.</string>
+    <string name="learn_chip_dg12">Ако държавата ги вписва: данни за документа, като издаващия орган и датата на издаване.</string>
+
+    <string name="learn_chip_section_verification">Прочетено само за проверка</string>
+    <string name="learn_chip_verification_intro">Тези файлове не се показват: те служат за доказване, че данните са автентични.</string>
+    <string name="learn_chip_ef_card_access">Протоколите за достъп, които чипът приема, например PACE.</string>
+    <string name="learn_chip_ef_com">Списъкът на наличните групи данни.</string>
+    <string name="learn_chip_ef_sod">Хешът на всяка група данни, подписан от държавата.</string>
+    <string name="learn_chip_dg14">Публичният ключ, използван за Chip Authentication.</string>
+    <string name="learn_chip_dg15">Публичният ключ, използван за Active Authentication.</string>
+    <string name="learn_chip_ef_card_security">Само при някои карти: ключът на чипа, подписан от държавата и проверяван по време на PACE.</string>
+
+    <string name="learn_chip_section_never">Никога не се чете</string>
+    <string name="learn_chip_dg3">Пръстовите отпечатъци.</string>
+    <string name="learn_chip_dg4">Изображението на ириса.</string>
+    <string name="learn_chip_eac">Тези два файла и без това са защитени с допълнителна ключалка, EAC (Extended Access Control), която само оправомощени органи могат да отключат.</string>
+    <string name="learn_chip_others">Останалите групи данни (от DG5 до DG10, DG13 и DG16: други изображения, саморъчен подпис, специфични за държавата данни, лица за уведомяване) също не се четат.</string>
+
+    <string name="learn_chip_section_never_does">Какво не прави Sceau</string>
+    <string name="learn_chip_no_storage">Не запазва, не изпраща и не записва в журнал никакви прочетени данни: всичко остава в паметта на телефона и се изтрива при излизане от резултата.</string>
+    <string name="learn_chip_no_screenshot">Не позволява екранни снимки, нито визуализация в последните приложения.</string>
+    <string name="learn_chip_no_write">Не променя нищо в чипа: само чете.</string>
+    <string name="learn_chip_no_other_data">Чипът не съдържа данни за съдимост, здравни данни или местоположение.</string>
+</resources>

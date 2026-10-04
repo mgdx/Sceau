@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="learn_intro_skip">Intro overslaan</string>
+    <string name="learn_intro_next">Volgende</string>
+    <string name="learn_intro_start">Aan de slag</string>
+    <string name="learn_intro_page">Pagina %1$d van %2$d</string>
+
+    <string name="learn_intro_chip_title">Een chip in je document</string>
+    <string name="learn_intro_chip_body">Biometrische paspoorten en recente identiteitskaarten bevatten een contactloze chip volgens de internationale norm ICAO 9303.</string>
+    <string name="learn_intro_chip_icao">ICAO: de Internationale Burgerluchtvaartorganisatie, die de regels voor reisdocumenten vastlegt.</string>
+    <string name="learn_intro_chip_copy">De chip bevat een kopie van de gedrukte gegevens en de foto, elektronisch ondertekend door de staat die het document heeft afgegeven.</string>
+
+    <string name="learn_intro_key_title">Een sleutel om de chip te openen</string>
+    <string name="learn_intro_key_body">Zonder sleutel weigert de chip te antwoorden. Deze sleutel staat op het document:</string>
+    <string name="learn_intro_key_can">CAN: het toegangsnummer van 6 cijfers op de identiteitskaart.</string>
+    <string name="learn_intro_key_mrz">MRZ: de regels met tekens onderaan de fotopagina, waaruit het documentnummer, de geboortedatum en de vervaldatum komen.</string>
+    <string name="learn_intro_key_channel">Daarna verloopt alle communicatie via een versleuteld kanaal (PACE of BAC, de protocollen uit de norm): iemand in de buurt kan niet meelezen.</string>
+
+    <string name="learn_intro_verify_title">Wat Sceau controleert</string>
+    <string name="learn_intro_verify_signature">De handtekening van de staat (Passive Authentication), met de landcertificaten die in de app zijn ingebouwd.</string>
+    <string name="learn_intro_verify_clone">Dat de chip geen kopie is (Chip Authentication of Active Authentication): hij moet bewijzen dat hij een geheime sleutel bevat die niet kan worden uitgelezen.</string>
+    <string name="learn_intro_verify_verdicts">Het resultaat is een van vier uitkomsten:</string>
+
+    <string name="learn_intro_privacy_title">Je gegevens blijven hier</string>
+    <string name="learn_intro_privacy_offline">Alles gebeurt op de telefoon: Sceau heeft niet eens toestemming om verbinding te maken met internet.</string>
+    <string name="learn_intro_privacy_nothing_saved">Er wordt niets opgeslagen: de uitgelezen gegevens worden gewist zodra je het resultaat verlaat of de app naar de achtergrond gaat.</string>
+    <string name="learn_intro_privacy_screenshots">Screenshots zijn in de hele app geblokkeerd.</string>
+
+    <string name="learn_about_section">Zo werkt Sceau</string>
+    <string name="learn_about_replay_intro">Introductie opnieuw bekijken</string>
+
+    <string name="learn_chip_title">Wat de chip bevat</string>
+    <string name="learn_chip_back">Terug</string>
+    <string name="learn_chip_intro">De chip bewaart zijn gegevens in bestanden: gegevensgroepen (DG1, DG2…) en enkele technische bestanden (EF). Dit doet Sceau ermee.</string>
+
+    <string name="learn_chip_section_displayed">Uitgelezen en getoond</string>
+    <string name="learn_chip_dg1">De gegevens uit de MRZ: naam, voornamen, nationaliteit, geboortedatum, geslacht, documentnummer, staat van afgifte en vervaldatum.</string>
+    <string name="learn_chip_dg2">De foto van de houder.</string>
+    <string name="learn_chip_dg11">Als de staat ze vastlegt: aanvullende persoonsgegevens, zoals geboorteplaats of adres.</string>
+    <string name="learn_chip_dg12">Als de staat ze vastlegt: gegevens over het document, zoals de instantie en datum van afgifte.</string>
+
+    <string name="learn_chip_section_verification">Alleen uitgelezen voor de controle</string>
+    <string name="learn_chip_verification_intro">Deze bestanden worden niet getoond: ze dienen om te bewijzen dat de gegevens echt zijn.</string>
+    <string name="learn_chip_ef_card_access">De toegangsprotocollen die de chip accepteert, zoals PACE.</string>
+    <string name="learn_chip_ef_com">De lijst met aanwezige gegevensgroepen.</string>
+    <string name="learn_chip_ef_sod">De hash van elke gegevensgroep, ondertekend door de staat.</string>
+    <string name="learn_chip_dg14">De openbare sleutel voor Chip Authentication.</string>
+    <string name="learn_chip_dg15">De openbare sleutel voor Active Authentication.</string>
+    <string name="learn_chip_ef_card_security">Alleen op sommige kaarten: de sleutel van de chip, ondertekend door de staat en gecontroleerd tijdens PACE.</string>
+
+    <string name="learn_chip_section_never">Nooit uitgelezen</string>
+    <string name="learn_chip_dg3">De vingerafdrukken.</string>
+    <string name="learn_chip_dg4">De afbeelding van de iris.</string>
+    <string name="learn_chip_eac">Deze twee bestanden zijn sowieso beveiligd met een extra slot, EAC (Extended Access Control), dat alleen bevoegde instanties kunnen openen.</string>
+    <string name="learn_chip_others">De andere gegevensgroepen (DG5 tot en met DG10, DG13 en DG16: andere afbeeldingen, handtekening, gegevens specifiek voor de staat, te waarschuwen personen) worden evenmin uitgelezen.</string>
+
+    <string name="learn_chip_section_never_does">Wat Sceau niet doet</string>
+    <string name="learn_chip_no_storage">Sceau slaat geen uitgelezen gegevens op, verstuurt ze niet en logt ze niet: alles blijft in het geheugen van de telefoon en wordt gewist zodra je het resultaat verlaat.</string>
+    <string name="learn_chip_no_screenshot">Sceau staat geen screenshots toe en toont geen voorbeeld bij recente apps.</string>
+    <string name="learn_chip_no_write">Sceau wijzigt niets op de chip: de app leest alleen.</string>
+    <string name="learn_chip_no_other_data">De chip bevat geen strafblad, geen gezondheidsgegevens en geen locatie.</string>
+</resources>

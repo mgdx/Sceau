@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="learn_intro_skip">Jäta tutvustus vahele</string>
+    <string name="learn_intro_next">Edasi</string>
+    <string name="learn_intro_start">Alusta</string>
+    <string name="learn_intro_page">Leht %1$d/%2$d</string>
+
+    <string name="learn_intro_chip_title">Kiip teie dokumendis</string>
+    <string name="learn_intro_chip_body">Biomeetrilistes passides ja uuemates ID-kaartides on kontaktivaba kiip, mis vastab rahvusvahelisele standardile ICAO 9303.</string>
+    <string name="learn_intro_chip_icao">ICAO: Rahvusvaheline Tsiviillennunduse Organisatsioon, mis kehtestab reisidokumentide reeglid.</string>
+    <string name="learn_intro_chip_copy">Kiibil on trükitud andmete ja foto koopia, mille on elektrooniliselt allkirjastanud dokumendi välja andnud riik.</string>
+
+    <string name="learn_intro_key_title">Võti kiibi avamiseks</string>
+    <string name="learn_intro_key_body">Ilma võtmeta kiip ei vasta. Võti on trükitud dokumendile:</string>
+    <string name="learn_intro_key_can">CAN: ID-kaardile trükitud 6-kohaline juurdepääsunumber.</string>
+    <string name="learn_intro_key_mrz">MRZ: fotolehe allosas olevad märgiread, millest saadakse dokumendi number, sünniaeg ja kehtivuse lõpp.</string>
+    <string name="learn_intro_key_channel">Seejärel käib suhtlus krüpteeritud kanali kaudu (PACE või BAC, standardis ette nähtud protokollid): läheduses olev inimene ei saa seda lugeda.</string>
+
+    <string name="learn_intro_verify_title">Mida Sceau kontrollib</string>
+    <string name="learn_intro_verify_signature">Riigi allkirja (Passive Authentication), kasutades rakendusse sisseehitatud riikide sertifikaate.</string>
+    <string name="learn_intro_verify_clone">Et kiip pole koopia (Chip Authentication või Active Authentication): kiip peab tõendama, et tal on salajane võti, mida ei saa välja võtta.</string>
+    <string name="learn_intro_verify_verdicts">Tulemus on üks neljast otsusest:</string>
+
+    <string name="learn_intro_privacy_title">Teie andmed jäävad siia</string>
+    <string name="learn_intro_privacy_offline">Kõik toimub telefonis: Sceaul pole isegi luba internetti kasutada.</string>
+    <string name="learn_intro_privacy_nothing_saved">Midagi ei salvestata: loetud andmed kustutatakse kohe, kui lahkute tulemusest või rakendus läheb taustale.</string>
+    <string name="learn_intro_privacy_screenshots">Ekraanipildid on kogu rakenduses blokeeritud.</string>
+
+    <string name="learn_about_section">Kuidas Sceau töötab</string>
+    <string name="learn_about_replay_intro">Vaata tutvustust uuesti</string>
+
+    <string name="learn_chip_title">Mida kiip sisaldab</string>
+    <string name="learn_chip_back">Tagasi</string>
+    <string name="learn_chip_intro">Kiip hoiab teavet failides: andmerühmades (DG1, DG2…) ja mõnes tehnilises failis (EF). Siin on kirjas, mida Sceau nendega teeb.</string>
+
+    <string name="learn_chip_section_displayed">Loetakse ja kuvatakse</string>
+    <string name="learn_chip_dg1">MRZ-i andmed: perekonnanimi, eesnimed, kodakondsus, sünniaeg, sugu, dokumendi number, väljaandja riik ja kehtivuse lõpp.</string>
+    <string name="learn_chip_dg2">Dokumendi kasutaja foto.</string>
+    <string name="learn_chip_dg11">Kui riik need kannab: täiendavad isikuandmed, näiteks sünnikoht või aadress.</string>
+    <string name="learn_chip_dg12">Kui riik need kannab: andmed dokumendi kohta, näiteks väljaandja asutus ja väljaandmise kuupäev.</string>
+
+    <string name="learn_chip_section_verification">Loetakse ainult kontrollimiseks</string>
+    <string name="learn_chip_verification_intro">Neid faile ei kuvata: need tõendavad, et andmed on ehtsad.</string>
+    <string name="learn_chip_ef_card_access">Kiibi toetatud juurdepääsuprotokollid, näiteks PACE.</string>
+    <string name="learn_chip_ef_com">Olemasolevate andmerühmade loend.</string>
+    <string name="learn_chip_ef_sod">Iga andmerühma räsi, riigi allkirjastatud.</string>
+    <string name="learn_chip_dg14">Avalik võti, mida kasutatakse Chip Authenticationi jaoks.</string>
+    <string name="learn_chip_dg15">Avalik võti, mida kasutatakse Active Authenticationi jaoks.</string>
+    <string name="learn_chip_ef_card_security">Ainult mõnel kaardil: riigi allkirjastatud kiibi võti, mida kontrollitakse PACE ajal.</string>
+
+    <string name="learn_chip_section_never">Ei loeta kunagi</string>
+    <string name="learn_chip_dg3">Sõrmejäljed.</string>
+    <string name="learn_chip_dg4">Vikerkesta kujutis.</string>
+    <string name="learn_chip_eac">Need kaks faili on niikuinii kaitstud lisalukuga, EAC (Extended Access Control), mida saavad avada ainult volitatud asutused.</string>
+    <string name="learn_chip_others">Teisi andmerühmi (DG5–DG10, DG13 ja DG16: muud pildid, omakäeline allkiri, riigipõhised andmed, teavitatavad isikud) samuti ei loeta.</string>
+
+    <string name="learn_chip_section_never_does">Mida Sceau ei tee</string>
+    <string name="learn_chip_no_storage">Sceau ei salvesta, saada ega logi ühtegi loetud andmet: kõik jääb telefoni mällu ja kustutatakse tulemusest lahkudes.</string>
+    <string name="learn_chip_no_screenshot">Sceau ei luba ekraanipilte ega eelvaadet hiljutiste rakenduste loendis.</string>
+    <string name="learn_chip_no_write">Sceau ei muuda kiibil midagi, vaid ainult loeb.</string>
+    <string name="learn_chip_no_other_data">Kiip ei sisalda karistusregistri andmeid, terviseandmeid ega asukohta.</string>
+</resources>
