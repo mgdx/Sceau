@@ -11,7 +11,6 @@ Sceau fonctionne entièrement hors ligne : il ne demande aucune permission rése
 ## Fonctionnalités
 
 - **Lecture NFC** avec le CAN (6 chiffres imprimés sur la carte d'identité) ou la MRZ (numéro de document, date de naissance, date d'expiration), par PACE ou BAC selon ce que la puce annonce. Une puce qui fait patienter après des essais ratés est attendue jusqu'à une minute.
-- **Scan de la MRZ par la caméra**, pour éviter les fautes de frappe : la bande de texte en bas de la page du passeport ou au verso de la carte remplit le numéro de document et les deux dates, que l'on relit avant de lancer la lecture. La reconnaissance est faite dans l'application, sans service extérieur, et n'accepte qu'une lecture dont tous les chiffres de contrôle sont justes. La saisie manuelle reste toujours possible.
 - **Affichage** de la photo, de l'identité (nom, prénoms, sexe, date de naissance, nationalité, type et numéro de document, État émetteur, date d'expiration) et, si la puce les contient, des données complémentaires (DG11, DG12).
 - **Vérification de l'authenticité** :
   - *Passive Authentication* : la signature des données par l'État émetteur est vérifiée jusqu'à un certificat racine (CSCA) connu, et chaque groupe de données est comparé à son empreinte signée ;
@@ -21,7 +20,7 @@ Sceau fonctionne entièrement hors ligne : il ne demande aucune permission rése
 - **Effacement** : un bouton « Effacer », le retour arrière ou la mise en arrière-plan vident immédiatement la mémoire.
 - Interface en français et en anglais, mode sombre suivant le système.
 
-Sceau ne lit pas les empreintes digitales ni l'iris (réservés aux autorités), ne lit pas le CAN par la caméra et ne fait aucune reconnaissance faciale.
+Sceau ne lit pas les empreintes digitales ni l'iris (réservés aux autorités), ne lit pas la MRZ par la caméra et ne fait aucune reconnaissance faciale.
 
 ## Documents pris en charge
 
@@ -55,11 +54,10 @@ Sceau est fourni sans aucune garantie (licence GPL, articles 15 et 16) et son ve
 
 ## Vie privée
 
-- Permissions demandées : NFC, et caméra. **Aucune permission réseau** : l'application ne peut rien envoyer.
-- La caméra sert uniquement à lire la MRZ, et n'est demandée qu'au premier scan. **Aucune photo n'est prise ni enregistrée** : chaque image est analysée en mémoire puis effacée, seuls le numéro de document et les deux dates en sont tirés (jamais le nom), et la caméra est libérée dès la sortie de l'écran de scan. Refuser la permission n'empêche rien : il suffit de taper les champs. Sur un appareil sans caméra, le bouton de scan n'apparaît pas.
+- Seule permission demandée : NFC. **Aucune permission réseau** : l'application ne peut rien envoyer.
 - Aucune donnée lue n'est écrite sur le disque, en cache, en base ou dans les journaux. La clé d'accès n'est jamais mémorisée d'une lecture à l'autre.
 - Les données en mémoire sont effacées à la sortie de l'écran de résultat et à la mise en arrière-plan.
-- Captures d'écran et aperçu dans le multitâche bloqués sur toute l'application, aperçu de la caméra compris.
+- Captures d'écran et aperçu dans le multitâche bloqués sur les écrans de lecture et de résultat.
 - Aucune télémétrie, aucun rapport de plantage, aucune bibliothèque d'analyse ni de publicité, aucun service Google.
 
 Détails : [`docs/architecture.md`](docs/architecture.md), section « Cycle de vie des données sensibles ».
@@ -69,7 +67,7 @@ Détails : [`docs/architecture.md`](docs/architecture.md), section « Cycle de v
 - **F-Droid** : soumission prévue après la première release.
 - **Releases GitHub** : APK publiés sur la page Releases du dépôt, pour les versions étiquetées `vX.Y.Z`.
 
-Configuration requise : Android 8.0 ou plus récent, avec NFC. L'application s'installe aussi sans NFC et l'indique à l'ouverture. La caméra est facultative.
+Configuration requise : Android 8.0 ou plus récent, avec NFC. L'application s'installe aussi sans NFC et l'indique à l'ouverture.
 
 ## Compilation
 
@@ -89,7 +87,7 @@ git submodule update --init
 ./gradlew check                   # tests, lint et ktlint, comme la CI
 ```
 
-Le projet compte quatre modules : `:core`, en Kotlin pur, qui lit et vérifie la puce ; `:mrz`, en Kotlin pur, qui reconnaît la MRZ dans les images de la caméra (sa police OCR-B ne sert qu'à générer des modèles et aux tests, voir [`mrz/README.md`](mrz/README.md)) ; `:app`, qui porte l'interface Android ; `:testchip`, une puce ICAO simulée et une PKI factice qui servent aux tests et, dans l'APK de debug seulement, à un mode démo (menu de l'accueil → « Simuler une CNIe (démo) ») qui lit une carte spécimen sans document réel. Rien de `:testchip` n'entre dans l'APK release. Voir [`CONTRIBUTING.md`](CONTRIBUTING.md) et [`docs/`](docs/).
+Le projet compte trois modules : `:core`, en Kotlin pur, qui lit et vérifie la puce ; `:app`, qui porte l'interface Android ; `:testchip`, une puce ICAO simulée et une PKI factice qui servent aux tests et, dans l'APK de debug seulement, à un mode démo (menu de l'accueil → « Simuler une CNIe (démo) ») qui lit une carte spécimen sans document réel. Rien de `:testchip` n'entre dans l'APK release. Voir [`CONTRIBUTING.md`](CONTRIBUTING.md) et [`docs/`](docs/).
 
 ## Documentation
 

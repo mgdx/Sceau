@@ -41,10 +41,3 @@
 | CNIe | franskt id-kort | Menu démo |
 | Master List | Master List | Jamais traduit ; pluriel « Master Lists » |
 | JJ / MM / AAAA | DD / MM / ÅÅÅÅ | Gabarits de date |
-| caméra | kamera | |
-| scanner (la MRZ) | skanna (MRZ-skanning) | |
-| lampe torche | ficklampa | |
-| cadre de visée | ram | |
-| Autoriser (permission) | Tillåt | Vocabulaire Android |
-| réglages de l'application | appinställningar | Vocabulaire Android |
-| saisie manuelle | ange manuellt | |

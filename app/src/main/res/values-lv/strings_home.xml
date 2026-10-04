@@ -25,7 +25,4 @@
     <string name="home_nfc_settings">Atvērt NFC iestatījumus</string>
     <string name="home_nfc_absent">Šim tālrunim nav NFC, tāpēc tas nevar nolasīt personu apliecinošo dokumentu mikroshēmu.</string>
     <string name="home_menu_demo">Simulēt Francijas personas apliecību (demo)</string>
-    <string name="home_scan_mrz">Skenēt MRZ</string>
-    <string name="home_mrz_scanned">MRZ noskenēta: pirms mikroshēmas nolasīšanas pārbaudiet laukus</string>
-    <string name="home_menu_demo_mrz_scan">Simulēt MRZ skenēšanu (demo)</string>
 </resources>

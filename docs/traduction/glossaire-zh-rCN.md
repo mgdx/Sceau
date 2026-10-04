@@ -42,10 +42,3 @@ Espace entre sinogrammes et mots latins ou chiffres (usage des chaînes Android 
 | RGPD | 《通用数据保护条例》（GDPR） | |
 | CAN | CAN（卡片访问号码） | glose seulement dans l’aide du champ |
 | JJ / MM / AAAA | DD / MM / YYYY | gabarit usuel des formulaires numériques |
-| caméra | 相机 | |
-| scanner (la MRZ) | 扫描 | 识别 pour la reconnaissance en cours, 读取 réservé à la puce |
-| lampe torche | 手电筒 | |
-| cadre de visée | 框 | |
-| Autoriser (permission) | 允许 | Vocabulaire Android |
-| réglages de l’application | 应用设置 | Vocabulaire Android |
-| saisie manuelle | 手动输入 | |

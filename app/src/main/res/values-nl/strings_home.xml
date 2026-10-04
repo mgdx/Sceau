@@ -25,7 +25,4 @@
     <string name="home_nfc_settings">NFC-instellingen openen</string>
     <string name="home_nfc_absent">Deze telefoon heeft geen NFC: hij kan de chip van identiteitsdocumenten niet uitlezen.</string>
     <string name="home_menu_demo">Franse identiteitskaart simuleren (demo)</string>
-    <string name="home_scan_mrz">MRZ scannen</string>
-    <string name="home_mrz_scanned">MRZ gescand: controleer de velden voordat je de chip uitleest</string>
-    <string name="home_menu_demo_mrz_scan">MRZ-scan simuleren (demo)</string>
 </resources>

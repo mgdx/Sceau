@@ -6,7 +6,6 @@ Sceau reads the chip of ICAO 9303 identity documents over NFC and checks that th
 <li>European identity cards, using the CAN or the MRZ</li>
 <li>Biometric passports from any country, using the document number, date of birth and expiry date</li>
 </ul>
-To avoid typing mistakes, the MRZ (the band of text at the bottom of the passport page or on the back of the card) can be read with the camera: the document number and dates are filled in, and you check them before starting the reading. Recognition runs inside the app, with no external service.
 
 <b>What Sceau shows</b>
 <ul>
@@ -27,15 +26,15 @@ Sceau ships the French CSCA certificates published by ANTS and the German Master
 
 <b>Privacy</b>
 <ul>
-<li>Permissions: NFC, and camera only to read the MRZ. No photo is taken or saved: images are analysed in memory then wiped, and the name is never read. The camera is optional: you can always type the fields</li>
+<li>Only permission: NFC</li>
 <li>No data read from the chip is saved; memory is wiped when leaving the result or when the app goes to the background</li>
-<li>Screenshots are blocked throughout the app</li>
+<li>Screenshots are blocked while reading and on the result screen</li>
 <li>No ads, no trackers, no Google services</li>
 </ul>
 
 <b>Intended use</b>
 Sceau is meant for checking your own document, or a document presented by its holder. Under the GDPR, the photo is biometric data when used for automated comparison: Sceau does not perform such comparison.
 
-Sceau does not read fingerprints or iris data.
+Sceau does not read fingerprints or iris data, and does not scan the MRZ with the camera.
 
 Free software under the GPLv3 licence.

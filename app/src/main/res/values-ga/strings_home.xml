@@ -25,7 +25,4 @@
     <string name="home_nfc_settings">Oscail socruithe NFC</string>
     <string name="home_nfc_absent">Níl NFC ar an bhfón seo, mar sin ní féidir leis sliseog na gcáipéisí aitheantais a léamh.</string>
     <string name="home_menu_demo">Insamhail cárta aitheantais Francach (taispeántas)</string>
-    <string name="home_scan_mrz">Scan an MRZ</string>
-    <string name="home_mrz_scanned">MRZ scanta: seiceáil na réimsí sula léann tú an tsliseog</string>
-    <string name="home_menu_demo_mrz_scan">Insamhail scanadh MRZ (taispeántas)</string>
 </resources>

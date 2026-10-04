@@ -121,11 +121,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.coroutines.android)
-    implementation(project(":mrz"))
-    // Scan de la MRZ (D32) : aperçu et analyse d'image uniquement, jamais ImageCapture.
-    implementation(libs.androidx.camera.camera2)
-    implementation(libs.androidx.camera.lifecycle)
-    implementation(libs.androidx.camera.compose)
 
     testImplementation(libs.junit)
     // Contrôle des débordements de texte dans toutes les langues (D28) : Robolectric et

@@ -1,7 +1,6 @@
 First release.
 • NFC reading of the French national ID card, European ID cards and biometric passports (PACE or BAC)
 • Display of the photo, identity and additional data
-• MRZ scan with the camera to fill in the document number and dates, no photo saved
 • Passive, Chip and Active Authentication, with a verdict and a checklist
 • Trust store: French CSCAs from ANTS, German Master List from BSI, Master List import
 • Offline, no data kept, French and English interface

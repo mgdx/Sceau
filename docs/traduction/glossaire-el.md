@@ -42,12 +42,5 @@
 | JJ / MM / AAAA | ΗΗ / ΜΜ / ΕΕΕΕ | Ημέρα, Μήνας, Έτος |
 | RGPD | ΓΚΠΔ | Γενικός Κανονισμός για την Προστασία Δεδομένων |
 | Master List | Master List | Jamais traduit, invariable au pluriel |
-| caméra | κάμερα |  |
-| scanner (la MRZ) | σάρωση (bouton : « Σάρωση MRZ ») |  |
-| lampe torche | φακός |  |
-| cadre de visée | πλαίσιο |  |
-| Autoriser (permission) | Αποδοχή | Vocabulaire Android ; Android 10+ emploie « Να επιτρέπεται », gardé « Αποδοχή » (plus court), à confirmer |
-| réglages de l’application | ρυθμίσεις της εφαρμογής | Vocabulaire Android |
-| saisie manuelle | χειροκίνητη καταχώριση |  |
 
 Typographie : guillemets « », point d’interrogation grec « ; », apostrophe typographique ’ (κατ’ εκτίμηση).

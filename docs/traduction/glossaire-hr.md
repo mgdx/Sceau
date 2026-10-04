@@ -38,10 +38,3 @@
 | RGPD | Opća uredba o zaštiti podataka | Nom complet |
 | Master List | Master List | Jamais traduit ; « popis Master List » quand la phrase exige une déclinaison |
 | CAN, MRZ, SOD, DS | idem | Jamais traduits ; suffixe casuel avec trait d’union (MRZ-a, SOD-a) selon l’usage croate |
-| caméra | kamera | Nom Android de la permission |
-| scanner (la MRZ) | skeniraj / skeniranje | MRZ au masculin (MRZ je skeniran) |
-| lampe torche | svjetiljka | Réglages rapides Android |
-| cadre de visée | okvir |  |
-| Autoriser (permission) | Dopusti | Vocabulaire Android |
-| réglages de l’application | postavke aplikacije | Vocabulaire Android |
-| saisie manuelle | unesi ručno |  |

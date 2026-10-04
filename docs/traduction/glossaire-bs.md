@@ -39,10 +39,3 @@
 | RGPD | GDPR (Opća uredba o zaštiti podataka) | |
 | Master List | Master List | invariable, traité au féminin (lista) |
 | JJ / MM / AAAA | DD / MM / GGGG | |
-| caméra | kamera | Nom Android de la permission |
-| scanner (la MRZ) | skeniraj / skeniranje | MRZ au masculin (MRZ je skeniran) |
-| lampe torche | svjetiljka | Réglages rapides Android ; « baterijska lampa » est la forme serbe |
-| cadre de visée | okvir |  |
-| Autoriser (permission) | Dozvoli | Vocabulaire Android |
-| réglages de l’application | postavke aplikacije | Vocabulaire Android |
-| saisie manuelle | unesi ručno |  |

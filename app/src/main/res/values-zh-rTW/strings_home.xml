@@ -25,7 +25,4 @@
     <string name="home_nfc_settings">開啟 NFC 設定</string>
     <string name="home_nfc_absent">這支手機不支援 NFC，無法讀取身分證件的晶片。</string>
     <string name="home_menu_demo">模擬法國身分證（示範）</string>
-    <string name="home_scan_mrz">掃描 MRZ</string>
-    <string name="home_mrz_scanned">已掃描 MRZ：讀取晶片前請核對各欄位</string>
-    <string name="home_menu_demo_mrz_scan">模擬掃描 MRZ（示範）</string>
 </resources>

@@ -25,7 +25,4 @@
     <string name="home_nfc_settings">Atidaryti NFC nustatymus</string>
     <string name="home_nfc_absent">Šiame telefone nėra NFC, todėl jis negali nuskaityti asmens dokumentų lusto.</string>
     <string name="home_menu_demo">Imituoti Prancūzijos asmens tapatybės kortelę (demonstracija)</string>
-    <string name="home_scan_mrz">Nuskenuoti MRZ</string>
-    <string name="home_mrz_scanned">MRZ nuskenuota: prieš nuskaitydami lustą patikrinkite laukus</string>
-    <string name="home_menu_demo_mrz_scan">Imituoti MRZ nuskenavimą (demonstracija)</string>
 </resources>

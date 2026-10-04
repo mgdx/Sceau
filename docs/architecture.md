@@ -5,11 +5,7 @@ Ce document décrit l'organisation du code de Sceau, l'API publique du module `:
 ## 1. Modules
 
 ```
-:app   Android : NFC (IsoDep), caméra (CameraX), UI Compose / Material 3, navigation, cycle de vie
-  │  │  │
-  │  │  │ implementation
-  │  │  ▼
-  │  │ :mrz  Kotlin pur (JVM 17) : lecture optique de la MRZ (D32), sans dépendance
+:app   Android : NFC (IsoDep), UI Compose / Material 3, navigation, cycle de vie
   │  │
   │  │ debugImplementation (APK de debug seulement : mode démo)
   │  ▼
@@ -23,15 +19,13 @@ Ce document décrit l'organisation du code de Sceau, l'API publique du module `:
 | Module | Paquet | Rôle | Dépendances principales |
 |---|---|---|---|
 | `:core` | `io.github.mgdx.sceau.core` | Séquence ICAO 9303, Passive / Chip / Active Authentication, magasin de confiance, modèles de données, verdict | JMRTD, SCUBA (smartcards), BouncyCastle, kotlinx-coroutines |
-| `:app` | `io.github.mgdx.sceau` | Transport `IsoDep`, caméra et écran de scan, écrans, navigation, session de lecture, stockage des Master Lists importées | `:core`, `:mrz`, scuba-sc-android, Compose, Material 3, Navigation Compose, Lifecycle, CameraX ; `:testchip` en debug seulement |
-| `:mrz` | `io.github.mgdx.sceau.mrz` | Lecture optique de la MRZ : localisation, classification des caractères OCR-B, chiffres de contrôle, stabilisation ; ne rend que le format, le numéro et les deux dates (`mrz/README.md`, D32) | aucune (JUnit en test) |
+| `:app` | `io.github.mgdx.sceau` | Transport `IsoDep`, écrans, navigation, session de lecture, stockage des Master Lists importées | `:core`, scuba-sc-android, Compose, Material 3, Navigation Compose, Lifecycle ; `:testchip` en debug seulement |
 | `:testchip` | `io.github.mgdx.sceau.testchip` | PKI factice, puce simulée (BAC, PACE, messagerie sécurisée, CA, AA), CNIe spécimen (`testchip/README.md`) | `:core`, JMRTD, SCUBA, BouncyCastle |
 
 Règles :
 
 - `:core` n'importe **aucune** classe `android.*` : il est compilé et testé sur la JVM (`./gradlew :core:test`). Ses tests remplacent la puce soit par un transport qui rejoue des APDU enregistrés (`ScriptedTransport`), soit par la puce simulée de `:testchip`, et génèrent à la volée une PKI factice (CSCA, lien, DS, SOD, clés CA et AA, en RSA et ECDSA).
 - `:testchip` n'entre jamais dans l'APK release : `testImplementation` de `:core`, `debugImplementation` de `:app` (décision D17). Le code principal de `:core` n'en dépend pas.
-- `:mrz` n'importe aucune classe `android.*` et ne contient aucun code natif : il est compilé et testé sur la JVM (`./gradlew :mrz:test`) sur des MRZ de synthèse, jamais sur des images de vrais documents. Il ne dépend pas de `:core`, et `:core` ne dépend pas de lui : l'analyse d'images reste hors du module cryptographique et l'API de `readAndVerify` est inchangée. La police OCR-B (`mrz/fonts/`) sert à générer les modèles et aux tests ; elle n'entre jamais dans l'APK.
 - Les dépendances de `:core` sont en `implementation` (décision D9) : son API publique n'expose que des types Kotlin, `java.security` et `java.time`, jamais JMRTD ni BouncyCastle.
 - Les ressources du magasin de confiance embarqué sont dans `core/src/main/resources/trust/` : 5 certificats CSCA de l'ANTS et la Master List allemande du BSI (décision D1, provenance dans `docs/trust-store.md`), énumérés par `trust/index.txt` (décision D16).
 
@@ -49,26 +43,14 @@ core/src/main/kotlin/io/github/mgdx/sceau/core/
                            TrustStoreLoader, MasterListParser
   verify/                  PassiveAuthentication, ActiveAuthentication, Verdicts, CertificateChains
 
-mrz/src/main/kotlin/io/github/mgdx/sceau/mrz/
-  Api.kt                   MrzScanner (analyze, reset), LumaFrame, MrzFormat, MrzKeyFields, MrzScanResult
-  Internal.kt              contrat interne : LineRecognizer, RecognizedMrz, GlyphCandidates, MrzFieldDecoder (stabilisation)
-  TemplateLineRecognizer.kt  traitement d'image : redressement, binarisation, inclinaison, lignes, grille, classification
-  OcrbTemplates.kt         chargement des 37 modèles OCR-B 16 × 20 (resources/…/mrz/ocrb-templates.bin)
-  MrzDecoding.kt           positions des champs TD1/TD2/TD3, corrections selon le type de champ, contrôles
-  CheckDigit.kt            chiffre de contrôle ICAO 9303-3 (pondération 7-3-1)
-mrz/fonts/                 police OCR-B (ocrb10.otf) et licences, hors APK
-scripts/generate-ocrb-templates.sh, GenerateOcrbTemplates.java   régénération des modèles
-
 app/src/main/java/io/github/mgdx/sceau/
   SceauApplication.kt      singleton TrustStoreRepository, préchargement du magasin au démarrage
   MainActivity.kt          activité unique, mode lecteur NFC, SessionViewModel à portée d'activité
   nfc/                     IsoDepTransport (CardTransport, classement des erreurs), NfcStatus
-  session/                 SessionViewModel, ReadState, AccessForm (saisie de l'accueil, dates, fillFromMrz)
+  session/                 SessionViewModel, ReadState, AccessForm (saisie de l'accueil, dates)
   trust/                   TrustStoreRepository
   demo/DemoCard            document simulé du mode démo (voir DemoMode ci-dessous)
-  ui/                      SceauNavHost, Routes, écrans home/, scan/, reading/, result/, trust/, about/
-  ui/scan/                 MrzScanScreen (permission, aperçu CameraX, torche), MrzFrameAnalyzer (copie du plan Y),
-                           ScanGeometry (cadre de visée, recadrage capteur), ScanStatus (état affiché)
+  ui/                      SceauNavHost, Routes, écrans home/, reading/, result/, trust/, about/
   ui/common/SecureWindow   FLAG_SECURE compté par fenêtre
   ui/theme/                thème Material 3, palette du logo, mode sombre suivant le système
   jp2/Jpeg2000Decoder      décodage JPEG 2000 (JNI vers libsceau_jp2.so), appelé dans le seul processus isolé
@@ -169,51 +151,17 @@ Résultat  affiche verdict, photo, DG1, DG11/DG12, liste de contrôle
 4. **Magasin de confiance** : `TrustStoreRepository.get()` fournit le `TrustStore` fusionné, chargé une fois puis gardé en mémoire jusqu'au prochain import ou effacement des imports. `SceauApplication` le précharge en arrière-plan au démarrage du processus (décision D16).
 5. **Résultat** (`ResultScreen`) : sur `Done(report)`, la navigation remplace l'écran de lecture par l'écran de résultat (`popUpTo(READING) inclusive`). L'écran met en forme le rapport ; le portrait JPEG 2000 est décodé par OpenJPEG dans le processus isolé de `Jpeg2000Service` (décision D23), le JPEG par le décodeur Android. Aucune donnée n'est copiée hors du rapport au-delà de ce qu'exige l'affichage.
 6. **Magasin de confiance, écran dédié** (`TrustStoreScreen`) : liste des CSCA, import d'une Master List via `ACTION_OPEN_DOCUMENT` → `preview(bytes)` (signature vérifiée, empreinte du signataire montrée) → confirmation → `import(bytes)`. Les Master Lists importées sont stockées telles quelles dans `filesDir/trust/` : ce sont des certificats publics, pas des données personnelles. « Supprimer les certificats importés » appelle `clearImported()`.
-7. **Mode démo** (APK de debug seulement, décision D17) : l'entrée « Simuler une CNIe (démo) » du menu de l'accueil construit, hors du thread principal, une CNIe simulée de `:testchip` (`DemoMode.newSimulatedCnie()`), puis `SessionViewModel.startDemo(card)` la lit par le même chemin qu'un document réel (`launchRead`), avec sa clé CAN et son magasin de test, qui ne sert qu'à cette lecture. La clé saisie est oubliée. Le résultat porte le bandeau « Document simulé — démonstration » (`ReadState.Done.isDemo`). L'entrée « Simuler un scan de MRZ » remplit le formulaire avec la MRZ de la CNIe simulée (`DemoMode.simulatedMrzScan()` puis `SessionViewModel.onMrzScanned`), comme l'écran de scan. Dans l'APK release, `DemoMode.isAvailable` vaut `false` et ces entrées n'existent pas.
-8. **Scan de la MRZ** (`MrzScanScreen`, décision D32) : le bouton « Scanner la MRZ » de l'accueil ouvre l'écran de scan, qui remplit le formulaire de l'accueil sans jamais lancer la lecture ; détail ci-dessous.
-
-### Flux d'une image de la caméra
-
-```
-Accueil  « Scanner la MRZ » (affiché si FEATURE_CAMERA_ANY) ──► route scan (MrzScanScreen)
-           permission CAMERA demandée à l'arrivée si besoin ; refus : panneau, saisie manuelle
-Scan     ProcessCameraProvider.bindToLifecycle(écran, caméra arrière, Preview, ImageAnalysis)
-           ImageAnalysis 1280 × 720, KEEP_ONLY_LATEST, YUV_420_888, exécuteur à un fil
-           │ ImageProxy
-           ▼
-         MrzFrameAnalyzer.analyze    recadrage sur le cadre de visée (+8 %), copie du plan Y
-           │ LumaFrame(tableau de Sceau)          dans un ByteArray réutilisé ; ImageProxy fermé (finally)
-           ▼
-         MrzScanner.analyze (:mrz)  TemplateLineRecognizer → RecognizedMrz (lignes utiles seulement)
-           │                         MrzFieldDecoder → corrections, contrôles, 2 images identiques
-           │ MrzScanResult           tableau remis à zéro (finally)
-           ▼
-         fil principal : NothingFound / Unstable / UnsupportedDocumentNumber → ligne d'état (ScanStatusTracker)
-                          Found(MrzKeyFields) → SessionViewModel.onMrzScanned(fields), haptique, annonce
-           │ 900 ms
-           ▼
-Accueil  AccessForm.fillFromMrz : numéro, dates dans l'ordre de la locale ; clavier fermé, message « vérifiez »
-           l'utilisateur relit puis appuie sur « Lire » (jamais de lecture automatique)
-```
-
-- `MrzScanScreen` ne lie que `Preview` et `ImageAnalysis` ; `ImageCapture` n'est jamais lié. L'aperçu est affiché par `CameraXViewfinder` (`camera-compose`).
-- `MrzFrameAnalyzer.processFrame` calcule le rectangle du capteur qui correspond au cadre de visée affiché (`ScanGeometry.sensorCrop`, rotation et `cropRect` compris), copie la luminance de ce rectangle dans son tableau (`ScanGeometry.copyLuma`, `rowStride` et `pixelStride` respectés), puis appelle `MrzScanner.analyze`. Après un `Found`, les images suivantes sont ignorées.
-- `TemplateLineRecognizer` remet l'image à l'endroit (`rotationDegrees`), la réduit, la binarise, corrige l'inclinaison (±10°), cherche 3 lignes de 30 ou 2 lignes de 36 ou 44 caractères au pas régulier, puis classe chaque cellule des lignes utiles contre les 37 modèles (corrélation normalisée, score de 0 à 1, 5 meilleurs candidats). La ligne du nom est exigée pour reconnaître le format, mais jamais découpée ni classée. Entrée refusée (`null`) au-delà de 4096 × 4096 ou si dimensions, `rowStride` ou taille du tableau sont incohérents.
-- `MrzDecoding` corrige selon le type de champ (O/0, I/1, B/8, S/5, Z/2, G/6, D/0…), explore un nombre borné de combinaisons des candidats ambigus, et n'accepte qu'une lecture dont les chiffres de contrôle (et le composite en TD2 et TD3) sont justes et les dates existantes ; si deux lectures différentes ont presque le même coût, elle est refusée. `MrzFieldDecoder` ne rend `Found` qu'après deux résultats identiques, et oublie l'attente après 2 s sans MRZ ou sur `reset()`.
-- Le résultat ne passe ni par un argument de navigation ni par un `SavedStateHandle` : l'écran appelle directement `SessionViewModel.onMrzScanned`, puis `popBackStack`.
+7. **Mode démo** (APK de debug seulement, décision D17) : l'entrée « Simuler une CNIe (démo) » du menu de l'accueil construit, hors du thread principal, une CNIe simulée de `:testchip` (`DemoMode.newSimulatedCnie()`), puis `SessionViewModel.startDemo(card)` la lit par le même chemin qu'un document réel (`launchRead`), avec sa clé CAN et son magasin de test, qui ne sert qu'à cette lecture. La clé saisie est oubliée. Le résultat porte le bandeau « Document simulé — démonstration » (`ReadState.Done.isDemo`). Dans l'APK release, `DemoMode.isAvailable` vaut `false` et l'entrée n'existe pas.
 
 ## 4. Cycle de vie des données sensibles
 
-Données sensibles : la clé d'accès (CAN ou MRZ) et le contenu de `VerificationReport.document` (DG1, portrait DG2, DG11, DG12, octets bruts des DG), ainsi que les images de la caméra pendant un scan de la MRZ et les champs qui en sont tirés (D32). Règles de SPEC §8.
+Données sensibles : la clé d'accès (CAN ou MRZ) et le contenu de `VerificationReport.document` (DG1, portrait DG2, DG11, DG12, octets bruts des DG). Règles de SPEC §8.
 
 ### Où elles vivent
 
 | Donnée | Emplacement | Durée de vie |
 |---|---|---|
 | Saisie CAN / MRZ | `SessionViewModel.form` (`AccessForm`, en mémoire, jamais dans un `Bundle` ni un `SavedStateHandle` ; `toString()` masqué) | de la frappe à la fin d'une lecture réussie (formulaire vidé, onglet gardé) ou à `clear()` |
-| Plan de luminance d'une image de la caméra | `MrzFrameAnalyzer.luma` (`ByteArray` de Sceau, réutilisé d'une image à l'autre) | le temps d'une analyse : remis à zéro après chaque image (`finally`), à la mise en arrière-plan (`reset()`), et remis à zéro puis libéré à la sortie de l'écran (`release()`, sur le fil de l'analyse) ou quand la taille du recadrage change |
-| Résultat du scan (`MrzKeyFields` : format, numéro, dates `AAMMJJ`) | message de l'analyseur vers le fil principal, puis `SessionViewModel.onMrzScanned` | le temps d'être copié dans `form` ; ensuite les règles de la saisie manuelle. `toString()` ne montre que le format |
-| Tableaux de travail de `:mrz` (image réduite, binaire, cellules, `CharArray` des champs) | `TemplateLineRecognizer`, `MrzDecoding` | réutilisés ou temporaires, remis à zéro avant le retour de chaque analyse ; nationalité, sexe et données facultatives jamais copiés dans un `String` |
 | `AccessKey` | `SessionViewModel` (portée d'activité) | de `prepare(key)` à la fin d'une lecture réussie ou à `clear()` ; conservée après une erreur pour « Réessayer » |
 | `VerificationReport` | `SessionViewModel`, état `ReadState.Done` | de la fin de la lecture à `clear()` |
 | Images décodées (bitmap) | écran de résultat | tant que l'écran est composé ; effacées par `wipeAndRecycle()`. Les tampons intermédiaires du décodage JPEG 2000 (copie native du flux, échantillons, tableau ARGB natif et Java, flux et pixels reçus ou envoyés par binder, des deux côtés) sont remis à zéro dès le bitmap construit ; le processus isolé est terminé après chaque image (D23) |
@@ -238,7 +186,6 @@ Une mise en arrière-plan depuis l'accueil (en `Idle`, `WaitingForCard` ou `Erro
 Limites assumées :
 
 - Kotlin/JVM ne permet pas d'effacer les `String` (nom, numéro, CAN) ni de garantir qu'aucune copie n'a été faite par le ramasse-miettes. La remise à zéro porte sur les tableaux d'octets, qui contiennent la photo et les DG bruts ; les chaînes deviennent inaccessibles dès que la session est vidée.
-- Les tampons de CameraX et du pilote de la caméra (images YUV, `ImageProxy`, surface de l'aperçu) sont libérés sans remise à zéro : Sceau ne les possède pas. Ils restent en mémoire du processus ou du serveur de caméra, ne sont ni écrits ni journalisés. Les champs reconnus deviennent des `String` (numéro, dates), soumis à la limite précédente.
 - JMRTD et OpenJPEG gardent des copies intermédiaires dans des tampons internes qu'ils libèrent sans remise à zéro (décisions D3 et D14). Elles restent en mémoire et ne sont ni écrites ni journalisées ; celles d'OpenJPEG disparaissent avec le processus isolé, terminé après chaque image (D23). Les tampons des `Parcel` binder qui transportent le flux et les pixels sont libérés sans remise à zéro (l'API publique ne le permet pas).
 
 ### Journaux
@@ -247,12 +194,12 @@ Aucun appel à `android.util.Log`, `println` ni `printStackTrace` dans le code d
 
 ### Protection de l'écran
 
-- `FLAG_SECURE` est posé sur la fenêtre de l'activité dès sa création, dans `MainActivity.onCreate` avant le premier dessin (`secureForLifetime(window)`), pour toute sa durée de vie : capture d'écran refusée, aperçu masqué dans le multitâche, affichage bloqué sur un écran externe non sécurisé, sur tous les écrans (accueil et saisie du CAN et de la MRZ, écran de scan et aperçu de la caméra, lecture, résultat, magasin de confiance, à propos) (SPEC §2 et §8, audit V7).
+- `FLAG_SECURE` est posé sur la fenêtre de l'activité dès sa création, dans `MainActivity.onCreate` avant le premier dessin (`secureForLifetime(window)`), pour toute sa durée de vie : capture d'écran refusée, aperçu masqué dans le multitâche, affichage bloqué sur un écran externe non sécurisé, sur tous les écrans (accueil et saisie du CAN et de la MRZ, lecture, résultat, magasin de confiance, à propos) (SPEC §2 et §8, audit V7).
 - Les écrans de lecture et de résultat demandent en plus la protection tant qu'ils sont composés (`SecureWindow()`), ainsi que la fenêtre du dialogue de la photo en plein écran. Les demandes sont comptées par fenêtre ; celle de `secureForLifetime` n'est jamais rendue, si bien que la sortie d'un écran ne lève jamais la protection.
 
 ### Réseau
 
-Le manifeste ne déclare aucune permission réseau (`android.permission.NFC` et `android.permission.CAMERA` seulement, décision D7 pour la permission interne ajoutée par androidx.core, D32 pour la caméra). Aucune donnée ne peut quitter l'appareil ; le magasin de confiance n'est jamais mis à jour par le réseau.
+Le manifeste ne déclare aucune permission réseau (`android.permission.NFC` seulement, décision D7 pour la permission interne ajoutée par androidx.core). Aucune donnée ne peut quitter l'appareil ; le magasin de confiance n'est jamais mis à jour par le réseau.
 
 ## 5. Tests
 
@@ -268,11 +215,3 @@ SCEAU_FUZZ_SEED=0x5cea2026 SCEAU_FUZZ_INDEX=736 ./gradlew :core:test --tests "�
 ```
 
 Un échec donne la cible, la graine, l'index et la liste des mutations, jamais les octets ; les graines signées sont resignées de façon déterministe (ECDSA RFC 6979, heure de signature fixe) pour que graine et index suffisent à le rejouer. Les échecs sont regroupés par signature (exception et ligne du projet). Une entrée minimale devient un test de non-régression ; un bogue non encore corrigé reste dans `FuzzRegressionTest`, marqué `@Ignore`.
-
-### Fuzzing de l'entrée de `:mrz`
-
-`mrz/src/test/kotlin/…/mrz/RecognizerFuzzTest.kt` reprend le modèle de `FuzzHarness` et les mêmes variables `SCEAU_FUZZ_*` (et propriétés `sceau.fuzz.*`) sur l'entrée de `TemplateLineRecognizer` : dimensions extrêmes ou incohérentes, `rowStride` faux, tampon trop court, octets aléatoires, bruit, et MRZ de synthèse mutées (bandes, blocs, octets). Propriété : jamais d'exception ni de délai dépassé, et tout résultat non nul respecte le contrat de `LineRecognizer` (format cohérent avec le nombre et la longueur des lignes, candidats triés, scores dans [0, 1]). `RecognizerInputTest` fige les cas limites (images vides, uniformes, pages sans MRZ, entrée non modifiée).
-
-```bash
-SCEAU_FUZZ_ITERATIONS=20000 ./gradlew :mrz:test --tests '*Fuzz*' --rerun   # mode long
-```

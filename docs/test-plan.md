@@ -16,8 +16,6 @@ Plan de test manuel de SPEC §9.2, exécuté via adb sur un téléphone réel (s
 | Document d'un émetteur absent du magasin embarqué, par exemple une carte d'identité slovaque (voir décision D1) ; à défaut, un passeport d'un pays absent de la Master List du BSI | TP-19 |
 | Carte sans contact non ICAO (carte bancaire, carte de transport) | TP-20 |
 | Master List nationale valide, autre que celle du BSI déjà embarquée : Italie ou Suède (`.ml`) | TP-17, TP-19 |
-| Lampe de bureau orientable, pièce peu éclairée | TP-31 (reflet, faible lumière) |
-| Émulateur Android sans caméra (AVD avec caméras avant et arrière sur « None »), facultatif | TP-28 |
 
 Aucune donnée personnelle des documents de test ne doit figurer dans le compte rendu : noter seulement « conforme » ou l'écart constaté.
 
@@ -47,12 +45,6 @@ adb exec-out screencap -p > capture.png                     # capture d'écran
 adb push master-list.ml /sdcard/Download/                   # déposer une Master List à importer
 adb logcat --pid=$(adb shell pidof $PKG)                    # journaux de l'application
 adb shell dumpsys package $PKG | grep -A5 "permission"      # permissions demandées et accordées
-
-adb shell pm grant $PKG android.permission.CAMERA           # accorder la caméra
-adb shell pm revoke $PKG android.permission.CAMERA          # retirer la caméra (le système tue le processus)
-adb shell pm clear-permission-flags $PKG android.permission.CAMERA user-set user-fixed   # oublier un refus définitif
-adb shell dumpsys media.camera | grep -i -A3 "client"       # clients actifs du service caméra
-aapt2 dump badging app-release.apk | grep -i "feature\|permission"   # features et permissions déclarées
 ```
 
 Un seul agent ou testeur utilise le téléphone à la fois.
@@ -71,7 +63,7 @@ Pour chaque cas : cocher OK ou KO, et en cas de KO noter l'écart, les étapes e
 - **Étapes** :
   1. `adb install -r app-debug.apk`, puis lancer l'application.
   2. `adb shell dumpsys package io.github.mgdx.sceau | grep -A5 permission`.
-- **Attendu** : l'application démarre sur l'accueil, sans demande de permission à l'exécution (la caméra n'est demandée qu'à l'ouverture de l'écran de scan, TP-26). Seules `android.permission.NFC`, `android.permission.CAMERA` (non accordée, D32) et la permission interne `io.github.mgdx.sceau.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION` (décision D7) apparaissent ; aucune permission `INTERNET`, `ACCESS_NETWORK_STATE` ni de stockage.
+- **Attendu** : l'application démarre sur l'accueil, sans demande de permission à l'exécution. Seules `android.permission.NFC` et la permission interne `io.github.mgdx.sceau.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION` (décision D7) apparaissent ; aucune permission `INTERNET` ni `ACCESS_NETWORK_STATE`.
 - **Résultat** : ☐ OK ☐ KO — Notes :
 
 ### TP-02 NFC désactivé, puis réactivé
@@ -217,10 +209,10 @@ Pour toutes les erreurs, l'écran affiche sous le message le code technique comp
 ### TP-16 `FLAG_SECURE` : capture refusée
 
 - **Étapes** :
-  1. Sur l'accueil (champs MRZ remplis), sur l'écran de scan (aperçu de la caméra actif), sur l'écran de lecture puis sur le résultat, `adb exec-out screencap -p > capture.png` et ouvrir l'image ; tenter aussi la capture système (touches volume bas + marche).
-  2. Sur l'accueil, sur l'écran de scan et sur le résultat, `adb shell input keyevent KEYCODE_APP_SWITCH`.
+  1. Sur l'accueil (champs MRZ remplis), sur l'écran de lecture puis sur le résultat, `adb exec-out screencap -p > capture.png` et ouvrir l'image ; tenter aussi la capture système (touches volume bas + marche).
+  2. Sur l'accueil et sur le résultat, `adb shell input keyevent KEYCODE_APP_SWITCH`.
   3. Revenir du résultat à l'accueil, puis ouvrir le magasin de confiance et « À propos », et refaire la capture.
-- **Attendu** : captures noires ou refusées par le système sur tous les écrans, accueil, scan, magasin de confiance et « À propos » compris, y compris après être revenu d'un écran de lecture ou de résultat : `FLAG_SECURE` est posé sur toute l'activité dès sa création (SPEC §2 et §8, audit V7). Aperçu masqué dans le multitâche sur tous les écrans.
+- **Attendu** : captures noires ou refusées par le système sur tous les écrans, accueil, magasin de confiance et « À propos » compris, y compris après être revenu d'un écran de lecture ou de résultat : `FLAG_SECURE` est posé sur toute l'activité dès sa création (SPEC §2 et §8, audit V7). Aperçu masqué dans le multitâche sur tous les écrans.
 - **Résultat** : ☐ OK ☐ KO — Notes :
 
 ### TP-21 Aucune donnée dans les journaux ni sur le disque
@@ -288,98 +280,6 @@ Pour toutes les erreurs, l'écran affiche sous le message le code technique comp
 - **Attendu** : étape 2 : les 5 étapes se cochent sans document ; résultat avec le bandeau « Document simulé — démonstration », verdict **Authentique**, portrait synthétique (silhouette, aucune photo de personne), identité SPECIMEN / MARIANNE, canal PACE, chaîne vers `CSCA-TEST-FRANCE`. Étape 3 : mêmes effacements qu'une lecture réelle (TP-13, TP-15). Étape 4 : aucun certificat de test dans le magasin réel. Étape 5 : l'entrée « Simuler une CNIe (démo) » n'existe pas dans l'APK release (décision D17).
 - **Résultat** : ☐ OK ☐ KO — Notes :
 
-## I. Scan de la MRZ par la caméra (D32)
-
-Ces cas utilisent l'APK release de préférence (taille, R8), sinon l'APK de debug. Les MRZ des documents de test ne doivent figurer dans aucun compte rendu : noter « champs justes » ou le champ en écart, jamais sa valeur.
-
-### TP-26 Scan d'un passeport puis lecture complète
-
-- **Préconditions** : permission caméra non accordée, onglet Passeport, lumière normale.
-- **Étapes** :
-  1. Toucher « Scanner la MRZ » ; accepter la permission.
-  2. Viser la page de données du passeport, la MRZ (deux lignes en bas) dans le cadre ; chronométrer jusqu'à la reconnaissance.
-  3. De retour sur l'accueil, relire les trois champs, puis toucher « Lire » et poser le passeport.
-  4. Recommencer avec le passeport tenu de travers (environ 10°), puis à 30 cm.
-- **Attendu** : étape 1 : la demande système apparaît à l'arrivée sur l'écran de scan (pas au démarrage de l'application) ; aperçu, cadre de visée, consigne, illustration du passeport spécimen « Utopie » ; aucun bouton de prise de vue. Étape 2 : l'état passe de la recherche à « MRZ vue » puis au succès (vibration, annonce TalkBack si activé) et l'écran se ferme seul en moins d'une seconde ; noter le délai (objectif : quelques secondes). Étape 3 : onglet Passeport, clavier fermé, message invitant à vérifier les champs ; numéro et dates justes, dates dans l'ordre de la locale ; aucune lecture lancée avant « Lire » ; lecture complète jusqu'au verdict **Authentique** (comme TP-05). Étape 4 : reconnaissance toujours possible, éventuellement plus lente ; jamais de champs faux.
-- **Résultat** : ☐ OK ☐ KO — Notes :
-
-### TP-27 Scan d'une CNIe (TD1) puis lecture complète
-
-- **Préconditions** : permission caméra accordée (TP-26), onglet Carte d'identité.
-- **Étapes** :
-  1. Choisir le segment **MRZ** (D31), toucher « Scanner la MRZ ».
-  2. Viser le verso de la CNIe, les trois lignes de la MRZ dans le cadre.
-  3. Relire les champs, toucher « Lire », poser la carte.
-  4. Sur l'accueil, segment **CAN** : vérifier que le bouton de scan n'y est pas.
-- **Attendu** : étape 1 : l'illustration montre une carte (TD1). Étape 2 : succès, retour sur l'onglet Carte d'identité, segment MRZ, champs justes. Étape 3 : lecture PACE par la MRZ, verdict **Authentique** (comme TP-25). Étape 4 : le scan n'existe que pour la MRZ (le CAN n'est jamais lu par la caméra). Si le numéro de la carte dépasse 9 caractères, l'écran de scan invite à la saisie manuelle, avec un bouton « Saisie manuelle » : le noter.
-- **Résultat** : ☐ OK ☐ KO — Notes :
-
-### TP-28 Permission caméra refusée, refus définitif, révocation
-
-- **Préconditions** : `adb shell pm revoke io.github.mgdx.sceau android.permission.CAMERA` puis `adb shell pm clear-permission-flags io.github.mgdx.sceau android.permission.CAMERA user-set user-fixed` ; application relancée sur l'accueil.
-- **Étapes** :
-  1. « Scanner la MRZ », refuser la permission.
-  2. Toucher le bouton qui redemande la permission, refuser de nouveau (sur Android 11+, le second refus est définitif).
-  3. Toucher le bouton des réglages, accorder la caméra dans les réglages de l'application, revenir.
-  4. Pendant que l'aperçu tourne, `adb shell pm revoke io.github.mgdx.sceau android.permission.CAMERA`, puis rouvrir l'application depuis le multitâche.
-  5. Toucher « Saisie manuelle » depuis le panneau de refus.
-- **Attendu** : étape 1 : panneau expliquant que la saisie manuelle reste possible, avec un bouton pour redemander et « Saisie manuelle ». Étape 2 : le panneau propose désormais d'ouvrir les réglages, qui s'ouvrent sur la page de Sceau. Étape 3 : au retour, l'aperçu démarre sans autre action. Étape 4 : le système termine le processus ; au retour, l'application redémarre sur l'accueil, vide, sans plantage (comme TP-14), et un nouveau scan redemande la permission. Étape 5 : retour à l'accueil, saisie intacte. Aucun plantage à aucune étape.
-- **Résultat** : ☐ OK ☐ KO — Notes :
-
-### TP-29 Appareil sans caméra
-
-Aucun téléphone de test n'est dépourvu de caméra, et `adb shell pm disable` ne peut pas retirer une feature matérielle : on vérifie la déclaration, puis, si possible, le comportement sur émulateur.
-
-- **Étapes** :
-  1. `aapt2 dump badging app/build/outputs/apk/release/app-arm64-v8a-release-unsigned.apk | grep -i "feature\|permission"` (`aapt2` est dans `$ANDROID_HOME/build-tools/<version>/`).
-  2. Vérifier le rapport de lint de `:app` (`./gradlew :app:lint`) : aucune alerte `PermissionImpliesUnsupportedHardware`.
-  3. Facultatif : installer l'APK sur un AVD dont les caméras avant et arrière sont réglées sur « None », ouvrir les deux onglets.
-- **Attendu** : étape 1 : `uses-permission: name='android.permission.CAMERA'`, `uses-feature-not-required: name='android.hardware.camera'` et `name='android.hardware.camera.autofocus'`, `uses-feature-not-required` pour `android.hardware.nfc` ; aucune ligne `uses-feature: name='android.hardware.camera…'` ni `uses-implied-feature` pour la caméra (sinon F-Droid et les magasins masqueraient l'application aux appareils sans caméra). Étape 2 : aucune alerte. Étape 3 : installation possible, aucun bouton « Scanner la MRZ » sur l'onglet Passeport ni dans le segment MRZ, saisie manuelle normale.
-- **Résultat** : ☐ OK ☐ KO ☐ Non testé (étape 3) — Notes :
-
-### TP-30 Arrière-plan, rotation et retour pendant le scan
-
-- **Préconditions** : permission accordée, écran de scan ouvert, aucun document devant la caméra.
-- **Étapes** :
-  1. `adb shell input keyevent KEYCODE_HOME`, attendre 2 s, `adb shell dumpsys media.camera`, puis revenir à l'application.
-  2. Basculer en paysage puis en portrait (`user_rotation 1` puis `0`), puis viser un passeport.
-  3. Rouvrir l'écran de scan et toucher la flèche de retour ; recommencer avec `KEYCODE_BACK`.
-  4. Rouvrir l'écran de scan, activer la torche, puis `KEYCODE_HOME`.
-- **Attendu** : étape 1 : la caméra est fermée tant que l'application est en arrière-plan (aucun client `io.github.mgdx.sceau` actif) ; au retour, l'aperçu redémarre, état « recherche ». Étape 2 : l'aperçu et le cadre se réorientent, la reconnaissance fonctionne dans les deux orientations, sans plantage ni fuite (pas de second aperçu, pas d'écran noir). Étape 3 : retour à l'accueil, champs inchangés. Étape 4 : la torche s'éteint en arrière-plan.
-- **Résultat** : ☐ OK ☐ KO — Notes :
-
-### TP-31 Faible lumière, torche et reflet
-
-- **Préconditions** : passeport français (film plastique brillant) et CNIe.
-- **Étapes** :
-  1. Pièce peu éclairée : tenter le scan sans torche, puis avec la torche.
-  2. Lumière directe d'une lampe sur la page : incliner le document jusqu'à ce qu'un reflet couvre une partie de la MRZ.
-  3. MRZ hors du cadre ou partiellement cachée par un doigt.
-- **Attendu** : le bouton torche n'apparaît que si l'appareil a un flash, et allume ou éteint la torche ; en faible lumière, la reconnaissance aboutit avec la torche (noter le délai, et le résultat sans torche). Avec un reflet ou une MRZ masquée, l'écran reste sur « MRZ vue » ou « recherche » jusqu'à ce que le document soit réorienté : **jamais de champs faux** remplis. Noter les conditions où le scan échoue.
-- **Résultat** : ☐ OK ☐ KO — Notes :
-
-### TP-32 Aucun fichier créé par le scan
-
-- **Préconditions** : APK de debug (pour `run-as`).
-- **Étapes** :
-  1. `adb shell run-as io.github.mgdx.sceau touch files/.repere` puis `adb logcat -c`.
-  2. Faire deux scans complets (passeport, CNIe) et un scan abandonné.
-  3. `adb shell run-as io.github.mgdx.sceau find . -newer files/.repere`.
-  4. `adb logcat -d > log.txt` ; chercher localement le numéro du document et les dates (formats `AAMMJJ` et `JJ/MM/AAAA`).
-  5. `adb shell ls -lt /sdcard/DCIM /sdcard/Pictures`.
-- **Attendu** : étape 3 : aucun fichier listé (hors `files/.repere` lui-même et des fichiers propres au système, par exemple `code_cache/`, à noter) ; aucune image, rien dans `cache/`. Étape 4 : ni numéro ni date dans les journaux. Étape 5 : aucune photo nouvelle. Supprimer le repère (`run-as … rm files/.repere`).
-- **Résultat** : ☐ OK ☐ KO — Notes :
-
-### TP-33 Caméra libérée
-
-- **Étapes** :
-  1. Ouvrir l'écran de scan, `adb shell dumpsys media.camera` : noter le client actif.
-  2. Réussir un scan (retour automatique à l'accueil), puis `adb shell dumpsys media.camera`.
-  3. Rouvrir l'écran de scan, revenir par « Saisie manuelle » ou retour arrière, puis `dumpsys` de nouveau.
-  4. Ouvrir l'application Appareil photo du système.
-- **Attendu** : étape 1 : un client de Sceau sur la caméra arrière. Étapes 2 et 3 : plus aucun client de Sceau dans la seconde qui suit le retour à l'accueil. Étape 4 : l'appareil photo du système s'ouvre normalement.
-- **Résultat** : ☐ OK ☐ KO — Notes :
-
 ---
 
 ## Synthèse
@@ -411,13 +311,5 @@ Aucun téléphone de test n'est dépourvu de caméra, et `adb shell pm disable` 
 | TP-23 | Passeport après tentatives ratées (attente jusqu'à 60 s) | |
 | TP-24 | Mode démo (debug) et absence en release | |
 | TP-25 | Carte d'identité lue par la MRZ | |
-| TP-26 | Scan d'un passeport puis lecture | |
-| TP-27 | Scan d'une CNIe (TD1) puis lecture | |
-| TP-28 | Permission caméra refusée, définitive, révoquée | |
-| TP-29 | Appareil sans caméra | |
-| TP-30 | Arrière-plan, rotation et retour pendant le scan | |
-| TP-31 | Faible lumière, torche et reflet | |
-| TP-32 | Aucun fichier créé par le scan | |
-| TP-33 | Caméra libérée | |
 
 Appareil : ………… Android : ………… Version de Sceau : ………… Date : ………… Testeur : …………

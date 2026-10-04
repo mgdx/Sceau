@@ -25,7 +25,4 @@
     <string name="home_nfc_settings">Apri impostazioni NFC</string>
     <string name="home_nfc_absent">Questo telefono non ha l’NFC: non può leggere il chip dei documenti d’identità.</string>
     <string name="home_menu_demo">Simula una carta d’identità francese (demo)</string>
-    <string name="home_scan_mrz">Scansiona MRZ</string>
-    <string name="home_mrz_scanned">MRZ scansionata: controlla i campi prima di leggere il chip</string>
-    <string name="home_menu_demo_mrz_scan">Simula una scansione della MRZ (demo)</string>
 </resources>

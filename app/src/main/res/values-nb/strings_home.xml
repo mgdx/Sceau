@@ -25,7 +25,4 @@
     <string name="home_nfc_settings">Åpne NFC-innstillinger</string>
     <string name="home_nfc_absent">Denne telefonen har ikke NFC og kan ikke lese av brikken i identitetsdokumenter.</string>
     <string name="home_menu_demo">Simuler et fransk ID-kort (demo)</string>
-    <string name="home_scan_mrz">Skann MRZ</string>
-    <string name="home_mrz_scanned">MRZ skannet: Kontroller feltene før du leser av brikken</string>
-    <string name="home_menu_demo_mrz_scan">Simuler en MRZ-skanning (demo)</string>
 </resources>

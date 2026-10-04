@@ -25,7 +25,4 @@
     <string name="home_nfc_settings">Abrir definições de NFC</string>
     <string name="home_nfc_absent">Este telemóvel não tem NFC: não consegue ler o chip dos documentos de identificação.</string>
     <string name="home_menu_demo">Simular um cartão de identidade francês (demonstração)</string>
-    <string name="home_scan_mrz">Digitalizar MRZ</string>
-    <string name="home_mrz_scanned">MRZ digitalizada: verifique os campos antes de ler o chip</string>
-    <string name="home_menu_demo_mrz_scan">Simular uma digitalização da MRZ (demonstração)</string>
 </resources>

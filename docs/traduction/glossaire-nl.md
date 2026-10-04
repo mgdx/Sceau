@@ -39,10 +39,3 @@
 | RGPD | AVG | Algemene verordening gegevensbescherming |
 | JJ / MM / AAAA | DD / MM / JJJJ | gabarits de saisie |
 | Master List, CSCA, DS, SOD, CAN, MRZ | inchangés | termes ICAO |
-| caméra | camera | |
-| scanner (la MRZ) | scannen (MRZ scannen, MRZ-scan) | |
-| lampe torche | zaklamp | |
-| cadre de visée | kader | |
-| Autoriser (permission) | Toestaan | Vocabulaire Android |
-| réglages de l'application | app-instellingen | Vocabulaire Android |
-| saisie manuelle | handmatig invoeren | |

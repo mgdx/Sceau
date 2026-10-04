@@ -25,7 +25,4 @@
     <string name="home_nfc_settings">NFC の設定を開く</string>
     <string name="home_nfc_absent">このスマートフォンには NFC がないため、身分証明書の IC チップを読み取れません。</string>
     <string name="home_menu_demo">フランスの身分証明書をシミュレート（デモ）</string>
-    <string name="home_scan_mrz">MRZ をスキャン</string>
-    <string name="home_mrz_scanned">MRZ をスキャンしました。IC チップを読み取る前に各項目を確認してください</string>
-    <string name="home_menu_demo_mrz_scan">MRZ スキャンをシミュレート（デモ）</string>
 </resources>

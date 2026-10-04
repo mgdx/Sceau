@@ -4,9 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## État du dépôt
 
-Jalons atteints (SPEC §11) : Socle, Lecture, Vérification et l'essentiel des Finitions (DG11/DG12, écran Magasin de confiance et import, À propos, effacement mémoire, `FLAG_SECURE`, traductions en-US). Lecture optique de la MRZ par la caméra ajoutée le 2026-10-04 (D32, plan `docs/plan-ocr-mrz.md`), recette sur appareil à faire. La lecture réelle d'un passeport français a été validée sur Fairphone 3 le 2026-09-25. Reste le jalon Publication (revue sécurité, plan de test complet sur appareil, première release, soumission F-Droid).
+Jalons atteints (SPEC §11) : Socle, Lecture, Vérification et l'essentiel des Finitions (DG11/DG12, écran Magasin de confiance et import, À propos, effacement mémoire, `FLAG_SECURE`, traductions en-US). La lecture réelle d'un passeport français a été validée sur Fairphone 3 le 2026-09-25. Reste le jalon Publication (revue sécurité, plan de test complet sur appareil, première release, soumission F-Droid).
 
-`SPEC.md` est la source de vérité : lis-le en entier avant toute modification. Tout écart est consigné et justifié dans `docs/decisions.md` (D1 à D32 à ce jour). La documentation vit dans `docs/` : `architecture.md`, `protocol.md` (séquence ICAO réelle, délais, codes d'erreur), `trust-store.md`, `dependencies.md`, `test-plan.md`, `decisions.md`.
+`SPEC.md` est la source de vérité : lis-le en entier avant toute modification. Tout écart est consigné et justifié dans `docs/decisions.md` (D1 à D31 à ce jour). La documentation vit dans `docs/` : `architecture.md`, `protocol.md` (séquence ICAO réelle, délais, codes d'erreur), `trust-store.md`, `dependencies.md`, `test-plan.md`, `decisions.md`.
 
 ## Ce qu'est Sceau
 
@@ -14,7 +14,7 @@ Application Android libre (GPLv3, visée F-Droid) qui lit par NFC la puce des do
 
 ## Commandes
 
-Projet Gradle Kotlin (AGP 9, Kotlin intégré), quatre modules : `:core`, `:app`, `:testchip`, `:mrz`. Toolchain JVM 17 ; le démon Gradle tourne sur JDK 25 (`gradle/gradle-daemon-jvm.properties`). Versions dans `gradle/libs.versions.toml`.
+Projet Gradle Kotlin (AGP 9, Kotlin intégré), trois modules : `:core`, `:app`, `:testchip`. Toolchain JVM 17 ; le démon Gradle tourne sur JDK 25 (`gradle/gradle-daemon-jvm.properties`). Versions dans `gradle/libs.versions.toml`.
 
 Le décodeur JPEG 2000 (OpenJPEG) est un sous-module git : après un clone, `git submodule update --init` (ou `git clone --recurse-submodules`). La compilation native demande le NDK `28.2.13676358` et CMake `4.1.2`.
 
@@ -22,9 +22,6 @@ Le décodeur JPEG 2000 (OpenJPEG) est un sous-module git : après un clone, `git
 ./gradlew :core:test                                                   # tests JVM du cœur
 ./gradlew :core:test --tests "io.github.mgdx.sceau.core.SomeTest"       # un seul test
 ./gradlew :testchip:test                                               # tests de la puce simulée
-./gradlew :mrz:test                                                    # tests de la lecture optique de la MRZ (images de synthèse)
-SCEAU_FUZZ_ITERATIONS=20000 ./gradlew :mrz:test --tests '*Fuzz*' --rerun    # fuzzing long de l'entrée de :mrz
-scripts/generate-ocrb-templates.sh                                     # régénère les modèles OCR-B de :mrz (empreinte à reporter dans mrz/README.md)
 SCEAU_FUZZ_ITERATIONS=200000 ./gradlew :core:test --tests '*fuzz*' --rerun   # fuzzing long des parseurs (docs/architecture.md §5)
 ./gradlew :app:testDebugUnitTest                                        # tests JVM de l'app (dont le mode démo)
 ./gradlew :app:assembleDebug                                            # APK de debug (mode démo inclus)
@@ -61,20 +58,17 @@ suspend fun readAndVerify(transport: CardTransport, key: AccessKey, trustStore: 
 
 **`:testchip` — Kotlin JVM, jamais dans l'APK release** (paquet `io.github.mgdx.sceau.testchip`) : PKI factice (CSCA, lien, DS, SOD, clés CA/AA en RSA et EC), puce simulée à état (BAC, PACE, messagerie sécurisée, CA, AA) écrite sans le code protocolaire de JMRTD, CNIe spécimen. `testImplementation` de `:core`, `debugImplementation` de `:app`. Voir `testchip/README.md` et D17.
 
-**`:mrz` — lecture optique de la MRZ, Kotlin pur, aucun import `android.*`, aucun code natif, testé sur JVM** (paquet `io.github.mgdx.sceau.mrz`, `implementation` de `:app`, D32 ; voir `mrz/README.md`). `MrzScanner.analyze(LumaFrame)` reçoit le plan de luminance d'une image et ne rend que le format (TD1, TD2, TD3), le numéro de document et les deux dates (`MrzKeyFields`). Classification par modèles OCR-B (37 classes, 16 × 20, `ocrb-templates.bin`, empreinte vérifiée par `OcrbTemplatesFingerprintTest`), corrections guidées par les chiffres de contrôle, résultat rendu seulement si tous les contrôles sont justes, sans ambiguïté, et confirmé par deux images. La ligne du nom n'est jamais classée. Police OCR-B (`mrz/fonts/`, CTAN `ocr-b-outline`) hors APK. Tests sur MRZ de synthèse uniquement, jamais d'image de vrai document.
-
-**`:app` — NFC, caméra (CameraX), Compose/Material 3, Navigation Compose** (paquet `io.github.mgdx.sceau`). Écrans : Accueil (onglets Passeport / Carte d'identité, Passeport par défaut, dates tapées au clavier dans l'ordre de la locale, D10 ; clavier retiré après la date d'expiration, D29 ; bouton « Scanner la MRZ » au-dessus des champs MRZ si l'appareil a une caméra), Scan de la MRZ (`ui/scan/`, permission caméra demandée à l'arrivée, aperçu et analyse CameraX, jamais `ImageCapture` ; remplit le formulaire via `SessionViewModel.onMrzScanned` sans lancer la lecture, D32), Lecture (étapes cochées, message d'attente après 5 s d'authentification, erreurs avec code et Réessayer), Résultat (verdict, photo, identité, DG11/DG12, liste de contrôle, bouton Effacer), Magasin de confiance (liste + import de Master List via `ACTION_OPEN_DOCUMENT`), À propos. JPEG 2000 décodé par OpenJPEG en JNI (`jp2/Jpeg2000Decoder`, `app/src/main/cpp/`, D3), uniquement dans le service `jp2/Jpeg2000Service` en `isolatedProcess` (D23) : la bibliothèque native n'est jamais chargée dans le processus principal. Master Lists importées limitées à 10 et 40 Mo cumulés (D22). Palette du logo, couleurs dynamiques désactivées (D18).
+**`:app` — NFC, Compose/Material 3, Navigation Compose** (paquet `io.github.mgdx.sceau`). Écrans : Accueil (onglets Passeport / Carte d'identité, Passeport par défaut, dates tapées au clavier dans l'ordre de la locale, D10 ; clavier retiré après la date d'expiration, D29), Lecture (étapes cochées, message d'attente après 5 s d'authentification, erreurs avec code et Réessayer), Résultat (verdict, photo, identité, DG11/DG12, liste de contrôle, bouton Effacer), Magasin de confiance (liste + import de Master List via `ACTION_OPEN_DOCUMENT`), À propos. JPEG 2000 décodé par OpenJPEG en JNI (`jp2/Jpeg2000Decoder`, `app/src/main/cpp/`, D3), uniquement dans le service `jp2/Jpeg2000Service` en `isolatedProcess` (D23) : la bibliothèque native n'est jamais chargée dans le processus principal. Master Lists importées limitées à 10 et 40 Mo cumulés (D22). Palette du logo, couleurs dynamiques désactivées (D18).
 
 **Mode démo (APK de debug uniquement)** : menu de l'accueil → « Simuler une CNIe (démo) » lit la CNIe simulée de `:testchip` dans la vraie interface, avec son propre magasin de test (jamais mêlé au magasin réel) et le bandeau « Document simulé ». `DemoMode` existe en version `src/debug` et en version vide `src/release`.
 
 ## Dépendances
 
-JMRTD et SCUBA (`scuba-smartcards`, `scuba-sc-android` ; LGPL 2.1 ou ultérieure), BouncyCastle `bcprov`/`bcpkix` `jdk18on` (jamais SpongyCastle), OpenJPEG (BSD-2-Clause) compilé depuis le sous-module `app/src/main/cpp/openjpeg` pour le JPEG 2000 (jj2000 écarté : licence non libre, D3), Compose/Material 3/Navigation. CameraX (`camera-camera2`, `camera-lifecycle`, `camera-compose`, Apache 2.0) pour le scan de la MRZ. Toute autre dépendance doit être justifiée dans `docs/dependencies.md` (licence vérifiée sur l'artefact, compatibilité F-Droid). Aucun service Google, aucun blob binaire ; seule exception, les bibliothèques natives précompilées des AAR AndroidX (`libandroidx.graphics.path.so` de Compose, `libimage_processing_util_jni.so` et `libsurface_util_jni.so` de CameraX : SPEC §2, D32).
+JMRTD et SCUBA (`scuba-smartcards`, `scuba-sc-android` ; LGPL 2.1 ou ultérieure), BouncyCastle `bcprov`/`bcpkix` `jdk18on` (jamais SpongyCastle), OpenJPEG (BSD-2-Clause) compilé depuis le sous-module `app/src/main/cpp/openjpeg` pour le JPEG 2000 (jj2000 écarté : licence non libre, D3), Compose/Material 3/Navigation. Toute autre dépendance doit être justifiée dans `docs/dependencies.md` (licence vérifiée sur l'artefact, compatibilité F-Droid). Aucun service Google, aucun blob binaire.
 
 ## Contraintes non négociables
 
-- Manifeste : permissions `android.permission.NFC` et `android.permission.CAMERA` uniquement (plus la permission interne ajoutée par androidx.core, D7 ; caméra pour la seule lecture de la MRZ, D32), aucune permission réseau ni de stockage, `android.hardware.nfc`, `android.hardware.camera` et `android.hardware.camera.autofocus` en `required="false"`. minSdk 26.
-- Images de la caméra : plan Y copié dans un tableau de Sceau remis à zéro après chaque analyse, aucune image écrite ni conservée, `ImageCapture` jamais lié, ligne du nom de la MRZ jamais reconnue (SPEC §8, D32).
+- Manifeste : permission `android.permission.NFC` uniquement (plus la permission interne ajoutée par androidx.core, D7), aucune permission réseau, `android.hardware.nfc` en `required="false"`. minSdk 26.
 - Aucune donnée lue n'est écrite sur disque, en cache, en base ni en log, en debug comme en release. **Aucun journal, même temporaire pour déboguer** : ni `Log`, ni `println`, ni `printStackTrace` ; le diagnostic passe par le code d'erreur affiché. Les loggers de JMRTD et SCUBA sont coupés, et aucune exception de JMRTD n'est attachée comme cause (leurs messages contiennent des APDU). Aucune donnée personnelle dans les exceptions ou les identifiants d'erreur.
 - `FLAG_SECURE` sur les écrans Lecture et Résultat. Tableaux d'octets DG1/DG2/DG11/DG12 remis à zéro et libérés à la sortie du résultat et en arrière-plan. CAN/MRZ jamais mémorisés entre deux lectures.
 - Nonce AA tiré d'un `SecureRandom`.

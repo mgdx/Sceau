@@ -40,10 +40,3 @@ Référence de vocabulaire pour `app/src/main/res/values-ka/`.
 | JJ / MM / AAAA | დდ / თთ / წწწწ | დღე / თვე / წელი |
 | RGPD | მონაცემთა დაცვის ზოგადი რეგულაცია (GDPR) |  |
 | Master List, CAN, MRZ, DS, CSCA, SOD, DGn | inchangés (latin) | suffixes casuels après trait d’union (Master List-ის, SOD-ის) |
-| caméra | კამერა | |
-| scanner (la MRZ) | სკანირება / დასკანერდა | |
-| lampe torche | ფანარი | |
-| cadre de visée | ჩარჩო | |
-| Autoriser (permission) | დაშვება | Vocabulaire Android |
-| réglages de l’application | აპის პარამეტრები | Vocabulaire Android |
-| saisie manuelle | ხელით შეყვანა | |

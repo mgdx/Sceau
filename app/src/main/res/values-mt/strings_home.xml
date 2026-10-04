@@ -25,7 +25,4 @@
     <string name="home_nfc_settings">Iftaħ is-settings tal-NFC</string>
     <string name="home_nfc_absent">Dan it-telefon m’għandux NFC: ma jistax jaqra ċ-ċippa tad-dokumenti tal-identità.</string>
     <string name="home_menu_demo">Issimula karta tal-identità Franċiża (demo)</string>
-    <string name="home_scan_mrz">Skennja l-MRZ</string>
-    <string name="home_mrz_scanned">L-MRZ ġiet skennjata: iċċekkja l-oqsma qabel taqra ċ-ċippa</string>
-    <string name="home_menu_demo_mrz_scan">Issimula skennjar tal-MRZ (demo)</string>
 </resources>

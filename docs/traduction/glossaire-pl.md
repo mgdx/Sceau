@@ -39,10 +39,3 @@
 | RGPD | RODO | Acronyme officiel polonais |
 | Master List | Master List | Jamais traduit, traité comme invariable féminin |
 | CAN, MRZ, PACE, BAC, SOD, DS, CSCA, DGn | idem | Jamais traduits |
-| caméra | aparat | Nom Android de l’autorisation |
-| scanner (la MRZ) | zeskanuj / skanowanie | « Zeskanowano MRZ » ; « strefa MRZ » quand la phrase exige une déclinaison |
-| lampe torche | latarka | Réglages rapides Android |
-| cadre de visée | ramka |  |
-| Autoriser (permission) | Zezwól | Vocabulaire Android |
-| réglages de l’application | ustawienia aplikacji | Vocabulaire Android |
-| saisie manuelle | wpisz ręcznie |  |

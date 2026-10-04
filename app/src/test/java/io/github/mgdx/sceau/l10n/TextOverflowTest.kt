@@ -55,8 +55,6 @@ import io.github.mgdx.sceau.core.Step
 import io.github.mgdx.sceau.core.report.Verdict
 import io.github.mgdx.sceau.demo.DemoCard
 import io.github.mgdx.sceau.demo.DemoMode
-import io.github.mgdx.sceau.mrz.MrzFormat
-import io.github.mgdx.sceau.mrz.MrzKeyFields
 import io.github.mgdx.sceau.session.DateOrder
 import io.github.mgdx.sceau.session.DatePart
 import io.github.mgdx.sceau.session.DocumentTab
@@ -71,11 +69,6 @@ import io.github.mgdx.sceau.ui.home.HomeScreen
 import io.github.mgdx.sceau.ui.reading.ReadingScreen
 import io.github.mgdx.sceau.ui.result.Countries
 import io.github.mgdx.sceau.ui.result.ResultScreen
-import io.github.mgdx.sceau.ui.scan.MrzScanScaffold
-import io.github.mgdx.sceau.ui.scan.PermissionPanel
-import io.github.mgdx.sceau.ui.scan.ScanViewfinderLayout
-import io.github.mgdx.sceau.ui.scan.SpecimenKind
-import io.github.mgdx.sceau.ui.scan.StatusLine
 import io.github.mgdx.sceau.ui.theme.SceauTheme
 import io.github.mgdx.sceau.ui.trust.TrustStoreScreen
 import io.github.mgdx.sceau.ui.trust.groupByCountry
@@ -163,7 +156,6 @@ class TextOverflowTest {
         settle()
 
         homeScenes()
-        scanScenes()
         readingScenes()
         resultScenes()
         trustStoreScene()
@@ -219,18 +211,8 @@ class TextOverflowTest {
     // --- Scènes ------------------------------------------------------------------------------
 
     private fun homeScenes() {
-        val homeContent: @Composable () -> Unit = {
-            HomeScreen(
-                session,
-                onRead = {},
-                onOpenTrustStore = {},
-                onOpenAbout = {},
-                onScanMrz = {},
-            )
-        }
+        val homeContent: @Composable () -> Unit = { HomeScreen(session, onRead = {}, onOpenTrustStore = {}, onOpenAbout = {}) }
 
-        // Caméra déclarée (absente par défaut sous Robolectric) : bouton « Scanner la MRZ » affiché.
-        shadowOf(compose.activity.packageManager).setSystemFeature(PackageManager.FEATURE_CAMERA_ANY, true)
         setNfc(present = true, enabled = false)
         session.clear()
         session.selectTab(DocumentTab.ID_CARD)
@@ -264,60 +246,6 @@ class TextOverflowTest {
         session.onDateOfExpiryChange("99999999")
         render("Accueil, passeport, dates invalides, sans NFC", homeContent)
         session.clear()
-
-        // Retour du scan : champs remplis et message « MRZ lue ». Le message est figé dans la
-        // langue où il a été émis : il est retiré (délai écoulé) puis réémis dans chaque langue.
-        setNfc(present = true, enabled = true)
-        session.selectTab(DocumentTab.PASSPORT)
-        render(
-            "Accueil, passeport, MRZ scannée",
-            homeContent,
-            perLanguage = {
-                compose.mainClock.advanceTimeBy(SNACKBAR_DISMISS_MILLIS)
-                session.onMrzScanned(SCANNED_MRZ)
-            },
-            ready = {
-                settle(frames = 30)
-                assertTrue(
-                    "message « MRZ lue » absent",
-                    compose.onAllNodes(hasTextRes(R.string.home_mrz_scanned), useUnmergedTree = true).fetchSemanticsNodes().isNotEmpty(),
-                )
-                assertTrue(
-                    "bouton « Scanner la MRZ » absent",
-                    compose.onAllNodes(hasTextRes(R.string.home_scan_mrz), useUnmergedTree = true).fetchSemanticsNodes().isNotEmpty(),
-                )
-            },
-        )
-        session.clear()
-    }
-
-    /**
-     * Écran de scan sans caméra : chaque ligne d'état avec le passeport spécimen, la recherche
-     * avec la carte spécimen, puis la permission refusée (D32). L'illustration est présente sauf
-     * sur les erreurs.
-     */
-    private fun scanScenes() {
-        val scenes = StatusLine.entries.map { it to SpecimenKind.PASSPORT } + (StatusLine.SEARCHING to SpecimenKind.ID_CARD)
-        scenes.forEach { (status, specimen) ->
-            val description =
-                if (specimen == SpecimenKind.PASSPORT) R.string.scan_specimen_passport else R.string.scan_specimen_id_card
-            val shown = status != StatusLine.UNSUPPORTED && status != StatusLine.CAMERA_UNAVAILABLE
-            render("Scan, état $status, $specimen", {
-                MrzScanScaffold(onBack = {}) {
-                    ScanViewfinderLayout(geometry = null, status = status, specimen = specimen, onManualEntry = {})
-                }
-            }, ready = { lang ->
-                val found = compose.onAllNodes(hasContentDescriptionRes(description)).fetchSemanticsNodes().size
-                assertEquals("illustration ($status, $specimen, ${lang.tag})", if (shown) 1 else 0, found)
-            })
-        }
-        listOf(false to "Scan, permission refusée", true to "Scan, permission refusée définitivement").forEach { (permanently, name) ->
-            render(name, {
-                MrzScanScaffold(onBack = {}) {
-                    PermissionPanel(permanentlyDenied = permanently, onRequest = {}, onOpenSettings = {}, onBack = {})
-                }
-            })
-        }
     }
 
     private fun readingScenes() {
@@ -497,7 +425,6 @@ class TextOverflowTest {
     private fun screenPrefix(screen: String): String =
         when {
             screen.startsWith("Accueil") -> "home_"
-            screen.startsWith("Scan") -> "scan_"
             screen.startsWith("Lecture") -> "reading_"
             screen.startsWith("Résultat") -> "result_"
             screen.startsWith("Magasin") -> "trust_"
@@ -662,12 +589,6 @@ class TextOverflowTest {
         const val KNOWN_OVERFLOWS = "/l10n/known-overflows.txt"
         const val ANDROID_NS = "http://schemas.android.com/apk/res/android"
         const val SLOW_CHIP_WAIT_MILLIS = 6_000L
-
-        // Au-delà de SnackbarDuration.Short (4 s).
-        const val SNACKBAR_DISMISS_MILLIS = 5_000L
-
-        // Champs factices, sans lien avec un vrai document.
-        val SCANNED_MRZ = MrzKeyFields(MrzFormat.TD3, documentNumber = "AB1234567", dateOfBirth = "900101", dateOfExpiry = "300101")
         const val AWAIT_TIMEOUT_NANOS = 60_000_000_000L
         const val POLL_MILLIS = 10L
         const val MIN_TEXT_NODES = 3

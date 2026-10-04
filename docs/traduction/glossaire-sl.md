@@ -39,10 +39,3 @@
 | RGPD | Splošna uredba o varstvu podatkov | Nom complet |
 | Master List | Master List | Jamais traduit ; « seznam Master List » quand la phrase exige une déclinaison |
 | CAN, MRZ, PACE, BAC, SOD, DS, CSCA, DGn | idem | Jamais traduits |
-| caméra | fotoaparat | Nom Android de la permission |
-| scanner (la MRZ) | skeniraj / skeniranje | MRZ au féminin (MRZ skenirana) ; « optično preberi » écarté pour la concision |
-| lampe torche | svetilka | Réglages rapides Android |
-| cadre de visée | okvir |  |
-| Autoriser (permission) | Dovoli | Vocabulaire Android |
-| réglages de l’application | nastavitve aplikacije | Vocabulaire Android |
-| saisie manuelle | vnesi ročno |  |

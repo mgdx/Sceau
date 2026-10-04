@@ -43,10 +43,3 @@ Vocabulaire taïwanais (pas une conversion des caractères du chinois simplifié
 | Échec (verdict) | 驗證失敗 | statut d’une vérification : 失敗 |
 | RGPD | 《一般資料保護規則》（GDPR） | |
 | CAN | CAN（卡片存取碼） | glose seulement dans l’aide du champ |
-| caméra | 相機 | |
-| scanner (la MRZ) | 掃描 | 辨識 pour la reconnaissance en cours, 讀取 réservé à la puce |
-| lampe torche | 手電筒 | |
-| cadre de visée | 框 | |
-| Autoriser (permission) | 允許 | Vocabulaire Android |
-| réglages de l’application | 應用程式設定 | Vocabulaire Android |
-| saisie manuelle | 手動輸入 | |

@@ -11,7 +11,6 @@ import io.github.mgdx.sceau.ui.about.AboutScreen
 import io.github.mgdx.sceau.ui.home.HomeScreen
 import io.github.mgdx.sceau.ui.reading.ReadingScreen
 import io.github.mgdx.sceau.ui.result.ResultScreen
-import io.github.mgdx.sceau.ui.scan.MrzScanScreen
 import io.github.mgdx.sceau.ui.trust.TrustStoreScreen
 
 /** Routes de navigation de l'application. */
@@ -21,7 +20,6 @@ object Routes {
     const val RESULT = "result"
     const val TRUST = "trust"
     const val ABOUT = "about"
-    const val SCAN = "scan"
 }
 
 @Composable
@@ -37,10 +35,6 @@ fun SceauNavHost(
                 onRead = { navController.navigate(Routes.READING) { launchSingleTop = true } },
                 onOpenTrustStore = { navController.navigate(Routes.TRUST) { launchSingleTop = true } },
                 onOpenAbout = { navController.navigate(Routes.ABOUT) { launchSingleTop = true } },
-                onScanMrz = {
-                    session.onScanRequested()
-                    navController.navigate(Routes.SCAN) { launchSingleTop = true }
-                },
             )
         }
         composable(Routes.READING) {
@@ -71,13 +65,6 @@ fun SceauNavHost(
             AboutScreen(
                 repository = trustStoreRepository,
                 onBack = { navController.popBackStack() },
-            )
-        }
-        composable(Routes.SCAN) {
-            MrzScanScreen(
-                session = session,
-                // Sans effet si l'écran a déjà été quitté (retour pendant l'annonce du succès).
-                onDone = { navController.popBackStack(Routes.SCAN, inclusive = true) },
             )
         }
     }

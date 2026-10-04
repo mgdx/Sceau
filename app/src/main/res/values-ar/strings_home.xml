@@ -25,7 +25,4 @@
     <string name="home_nfc_settings">فتح إعدادات NFC</string>
     <string name="home_nfc_absent">لا يدعم هذا الهاتف تقنية NFC، لذا لا يمكنه قراءة شريحة وثائق الهوية.</string>
     <string name="home_menu_demo">محاكاة بطاقة هوية فرنسية (عرض توضيحي)</string>
-    <string name="home_scan_mrz">مسح MRZ ضوئيًا</string>
-    <string name="home_mrz_scanned">تم مسح MRZ: تحقّق من الحقول قبل قراءة الشريحة</string>
-    <string name="home_menu_demo_mrz_scan">محاكاة مسح MRZ (عرض توضيحي)</string>
 </resources>

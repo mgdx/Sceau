@@ -39,10 +39,3 @@ Termes clés de l’interface de Sceau. Restent tels quels : CAN, MRZ, PACE, BAC
 | nom / prénoms | családi név / utónév | libellés des documents hongrois |
 | RGPD | GDPR |  |
 | JJ / MM / AAAA | NN / HH / ÉÉÉÉ | nap / hónap / év ; ordre de saisie donné par la locale (D10) |
-| caméra | kamera | Nom Android de la permission |
-| scanner (la MRZ) | beolvasás | « az MRZ » ; « olvasás » réservé à la puce, proximité des deux termes acceptée |
-| lampe torche | zseblámpa | Réglages rapides Android |
-| cadre de visée | keret |  |
-| Autoriser (permission) | Engedélyezés | Vocabulaire Android |
-| réglages de l’application | alkalmazásbeállítások | Vocabulaire Android |
-| saisie manuelle | kézi bevitel |  |

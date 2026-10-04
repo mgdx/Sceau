@@ -25,7 +25,4 @@
     <string name="home_nfc_settings">פתיחת הגדרות NFC</string>
     <string name="home_nfc_absent">בטלפון הזה אין NFC, ולכן הוא לא יכול לקרוא את השבב של מסמכי זיהוי.</string>
     <string name="home_menu_demo">הדמיה של תעודת זהות צרפתית (הדגמה)</string>
-    <string name="home_scan_mrz">סריקת MRZ</string>
-    <string name="home_mrz_scanned">ה-MRZ נסרק: יש לבדוק את השדות לפני קריאת השבב</string>
-    <string name="home_menu_demo_mrz_scan">הדמיה של סריקת MRZ (הדגמה)</string>
 </resources>

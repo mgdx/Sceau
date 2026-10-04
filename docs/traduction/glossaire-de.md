@@ -42,10 +42,3 @@
 | CAN | CAN | « Zugangsnummer (CAN) » seulement dans `home_can_supporting` |
 | RGPD | DSGVO | |
 | JJ / MM / AAAA | TT / MM / JJJJ | |
-| caméra | Kamera | |
-| scanner (la MRZ) | scannen (MRZ scannen, MRZ-Scan) | |
-| lampe torche | Taschenlampe | Schnelleinstellung Android |
-| cadre de visée | Rahmen | |
-| Autoriser (permission) | Zulassen | Vocabulaire Android |
-| réglages de l'application | App-Einstellungen | Vocabulaire Android |
-| saisie manuelle | manuelle Eingabe | |

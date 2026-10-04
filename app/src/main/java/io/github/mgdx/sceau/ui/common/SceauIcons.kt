@@ -113,14 +113,6 @@ object SceauIcons {
         )
     }
 
-    val PhotoCamera: ImageVector by lazy {
-        icon(
-            "PhotoCamera",
-            "M12,12m-3.2,0a3.2,3.2 0,1 1,6.4 0a3.2,3.2 0,1 1,-6.4 0M9,2L7.17,4H4c-1.1,0 -2,0.9 -2,2v12c0,1.1 0.9,2 2,2h16" +
-                "c1.1,0 2,-0.9 2,-2V6c0,-1.1 -0.9,-2 -2,-2h-3.17L15,2H9zM12,17c-2.76,0 -5,-2.24 -5,-5s2.24,-5 5,-5 5,2.24 5,5 -2.24,5 -5,5z",
-        )
-    }
-
     private fun icon(
         name: String,
         pathData: String,

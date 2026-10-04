@@ -25,7 +25,4 @@
     <string name="home_nfc_settings">Ava NFC seaded</string>
     <string name="home_nfc_absent">Sellel telefonil pole NFC-d, seega ei saa see isikut tõendavate dokumentide kiipi lugeda.</string>
     <string name="home_menu_demo">Simuleeri Prantsuse ID-kaarti (demo)</string>
-    <string name="home_scan_mrz">Skanni MRZ</string>
-    <string name="home_mrz_scanned">MRZ skannitud: kontrollige välju enne kiibi lugemist</string>
-    <string name="home_menu_demo_mrz_scan">Simuleeri MRZ skannimist (demo)</string>
 </resources>

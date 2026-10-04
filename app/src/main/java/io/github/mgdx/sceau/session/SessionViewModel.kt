@@ -15,7 +15,6 @@ import io.github.mgdx.sceau.core.readAndVerify
 import io.github.mgdx.sceau.core.report.VerificationReport
 import io.github.mgdx.sceau.core.trust.TrustStore
 import io.github.mgdx.sceau.demo.DemoCard
-import io.github.mgdx.sceau.mrz.MrzKeyFields
 import io.github.mgdx.sceau.trust.TrustStoreRepository
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -27,7 +26,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.time.LocalDate
 
 /** État de la lecture, partagé entre les écrans Lecture et Résultat. */
 sealed interface ReadState {
@@ -120,52 +118,6 @@ class SessionViewModel(
     fun onDateOfExpiryChange(input: String) {
         form = form.copy(dateOfExpiryDigits = AccessForm.filterDateDigits(input))
     }
-
-    /**
-     * Vrai après un scan de la MRZ, jusqu'à ce que l'accueil l'ait pris en compte
-     * ([consumeMrzScanned]) : message invitant à vérifier les champs, clavier fermé.
-     */
-    var mrzScanned: Boolean by mutableStateOf(false)
-        private set
-
-    /**
-     * Ordre de date de l'écran d'accueil, pour interpréter les dates scannées comme celles tapées
-     * au clavier ; à défaut, celui de la locale de l'application. Aucune donnée personnelle.
-     */
-    private var dateOrder: DateOrder? = null
-
-    /** Appelé par l'accueil avec l'ordre de date de sa locale (D10). */
-    fun onDateOrder(order: DateOrder) {
-        dateOrder = order
-    }
-
-    /**
-     * MRZ reconnue par l'écran de scan (D32) : remplit le numéro et les deux dates du formulaire,
-     * qui suivent ensuite exactement les règles de la saisie au clavier (validation, oubli). Ne
-     * lance jamais la lecture : l'utilisateur vérifie les champs puis appuie sur « Lire ».
-     */
-    fun onMrzScanned(fields: MrzKeyFields) {
-        val order = dateOrder ?: DateOrder.forLocale(getApplication<Application>().resources.configuration.locales[0])
-        form = form.fillFromMrz(fields, LocalDate.now(), order)
-        mrzScanned = true
-    }
-
-    /**
-     * Vrai une fois l'écran de scan ouvert depuis l'accueil par ce processus ([onScanRequested]).
-     * Vit en mémoire seulement : après la mort du processus, la navigation restaurée rouvrirait
-     * le scan avec un ViewModel neuf, où il est faux ; l'écran rend alors la main à l'accueil
-     * (SPEC §8). Une rotation garde le ViewModel, donc l'écran.
-     */
-    var scanRequested: Boolean = false
-        private set
-
-    /** Appelé par le bouton « Scanner la MRZ » de l'accueil, avant la navigation. */
-    fun onScanRequested() {
-        scanRequested = true
-    }
-
-    /** Vrai une seule fois après chaque [onMrzScanned]. */
-    fun consumeMrzScanned(): Boolean = mrzScanned.also { mrzScanned = false }
 
     /** Mémorise la clé pour la prochaine lecture et passe en WaitingForCard. */
     fun prepare(key: AccessKey) {
@@ -280,7 +232,6 @@ class SessionViewModel(
         (_state.value as? ReadState.Done)?.report?.wipe()
         key = null
         form = AccessForm()
-        mrzScanned = false
         _state.value = ReadState.Idle
         closeDisposables()
     }

@@ -25,7 +25,4 @@
     <string name="home_nfc_settings">เปิดการตั้งค่า NFC</string>
     <string name="home_nfc_absent">โทรศัพท์นี้ไม่มี NFC จึงอ่านชิปของเอกสารแสดงตนไม่ได้</string>
     <string name="home_menu_demo">จำลอง CNIe (สาธิต)</string>
-    <string name="home_scan_mrz">สแกน MRZ</string>
-    <string name="home_mrz_scanned">สแกน MRZ แล้ว ตรวจสอบช่องข้อมูลก่อนอ่านชิป</string>
-    <string name="home_menu_demo_mrz_scan">จำลองการสแกน MRZ (สาธิต)</string>
 </resources>

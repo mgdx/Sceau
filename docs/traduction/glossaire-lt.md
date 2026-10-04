@@ -42,10 +42,3 @@
 | numéro personnel | asmens kodas | |
 | JJ / MM / AAAA | DD / MM / MMMM | gabarits des formulaires lituaniens |
 | RGPD | BDAR | Bendrasis duomenų apsaugos reglamentas |
-| caméra | fotoaparatas | Nom de la permission Android |
-| scanner (la MRZ) | nuskenuoti (MRZ nuskenavimas) | « nuskaityti » réservé à la lecture de la puce ; « skenuoti » parfois jugé familier, à confirmer par un locuteur |
-| lampe torche | žibintuvėlis | |
-| cadre de visée | rėmelis | |
-| Autoriser (permission) | Leisti | Vocabulaire Android |
-| réglages de l'application | programos nustatymai | Vocabulaire Android |
-| saisie manuelle | įvesti rankiniu būdu | |

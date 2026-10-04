@@ -1,12 +1,6 @@
 package io.github.mgdx.sceau.demo
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import io.github.mgdx.sceau.mrz.MrzFormat
-import io.github.mgdx.sceau.mrz.MrzKeyFields
 import io.github.mgdx.sceau.testchip.SimulatedDocuments
-import io.github.mgdx.sceau.ui.scan.ScanDiagnosticsSnapshot
-import java.time.format.DateTimeFormatter
 
 /**
  * Mode démo de l'APK de debug : CNIe simulée par le module `:testchip`, lue dans la vraie
@@ -27,33 +21,5 @@ object DemoMode {
             key = checkNotNull(card.canKey),
             trustStore = card.trustStore,
         )
-    }
-
-    /**
-     * Champs de la MRZ (TD1) de la CNIe simulée, tels que l'écran de scan les rendrait, pour
-     * tester le remplissage de l'accueil sans caméra. Constantes du spécimen : aucune PKI générée.
-     */
-    fun simulatedMrzScan(): MrzKeyFields? {
-        val yymmdd = DateTimeFormatter.ofPattern("yyMMdd")
-        return MrzKeyFields(
-            format = MrzFormat.TD1,
-            documentNumber = SimulatedDocuments.SPECIMEN_DOCUMENT_NUMBER,
-            dateOfBirth = SimulatedDocuments.SPECIMEN_DATE_OF_BIRTH.format(yymmdd),
-            dateOfExpiry = SimulatedDocuments.SPECIMEN_DATE_OF_EXPIRY.format(yymmdd),
-        )
-    }
-
-    /**
-     * Bandeau de diagnostic de l'écran de scan (D32) : cadence, durée d'analyse, dimensions,
-     * issues récentes. Jamais un caractère reconnu ni une image. Faux en release.
-     */
-    const val SCAN_DIAGNOSTICS: Boolean = true
-
-    @Composable
-    fun ScanDiagnosticsBanner(
-        snapshot: ScanDiagnosticsSnapshot,
-        modifier: Modifier = Modifier,
-    ) {
-        ScanDiagnosticsBannerContent(snapshot, modifier)
     }
 }

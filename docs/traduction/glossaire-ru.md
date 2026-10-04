@@ -37,10 +37,3 @@
 | RGPD | GDPR (Общий регламент по защите данных) | pas d’acronyme russe établi |
 | Master List | Master List | invariable, traité au masculin (список) |
 | JJ / MM / AAAA | ДД / ММ / ГГГГ | |
-| caméra | камера | Nom Android de la permission |
-| scanner (la MRZ) | сканировать / отсканирована | MRZ au féminin ; « считывать » réservé à la puce |
-| lampe torche | фонарик | Réglages rapides Android |
-| cadre de visée | рамка |  |
-| Autoriser (permission) | Разрешить | Vocabulaire Android |
-| réglages de l’application | настройки приложения | Vocabulaire Android |
-| saisie manuelle | ввести вручную |  |

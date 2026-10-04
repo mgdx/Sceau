@@ -6,7 +6,6 @@ Sceau lit par NFC la puce des documents d'identité conformes à la norme ICAO 9
 <li>Cartes d'identité européennes, avec le CAN ou la MRZ</li>
 <li>Passeports biométriques de tous pays, avec le numéro de document et les dates de naissance et d'expiration</li>
 </ul>
-Pour éviter les fautes de frappe, la MRZ (la bande de texte en bas de la page du passeport ou au verso de la carte) peut être lue par la caméra : le numéro et les dates sont remplis, vous les relisez avant de lancer la lecture. La reconnaissance se fait dans l'application, sans service extérieur.
 
 <b>Ce que Sceau affiche</b>
 <ul>
@@ -27,15 +26,15 @@ Sceau embarque les certificats CSCA français de l'ANTS et la Master List allema
 
 <b>Vie privée</b>
 <ul>
-<li>Permissions : NFC, et caméra uniquement pour lire la MRZ. Aucune photo n'est prise ni enregistrée : les images sont analysées en mémoire puis effacées, et le nom n'est jamais lu. La caméra est facultative : on peut toujours taper les champs</li>
+<li>Seule permission : NFC</li>
 <li>Aucune donnée lue n'est enregistrée ; la mémoire est effacée en quittant le résultat ou en passant en arrière-plan</li>
-<li>Captures d'écran bloquées dans toute l'application</li>
+<li>Captures d'écran bloquées pendant la lecture et sur le résultat</li>
 <li>Aucune publicité, aucun traceur, aucun service Google</li>
 </ul>
 
 <b>Cadre d'usage</b>
 Sceau est fait pour vérifier son propre document, ou un document que son titulaire présente lui-même. La photo est une donnée biométrique au sens du RGPD si elle sert à une comparaison automatisée : Sceau ne fait pas cette comparaison.
 
-Sceau ne lit ni les empreintes digitales ni l'iris.
+Sceau ne lit ni les empreintes digitales ni l'iris, et ne lit pas la MRZ par la caméra.
 
 Logiciel libre sous licence GPLv3.

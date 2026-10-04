@@ -44,10 +44,3 @@ Registre des interfaces Android en hindi : termes anglais courants translittér�
 | RGPD | GDPR | pas d'acronyme hindi établi |
 | Mo | MB | |
 | CAN, MRZ, Master List, etc. | inchangés | termes ICAO jamais traduits |
-| caméra | कैमरा | |
-| scanner (la MRZ) | स्कैन करें / स्कैन हो गया | |
-| lampe torche | फ़्लैशलाइट | |
-| cadre de visée | फ़्रेम | |
-| Autoriser (permission) | अनुमति दें | Vocabulaire Android |
-| réglages de l'application | ऐप की सेटिंग | Vocabulaire Android |
-| saisie manuelle | खुद डालें | |

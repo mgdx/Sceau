@@ -25,7 +25,4 @@
     <string name="home_nfc_settings">NFC-Einstellungen öffnen</string>
     <string name="home_nfc_absent">Dieses Smartphone hat kein NFC und kann den Chip von Ausweisdokumenten nicht auslesen.</string>
     <string name="home_menu_demo">Französischen Ausweis simulieren (Demo)</string>
-    <string name="home_scan_mrz">MRZ scannen</string>
-    <string name="home_mrz_scanned">MRZ gescannt: Prüfen Sie die Felder, bevor Sie den Chip auslesen</string>
-    <string name="home_menu_demo_mrz_scan">MRZ-Scan simulieren (Demo)</string>
 </resources>

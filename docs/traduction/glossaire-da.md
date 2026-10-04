@@ -42,10 +42,3 @@
 | RGPD | GDPR | Usage danois courant |
 | CNIe | fransk ID-kort | Explicité, sigle inconnu au Danemark |
 | Master List | Master List | Jamais traduit ; génitif « Master Listens » |
-| caméra | kamera | |
-| scanner (la MRZ) | scanne (« Scan MRZ », MRZ-scanning) | |
-| lampe torche | lommelygte | |
-| cadre de visée | ramme | |
-| Autoriser (permission) | Tillad | Vocabulaire Android |
-| réglages de l'application | appindstillinger | Vocabulaire Android |
-| saisie manuelle | indtaste manuelt | |
