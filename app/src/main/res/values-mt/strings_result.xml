@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">Hashes li ma jaqblux: %1$s</string>
     <string name="result_detail_dg_all_match">Il-hashes kollha jaqblu.</string>
     <string name="result_detail_dg_missing">Gruppi tad-data ddikjarati iżda mhux ipprovduti miċ-ċippa: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: anomalija magħrufa ppubblikata mill-emittent, data skartata</string>
     <string name="result_detail_unsupported">Algoritmu mhux appoġġat: %1$s</string>
     <string name="result_detail_error">Żball tekniku: %1$s</string>
     <string name="result_detail_no_dg14">Id-dokument ma fihx DG14: iċ-ċippa ma toffrix din il-verifika.</string>

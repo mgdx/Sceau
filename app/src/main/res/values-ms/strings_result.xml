@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">Cincangan tidak sepadan: %1$s</string>
     <string name="result_detail_dg_all_match">Semua cincangan sepadan.</string>
     <string name="result_detail_dg_missing">Kumpulan data yang diisytiharkan tetapi tidak diberikan oleh cip: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: anomali diketahui yang diterbitkan oleh pengeluar, data diketepikan</string>
     <string name="result_detail_unsupported">Algoritma tidak disokong: %1$s</string>
     <string name="result_detail_error">Ralat teknikal: %1$s</string>
     <string name="result_detail_no_dg14">Dokumen ini tiada DG14: cip tidak menawarkan semakan ini.</string>

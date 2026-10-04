@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">Nem egyező hash-értékek: %1$s</string>
     <string name="result_detail_dg_all_match">Minden hash-érték egyezik.</string>
     <string name="result_detail_dg_missing">Bejelentett, de a chip által nem szolgáltatott adatcsoportok: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: a kibocsátó által közzétett ismert eltérés, az adatok elvetve</string>
     <string name="result_detail_unsupported">Nem támogatott algoritmus: %1$s</string>
     <string name="result_detail_error">Technikai hiba: %1$s</string>
     <string name="result_detail_no_dg14">Az okmány nem tartalmaz DG14-et: a chip nem kínálja ezt az ellenőrzést.</string>

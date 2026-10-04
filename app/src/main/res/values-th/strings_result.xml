@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">ค่าแฮชที่ไม่ตรงกัน: %1$s</string>
     <string name="result_detail_dg_all_match">ค่าแฮชทั้งหมดตรงกัน</string>
     <string name="result_detail_dg_missing">กลุ่มข้อมูลที่ประกาศไว้แต่ชิปไม่ได้ให้มา: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: ความผิดปกติที่ทราบแล้วซึ่งผู้ออกเผยแพร่ ข้อมูลถูกตัดออก</string>
     <string name="result_detail_unsupported">ไม่รองรับอัลกอริทึม: %1$s</string>
     <string name="result_detail_error">ข้อผิดพลาดทางเทคนิค: %1$s</string>
     <string name="result_detail_no_dg14">เอกสารไม่มี DG14 ชิปจึงไม่รองรับการตรวจสอบนี้</string>

@@ -142,7 +142,12 @@ internal class ReadingSession(
                 dateOfExpiry = data.dg1.dateOfExpiry,
                 documentCode = data.dg1.documentCode,
                 issuingState = data.dg1.issuingState,
+                documentNumber = data.dg1.documentNumber,
             )
+        // Décision D34 : un DG dont l'écart d'empreinte est toléré (anomalie connue de l'émetteur)
+        // n'est pas digne de foi ; il est retiré du rapport et remis à zéro.
+        val shown = if (pa.discardedDataGroups.isEmpty()) data else data.discarding(pa.discardedDataGroups)
+        document = shown
 
         // La CA est déjà faite (READ_DATA) : l'étape VERIFY_CHIP ne couvre plus que l'AA, et la
         // vérification hors ligne de PACE-CAM, qui a besoin de l'État émetteur de DG1.
@@ -157,7 +162,28 @@ internal class ReadingSession(
             verdict = Verdicts.compute(checks),
             checks = checks,
             chain = pa.chain,
-            document = data,
+            document = shown,
         )
+    }
+
+    /** Copie sans les DG [numbers] (11 ou 12), dont les octets et les images sont remis à zéro. */
+    private fun DocumentData.discarding(numbers: Set<Int>): DocumentData {
+        numbers.forEach { rawDataGroups[it]?.fill(0) }
+        if (DG12 in numbers) {
+            dg12?.frontImage?.wipe()
+            dg12?.rearImage?.wipe()
+        }
+        return DocumentData(
+            dg1 = dg1,
+            portrait = portrait,
+            dg11 = dg11.takeUnless { DG11 in numbers },
+            dg12 = dg12.takeUnless { DG12 in numbers },
+            rawDataGroups = rawDataGroups - numbers,
+        )
+    }
+
+    private companion object {
+        const val DG11 = 11
+        const val DG12 = 12
     }
 }

@@ -20,6 +20,12 @@ class PassiveAuthResult(
     /** [io.github.mgdx.sceau.core.report.CheckId.DG_HASHES] */
     val dataGroupHashes: Check,
     val chain: ChainInfo?,
+    /**
+     * DG dont l'écart d'empreinte est toléré au titre d'une anomalie connue de l'émetteur
+     * (`CheckDetail.DataGroupHashes.deviations`, décision D34) : 11 ou 12 seulement. Leurs données
+     * ne sont pas dignes de foi : elles doivent être retirées du rapport et remises à zéro.
+     */
+    val discardedDataGroups: Set<Int> = emptySet(),
 )
 
 object PassiveAuthentication {
@@ -34,6 +40,8 @@ object PassiveAuthentication {
      * @param issuingState État émetteur lu dans DG1 (code ICAO à trois lettres, "FRA", "D<<"…) :
      *   il doit correspondre au pays du CSCA et du DS (voir [IcaoCountries]), sinon la chaîne
      *   est en échec avec `CheckDetail.CountryMismatch`. Null : seuls le CSCA et le DS sont comparés.
+     * @param documentNumber numéro du document lu dans DG1, pour reconnaître une anomalie connue
+     *   de l'émetteur (décision D34) ; n'est pris en compte que si l'empreinte de DG1 est vérifiée.
      */
     fun verify(
         sod: ByteArray,
@@ -43,7 +51,9 @@ object PassiveAuthentication {
         dateOfExpiry: LocalDate?,
         documentCode: String,
         issuingState: String? = null,
-    ): PassiveAuthResult = PassiveAuthenticator(trustStore).verify(sod, dataGroups, dateOfIssue, dateOfExpiry, documentCode, issuingState)
+        documentNumber: String? = null,
+    ): PassiveAuthResult =
+        PassiveAuthenticator(trustStore).verify(sod, dataGroups, dateOfIssue, dateOfExpiry, documentCode, issuingState, documentNumber)
 }
 
 object ActiveAuthentication {

@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">Abweichende Hashwerte: %1$s</string>
     <string name="result_detail_dg_all_match">Alle Hashwerte stimmen überein.</string>
     <string name="result_detail_dg_missing">Angekündigte, aber vom Chip nicht gelieferte Datengruppen: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: bekannte, vom Aussteller veröffentlichte Abweichung, Daten verworfen</string>
     <string name="result_detail_unsupported">Algorithmus nicht unterstützt: %1$s</string>
     <string name="result_detail_error">Technischer Fehler: %1$s</string>
     <string name="result_detail_no_dg14">Das Dokument enthält keine DG14: Der Chip bietet diese Prüfung nicht an.</string>

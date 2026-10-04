@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">Αποτυπώματα που δεν αντιστοιχούν: %1$s</string>
     <string name="result_detail_dg_all_match">Όλα τα αποτυπώματα αντιστοιχούν.</string>
     <string name="result_detail_dg_missing">Ομάδες δεδομένων που δηλώνονται αλλά δεν παρέχονται από το τσιπ: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: γνωστή ανωμαλία που δημοσίευσε ο εκδότης, τα δεδομένα απορρίφθηκαν</string>
     <string name="result_detail_unsupported">Μη υποστηριζόμενος αλγόριθμος: %1$s</string>
     <string name="result_detail_error">Τεχνικό σφάλμα: %1$s</string>
     <string name="result_detail_no_dg14">Το έγγραφο δεν περιέχει DG14: το τσιπ δεν προσφέρει αυτόν τον έλεγχο.</string>

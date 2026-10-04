@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">哈希值不符：%1$s</string>
     <string name="result_detail_dg_all_match">所有哈希值均相符。</string>
     <string name="result_detail_dg_missing">已声明但芯片未提供的数据组：%1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s：签发者公布的已知异常，数据已舍弃</string>
     <string name="result_detail_unsupported">不支持的算法：%1$s</string>
     <string name="result_detail_error">技术错误：%1$s</string>
     <string name="result_detail_no_dg14">证件不含 DG14：芯片不提供此项验证。</string>

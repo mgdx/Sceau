@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">Несовпадающие хеши: %1$s</string>
     <string name="result_detail_dg_all_match">Все хеши совпадают.</string>
     <string name="result_detail_dg_missing">Группы данных, заявленные, но не предоставленные чипом: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: известная аномалия, опубликованная издателем, данные отброшены</string>
     <string name="result_detail_unsupported">Алгоритм не поддерживается: %1$s</string>
     <string name="result_detail_error">Техническая ошибка: %1$s</string>
     <string name="result_detail_no_dg14">В документе нет DG14: чип не поддерживает эту проверку.</string>
