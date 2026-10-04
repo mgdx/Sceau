@@ -70,7 +70,7 @@ JMRTD et SCUBA (`scuba-smartcards`, `scuba-sc-android` ; LGPL 2.1 ou ultérieure
 
 - Manifeste : permission `android.permission.NFC` uniquement (plus la permission interne ajoutée par androidx.core, D7), aucune permission réseau, `android.hardware.nfc` en `required="false"`. minSdk 26.
 - Aucune donnée lue n'est écrite sur disque, en cache, en base ni en log, en debug comme en release. **Aucun journal, même temporaire pour déboguer** : ni `Log`, ni `println`, ni `printStackTrace` ; le diagnostic passe par le code d'erreur affiché. Les loggers de JMRTD et SCUBA sont coupés, et aucune exception de JMRTD n'est attachée comme cause (leurs messages contiennent des APDU). Aucune donnée personnelle dans les exceptions ou les identifiants d'erreur.
-- `FLAG_SECURE` sur les écrans Lecture et Résultat. Tableaux d'octets DG1/DG2/DG11/DG12 remis à zéro et libérés à la sortie du résultat et en arrière-plan. CAN/MRZ jamais mémorisés entre deux lectures.
+- `FLAG_SECURE` posé sur toute l'activité dès sa création (`secureForLifetime`), donc sur tous les écrans, accueil compris ; Lecture, Résultat et la photo en plein écran le demandent en plus (`SecureWindow()`). Tableaux d'octets DG1/DG2/DG11/DG12 remis à zéro et libérés à la sortie du résultat et en arrière-plan. CAN/MRZ jamais mémorisés entre deux lectures.
 - Nonce AA tiré d'un `SecureRandom`.
 - Interface en français, aucune chaîne codée en dur : chaînes réparties par écran dans `res/values/strings_<écran>.xml` (D5), `values-en` et 43 autres langues (D27), proposées dans `res/xml/locales_config.xml` à tenir à jour avec les dossiers `values-*` (le lint échoue sinon). Glossaires dans `docs/traduction/`.
 - Aucune télémétrie ni rapport de plantage.
