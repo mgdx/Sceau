@@ -1,8 +1,11 @@
 package io.github.mgdx.sceau.demo
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import io.github.mgdx.sceau.mrz.MrzFormat
 import io.github.mgdx.sceau.mrz.MrzKeyFields
 import io.github.mgdx.sceau.testchip.SimulatedDocuments
+import io.github.mgdx.sceau.ui.scan.ScanDiagnosticsSnapshot
 import java.time.format.DateTimeFormatter
 
 /**
@@ -38,5 +41,19 @@ object DemoMode {
             dateOfBirth = SimulatedDocuments.SPECIMEN_DATE_OF_BIRTH.format(yymmdd),
             dateOfExpiry = SimulatedDocuments.SPECIMEN_DATE_OF_EXPIRY.format(yymmdd),
         )
+    }
+
+    /**
+     * Bandeau de diagnostic de l'écran de scan (D32) : cadence, durée d'analyse, dimensions,
+     * issues récentes. Jamais un caractère reconnu ni une image. Faux en release.
+     */
+    const val SCAN_DIAGNOSTICS: Boolean = true
+
+    @Composable
+    fun ScanDiagnosticsBanner(
+        snapshot: ScanDiagnosticsSnapshot,
+        modifier: Modifier = Modifier,
+    ) {
+        ScanDiagnosticsBannerContent(snapshot, modifier)
     }
 }

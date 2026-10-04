@@ -37,6 +37,20 @@ class SessionViewModelMrzScanTest {
     }
 
     @Test
+    fun `l ecran de scan n est autorise qu apres le bouton de l accueil de ce processus`() {
+        // ViewModel neuf, comme après la mort du processus : l'écran de scan restauré rend la main.
+        val restored = SessionViewModel(RuntimeEnvironment.getApplication())
+        assertFalse(restored.scanRequested)
+
+        // Bouton « Scanner la MRZ » : l'écran reste ouvert, y compris après une rotation, qui
+        // garde le même ViewModel.
+        restored.onScanRequested()
+        assertTrue(restored.scanRequested)
+        restored.onMrzScanned(fields)
+        assertTrue(restored.scanRequested)
+    }
+
+    @Test
     fun `effacer oublie les valeurs scannees et le message`() {
         val session = SessionViewModel(RuntimeEnvironment.getApplication())
         session.onMrzScanned(fields)

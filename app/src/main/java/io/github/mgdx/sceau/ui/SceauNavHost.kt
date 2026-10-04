@@ -37,7 +37,10 @@ fun SceauNavHost(
                 onRead = { navController.navigate(Routes.READING) { launchSingleTop = true } },
                 onOpenTrustStore = { navController.navigate(Routes.TRUST) { launchSingleTop = true } },
                 onOpenAbout = { navController.navigate(Routes.ABOUT) { launchSingleTop = true } },
-                onScanMrz = { navController.navigate(Routes.SCAN) { launchSingleTop = true } },
+                onScanMrz = {
+                    session.onScanRequested()
+                    navController.navigate(Routes.SCAN) { launchSingleTop = true }
+                },
             )
         }
         composable(Routes.READING) {

@@ -14,6 +14,12 @@ data class PixelRect(
     val height: Int,
 )
 
+/** Point en pixels, coordonnées non entières. */
+data class PixelPoint(
+    val x: Float,
+    val y: Float,
+)
+
 /**
  * Cadre de visée exprimé en fractions (0 à 1) de la vue d'aperçu, plus la taille de cette vue
  * en pixels. Publié par l'interface, lu par l'analyseur sur son propre fil.
@@ -150,6 +156,62 @@ object ScanGeometry {
         val bottom = ceil(y1).toInt().coerceIn(top, vis.height)
         return PixelRect(vis.left + left, vis.top + top, right - left, bottom - top)
     }
+
+    /**
+     * Point du tampon de l'image (repère avant rotation, en pixels) affiché au point
+     * ([viewX], [viewY]) de la vue d'aperçu de [viewWidth] × [viewHeight] pixels. Même modèle
+     * d'affichage que [sensorCrop] : image tournée de [rotationDegrees], centrée et recadrée pour
+     * remplir la vue. Sert à placer la mise au point sous le doigt ou au centre du cadre.
+     */
+    fun viewToBuffer(
+        imageWidth: Int,
+        imageHeight: Int,
+        rotationDegrees: Int,
+        viewWidth: Int,
+        viewHeight: Int,
+        viewX: Float,
+        viewY: Float,
+        visible: PixelRect = PixelRect(0, 0, imageWidth, imageHeight),
+    ): PixelPoint {
+        require(imageWidth > 0 && imageHeight > 0 && viewWidth > 0 && viewHeight > 0)
+        require(rotationDegrees == 0 || rotationDegrees == 90 || rotationDegrees == 180 || rotationDegrees == 270)
+        val vis = clamp(visible, imageWidth, imageHeight)
+        val swap = rotationDegrees == 90 || rotationDegrees == 270
+        val uprightWidth = (if (swap) vis.height else vis.width).toFloat()
+        val uprightHeight = (if (swap) vis.width else vis.height).toFloat()
+        val scale = max(viewWidth / uprightWidth, viewHeight / uprightHeight)
+        val u = ((uprightWidth - viewWidth / scale) / 2f + viewX.coerceIn(0f, viewWidth.toFloat()) / scale).coerceIn(0f, uprightWidth)
+        val v = ((uprightHeight - viewHeight / scale) / 2f + viewY.coerceIn(0f, viewHeight.toFloat()) / scale).coerceIn(0f, uprightHeight)
+        val w = vis.width.toFloat()
+        val h = vis.height.toFloat()
+        val (x, y) =
+            when (rotationDegrees) {
+                90 -> v to h - u
+                180 -> w - u to h - v
+                270 -> w - v to u
+                else -> u to v
+            }
+        return PixelPoint(vis.left + x, vis.top + y)
+    }
+
+    /** Centre du cadre de visée [viewfinder], dans le repère du tampon de l'image (voir [viewToBuffer]). */
+    fun meteringPoint(
+        imageWidth: Int,
+        imageHeight: Int,
+        rotationDegrees: Int,
+        viewfinder: ViewfinderGeometry,
+        visible: PixelRect = PixelRect(0, 0, imageWidth, imageHeight),
+    ): PixelPoint =
+        viewToBuffer(
+            imageWidth = imageWidth,
+            imageHeight = imageHeight,
+            rotationDegrees = rotationDegrees,
+            viewWidth = viewfinder.viewWidth,
+            viewHeight = viewfinder.viewHeight,
+            viewX = (viewfinder.left + viewfinder.right) / 2f * viewfinder.viewWidth,
+            viewY = (viewfinder.top + viewfinder.bottom) / 2f * viewfinder.viewHeight,
+            visible = visible,
+        )
 
     /**
      * Copie la zone [crop] du plan de luminance [plane] ([rowStride] octets par ligne,

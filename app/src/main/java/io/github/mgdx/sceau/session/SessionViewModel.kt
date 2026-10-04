@@ -150,6 +150,20 @@ class SessionViewModel(
         mrzScanned = true
     }
 
+    /**
+     * Vrai une fois l'écran de scan ouvert depuis l'accueil par ce processus ([onScanRequested]).
+     * Vit en mémoire seulement : après la mort du processus, la navigation restaurée rouvrirait
+     * le scan avec un ViewModel neuf, où il est faux ; l'écran rend alors la main à l'accueil
+     * (SPEC §8). Une rotation garde le ViewModel, donc l'écran.
+     */
+    var scanRequested: Boolean = false
+        private set
+
+    /** Appelé par le bouton « Scanner la MRZ » de l'accueil, avant la navigation. */
+    fun onScanRequested() {
+        scanRequested = true
+    }
+
     /** Vrai une seule fois après chaque [onMrzScanned]. */
     fun consumeMrzScanned(): Boolean = mrzScanned.also { mrzScanned = false }
 
