@@ -17,6 +17,8 @@ internal class DeviationEvidence(
     val documentCode: String,
     /** Numéro du document de DG1, sans caractère de remplissage. */
     val documentNumber: String?,
+    /** Date d'expiration de DG1, null si illisible. */
+    val dateOfExpiry: LocalDate?,
     /** Attribut signé signingTime du SOD (date UTC), null s'il est absent. */
     val sodSigningTime: LocalDate?,
     /**
@@ -33,6 +35,9 @@ internal class DeviationEvidence(
  * @property source page ou fichier officiel de l'émetteur qui publie l'anomalie
  * @property listDate date de la liste de l'émetteur (signingTime de la Deviation List)
  * @property listSha256 empreinte SHA-256 du fichier publié, consignée dans docs/trust-sources.md §2.4
+ * @property obsoleteAfter date après laquelle aucun document couvert ne peut plus être valide : la
+ *   règle ne s'applique qu'à un document dont l'expiration (DG1) ne la dépasse pas, et un test
+ *   échoue une fois cette date passée, pour penser à supprimer la règle
  * @property matches critère, évalué sur des éléments signés (voir [DeviationEvidence])
  */
 internal class KnownDeviationRule(
@@ -40,8 +45,12 @@ internal class KnownDeviationRule(
     val source: String,
     val listDate: LocalDate,
     val listSha256: String,
+    val obsoleteAfter: LocalDate,
     val matches: (DeviationEvidence) -> Boolean,
 ) {
+    /** Vrai si [today] est postérieur à [obsoleteAfter] : la règle n'a plus lieu d'être. */
+    fun isObsolete(today: LocalDate): Boolean = today.isAfter(obsoleteAfter)
+
     init {
         // Garde-fou : DG1 (MRZ), DG2 (portrait), DG14 et DG15 (clés de la puce) ne sont jamais tolérés.
         require(deviation.dataGroup in KnownDeviations.TOLERABLE_DATA_GROUPS) { "DEVIATION_DATA_GROUP" }
@@ -65,9 +74,17 @@ internal class KnownDeviations(
         rules
             .filter { rule ->
                 val dataGroup = rule.deviation.dataGroup
-                dataGroup in TOLERABLE_DATA_GROUPS && dataGroup in mismatched && rule.matches(evidence)
+                val expiry = evidence.dateOfExpiry
+                dataGroup in TOLERABLE_DATA_GROUPS &&
+                    dataGroup in mismatched &&
+                    expiry != null &&
+                    !expiry.isAfter(rule.obsoleteAfter) &&
+                    rule.matches(evidence)
             }.map { it.deviation }
             .distinct()
+
+    /** Règles périmées à la date [today] (voir [KnownDeviationRule.obsoleteAfter]). */
+    fun obsoleteRules(today: LocalDate): List<KnownDeviationRule> = rules.filter { it.isObsolete(today) }
 
     companion object {
         /** Seuls DG11 et DG12 (données complémentaires, sans rôle dans la vérification) peuvent être tolérés. */
@@ -99,6 +116,14 @@ internal class KnownDeviations(
  * liste), signingTime du SOD dans la période de délivrance élargie d'un mois de chaque côté.
  * Restriction sur une donnée non vérifiée : un DG12 lisible dont la date de délivrance n'est pas
  * le 2015-12-05 n'est pas couvert.
+ *
+ * Péremption ([OBSOLETE_AFTER], 2029-03-05) : dernière délivrance admise par le critère
+ * (2018-03-05, signingTime avec la marge) + 10 ans, durée maximale d'une carte d'identité pour un
+ * majeur (décret-loi 112/2008, art. 31, converti par la loi 133/2008), échéance reportée au jour
+ * anniversaire du titulaire qui suit (décret-loi 5/2012, art. 7, al. 2, converti par la loi
+ * 35/2012) : au plus un an de plus, soit le 2029-03-05 au plus tard (au plus tard le 2029-02-05
+ * pour les cartes de la liste, délivrées jusqu'au 2018-02-05). La validité de 50 ans au-delà de
+ * 70 ans ne vaut que pour les cartes délivrées depuis le 2026-07-30.
  */
 internal object ItalianCie3Dg12 {
     val DEVIATION = KnownDeviation(id = "IT-CIE3-DG12", dataGroup = 12)
@@ -110,6 +135,9 @@ internal object ItalianCie3Dg12 {
     /** Période de délivrance de la liste (2017-10-01 au 2018-02-05), élargie d'un mois (D34). */
     val SIGNING_TIME_FROM: LocalDate = LocalDate.of(2017, 9, 1)
     val SIGNING_TIME_TO: LocalDate = LocalDate.of(2018, 3, 5)
+
+    /** Aucune carte couverte n'est valide au-delà : 2018-03-05 + 10 ans + 1 an au plus (D34). */
+    val OBSOLETE_AFTER: LocalDate = LocalDate.of(2029, 3, 5)
 
     /** Date de délivrance erronée que portent tous les DG12 concernés. */
     val DG12_DATE_OF_ISSUE: LocalDate = LocalDate.of(2015, 12, 5)
@@ -127,5 +155,5 @@ internal object ItalianCie3Dg12 {
             (evidence.dg12DateOfIssue == null || evidence.dg12DateOfIssue == DG12_DATE_OF_ISSUE)
     }
 
-    val RULE = KnownDeviationRule(DEVIATION, SOURCE, LIST_DATE, LIST_SHA256, ::matches)
+    val RULE = KnownDeviationRule(DEVIATION, SOURCE, LIST_DATE, LIST_SHA256, OBSOLETE_AFTER, ::matches)
 }

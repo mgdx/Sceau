@@ -224,6 +224,7 @@ internal class PassiveAuthenticator(
                 issuingState = facts.issuingState,
                 documentCode = facts.documentCode,
                 documentNumber = facts.documentNumber,
+                dateOfExpiry = facts.dateOfExpiry,
                 sodSigningTime = signingDate(signer),
                 dg12DateOfIssue = facts.dateOfIssue,
             )

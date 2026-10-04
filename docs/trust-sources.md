@@ -226,6 +226,11 @@ SHA-256 `1219d8c74a7acf13c55e265fa8125230167160f4f999b64b28644275a084d31d` (arch
   seul l'écart d'empreinte de DG12 est toléré, et DG12 est alors écarté (non affiché, octets remis à
   zéro, date de délivrance ignorée). Aucune donnée qui fonde le verdict (DG1, DG2, DG14, DG15, SOD,
   chaîne) n'est touchée.
+- **Péremption** : la règle ne vaut que pour un document dont l'expiration (DG1, signée) ne dépasse
+  pas le **2029-03-05**. Ce plafond vaut 2018-03-05 (dernière délivrance admise) + 10 ans (décret-loi
+  112/2008, art. 31), plus au plus un an jusqu'à l'anniversaire du titulaire (décret-loi 5/2012,
+  art. 7, al. 2). Passé cette date, `KnownDeviationsTest` échoue : supprimer la règle
+  `IT-CIE3-DG12` et la décision D34.
 
 ## 3. Publications nationales, pays par pays
 

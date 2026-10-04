@@ -19,6 +19,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.File
 import java.time.LocalDate
+import java.time.ZoneOffset
 
 /**
  * Anomalies connues des émetteurs (décision D34) : tolérance d'un écart d'empreinte sur DG11 ou
@@ -39,6 +40,7 @@ class KnownDeviationsTest {
             documentCode = "C"
             issuingState = "ITA"
             documentNumber = "CA12345XY"
+            dateOfExpiry = EXPIRY
             extraDataGroups = mapOf(12 to signedDg12)
             sod = SodOptions(signingTime = TestCrypto.instant(LocalDate.of(2017, 12, 15)))
             configure()
@@ -145,6 +147,7 @@ class KnownDeviationsTest {
                     documentCode = "C"
                     issuingState = "FRA"
                     documentNumber = "CA12345XY"
+                    dateOfExpiry = EXPIRY
                     extraDataGroups = mapOf(12 to signedDg12)
                     sod = SodOptions(signingTime = TestCrypto.instant(LocalDate.of(2017, 12, 15)))
                 }.withWrongDg12()
@@ -160,7 +163,7 @@ class KnownDeviationsTest {
     fun `deviation sur DG1, DG2, DG14 ou DG15 refusee`() {
         for (dataGroup in listOf(1, 2, 3, 14, 15)) {
             assertThrows(IllegalArgumentException::class.java) {
-                KnownDeviationRule(KnownDeviation("TEST", dataGroup), "test", LocalDate.of(2020, 1, 1), "00") { true }
+                KnownDeviationRule(KnownDeviation("TEST", dataGroup), "test", LocalDate.of(2020, 1, 1), "00", FAR_FUTURE) { true }
             }
         }
     }
@@ -168,7 +171,9 @@ class KnownDeviationsTest {
     @Test
     fun `une deviation DG12 ne couvre ni DG1 ni DG2`() {
         val always =
-            KnownDeviations(listOf(KnownDeviationRule(KnownDeviation("TEST-DG12", 12), "test", LocalDate.of(2020, 1, 1), "00") { true }))
+            KnownDeviations(
+                listOf(KnownDeviationRule(KnownDeviation("TEST-DG12", 12), "test", LocalDate.of(2020, 1, 1), "00", FAR_FUTURE) { true }),
+            )
 
         val dg2 = verify(cie().withWrongDg12().withModifiedDataGroup(2), deviations = always)
         assertEquals(CheckStatus.FAILED, dg2.dataGroupHashes.status)
@@ -197,6 +202,50 @@ class KnownDeviationsTest {
     }
 
     @Test
+    fun `expiration au-dela de la peremption ou illisible - pas de tolerance`() {
+        val late = cie { dateOfExpiry = ItalianCie3Dg12.OBSOLETE_AFTER.plusDays(1) }
+        val tooLate = verify(late.withWrongDg12())
+        assertEquals(CheckStatus.FAILED, tooLate.dataGroupHashes.status)
+        assertEquals(emptySet<Int>(), tooLate.discardedDataGroups)
+
+        val lastDay = cie { dateOfExpiry = ItalianCie3Dg12.OBSOLETE_AFTER }
+        assertEquals(setOf(12), verify(lastDay.withWrongDg12()).discardedDataGroups)
+
+        val document = cie().withWrongDg12()
+        val unreadable =
+            PassiveAuthenticator(store()).verify(
+                sod = document.sod,
+                dataGroups = document.dataGroups,
+                dateOfIssue = ItalianCie3Dg12.DG12_DATE_OF_ISSUE,
+                dateOfExpiry = null,
+                documentCode = "C",
+                issuingState = "ITA",
+                documentNumber = "CA12345XY",
+            )
+        assertEquals(CheckStatus.OK, unreadable.sodSignature.status)
+        assertEquals(emptySet<Int>(), unreadable.discardedDataGroups)
+    }
+
+    @Test
+    fun `peremption - aucune regle du registre reel n'est perimee`() {
+        val messages = obsolescenceMessages(KnownDeviations.REGISTRY, LocalDate.now(ZoneOffset.UTC))
+        assertTrue(messages.joinToString("\n"), messages.isEmpty())
+    }
+
+    @Test
+    fun `peremption - une regle factice perimee est signalee`() {
+        val rule =
+            KnownDeviationRule(KnownDeviation("TEST-OLD", 12), "test", LocalDate.of(2010, 1, 1), "00", LocalDate.of(2020, 6, 30)) { true }
+        val registry = KnownDeviations(listOf(rule))
+
+        assertEquals(emptyList<String>(), obsolescenceMessages(registry, LocalDate.of(2020, 6, 30)))
+        assertEquals(
+            listOf("Règle TEST-OLD périmée depuis 2020-06-30 : supprimer la règle et sa décision (D34), voir docs/trust-sources.md §2.4"),
+            obsolescenceMessages(registry, LocalDate.of(2020, 7, 1)),
+        )
+    }
+
+    @Test
     fun `registre reel - regle italienne fixee sur la Deviation List documentee`() {
         val rule = KnownDeviations.REGISTRY.rules.single { it.deviation.id == "IT-CIE3-DG12" }
         assertEquals(12, rule.deviation.dataGroup)
@@ -206,6 +255,8 @@ class KnownDeviationsTest {
         // Période de délivrance de la liste (2017-10-01 au 2018-02-05) élargie d'un mois.
         assertEquals(LocalDate.of(2017, 9, 1), ItalianCie3Dg12.SIGNING_TIME_FROM)
         assertEquals(LocalDate.of(2018, 3, 5), ItalianCie3Dg12.SIGNING_TIME_TO)
+        // 2018-03-05 + 10 ans, reporté au plus d'un an jusqu'à l'anniversaire du titulaire.
+        assertEquals(LocalDate.of(2029, 3, 5), rule.obsoleteAfter)
         assertTrue(KnownDeviations.REGISTRY.rules.all { it.deviation.dataGroup in setOf(11, 12) })
 
         val doc = listOf(File("../docs/trust-sources.md"), File("docs/trust-sources.md")).first { it.isFile }.readText()
@@ -221,6 +272,7 @@ class KnownDeviationsTest {
                 issuingState = "ITA",
                 documentCode = "C",
                 documentNumber = "CA12345XY",
+                dateOfExpiry = EXPIRY,
                 sodSigningTime = LocalDate.of(2017, 12, 15),
                 dg12DateOfIssue = null,
             )
@@ -232,5 +284,19 @@ class KnownDeviationsTest {
     private companion object {
         const val SEED = 0x17A1L
         const val DG12_TAG = 0x6C
+
+        /** Expiration d'une CIE délivrée fin 2017 : 10 ans, reportée à l'anniversaire suivant. */
+        val EXPIRY: LocalDate = LocalDate.of(2028, 12, 15)
+        val FAR_FUTURE: LocalDate = LocalDate.of(2100, 1, 1)
+
+        /** Messages d'échec du test de péremption pour [registry] à la date [today]. */
+        fun obsolescenceMessages(
+            registry: KnownDeviations,
+            today: LocalDate,
+        ): List<String> =
+            registry.obsoleteRules(today).map {
+                "Règle ${it.deviation.id} périmée depuis ${it.obsoleteAfter} : supprimer la règle et sa décision (D34), " +
+                    "voir docs/trust-sources.md §2.4"
+            }
     }
 }
