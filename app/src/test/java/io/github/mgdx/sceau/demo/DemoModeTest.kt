@@ -28,4 +28,17 @@ class DemoModeTest {
         assertTrue(portrait.bytes.isNotEmpty())
         report.wipe()
     }
+
+    @Test
+    fun `la CNIe simulee porte une signature manuscrite JPEG (DG7, D37)`() {
+        val card = checkNotNull(DemoMode.newSimulatedCnie())
+
+        val report = runBlocking { readAndVerify(card.transport, card.key, card.trustStore) { } }
+
+        val signature = checkNotNull(report.document.signature)
+        assertEquals(ImageFormat.JPEG, signature.format)
+        assertTrue(signature.bytes.isNotEmpty())
+        report.wipe()
+        assertTrue(signature.bytes.all { it == 0.toByte() })
+    }
 }

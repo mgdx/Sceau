@@ -22,6 +22,7 @@
     <string name="result_image_front">Ảnh mặt trước</string>
     <string name="result_image_rear">Ảnh mặt sau</string>
     <string name="result_image_unavailable">Không đọc được ảnh</string>
+    <string name="result_section_signature">Chữ ký của người mang giấy tờ</string>
 
     <!-- Identité -->
     <string name="result_section_identity">Nhân thân</string>

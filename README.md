@@ -11,7 +11,7 @@ Sceau fonctionne entièrement hors ligne : il ne demande aucune permission rése
 ## Fonctionnalités
 
 - **Lecture NFC** avec le CAN (6 chiffres imprimés sur la carte d'identité) ou la MRZ (numéro de document, date de naissance, date d'expiration), par PACE ou BAC selon ce que la puce annonce. Une puce qui fait patienter après des essais ratés est attendue jusqu'à une minute.
-- **Affichage** de la photo, de l'identité (nom, prénoms, sexe, date de naissance, nationalité, type et numéro de document, État émetteur, date d'expiration) et, si la puce les contient, des données complémentaires (DG11, DG12).
+- **Affichage** de la photo, de l'identité (nom, prénoms, sexe, date de naissance, nationalité, type et numéro de document, État émetteur, date d'expiration) et, si la puce les contient, de la signature manuscrite du titulaire (DG7) et des données complémentaires (DG11, DG12).
 - **Vérification de l'authenticité** :
   - *Passive Authentication* : la signature des données par l'État émetteur est vérifiée jusqu'à un certificat racine (CSCA) connu, et chaque groupe de données est comparé à son empreinte signée ;
   - *Chip Authentication* et *Active Authentication* : la puce prouve qu'elle détient une clé secrète, ce qu'un clone ne peut pas faire.

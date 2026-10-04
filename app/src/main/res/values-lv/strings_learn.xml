@@ -37,6 +37,7 @@
     <string name="learn_chip_section_displayed">Nolasīts un parādīts</string>
     <string name="learn_chip_dg1">MRZ dati: dokumenta veids, uzvārds, vārdi, pilsonība, dzimšanas datums, dzimums, dokumenta numurs, izdevējvalsts un derīguma termiņš.</string>
     <string name="learn_chip_dg2">Turētāja fotoattēls.</string>
+    <string name="learn_chip_dg7">Ja valsts to ieraksta: turētāja rokraksta paraksta attēls.</string>
     <string name="learn_chip_dg11">Ja valsts tos ieraksta: papildu personas informācija, piemēram, dzimšanas vieta vai adrese.</string>
     <string name="learn_chip_dg12">Ja valsts tos ieraksta: informācija par dokumentu, piemēram, izdevējiestāde un izdošanas datums, dažreiz arī dokumenta attēls.</string>
 
@@ -53,7 +54,7 @@
     <string name="learn_chip_dg3">Pirkstu nospiedumi.</string>
     <string name="learn_chip_dg4">Varavīksnenes attēls.</string>
     <string name="learn_chip_eac">Eiropas dokumentos šie divi faili jebkurā gadījumā ir aizsargāti ar papildu slēdzeni – EAC (Extended Access Control), ko var atvērt tikai pilnvarotas iestādes.</string>
-    <string name="learn_chip_others">Arī pārējās datu grupas (DG5–DG10, DG13 un DG16: citi attēli, rokraksta paraksts, valstij specifiski dati, personas, kuras jāinformē) netiek nolasītas.</string>
+    <string name="learn_chip_others">Arī pārējās datu grupas (DG5, DG6, DG8–DG10, DG13 un DG16: cits portrets, rezervēta vieta, dokumenta drošības elementi, valstij specifiski dati, personas, kuras jāinformē) netiek nolasītas.</string>
 
     <string name="learn_chip_section_never_does">Ko Sceau nedara</string>
     <string name="learn_chip_no_storage">Tā nesaglabā, nesūta un nereģistrē žurnālā nekādus nolasītos datus: viss paliek tālruņa atmiņā un tiek dzēsts, izejot no rezultāta.</string>

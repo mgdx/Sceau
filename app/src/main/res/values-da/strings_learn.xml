@@ -37,6 +37,7 @@
     <string name="learn_chip_section_displayed">Læst og vist</string>
     <string name="learn_chip_dg1">MRZ-dataene: dokumenttype, efternavn, fornavne, nationalitet, fødselsdato, køn, dokumentnummer, udstedende stat og udløbsdato.</string>
     <string name="learn_chip_dg2">Indehaverens billede.</string>
+    <string name="learn_chip_dg7">Hvis staten registrerer den: et billede af indehaverens håndskrevne underskrift.</string>
     <string name="learn_chip_dg11">Hvis staten registrerer dem: yderligere personoplysninger, f.eks. fødested eller adresse.</string>
     <string name="learn_chip_dg12">Hvis staten registrerer dem: oplysninger om dokumentet, f.eks. udstedende myndighed og udstedelsesdato, nogle gange et billede af dokumentet.</string>
 
@@ -53,7 +54,7 @@
     <string name="learn_chip_dg3">Fingeraftrykkene.</string>
     <string name="learn_chip_dg4">Billedet af iris.</string>
     <string name="learn_chip_eac">På europæiske dokumenter er disse to filer under alle omstændigheder beskyttet af en ekstra lås, EAC (Extended Access Control), som kun autoriserede myndigheder kan åbne.</string>
-    <string name="learn_chip_others">De øvrige datagrupper (DG5 til DG10, DG13 og DG16: andre billeder, håndskreven underskrift, statsspecifikke data, personer, der skal underrettes) læses heller ikke.</string>
+    <string name="learn_chip_others">De øvrige datagrupper (DG5, DG6, DG8 til DG10, DG13 og DG16: andet portræt, reserveret plads, dokumentets sikkerhedselementer, statsspecifikke data, personer, der skal underrettes) læses heller ikke.</string>
 
     <string name="learn_chip_section_never_does">Det gør Sceau ikke</string>
     <string name="learn_chip_no_storage">Sceau gemmer, sender og logger ingen læste data: alt bliver i telefonens hukommelse og slettes, når du forlader resultatet.</string>

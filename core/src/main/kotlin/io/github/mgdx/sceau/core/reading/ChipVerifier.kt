@@ -47,7 +47,7 @@ internal class ChipVerifier(
     private val service get() = chip.service
 
     /**
-     * Chip Authentication, avant la lecture de DG1, DG2, DG15, DG11 et DG12 (décision D20).
+     * Chip Authentication, avant la lecture de DG1, DG2, DG15, DG11, DG12 et DG7 (décisions D20, D37).
      * Après succès, JMRTD remplace la messagerie sécurisée par celle dérivée de la clé de DG14 :
      * toute commande ultérieure (lecture des DG, AA) passe par ce canal.
      *

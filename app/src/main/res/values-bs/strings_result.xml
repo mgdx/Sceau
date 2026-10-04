@@ -22,6 +22,7 @@
     <string name="result_image_front">Slika prednje strane</string>
     <string name="result_image_rear">Slika poleđine</string>
     <string name="result_image_unavailable">Nečitljiva slika</string>
+    <string name="result_section_signature">Potpis nosioca</string>
 
     <!-- Identité -->
     <string name="result_section_identity">Identitet</string>

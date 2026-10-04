@@ -40,6 +40,8 @@ val report = readAndVerify(card.chip(), card.canKey!!, card.trustStore) { }
   (brainpoolP256r1). BAC reste accepté (transition ICAO).
 - DG1 : MRZ TD1, code « ID », FRA, `SPECIMEN` / `MARIANNE`, document `SPEC12345`.
 - DG2 : portrait JPEG 2000 synthétique (`specimen-portrait.jp2`), ISO 19794-5.
+- DG7 : signature manuscrite synthétique (`specimen-signature.jpg`, JPEG en niveaux de gris,
+  300 × 100), lue et affichée depuis la décision D37.
 - DG11 : nom complet, lieu de naissance et adresse fictifs. DG12 : « PREFECTURE DE TEST »,
   délivrance le 15/03/2024.
 - DG14 : clé CA ECDH brainpoolP256r1, `ChipAuthenticationInfo` AES-128,
@@ -81,3 +83,16 @@ Le script construit `opj_compress` depuis `app/src/main/cpp/openjpeg` dans un do
 temporaire, dessine l'image en PPM avec `python3`, puis l'encode :
 `opj_compress -i specimen.ppm -o specimen-portrait.jp2 -r 25 -I` (JP2, compression 9/7 avec
 pertes, taux 25). Il échoue si le fichier dépasse 20 Ko.
+
+## Signature synthétique
+
+`src/main/resources/specimen-signature.jpg` (300 × 100, niveaux de gris, environ 3,5 Ko) :
+paraphe fait de courbes de Bézier tracées par programme en noir sur blanc, **aucune signature
+réelle**. Pour la régénérer, depuis la racine du dépôt (JDK 17 ou ultérieur) :
+
+```bash
+java -Djava.awt.headless=true testchip/tools/GenerateSpecimenSignature.java
+```
+
+Le programme échoue si le fichier dépasse 8 Ko. `TestDataGroups.dg7()` l'emballe dans un DG7
+(ICAO 9303-10) construit avec JMRTD ; la CNIe simulée le porte (décision D37).

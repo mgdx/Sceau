@@ -37,6 +37,7 @@
     <string name="learn_chip_section_displayed">Dibaca dan dipaparkan</string>
     <string name="learn_chip_dg1">Data MRZ: jenis dokumen, nama keluarga, nama diberi, warganegara, tarikh lahir, jantina, nombor dokumen, negara pengeluar dan tarikh tamat tempoh.</string>
     <string name="learn_chip_dg2">Foto pemegang.</string>
+    <string name="learn_chip_dg7">Jika negara merekodkannya: imej tandatangan tulisan tangan pemegang.</string>
     <string name="learn_chip_dg11">Jika negara merekodkannya: maklumat peribadi tambahan, seperti tempat lahir atau alamat.</string>
     <string name="learn_chip_dg12">Jika negara merekodkannya: maklumat tentang dokumen, seperti pihak berkuasa pengeluar dan tarikh dikeluarkan, kadangkala imej dokumen.</string>
 
@@ -53,7 +54,7 @@
     <string name="learn_chip_dg3">Cap jari.</string>
     <string name="learn_chip_dg4">Imej iris.</string>
     <string name="learn_chip_eac">Pada dokumen Eropah, kedua-dua fail ini juga dilindungi oleh kunci tambahan, EAC (Extended Access Control), yang hanya boleh dibuka oleh pihak berkuasa yang diberi kuasa.</string>
-    <string name="learn_chip_others">Kumpulan data lain (DG5 hingga DG10, DG13 dan DG16: imej lain, tandatangan tulisan tangan, data khusus negara, orang untuk dihubungi) juga tidak dibaca.</string>
+    <string name="learn_chip_others">Kumpulan data lain (DG5, DG6, DG8 hingga DG10, DG13 dan DG16: potret lain, ruang simpanan, ciri keselamatan dokumen, data khusus negara, orang untuk dihubungi) juga tidak dibaca.</string>
 
     <string name="learn_chip_section_never_does">Perkara yang tidak dilakukan oleh Sceau</string>
     <string name="learn_chip_no_storage">Sceau tidak menyimpan, menghantar atau merekodkan sebarang data yang dibaca: semuanya kekal dalam memori telefon dan dipadamkan apabila anda meninggalkan keputusan.</string>

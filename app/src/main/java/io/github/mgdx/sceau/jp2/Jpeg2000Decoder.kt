@@ -4,7 +4,7 @@ import android.graphics.Bitmap
 import androidx.core.graphics.createBitmap
 
 /**
- * Décodeur JPEG 2000 (portrait DG2, images DG12) au-dessus d'OpenJPEG, compilé depuis les
+ * Décodeur JPEG 2000 (portrait DG2, signature DG7, images DG12) au-dessus d'OpenJPEG, compilé depuis les
  * sources dans `libsceau_jp2.so` (décision D3). Accepte un fichier JP2 ou un flux J2K brut.
  *
  * Le flux vient d'une puce potentiellement hostile : une donnée invalide, tronquée ou aux

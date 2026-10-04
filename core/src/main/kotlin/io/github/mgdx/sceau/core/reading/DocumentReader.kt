@@ -39,7 +39,7 @@ internal class LdsContent(
  * par la Chip Authentication :
  * 1. [readSecurityObjects] : EF.COM, EF.SOD, puis DG14 s'il est annoncé dans EF.COM ou dans le
  *    SOD ;
- * 2. [readDataGroups] : DG1, DG2, puis DG15, DG11 et DG12 s'ils sont annoncés, sous la
+ * 2. [readDataGroups] : DG1, DG2, puis DG15, DG11, DG12 et DG7 s'ils sont annoncés, sous la
  *    messagerie sécurisée courante, c'est-à-dire celle de la Chip Authentication si elle a
  *    réussi.
  *
@@ -70,7 +70,7 @@ internal class DocumentReader(
     }
 
     /**
-     * Second temps : DG1, DG2, DG15, DG11, DG12. Chaque DG est rangé dans [into] dès sa lecture,
+     * Second temps : DG1, DG2, DG15, DG11, DG12, DG7. Chaque DG est rangé dans [into] dès sa lecture,
      * pour que l'appelant puisse l'effacer si la suite échoue. [into] contient déjà DG14 s'il a
      * été lu.
      */
@@ -110,8 +110,11 @@ internal class DocumentReader(
         /** DG14, lu avant la Chip Authentication qu'il annonce. */
         const val SECURITY_DATA_GROUP = 14
 
-        /** DG lus après la Chip Authentication s'ils sont annoncés, dans cet ordre. Ne jamais y ajouter 3 ni 4. */
-        val OPTIONAL_DATA_GROUPS = listOf(15, 11, 12)
+        /**
+         * DG lus après la Chip Authentication s'ils sont annoncés, dans cet ordre (DG7 : D37).
+         * Ne jamais y ajouter 3 ni 4.
+         */
+        val OPTIONAL_DATA_GROUPS = listOf(15, 11, 12, 7)
 
         /**
          * DG annoncés par EF.COM ; vide s'il est illisible. Les longueurs sont contrôlées avant

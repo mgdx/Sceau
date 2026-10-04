@@ -37,6 +37,7 @@
     <string name="learn_chip_section_displayed">Read and displayed</string>
     <string name="learn_chip_dg1">The MRZ data: document type, surname, given names, nationality, date of birth, sex, document number, issuing country and expiry date.</string>
     <string name="learn_chip_dg2">The holder’s photo.</string>
+    <string name="learn_chip_dg7">If the country records it: an image of the holder’s handwritten signature.</string>
     <string name="learn_chip_dg11">If the country records it: additional personal details, such as place of birth or address.</string>
     <string name="learn_chip_dg12">If the country records it: details about the document, such as the issuing authority and date of issue, sometimes an image of the document.</string>
 
@@ -53,7 +54,7 @@
     <string name="learn_chip_dg3">Fingerprints.</string>
     <string name="learn_chip_dg4">The iris image.</string>
     <string name="learn_chip_eac">On European documents, these two files are protected by an extra lock anyway, EAC (Extended Access Control), which only authorized authorities can open.</string>
-    <string name="learn_chip_others">The other data groups (DG5 to DG10, DG13 and DG16: other images, handwritten signature, country-specific data, persons to notify) are not read either.</string>
+    <string name="learn_chip_others">The other data groups (DG5, DG6, DG8 to DG10, DG13 and DG16: other portrait, reserved slot, document security features, country-specific data, persons to notify) are not read either.</string>
 
     <string name="learn_chip_section_never_does">What Sceau does not do</string>
     <string name="learn_chip_no_storage">It does not save, send or log any data read: everything stays in the phone’s memory and is erased when you leave the result.</string>

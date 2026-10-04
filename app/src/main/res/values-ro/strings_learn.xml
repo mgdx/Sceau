@@ -37,6 +37,7 @@
     <string name="learn_chip_section_displayed">Citite și afișate</string>
     <string name="learn_chip_dg1">Datele din MRZ: tipul documentului, nume, prenume, cetățenie, data nașterii, sex, numărul documentului, statul emitent și data expirării.</string>
     <string name="learn_chip_dg2">Fotografia titularului.</string>
+    <string name="learn_chip_dg7">Dacă statul o înscrie: imaginea semnăturii olografe a titularului.</string>
     <string name="learn_chip_dg11">Dacă statul le înscrie: informații personale suplimentare, cum ar fi locul nașterii sau adresa.</string>
     <string name="learn_chip_dg12">Dacă statul le înscrie: informații despre document, cum ar fi autoritatea emitentă și data eliberării, uneori o imagine a documentului.</string>
 
@@ -53,7 +54,7 @@
     <string name="learn_chip_dg3">Amprentele digitale.</string>
     <string name="learn_chip_dg4">Imaginea irisului.</string>
     <string name="learn_chip_eac">Pe documentele europene, aceste două fișiere sunt oricum protejate de un lacăt suplimentar, EAC (Extended Access Control), pe care doar autoritățile abilitate îl pot deschide.</string>
-    <string name="learn_chip_others">Celelalte grupuri de date (DG5–DG10, DG13 și DG16: alte imagini, semnătura olografă, date specifice statului, persoane de contactat) nu sunt nici ele citite.</string>
+    <string name="learn_chip_others">Celelalte grupuri de date (DG5, DG6, DG8–DG10, DG13 și DG16: alt portret, spațiu rezervat, elemente de securitate ale documentului, date specifice statului, persoane de contactat) nu sunt nici ele citite.</string>
 
     <string name="learn_chip_section_never_does">Ce nu face Sceau</string>
     <string name="learn_chip_no_storage">Nu salvează, nu trimite și nu jurnalizează nicio dată citită: totul rămâne în memoria telefonului și este șters când părăsiți rezultatul.</string>

@@ -37,6 +37,7 @@
     <string name="learn_chip_section_displayed">Lest og vist</string>
     <string name="learn_chip_dg1">MRZ-dataene: dokumenttype, etternavn, fornavn, nasjonalitet, fødselsdato, kjønn, dokumentnummer, utstedende stat og utløpsdato.</string>
     <string name="learn_chip_dg2">Bildet av innehaveren.</string>
+    <string name="learn_chip_dg7">Hvis staten registrerer den: et bilde av innehaverens håndskrevne signatur.</string>
     <string name="learn_chip_dg11">Hvis staten registrerer dem: flere personopplysninger, som fødested eller adresse.</string>
     <string name="learn_chip_dg12">Hvis staten registrerer dem: opplysninger om dokumentet, som utstedende myndighet og utstedelsesdato, noen ganger et bilde av dokumentet.</string>
 
@@ -53,7 +54,7 @@
     <string name="learn_chip_dg3">Fingeravtrykkene.</string>
     <string name="learn_chip_dg4">Bildet av iris.</string>
     <string name="learn_chip_eac">På europeiske dokumenter er disse to filene uansett beskyttet av en ekstra lås, EAC (Extended Access Control), som bare autoriserte myndigheter kan åpne.</string>
-    <string name="learn_chip_others">De andre datagruppene (DG5 til DG10, DG13 og DG16: andre bilder, håndskrevet signatur, statsspesifikke data, personer som skal varsles) leses heller ikke.</string>
+    <string name="learn_chip_others">De andre datagruppene (DG5, DG6, DG8 til DG10, DG13 og DG16: annet portrett, reservert plass, dokumentets sikkerhetselementer, statsspesifikke data, personer som skal varsles) leses heller ikke.</string>
 
     <string name="learn_chip_section_never_does">Dette gjør ikke Sceau</string>
     <string name="learn_chip_no_storage">Appen lagrer, sender og logger ingen leste data: alt blir i telefonens minne og slettes når du forlater resultatet.</string>

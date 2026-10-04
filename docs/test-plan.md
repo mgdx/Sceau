@@ -393,6 +393,18 @@ Pour revenir à un premier lancement : `adb shell pm clear $PKG` (efface aussi l
 - **Attendu** : aucune erreur de lecture ; verdict **Authentique** si la Chip Authentication réussit (pas d'Active Authentication sur ces cartes). Sous le verdict, ni photo ni nom : la section « Identité » affiche le bandeau « La puce de cette carte ne contient aucune donnée d'identité : seule son authenticité peut être vérifiée… », puis seulement le type de document (code « UB ») et l'État émetteur (Allemagne). Aucun champ vide, « Inconnu » ou fait de « < ». Ligne « Validité du DS » : non disponible si ni le SOD ni DG1 ne portent de date (jamais en échec pour cette seule raison). Noter le verdict et le statut de chaque ligne.
 - **Résultat** : ☐ OK ☐ KO — Notes :
 
+### TP-37 Signature du titulaire (DG7)
+
+- **Préconditions** : APK de debug pour la partie démo ; si possible, un document réel dont la puce porte DG7 (signature manuscrite : certains passeports et cartes d'identité, à repérer dans la liste « Empreintes » des contrôles, qui cite DG7 s'il est lu). Décision D37.
+- **Étapes** :
+  1. Menu de l'accueil → « Simuler une CNIe (démo) », puis faire défiler le résultat, en thème clair puis en thème sombre.
+  2. Déplier la ligne « Empreintes ».
+  3. « Effacer », puis relancer la démo et mettre l'application en arrière-plan sur le résultat.
+  4. Avec un document réel qui porte DG7 : le lire et faire défiler le résultat. Avec un document sans DG7 (une CNIe française, par exemple), vérifier l'absence de la section.
+  5. À propos → « Ce que contient la puce ».
+- **Attendu** : étape 1 : sous « Identité », une carte « Signature du titulaire » montre le paraphe synthétique (traits noirs) sur fond blanc, lisible dans les deux thèmes, sans déformation ; pas de « Image illisible ». Verdict inchangé (**Authentique**). Étape 2 : DG7 figure parmi les DG contrôlés. Étape 3 : retour à l'accueil et effacement comme pour la photo (TP-13, TP-15). Étape 4 : la signature réelle s'affiche (JPEG ou JPEG 2000) ; sans DG7, aucune section ni emplacement vide. Étape 5 : DG7 figure sous « Lu et affiché » ; la liste des DG non lus cite « DG5, DG6, DG8 à DG10, DG13 et DG16 ». Capture d'écran bloquée sur le résultat (`FLAG_SECURE`, TP-16).
+- **Résultat** : ☐ OK ☐ KO — Notes :
+
 ---
 
 ## Synthèse
@@ -435,5 +447,6 @@ Pour revenir à un premier lancement : `adb shell pm clear $PKG` (efface aussi l
 | TP-34 | Doublons refusés à l'import | |
 | TP-35 | Carte d'identité allemande antérieure à août 2021 (accès réservé) | |
 | TP-36 | Carte eID-UB allemande (aucune donnée d'identité) | |
+| TP-37 | Signature du titulaire (DG7) | |
 
 Appareil : ………… Android : ………… Version de Sceau : ………… Date : ………… Testeur : …………

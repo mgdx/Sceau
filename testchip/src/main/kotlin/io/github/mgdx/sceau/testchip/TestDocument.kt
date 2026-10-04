@@ -14,10 +14,13 @@ import org.bouncycastle.crypto.signers.ISO9796d2Signer
 import org.bouncycastle.crypto.util.PrivateKeyFactory
 import org.jmrtd.lds.ActiveAuthenticationInfo
 import org.jmrtd.lds.ChipAuthenticationPublicKeyInfo
+import org.jmrtd.lds.DisplayedImageInfo
+import org.jmrtd.lds.ImageInfo
 import org.jmrtd.lds.SecurityInfo
 import org.jmrtd.lds.icao.DG14File
 import org.jmrtd.lds.icao.DG15File
 import org.jmrtd.lds.icao.DG1File
+import org.jmrtd.lds.icao.DG7File
 import org.jmrtd.lds.icao.MRZInfo
 import java.security.KeyPair
 import java.security.PrivateKey
@@ -173,6 +176,14 @@ object TestDataGroups {
         val payload = ByteArray(DG2_PAYLOAD).also { pki.random.nextBytes(it) }
         return TestSod.tlv(DG2_TAG, payload)
     }
+
+    /**
+     * DG7 (signature manuscrite, ICAO 9303-10) construit avec JMRTD : une image par élément de
+     * [images], de type « signature ou marque usuelle ». Par défaut, la signature synthétique de
+     * la CNIe simulée.
+     */
+    fun dg7(vararg images: ByteArray = arrayOf(SimulatedDocuments.specimenSignature())): ByteArray =
+        DG7File(images.map { DisplayedImageInfo(ImageInfo.TYPE_SIGNATURE_OR_MARK, it) }).encoded
 
     /** Pays fictif des spécimens ICAO 9303 (Utopia). */
     const val SPECIMEN_STATE = "UTO"

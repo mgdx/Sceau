@@ -22,6 +22,7 @@
     <string name="result_image_front">表面の画像</string>
     <string name="result_image_rear">裏面の画像</string>
     <string name="result_image_unavailable">画像を読み取れません</string>
+    <string name="result_section_signature">所持者の署名</string>
 
     <!-- Identité -->
     <string name="result_section_identity">身分事項</string>

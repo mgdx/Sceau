@@ -41,6 +41,7 @@
     <string name="learn_chip_section_displayed">Lu et affiché</string>
     <string name="learn_chip_dg1">Les données de la MRZ : type de document, nom, prénoms, nationalité, date de naissance, sexe, numéro du document, État émetteur et date d’expiration.</string>
     <string name="learn_chip_dg2">La photo du titulaire.</string>
+    <string name="learn_chip_dg7">Si l’État l’inscrit : l’image de la signature manuscrite du titulaire.</string>
     <string name="learn_chip_dg11">Si l’État les inscrit : informations personnelles complémentaires, comme le lieu de naissance ou l’adresse.</string>
     <string name="learn_chip_dg12">Si l’État les inscrit : informations sur le document, comme l’autorité et la date de délivrance, parfois une image du document.</string>
 
@@ -57,7 +58,7 @@
     <string name="learn_chip_dg3">Les empreintes digitales.</string>
     <string name="learn_chip_dg4">L’image de l’iris.</string>
     <string name="learn_chip_eac">Sur les documents européens, ces deux fichiers sont de toute façon protégés par un verrou supplémentaire, l’EAC (Extended Access Control), que seules les autorités habilitées peuvent ouvrir.</string>
-    <string name="learn_chip_others">Les autres groupes de données (DG5 à DG10, DG13 et DG16 : autres images, signature manuscrite, données propres à l’État, personnes à prévenir) ne sont pas lus non plus.</string>
+    <string name="learn_chip_others">Les autres groupes de données (DG5, DG6, DG8 à DG10, DG13 et DG16 : autre portrait, emplacement réservé, éléments de sécurité du document, données propres à l’État, personnes à prévenir) ne sont pas lus non plus.</string>
 
     <string name="learn_chip_section_never_does">Ce que Sceau ne fait pas</string>
     <string name="learn_chip_no_storage">Il n’enregistre, n’envoie ni ne journalise aucune donnée lue : tout reste dans la mémoire du téléphone, effacé en quittant le résultat.</string>
@@ -70,6 +71,7 @@
     <string name="learn_chip_label_dg2" translatable="false">DG2</string>
     <string name="learn_chip_label_dg3" translatable="false">DG3</string>
     <string name="learn_chip_label_dg4" translatable="false">DG4</string>
+    <string name="learn_chip_label_dg7" translatable="false">DG7</string>
     <string name="learn_chip_label_dg11" translatable="false">DG11</string>
     <string name="learn_chip_label_dg12" translatable="false">DG12</string>
     <string name="learn_chip_label_dg14" translatable="false">DG14</string>

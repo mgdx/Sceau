@@ -37,6 +37,7 @@
     <string name="learn_chip_section_displayed">Loetakse ja kuvatakse</string>
     <string name="learn_chip_dg1">MRZ-i andmed: dokumendi liik, perekonnanimi, eesnimed, kodakondsus, sünniaeg, sugu, dokumendi number, väljaandja riik ja kehtivuse lõpp.</string>
     <string name="learn_chip_dg2">Dokumendi kasutaja foto.</string>
+    <string name="learn_chip_dg7">Kui riik selle kannab: dokumendi kasutaja omakäelise allkirja kujutis.</string>
     <string name="learn_chip_dg11">Kui riik need kannab: täiendavad isikuandmed, näiteks sünnikoht või aadress.</string>
     <string name="learn_chip_dg12">Kui riik need kannab: andmed dokumendi kohta, näiteks väljaandja asutus ja väljaandmise kuupäev, mõnikord ka dokumendi kujutis.</string>
 
@@ -53,7 +54,7 @@
     <string name="learn_chip_dg3">Sõrmejäljed.</string>
     <string name="learn_chip_dg4">Vikerkesta kujutis.</string>
     <string name="learn_chip_eac">Euroopa dokumentidel on need kaks faili niikuinii kaitstud lisalukuga, EAC (Extended Access Control), mida saavad avada ainult volitatud asutused.</string>
-    <string name="learn_chip_others">Teisi andmerühmi (DG5–DG10, DG13 ja DG16: muud pildid, omakäeline allkiri, riigipõhised andmed, teavitatavad isikud) samuti ei loeta.</string>
+    <string name="learn_chip_others">Teisi andmerühmi (DG5, DG6, DG8–DG10, DG13 ja DG16: teine portree, reserveeritud koht, dokumendi turvaelemendid, riigipõhised andmed, teavitatavad isikud) samuti ei loeta.</string>
 
     <string name="learn_chip_section_never_does">Mida Sceau ei tee</string>
     <string name="learn_chip_no_storage">Sceau ei salvesta, saada ega logi ühtegi loetud andmet: kõik jääb telefoni mällu ja kustutatakse tulemusest lahkudes.</string>

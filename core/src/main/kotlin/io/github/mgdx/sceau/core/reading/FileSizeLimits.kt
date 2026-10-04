@@ -17,8 +17,10 @@ import org.jmrtd.lds.LDSFileUtil
  * - EF.COM, DG1 : 1 Ko (EF.COM : quelques dizaines d'octets ; DG1 : MRZ de 90 caractères au plus) ;
  * - EF.SOD : 32 Ko (hachages des DG et certificat DS : 2 à 6 Ko en pratique) ;
  * - EF.CardAccess, DG11, DG14, DG15 : 16 Ko (SecurityInfos, clés publiques, texte : moins de 2 Ko) ;
- * - DG2, DG12 : 256 Ko (portrait JPEG 2000 d'une CNIe : 15 à 25 Ko ; images recto et verso
- *   éventuelles dans DG12) ;
+ * - DG2, DG7, DG12 : 256 Ko (portrait JPEG 2000 d'une CNIe : 15 à 25 Ko ; signature manuscrite
+ *   de DG7 : quelques Ko ; images recto et verso éventuelles dans DG12). DG7 reste au plafond
+ *   des fichiers d'images : ICAO 9303-10 ne borne pas sa taille et il peut contenir plusieurs
+ *   images (D37) ;
  * - tout autre fichier : 256 Ko.
  */
 internal object FileSizeLimits {
@@ -29,8 +31,12 @@ internal object FileSizeLimits {
             PassportService.EF_COM, PassportService.EF_DG1 -> 1 * KIB
             PassportService.EF_SOD -> 32 * KIB
             PassportService.EF_CARD_ACCESS, PassportService.EF_DG11, PassportService.EF_DG14, PassportService.EF_DG15 -> 16 * KIB
-            else -> 256 * KIB
+            PassportService.EF_DG2, PassportService.EF_DG7, PassportService.EF_DG12 -> IMAGE_FILE_MAX
+            else -> IMAGE_FILE_MAX
         }
+
+    /** Plafond des fichiers d'images (DG2, DG7, DG12) et de tout fichier non listé. */
+    private const val IMAGE_FILE_MAX = 256 * KIB
 
     /** Nom court du fichier pour les identifiants d'erreur (`SOD`, `DG1`…). */
     fun nameOf(fid: Short): String =

@@ -46,10 +46,13 @@ class LdsParsersFuzzTest {
             property(dg1.documentNumber.length <= input.bytes.size) { "numéro de document plus long que DG1" }
         }
 
-    // --- DG2, DG11, DG12 : jamais d'exception, DG illisible = absent ---------------------------
+    // --- DG2, DG7, DG11, DG12 : jamais d'exception, DG illisible = absent -----------------------
 
     @Test
     fun dg2() = optionalDataGroup(2, PassportService.EF_DG2, DG2_ITERATIONS)
+
+    @Test
+    fun dg7() = optionalDataGroup(7, PassportService.EF_DG7, DEFAULT_ITERATIONS)
 
     @Test
     fun dg11() = optionalDataGroup(11, PassportService.EF_DG11, DEFAULT_ITERATIONS)
@@ -67,6 +70,7 @@ class LdsParsersFuzzTest {
         try {
             when (number) {
                 2 -> DataGroupParsers.parseDg2(input.bytes)
+                7 -> DataGroupParsers.parseDg7(input.bytes)
                 11 -> DataGroupParsers.parseDg11(input.bytes, FuzzSeeds.TODAY)
                 else -> DataGroupParsers.parseDg12(input.bytes, FuzzSeeds.TODAY)
             }
@@ -76,10 +80,17 @@ class LdsParsersFuzzTest {
         val document = DataGroupParsers.document(mapOf(1 to validDg1, number to input.bytes), FuzzSeeds.TODAY)
         val size = input.bytes.size
         document.portrait?.let { property(it.bytes.size <= size) { "portrait plus grand que DG2" } }
+        document.signature?.let { property(it.bytes.size <= size) { "signature plus grande que DG7" } }
         document.dg12?.frontImage?.let { property(it.bytes.size <= size) { "image recto plus grande que DG12" } }
         document.dg12?.rearImage?.let { property(it.bytes.size <= size) { "image verso plus grande que DG12" } }
         if (input.pristine && number != 2) {
-            property(if (number == 11) document.dg11 != null else document.dg12 != null) { "graine DG$number illisible" }
+            val parsed =
+                when (number) {
+                    7 -> document.signature != null
+                    11 -> document.dg11 != null
+                    else -> document.dg12 != null
+                }
+            property(parsed) { "graine DG$number illisible" }
         }
     }
 

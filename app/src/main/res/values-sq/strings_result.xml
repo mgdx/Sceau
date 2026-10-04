@@ -22,6 +22,7 @@
     <string name="result_image_front">Pamja e përparme</string>
     <string name="result_image_rear">Pamja e pasme</string>
     <string name="result_image_unavailable">Imazh i palexueshëm</string>
+    <string name="result_section_signature">Nënshkrimi i mbajtësit</string>
 
     <!-- Identité -->
     <string name="result_section_identity">Identiteti</string>

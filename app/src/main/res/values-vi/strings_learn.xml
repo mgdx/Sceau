@@ -37,6 +37,7 @@
     <string name="learn_chip_section_displayed">Được đọc và hiển thị</string>
     <string name="learn_chip_dg1">Dữ liệu MRZ: loại giấy tờ, họ, chữ đệm và tên, quốc tịch, ngày sinh, giới tính, số giấy tờ, quốc gia cấp và ngày hết hạn.</string>
     <string name="learn_chip_dg2">Ảnh chân dung của người mang giấy tờ.</string>
+    <string name="learn_chip_dg7">Nếu quốc gia có ghi: ảnh chữ ký tay của người mang giấy tờ.</string>
     <string name="learn_chip_dg11">Nếu quốc gia có ghi: thông tin cá nhân bổ sung, chẳng hạn nơi sinh hoặc địa chỉ.</string>
     <string name="learn_chip_dg12">Nếu quốc gia có ghi: thông tin về giấy tờ, chẳng hạn cơ quan cấp và ngày cấp, đôi khi có cả hình ảnh của giấy tờ.</string>
 
@@ -53,7 +54,7 @@
     <string name="learn_chip_dg3">Dấu vân tay.</string>
     <string name="learn_chip_dg4">Ảnh mống mắt.</string>
     <string name="learn_chip_eac">Trên giấy tờ châu Âu, dù sao thì hai tệp này cũng được bảo vệ bằng một lớp khóa bổ sung, EAC (Extended Access Control), mà chỉ các cơ quan có thẩm quyền mới mở được.</string>
-    <string name="learn_chip_others">Các nhóm dữ liệu khác (DG5 đến DG10, DG13 và DG16: ảnh khác, chữ ký tay, dữ liệu riêng của từng quốc gia, người cần báo tin) cũng không được đọc.</string>
+    <string name="learn_chip_others">Các nhóm dữ liệu khác (DG5, DG6, DG8 đến DG10, DG13 và DG16: ảnh chân dung khác, vị trí dự trữ, yếu tố bảo an của giấy tờ, dữ liệu riêng của từng quốc gia, người cần báo tin) cũng không được đọc.</string>
 
     <string name="learn_chip_section_never_does">Những điều Sceau không làm</string>
     <string name="learn_chip_no_storage">Sceau không lưu, không gửi và không ghi nhật ký bất kỳ dữ liệu nào đã đọc: mọi thứ chỉ nằm trong bộ nhớ điện thoại và bị xóa khi bạn rời màn hình kết quả.</string>

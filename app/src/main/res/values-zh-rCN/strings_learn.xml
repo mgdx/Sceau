@@ -37,6 +37,7 @@
     <string name="learn_chip_section_displayed">读取并显示</string>
     <string name="learn_chip_dg1">MRZ 中的数据：证件类型、姓、名、国籍、出生日期、性别、证件号码、签发国和有效期。</string>
     <string name="learn_chip_dg2">持证人的照片。</string>
+    <string name="learn_chip_dg7">如果签发国写入了此信息：持证人手写签名的图像。</string>
     <string name="learn_chip_dg11">如果签发国写入了这些信息：其他个人信息，例如出生地或地址。</string>
     <string name="learn_chip_dg12">如果签发国写入了这些信息：证件相关信息，例如签发机关和签发日期，有时还有证件的图像。</string>
 
@@ -53,7 +54,7 @@
     <string name="learn_chip_dg3">指纹。</string>
     <string name="learn_chip_dg4">虹膜图像。</string>
     <string name="learn_chip_eac">在欧洲证件上，这两个文件无论如何都受另一把锁保护，即 EAC（Extended Access Control），只有获得授权的机关才能打开。</string>
-    <string name="learn_chip_others">其他数据组（DG5 至 DG10、DG13 和 DG16：其他图像、手写签名、国家特有数据、紧急联系人）也不会读取。</string>
+    <string name="learn_chip_others">其他数据组（DG5、DG6、DG8 至 DG10、DG13 和 DG16：其他肖像、保留位置、证件安全特征、国家特有数据、紧急联系人）也不会读取。</string>
 
     <string name="learn_chip_section_never_does">Sceau 不会做的事</string>
     <string name="learn_chip_no_storage">不会保存、发送或记录任何读取的数据：所有数据都只留在手机内存中，退出结果页面时即被清除。</string>

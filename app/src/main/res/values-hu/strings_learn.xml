@@ -37,6 +37,7 @@
     <string name="learn_chip_section_displayed">Beolvasva és megjelenítve</string>
     <string name="learn_chip_dg1">Az MRZ adatai: okmány típusa, családi név, utónevek, állampolgárság, születési dátum, nem, okmányszám, kibocsátó állam és lejárati dátum.</string>
     <string name="learn_chip_dg2">A tulajdonos fényképe.</string>
+    <string name="learn_chip_dg7">Ha az állam rögzíti: a tulajdonos saját kezű aláírásának képe.</string>
     <string name="learn_chip_dg11">Ha az állam rögzíti: további személyes adatok, például a születési hely vagy a lakcím.</string>
     <string name="learn_chip_dg12">Ha az állam rögzíti: az okmány adatai, például a kiállító hatóság és a kiállítás dátuma, néha az okmány képe is.</string>
 
@@ -53,7 +54,7 @@
     <string name="learn_chip_dg3">Az ujjlenyomatok.</string>
     <string name="learn_chip_dg4">Az írisz képe.</string>
     <string name="learn_chip_eac">Az európai okmányokon ezt a két fájlt egyébként is egy további zár, az EAC (Extended Access Control) védi, amelyet csak az arra jogosult hatóságok nyithatnak meg.</string>
-    <string name="learn_chip_others">A többi adatcsoportot (DG5–DG10, DG13 és DG16: további képek, saját kezű aláírás, az államra jellemző adatok, értesítendő személyek) sem olvassa be.</string>
+    <string name="learn_chip_others">A többi adatcsoportot (DG5, DG6, DG8–DG10, DG13 és DG16: további arckép, fenntartott hely, az okmány biztonsági elemei, az államra jellemző adatok, értesítendő személyek) sem olvassa be.</string>
 
     <string name="learn_chip_section_never_does">Amit a Sceau nem tesz</string>
     <string name="learn_chip_no_storage">Egyetlen beolvasott adatot sem ment, küld el vagy naplóz: minden a telefon memóriájában marad, és az eredmény elhagyásakor törlődik.</string>

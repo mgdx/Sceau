@@ -11,7 +11,7 @@ enum class Sex { MALE, FEMALE, UNSPECIFIED }
 
 enum class ImageFormat { JPEG, JPEG2000, UNKNOWN }
 
-/** Image brute telle que stockée dans la puce (DG2, DG12). Remise à zéro par [wipe]. */
+/** Image brute telle que stockée dans la puce (DG2, DG7, DG12). Remise à zéro par [wipe]. */
 class EncodedImage(
     val format: ImageFormat,
     val bytes: ByteArray,
@@ -93,10 +93,13 @@ class DocumentData(
     val dg11: Dg11Data?,
     val dg12: Dg12Data?,
     val rawDataGroups: Map<Int, ByteArray>,
+    /** DG7 : image de la signature manuscrite du titulaire, si l'État l'inscrit (D37). */
+    val signature: EncodedImage? = null,
 ) {
     fun wipe() {
         rawDataGroups.values.forEach { it.fill(0) }
         portrait?.wipe()
+        signature?.wipe()
         dg12?.frontImage?.wipe()
         dg12?.rearImage?.wipe()
     }
