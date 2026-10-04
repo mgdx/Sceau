@@ -43,6 +43,7 @@ internal class TemplateLineRecognizer(
     /** Encre (1) ou papier (0), après binarisation. */
     private var ink = ByteArray(0)
     private var integral = IntArray(0)
+    private var rowSums = IntArray(0)
     private var samples = IntArray(0)
     private var profile = IntArray(0)
     private var columns = IntArray(0)
@@ -57,6 +58,13 @@ internal class TemplateLineRecognizer(
     private val patchHeight = templates.height + 2 * SHIFT_Y
     private val patch = FloatArray(patchWidth * patchHeight)
     private val scores = FloatArray(templates.classes.size)
+    private val allClasses = IntArray(templates.classes.size) { it }
+    private val shortlisted = IntArray(templates.classes.size)
+
+    /** Réglage de la ligne en cours de classement ([fitLine]). */
+    private var fitLevel = 0
+    private var fitDy = 0f
+    private var fitScale = 1f
 
     override fun recognize(frame: LumaFrame): RecognizedMrz? {
         if (!isValid(frame)) return null
@@ -168,6 +176,7 @@ internal class TemplateLineRecognizer(
             ink = ByteArray(pixels)
         }
         if (integral.size < (width + 1) * (height + 1)) integral = IntArray((width + 1) * (height + 1))
+        if (rowSums.size < 3 * width) rowSums = IntArray(3 * width)
         val samplesNeeded = (width / SKEW_COLUMN_STEP + 1) * height
         if (samples.size < samplesNeeded) samples = IntArray(samplesNeeded)
         val bins = height + 2 * skewOffset() + 2
@@ -190,6 +199,7 @@ internal class TemplateLineRecognizer(
         straight.fill(0)
         ink.fill(0)
         integral.fill(0)
+        rowSums.fill(0)
         samples.fill(0)
         profile.fill(0)
         columns.fill(0)
@@ -215,7 +225,17 @@ internal class TemplateLineRecognizer(
             }
         }
         val radius = maxOf(MIN_WINDOW_RADIUS, w / WINDOW_DIVISOR)
+        // Pixel lissé par le noyau binomial 3 × 3 (1 2 1)² / 16, bords répétés : le bruit du
+        // capteur est divisé par près de trois, mais un trait d'un pixel et demi, fréquent aux
+        // petites tailles, garde l'essentiel de son contraste (une moyenne 3 × 3 l'écrasait).
+        // [rowSums] garde le lissage horizontal de trois rangées, en tourniquet.
+        smoothRow(source, 0)
+        if (h > 1) smoothRow(source, 1)
         for (y in 0 until h) {
+            if (y + 1 < h && y > 0) smoothRow(source, y + 1)
+            val up = (if (y > 0) y - 1 else 0) % 3 * w
+            val mid = y % 3 * w
+            val down = (if (y + 1 < h) y + 1 else y) % 3 * w
             val y0 = maxOf(0, y - radius)
             val y1 = minOf(h, y + radius + 1)
             for (x in 0 until w) {
@@ -223,22 +243,33 @@ internal class TemplateLineRecognizer(
                 val x1 = minOf(w, x + radius + 1)
                 val count = (y1 - y0) * (x1 - x0)
                 val sum = integral[y1 * row + x1] - integral[y0 * row + x1] - integral[y1 * row + x0] + integral[y0 * row + x0]
-                // Pixel lissé sur 3 × 3 (bruit du capteur divisé par trois).
-                val px0 = maxOf(0, x - 1)
-                val px1 = minOf(w, x + 2)
-                val py0 = maxOf(0, y - 1)
-                val py1 = minOf(h, y + 2)
-                val local = (px1 - px0) * (py1 - py0)
-                val pixels =
-                    integral[py1 * row + px1] - integral[py0 * row + px1] - integral[py1 * row + px0] + integral[py0 * row + px0]
+                val pixels = rowSums[up + x] + 2 * rowSums[mid + x] + rowSums[down + x]
                 // moyenne − pixel > max(contraste minimal, K · moyenne), en entiers (facteur commun
-                // count · local) : la fenêtre compte au plus (2 · 44 + 1)² pixels, les produits
-                // tiennent dans un Int.
-                val darker = sum * local - pixels * count
+                // count · 16) ; la fenêtre compte au plus (2 · 44 + 1)² pixels.
+                val darker = sum.toLong() * SMOOTH_WEIGHT - pixels.toLong() * count
                 val isInk =
-                    darker > MIN_CONTRAST * count * local && darker * CONTRAST_SCALE > sum * local * RELATIVE_CONTRAST
+                    darker > MIN_CONTRAST.toLong() * count * SMOOTH_WEIGHT &&
+                        darker * CONTRAST_SCALE > sum.toLong() * SMOOTH_WEIGHT * RELATIVE_CONTRAST
                 ink[y * w + x] = if (isInk) 1 else 0
             }
+        }
+    }
+
+    /** Lissage horizontal (1 2 1) de la rangée [y] de [source] dans [rowSums], bords répétés. */
+    private fun smoothRow(
+        source: ByteArray,
+        y: Int,
+    ) {
+        val w = width
+        val offset = y * w
+        val slot = y % 3 * w
+        var left = source[offset].toInt() and 0xFF
+        var center = left
+        for (x in 0 until w) {
+            val right = if (x + 1 < w) source[offset + x + 1].toInt() and 0xFF else center
+            rowSums[slot + x] = left + 2 * center + right
+            left = center
+            center = right
         }
     }
 
@@ -329,6 +360,39 @@ internal class TemplateLineRecognizer(
         ink = rotated
     }
 
+    /**
+     * Efface de [ink] les traits horizontaux plus longs que [width] / [LONG_RUN_DIVISOR] (trous
+     * d'un pixel tolérés) : bord de la page ou de la carte, filets. Un caractère de la MRZ, même
+     * collé à ses voisins par le flou, n'en produit pas ; sans cela, un bord sous la MRZ fausse
+     * le profil des lignes et se colle à la dernière.
+     */
+    private fun removeLongRuns() {
+        val w = width
+        val longest = maxOf(MIN_LONG_RUN, w / LONG_RUN_DIVISOR)
+        for (y in 0 until height) {
+            val offset = y * w
+            var x = 0
+            while (x < w) {
+                if (ink[offset + x].toInt() == 0) {
+                    x++
+                    continue
+                }
+                val start = x
+                var end = x
+                while (x < w) {
+                    if (ink[offset + x].toInt() != 0) {
+                        end = x
+                    } else if (x - end > RUN_GAP_TOLERANCE) {
+                        break
+                    }
+                    x++
+                }
+                if (end - start + 1 > longest) ink.fill(0, offset + start, offset + end + 1)
+                x = end + 1
+            }
+        }
+    }
+
     /** Abscisse dans [gray] du point (x, y) de l'image redressée. */
     private fun toGrayX(
         x: Float,
@@ -393,6 +457,7 @@ internal class TemplateLineRecognizer(
         binarize(gray)
         val skew = estimateSkew()
         deskew(skew)
+        removeLongRuns()
 
         var maxProfile = 0
         for (y in 0 until height) {
@@ -619,6 +684,7 @@ internal class TemplateLineRecognizer(
             val upper = if (line.bandIndex > 0) (bands[line.bandIndex - 1].bottom + line.band.top) / 2 else 0
             val lower = if (line.bandIndex < bands.size - 1) (line.band.bottom + bands[line.bandIndex + 1].top) / 2 else height - 1
             val geometry = verticalGeometry(line, upper, lower) ?: return null
+            fitLine(line, geometry)
             val candidates = ArrayList<GlyphCandidates>(line.positions)
             for (k in 0 until line.positions) {
                 val glyph = classifyCell(line.x0 + k * line.pitch, line.pitch, geometry)
@@ -735,19 +801,92 @@ internal class TemplateLineRecognizer(
         return false
     }
 
-    /** Corrélation normalisée de la cellule centrée en [center] contre chaque modèle. */
+    /**
+     * Réglage de la ligne : niveau de flou des modèles, décalage vertical (en pixels de modèle)
+     * et échelle de la hauteur, retenus par descente coordonnée sur une cellule sur
+     * [FIT_STRIDE] en maximisant le score moyen de rang 1. La corrélation normalisée est
+     * maximale quand le modèle a le flou de l'image ; le décalage et l'échelle rattrapent une
+     * ligne de base ou une hauteur estimées à un pixel près, ce qui compte aux petites tailles.
+     */
+    private fun fitLine(
+        line: TextLine,
+        geometry: Geometry,
+    ) {
+        fitLevel = 0
+        fitDy = 0f
+        fitScale = 1f
+        var best = Float.NEGATIVE_INFINITY
+        for (level in OcrbTemplates.BLUR_SIGMAS.indices) {
+            val score = meanFitScore(line, geometry, level, 0f, 1f)
+            if (score > best) {
+                best = score
+                fitLevel = level
+            }
+        }
+        for (dy in FIT_OFFSETS) {
+            val score = meanFitScore(line, geometry, fitLevel, dy, 1f)
+            if (score > best) {
+                best = score
+                fitDy = dy
+            }
+        }
+        for (scale in FIT_SCALES) {
+            val score = meanFitScore(line, geometry, fitLevel, fitDy, scale)
+            if (score > best) {
+                best = score
+                fitScale = scale
+            }
+        }
+    }
+
+    private fun meanFitScore(
+        line: TextLine,
+        geometry: Geometry,
+        level: Int,
+        dy: Float,
+        scale: Float,
+    ): Float {
+        var total = 0f
+        var count = 0
+        var k = FIT_STRIDE / 2
+        while (k < line.positions) {
+            total += correlateCell(line.x0 + k * line.pitch, line.pitch, geometry, level, dy, scale, shifted = false)
+            count++
+            k += FIT_STRIDE
+        }
+        return total / count
+    }
+
     private fun classifyCell(
         center: Float,
         pitch: Float,
         geometry: Geometry,
     ): GlyphCandidates {
+        correlateCell(center, pitch, geometry, fitLevel, fitDy, fitScale, shifted = true)
+        return GlyphCandidates(topCandidates())
+    }
+
+    /**
+     * Corrélation normalisée de la cellule centrée en [center] contre chaque modèle du niveau de
+     * flou [level] (dans [scores]) ; rend le meilleur score. Si [shifted], la cellule est aussi
+     * décalée de ±[SHIFT_X] pixels de modèle et le meilleur décalage est retenu par classe.
+     */
+    private fun correlateCell(
+        center: Float,
+        pitch: Float,
+        geometry: Geometry,
+        level: Int,
+        dy: Float,
+        scale: Float,
+        shifted: Boolean,
+    ): Float {
         val tw = templates.width
         val th = templates.height
         val baseline = geometry.baseIntercept + geometry.baseSlope * center
-        val unit = geometry.glyphHeight / OcrbTemplates.REFERENCE_HEIGHT
-        val boxTop = baseline - OcrbTemplates.REFERENCE_HEIGHT * (1 + OcrbTemplates.MARGIN) * unit
+        val unit = geometry.glyphHeight * scale / OcrbTemplates.REFERENCE_HEIGHT
         val stepX = pitch / tw
         val stepY = OcrbTemplates.REFERENCE_HEIGHT * (1 + 2 * OcrbTemplates.MARGIN) * unit / th
+        val boxTop = baseline - OcrbTemplates.REFERENCE_HEIGHT * (1 + OcrbTemplates.MARGIN) * unit + dy * stepY
         val left = center - pitch / 2
         for (j in 0 until patchHeight) {
             for (i in 0 until patchWidth) {
@@ -762,36 +901,75 @@ internal class TemplateLineRecognizer(
             }
         }
         scores.fill(-1f)
-        val size = tw * th
-        val normalized = templates.normalized
-        for (oy in 0..2 * SHIFT_Y) {
-            for (ox in 0..2 * SHIFT_X) {
-                var sum = 0f
-                var squares = 0f
-                for (j in 0 until th) {
-                    val offset = (j + oy) * patchWidth + ox
-                    for (i in 0 until tw) {
-                        val v = patch[offset + i]
-                        sum += v
-                        squares += v * v
-                    }
-                }
-                val variance = squares - sum * sum / size
-                if (variance < MIN_CELL_VARIANCE * size) continue
-                val inverseNorm = 1f / sqrt(variance)
-                for (c in scores.indices) {
-                    var dot = 0f
-                    var t = c * size
-                    for (j in 0 until th) {
-                        val offset = (j + oy) * patchWidth + ox
-                        for (i in 0 until tw) dot += normalized[t++] * patch[offset + i]
-                    }
-                    val score = dot * inverseNorm
-                    if (score > scores[c]) scores[c] = score
+        val normalized = templates.levels[level]
+        correlateAt(SHIFT_X, SHIFT_Y, normalized, scores.size, allClasses)
+        if (shifted) {
+            // Décalages évalués pour les classes les mieux classées sans décalage seulement.
+            // Si la fenêtre centrale est sans contraste, toutes les classes.
+            val count = shortlist()
+            val classes = if (scores[shortlisted[0]] < 0f) allClasses else shortlisted
+            val evaluated = if (scores[shortlisted[0]] < 0f) scores.size else count
+            for (oy in 0..2 * SHIFT_Y) {
+                for (ox in 0..2 * SHIFT_X) {
+                    if (ox != SHIFT_X || oy != SHIFT_Y) correlateAt(ox, oy, normalized, evaluated, classes)
                 }
             }
         }
-        return GlyphCandidates(topCandidates())
+        var best = 0f
+        for (s in scores) if (s > best) best = s
+        return best
+    }
+
+    /** Corrélation de la fenêtre de [patch] décalée de ([ox], [oy]) avec les [count] premières classes de [classes]. */
+    private fun correlateAt(
+        ox: Int,
+        oy: Int,
+        normalized: FloatArray,
+        count: Int,
+        classes: IntArray,
+    ) {
+        val tw = templates.width
+        val th = templates.height
+        val size = tw * th
+        var sum = 0f
+        var squares = 0f
+        for (j in 0 until th) {
+            val offset = (j + oy) * patchWidth + ox
+            for (i in 0 until tw) {
+                val v = patch[offset + i]
+                sum += v
+                squares += v * v
+            }
+        }
+        val variance = squares - sum * sum / size
+        if (variance < MIN_CELL_VARIANCE * size) return
+        val inverseNorm = 1f / sqrt(variance)
+        for (n in 0 until count) {
+            val c = classes[n]
+            var dot = 0f
+            var t = c * size
+            for (j in 0 until th) {
+                val offset = (j + oy) * patchWidth + ox
+                for (i in 0 until tw) dot += normalized[t++] * patch[offset + i]
+            }
+            val score = dot * inverseNorm
+            if (score > scores[c]) scores[c] = score
+        }
+    }
+
+    /** Remplit [shortlisted] des [SHORTLIST] classes de meilleur score ; rend leur nombre. */
+    private fun shortlist(): Int {
+        val count = minOf(SHORTLIST, scores.size)
+        for (n in 0 until count) {
+            var best = -1
+            for (c in scores.indices) {
+                var taken = false
+                for (m in 0 until n) if (shortlisted[m] == c) taken = true
+                if (!taken && (best < 0 || scores[c] > scores[best])) best = c
+            }
+            shortlisted[n] = best
+        }
+        return count
     }
 
     private fun topCandidates(): List<Pair<Char, Float>> {
@@ -820,6 +998,7 @@ internal class TemplateLineRecognizer(
         const val MIN_CONTRAST = 10
         const val CONTRAST_SCALE = 100
         const val RELATIVE_CONTRAST = 12
+        const val SMOOTH_WEIGHT = 16
 
         const val MAX_SKEW_DEGREES = 10.0
         const val COARSE_SKEW_STEP = 1.0
@@ -827,6 +1006,10 @@ internal class TemplateLineRecognizer(
         const val SKEW_COLUMN_STEP = 3
         const val MIN_SKEW_CORRECTION = 0.05
         const val MIN_SKEW_SAMPLES = 50
+
+        const val LONG_RUN_DIVISOR = 10
+        const val MIN_LONG_RUN = 40
+        const val RUN_GAP_TOLERANCE = 1
 
         const val MIN_ROW_INK_DIVISOR = 60
         val BAND_THRESHOLDS = floatArrayOf(0.45f, 0.3f, 0.18f)
@@ -871,9 +1054,15 @@ internal class TemplateLineRecognizer(
 
         /** Décalage maximal, en pixels de modèle, de la cellule par rapport à la grille. */
         const val SHIFT_X = 1
-        const val SHIFT_Y = 0
+        const val SHIFT_Y = 1
+
+        /** Classes dont les décalages sont évalués (les mieux classées sans décalage). */
+        const val SHORTLIST = 8
         const val MIN_CELL_VARIANCE = 4f
         const val CANDIDATES = 5
+        const val FIT_STRIDE = 3
+        val FIT_OFFSETS = floatArrayOf(-1f, -0.5f, 0.5f, 1f)
+        val FIT_SCALES = floatArrayOf(0.93f, 1.07f)
         const val MIN_MEAN_SCORE = 0.5f
     }
 }
