@@ -98,6 +98,23 @@
         <item quantity="other">تم رفض الاستيراد: الحد الأقصى للشهادات المستوردة هو %1$d. احذف إحداها لإضافة شهادة أخرى.</item>
     </plurals>
 
+    <!-- Doublons à l'import (D33) -->
+    <string name="trust_import_duplicate_certificate">تم استيراد هذه الشهادة من قبل.</string>
+    <string name="trust_import_duplicate_known_ants">هذه الشهادة موجودة بالفعل في مخزن الثقة (المصدر: ANTS). لا يوجد ما يمكن استيراده.</string>
+    <string name="trust_import_duplicate_known_national">هذه الشهادة موجودة بالفعل في مخزن الثقة (المصدر: نشر وطني). لا يوجد ما يمكن استيراده.</string>
+    <string name="trust_import_duplicate_known_embedded_master_list">هذه الشهادة موجودة بالفعل في مخزن الثقة (المصدر: قائمة Master List المدمجة). لا يوجد ما يمكن استيراده.</string>
+    <string name="trust_import_duplicate_known_imported_master_list">هذه الشهادة موجودة بالفعل في مخزن الثقة (المصدر: قائمة Master List المستوردة). لا يوجد ما يمكن استيراده.</string>
+    <string name="trust_import_duplicate_master_list">تم استيراد قائمة Master List هذه من قبل.</string>
+    <string name="trust_import_duplicate_embedded_master_list">قائمة Master List هذه مطابقة للقائمة المدمجة في التطبيق. لا يوجد ما يمكن استيراده.</string>
+    <plurals name="trust_import_new_certificates">
+        <item quantity="zero">الشهادات الجديدة: %1$d من %2$d</item>
+        <item quantity="one">الشهادات الجديدة: %1$d من %2$d</item>
+        <item quantity="two">الشهادات الجديدة: %1$d من %2$d</item>
+        <item quantity="few">الشهادات الجديدة: %1$d من %2$d</item>
+        <item quantity="many">الشهادات الجديدة: %1$d من %2$d</item>
+        <item quantity="other">الشهادات الجديدة: %1$d من %2$d</item>
+    </plurals>
+
     <!-- Éléments importés (D33) -->
     <string name="trust_imported_title">العناصر المستوردة</string>
     <string name="trust_imported_master_list">قائمة Master List مستوردة</string>

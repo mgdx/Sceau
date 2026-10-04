@@ -88,6 +88,21 @@
         <item quantity="other">Importuoti neleidžiama: galima importuoti ne daugiau kaip %1$d sertifikatų. Ištrinkite vieną, kad pridėtumėte kitą.</item>
     </plurals>
 
+    <!-- Doublons à l'import (D33) -->
+    <string name="trust_import_duplicate_certificate">Šis sertifikatas jau importuotas.</string>
+    <string name="trust_import_duplicate_known_ants">Šis sertifikatas jau yra patikimų sertifikatų saugykloje (šaltinis: ANTS). Nėra ką importuoti.</string>
+    <string name="trust_import_duplicate_known_national">Šis sertifikatas jau yra patikimų sertifikatų saugykloje (šaltinis: nacionalinis leidinys). Nėra ką importuoti.</string>
+    <string name="trust_import_duplicate_known_embedded_master_list">Šis sertifikatas jau yra patikimų sertifikatų saugykloje (šaltinis: į programėlę įtrauktas Master List). Nėra ką importuoti.</string>
+    <string name="trust_import_duplicate_known_imported_master_list">Šis sertifikatas jau yra patikimų sertifikatų saugykloje (šaltinis: importuotas Master List). Nėra ką importuoti.</string>
+    <string name="trust_import_duplicate_master_list">Šis Master List jau importuotas.</string>
+    <string name="trust_import_duplicate_embedded_master_list">Šis Master List sutampa su įtrauktuoju į programėlę. Nėra ką importuoti.</string>
+    <plurals name="trust_import_new_certificates">
+        <item quantity="one">%1$d naujas sertifikatas iš %2$d</item>
+        <item quantity="few">%1$d nauji sertifikatai iš %2$d</item>
+        <item quantity="many">%1$d naujo sertifikato iš %2$d</item>
+        <item quantity="other">%1$d naujų sertifikatų iš %2$d</item>
+    </plurals>
+
     <!-- Éléments importés (D33) -->
     <string name="trust_imported_title">Importuoti elementai</string>
     <string name="trust_imported_master_list">Importuotas Master List</string>

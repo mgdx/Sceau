@@ -78,6 +78,19 @@
         <item quantity="other">Import abgelehnt: höchstens %1$d importierte Zertifikate. Löschen Sie eines, um ein anderes hinzuzufügen.</item>
     </plurals>
 
+    <!-- Doublons à l'import (D33) -->
+    <string name="trust_import_duplicate_certificate">Dieses Zertifikat wurde bereits importiert.</string>
+    <string name="trust_import_duplicate_known_ants">Dieses Zertifikat ist bereits im Vertrauensspeicher enthalten (Quelle: ANTS). Es gibt nichts zu importieren.</string>
+    <string name="trust_import_duplicate_known_national">Dieses Zertifikat ist bereits im Vertrauensspeicher enthalten (Quelle: nationale Veröffentlichung). Es gibt nichts zu importieren.</string>
+    <string name="trust_import_duplicate_known_embedded_master_list">Dieses Zertifikat ist bereits im Vertrauensspeicher enthalten (Quelle: integrierte Master List). Es gibt nichts zu importieren.</string>
+    <string name="trust_import_duplicate_known_imported_master_list">Dieses Zertifikat ist bereits im Vertrauensspeicher enthalten (Quelle: importierte Master List). Es gibt nichts zu importieren.</string>
+    <string name="trust_import_duplicate_master_list">Diese Master List wurde bereits importiert.</string>
+    <string name="trust_import_duplicate_embedded_master_list">Diese Master List ist identisch mit der in der App integrierten. Es gibt nichts zu importieren.</string>
+    <plurals name="trust_import_new_certificates">
+        <item quantity="one">%1$d neues Zertifikat von %2$d</item>
+        <item quantity="other">%1$d neue Zertifikate von %2$d</item>
+    </plurals>
+
     <!-- Éléments importés (D33) -->
     <string name="trust_imported_title">Importierte Elemente</string>
     <string name="trust_imported_master_list">Importierte Master List</string>

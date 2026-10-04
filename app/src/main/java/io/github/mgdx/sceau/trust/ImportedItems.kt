@@ -57,6 +57,8 @@ sealed interface ImportPreview {
     class MasterList(
         override val bytes: ByteArray,
         val info: MasterListInfo,
+        /** Certificats distincts de la liste absents du magasin actuel (D33). */
+        val newCertificates: Int,
     ) : ImportPreview
 
     class Certificate(

@@ -83,6 +83,20 @@
         <item quantity="other">Importēšana noraidīta: var importēt ne vairāk kā %1$d sertifikātus. Lai pievienotu citu, dzēsiet kādu no tiem.</item>
     </plurals>
 
+    <!-- Doublons à l'import (D33) -->
+    <string name="trust_import_duplicate_certificate">Šis sertifikāts jau ir importēts.</string>
+    <string name="trust_import_duplicate_known_ants">Šis sertifikāts jau ir uzticamības krātuvē (avots: ANTS). Nav ko importēt.</string>
+    <string name="trust_import_duplicate_known_national">Šis sertifikāts jau ir uzticamības krātuvē (avots: valsts publikācija). Nav ko importēt.</string>
+    <string name="trust_import_duplicate_known_embedded_master_list">Šis sertifikāts jau ir uzticamības krātuvē (avots: lietotnē iebūvētā Master List). Nav ko importēt.</string>
+    <string name="trust_import_duplicate_known_imported_master_list">Šis sertifikāts jau ir uzticamības krātuvē (avots: importētā Master List). Nav ko importēt.</string>
+    <string name="trust_import_duplicate_master_list">Šī Master List jau ir importēta.</string>
+    <string name="trust_import_duplicate_embedded_master_list">Šī Master List ir identiska lietotnē iebūvētajai. Nav ko importēt.</string>
+    <plurals name="trust_import_new_certificates">
+        <item quantity="zero">%1$d jaunu sertifikātu no %2$d</item>
+        <item quantity="one">%1$d jauns sertifikāts no %2$d</item>
+        <item quantity="other">%1$d jauni sertifikāti no %2$d</item>
+    </plurals>
+
     <!-- Éléments importés (D33) -->
     <string name="trust_imported_title">Importētie vienumi</string>
     <string name="trust_imported_master_list">Importēta Master List</string>

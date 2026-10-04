@@ -78,6 +78,19 @@
         <item quantity="other">Importen avvisades: högst %1$d importerade certifikat tillåts. Ta bort ett för att lägga till ett annat.</item>
     </plurals>
 
+    <!-- Doublons à l'import (D33) -->
+    <string name="trust_import_duplicate_certificate">Det här certifikatet har redan importerats.</string>
+    <string name="trust_import_duplicate_known_ants">Det här certifikatet finns redan i tillitsarkivet (källa: ANTS). Det finns inget att importera.</string>
+    <string name="trust_import_duplicate_known_national">Det här certifikatet finns redan i tillitsarkivet (källa: nationellt publicerat). Det finns inget att importera.</string>
+    <string name="trust_import_duplicate_known_embedded_master_list">Det här certifikatet finns redan i tillitsarkivet (källa: inbyggd Master List). Det finns inget att importera.</string>
+    <string name="trust_import_duplicate_known_imported_master_list">Det här certifikatet finns redan i tillitsarkivet (källa: importerad Master List). Det finns inget att importera.</string>
+    <string name="trust_import_duplicate_master_list">Den här Master List har redan importerats.</string>
+    <string name="trust_import_duplicate_embedded_master_list">Den här Master List är identisk med den som är inbyggd i appen. Det finns inget att importera.</string>
+    <plurals name="trust_import_new_certificates">
+        <item quantity="one">%1$d nytt certifikat av %2$d</item>
+        <item quantity="other">%1$d nya certifikat av %2$d</item>
+    </plurals>
+
     <!-- Éléments importés (D33) -->
     <string name="trust_imported_title">Importerade objekt</string>
     <string name="trust_imported_master_list">Importerad Master List</string>

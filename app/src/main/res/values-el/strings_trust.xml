@@ -78,6 +78,19 @@
         <item quantity="other">Η εισαγωγή απορρίφθηκε: επιτρέπονται έως %1$d εισαγόμενα πιστοποιητικά. Διαγράψτε ένα για να προσθέσετε άλλο.</item>
     </plurals>
 
+    <!-- Doublons à l'import (D33) -->
+    <string name="trust_import_duplicate_certificate">Αυτό το πιστοποιητικό έχει ήδη εισαχθεί.</string>
+    <string name="trust_import_duplicate_known_ants">Αυτό το πιστοποιητικό υπάρχει ήδη στα αξιόπιστα πιστοποιητικά (προέλευση: ANTS). Δεν υπάρχει τίποτα για εισαγωγή.</string>
+    <string name="trust_import_duplicate_known_national">Αυτό το πιστοποιητικό υπάρχει ήδη στα αξιόπιστα πιστοποιητικά (προέλευση: εθνική δημοσίευση). Δεν υπάρχει τίποτα για εισαγωγή.</string>
+    <string name="trust_import_duplicate_known_embedded_master_list">Αυτό το πιστοποιητικό υπάρχει ήδη στα αξιόπιστα πιστοποιητικά (προέλευση: ενσωματωμένη Master List). Δεν υπάρχει τίποτα για εισαγωγή.</string>
+    <string name="trust_import_duplicate_known_imported_master_list">Αυτό το πιστοποιητικό υπάρχει ήδη στα αξιόπιστα πιστοποιητικά (προέλευση: εισαγόμενη Master List). Δεν υπάρχει τίποτα για εισαγωγή.</string>
+    <string name="trust_import_duplicate_master_list">Αυτή η Master List έχει ήδη εισαχθεί.</string>
+    <string name="trust_import_duplicate_embedded_master_list">Αυτή η Master List είναι ίδια με την ενσωματωμένη στην εφαρμογή. Δεν υπάρχει τίποτα για εισαγωγή.</string>
+    <plurals name="trust_import_new_certificates">
+        <item quantity="one">%1$d νέο πιστοποιητικό από %2$d</item>
+        <item quantity="other">%1$d νέα πιστοποιητικά από %2$d</item>
+    </plurals>
+
     <!-- Éléments importés (D33) -->
     <string name="trust_imported_title">Εισαγόμενα στοιχεία</string>
     <string name="trust_imported_master_list">Εισαγόμενη Master List</string>

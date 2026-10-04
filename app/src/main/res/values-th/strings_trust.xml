@@ -73,6 +73,18 @@
         <item quantity="other">ปฏิเสธการนำเข้า: นำเข้าใบรับรองได้ไม่เกิน %1$d รายการ ลบรายการใดรายการหนึ่งก่อนเพิ่มรายการใหม่</item>
     </plurals>
 
+    <!-- Doublons à l'import (D33) -->
+    <string name="trust_import_duplicate_certificate">นำเข้าใบรับรองนี้แล้ว</string>
+    <string name="trust_import_duplicate_known_ants">ใบรับรองนี้มีอยู่ในคลังใบรับรองแล้ว (แหล่งที่มา: ANTS) ไม่มีอะไรให้นำเข้า</string>
+    <string name="trust_import_duplicate_known_national">ใบรับรองนี้มีอยู่ในคลังใบรับรองแล้ว (แหล่งที่มา: เผยแพร่โดยประเทศผู้ออก) ไม่มีอะไรให้นำเข้า</string>
+    <string name="trust_import_duplicate_known_embedded_master_list">ใบรับรองนี้มีอยู่ในคลังใบรับรองแล้ว (แหล่งที่มา: Master List ในตัวแอป) ไม่มีอะไรให้นำเข้า</string>
+    <string name="trust_import_duplicate_known_imported_master_list">ใบรับรองนี้มีอยู่ในคลังใบรับรองแล้ว (แหล่งที่มา: Master List ที่นำเข้า) ไม่มีอะไรให้นำเข้า</string>
+    <string name="trust_import_duplicate_master_list">นำเข้า Master List นี้แล้ว</string>
+    <string name="trust_import_duplicate_embedded_master_list">Master List นี้เหมือนกับที่มีอยู่ในตัวแอป ไม่มีอะไรให้นำเข้า</string>
+    <plurals name="trust_import_new_certificates">
+        <item quantity="other">ใบรับรองใหม่ %1$d จาก %2$d รายการ</item>
+    </plurals>
+
     <!-- Éléments importés (D33) -->
     <string name="trust_imported_title">รายการที่นำเข้า</string>
     <string name="trust_imported_master_list">Master List ที่นำเข้า</string>

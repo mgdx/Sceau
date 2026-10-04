@@ -78,6 +78,19 @@
         <item quantity="other">Importálás elutasítva: legfeljebb %1$d importált tanúsítvány lehet. Újabb hozzáadásához töröljön egyet.</item>
     </plurals>
 
+    <!-- Doublons à l'import (D33) -->
+    <string name="trust_import_duplicate_certificate">Ez a tanúsítvány már importálva van.</string>
+    <string name="trust_import_duplicate_known_ants">Ez a tanúsítvány már szerepel a megbízható tanúsítványok között (forrás: ANTS). Nincs mit importálni.</string>
+    <string name="trust_import_duplicate_known_national">Ez a tanúsítvány már szerepel a megbízható tanúsítványok között (forrás: nemzeti közzététel). Nincs mit importálni.</string>
+    <string name="trust_import_duplicate_known_embedded_master_list">Ez a tanúsítvány már szerepel a megbízható tanúsítványok között (forrás: beépített Master List). Nincs mit importálni.</string>
+    <string name="trust_import_duplicate_known_imported_master_list">Ez a tanúsítvány már szerepel a megbízható tanúsítványok között (forrás: importált Master List). Nincs mit importálni.</string>
+    <string name="trust_import_duplicate_master_list">Ez a Master List már importálva van.</string>
+    <string name="trust_import_duplicate_embedded_master_list">Ez a Master List megegyezik az alkalmazásba beépítettel. Nincs mit importálni.</string>
+    <plurals name="trust_import_new_certificates">
+        <item quantity="one">%1$d új tanúsítvány (összesen %2$d)</item>
+        <item quantity="other">%1$d új tanúsítvány (összesen %2$d)</item>
+    </plurals>
+
     <!-- Éléments importés (D33) -->
     <string name="trust_imported_title">Importált elemek</string>
     <string name="trust_imported_master_list">Importált Master List</string>

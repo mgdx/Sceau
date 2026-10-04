@@ -83,6 +83,20 @@
         <item quantity="other">Importazione rifiutata: puoi importare al massimo %1$d certificati. Eliminane uno per aggiungerne un altro.</item>
     </plurals>
 
+    <!-- Doublons à l'import (D33) -->
+    <string name="trust_import_duplicate_certificate">Questo certificato è già stato importato.</string>
+    <string name="trust_import_duplicate_known_ants">Questo certificato è già presente nell’archivio attendibile (origine: ANTS): non c’è nulla da importare.</string>
+    <string name="trust_import_duplicate_known_national">Questo certificato è già presente nell’archivio attendibile (origine: pubblicazione nazionale): non c’è nulla da importare.</string>
+    <string name="trust_import_duplicate_known_embedded_master_list">Questo certificato è già presente nell’archivio attendibile (origine: Master List integrata): non c’è nulla da importare.</string>
+    <string name="trust_import_duplicate_known_imported_master_list">Questo certificato è già presente nell’archivio attendibile (origine: Master List importata): non c’è nulla da importare.</string>
+    <string name="trust_import_duplicate_master_list">Questa Master List è già stata importata.</string>
+    <string name="trust_import_duplicate_embedded_master_list">Questa Master List è identica a quella integrata nell’app: non c’è nulla da importare.</string>
+    <plurals name="trust_import_new_certificates">
+        <item quantity="one">%1$d nuovo certificato su %2$d</item>
+        <item quantity="many">%1$d nuovi certificati su %2$d</item>
+        <item quantity="other">%1$d nuovi certificati su %2$d</item>
+    </plurals>
+
     <!-- Éléments importés (D33) -->
     <string name="trust_imported_title">Elementi importati</string>
     <string name="trust_imported_master_list">Master List importata</string>

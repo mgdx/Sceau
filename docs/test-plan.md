@@ -275,7 +275,7 @@ Pour toutes les erreurs, l'écran affiche sous le message le code technique comp
   4. Réimporter le même certificat, en PEM cette fois.
   5. Relire le document.
   6. Tuer l'application, la relancer, rouvrir le magasin.
-- **Attendu** : étape 3 : dialogue « Importer ce certificat ? » avec l'avertissement (aucune signature d'État ne garantit ce fichier, l'utilisateur lui accorde sa confiance, comparer l'empreinte), le type (« CSCA auto-signé » ou « Certificat de lien »), le sujet, le pays, la validité et l'empreinte SHA-256, identique à celle publiée ; « Annuler » n'importe rien. Après confirmation : message « Certificat importé. », section « Éléments importés » avec le sujet, le pays, la validité et l'empreinte ; dans la liste du pays, le certificat marqué « Certificat importé ». Étape 4 : aucun doublon (même empreinte du DER). Étape 5 : **Authentique** (ou « Signature valide, puce non vérifiée »), détail de la chaîne avec la source « Certificat importé ». Étape 6 : le certificat est toujours là (un fichier `<empreinte>.der` dans `files/trust/`).
+- **Attendu** : étape 3 : dialogue « Importer ce certificat ? » avec l'avertissement (aucune signature d'État ne garantit ce fichier, l'utilisateur lui accorde sa confiance, comparer l'empreinte), le type (« CSCA auto-signé » ou « Certificat de lien »), le sujet, le pays, la validité et l'empreinte SHA-256, identique à celle publiée ; « Annuler » n'importe rien. Après confirmation : message « Certificat importé. », section « Éléments importés » avec le sujet, le pays, la validité et l'empreinte ; dans la liste du pays, le certificat marqué « Certificat importé ». Étape 4 : message « Ce certificat est déjà importé. » sans dialogue, aucun doublon (même empreinte du DER, voir TP-34). Étape 5 : **Authentique** (ou « Signature valide, puce non vérifiée »), détail de la chaîne avec la source « Certificat importé ». Étape 6 : le certificat est toujours là (un fichier `<empreinte>.der` dans `files/trust/`).
 - **Résultat** : ☐ OK ☐ KO — Notes :
 
 ### TP-28 Certificats refusés (D33)
@@ -367,6 +367,19 @@ Pour revenir à un premier lancement : `adb shell pm clear $PKG` (efface aussi l
 - **Attendu** : étape 1 : la page 3 reste affichée, contenu défilable en paysage, boutons visibles. Étape 2 : l'introduction réapparaît (page 3 ou page 1), sans plantage. Étapes 3 et 4 : l'accueil reste affiché, l'introduction ne revient pas.
 - **Résultat** : ☐ OK ☐ KO — Notes :
 
+### TP-34 Doublons refusés à l'import (D33)
+
+- **Préconditions** : aucun élément importé ; copiés sur le téléphone : `core/src/main/resources/trust/ants-csca-2025.der`, `ge-csca-6.der` et `de-bsi-master-list.ml` du dépôt, un CSCA absent du magasin en DER et en PEM (celui de TP-27), et une Master List différente de la liste embarquée (par exemple une version plus récente publiée par le BSI, ou une autre Master List nationale).
+- **Étapes** :
+  1. Magasin de confiance → « Importer une Master List ou un certificat », choisir `ants-csca-2025.der`.
+  2. Choisir `ge-csca-6.der`.
+  3. Choisir `de-bsi-master-list.ml`.
+  4. Importer le CSCA de TP-27 en DER et confirmer ; puis le choisir de nouveau, en DER puis en PEM.
+  5. Choisir la Master List différente : lire le dialogue, confirmer. Puis la choisir de nouveau.
+  6. Choisir un certificat contenu dans cette Master List (s'il en existe un téléchargeable seul).
+- **Attendu** : aucun dialogue de confirmation aux étapes 1, 2, 3, à la reprise de l'étape 4, à la reprise de l'étape 5 et à l'étape 6, seulement un message. Étape 1 : « Ce certificat figure déjà dans le magasin de confiance (source : ANTS) : il n'y a rien à importer. » Étape 2 : même message, source « publication nationale ». Étape 3 : « Cette Master List est identique à celle embarquée dans l'application : il n'y a rien à importer. » Étape 4 : premier import normal, puis « Ce certificat est déjà importé. » en DER comme en PEM. Étape 5 : le dialogue indique « N nouveaux certificats sur M » sous « Nombre de certificats » (N peut valoir 0 : l'import reste possible) ; à la reprise, « Cette Master List est déjà importée. » Étape 6 : source « Master List importée » (ou « Master List embarquée » si le certificat y figure aussi). Dans « Éléments importés », seuls le CSCA de l'étape 4 et la Master List de l'étape 5, chacun une fois ; `files/trust/` ne contient que ces deux fichiers.
+- **Résultat** : ☐ OK ☐ KO — Notes :
+
 ---
 
 ## Synthèse
@@ -406,5 +419,6 @@ Pour revenir à un premier lancement : `adb shell pm clear $PKG` (efface aussi l
 | TP-31 | Introduction rejouée depuis À propos | |
 | TP-32 | Écran « Ce que contient la puce » | |
 | TP-33 | Rotation et mort du processus pendant l'introduction | |
+| TP-34 | Doublons refusés à l'import | |
 
 Appareil : ………… Android : ………… Version de Sceau : ………… Date : ………… Testeur : …………

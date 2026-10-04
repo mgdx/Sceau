@@ -33,6 +33,12 @@ class TrustStoreRepository(
 
     private val directory: File get() = File(context.filesDir, IMPORT_DIRECTORY)
 
+    /**
+     * Empreintes SHA-256 des Master Lists embarquées dans `:core`, énumérées comme par le
+     * chargeur du magasin (`trust/index.txt`), calculées une fois à la première demande.
+     */
+    private val embeddedMasterListHashes: Set<String> by lazy { readEmbeddedMasterListHashes() }
+
     /** Magasin fusionné, chargé une fois puis mis en cache en mémoire jusqu'au prochain import. */
     suspend fun get(): TrustStore =
         withContext(Dispatchers.IO) {
@@ -49,8 +55,9 @@ class TrustStoreRepository(
      * comme certificat seul s'il ne dépasse pas [ImportLimits.MAX_CERTIFICATE_BYTES], puis, s'il
      * est plus gros ou n'est pas un certificat lisible, comme Master List. Lève
      * [InvalidCertificateException] pour un certificat refusé, [ImportLimitException] au-delà des
-     * limites, [InvalidMasterListException] pour une Master List invalide et
-     * [UnrecognizedFileException] pour un fichier qui n'est ni l'un ni l'autre.
+     * limites, [InvalidMasterListException] pour une Master List invalide,
+     * [UnrecognizedFileException] pour un fichier qui n'est ni l'un ni l'autre et
+     * [DuplicateImportException] pour un fichier déjà présent dans le magasin.
      */
     suspend fun previewImport(bytes: ByteArray): ImportPreview {
         if (bytes.size <= ImportLimits.MAX_CERTIFICATE_BYTES) {
@@ -60,38 +67,54 @@ class TrustStoreRepository(
                 if (e.code != CODE_UNREADABLE) throw e
             }
         }
-        // Limites vérifiées avant l'analyse et la confirmation (D22).
+        // Doublon puis limites, vérifiés avant l'analyse et la confirmation (D22, D33).
         checkImportAllowed(bytes)
-        return try {
-            ImportPreview.MasterList(bytes, preview(bytes).info)
-        } catch (e: InvalidMasterListException) {
-            if (e.code == CODE_NOT_CMS) throw UnrecognizedFileException()
-            throw e
-        }
+        val masterList =
+            try {
+                preview(bytes)
+            } catch (e: InvalidMasterListException) {
+                if (e.code == CODE_NOT_CMS) throw UnrecognizedFileException()
+                throw e
+            }
+        val store = get()
+        val newCertificates =
+            withContext(Dispatchers.Default) {
+                ImportDuplicates.newCertificateCount(
+                    masterList.certificates.map { sha256Hex(it.encoded) },
+                    store.anchors.mapTo(HashSet()) { it.sha256 },
+                )
+            }
+        return ImportPreview.MasterList(bytes, masterList.info, newCertificates)
     }
 
     /**
      * Lit et vérifie un certificat seul sans l'importer (D33), limites comprises : lève
-     * [InvalidCertificateException] ou [ImportLimitException].
+     * [InvalidCertificateException], [DuplicateImportException] ou [ImportLimitException].
      */
     suspend fun previewCertificate(bytes: ByteArray): CertificateSummary =
         withContext(Dispatchers.IO) {
             requireCertificateSize(bytes)
             val certificate = TrustStores.parseCertificate(bytes)
-            mutex.withLock { requireCertificateAllowed(certificate.encoded, bytes.size.toLong()) }
+            val store = get()
+            mutex.withLock {
+                requireNewCertificate(certificate.encoded, store)
+                requireCertificateAllowed(certificate.encoded, bytes.size.toLong())
+            }
             CertificateSummary.of(certificate)
         }
 
     /**
      * Importe un certificat déjà prévisualisé et confirmé, converti en DER ; invalide le cache.
      * Revérifié ici : l'appelant ne doit pas pouvoir écrire un certificat invalide. Un certificat
-     * déjà importé est laissé tel quel ; au-delà des limites, lève [ImportLimitException].
+     * déjà présent lève [DuplicateImportException] ; au-delà des limites, [ImportLimitException].
      */
     suspend fun importCertificate(bytes: ByteArray): Unit =
         withContext(Dispatchers.IO) {
             requireCertificateSize(bytes)
             val der = TrustStores.parseCertificate(bytes).encoded
+            val store = get()
             mutex.withLock {
+                requireNewCertificate(der, store)
                 if (requireCertificateAllowed(der, bytes.size.toLong()) == ImportDecision.ALLOWED) {
                     write(certificateFileName(der), der)
                 }
@@ -125,24 +148,29 @@ class TrustStoreRepository(
         }
 
     /**
-     * Vérifie, avant toute analyse, que [bytes] pourrait être importée sans dépasser les limites
-     * de [ImportLimits] ; lève [ImportLimitException] sinon.
+     * Vérifie, avant toute analyse, que [bytes] n'est pas déjà dans le magasin (D33) et pourrait
+     * être importée sans dépasser les limites de [ImportLimits] ; lève [DuplicateImportException]
+     * ou [ImportLimitException] sinon.
      */
     suspend fun checkImportAllowed(bytes: ByteArray): Unit =
         withContext(Dispatchers.IO) {
-            mutex.withLock { requireAllowed(bytes) }
+            mutex.withLock {
+                requireNewMasterList(bytes)
+                requireAllowed(bytes)
+            }
         }
 
     /**
      * Importe une Master List déjà prévisualisée et confirmée ; invalide le cache. Une liste déjà
-     * importée est laissée telle quelle ; au-delà des limites de [ImportLimits], lève
-     * [ImportLimitException].
+     * importée ou embarquée lève [DuplicateImportException] ; au-delà des limites de
+     * [ImportLimits], [ImportLimitException].
      */
     suspend fun import(bytes: ByteArray): Unit =
         withContext(Dispatchers.IO) {
             // Revérifiée ici : l'appelant ne doit pas pouvoir écrire une liste invalide.
             TrustStores.parseMasterList(bytes)
             mutex.withLock {
+                requireNewMasterList(bytes)
                 if (requireAllowed(bytes) == ImportDecision.ALLOWED) {
                     write(importFileName(bytes), bytes)
                 }
@@ -157,6 +185,23 @@ class TrustStoreRepository(
             throw ImportLimitException(decision)
         }
         return decision
+    }
+
+    /** Lève [DuplicateImportException] si le certificat [der] est déjà importé ou dans [store] (D33). */
+    private fun requireNewCertificate(
+        der: ByteArray,
+        store: TrustStore,
+    ) {
+        val imported = certificateFiles().mapTo(HashSet()) { it.name.removeSuffix(CERTIFICATE_EXTENSION) }
+        val duplicate = ImportDuplicates.certificate(sha256Hex(der), imported, ImportDuplicates.sourcesBySha256(store.anchors))
+        if (duplicate != null) throw DuplicateImportException(duplicate)
+    }
+
+    /** Lève [DuplicateImportException] si la Master List [bytes] est déjà importée ou embarquée (D33). */
+    private fun requireNewMasterList(bytes: ByteArray) {
+        val imported = masterListFiles().mapTo(HashSet()) { it.name.removeSuffix(IMPORT_EXTENSION) }
+        val duplicate = ImportDuplicates.masterList(sha256Hex(bytes), imported, embeddedMasterListHashes)
+        if (duplicate != null) throw DuplicateImportException(duplicate)
     }
 
     private fun requireCertificateSize(bytes: ByteArray) {
@@ -257,7 +302,22 @@ class TrustStoreRepository(
         }
     }
 
+    private fun readEmbeddedMasterListHashes(): Set<String> {
+        val index = readEmbeddedResource(EMBEDDED_INDEX) ?: return emptySet()
+        return index
+            .toString(Charsets.UTF_8)
+            .lineSequence()
+            .map { it.trim() }
+            .filter { !it.startsWith("#") && it.endsWith(IMPORT_EXTENSION) }
+            .mapNotNull { name -> readEmbeddedResource(EMBEDDED_DIRECTORY + name)?.let(::sha256Hex) }
+            .toSet()
+    }
+
+    private fun readEmbeddedResource(path: String): ByteArray? = TrustStores::class.java.getResourceAsStream(path)?.use { it.readBytes() }
+
     companion object {
+        private const val EMBEDDED_DIRECTORY = "/trust/"
+        private const val EMBEDDED_INDEX = EMBEDDED_DIRECTORY + "index.txt"
         private const val IMPORT_DIRECTORY = "trust"
         private const val IMPORT_EXTENSION = ".ml"
         private const val CERTIFICATE_EXTENSION = ".der"

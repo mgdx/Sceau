@@ -73,6 +73,18 @@
         <item quantity="other">Không thể nhập: chỉ được nhập tối đa %1$d chứng chỉ. Hãy xóa một chứng chỉ để thêm chứng chỉ khác.</item>
     </plurals>
 
+    <!-- Doublons à l'import (D33) -->
+    <string name="trust_import_duplicate_certificate">Chứng chỉ này đã được nhập.</string>
+    <string name="trust_import_duplicate_known_ants">Chứng chỉ này đã có trong kho chứng chỉ tin cậy (nguồn: ANTS). Không có gì để nhập.</string>
+    <string name="trust_import_duplicate_known_national">Chứng chỉ này đã có trong kho chứng chỉ tin cậy (nguồn: công bố quốc gia). Không có gì để nhập.</string>
+    <string name="trust_import_duplicate_known_embedded_master_list">Chứng chỉ này đã có trong kho chứng chỉ tin cậy (nguồn: Master List tích hợp sẵn). Không có gì để nhập.</string>
+    <string name="trust_import_duplicate_known_imported_master_list">Chứng chỉ này đã có trong kho chứng chỉ tin cậy (nguồn: Master List đã nhập). Không có gì để nhập.</string>
+    <string name="trust_import_duplicate_master_list">Master List này đã được nhập.</string>
+    <string name="trust_import_duplicate_embedded_master_list">Master List này giống hệt Master List tích hợp sẵn trong ứng dụng. Không có gì để nhập.</string>
+    <plurals name="trust_import_new_certificates">
+        <item quantity="other">%1$d chứng chỉ mới trên tổng số %2$d</item>
+    </plurals>
+
     <!-- Éléments importés (D33) -->
     <string name="trust_imported_title">Mục đã nhập</string>
     <string name="trust_imported_master_list">Master List đã nhập</string>
