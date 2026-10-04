@@ -6,7 +6,7 @@
     <string name="scan_status_searching">Mencari MRZ…</string>
     <string name="scan_status_seen">MRZ ditemui, sedang dibaca. Pegang dokumen dengan stabil.</string>
     <string name="scan_status_unsupported">Nombor dokumen ini terlalu panjang untuk dibaca secara automatik. Masukkan data secara manual.</string>
-    <string name="scan_status_success">MRZ dibaca. Semak medan sebelum anda mula membaca.</string>
+    <string name="scan_status_success">MRZ diimbas. Semak medan sebelum membaca cip.</string>
     <string name="scan_camera_unavailable">Kamera tidak tersedia. Anda masih boleh memasukkan data secara manual.</string>
     <string name="scan_torch_on">Hidupkan lampu suluh</string>
     <string name="scan_torch_off">Matikan lampu suluh</string>

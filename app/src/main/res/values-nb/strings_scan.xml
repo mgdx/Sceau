@@ -6,7 +6,7 @@
     <string name="scan_status_searching">Leter etter MRZ…</string>
     <string name="scan_status_seen">MRZ funnet, leser. Hold dokumentet i ro.</string>
     <string name="scan_status_unsupported">Dette dokumentnummeret er for langt til å leses automatisk. Skriv inn opplysningene manuelt.</string>
-    <string name="scan_status_success">MRZ lest. Kontroller feltene før du starter avlesingen.</string>
+    <string name="scan_status_success">MRZ skannet. Kontroller feltene før du leser av brikken.</string>
     <string name="scan_camera_unavailable">Kameraet er ikke tilgjengelig. Du kan fortsatt skrive inn opplysningene manuelt.</string>
     <string name="scan_torch_on">Slå på lommelykten</string>
     <string name="scan_torch_off">Slå av lommelykten</string>

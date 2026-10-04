@@ -38,3 +38,10 @@
 | RGPD | GDPR | Acronyme courant en tchèque |
 | Master List | Master List | Jamais traduit ; « seznam Master List » quand la phrase exige une déclinaison |
 | CAN, MRZ, PACE, BAC, SOD, DS, CSCA, DGn | idem | Jamais traduits |
+| caméra | fotoaparát | Nom Android de la permission |
+| scanner (la MRZ) | naskenovat / skenování | MRZ au féminin (MRZ načtena) |
+| lampe torche | svítilna | Réglages rapides Android |
+| cadre de visée | rámeček |  |
+| Autoriser (permission) | Povolit | Vocabulaire Android |
+| réglages de l’application | nastavení aplikace | Vocabulaire Android |
+| saisie manuelle | zadat ručně |  |

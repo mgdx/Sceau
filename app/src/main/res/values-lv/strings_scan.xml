@@ -6,7 +6,7 @@
     <string name="scan_status_searching">Notiek MRZ meklēšana…</string>
     <string name="scan_status_seen">MRZ atrasta, notiek nolasīšana. Turiet dokumentu nekustīgi.</string>
     <string name="scan_status_unsupported">Šis dokumenta numurs ir pārāk garš automātiskai nolasīšanai. Ievadiet datus manuāli.</string>
-    <string name="scan_status_success">MRZ nolasīta. Pirms nolasīšanas sākšanas pārbaudiet laukus.</string>
+    <string name="scan_status_success">MRZ noskenēta. Pirms mikroshēmas nolasīšanas pārbaudiet laukus.</string>
     <string name="scan_camera_unavailable">Kamera nav pieejama. Datus joprojām var ievadīt manuāli.</string>
     <string name="scan_torch_on">Ieslēgt lukturīti</string>
     <string name="scan_torch_off">Izslēgt lukturīti</string>

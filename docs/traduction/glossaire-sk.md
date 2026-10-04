@@ -38,3 +38,10 @@
 | RGPD | GDPR | Acronyme courant en slovaque |
 | Master List | Master List | Jamais traduit ; « zoznam Master List » quand la phrase exige une déclinaison |
 | CAN, MRZ, PACE, BAC, SOD, DS, CSCA, DGn | idem | Jamais traduits |
+| caméra | fotoaparát | Nom Android de la permission |
+| scanner (la MRZ) | naskenovať / skenovanie | MRZ au féminin (MRZ načítaná) |
+| lampe torche | baterka | Réglages rapides Android |
+| cadre de visée | rámček |  |
+| Autoriser (permission) | Povoliť | Vocabulaire Android |
+| réglages de l’application | nastavenia aplikácie | Vocabulaire Android |
+| saisie manuelle | zadať ručne |  |

@@ -2,11 +2,11 @@
 <resources>
     <string name="scan_title">Σάρωση MRZ</string>
     <string name="scan_back">Πίσω</string>
-    <string name="scan_instruction">Τοποθετήστε μέσα στο πλαίσιο τις σειρές χαρακτήρων στο κάτω μέρος της σελίδας</string>
+    <string name="scan_instruction">Τοποθετήστε στο πλαίσιο τις σειρές χαρακτήρων στο κάτω μέρος της σελίδας</string>
     <string name="scan_status_searching">Αναζήτηση MRZ…</string>
     <string name="scan_status_seen">Εντοπίστηκε MRZ, γίνεται ανάγνωση. Κρατήστε το έγγραφο ακίνητο.</string>
     <string name="scan_status_unsupported">Αυτός ο αριθμός εγγράφου είναι πολύ μεγάλος για αυτόματη ανάγνωση. Καταχωρίστε τα δεδομένα χειροκίνητα.</string>
-    <string name="scan_status_success">Η MRZ διαβάστηκε. Ελέγξτε τα πεδία πριν ξεκινήσετε την ανάγνωση.</string>
+    <string name="scan_status_success">Η MRZ σαρώθηκε. Ελέγξτε τα πεδία πριν από την ανάγνωση του τσιπ.</string>
     <string name="scan_camera_unavailable">Η κάμερα δεν είναι διαθέσιμη. Μπορείτε ακόμη να καταχωρίσετε τα δεδομένα χειροκίνητα.</string>
     <string name="scan_torch_on">Ενεργοποίηση φακού</string>
     <string name="scan_torch_off">Απενεργοποίηση φακού</string>

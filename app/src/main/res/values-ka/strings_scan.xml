@@ -4,9 +4,9 @@
     <string name="scan_back">უკან</string>
     <string name="scan_instruction">გვერდის ბოლოში არსებული სიმბოლოების სტრიქონები მოათავსეთ ჩარჩოში</string>
     <string name="scan_status_searching">MRZ-ის ძიება…</string>
-    <string name="scan_status_seen">MRZ ნაპოვნია, მიმდინარეობს წაკითხვა. დოკუმენტი გააჩერეთ უძრავად.</string>
+    <string name="scan_status_seen">MRZ ნაპოვნია, მიმდინარეობს წაკითხვა. დოკუმენტი უძრავად დაიჭირეთ.</string>
     <string name="scan_status_unsupported">დოკუმენტის ეს ნომერი ავტომატური წაკითხვისთვის ზედმეტად გრძელია. მონაცემები ხელით შეიყვანეთ.</string>
-    <string name="scan_status_success">MRZ წაკითხულია. წაკითხვის დაწყებამდე შეამოწმეთ ველები.</string>
+    <string name="scan_status_success">MRZ დასკანერდა. ჩიპის წაკითხვამდე შეამოწმეთ ველები.</string>
     <string name="scan_camera_unavailable">კამერა მიუწვდომელია. მონაცემების ხელით შეყვანა კვლავ შესაძლებელია.</string>
     <string name="scan_torch_on">ფანრის ჩართვა</string>
     <string name="scan_torch_off">ფანრის გამორთვა</string>

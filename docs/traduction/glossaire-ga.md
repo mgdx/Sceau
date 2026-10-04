@@ -39,3 +39,10 @@ Termes clés de l’interface de Sceau. Restent tels quels : CAN, MRZ, PACE, BAC
 | nom / prénoms | sloinne / réamhainmneacha | libellés du passeport irlandais |
 | RGPD | RGCS | Rialachán Ginearálta maidir le Cosaint Sonraí |
 | JJ / MM / AAAA | LL / MM / BBBB | lá / mí / bliain |
+| caméra | ceamara | |
+| scanner (la MRZ) | scan (scanadh, scanta) | « Scan an MRZ » = impératif irlandais + article, ressemble à l'anglais |
+| lampe torche | tóirse | |
+| cadre de visée | fráma | |
+| Autoriser (permission) | Ceadaigh | Vocabulaire Android |
+| réglages de l'application | socruithe na haipe | Vocabulaire Android |
+| saisie manuelle | iontráil de láimh | |

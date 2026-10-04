@@ -39,3 +39,10 @@ Termes clés de l’interface de Sceau. Restent tels quels : CAN, MRZ, PACE, BAC
 | nom / prénoms | kunjom / ismijiet |  |
 | RGPD | GDPR | acronyme usuel à Malte |
 | JJ / MM / AAAA | JJ / XX / SSSS | jum / xahar / sena, à confirmer |
+| caméra | kamera |  |
+| scanner (la MRZ) | skennja (bouton : « Skennja l-MRZ ») |  |
+| lampe torche | torċ |  |
+| cadre de visée | qafas |  |
+| Autoriser (permission) | Ippermetti | Vocabulaire Android |
+| réglages de l’application | settings tal-app | Vocabulaire Android ; anglicisme déjà retenu dans l’appli (is-settings) |
+| saisie manuelle | daħħal manwalment |  |

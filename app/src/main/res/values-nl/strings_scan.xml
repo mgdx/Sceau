@@ -6,7 +6,7 @@
     <string name="scan_status_searching">MRZ zoeken…</string>
     <string name="scan_status_seen">MRZ gevonden, bezig met lezen. Houd het document stil.</string>
     <string name="scan_status_unsupported">Dit documentnummer is te lang om automatisch te worden gelezen. Voer de gegevens handmatig in.</string>
-    <string name="scan_status_success">MRZ gelezen. Controleer de velden voordat je begint met uitlezen.</string>
+    <string name="scan_status_success">MRZ gescand. Controleer de velden voordat je de chip uitleest.</string>
     <string name="scan_camera_unavailable">Camera niet beschikbaar. Handmatig invoeren blijft mogelijk.</string>
     <string name="scan_torch_on">Zaklamp aanzetten</string>
     <string name="scan_torch_off">Zaklamp uitzetten</string>

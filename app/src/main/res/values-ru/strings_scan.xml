@@ -6,7 +6,7 @@
     <string name="scan_status_searching">Поиск MRZ…</string>
     <string name="scan_status_seen">MRZ найдена, идёт считывание. Держите документ неподвижно.</string>
     <string name="scan_status_unsupported">Номер документа слишком длинный для автоматического считывания. Введите данные вручную.</string>
-    <string name="scan_status_success">MRZ считана. Проверьте поля перед началом считывания.</string>
+    <string name="scan_status_success">MRZ отсканирована. Проверьте поля, прежде чем считывать чип.</string>
     <string name="scan_camera_unavailable">Камера недоступна. Данные можно ввести вручную.</string>
     <string name="scan_torch_on">Включить фонарик</string>
     <string name="scan_torch_off">Выключить фонарик</string>

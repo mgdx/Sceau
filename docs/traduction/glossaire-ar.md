@@ -40,3 +40,10 @@ Référence de vocabulaire pour `app/src/main/res/values-ar/`.
 | JJ / MM / AAAA | يوم / شهر / سنة | mots entiers : pas d’abréviation usuelle en arabe |
 | RGPD | اللائحة العامة لحماية البيانات (GDPR) | pas d’acronyme arabe établi |
 | Master List, CAN, MRZ, DS, CSCA, SOD, DGn | inchangés (latin) | précédés d’un mot arabe (« قائمة Master List », « رقم CAN ») pour que la phrase commence en écriture arabe |
+| caméra | الكاميرا | |
+| scanner (la MRZ) | مسح ضوئي / مسح | « مسح MRZ ضوئيًا » pour le titre et le bouton, « تم مسح MRZ » ensuite |
+| lampe torche | المصباح | doute : le réglage rapide d’Android peut s’appeler « الفلاش » selon la version |
+| cadre de visée | الإطار | |
+| Autoriser (permission) | السماح | Vocabulaire Android |
+| réglages de l’application | إعدادات التطبيق | Vocabulaire Android |
+| saisie manuelle | الإدخال اليدوي | |

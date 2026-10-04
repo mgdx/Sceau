@@ -42,3 +42,10 @@
 | Échec | Mislyktes | verdict et statut de contrôle |
 | RGPD | GDPR (personvernforordningen) | |
 | Master List | Master List | jamais traduit ; pluriel « Master Lists » |
+| caméra | kamera | |
+| scanner (la MRZ) | skanne (« Skann MRZ », MRZ-skanning) | |
+| lampe torche | lommelykt | |
+| cadre de visée | ramme | |
+| Autoriser (permission) | Tillat | Vocabulaire Android |
+| réglages de l'application | appinnstillinger | Vocabulaire Android |
+| saisie manuelle | skrive inn manuelt | |

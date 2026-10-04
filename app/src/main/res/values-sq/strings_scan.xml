@@ -6,7 +6,7 @@
     <string name="scan_status_searching">Po kërkohet MRZ-ja…</string>
     <string name="scan_status_seen">MRZ-ja u gjet, po lexohet. Mbaje dokumentin të palëvizur.</string>
     <string name="scan_status_unsupported">Ky numër dokumenti është shumë i gjatë për t’u lexuar automatikisht. Fut të dhënat me dorë.</string>
-    <string name="scan_status_success">MRZ-ja u lexua. Kontrollo fushat përpara se të nisësh leximin.</string>
+    <string name="scan_status_success">MRZ-ja u skanua. Kontrollo fushat përpara se të lexosh çipin.</string>
     <string name="scan_camera_unavailable">Kamera nuk ofrohet. Mund t’i futësh ende të dhënat me dorë.</string>
     <string name="scan_torch_on">Ndize elektrikun e dorës</string>
     <string name="scan_torch_off">Fike elektrikun e dorës</string>

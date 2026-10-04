@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="scan_title">Digitalizar a MRZ</string>
+    <string name="scan_title">Digitalizar MRZ</string>
     <string name="scan_back">Voltar</string>
-    <string name="scan_instruction">Coloque dentro da moldura as linhas de carateres na parte inferior da página</string>
+    <string name="scan_instruction">Coloque na moldura as linhas de carateres da parte inferior da página</string>
     <string name="scan_status_searching">A procurar a MRZ…</string>
     <string name="scan_status_seen">MRZ detetada, a ler. Mantenha o documento imóvel.</string>
     <string name="scan_status_unsupported">Este número de documento é demasiado longo para ser lido automaticamente. Introduza os dados manualmente.</string>
-    <string name="scan_status_success">MRZ lida. Verifique os campos antes de iniciar a leitura.</string>
+    <string name="scan_status_success">MRZ digitalizada. Verifique os campos antes de ler o chip.</string>
     <string name="scan_camera_unavailable">Câmara indisponível. Pode continuar a introduzir os dados manualmente.</string>
     <string name="scan_torch_on">Ligar lanterna</string>
     <string name="scan_torch_off">Desligar lanterna</string>

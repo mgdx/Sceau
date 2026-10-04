@@ -40,3 +40,10 @@ Référence de vocabulaire pour `app/src/main/res/values-iw/`.
 | JJ / MM / AAAA | יי / חח / שששש | gabarit des formulaires israéliens |
 | RGPD | התקנה הכללית להגנה על מידע (GDPR) | acronyme anglais courant en Israël |
 | Master List, CAN, MRZ, DS, CSCA, SOD, DGn | inchangés (latin) | article ה- avec trait d’union (ה-MRZ, ה-SOD) |
+| caméra | מצלמה | |
+| scanner (la MRZ) | סריקה / נסרק | « ה-MRZ » masculin ; toute phrase commence par un mot hébreu (sens d’écriture) |
+| lampe torche | פנס | |
+| cadre de visée | מסגרת | |
+| Autoriser (permission) | אישור | Vocabulaire Android ; doute : « אישור » ou « יש לאשר » selon la version |
+| réglages de l’application | הגדרות האפליקציה | Vocabulaire Android |
+| saisie manuelle | הזנה ידנית | |

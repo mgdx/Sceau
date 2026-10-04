@@ -5,8 +5,8 @@
     <string name="scan_instruction">Halten Sie die Zeichenzeilen unten auf der Seite in den Rahmen</string>
     <string name="scan_status_searching">MRZ wird gesucht…</string>
     <string name="scan_status_seen">MRZ erkannt, wird gelesen. Halten Sie das Dokument ruhig.</string>
-    <string name="scan_status_unsupported">Diese Dokumentennummer ist zu lang, um automatisch gelesen zu werden. Geben Sie die Daten manuell ein.</string>
-    <string name="scan_status_success">MRZ gelesen. Prüfen Sie die Felder, bevor Sie mit dem Auslesen beginnen.</string>
+    <string name="scan_status_unsupported">Diese Dokumentennummer ist zu lang für das automatische Lesen. Geben Sie die Daten manuell ein.</string>
+    <string name="scan_status_success">MRZ gescannt. Prüfen Sie die Felder, bevor Sie den Chip auslesen.</string>
     <string name="scan_camera_unavailable">Kamera nicht verfügbar. Die manuelle Eingabe ist weiterhin möglich.</string>
     <string name="scan_torch_on">Taschenlampe einschalten</string>
     <string name="scan_torch_off">Taschenlampe ausschalten</string>

@@ -42,3 +42,10 @@ Registre 합니다/하세요 des réglages système. Ponctuation latine (: , ( )
 | RGPD | EU 일반개인정보보호법(GDPR) | |
 | CAN | CAN(카드 액세스 번호) | glose seulement dans l’aide du champ |
 | JJ / MM / AAAA | DD / MM / YYYY | gabarit usuel des formulaires numériques |
+| caméra | 카메라 | |
+| scanner (la MRZ) | 스캔 | |
+| lampe torche | 손전등 | |
+| cadre de visée | 프레임 | |
+| Autoriser (permission) | 허용 | Vocabulaire Android |
+| réglages de l’application | 앱 설정 | Vocabulaire Android |
+| saisie manuelle | 직접 입력 | |

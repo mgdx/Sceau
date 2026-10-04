@@ -6,7 +6,7 @@
     <string name="scan_status_searching">MRZ aranıyor…</string>
     <string name="scan_status_seen">MRZ bulundu, okunuyor. Belgeyi sabit tutun.</string>
     <string name="scan_status_unsupported">Bu belge numarası otomatik olarak okunamayacak kadar uzun. Verileri elle girin.</string>
-    <string name="scan_status_success">MRZ okundu. Okumayı başlatmadan önce alanları kontrol edin.</string>
+    <string name="scan_status_success">MRZ tarandı. Çipi okumadan önce alanları kontrol edin.</string>
     <string name="scan_camera_unavailable">Kamera kullanılamıyor. Verileri yine de elle girebilirsiniz.</string>
     <string name="scan_torch_on">El fenerini aç</string>
     <string name="scan_torch_off">El fenerini kapat</string>

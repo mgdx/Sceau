@@ -42,3 +42,10 @@
 | JJ / MM / AAAA | DD / MM / ÁÁÁÁ | gabarit de date islandais |
 | RGPD | almenna persónuverndarreglugerðin (GDPR) | |
 | algorithme | reiknirit | |
+| caméra | myndavél | |
+| scanner (la MRZ) | skanna (skönnun) | MRZ traité au neutre (véllesanlegt svæði) : « MRZ skannað », « MRZ lesið » |
+| lampe torche | vasaljós | |
+| cadre de visée | rammi | |
+| Autoriser (permission) | Leyfa | Vocabulaire Android |
+| réglages de l'application | forritsstillingar | Vocabulaire Android |
+| saisie manuelle | slá inn handvirkt | |
