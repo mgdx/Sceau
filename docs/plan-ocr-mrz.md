@@ -1,5 +1,7 @@
 # Plan : lecture optique de la MRZ (D32)
 
+> **État au 2026-10-04** : lots 0, A, B, C, D et E (débordements et relecture des traductions) fusionnés sur `main` ; F (documentation) et H (illustration du document spécimen sur l'écran de scan, lot ajouté au plan) en cours ; G (intégration et recette sur appareil) à faire. Les écarts constatés à l'intégration sont consignés dans D32, paragraphe « Intégration ».
+
 Plan de travail de la décision D32, découpé en lots pour le skill `android-supervision`. Chaque lot se fait dans son propre worktree, se vérifie par `./gradlew check` et se commite sur sa propre branche. Le superviseur fusionne, mesure et recette.
 
 ## Ordonnancement
