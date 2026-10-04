@@ -4,30 +4,36 @@ Version du 2026-09-25, intègre les décisions D1 à D19 et l'audit de sécurit�
 
 Ce document est la source de vérité du projet. Toute décision d'implémentation future qui s'en écarte doit être justifiée dans `docs/decisions.md` et validée. Les décisions D1 à D19, désormais intégrées ici, y restent pour l'historique.
 
+Mise à jour du 2026-10-04 : lecture optique de la MRZ par la caméra (D32), aux sections 1, 2, 3, 5.1, 5.6, 8, 9 et 10.
+
 ## 1. Objet
 
 Sceau est une application Android libre qui lit par NFC la puce des documents d'identité conformes à ICAO 9303 (carte nationale d'identité électronique française, cartes d'identité européennes, passeports biométriques de tous pays), affiche les données et la photo stockées dans la puce, et vérifie cryptographiquement que le document est authentique et que la puce n'est pas un clone, à partir d'un magasin de certificats CSCA embarqué.
 
 L'application ne conserve rien, n'envoie rien et fonctionne entièrement hors ligne.
 
+Pour éviter les fautes de frappe, la MRZ d'un passeport ou d'une carte d'identité peut être lue par la caméra : le numéro de document et les deux dates remplissent alors les champs de l'accueil, que l'utilisateur relit avant de lancer lui-même la lecture NFC (§5.6, D32).
+
 ### Hors périmètre v1
 
 - Lecture des empreintes digitales (DG3) et de l'iris (DG4), qui exigent Terminal Authentication et des certificats délivrés par l'État.
-- Lecture optique de la MRZ ou du CAN par la caméra (aucun OCR).
+- Lecture optique du CAN par la caméra (6 chiffres sans chiffre de contrôle, plus courts à taper qu'à scanner) ; seule la MRZ est lue par la caméra (§5.6, D32).
+- Reconnaissance de la ligne du nom de la MRZ et de tout autre texte du document.
 - Reconnaissance faciale automatique.
 - Tout stockage, historique, export ou envoi des données lues.
 - Mise à jour du magasin de confiance par le réseau.
 
 ## 2. Contraintes générales
 
-- Licence GPLv3. Publication visée sur F-Droid : aucune dépendance propriétaire, aucun service Google, aucun blob binaire non reconstruisible. Le code natif est compilé depuis les sources à chaque build.
-- Aucune permission réseau dans le manifeste. Permissions demandées : `android.permission.NFC` uniquement, plus la permission interne de niveau `signature` `<paquet>.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION` qu'ajoute androidx.core (D7). La feature `android.hardware.nfc` est déclarée non obligatoire pour que l'appli s'installe partout et affiche un message clair si le NFC est absent. Sauvegarde Android désactivée.
+- Licence GPLv3. Publication visée sur F-Droid : aucune dépendance propriétaire, aucun service Google, aucun blob binaire non reconstruisible. Le code natif de Sceau est compilé depuis les sources à chaque build. Seule exception, limitée à AndroidX : les bibliothèques natives précompilées que Google publie dans les AAR AndroidX sous Apache 2.0, avec leurs sources dans AOSP, sont acceptées, comme F-Droid les accepte (`libandroidx.graphics.path.so` de Compose ; `libimage_processing_util_jni.so` et `libsurface_util_jni.so` de CameraX, D32). La règle s'applique sans exception au code de Sceau et à toute dépendance qui n'est pas AndroidX.
+- Aucune permission réseau dans le manifeste. Permissions demandées : `android.permission.NFC` et `android.permission.CAMERA` (lecture de la MRZ, §5.6, D32), plus la permission interne de niveau `signature` `<paquet>.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION` qu'ajoute androidx.core (D7). La permission caméra n'est demandée qu'à l'ouverture de l'écran de scan, jamais au démarrage. Les features `android.hardware.nfc`, `android.hardware.camera` et `android.hardware.camera.autofocus` sont déclarées non obligatoires pour que l'appli s'installe partout : sans NFC, un message clair l'explique ; sans caméra, le bouton de scan n'est pas affiché. Sans ces déclarations, la permission `CAMERA` rendrait la caméra et l'autofocus implicitement obligatoires. Aucune permission de stockage. Sauvegarde Android désactivée.
 - Android 8.0+ (minSdk 26), compileSdk courant, Kotlin, Jetpack Compose, Material 3, mode sombre suivant le système. Palette propre à l'application (celle du logo), couleurs dynamiques désactivées pour garder la lecture des verdicts stable (D18).
 - Identifiant d'application et paquet `io.github.mgdx.sceau`, `io.github.mgdx.sceau.core` pour `:core` (D4).
 - Interface en français. Aucune chaîne codée en dur ; chaînes dans `res/values/`, réparties en un fichier par écran (`strings_<écran>.xml`) plus `strings.xml` pour les chaînes communes (D5), fichiers prêts pour les traductions (`values-en` fourni dès la v1, 43 autres langues et choix de la langue par application depuis D27).
 - Architecture en modules :
   - `:core` : lecture, vérification, magasin de confiance, modèles. Kotlin pur, aucun import `android.*`, aucun code natif, testable sur JVM. Ses dépendances sont en `implementation` : son API publique n'expose que des types Kotlin, `java.security` et `java.time` (D9).
-  - `:app` : NFC, UI Compose, navigation, cycle de vie, décodage des images (dont le décodeur JPEG 2000 natif).
+  - `:app` : NFC, caméra, UI Compose, navigation, cycle de vie, décodage des images (dont le décodeur JPEG 2000 natif).
+  - `:mrz` : lecture optique de la MRZ à partir du plan de luminance d'une image de la caméra (paquet `io.github.mgdx.sceau.mrz`). Kotlin pur, aucun import `android.*`, aucun code natif, testé sur JVM ; `implementation` de `:app`. Il ne rend que le format, le numéro de document et les deux dates (D32).
   - `:testchip` : PKI factice, puce ICAO simulée et CNIe spécimen, Kotlin JVM. Réservé aux tests (`testImplementation` de `:core`) et à l'APK de debug (`debugImplementation` de `:app`) ; il n'entre jamais dans l'APK release (D17).
 - Qualité : zéro avertissement sur `test`, `lint` et `ktlintCheck`. Un avertissement bloque la CI. Les règles lint désactivées sont justifiées dans `docs/decisions.md` (D8).
 - APK : splits ABI activés, un APK par architecture (`armeabi-v7a`, `arm64-v8a`, `x86`, `x86_64`), qui n'embarque que la bibliothèque native de son architecture, plus un APK universel. Objectif inférieur à 8 Mo par APK, Master List comprise (D2).
@@ -43,10 +49,13 @@ L'application ne conserve rien, n'envoie rien et fonctionne entièrement hors li
 | Décodage JPEG 2000 (photo DG2, images DG12) | OpenJPEG (bibliothèque `openjp2` seule) | BSD-2-Clause | Code natif en JNI dans `:app`, compilé depuis les sources (sous-module git `app/src/main/cpp/openjpeg`) par CMake et le NDK, lié statiquement ; aucun binaire précompilé |
 | Exécution asynchrone | kotlinx-coroutines | Apache 2 | |
 | UI | Compose, Material 3, Navigation Compose, Lifecycle | Apache 2 | |
+| Caméra (aperçu et analyse d'image pour la MRZ) | CameraX (`camera-camera2`, `camera-lifecycle`, `camera-compose`) | Apache 2 | `camera-core` embarque deux bibliothèques natives AndroidX précompilées, admises par l'exception de §2 (D32) |
 
 La clause « ou ultérieure » permet d'utiliser JMRTD et SCUBA sous LGPL 3, compatible avec la GPLv3 de Sceau.
 
 jj2000 (fork JMRTD) est écarté : sa licence d'origine restreint le champ d'usage (non libre, retiré de Debian pour cette raison), ce qui la rend incompatible avec la GPLv3 et avec la politique d'inclusion de F-Droid ; ce fork n'est pas non plus publié sur Maven Central (D3). OpenJPEG, implémentation de référence sous licence libre, le remplace. Le sous-module suit la veille de sécurité amont : il est avancé dès qu'un correctif de sécurité est publié, et le harnais de test natif est rejoué à chaque montée de version (audit V5).
+
+La reconnaissance de la MRZ n'utilise aucune bibliothèque d'OCR : ML Kit (service Google propriétaire) et Tesseract (natif, plusieurs Mo par ABI) sont écartés (D32). `:mrz` compare chaque caractère à 37 modèles dérivés de la police OCR-B du paquet CTAN `ocr-b-outline` (`ocrb10.otf`, vectorisé d'après les sources METAFONT de N. Schwarz ; licence : « you may freely use, modify, and/or distribute any of these files, without limitation »). La police est versionnée dans `mrz/fonts/` et n'entre jamais dans l'APK ; seuls les modèles qui en dérivent sont embarqués (`ocrb-templates.bin`, 11 885 octets, régénérés par `scripts/generate-ocrb-templates.sh`, empreintes de la police et des modèles vérifiées par un test).
 
 Toute nouvelle dépendance doit être justifiée dans `docs/dependencies.md`, qui liste chaque dépendance avec sa version résolue, sa licence vérifiée sur l'artefact et sa compatibilité F-Droid.
 
@@ -71,13 +80,15 @@ Deux onglets en haut, le Passeport en premier et sélectionné à l'ouverture (D
 
 Les deux dates se saisissent au clavier numérique (clavier de type mot de passe numérique, pour que le clavier du système n'apprenne ni ne suggère ces dates), en huit chiffres, sans sélecteur de date. Les séparateurs `/` s'affichent au fil de la frappe sans être stockés. L'ordre des champs suit le format de date court de la locale : JJ/MM/AAAA en français, MM/JJ/AAAA en anglais américain, jour, mois, année par défaut. Une date doit exister, la naissance ne pas dépasser aujourd'hui, l'expiration être postérieure à 1990 ; l'erreur s'affiche sous le champ et « Lire » reste inactif tant qu'une date est invalide (D10).
 
+Au-dessus des trois champs de la MRZ, dans l'onglet Passeport comme dans le segment MRZ de l'onglet Carte d'identité, un bouton « Scanner la MRZ » ouvre l'écran de scan (§5.6). Il n'est affiché que si l'appareil a une caméra (`FEATURE_CAMERA_ANY`). Au retour d'un scan réussi, l'onglet et le segment sont gardés, le numéro et les deux dates sont remplis puis validés comme une saisie au clavier, le clavier est fermé et un message court invite à vérifier les champs avant « Lire » : le scan ne lance jamais la lecture NFC. La saisie manuelle reste toujours possible (D32).
+
 Les champs CAN, numéro de document et dates sont exclus de la saisie automatique (autofill) : aucun gestionnaire de mots de passe ne doit se les voir proposer (audit V14).
 
 Sous les champs, une phrase rappelle que le document doit être présenté par son titulaire, et un bouton « Lire ».
 
 Si le NFC est désactivé, un bandeau l'indique avec un bouton vers les réglages NFC du système. Si le téléphone n'a pas de NFC, l'écran l'explique et désactive le bouton.
 
-Un menu donne accès aux écrans « Magasin de confiance » et « À propos ». Dans l'APK de debug seulement, il propose aussi « Simuler une CNIe (démo) », qui lit la CNIe spécimen de `:testchip` par le même chemin qu'un document réel (section 9.3). Cette entrée n'existe pas dans l'APK release.
+Un menu donne accès aux écrans « Magasin de confiance » et « À propos ». Dans l'APK de debug seulement, il propose aussi « Simuler une CNIe (démo) », qui lit la CNIe spécimen de `:testchip` par le même chemin qu'un document réel (section 9.3), et « Simuler un scan de MRZ », qui remplit les champs avec la MRZ de cette CNIe comme le ferait l'écran de scan. Ces entrées n'existent pas dans l'APK release.
 
 Les valeurs saisies ne sont jamais persistées : elles vivent dans le `ViewModel`, jamais dans un `Bundle` ni un `SavedStateHandle`, et sont effacées à la fin d'une lecture réussie et à la fermeture de l'écran de résultat.
 
@@ -157,6 +168,19 @@ Aucune donnée personnelle ne transite par cet écran.
 ### 5.5 Écran « À propos »
 
 Version, licence, lien vers le dépôt, rappel du cadre d'usage (voir section 8), et description du magasin de confiance embarqué : CSCA français de l'ANTS et Master List allemande du BSI, avec la date de signature de cette Master List, puis les pays dont des certificats publiés par l'État lui-même sont embarqués. Une mention précise que la Master List du BSI est redistribuée sans modification, sans coopération ni approbation du BSI (conditions de réutilisation, D1). L'attribution de l'Open Government Licence v3.0 accompagne les certificats britanniques (D26). Les limites de la section 7.4 y sont rappelées.
+
+### 5.6 Écran de scan de la MRZ
+
+Ouvert par le bouton « Scanner la MRZ » de l'accueil (§5.1). Il reconnaît les formats TD3 (passeport), TD1 (carte d'identité) et TD2, quel que soit l'onglet (D32).
+
+- **Permission** : si la permission caméra n'est pas accordée, elle est demandée à l'arrivée sur l'écran, une seule fois. En cas de refus, l'écran explique que la saisie manuelle reste possible, avec un bouton pour redemander la permission et un bouton « Saisie manuelle » qui revient à l'accueil. En cas de refus définitif, le premier bouton ouvre les réglages de l'application ; au retour, la permission est relue.
+- **Visée** : aperçu plein écran de la caméra arrière, assombri hors d'un cadre de visée au format de la MRZ ; consigne « Placez la bande en bas de la page dans le cadre » ; ligne d'état annoncée par TalkBack (recherche, MRZ vue, lecture réussie). Une illustration montre un document spécimen ICAO « Utopie » dessiné en Compose, MRZ encadrée : un passeport (TD3) ou une carte (TD1) selon l'onglet d'où vient l'utilisateur. Bouton torche si l'appareil en a une. Aucun bouton de prise de vue : l'application ne prend pas de photo.
+- **Reconnaissance** : seule la zone du cadre de visée est analysée. Une MRZ n'est acceptée que si les chiffres de contrôle du numéro, de la date de naissance et de la date d'expiration sont justes, ainsi que le composite en TD3 et TD2, et si deux images successives donnent le même résultat. Une lecture ambiguë (deux lectures différentes presque aussi probables) est refusée, jamais devinée.
+- **Succès** : retour haptique et annonce, puis retour automatique à l'accueil, dont les champs sont remplis (§5.1). Les dates `AAMMJJ` sont écrites dans l'ordre de la locale (D10) : naissance en 20AA si elle ne dépasse pas aujourd'hui, 19AA sinon ; expiration en 20AA. La clé BAC et PACE n'utilisant que `AAMMJJ`, ce choix n'a aucune incidence sur la lecture.
+- **Cas particuliers** : numéro de document étendu (TD1, plus de 9 caractères, non pris en charge comme en saisie manuelle) ou caméra indisponible : un message invite à la saisie manuelle, avec un bouton « Saisie manuelle ».
+- La flèche de retour, le retour arrière, le succès et la mise en arrière-plan libèrent la caméra. Après la mort du processus, l'application redémarre sur l'accueil, vide.
+
+Un résultat dont tous les contrôles sont justes reste à relire : une confusion de caractères peut passer tous les chiffres de contrôle (D32). Une erreur résiduelle ne coûte qu'un `ACCESS_DENIED`, comme une faute de frappe.
 
 ## 6. Protocole de lecture et de vérification (module `:core`)
 
@@ -247,9 +271,10 @@ Ces limites sont affichées dans l'écran « À propos ».
 
 - Aucune donnée lue n'est écrite sur disque, en cache, en base ou en log, ni en debug ni en release. Aucun `Bundle`, `SavedStateHandle`, `rememberSaveable` ni préférence ne contient de donnée lue ni de clé ; après la mort du processus, l'application redémarre sur l'accueil, vide.
 - Aucun journal, même temporaire pour déboguer : ni `Log`, ni `println`, ni `printStackTrace`. Le diagnostic passe par le code d'erreur affiché (§5.2). Les loggers `java.util.logging` de JMRTD et SCUBA (`org.jmrtd`, `net.sf.scuba`) sont coupés au début de chaque lecture, car ils écrivent des APDU en clair (D14).
-- `FLAG_SECURE` sur toute l'activité dès sa création : pas de capture d'écran, pas d'aperçu dans le multitâche, sur l'accueil (saisie du CAN et de la MRZ) comme sur la lecture, le résultat et la photo en plein écran (audit V7).
+- `FLAG_SECURE` sur toute l'activité dès sa création : pas de capture d'écran, pas d'aperçu dans le multitâche, sur l'accueil (saisie du CAN et de la MRZ) comme sur l'aperçu de la caméra, la lecture, le résultat et la photo en plein écran (audit V7).
+- Images de la caméra (D32) : chaque image est une donnée lue. Seuls les cas d'usage Aperçu et Analyse d'image de CameraX sont liés, `ImageCapture` jamais. Le plan de luminance (Y) de la zone du cadre de visée est copié dans un tableau propre à Sceau, réutilisé d'une image à l'autre, remis à zéro après chaque analyse et à la mise en arrière-plan, libéré à la sortie de l'écran ; l'image de CameraX est fermée aussitôt. Aucune image n'est écrite sur disque ni en cache, aucune n'est conservée. La ligne du nom de la MRZ est localisée pour reconnaître le format mais jamais transformée en texte ; nationalité, sexe et données facultatives éventuellement reconnues sur les lignes utiles sont jetées dans `:mrz`, qui n'expose que le format, le numéro et les deux dates. Le résultat ne vit que dans le formulaire du `SessionViewModel`, avec les règles d'oubli de la saisie manuelle (§5.1). Aucun code d'erreur ni message ne contient de caractère reconnu.
 - Effacement : les tableaux d'octets de DG1, DG2, DG11 et DG12 (DG bruts, portrait, images de DG12) et les images décodées (bitmaps remis à zéro puis recyclés) sont effacés à la sortie de l'écran de résultat (« Effacer », retour arrière), lors de la mise en arrière-plan de l'appli pendant une lecture ou sur le résultat, à l'annulation d'une lecture et à la fin du `ViewModel`. Les bitmaps sont possédés par la session, de sorte que l'effacement les atteigne directement, y compris quand un décodage se termine après la sortie de l'écran (audit V13). Une rotation n'efface rien. Un rapport produit par une lecture abandonnée entre-temps est effacé dès sa réception, sans être publié.
-- Limites de l'effacement, assumées et documentées : les `String` et dates (nom, numéro, CAN, champs de DG11 et DG12) sont immuables et ne peuvent pas être remises à zéro, seul le ramasse-miettes les libère ; les tampons internes de JMRTD (flux de lecture, objets de la LDS, messagerie sécurisée), d'OpenJPEG et du décodeur d'images d'Android sont libérés sans remise à zéro. Ces copies restent dans la mémoire du processus, ne sont ni écrites ni journalisées. Sceau remet à zéro tous ses propres tableaux, y compris les tampons natifs intermédiaires du décodage JPEG 2000 (D3, D14).
+- Limites de l'effacement, assumées et documentées : les `String` et dates (nom, numéro, CAN, champs de DG11 et DG12, champs reconnus par le scan) sont immuables et ne peuvent pas être remises à zéro, seul le ramasse-miettes les libère ; les tampons internes de JMRTD (flux de lecture, objets de la LDS, messagerie sécurisée), d'OpenJPEG, du décodeur d'images d'Android, de CameraX et du pilote de la caméra (images YUV) sont libérés sans remise à zéro. Ces copies restent dans la mémoire du processus, ne sont ni écrites ni journalisées. Sceau remet à zéro tous ses propres tableaux, y compris les tampons natifs intermédiaires du décodage JPEG 2000 (D3, D14).
 - La clé d'accès (CAN ou MRZ) n'est jamais mémorisée entre deux lectures : elle est oubliée après une lecture réussie (conservée après une erreur pour « Réessayer ») et à l'effacement.
 - Décodage des images sous contrainte : une image venue de la puce est une donnée potentiellement hostile.
   - JPEG : dimensions lues avant décodage, plafond de pixels, sous-échantillonnage vers une taille d'affichage raisonnable (audit V2).
@@ -287,7 +312,18 @@ Les tests de `:core` utilisent cette puce simulée pour des lectures de bout en 
 - empreintes des fichiers embarqués conformes à `docs/trust-store.md`
 - codes d'erreur sans donnée personnelle
 
-Les tests de `:app` (JVM) couvrent la saisie de l'accueil, la mise en forme des contrôles, la correspondance des erreurs et le mode démo de bout en bout.
+Les tests de `:app` (JVM) couvrent la saisie de l'accueil (dont le remplissage par une MRZ scannée : siècles, ordres de date), la mise en forme des contrôles, la correspondance des erreurs, l'analyseur d'images et la géométrie du cadre de visée, et le mode démo de bout en bout.
+
+Les tests de `:mrz` (JVM, `./gradlew :mrz:test`) n'utilisent jamais d'image de vrai document, qui contiendrait des données personnelles : des MRZ de synthèse sont rendues avec la police OCR-B, puis dégradées (flou, bruit, inclinaison de ±8°, perspective, éclairage non uniforme, bande de reflet, faible contraste, échelles et rotations du capteur). Cas couverts au minimum :
+
+- chiffres de contrôle ICAO 9303-3 et spécimens « UTO » de la norme, en TD1, TD2 et TD3
+- corrections selon le type de champ ; chiffre de contrôle ou composite faux refusé ; lecture ambiguë refusée ; dates impossibles ; numéro étendu de TD1
+- stabilisation sur deux images, oubli après 2 s sans MRZ, `toString` muet
+- taux de reconnaissance minimal par format (MRZ trouvée, format juste, caractères justes au rang 1 et dans les deux premiers) et, de bout en bout, aucune fausse MRZ rendue
+- images sans MRZ, uniformes ou de bruit, dimensions et `rowStride` invalides, tampon trop court : aucun résultat, aucune exception, image d'entrée non modifiée
+- empreintes de la police OCR-B et des modèles embarqués
+
+Le fuzzing (`docs/architecture.md` §5) couvre aussi l'entrée de `:mrz` : dimensions extrêmes ou incohérentes, `rowStride` faux, octets aléatoires, MRZ de synthèse mutées, avec les mêmes variables `SCEAU_FUZZ_*` que `:core`.
 
 ### 9.2 Code natif
 
@@ -310,6 +346,7 @@ Plan de test manuel dans `docs/test-plan.md`, exécuté via adb sur téléphone 
 - NFC désactivé, puis réactivé
 - import d'une Master List valide puis invalide
 - saisie des dates au clavier, mode démo (APK de debug)
+- scan de la MRZ d'un passeport et d'une CNIe puis lecture complète ; permission caméra refusée, refusée définitivement, révoquée ; appareil sans caméra ; arrière-plan et rotation pendant le scan ; faible lumière et reflet ; aucun fichier créé et caméra libérée après le scan
 
 ## 10. Livrables et organisation du dépôt
 
@@ -332,6 +369,7 @@ app/src/main/cpp/            décodeur JPEG 2000 natif (pont JNI, cœur de déco
 app/src/main/cpp/openjpeg/   sous-module git OpenJPEG
 app/src/main/cpp/test/       harnais de test hôte sous sanitizers (hors APK)
 testchip/                    PKI factice, puce simulée, CNIe spécimen (tests et debug)
+mrz/                         lecture optique de la MRZ (Kotlin pur) ; police OCR-B dans mrz/fonts/, hors APK
 ```
 
 Releases : APK par architecture et APK universel publiés sur les releases GitHub, tag `vX.Y.Z`, changelog Fastlane à jour. Préparation de la soumission à F-Droid avec le skill `android-fdroid` avant la première release publique.
