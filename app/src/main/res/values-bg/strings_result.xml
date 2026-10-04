@@ -22,6 +22,7 @@
     <string name="result_image_front">Изображение на лицевата страна</string>
     <string name="result_image_rear">Изображение на гърба</string>
     <string name="result_image_unavailable">Нечетливо изображение</string>
+    <string name="result_section_signature">Подпис на притежателя</string>
 
     <!-- Identité -->
     <string name="result_section_identity">Самоличност</string>

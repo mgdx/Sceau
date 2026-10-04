@@ -37,6 +37,7 @@
     <string name="learn_chip_section_displayed">Nuskaitoma ir rodoma</string>
     <string name="learn_chip_dg1">MRZ duomenys: dokumento tipas, pavardė, vardai, pilietybė, gimimo data, lytis, dokumento numeris, išdavusi valstybė ir galiojimo pabaigos data.</string>
     <string name="learn_chip_dg2">Turėtojo nuotrauka.</string>
+    <string name="learn_chip_dg7">Jei valstybė jį įrašo: turėtojo rankraštinio parašo atvaizdas.</string>
     <string name="learn_chip_dg11">Jei valstybė juos įrašo: papildoma asmens informacija, pavyzdžiui, gimimo vieta ar adresas.</string>
     <string name="learn_chip_dg12">Jei valstybė juos įrašo: informacija apie dokumentą, pavyzdžiui, išdavusi institucija ir išdavimo data, kartais dokumento atvaizdas.</string>
 
@@ -53,7 +54,7 @@
     <string name="learn_chip_dg3">Pirštų atspaudai.</string>
     <string name="learn_chip_dg4">Rainelės atvaizdas.</string>
     <string name="learn_chip_eac">Europos dokumentuose šie du failai bet kuriuo atveju apsaugoti papildomu užraktu – EAC (Extended Access Control), kurį gali atverti tik įgaliotos institucijos.</string>
-    <string name="learn_chip_others">Kitos duomenų grupės (DG5–DG10, DG13 ir DG16: kiti atvaizdai, rankraštinis parašas, valstybei būdingi duomenys, asmenys, kuriuos reikia informuoti) taip pat nenuskaitomos.</string>
+    <string name="learn_chip_others">Kitos duomenų grupės (DG5, DG6, DG8–DG10, DG13 ir DG16: kitas portretas, rezervuota vieta, dokumento apsaugos elementai, valstybei būdingi duomenys, asmenys, kuriuos reikia informuoti) taip pat nenuskaitomos.</string>
 
     <string name="learn_chip_section_never_does">Ko Sceau nedaro</string>
     <string name="learn_chip_no_storage">Neįrašo, nesiunčia ir neregistruoja žurnaluose jokių nuskaitytų duomenų: viskas lieka telefono atmintyje ir ištrinama išėjus iš rezultato ekrano.</string>

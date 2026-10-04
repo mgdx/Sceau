@@ -1,10 +1,12 @@
 package io.github.mgdx.sceau.testchip
 
 import org.jmrtd.lds.CardAccessFile
+import org.jmrtd.lds.ImageInfo
 import org.jmrtd.lds.PACEInfo
 import org.jmrtd.lds.SODFile
 import org.jmrtd.lds.SecurityInfo
 import org.jmrtd.lds.icao.DG1File
+import org.jmrtd.lds.icao.DG7File
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -45,9 +47,25 @@ class SimulatedDocumentsTest {
     }
 
     @Test
+    fun `signature - JPEG synthetique de 8 Ko au plus, dans le DG7 de la CNIe`() {
+        val signature = SimulatedDocuments.specimenSignature()
+        assertTrue("${signature.size} octets", signature.size <= 8 * 1024)
+        assertTrue(signature.copyOf(3).contentEquals(byteArrayOf(0xFF.toByte(), 0xD8.toByte(), 0xFF.toByte())))
+        val dg7 =
+            DG7File(
+                card.document.dataGroups
+                    .getValue(7)
+                    .inputStream(),
+            )
+        val image = dg7.images.single()
+        assertEquals(ImageInfo.TYPE_SIGNATURE_OR_MARK, image.type)
+        assertTrue(image.imageInputStream.use { it.readBytes() }.contentEquals(signature))
+    }
+
+    @Test
     fun `SOD - signe par DS-TEST-FRANCE sous CSCA-TEST-FRANCE, empreintes de tous les DG`() {
         val sod = SODFile(card.document.sod.inputStream())
-        assertEquals(setOf(1, 2, 11, 12, 14, 15), sod.dataGroupHashes.keys)
+        assertEquals(setOf(1, 2, 7, 11, 12, 14, 15), sod.dataGroupHashes.keys)
         assertTrue(
             sod.docSigningCertificate.subjectX500Principal.name
                 .contains("CN=DS-TEST-FRANCE"),

@@ -37,6 +37,7 @@
     <string name="learn_chip_section_displayed">Očitano i prikazano</string>
     <string name="learn_chip_dg1">Podaci iz MRZ-a: vrsta isprave, prezime, imena, državljanstvo, datum rođenja, spol, broj isprave, država izdavanja i datum isteka.</string>
     <string name="learn_chip_dg2">Fotografija nositelja.</string>
+    <string name="learn_chip_dg7">Ako ga država upisuje: slika vlastoručnog potpisa nositelja.</string>
     <string name="learn_chip_dg11">Ako ih država upisuje: dodatni osobni podaci, poput mjesta rođenja ili adrese.</string>
     <string name="learn_chip_dg12">Ako ih država upisuje: podaci o ispravi, poput tijela izdavanja i datuma izdavanja, ponekad i slika isprave.</string>
 
@@ -53,7 +54,7 @@
     <string name="learn_chip_dg3">Otisci prstiju.</string>
     <string name="learn_chip_dg4">Slika šarenice.</string>
     <string name="learn_chip_eac">Na europskim ispravama te su dvije datoteke ionako zaštićene dodatnom bravom, EAC (Extended Access Control), koju mogu otvoriti samo ovlaštena tijela.</string>
-    <string name="learn_chip_others">Ni ostale skupine podataka (DG5 do DG10, DG13 i DG16: druge slike, vlastoručni potpis, podaci specifični za državu, osobe koje treba obavijestiti) ne očitavaju se.</string>
+    <string name="learn_chip_others">Ni ostale skupine podataka (DG5, DG6, DG8 do DG10, DG13 i DG16: drugi portret, rezervirano mjesto, zaštitni elementi isprave, podaci specifični za državu, osobe koje treba obavijestiti) ne očitavaju se.</string>
 
     <string name="learn_chip_section_never_does">Što Sceau ne radi</string>
     <string name="learn_chip_no_storage">Ne pohranjuje, ne šalje i ne bilježi nijedan očitani podatak: sve ostaje u memoriji telefona i briše se pri izlasku iz rezultata.</string>

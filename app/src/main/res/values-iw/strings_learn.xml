@@ -37,6 +37,7 @@
     <string name="learn_chip_section_displayed">נקרא ומוצג</string>
     <string name="learn_chip_dg1">נתוני ה-MRZ: סוג המסמך, שם משפחה, שמות פרטיים, אזרחות, תאריך לידה, מין, מספר המסמך, המדינה המנפיקה ותאריך התפוגה.</string>
     <string name="learn_chip_dg2">התמונה של בעל המסמך.</string>
+    <string name="learn_chip_dg7">אם המדינה רושמת אותה: תמונה של החתימה בכתב יד של בעל המסמך.</string>
     <string name="learn_chip_dg11">אם המדינה רושמת אותם: פרטים אישיים נוספים, כמו מקום הלידה או הכתובת.</string>
     <string name="learn_chip_dg12">אם המדינה רושמת אותם: פרטים על המסמך, כמו הרשות המנפיקה ותאריך ההנפקה, ולפעמים תמונה של המסמך.</string>
 
@@ -53,7 +54,7 @@
     <string name="learn_chip_dg3">טביעות האצבע.</string>
     <string name="learn_chip_dg4">תמונת הקשתית.</string>
     <string name="learn_chip_eac">במסמכים אירופיים, שני הקבצים האלה מוגנים בכל מקרה במנעול נוסף, EAC (Extended Access Control), שרק רשויות מוסמכות יכולות לפתוח.</string>
-    <string name="learn_chip_others">גם שאר קבוצות הנתונים (DG5 עד DG10, DG13 ו-DG16: תמונות נוספות, חתימה בכתב יד, נתונים ייחודיים למדינה, אנשים שיש להודיע להם) לא נקראות.</string>
+    <string name="learn_chip_others">גם שאר קבוצות הנתונים (DG5, DG6, DG8 עד DG10, DG13 ו-DG16: תמונת דיוקן נוספת, מקום שמור, רכיבי האבטחה של המסמך, נתונים ייחודיים למדינה, אנשים שיש להודיע להם) לא נקראות.</string>
 
     <string name="learn_chip_section_never_does">מה Sceau לא עושה</string>
     <string name="learn_chip_no_storage">היא לא שומרת, לא שולחת ולא מתעדת ביומן שום מידע שנקרא: הכול נשאר בזיכרון הטלפון ונמחק ביציאה ממסך התוצאה.</string>

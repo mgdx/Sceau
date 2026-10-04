@@ -6,6 +6,7 @@ import io.github.mgdx.sceau.testchip.AaKeyType
 import io.github.mgdx.sceau.testchip.PaceSettings
 import io.github.mgdx.sceau.testchip.SimulatedDocuments
 import io.github.mgdx.sceau.testchip.TestCrypto
+import io.github.mgdx.sceau.testchip.TestDataGroups
 import io.github.mgdx.sceau.testchip.TestDocument
 import io.github.mgdx.sceau.testchip.TestKeyType
 import io.github.mgdx.sceau.testchip.TestPki
@@ -144,6 +145,7 @@ internal object FuzzSeeds {
     fun dataGroup(number: Int): List<ByteArray> =
         documents.mapNotNull { it.document.dataGroups[number] } +
             when (number) {
+                7 -> listOf(richDg7)
                 11 -> listOf(richDg11)
                 12 -> listOf(richDg12)
                 else -> emptyList()
@@ -186,6 +188,14 @@ internal object FuzzSeeds {
             listOf("L898902C3", "X0000000"),
             "AUCUNE",
         ).encoded
+    }
+
+    /** DG7 à deux images (JPEG et JPEG 2000 réduits à leur signature). */
+    private val richDg7: ByteArray by lazy {
+        TestDataGroups.dg7(
+            byteArrayOf(0xFF.toByte(), 0xD8.toByte(), 0xFF.toByte(), 0xE0.toByte(), 0, 0x10),
+            byteArrayOf(0xFF.toByte(), 0x4F, 0xFF.toByte(), 0x51, 0, 0x2F),
+        )
     }
 
     /** DG12 avec images recto et verso (JPEG et JPEG 2000 réduits à leur signature). */

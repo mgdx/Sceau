@@ -37,6 +37,7 @@
     <string name="learn_chip_section_displayed">Prečítané a zobrazené</string>
     <string name="learn_chip_dg1">Údaje zo zóny MRZ: typ dokladu, priezvisko, mená, štátna príslušnosť, dátum narodenia, pohlavie, číslo dokladu, vydávajúci štát a dátum platnosti.</string>
     <string name="learn_chip_dg2">Fotografia držiteľa.</string>
+    <string name="learn_chip_dg7">Ak ho štát zapisuje: obraz vlastnoručného podpisu držiteľa.</string>
     <string name="learn_chip_dg11">Ak ich štát zapisuje: doplňujúce osobné údaje, napríklad miesto narodenia alebo adresa.</string>
     <string name="learn_chip_dg12">Ak ich štát zapisuje: údaje o doklade, napríklad vydávajúci orgán a dátum vydania, niekedy aj obrázok dokladu.</string>
 
@@ -53,7 +54,7 @@
     <string name="learn_chip_dg3">Odtlačky prstov.</string>
     <string name="learn_chip_dg4">Obraz dúhovky.</string>
     <string name="learn_chip_eac">Na európskych dokladoch sú tieto dva súbory tak či tak chránené ďalším zámkom, EAC (Extended Access Control), ktorý môžu otvoriť iba oprávnené orgány.</string>
-    <string name="learn_chip_others">Ostatné dátové skupiny (DG5 až DG10, DG13 a DG16: ďalšie obrázky, vlastnoručný podpis, údaje špecifické pre štát, osoby, ktoré treba upovedomiť) sa tiež nečítajú.</string>
+    <string name="learn_chip_others">Ostatné dátové skupiny (DG5, DG6, DG8 až DG10, DG13 a DG16: ďalší portrét, vyhradené miesto, ochranné prvky dokladu, údaje špecifické pre štát, osoby, ktoré treba upovedomiť) sa tiež nečítajú.</string>
 
     <string name="learn_chip_section_never_does">Čo Sceau nerobí</string>
     <string name="learn_chip_no_storage">Neukladá, neodosiela ani nezaznamenáva žiadne prečítané údaje: všetko zostáva v pamäti telefónu a po opustení výsledku sa vymaže.</string>

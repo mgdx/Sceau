@@ -37,6 +37,7 @@
     <string name="learn_chip_section_displayed">تُقرأ وتُعرض</string>
     <string name="learn_chip_dg1">بيانات منطقة MRZ: نوع الوثيقة، واسم العائلة، والأسماء الشخصية، والجنسية، وتاريخ الميلاد، والجنس، ورقم الوثيقة، ودولة الإصدار، وتاريخ الانتهاء.</string>
     <string name="learn_chip_dg2">صورة حامل الوثيقة.</string>
+    <string name="learn_chip_dg7">إن كانت الدولة تسجّله: صورة التوقيع بخط اليد لحامل الوثيقة.</string>
     <string name="learn_chip_dg11">إن كانت الدولة تسجّلها: معلومات شخصية إضافية، مثل مكان الميلاد أو العنوان.</string>
     <string name="learn_chip_dg12">إن كانت الدولة تسجّلها: معلومات عن الوثيقة، مثل جهة الإصدار وتاريخ الإصدار، وأحيانًا صورة للوثيقة.</string>
 
@@ -53,7 +54,7 @@
     <string name="learn_chip_dg3">بصمات الأصابع.</string>
     <string name="learn_chip_dg4">صورة القزحية.</string>
     <string name="learn_chip_eac">في الوثائق الأوروبية، هذان الملفان محميان على أي حال بقفل إضافي، هو EAC (Extended Access Control)، لا تستطيع فتحه إلا السلطات المخوَّلة.</string>
-    <string name="learn_chip_others">لا تُقرأ كذلك مجموعات البيانات الأخرى (من DG5 إلى DG10، وDG13 وDG16: صور أخرى، والتوقيع بخط اليد، وبيانات خاصة بالدولة، والأشخاص الذين يجب إبلاغهم).</string>
+    <string name="learn_chip_others">لا تُقرأ كذلك مجموعات البيانات الأخرى (DG5 وDG6، ومن DG8 إلى DG10، وDG13 وDG16: صورة شخصية أخرى، وموضع محجوز، وعناصر أمان الوثيقة، وبيانات خاصة بالدولة، والأشخاص الذين يجب إبلاغهم).</string>
 
     <string name="learn_chip_section_never_does">ما لا يفعله Sceau</string>
     <string name="learn_chip_no_storage">لا يحفظ أي بيانات مقروءة ولا يرسلها ولا يسجّلها: يبقى كل شيء في ذاكرة الهاتف ويُمحى عند مغادرة النتيجة.</string>

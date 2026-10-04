@@ -37,6 +37,7 @@
     <string name="learn_chip_section_displayed">Moqri u muri</string>
     <string name="learn_chip_dg1">Id-data tal-MRZ: tip ta’ dokument, kunjom, ismijiet, nazzjonalità, data tat-twelid, sess, numru tad-dokument, Stat emittenti u data ta’ skadenza.</string>
     <string name="learn_chip_dg2">Ir-ritratt tad-detentur.</string>
+    <string name="learn_chip_dg7">Jekk l-Istat idaħħalha: immaġni tal-firma bl-idejn tad-detentur.</string>
     <string name="learn_chip_dg11">Jekk l-Istat idaħħalha: informazzjoni personali addizzjonali, bħall-post tat-twelid jew l-indirizz.</string>
     <string name="learn_chip_dg12">Jekk l-Istat idaħħalha: informazzjoni dwar id-dokument, bħall-awtorità u d-data tal-ħruġ, xi drabi immaġni tad-dokument.</string>
 
@@ -53,7 +54,7 @@
     <string name="learn_chip_dg3">L-impronti tas-swaba’.</string>
     <string name="learn_chip_dg4">L-immaġni tal-iris.</string>
     <string name="learn_chip_eac">Fuq id-dokumenti Ewropej, dawn iż-żewġ fajls huma protetti xorta waħda b’serratura addizzjonali, l-EAC (Extended Access Control), li jistgħu jiftħuha biss l-awtoritajiet awtorizzati.</string>
-    <string name="learn_chip_others">Il-gruppi tad-data l-oħra (DG5 sa DG10, DG13 u DG16: immaġni oħra, firma bl-idejn, data speċifika għall-Istat, persuni li għandhom jiġu infurmati) lanqas ma jinqraw.</string>
+    <string name="learn_chip_others">Il-gruppi tad-data l-oħra (DG5, DG6, DG8 sa DG10, DG13 u DG16: ritratt ieħor, spazju riżervat, elementi tas-sigurtà tad-dokument, data speċifika għall-Istat, persuni li għandhom jiġu infurmati) lanqas ma jinqraw.</string>
 
     <string name="learn_chip_section_never_does">X’ma jagħmilx Sceau</string>
     <string name="learn_chip_no_storage">Ma jissejvja, ma jibgħat u ma jirreġistra l-ebda data moqrija: kollox jibqa’ fil-memorja tat-telefon u jitħassar meta toħroġ mir-riżultat.</string>

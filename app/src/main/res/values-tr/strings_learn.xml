@@ -37,6 +37,7 @@
     <string name="learn_chip_section_displayed">Okunur ve gösterilir</string>
     <string name="learn_chip_dg1">MRZ verileri: belge türü, soyadı, adları, uyruğu, doğum tarihi, cinsiyet, belge numarası, düzenleyen devlet ve son geçerlilik tarihi.</string>
     <string name="learn_chip_dg2">Belge sahibinin fotoğrafı.</string>
+    <string name="learn_chip_dg7">Devlet kaydediyorsa: belge sahibinin el yazısı imzasının görüntüsü.</string>
     <string name="learn_chip_dg11">Devlet kaydediyorsa: doğum yeri veya adres gibi ek kişisel bilgiler.</string>
     <string name="learn_chip_dg12">Devlet kaydediyorsa: düzenleyen makam ve düzenlenme tarihi gibi belgeye ilişkin bilgiler, bazen de belgenin bir görüntüsü.</string>
 
@@ -53,7 +54,7 @@
     <string name="learn_chip_dg3">Parmak izleri.</string>
     <string name="learn_chip_dg4">İris görüntüsü.</string>
     <string name="learn_chip_eac">Avrupa belgelerinde bu iki dosya zaten ek bir kilitle, yalnızca yetkili makamların açabildiği EAC (Extended Access Control) ile korunur.</string>
-    <string name="learn_chip_others">Diğer veri grupları da (DG5–DG10, DG13 ve DG16: diğer görüntüler, el yazısı imza, devlete özgü veriler, haber verilecek kişiler) okunmaz.</string>
+    <string name="learn_chip_others">Diğer veri grupları da (DG5, DG6, DG8–DG10, DG13 ve DG16: diğer portre, ayrılmış alan, belgenin güvenlik unsurları, devlete özgü veriler, haber verilecek kişiler) okunmaz.</string>
 
     <string name="learn_chip_section_never_does">Sceau’nun yapmadıkları</string>
     <string name="learn_chip_no_storage">Okunan hiçbir veriyi kaydetmez, göndermez veya günlüğe yazmaz: Her şey telefonun belleğinde kalır ve sonuç ekranından çıkınca silinir.</string>

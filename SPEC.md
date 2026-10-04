@@ -40,7 +40,7 @@ L'application ne conserve rien, n'envoie rien et fonctionne entièrement hors li
 | PACE, BAC, lecture des DG, PA, CA, AA | JMRTD | LGPL 2.1 ou ultérieure | Version la plus récente publiée sur Maven Central |
 | Abstraction APDU, pont JMRTD vers `IsoDep` | SCUBA (scuba-smartcards, scuba-sc-android) | LGPL 2.1 ou ultérieure | |
 | Cryptographie, X.509, CMS | BouncyCastle (bcprov, bcpkix, variantes `jdk18on` seulement) | MIT | Ne pas utiliser SpongyCastle |
-| Décodage JPEG 2000 (photo DG2, images DG12) | OpenJPEG (bibliothèque `openjp2` seule) | BSD-2-Clause | Code natif en JNI dans `:app`, compilé depuis les sources (sous-module git `app/src/main/cpp/openjpeg`) par CMake et le NDK, lié statiquement ; aucun binaire précompilé |
+| Décodage JPEG 2000 (photo DG2, signature DG7, images DG12) | OpenJPEG (bibliothèque `openjp2` seule) | BSD-2-Clause | Code natif en JNI dans `:app`, compilé depuis les sources (sous-module git `app/src/main/cpp/openjpeg`) par CMake et le NDK, lié statiquement ; aucun binaire précompilé |
 | Exécution asynchrone | kotlinx-coroutines | Apache 2 | |
 | UI | Compose, Material 3, Navigation Compose, Lifecycle | Apache 2 | |
 
@@ -125,6 +125,8 @@ Après une lecture en mode démo (APK de debug), un bandeau « Document simulé 
 
 **Identité** (DG1) : nom, prénoms, sexe, date de naissance, nationalité, type et numéro de document, État émetteur (drapeau et nom du pays à partir du code à trois lettres), date d'expiration. Si le document est expiré, un bandeau « Document expiré » s'affiche sans changer le verdict d'authenticité.
 
+**Signature du titulaire** (DG7), section affichée uniquement si la puce l'annonce et la fournit : image de la signature manuscrite, décodée comme la photo, sur fond blanc dans les deux thèmes pour rester lisible (D37).
+
 **Données complémentaires**, section affichée uniquement si DG11 ou DG12 est présent :
 
 - DG11 : nom complet, autres noms, numéro personnel, lieu de naissance, adresse, téléphone, profession, titre, résumé du profil, autres nationalités, données de garde.
@@ -138,7 +140,7 @@ Seuls les champs renseignés sont affichés. Tout texte venu de la puce (DG1, DG
 2. Signature du SOD valide
 3. Chaîne de certification : DS rattaché à un CSCA du magasin, avec le nom du CSCA, le pays, la source (ANTS, publication nationale, Master List embarquée, Master List importée) et l'algorithme de signature. Le pays du CSCA, celui du DS et l'État émetteur de DG1 doivent concorder ; sinon la ligne est en échec avec le détail des trois pays (audit V3)
 4. Certificat DS dans sa période de validité à la date de délivrance du document
-5. Empreintes des groupes de données conformes au SOD, avec la liste des DG contrôlés. Un DG que le SOD annonce, parmi ceux que Sceau lit (1, 2, 11, 12, 14, 15), et que la puce ne fournit pas est un échec, listé comme manquant : une puce ne peut pas retenir un DG signé (audit V1)
+5. Empreintes des groupes de données conformes au SOD, avec la liste des DG contrôlés. Un DG que le SOD annonce, parmi ceux que Sceau lit (1, 2, 7, 11, 12, 14, 15), et que la puce ne fournit pas est un échec, listé comme manquant : une puce ne peut pas retenir un DG signé (audit V1)
 6. Chip Authentication (DG14) réussie
 7. Active Authentication (DG15) réussie
 
@@ -186,7 +188,7 @@ L'ordre suit ICAO 9303 partie 11 : EF.CardAccess est un fichier du MF et PACE s'
    - **Délai d'authentification** : pendant PACE et BAC, le délai de réponse du transport est porté à 60 s, puis rétabli à sa valeur précédente (10 s) pour la lecture. Une puce peut imposer un délai croissant après des essais ratés ; couper plus tôt ne la laisse jamais répondre et aggrave la pénalité. Un délai dépassé pendant PACE arrête la lecture (`TIMEOUT-…`), sans repli sur BAC (D12).
    - Toutes les commandes suivantes passent par la messagerie sécurisée ; le MAC des réponses est toujours vérifié. APDU courtes uniquement (256 octets au plus, aucune APDU étendue), lecture par `SELECT` puis `READ BINARY` par blocs de 223 octets, sans SFI (D14).
 3. **EF.COM puis EF.SOD**. EF.COM est facultatif : absent ou illisible, la liste des DG présents vient du SOD. EF.SOD est obligatoire.
-4. **Groupes de données** : DG1, DG2, puis DG14, DG15, DG11, DG12 s'ils sont annoncés dans EF.COM ou dans le SOD. Les DG3 et DG4 ne sont jamais lus.
+4. **Groupes de données** : DG1, DG2, puis DG14, DG15, DG11, DG12 et DG7 (signature manuscrite, D37) s'ils sont annoncés dans EF.COM ou dans le SOD. Les DG3 et DG4 ne sont jamais lus, pas plus que DG5, DG6, DG8 à DG10, DG13 et DG16.
    - DG1 est obligatoire : son absence interrompt la lecture.
    - DG2 est toujours demandé. Un DG, DG2 compris, que la puce ne fournit pas alors que le SOD l'annonce met la ligne « Empreintes » en échec (§5.3, audit V1) ; un DG qui n'est pas annoncé dans le SOD est simplement absent (pas de photo sans DG2).
    - Taille bornée : la longueur annoncée par l'en-tête TLV de chaque fichier est contrôlée avant lecture, contre un plafond propre au fichier ; une longueur au-delà est refusée sans être lue. Un manque de mémoire est traité comme une erreur de lecture, sans empêcher l'effacement des données déjà lues. Un portrait dont l'en-tête d'image est corrompu donne « photo absente » plutôt que l'échec de toute la lecture (audit V11).
@@ -254,7 +256,7 @@ Ces limites sont affichées dans l'écran « À propos ».
 - Aucune donnée lue n'est écrite sur disque, en cache, en base ou en log, ni en debug ni en release. Aucun `Bundle`, `SavedStateHandle`, `rememberSaveable` ni préférence ne contient de donnée lue ni de clé (la seule préférence est l'indicateur « introduction vue », D35) ; après la mort du processus, l'application redémarre sur l'accueil, vide, ou sur l'introduction tant qu'elle n'a pas été vue.
 - Aucun journal, même temporaire pour déboguer : ni `Log`, ni `println`, ni `printStackTrace`. Le diagnostic passe par le code d'erreur affiché (§5.2). Les loggers `java.util.logging` de JMRTD et SCUBA (`org.jmrtd`, `net.sf.scuba`) sont coupés au début de chaque lecture, car ils écrivent des APDU en clair (D14).
 - `FLAG_SECURE` sur toute l'activité dès sa création : pas de capture d'écran, pas d'aperçu dans le multitâche, sur l'accueil (saisie du CAN et de la MRZ) comme sur la lecture, le résultat et la photo en plein écran (audit V7).
-- Effacement : les tableaux d'octets de DG1, DG2, DG11 et DG12 (DG bruts, portrait, images de DG12) et les images décodées (bitmaps remis à zéro puis recyclés) sont effacés à la sortie de l'écran de résultat (« Effacer », retour arrière), lors de la mise en arrière-plan de l'appli pendant une lecture ou sur le résultat, à l'annulation d'une lecture et à la fin du `ViewModel`. Les bitmaps sont possédés par la session, de sorte que l'effacement les atteigne directement, y compris quand un décodage se termine après la sortie de l'écran (audit V13). Une rotation n'efface rien. Un rapport produit par une lecture abandonnée entre-temps est effacé dès sa réception, sans être publié.
+- Effacement : les tableaux d'octets de DG1, DG2, DG7, DG11 et DG12 (DG bruts, portrait, signature, images de DG12) et les images décodées (bitmaps remis à zéro puis recyclés) sont effacés à la sortie de l'écran de résultat (« Effacer », retour arrière), lors de la mise en arrière-plan de l'appli pendant une lecture ou sur le résultat, à l'annulation d'une lecture et à la fin du `ViewModel`. Les bitmaps sont possédés par la session, de sorte que l'effacement les atteigne directement, y compris quand un décodage se termine après la sortie de l'écran (audit V13). Une rotation n'efface rien. Un rapport produit par une lecture abandonnée entre-temps est effacé dès sa réception, sans être publié.
 - Limites de l'effacement, assumées et documentées : les `String` et dates (nom, numéro, CAN, champs de DG11 et DG12) sont immuables et ne peuvent pas être remises à zéro, seul le ramasse-miettes les libère ; les tampons internes de JMRTD (flux de lecture, objets de la LDS, messagerie sécurisée), d'OpenJPEG et du décodeur d'images d'Android sont libérés sans remise à zéro. Ces copies restent dans la mémoire du processus, ne sont ni écrites ni journalisées. Sceau remet à zéro tous ses propres tableaux, y compris les tampons natifs intermédiaires du décodage JPEG 2000 (D3, D14).
 - La clé d'accès (CAN ou MRZ) n'est jamais mémorisée entre deux lectures : elle est oubliée après une lecture réussie (conservée après une erreur pour « Réessayer ») et à l'effacement.
 - Décodage des images sous contrainte : une image venue de la puce est une donnée potentiellement hostile.
@@ -281,7 +283,7 @@ Les tests de `:core` utilisent cette puce simulée pour des lectures de bout en 
 - chaîne nominale : verdict Authentique
 - signature du SOD altérée : Échec
 - DG2 modifié après signature : Échec sur l'empreinte
-- DG annoncé dans le SOD mais non fourni (DG2, DG14 ou DG15) : Échec
+- DG annoncé dans le SOD mais non fourni (DG2, DG7, DG14 ou DG15) : Échec
 - DS expiré avant la date de délivrance : Échec sur la validité ; date estimée hors période : non disponible
 - DS non rattaché à un CSCA connu : Émetteur inconnu
 - pays du CSCA, du DS et de DG1 incohérents : Échec

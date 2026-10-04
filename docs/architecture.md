@@ -106,7 +106,7 @@ suspend fun readAndVerify(transport: CardTransport, key: AccessKey, trustStore: 
 | `Check`, `CheckId`, `CheckStatus` | Ligne de la liste de contrôle ; statut `OK`, `FAILED`, `NOT_AVAILABLE`, `UNSUPPORTED_ALGORITHM`. |
 | `CheckDetail` | Détail structuré (protocole du canal, algorithme, chaîne, validité du DS, DG contrôlés, erreur technique). L'app le met en forme avec ses propres chaînes : `:core` ne produit aucun texte destiné à l'utilisateur. |
 | `ChainInfo` | Sujet et numéro de série du DS, période, algorithme, CSCA trouvé (sujet, pays, empreinte, source), certificats de lien. Aucune donnée personnelle. |
-| `DocumentData` | DG1, portrait, DG11, DG12 et octets bruts des DG lus. Aucune `data class`, `toString()` masqué. |
+| `DocumentData` | DG1, portrait, DG11, DG12, signature de DG7 (D37) et octets bruts des DG lus. Aucune `data class`, `toString()` masqué. |
 
 ### Vérification (utilisée par `readAndVerify`, testable séparément)
 
@@ -116,7 +116,7 @@ suspend fun readAndVerify(transport: CardTransport, key: AccessKey, trustStore: 
 | `ActiveAuthentication.verifyResponse(…)` | Vérifie la réponse au challenge AA avec la clé de DG15. |
 | `Verdicts.compute(checks)` | Verdict global (table de décision dans `docs/protocol.md` §6). |
 
-`:core` ne décode aucune image : il transmet les octets du portrait et des images de DG12 (`EncodedImage`, avec leur format) à `:app`, qui les décode (section 1, « Décodage des images »).
+`:core` ne décode aucune image : il transmet les octets du portrait, de la signature de DG7 et des images de DG12 (`EncodedImage`, avec leur format) à `:app`, qui les décode (section 1, « Décodage des images »).
 
 ### Magasin de confiance
 
@@ -141,7 +141,7 @@ Lecture   tag IsoDep détecté ─────► SessionViewModel.onCardDetecte
                        ▼
                      VerificationReport ──────────────────────────► état Done(report)
                                    │
-Résultat  affiche verdict, photo, DG1, DG11/DG12, liste de contrôle
+Résultat  affiche verdict, photo, DG1, signature DG7, DG11/DG12, liste de contrôle
           « Effacer » ou retour ───► SessionViewModel.clear()       report.wipe(), clé oubliée, état Idle
 ```
 
@@ -149,13 +149,13 @@ Résultat  affiche verdict, photo, DG1, DG11/DG12, liste de contrôle
 2. **Détection NFC** : `MainActivity` (lancement `singleTop`) active le mode lecteur NFC (`enableReaderMode`, NFC-A et NFC-B, tests de présence toutes les 2 s) entre `onResume` et `onPause`. Elle reçoit le tag `IsoDep` pendant que la session est en `WaitingForCard` ou `Error`, l'enveloppe dans un `IsoDepTransport` et appelle `onCardDetected(transport)`.
 3. **Lecture** (`ReadingScreen`) : `readAndVerify` s'exécute dans une coroutine du `ViewModel`, sur `Dispatchers.IO`. Chaque appel de `progress` fait passer l'état en `Reading(step)` ; l'écran coche les étapes terminées et affiche un message d'attente si l'ouverture du canal sécurisé dure plus de 5 s (décision D12). Une `SceauException` donne `Error(code)`, affiché avec un message en français, le code technique en petit (décision D11) et « Réessayer » (`retry()`, même clé). Le transport est toujours fermé hors du thread principal (`IsoDep.close()` attend la fin de l'APDU en cours).
 4. **Magasin de confiance** : `TrustStoreRepository.get()` fournit le `TrustStore` fusionné, chargé une fois puis gardé en mémoire jusqu'au prochain import ou effacement des imports. `SceauApplication` le précharge en arrière-plan au démarrage du processus (décision D16).
-5. **Résultat** (`ResultScreen`) : sur `Done(report)`, la navigation remplace l'écran de lecture par l'écran de résultat (`popUpTo(READING) inclusive`). L'écran met en forme le rapport ; le portrait JPEG 2000 est décodé par OpenJPEG dans le processus isolé de `Jpeg2000Service` (décision D23), le JPEG par le décodeur Android. Aucune donnée n'est copiée hors du rapport au-delà de ce qu'exige l'affichage.
+5. **Résultat** (`ResultScreen`) : sur `Done(report)`, la navigation remplace l'écran de lecture par l'écran de résultat (`popUpTo(READING) inclusive`). L'écran met en forme le rapport ; le portrait (et la signature de DG7, D37) en JPEG 2000 est décodé par OpenJPEG dans le processus isolé de `Jpeg2000Service` (décision D23), le JPEG par le décodeur Android. Aucune donnée n'est copiée hors du rapport au-delà de ce qu'exige l'affichage.
 6. **Magasin de confiance, écran dédié** (`TrustStoreScreen`) : liste des CSCA, import d'une Master List via `ACTION_OPEN_DOCUMENT` → `preview(bytes)` (signature vérifiée, empreinte du signataire montrée) → confirmation → `import(bytes)`. Les Master Lists importées sont stockées telles quelles dans `filesDir/trust/` : ce sont des certificats publics, pas des données personnelles. « Supprimer les certificats importés » appelle `clearImported()`.
 7. **Mode démo** (APK de debug seulement, décision D17) : l'entrée « Simuler une CNIe (démo) » du menu de l'accueil construit, hors du thread principal, une CNIe simulée de `:testchip` (`DemoMode.newSimulatedCnie()`), puis `SessionViewModel.startDemo(card)` la lit par le même chemin qu'un document réel (`launchRead`), avec sa clé CAN et son magasin de test, qui ne sert qu'à cette lecture. La clé saisie est oubliée. Le résultat porte le bandeau « Document simulé — démonstration » (`ReadState.Done.isDemo`). Dans l'APK release, `DemoMode.isAvailable` vaut `false` et l'entrée n'existe pas.
 
 ## 4. Cycle de vie des données sensibles
 
-Données sensibles : la clé d'accès (CAN ou MRZ) et le contenu de `VerificationReport.document` (DG1, portrait DG2, DG11, DG12, octets bruts des DG). Règles de SPEC §8.
+Données sensibles : la clé d'accès (CAN ou MRZ) et le contenu de `VerificationReport.document` (DG1, portrait DG2, signature DG7, DG11, DG12, octets bruts des DG). Règles de SPEC §8.
 
 ### Où elles vivent
 
@@ -171,7 +171,7 @@ Rien d'autre : aucune base, aucun fichier, aucun cache, aucun log, aucune préf�
 
 ### Quand elles sont effacées
 
-`SessionViewModel.clear()` interrompt la lecture en cours (fermeture du transport hors du thread principal), appelle `report.wipe()` (remise à zéro des tableaux d'octets de `DocumentData` : DG bruts, portrait, images DG12), oublie la clé, la saisie et le rapport, et repasse en `Idle`. Il est appelé :
+`SessionViewModel.clear()` interrompt la lecture en cours (fermeture du transport hors du thread principal), appelle `report.wipe()` (remise à zéro des tableaux d'octets de `DocumentData` : DG bruts, portrait, signature DG7, images DG12), oublie la clé, la saisie et le rapport, et repasse en `Idle`. Il est appelé :
 
 | Événement | Déclencheur |
 |---|---|
@@ -205,7 +205,7 @@ Le manifeste ne déclare aucune permission réseau (`android.permission.NFC` seu
 
 ### Fuzzing des parseurs
 
-`core/src/test/kotlin/…/core/fuzz/` contient un fuzzer mutationnel déterministe, sans dépendance (pas de Jazzer), lancé par `./gradlew :core:test`. Les graines sont des entrées valides produites par `:testchip` (EF.COM, EF.SOD, DG1 TD1 et TD3, DG2, DG11, DG12, DG14, DG15, EF.CardAccess, Master List de test) et la Master List embarquée. Les mutations touchent les octets (bit, octet, troncature, insertion, duplication ou suppression de bloc) et l'arbre TLV/DER (longueur gonflée, réduite, en forme longue sur 4 octets ou plus, indéfinie, imbrication profonde, tag inattendu, enfants dupliqués ou permutés, valeur remplacée) ; le contenu signé est aussi muté puis re-signé (LDSSecurityObject, `CscaMasterList`). Chaque cible vérifie le contrat de son appelant réel : résultat ou exception attendue, jamais d'`Error` (mémoire, pile), de délai dépassé (2 s par entrée), ni de SOD_SIGNATURE, DG_HASHES ou AA « OK » pour une entrée mutée dans sa partie signée.
+`core/src/test/kotlin/…/core/fuzz/` contient un fuzzer mutationnel déterministe, sans dépendance (pas de Jazzer), lancé par `./gradlew :core:test`. Les graines sont des entrées valides produites par `:testchip` (EF.COM, EF.SOD, DG1 TD1 et TD3, DG2, DG7, DG11, DG12, DG14, DG15, EF.CardAccess, Master List de test) et la Master List embarquée. Les mutations touchent les octets (bit, octet, troncature, insertion, duplication ou suppression de bloc) et l'arbre TLV/DER (longueur gonflée, réduite, en forme longue sur 4 octets ou plus, indéfinie, imbrication profonde, tag inattendu, enfants dupliqués ou permutés, valeur remplacée) ; le contenu signé est aussi muté puis re-signé (LDSSecurityObject, `CscaMasterList`). Chaque cible vérifie le contrat de son appelant réel : résultat ou exception attendue, jamais d'`Error` (mémoire, pile), de délai dépassé (2 s par entrée), ni de SOD_SIGNATURE, DG_HASHES ou AA « OK » pour une entrée mutée dans sa partie signée.
 
 Le nombre d'itérations par défaut tient l'ensemble sous 30 s. Mode long, reproduction et délai (`SCEAU_FUZZ_TIMEOUT_MILLIS`), par variables d'environnement (les `-D` de `./gradlew` n'atteignent pas la JVM des tests ; les propriétés système `sceau.fuzz.*` restent lues, pour un lancement depuis l'IDE) :
 

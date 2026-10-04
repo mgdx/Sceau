@@ -593,6 +593,6 @@ internal class PassiveAuthenticator(
         const val ID_SECURITY_OBJECT = "0.4.0.127.0.7.3.2.1"
 
         /** DG que Sceau demande à la puce (voir DocumentReader) : jamais DG3 ni DG4. */
-        val READ_DATA_GROUPS = setOf(1, 2, 11, 12, 14, 15)
+        val READ_DATA_GROUPS = setOf(1, 2, 7, 11, 12, 14, 15)
     }
 }

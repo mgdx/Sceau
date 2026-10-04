@@ -72,6 +72,7 @@ import io.github.mgdx.sceau.session.ReadState
 import io.github.mgdx.sceau.session.SessionViewModel
 import io.github.mgdx.sceau.ui.common.SceauIcons
 import io.github.mgdx.sceau.ui.common.SecureWindow
+import io.github.mgdx.sceau.ui.theme.LightOnSurfaceVariant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -170,6 +171,7 @@ private fun ResultContent(
             PortraitSection(document.portrait, bitmapOwner)
             IdentitySection(document.dg1, formatDate)
         }
+        document.signature?.let { SignatureSection(it, bitmapOwner) }
         AdditionalSection(document, formatDate, bitmapOwner)
         ChecksSection(report.checks, formatDate)
         Button(
@@ -312,7 +314,7 @@ private class BitmapOwner(
 }
 
 /**
- * Un seul décodage d'image à la fois dans tout le processus (audit V4) : DG2 et les deux
+ * Un seul décodage d'image à la fois dans tout le processus (audit V4) : DG2, DG7 et les deux
  * images de DG12 ne cumulent jamais leur mémoire de décodage.
  */
 private val decodeMutex = Mutex()
@@ -414,9 +416,12 @@ private fun ImageBox(
     description: String,
     unavailable: String,
     modifier: Modifier = Modifier,
+    containerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
+    contentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
 ) {
     Surface(
-        color = MaterialTheme.colorScheme.surfaceVariant,
+        color = containerColor,
+        contentColor = contentColor,
         shape = MaterialTheme.shapes.medium,
         modifier = modifier,
     ) {
@@ -435,12 +440,12 @@ private fun ImageBox(
                             SceauIcons.Person,
                             contentDescription = null,
                             modifier = Modifier.size(64.dp),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            tint = contentColor,
                         )
                         Text(
                             text = unavailable,
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            color = contentColor,
                         )
                     }
                 }
@@ -586,6 +591,32 @@ private fun ExpiredBanner() {
                 style = MaterialTheme.typography.titleSmall,
             )
         }
+    }
+}
+
+// --- Signature (DG7) ----------------------------------------------------------------------
+
+/**
+ * Signature manuscrite du titulaire (DG7, décision D37), décodée comme la photo. Elle est en
+ * général noire sur fond blanc : affichée sur fond blanc dans les deux thèmes, pour rester
+ * lisible en mode sombre.
+ */
+@Composable
+private fun SignatureSection(
+    signature: EncodedImage,
+    bitmapOwner: BitmapOwner,
+) {
+    val decoded = rememberDecodedImage(signature, bitmapOwner)
+    val title = stringResource(R.string.result_section_signature)
+    SectionCard(title = title) {
+        ImageBox(
+            load = decoded.load,
+            description = title,
+            unavailable = stringResource(R.string.result_image_unavailable),
+            modifier = Modifier.fillMaxWidth().height(120.dp).then(decoded.trigger),
+            containerColor = Color.White,
+            contentColor = LightOnSurfaceVariant,
+        )
     }
 }
 

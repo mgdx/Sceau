@@ -22,6 +22,7 @@
     <string name="result_image_front">Image du recto</string>
     <string name="result_image_rear">Image du verso</string>
     <string name="result_image_unavailable">Image illisible</string>
+    <string name="result_section_signature">Signature du titulaire</string>
 
     <!-- Identité -->
     <string name="result_section_identity">Identité</string>

@@ -13,6 +13,7 @@ import org.jmrtd.lds.icao.DG11File
 import org.jmrtd.lds.icao.DG12File
 import org.jmrtd.lds.icao.DG1File
 import org.jmrtd.lds.icao.DG2File
+import org.jmrtd.lds.icao.DG7File
 import org.jmrtd.lds.iso19794.FaceInfo
 import org.jmrtd.lds.iso39794.FaceImageDataBlock
 import java.io.ByteArrayInputStream
@@ -28,7 +29,7 @@ import java.time.LocalDate
 internal object DataGroupParsers {
     /**
      * Assemble [DocumentData]. DG1 est indispensable (exception s'il est illisible) ; un DG2,
-     * DG11 ou DG12 illisible est simplement absent. [dataGroups] est conservé tel quel.
+     * DG7, DG11 ou DG12 illisible est simplement absent. [dataGroups] est conservé tel quel.
      */
     fun document(
         dataGroups: Map<Int, ByteArray>,
@@ -41,6 +42,7 @@ internal object DataGroupParsers {
             dg11 = dataGroups[11]?.let { orNull { parseDg11(it, today) } },
             dg12 = dataGroups[12]?.let { orNull { parseDg12(it, today) } },
             rawDataGroups = dataGroups,
+            signature = dataGroups[7]?.let { orNull { parseDg7(it) } },
         )
     }
 
@@ -85,6 +87,20 @@ internal object DataGroupParsers {
         val image = images.firstOrNull() ?: return null
         val encoded = image.imageInputStream.use { it.readBytes() }
         return EncodedImage(formatOfMime(image.mimeType), encoded)
+    }
+
+    /**
+     * Première image de DG7 (signature manuscrite ou marque usuelle du titulaire, ICAO 9303-10
+     * §4.7.7), ou null. ICAO permet plusieurs images, mais les documents n'en portent qu'une,
+     * comme DG2 n'a qu'un portrait : seule la première est affichée (D37). Le format est déduit
+     * des octets ([sniffFormat]) : JMRTD annonce toujours `image/jpeg` pour DG7.
+     */
+    fun parseDg7(bytes: ByteArray): EncodedImage? {
+        // JMRTD alloue la longueur annoncée par chaque image (5F43) : contrôlée d'abord.
+        require(BerStructure.lengthsFit(bytes)) { "DG7_LENGTH" }
+        val image = DG7File(StrictInputStream(bytes)).images.orEmpty().firstOrNull() ?: return null
+        val encoded = image.imageInputStream.use { it.readBytes() }
+        return encoded.takeIf { it.isNotEmpty() }?.let { EncodedImage(sniffFormat(it), it) }
     }
 
     fun parseDg11(
@@ -137,7 +153,7 @@ internal object DataGroupParsers {
             else -> ImageFormat.UNKNOWN
         }
 
-    /** Format d'après la signature des premiers octets (DG12 ne déclare pas de type MIME). */
+    /** Format d'après la signature des premiers octets (DG7 et DG12 ne déclarent pas de type MIME fiable). */
     fun sniffFormat(bytes: ByteArray): ImageFormat {
         fun startsWith(vararg prefix: Int) = bytes.size >= prefix.size && prefix.indices.all { bytes[it] == prefix[it].toByte() }
         return when {

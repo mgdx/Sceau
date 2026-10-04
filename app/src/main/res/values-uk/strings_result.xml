@@ -22,6 +22,7 @@
     <string name="result_image_front">Зображення лицьового боку</string>
     <string name="result_image_rear">Зображення зворотного боку</string>
     <string name="result_image_unavailable">Нечитабельне зображення</string>
+    <string name="result_section_signature">Підпис власника</string>
 
     <!-- Identité -->
     <string name="result_section_identity">Особа</string>

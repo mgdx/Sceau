@@ -37,6 +37,7 @@
     <string name="learn_chip_section_displayed">Prebrano in prikazano</string>
     <string name="learn_chip_dg1">Podatki iz MRZ: vrsta dokumenta, priimek, imena, državljanstvo, datum rojstva, spol, številka dokumenta, država izdajateljica in datum veljavnosti.</string>
     <string name="learn_chip_dg2">Fotografija imetnika.</string>
+    <string name="learn_chip_dg7">Če ga država vpiše: slika lastnoročnega podpisa imetnika.</string>
     <string name="learn_chip_dg11">Če jih država vpiše: dodatni osebni podatki, na primer kraj rojstva ali naslov.</string>
     <string name="learn_chip_dg12">Če jih država vpiše: podatki o dokumentu, na primer izdajni organ in datum izdaje, včasih tudi slika dokumenta.</string>
 
@@ -53,7 +54,7 @@
     <string name="learn_chip_dg3">Prstni odtisi.</string>
     <string name="learn_chip_dg4">Slika šarenice.</string>
     <string name="learn_chip_eac">Na evropskih dokumentih sta ti dve datoteki v vsakem primeru zaščiteni z dodatno ključavnico, EAC (Extended Access Control), ki jo lahko odprejo le pooblaščeni organi.</string>
-    <string name="learn_chip_others">Tudi druge podatkovne skupine (DG5 do DG10, DG13 in DG16: druge slike, lastnoročni podpis, podatki posamezne države, osebe, ki jih je treba obvestiti) se ne preberejo.</string>
+    <string name="learn_chip_others">Tudi druge podatkovne skupine (DG5, DG6, DG8 do DG10, DG13 in DG16: drug portret, rezervirano mesto, zaščitni elementi dokumenta, podatki posamezne države, osebe, ki jih je treba obvestiti) se ne preberejo.</string>
 
     <string name="learn_chip_section_never_does">Česa Sceau ne počne</string>
     <string name="learn_chip_no_storage">Nobenega prebranega podatka ne shrani, pošlje ali zapiše v dnevnik: vse ostane v pomnilniku telefona in se izbriše, ko zapustite rezultat.</string>

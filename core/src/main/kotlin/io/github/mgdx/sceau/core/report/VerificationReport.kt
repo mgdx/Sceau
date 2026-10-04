@@ -93,7 +93,7 @@ sealed class CheckDetail {
 
     /**
      * Numéros des DG contrôlés, de ceux dont l'empreinte diffère du SOD, et de ceux que le SOD
-     * annonce parmi les DG que Sceau lit (1, 2, 11, 12, 14, 15) mais que la puce n'a pas fournis
+     * annonce parmi les DG que Sceau lit (1, 2, 7, 11, 12, 14, 15) mais que la puce n'a pas fournis
      * ([missing] non vide = échec : une puce ne peut pas retenir un DG signé, SPEC §6.1).
      *
      * [deviations] : écarts d'empreinte tolérés parce qu'ils correspondent à une anomalie connue,

@@ -37,6 +37,7 @@
     <string name="learn_chip_section_displayed">Lesið og birt</string>
     <string name="learn_chip_dg1">Gögn MRZ: tegund skilríkja, kenninafn, eiginnöfn, ríkisfang, fæðingardagur, kyn, númer skilríkja, útgáfuríki og gildistími.</string>
     <string name="learn_chip_dg2">Mynd af handhafa.</string>
+    <string name="learn_chip_dg7">Ef ríkið skráir hana: mynd af eiginhandarundirskrift handhafa.</string>
     <string name="learn_chip_dg11">Ef ríkið skráir þær: viðbótarpersónuupplýsingar, svo sem fæðingarstaður eða heimilisfang.</string>
     <string name="learn_chip_dg12">Ef ríkið skráir þær: upplýsingar um skilríkin, svo sem útgáfuyfirvald og útgáfudagur, stundum mynd af skilríkjunum.</string>
 
@@ -53,7 +54,7 @@
     <string name="learn_chip_dg3">Fingraför.</string>
     <string name="learn_chip_dg4">Mynd af lithimnu.</string>
     <string name="learn_chip_eac">Á evrópskum skilríkjum eru þessar tvær skrár hvort sem er varðar með viðbótarlás, EAC (Extended Access Control), sem aðeins yfirvöld með heimild geta opnað.</string>
-    <string name="learn_chip_others">Hinir gagnahóparnir (DG5 til DG10, DG13 og DG16: aðrar myndir, eiginhandarundirskrift, gögn sem eru sértæk fyrir ríkið, fólk sem á að láta vita) eru ekki heldur lesnir.</string>
+    <string name="learn_chip_others">Hinir gagnahóparnir (DG5, DG6, DG8 til DG10, DG13 og DG16: önnur andlitsmynd, frátekið pláss, öryggisþættir skilríkisins, gögn sem eru sértæk fyrir ríkið, fólk sem á að láta vita) eru ekki heldur lesnir.</string>
 
     <string name="learn_chip_section_never_does">Það sem Sceau gerir ekki</string>
     <string name="learn_chip_no_storage">Það vistar hvorki, sendir né skráir nein lesin gögn: allt er geymt í minni símans og því eytt þegar þú ferð af niðurstöðuskjánum.</string>

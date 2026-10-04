@@ -6,7 +6,7 @@ Ce document recense les non-conformités de documents réels à ICAO 9303 qui so
 - **Méthode** : lecture des normes (ICAO 9303-12, BSI TR-03129-2, BSI TR-03127), des publications nationales et du code de lecteurs libres (JMRTD 0.8.8, pymrtd, NFCPassportReader). Les fichiers ont été téléchargés hors du dépôt, puis analysés (`openssl cms -verify -noverify`, `openssl asn1parse`, `asn1crypto`). Aucun captcha ni aucune condition d'utilisation n'ont été contournés.
 - **Niveau de preuve** : chaque cas est marqué **vérifié** (lu dans la source primaire : norme, publication de l'État, fichier signé, code de Sceau) ou **rapporté** (affirmé par un tiers : commentaire de code d'une autre bibliothèque, ticket, éditeur commercial). Un cas rapporté n'a pas été reproduit sur un document réel.
 - **Classement** :
-  - **Codable** : peut entrer dans le registre des déviations connues (règles codées en dur). Le garde-fou actuel du registre ne tolère qu'un écart d'empreinte sur DG11 ou DG12, pour des documents désignés par des éléments signés, et écarte ce DG. Jamais DG1, DG2, DG14 ni DG15.
+  - **Codable** : peut entrer dans le registre des déviations connues (règles codées en dur). Le garde-fou actuel du registre ne tolère qu'un écart d'empreinte sur DG11 ou DG12, pour des documents désignés par des éléments signés, et écarte ce DG. Jamais DG1, DG2, DG7, DG14 ni DG15.
   - **À documenter** : limite à expliquer à l'utilisateur, ou à signaler à l'écran, sans tolérance.
   - **Déjà géré / hors périmètre** : Sceau le tolère déjà (code cité) ou n'est pas concerné.
 

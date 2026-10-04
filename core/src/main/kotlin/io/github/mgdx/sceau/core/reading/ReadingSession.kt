@@ -181,6 +181,7 @@ internal class ReadingSession(
             dg11 = dg11.takeUnless { DG11 in numbers },
             dg12 = dg12.takeUnless { DG12 in numbers },
             rawDataGroups = rawDataGroups - numbers,
+            signature = signature,
         )
     }
 

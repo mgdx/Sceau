@@ -37,6 +37,7 @@
     <string name="learn_chip_section_displayed">Luetaan ja näytetään</string>
     <string name="learn_chip_dg1">MRZ:n tiedot: asiakirjan tyyppi, sukunimi, etunimet, kansalaisuus, syntymäaika, sukupuoli, asiakirjan numero, myöntäjävaltio ja voimassaolon päättymispäivä.</string>
     <string name="learn_chip_dg2">Haltijan kuva.</string>
+    <string name="learn_chip_dg7">Jos valtio tallentaa sen: kuva haltijan käsin kirjoitetusta allekirjoituksesta.</string>
     <string name="learn_chip_dg11">Jos valtio tallentaa ne: muita henkilötietoja, kuten syntymäpaikka tai osoite.</string>
     <string name="learn_chip_dg12">Jos valtio tallentaa ne: tietoja asiakirjasta, kuten myöntäjä ja myöntämispäivä, joskus myös kuva asiakirjasta.</string>
 
@@ -53,7 +54,7 @@
     <string name="learn_chip_dg3">Sormenjäljet.</string>
     <string name="learn_chip_dg4">Iiriskuva.</string>
     <string name="learn_chip_eac">Eurooppalaisissa asiakirjoissa nämä kaksi tiedostoa on joka tapauksessa suojattu lisälukolla, EAC:lla (Extended Access Control), jonka voivat avata vain valtuutetut viranomaiset.</string>
-    <string name="learn_chip_others">Muita tietoryhmiä (DG5–DG10, DG13 ja DG16: muut kuvat, käsin kirjoitettu allekirjoitus, valtiokohtaiset tiedot, ilmoitettavat henkilöt) ei myöskään lueta.</string>
+    <string name="learn_chip_others">Muita tietoryhmiä (DG5, DG6, DG8–DG10, DG13 ja DG16: toinen kasvokuva, varattu paikka, asiakirjan turvaominaisuudet, valtiokohtaiset tiedot, ilmoitettavat henkilöt) ei myöskään lueta.</string>
 
     <string name="learn_chip_section_never_does">Mitä Sceau ei tee</string>
     <string name="learn_chip_no_storage">Se ei tallenna, lähetä eikä kirjaa lokiin luettuja tietoja: kaikki pysyy puhelimen muistissa ja poistetaan, kun poistut tuloksesta.</string>

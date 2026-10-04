@@ -37,6 +37,7 @@
     <string name="learn_chip_section_displayed">읽고 표시함</string>
     <string name="learn_chip_dg1">MRZ 데이터: 문서 종류, 성, 이름, 국적, 생년월일, 성별, 문서 번호, 발급 국가, 기간 만료일.</string>
     <string name="learn_chip_dg2">소지자의 사진.</string>
+    <string name="learn_chip_dg7">국가가 기록한 경우: 소지자의 자필 서명 이미지.</string>
     <string name="learn_chip_dg11">국가가 기록한 경우: 출생지나 주소 같은 추가 개인 정보.</string>
     <string name="learn_chip_dg12">국가가 기록한 경우: 발행관청, 발급일 같은 문서 정보이며, 문서 이미지가 포함되기도 합니다.</string>
 
@@ -53,7 +54,7 @@
     <string name="learn_chip_dg3">지문.</string>
     <string name="learn_chip_dg4">홍채 이미지.</string>
     <string name="learn_chip_eac">유럽 신분증의 경우 이 두 파일은 어차피 권한 있는 기관만 열 수 있는 추가 잠금 장치인 EAC(Extended Access Control)로 보호됩니다.</string>
-    <string name="learn_chip_others">나머지 데이터 그룹(DG5~DG10, DG13, DG16: 기타 이미지, 자필 서명, 국가별 데이터, 비상 연락처)도 읽지 않습니다.</string>
+    <string name="learn_chip_others">나머지 데이터 그룹(DG5, DG6, DG8~DG10, DG13, DG16: 다른 얼굴 사진, 예약된 영역, 문서 보안 요소, 국가별 데이터, 비상 연락처)도 읽지 않습니다.</string>
 
     <string name="learn_chip_section_never_does">Sceau가 하지 않는 일</string>
     <string name="learn_chip_no_storage">읽은 데이터를 저장하거나 전송하거나 로그에 기록하지 않습니다. 모든 데이터는 휴대전화 메모리에만 있다가 결과 화면을 나가면 삭제됩니다.</string>

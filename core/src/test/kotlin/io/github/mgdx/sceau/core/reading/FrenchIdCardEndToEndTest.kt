@@ -90,7 +90,7 @@ class FrenchIdCardEndToEndTest {
             assertAllOk(report)
             assertEquals("progression dans l'ordre, sans répétition", Step.entries.toList(), steps)
             assertEquals(CheckDetail.SecureChannel(ChannelProtocol.PACE), report.check(CheckId.SECURE_CHANNEL).detail)
-            assertEquals(listOf(1, 2, 11, 12, 14, 15), hashes(report).checked)
+            assertEquals(listOf(1, 2, 7, 11, 12, 14, 15), hashes(report).checked)
             assertEquals(emptyList<Int>(), hashes(report).mismatched)
             assertTrue(
                 report.chain
@@ -120,6 +120,11 @@ class FrenchIdCardEndToEndTest {
             val portrait = checkNotNull(report.document.portrait)
             assertEquals(ImageFormat.JPEG2000, portrait.format)
             assertArrayEquals(SimulatedDocuments.specimenPortrait(), portrait.bytes)
+
+            // DG7 (D37) : signature manuscrite synthétique, JPEG reconnu à ses premiers octets.
+            val signature = checkNotNull(report.document.signature)
+            assertEquals(ImageFormat.JPEG, signature.format)
+            assertArrayEquals(SimulatedDocuments.specimenSignature(), signature.bytes)
 
             val dg11 = checkNotNull(report.document.dg11)
             assertEquals("SPECIMEN, MARIANNE", dg11.fullName)
@@ -216,12 +221,12 @@ class FrenchIdCardEndToEndTest {
                             extraHashes = mapOf(3 to fakeHash, 4 to fakeHash),
                         ),
                 )
-            val chip = SimulatedChip(document, card.pace, comDataGroups = listOf(1, 2, 3, 4, 11, 12, 14, 15))
+            val chip = SimulatedChip(document, card.pace, comDataGroups = listOf(1, 2, 3, 4, 7, 11, 12, 14, 15))
 
             val report = read(chip, checkNotNull(card.canKey))
 
             assertEquals(Verdict.AUTHENTIC, report.verdict)
-            assertEquals(listOf(1, 2, 11, 12, 14, 15), hashes(report).checked)
-            assertEquals(setOf(1, 2, 11, 12, 14, 15), report.document.rawDataGroups.keys)
+            assertEquals(listOf(1, 2, 7, 11, 12, 14, 15), hashes(report).checked)
+            assertEquals(setOf(1, 2, 7, 11, 12, 14, 15), report.document.rawDataGroups.keys)
         }
 }

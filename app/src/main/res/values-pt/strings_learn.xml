@@ -37,6 +37,7 @@
     <string name="learn_chip_section_displayed">Lido e apresentado</string>
     <string name="learn_chip_dg1">Os dados da MRZ: tipo de documento, apelidos, nomes próprios, nacionalidade, data de nascimento, sexo, número do documento, Estado emissor e data de validade.</string>
     <string name="learn_chip_dg2">A fotografia do titular.</string>
+    <string name="learn_chip_dg7">Se o Estado a registar: a imagem da assinatura manuscrita do titular.</string>
     <string name="learn_chip_dg11">Se o Estado as registar: informações pessoais complementares, como o local de nascimento ou a morada.</string>
     <string name="learn_chip_dg12">Se o Estado as registar: informações sobre o documento, como a entidade emissora e a data de emissão, por vezes uma imagem do documento.</string>
 
@@ -53,7 +54,7 @@
     <string name="learn_chip_dg3">As impressões digitais.</string>
     <string name="learn_chip_dg4">A imagem da íris.</string>
     <string name="learn_chip_eac">Nos documentos europeus, estes dois ficheiros estão, de qualquer modo, protegidos por um bloqueio adicional, o EAC (Extended Access Control), que só as autoridades habilitadas podem abrir.</string>
-    <string name="learn_chip_others">Os restantes grupos de dados (DG5 a DG10, DG13 e DG16: outras imagens, assinatura manuscrita, dados próprios do Estado, pessoas a contactar) também não são lidos.</string>
+    <string name="learn_chip_others">Os restantes grupos de dados (DG5, DG6, DG8 a DG10, DG13 e DG16: outro retrato, espaço reservado, elementos de segurança do documento, dados próprios do Estado, pessoas a contactar) também não são lidos.</string>
 
     <string name="learn_chip_section_never_does">O que o Sceau não faz</string>
     <string name="learn_chip_no_storage">Não guarda, não envia nem regista nenhum dado lido: tudo fica na memória do telemóvel e é apagado ao sair do resultado.</string>

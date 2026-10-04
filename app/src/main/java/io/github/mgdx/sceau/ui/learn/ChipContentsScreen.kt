@@ -33,7 +33,7 @@ import io.github.mgdx.sceau.ui.common.SceauIcons
  * Écran « Ce que contient la puce » (D35) : ce que Sceau lit et affiche, ce qu'il lit pour la
  * seule vérification, ce qu'il ne lit jamais et ce qu'il ne fait pas. La liste des fichiers
  * reprend exactement ceux que demande `:core` (docs/protocol.md §2) : EF.CardAccess, EF.COM,
- * EF.SOD, DG14, DG1, DG2, DG15, DG11, DG12, et EF.CardSecurity après PACE-CAM seulement.
+ * EF.SOD, DG14, DG1, DG2, DG15, DG11, DG12, DG7 (D37), et EF.CardSecurity après PACE-CAM seulement.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,6 +64,7 @@ fun ChipContentsScreen(onBack: () -> Unit) {
             Section(SceauIcons.CheckCircle, MaterialTheme.colorScheme.secondary, R.string.learn_chip_section_displayed) {
                 FileEntry(R.string.learn_chip_label_dg1, R.string.learn_chip_dg1)
                 FileEntry(R.string.learn_chip_label_dg2, R.string.learn_chip_dg2)
+                FileEntry(R.string.learn_chip_label_dg7, R.string.learn_chip_dg7)
                 FileEntry(R.string.learn_chip_label_dg11, R.string.learn_chip_dg11)
                 FileEntry(R.string.learn_chip_label_dg12, R.string.learn_chip_dg12)
             }

@@ -37,6 +37,7 @@
     <string name="learn_chip_section_displayed">読み取って表示</string>
     <string name="learn_chip_dg1">MRZ のデータ：文書の種類、姓、名、国籍、生年月日、性別、文書番号、発行国、有効期間満了日。</string>
     <string name="learn_chip_dg2">所持者の顔写真。</string>
+    <string name="learn_chip_dg7">国が記録している場合：所持者の自筆署名の画像。</string>
     <string name="learn_chip_dg11">国が記録している場合：出生地や住所など、追加の個人情報。</string>
     <string name="learn_chip_dg12">国が記録している場合：発行官庁や発行年月日など、書類に関する情報。書類の画像が含まれることもあります。</string>
 
@@ -53,7 +54,7 @@
     <string name="learn_chip_dg3">指紋。</string>
     <string name="learn_chip_dg4">虹彩の画像。</string>
     <string name="learn_chip_eac">ヨーロッパの書類では、この 2 つのファイルはいずれにしても追加のロックである EAC（Extended Access Control）で保護されており、権限を持つ当局しか開けません。</string>
-    <string name="learn_chip_others">その他のデータグループ（DG5～DG10、DG13、DG16：その他の画像、自筆署名、国独自のデータ、緊急連絡先）も読み取りません。</string>
+    <string name="learn_chip_others">その他のデータグループ（DG5、DG6、DG8～DG10、DG13、DG16：別の顔画像、予約領域、文書のセキュリティ要素、国独自のデータ、緊急連絡先）も読み取りません。</string>
 
     <string name="learn_chip_section_never_does">Sceau がしないこと</string>
     <string name="learn_chip_no_storage">読み取ったデータを保存、送信、ログ記録することは一切ありません。すべてスマートフォンのメモリ内にとどまり、結果画面を閉じると消去されます。</string>

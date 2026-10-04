@@ -37,6 +37,7 @@
     <string name="learn_chip_section_displayed">Odczytywane i wyświetlane</string>
     <string name="learn_chip_dg1">Dane ze strefy MRZ: typ dokumentu, nazwisko, imiona, obywatelstwo, data urodzenia, płeć, numer dokumentu, państwo wydające i data ważności.</string>
     <string name="learn_chip_dg2">Zdjęcie posiadacza.</string>
+    <string name="learn_chip_dg7">Jeśli państwo go zapisuje: obraz odręcznego podpisu posiadacza.</string>
     <string name="learn_chip_dg11">Jeśli państwo je zapisuje: dodatkowe dane osobowe, np. miejsce urodzenia lub adres.</string>
     <string name="learn_chip_dg12">Jeśli państwo je zapisuje: informacje o dokumencie, np. organ wydający i data wydania, czasem obraz dokumentu.</string>
 
@@ -53,7 +54,7 @@
     <string name="learn_chip_dg3">Odciski palców.</string>
     <string name="learn_chip_dg4">Obraz tęczówki.</string>
     <string name="learn_chip_eac">W dokumentach europejskich te dwa pliki i tak są chronione dodatkową blokadą, EAC (Extended Access Control), którą mogą otworzyć tylko uprawnione organy.</string>
-    <string name="learn_chip_others">Pozostałe grupy danych (DG5–DG10, DG13 i DG16: inne obrazy, podpis odręczny, dane specyficzne dla państwa, osoby do powiadomienia) również nie są odczytywane.</string>
+    <string name="learn_chip_others">Pozostałe grupy danych (DG5, DG6, DG8–DG10, DG13 i DG16: inny portret, miejsce zarezerwowane, zabezpieczenia dokumentu, dane specyficzne dla państwa, osoby do powiadomienia) również nie są odczytywane.</string>
 
     <string name="learn_chip_section_never_does">Czego Sceau nie robi</string>
     <string name="learn_chip_no_storage">Nie zapisuje, nie wysyła ani nie rejestruje żadnych odczytanych danych: wszystko zostaje w pamięci telefonu i jest usuwane po opuszczeniu wyniku.</string>

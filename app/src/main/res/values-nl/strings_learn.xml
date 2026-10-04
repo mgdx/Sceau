@@ -37,6 +37,7 @@
     <string name="learn_chip_section_displayed">Uitgelezen en getoond</string>
     <string name="learn_chip_dg1">De gegevens uit de MRZ: soort document, naam, voornamen, nationaliteit, geboortedatum, geslacht, documentnummer, staat van afgifte en vervaldatum.</string>
     <string name="learn_chip_dg2">De foto van de houder.</string>
+    <string name="learn_chip_dg7">Als de staat die vastlegt: een afbeelding van de handtekening van de houder.</string>
     <string name="learn_chip_dg11">Als de staat ze vastlegt: aanvullende persoonsgegevens, zoals geboorteplaats of adres.</string>
     <string name="learn_chip_dg12">Als de staat ze vastlegt: gegevens over het document, zoals de instantie en datum van afgifte, soms een afbeelding van het document.</string>
 
@@ -53,7 +54,7 @@
     <string name="learn_chip_dg3">De vingerafdrukken.</string>
     <string name="learn_chip_dg4">De afbeelding van de iris.</string>
     <string name="learn_chip_eac">Op Europese documenten zijn deze twee bestanden sowieso beveiligd met een extra slot, EAC (Extended Access Control), dat alleen bevoegde instanties kunnen openen.</string>
-    <string name="learn_chip_others">De andere gegevensgroepen (DG5 tot en met DG10, DG13 en DG16: andere afbeeldingen, handtekening, gegevens specifiek voor de staat, te waarschuwen personen) worden evenmin uitgelezen.</string>
+    <string name="learn_chip_others">De andere gegevensgroepen (DG5, DG6, DG8 tot en met DG10, DG13 en DG16: ander portret, gereserveerde plaats, beveiligingskenmerken van het document, gegevens specifiek voor de staat, te waarschuwen personen) worden evenmin uitgelezen.</string>
 
     <string name="learn_chip_section_never_does">Wat Sceau niet doet</string>
     <string name="learn_chip_no_storage">Sceau slaat geen uitgelezen gegevens op, verstuurt ze niet en logt ze niet: alles blijft in het geheugen van de telefoon en wordt gewist zodra je het resultaat verlaat.</string>

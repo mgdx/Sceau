@@ -63,6 +63,9 @@ object SimulatedDocuments {
     const val PORTRAIT_WIDTH = 240
     const val PORTRAIT_HEIGHT = 320
 
+    /** Nom de ressource de la signature synthétique (JPEG, voir testchip/README.md). */
+    const val SIGNATURE_RESOURCE = "/specimen-signature.jpg"
+
     private const val FRENCH_PKI_SEED = 20_210_314L
 
     /** PKI de test « française » : CSCA-TEST-FRANCE (EC brainpoolP256r1), clés reproductibles. */
@@ -75,6 +78,7 @@ object SimulatedDocuments {
      * - EF.CardAccess : `PACEInfo` id-PACE-ECDH-GM-AES-CBC-CMAC-128, brainpoolP256r1 ;
      * - DG1 : MRZ TD1 « ID », FRA, SPECIMEN / MARIANNE ;
      * - DG2 : portrait JPEG 2000 synthétique (ISO 19794-5) ;
+     * - DG7 : signature manuscrite synthétique (JPEG, D37) ;
      * - DG11 : nom complet, lieu de naissance et adresse fictifs ; DG12 : autorité et date de
      *   délivrance ;
      * - DG14 : clé de Chip Authentication ECDH brainpoolP256r1 (CA AES-128) et
@@ -89,6 +93,7 @@ object SimulatedDocuments {
         val groups = sortedMapOf<Int, ByteArray>()
         groups[DG1] = frenchDg1()
         groups[DG2] = portraitDg2()
+        groups[DG7] = TestDataGroups.dg7(specimenSignature())
         groups[DG11] = frenchDg11()
         groups[DG12] = frenchDg12()
         val caKeys = pki.generateEc(TestPki.CURVE)
@@ -195,6 +200,11 @@ object SimulatedDocuments {
         checkNotNull(SimulatedDocuments::class.java.getResourceAsStream(PORTRAIT_RESOURCE)) { PORTRAIT_RESOURCE }
             .use { it.readBytes() }
 
+    /** Octets de la signature synthétique JPEG embarquée (DG7). */
+    fun specimenSignature(): ByteArray =
+        checkNotNull(SimulatedDocuments::class.java.getResourceAsStream(SIGNATURE_RESOURCE)) { SIGNATURE_RESOURCE }
+            .use { it.readBytes() }
+
     private fun frenchDg1(): ByteArray {
         val mrz =
             MRZInfo.createTD1MRZInfo(
@@ -275,6 +285,7 @@ object SimulatedDocuments {
     private const val CA_VERSION = 1
     private const val DG1 = 1
     private const val DG2 = 2
+    private const val DG7 = 7
     private const val DG11 = 11
     private const val DG12 = 12
     private const val DG14 = 14
