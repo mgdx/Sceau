@@ -3,6 +3,8 @@
     <string name="scan_title">Scan MRZ</string>
     <string name="scan_back">Tilbage</string>
     <string name="scan_instruction">Placer tegnlinjerne nederst på siden i rammen</string>
+    <string name="scan_specimen_passport">Eksempel: tegnlinjerne nederst på siden i et pas</string>
+    <string name="scan_specimen_id_card">Eksempel: tegnlinjerne på bagsiden af et identitetskort</string>
     <string name="scan_status_searching">Søger efter MRZ…</string>
     <string name="scan_status_seen">MRZ fundet, læser. Hold dokumentet stille.</string>
     <string name="scan_status_unsupported">Dette dokumentnummer er for langt til at blive læst automatisk. Indtast oplysningerne manuelt.</string>

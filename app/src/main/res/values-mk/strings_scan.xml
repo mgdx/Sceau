@@ -3,6 +3,8 @@
     <string name="scan_title">Скенирај MRZ</string>
     <string name="scan_back">Назад</string>
     <string name="scan_instruction">Ставете ги редовите знаци на дното од страницата во рамката</string>
+    <string name="scan_specimen_passport">Пример: редовите знаци на дното од страницата на пасошот</string>
+    <string name="scan_specimen_id_card">Пример: редовите знаци на задната страна од личната карта</string>
     <string name="scan_status_searching">Се бара MRZ…</string>
     <string name="scan_status_seen">MRZ е пронајдена, се чита. Држете го документот мирно.</string>
     <string name="scan_status_unsupported">Овој број на документ е предолг за автоматско читање. Внесете ги податоците рачно.</string>

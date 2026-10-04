@@ -3,6 +3,8 @@
     <string name="scan_title">MRZ scannen</string>
     <string name="scan_back">Zurück</string>
     <string name="scan_instruction">Halten Sie die Zeichenzeilen unten auf der Seite in den Rahmen</string>
+    <string name="scan_specimen_passport">Beispiel: die Zeichenzeilen unten auf der Seite eines Reisepasses</string>
+    <string name="scan_specimen_id_card">Beispiel: die Zeichenzeilen auf der Rückseite eines Personalausweises</string>
     <string name="scan_status_searching">MRZ wird gesucht…</string>
     <string name="scan_status_seen">MRZ erkannt, wird gelesen. Halten Sie das Dokument ruhig.</string>
     <string name="scan_status_unsupported">Diese Dokumentennummer ist zu lang für das automatische Lesen. Geben Sie die Daten manuell ein.</string>

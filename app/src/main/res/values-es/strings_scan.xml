@@ -3,6 +3,8 @@
     <string name="scan_title">Escanear MRZ</string>
     <string name="scan_back">Atrás</string>
     <string name="scan_instruction">Encuadra las líneas de caracteres de la parte inferior de la página</string>
+    <string name="scan_specimen_passport">Ejemplo: las líneas de caracteres de la parte inferior de la página de un pasaporte</string>
+    <string name="scan_specimen_id_card">Ejemplo: las líneas de caracteres del reverso de un documento de identidad</string>
     <string name="scan_status_searching">Buscando la MRZ…</string>
     <string name="scan_status_seen">MRZ detectada, leyendo. Mantén el documento quieto.</string>
     <string name="scan_status_unsupported">Este número de documento es demasiado largo para leerlo automáticamente. Introduce los datos a mano.</string>

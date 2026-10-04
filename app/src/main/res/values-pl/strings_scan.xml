@@ -3,6 +3,8 @@
     <string name="scan_title">Zeskanuj MRZ</string>
     <string name="scan_back">Wstecz</string>
     <string name="scan_instruction">Umieść w ramce wiersze znaków z dołu strony</string>
+    <string name="scan_specimen_passport">Przykład: wiersze znaków na dole strony paszportu</string>
+    <string name="scan_specimen_id_card">Przykład: wiersze znaków na odwrocie dowodu osobistego</string>
     <string name="scan_status_searching">Szukanie strefy MRZ…</string>
     <string name="scan_status_seen">Wykryto strefę MRZ, trwa odczyt. Trzymaj dokument nieruchomo.</string>
     <string name="scan_status_unsupported">Ten numer dokumentu jest za długi, aby odczytać go automatycznie. Wpisz dane ręcznie.</string>

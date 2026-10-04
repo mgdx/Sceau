@@ -3,6 +3,8 @@
     <string name="scan_title">Digitalizar MRZ</string>
     <string name="scan_back">Voltar</string>
     <string name="scan_instruction">Coloque na moldura as linhas de carateres da parte inferior da página</string>
+    <string name="scan_specimen_passport">Exemplo: as linhas de carateres da parte inferior da página de um passaporte</string>
+    <string name="scan_specimen_id_card">Exemplo: as linhas de carateres do verso de um cartão de identidade</string>
     <string name="scan_status_searching">A procurar a MRZ…</string>
     <string name="scan_status_seen">MRZ detetada, a ler. Mantenha o documento imóvel.</string>
     <string name="scan_status_unsupported">Este número de documento é demasiado longo para ser lido automaticamente. Introduza os dados manualmente.</string>

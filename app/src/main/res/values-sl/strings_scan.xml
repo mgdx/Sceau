@@ -3,6 +3,8 @@
     <string name="scan_title">Skeniraj MRZ</string>
     <string name="scan_back">Nazaj</string>
     <string name="scan_instruction">Vrstice znakov na dnu strani postavite v okvir</string>
+    <string name="scan_specimen_passport">Primer: vrstice znakov na dnu strani potnega lista</string>
+    <string name="scan_specimen_id_card">Primer: vrstice znakov na hrbtni strani osebne izkaznice</string>
     <string name="scan_status_searching">Iskanje MRZ …</string>
     <string name="scan_status_seen">MRZ najdena, branje poteka. Dokumenta ne premikajte.</string>
     <string name="scan_status_unsupported">Ta številka dokumenta je predolga za samodejno branje. Podatke vnesite ročno.</string>

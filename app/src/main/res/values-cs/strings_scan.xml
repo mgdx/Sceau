@@ -3,6 +3,8 @@
     <string name="scan_title">Naskenovat MRZ</string>
     <string name="scan_back">Zpět</string>
     <string name="scan_instruction">Umístěte řádky znaků ve spodní části stránky do rámečku</string>
+    <string name="scan_specimen_passport">Příklad: řádky znaků ve spodní části stránky cestovního pasu</string>
+    <string name="scan_specimen_id_card">Příklad: řádky znaků na zadní straně občanského průkazu</string>
     <string name="scan_status_searching">Hledání MRZ…</string>
     <string name="scan_status_seen">MRZ nalezena, probíhá čtení. Držte doklad v klidu.</string>
     <string name="scan_status_unsupported">Toto číslo dokladu je příliš dlouhé pro automatické čtení. Zadejte údaje ručně.</string>

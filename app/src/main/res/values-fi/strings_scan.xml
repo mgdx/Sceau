@@ -3,6 +3,8 @@
     <string name="scan_title">Skannaa MRZ</string>
     <string name="scan_back">Takaisin</string>
     <string name="scan_instruction">Aseta sivun alareunan merkkirivit kehykseen</string>
+    <string name="scan_specimen_passport">Esimerkki: passin sivun alareunan merkkirivit</string>
+    <string name="scan_specimen_id_card">Esimerkki: henkilökortin kääntöpuolen merkkirivit</string>
     <string name="scan_status_searching">Etsitään MRZ:aa…</string>
     <string name="scan_status_seen">MRZ löytyi, luetaan. Pidä asiakirja paikallaan.</string>
     <string name="scan_status_unsupported">Tämä asiakirjan numero on liian pitkä luettavaksi automaattisesti. Anna tiedot käsin.</string>

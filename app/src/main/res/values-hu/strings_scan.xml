@@ -3,6 +3,8 @@
     <string name="scan_title">MRZ beolvasása</string>
     <string name="scan_back">Vissza</string>
     <string name="scan_instruction">Helyezze a keretbe az oldal alján lévő karaktersorokat</string>
+    <string name="scan_specimen_passport">Példa: az útlevél oldalának alján lévő karaktersorok</string>
+    <string name="scan_specimen_id_card">Példa: a személyi igazolvány hátoldalán lévő karaktersorok</string>
     <string name="scan_status_searching">MRZ keresése…</string>
     <string name="scan_status_seen">MRZ észlelve, olvasás folyamatban. Tartsa mozdulatlanul az okmányt.</string>
     <string name="scan_status_unsupported">Ez az okmányszám túl hosszú az automatikus beolvasáshoz. Adja meg kézzel az adatokat.</string>

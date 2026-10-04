@@ -3,6 +3,8 @@
     <string name="scan_title">Σάρωση MRZ</string>
     <string name="scan_back">Πίσω</string>
     <string name="scan_instruction">Τοποθετήστε στο πλαίσιο τις σειρές χαρακτήρων στο κάτω μέρος της σελίδας</string>
+    <string name="scan_specimen_passport">Παράδειγμα: οι σειρές χαρακτήρων στο κάτω μέρος της σελίδας ενός διαβατηρίου</string>
+    <string name="scan_specimen_id_card">Παράδειγμα: οι σειρές χαρακτήρων στην πίσω όψη ενός δελτίου ταυτότητας</string>
     <string name="scan_status_searching">Αναζήτηση MRZ…</string>
     <string name="scan_status_seen">Εντοπίστηκε MRZ, γίνεται ανάγνωση. Κρατήστε το έγγραφο ακίνητο.</string>
     <string name="scan_status_unsupported">Αυτός ο αριθμός εγγράφου είναι πολύ μεγάλος για αυτόματη ανάγνωση. Καταχωρίστε τα δεδομένα χειροκίνητα.</string>

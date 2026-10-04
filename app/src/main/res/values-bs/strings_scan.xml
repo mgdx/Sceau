@@ -3,6 +3,8 @@
     <string name="scan_title">Skeniraj MRZ</string>
     <string name="scan_back">Nazad</string>
     <string name="scan_instruction">Postavite redove znakova na dnu stranice u okvir</string>
+    <string name="scan_specimen_passport">Primjer: redovi znakova na dnu stranice pasoša</string>
+    <string name="scan_specimen_id_card">Primjer: redovi znakova na poleđini lične karte</string>
     <string name="scan_status_searching">Traženje MRZ-a…</string>
     <string name="scan_status_seen">MRZ pronađen, čitanje u toku. Držite dokument mirno.</string>
     <string name="scan_status_unsupported">Ovaj broj dokumenta je predug za automatsko čitanje. Unesite podatke ručno.</string>

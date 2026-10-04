@@ -74,6 +74,7 @@ import io.github.mgdx.sceau.ui.result.ResultScreen
 import io.github.mgdx.sceau.ui.scan.MrzScanScaffold
 import io.github.mgdx.sceau.ui.scan.PermissionPanel
 import io.github.mgdx.sceau.ui.scan.ScanViewfinderLayout
+import io.github.mgdx.sceau.ui.scan.SpecimenKind
 import io.github.mgdx.sceau.ui.scan.StatusLine
 import io.github.mgdx.sceau.ui.theme.SceauTheme
 import io.github.mgdx.sceau.ui.trust.TrustStoreScreen
@@ -290,11 +291,24 @@ class TextOverflowTest {
         session.clear()
     }
 
-    /** Écran de scan sans caméra : chaque ligne d'état, puis la permission refusée (D32). */
+    /**
+     * Écran de scan sans caméra : chaque ligne d'état avec le passeport spécimen, la recherche
+     * avec la carte spécimen, puis la permission refusée (D32). L'illustration est présente sauf
+     * sur les erreurs.
+     */
     private fun scanScenes() {
-        StatusLine.entries.forEach { status ->
-            render("Scan, état $status", {
-                MrzScanScaffold(onBack = {}) { ScanViewfinderLayout(geometry = null, status = status, onManualEntry = {}) }
+        val scenes = StatusLine.entries.map { it to SpecimenKind.PASSPORT } + (StatusLine.SEARCHING to SpecimenKind.ID_CARD)
+        scenes.forEach { (status, specimen) ->
+            val description =
+                if (specimen == SpecimenKind.PASSPORT) R.string.scan_specimen_passport else R.string.scan_specimen_id_card
+            val shown = status != StatusLine.UNSUPPORTED && status != StatusLine.CAMERA_UNAVAILABLE
+            render("Scan, état $status, $specimen", {
+                MrzScanScaffold(onBack = {}) {
+                    ScanViewfinderLayout(geometry = null, status = status, specimen = specimen, onManualEntry = {})
+                }
+            }, ready = { lang ->
+                val found = compose.onAllNodes(hasContentDescriptionRes(description)).fetchSemanticsNodes().size
+                assertEquals("illustration ($status, $specimen, ${lang.tag})", if (shown) 1 else 0, found)
             })
         }
         listOf(false to "Scan, permission refusée", true to "Scan, permission refusée définitivement").forEach { (permanently, name) ->

@@ -3,6 +3,8 @@
     <string name="scan_title">Skenēt MRZ</string>
     <string name="scan_back">Atpakaļ</string>
     <string name="scan_instruction">Novietojiet rāmī rakstzīmju rindas lapas apakšā</string>
+    <string name="scan_specimen_passport">Piemērs: rakstzīmju rindas pases lapas apakšā</string>
+    <string name="scan_specimen_id_card">Piemērs: rakstzīmju rindas personas apliecības aizmugurē</string>
     <string name="scan_status_searching">Notiek MRZ meklēšana…</string>
     <string name="scan_status_seen">MRZ atrasta, notiek nolasīšana. Turiet dokumentu nekustīgi.</string>
     <string name="scan_status_unsupported">Šis dokumenta numurs ir pārāk garš automātiskai nolasīšanai. Ievadiet datus manuāli.</string>

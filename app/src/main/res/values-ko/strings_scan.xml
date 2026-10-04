@@ -3,6 +3,8 @@
     <string name="scan_title">MRZ 스캔</string>
     <string name="scan_back">뒤로</string>
     <string name="scan_instruction">페이지 아래쪽의 문자 줄을 프레임 안에 맞추세요</string>
+    <string name="scan_specimen_passport">예: 여권 페이지 아래쪽의 문자 줄</string>
+    <string name="scan_specimen_id_card">예: 신분증 뒷면의 문자 줄</string>
     <string name="scan_status_searching">MRZ를 찾는 중…</string>
     <string name="scan_status_seen">MRZ를 찾았습니다. 읽는 중입니다. 신분증을 움직이지 마세요.</string>
     <string name="scan_status_unsupported">이 문서 번호는 너무 길어 자동으로 읽을 수 없습니다. 데이터를 직접 입력하세요.</string>

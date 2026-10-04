@@ -3,6 +3,8 @@
     <string name="scan_title">Scanner la MRZ</string>
     <string name="scan_back">Retour</string>
     <string name="scan_instruction">Placez la bande de caractères en bas de la page dans le cadre</string>
+    <string name="scan_specimen_passport">Schéma d’un passeport : la bande de caractères en bas de la page</string>
+    <string name="scan_specimen_id_card">Schéma d’une carte d’identité : la bande de caractères au dos</string>
     <string name="scan_status_searching">Recherche de la MRZ…</string>
     <string name="scan_status_seen">MRZ repérée, lecture en cours. Gardez le document immobile.</string>
     <string name="scan_status_unsupported">Ce numéro de document est trop long pour être lu automatiquement. Saisissez les données à la main.</string>

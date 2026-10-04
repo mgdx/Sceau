@@ -3,6 +3,8 @@
     <string name="scan_title">掃描 MRZ</string>
     <string name="scan_back">返回</string>
     <string name="scan_instruction">將頁面底部的字元行放入框內</string>
+    <string name="scan_specimen_passport">範例：護照頁面底部的字元行</string>
+    <string name="scan_specimen_id_card">範例：身分證背面的字元行</string>
     <string name="scan_status_searching">正在尋找 MRZ…</string>
     <string name="scan_status_seen">已找到 MRZ，正在辨識。請保持證件不動。</string>
     <string name="scan_status_unsupported">這個證件號碼過長，無法自動辨識。請手動輸入資料。</string>
