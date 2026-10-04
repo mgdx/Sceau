@@ -17,6 +17,7 @@
     <string name="reading_error_not_icao">Tento doklad nezodpovedá norme ICAO 9303: jeho čip nemožno prečítať.</string>
     <string name="reading_error_timeout">Časový limit vypršal: čip neodpovedal včas. Skúste to znova a držte doklad nehybne.</string>
     <string name="reading_error_can_without_pace">Tento doklad nemožno čítať pomocou CAN. Použite kartu Cestovný pas a zadajte údaje z MRZ.</string>
+    <string name="reading_error_access_restricted">Čip tohto dokladu je vyhradený oprávneným orgánom: Sceau ho nemôže prečítať a nový pokus na tom nič nezmení. Týka sa to nemeckých občianskych preukazov vydaných pred augustom 2021.</string>
     <string name="reading_error_unexpected">Vyskytla sa neočakávaná chyba.</string>
     <string name="reading_error_code">Kód chyby: %1$s</string>
     <string name="reading_retry">Skúsiť znova</string>

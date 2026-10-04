@@ -17,6 +17,7 @@
     <string name="reading_error_not_icao">Dan id-dokument mhuwiex konformi mal-istandard ICAO 9303: iċ-ċippa tiegħu ma tistax tinqara.</string>
     <string name="reading_error_timeout">Il-ħin skada: iċ-ċippa ma wieġbitx fil-ħin. Erġa’ pprova u żomm id-dokument wieqaf.</string>
     <string name="reading_error_can_without_pace">Dan id-dokument ma jinqarax b’CAN. Uża t-tab Passaport u daħħal id-data tal-MRZ.</string>
+    <string name="reading_error_access_restricted">Iċ-ċippa ta’ dan id-dokument hija riżervata għall-awtoritajiet awtorizzati: Sceau ma jistax jaqraha, u tentattiv ieħor mhux se jbiddel xejn. Dan huwa l-każ tal-karti tal-identità Ġermaniżi maħruġa qabel Awwissu 2021.</string>
     <string name="reading_error_unexpected">Seħħ żball mhux mistenni.</string>
     <string name="reading_error_code">Kodiċi tal-iżball: %1$s</string>
     <string name="reading_retry">Erġa’ pprova</string>

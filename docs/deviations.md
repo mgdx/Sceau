@@ -86,8 +86,8 @@ Aucune autre Deviation List nationale publique n'a été trouvée (recherche web
 | IT-1 | Italie, CIE 3.0 | empreinte de DG12 fausse (date de délivrance figée, mention « non valable pour l'expatriation » absente) | vérifié (DL signée, note de l'IPZS) | **codable**, dans le garde-fou DG11/DG12, avec une condition sur la ligne « Validité du DS » |
 | CN-1 | Chine, passeports | type de contenu du SOD `id-data` au lieu de `id-icao-ldsSecurityObject` | rapporté (pymrtd) | **codable hors garde-fou** ; à n'envisager que sur un cas réel |
 | FRBE-1 | France, Belgique, anciens passeports | type de contenu du SOD `1.3.27.1.1.1` | rapporté (JMRTD) | hors périmètre en pratique (documents expirés) |
-| DE-1 | Allemagne, cartes d'identité délivrées avant le 2021-08-02 | application ICAO réservée aux systèmes d'inspection authentifiés (TA2) | vérifié (BSI TR-03127) | **à documenter** (§3.1) |
-| DE-2 | Allemagne, carte eID pour citoyens de l'Union (eID-UB) | DG1 de remplacement (« UB », champs vides), DG2 = logo | vérifié (BSI TR-03127) | **à documenter** (§3.1) |
+| DE-1 | Allemagne, cartes d'identité délivrées avant le 2021-08-02 | application ICAO réservée aux systèmes d'inspection authentifiés (TA2) | vérifié (BSI TR-03127) | **traité, D36** : code `ACCESS_RESTRICTED` et message dédié (§3.1) |
+| DE-2 | Allemagne, carte eID pour citoyens de l'Union (eID-UB) | DG1 de remplacement (« UB », champs vides), DG2 = logo | vérifié (BSI TR-03127) | **traité, D36** : bandeau « aucune donnée d'identité », photo masquée (§3.1) |
 | EU-1 | UE, laissez-passer | nationalité « DEU » au lieu de « D<< » dans la MRZ | vérifié (page du CSCA UE) | déjà géré (sans effet) |
 | GEN-1 | divers, non nommés | empreintes mal calculées, photos tronquées, MRZ de la puce différente de l'imprimé | rapporté (E. Poll, Radboud) | à documenter |
 | GEN-2 | aucun cas public | EF.COM et SOD divergents (`COMInconsistent`) | type prévu par 9303-12 et TR-03129 | à documenter ; amélioration à étudier (§4.4) |
@@ -106,7 +106,7 @@ Aucune autre Deviation List nationale publique n'a été trouvée (recherche web
 | H-11 | Chine (ticket) | DG14 absent, CA impossible | rapporté (passport-reader) | déjà géré |
 | H-12 | Allemagne (Master List du 2019-09-25), Hongrie | Master List signée directement par le CSCA ; signature de ML invérifiable | rapporté (pymrtd, ZeroPass) | hors périmètre |
 
-Total : 1 cas codable dans le garde-fou, 1 cas codable hors garde-fou, 7 cas à documenter (DE-1, DE-2, GEN-1, GEN-2, UK-1, HU-1, BM-1), 13 cas déjà gérés ou hors périmètre (EU-1, FRBE-1, H-1 à H-12, H-10 restant à confirmer).
+Total : 1 cas codable dans le garde-fou, 1 cas codable hors garde-fou, 2 cas traités hors registre (DE-1, DE-2, D36), 5 cas à documenter (GEN-1, GEN-2, UK-1, HU-1, BM-1), 13 cas déjà gérés ou hors périmètre (EU-1, FRBE-1, H-1 à H-12, H-10 restant à confirmer).
 
 ### 2.2 Fiches
 
@@ -237,9 +237,9 @@ Les cartes allemandes (carte d'identité *Personalausweis*, PA ; titre de séjou
 | Document | Accès possible | Données affichables | Vérification |
 |---|---|---|---|
 | **PA délivrée depuis le 2021-08-02** | PACE avec le CAN (ou la MRZ à trois lignes), puis EF.COM, EF.SOD, DG1, DG2, DG14 | MRZ de DG1 (nom, prénoms, numéro, nationalité, date de naissance, sexe, expiration) et photo | PA contre le CSCA allemand (présent dans la Master List du BSI), puis CA1 via DG14 : verdict attendu « Authentique ». Pas de DG12, donc date de délivrance tirée du `signingTime` du SOD ou estimée (PA valable 6 ans avant 24 ans, 10 ans ensuite : une estimation hors période donne `NOT_AVAILABLE`, jamais `FAILED`, D15) |
-| **PA délivrée avant le 2021-08-02** | PACE avec le CAN aboutit, mais l'application ICAO et EF.SOD exigent TA2 | **aucune donnée** | aucune. Réponse attendue `6982` (*security status not satisfied*) à la sélection ou à la lecture d'EF.SOD, affichée comme « Erreur inattendue » avec un code `UNEXPECTED-…-6982` (déduit du code, non vérifié sur une carte réelle) |
+| **PA délivrée avant le 2021-08-02** | PACE avec le CAN aboutit, mais l'application ICAO et EF.SOD exigent TA2 | **aucune donnée** | aucune. Réponse attendue `6982` (*security status not satisfied*) à la sélection ou à la lecture d'EF.SOD (non vérifié sur une carte réelle). **Traité, D36** : code `ACCESS_RESTRICTED-<étape>-<élément>` et message « puce réservée aux autorités habilitées », sans « Réessayer » ; auparavant « Erreur inattendue » (`UNEXPECTED-…-6982`) |
 | **eAT** (titre de séjour) | BAC (seulement pour les titres délivrés avant le 2019-11-01, note 6 du §3.3) ou PACE ; EF.COM, EF.SOD, DG1, DG2, DG14 | MRZ et photo | PA puis CA1 : « Authentique » attendu. Les mentions du titre (*Nebenbestimmungen*) sont dans l'application eID (DG19, DG20), hors d'atteinte |
-| **eID-UB** (depuis le 2020-11-01) | comme l'eAT | DG1 : code de document « UB », État « D », « < » dans tous les autres champs ; DG2 : logo eID | la signature peut être valide, mais le document ne porte **aucune donnée d'identité** dans l'application ICAO. Comportement de Sceau sur une MRZ vide non vérifié (lecture de DG1 ou analyse des dates) |
+| **eID-UB** (depuis le 2020-11-01) | comme l'eAT | DG1 : code de document « UB », État « D », « < » dans tous les autres champs ; DG2 : logo eID | la signature peut être valide, mais le document ne porte **aucune donnée d'identité** dans l'application ICAO. **Traité, D36** : MRZ vide lue sans erreur (vérifié sur la puce simulée), « Validité du DS » non évaluable faute de date ; l'écran Résultat affiche un bandeau « aucune donnée d'identité » au lieu des champs vides, et masque le logo de DG2 |
 | **Passeport** | BAC ou PACE ; DG1, DG2, DG14 ; DG3 sous EAC | MRZ et photo | PA puis CA via DG14. Rapporté et non vérifié dans une source primaire pour le passeport : pas d'AA, pas de DG11/DG12 |
 
 #### Ce qui reste hors d'atteinte
@@ -262,8 +262,8 @@ Les cartes allemandes (carte d'identité *Personalausweis*, PA ; titre de séjou
 | Priorité | Cas | Critère (éléments signés) | Effet proposé | Garde-fou |
 |---|---|---|---|---|
 | 1 | IT-1, CIE 3.0 | Passive Authentication aboutie (chaîne, signature, empreintes de DG1/DG2/DG14/DG15) ; DG1 : État « ITA », code « C… », numéro dans la liste de la DL ; en option `signingTime` du SOD dans [2017-10-01, 2018-02-05] | écart d'empreinte de DG12 toléré, DG12 écarté ; **date de délivrance de DG12 ignorée pour la ligne « Validité du DS »** ; message qui renvoie à la mention « non valable pour l'expatriation » imprimée | dans le garde-fou DG11/DG12 |
-| 2 | DE-1, carte d'identité allemande antérieure au 2021-08-02 | après un PACE réussi, `6982` à la sélection de l'application ICAO ou à la lecture d'EF.SOD | message dédié (« document qui réserve sa puce aux autorités », voir §4.3) au lieu de « Erreur inattendue » ; code d'erreur inchangé | hors registre : aucune tolérance, seulement un message |
-| 3 | DE-2, eID-UB | DG1 vérifié : code « UB », État « D » | bandeau « carte sans données d'identité dans la puce » ; aucun champ vide affiché comme une donnée | hors registre : affichage seulement |
+| 2 | DE-1, carte d'identité allemande antérieure au 2021-08-02 | après un PACE réussi, `6982` à la sélection de l'application ICAO ou à la lecture d'EF.SOD | message dédié (« document qui réserve sa puce aux autorités », voir §4.3) au lieu de « Erreur inattendue » ; **traité, D36**, avec un nouveau code `ACCESS_RESTRICTED` | hors registre : aucune tolérance, seulement un message |
+| 3 | DE-2, eID-UB | DG1 vérifié : code « UB », État « D » | bandeau « carte sans données d'identité dans la puce » ; aucun champ vide affiché comme une donnée ; **traité, D36** (photo masquée) | hors registre : affichage seulement |
 | 4 | CN-1, SOD en `id-data` | certificat DS précis relevé sur un document réel | accepter ce type de contenu pour ce DS seulement | **hors garde-fou** : la règle porte sur le SOD entier, donc sur DG1 et DG2. À ne coder que sur preuve |
 
 Pour la structure du registre : identifier chaque règle par l'OID 9303-12 de la déviation (`2.23.136.1.1.7.2.2` et le paramètre 12 pour IT-1). La règle reste alors rattachable à une DL signée si Sceau en importe un jour. Le critère « certificat DS » (TR-03129) est préférable dès qu'il est connu : il est signé par le CSCA, court, et ne demande pas de liste de numéros.

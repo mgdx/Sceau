@@ -17,6 +17,7 @@
     <string name="reading_error_not_icao">Този документ не отговаря на стандарта ICAO 9303: чипът му не може да бъде прочетен.</string>
     <string name="reading_error_timeout">Времето за изчакване изтече: чипът не отговори навреме. Опитайте отново, като държите документа неподвижен.</string>
     <string name="reading_error_can_without_pace">Този документ не се чете с CAN. Използвайте раздела „Паспорт“ и въведете данните от MRZ.</string>
+    <string name="reading_error_access_restricted">Чипът на този документ е запазен за оправомощени органи: Sceau не може да го прочете и нов опит няма да промени нищо. Такъв е случаят с германските лични карти, издадени преди август 2021 г.</string>
     <string name="reading_error_unexpected">Възникна неочаквана грешка.</string>
     <string name="reading_error_code">Код на грешката: %1$s</string>
     <string name="reading_retry">Нов опит</string>

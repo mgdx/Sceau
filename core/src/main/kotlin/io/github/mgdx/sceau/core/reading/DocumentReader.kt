@@ -1,5 +1,6 @@
 package io.github.mgdx.sceau.core.reading
 
+import io.github.mgdx.sceau.core.SceauException
 import org.jmrtd.PassportService
 import org.jmrtd.lds.LDSFileUtil
 import org.jmrtd.lds.SODFile
@@ -47,6 +48,10 @@ internal class LdsContent(
  * signale ([LdsContent.signedDataGroups]) : empreintes en échec, et CA ou AA en échec pour
  * DG14 ou DG15 (audit V1 : un clone ne doit pas pouvoir retenir un DG signé).
  *
+ * EF.SOD et DG1 sont indispensables : la puce qui en refuse l'accès par le SW 6982 les réserve
+ * aux terminaux étatiques ([io.github.mgdx.sceau.core.SceauException.AccessRestricted], D36).
+ * EF.COM, DG2 et les DG facultatifs refusés sont traités comme absents.
+ *
  * DG3 et DG4 (empreintes, iris) ne sont jamais demandés à la puce : seuls les numéros de
  * [SECURITY_DATA_GROUP] et [OPTIONAL_DATA_GROUPS] peuvent l'être, en plus de DG1 et DG2.
  */
@@ -92,10 +97,16 @@ internal class DocumentReader(
             chip.readFile(fid)
         } catch (e: Exception) {
             chip.rethrowTransportFailure()
+            // D36 : fichier indispensable réservé aux terminaux étatiques (Terminal
+            // Authentication), alors que le canal sécurisé est établi.
+            if (e.statusWord() == SW_SECURITY_STATUS_NOT_SATISFIED) throw SceauException.AccessRestricted(tag)
             throw StepFailure(tag, e)
         }
 
     companion object {
+        /** SW 6982 : *security status not satisfied* (ISO 7816-4). */
+        const val SW_SECURITY_STATUS_NOT_SATISFIED = 0x6982
+
         /** DG14, lu avant la Chip Authentication qu'il annonce. */
         const val SECURITY_DATA_GROUP = 14
 

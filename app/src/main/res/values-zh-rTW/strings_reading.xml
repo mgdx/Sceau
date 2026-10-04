@@ -17,6 +17,7 @@
     <string name="reading_error_not_icao">這份證件不符合 ICAO 9303 標準：無法讀取其晶片。</string>
     <string name="reading_error_timeout">逾時：晶片未及時回應。請讓證件保持不動，然後再試一次。</string>
     <string name="reading_error_can_without_pace">這份證件無法透過 CAN 讀取。請使用「護照」分頁並輸入 MRZ 資料。</string>
+    <string name="reading_error_access_restricted">這份證件的晶片僅供獲授權的機關讀取：Sceau 無法讀取，重試也不會改變結果。2021 年 8 月以前核發的德國身分證即屬此類。</string>
     <string name="reading_error_unexpected">發生未預期的錯誤。</string>
     <string name="reading_error_code">錯誤代碼：%1$s</string>
     <string name="reading_retry">重試</string>

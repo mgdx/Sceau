@@ -17,6 +17,7 @@
     <string name="reading_error_not_icao">See dokument ei vasta standardile ICAO 9303: selle kiipi ei saa lugeda.</string>
     <string name="reading_error_timeout">Aeg sai läbi: kiip ei vastanud õigel ajal. Proovige uuesti ja hoidke dokumenti liikumatult.</string>
     <string name="reading_error_can_without_pace">Seda dokumenti ei saa CAN-iga lugeda. Kasutage vahekaarti Pass ja sisestage MRZ andmed.</string>
+    <string name="reading_error_access_restricted">Selle dokumendi kiip on reserveeritud volitatud asutustele: Sceau ei saa seda lugeda ja uus katse seda ei muuda. Nii on enne 2021. aasta augustit välja antud Saksa isikutunnistustega.</string>
     <string name="reading_error_unexpected">Ilmnes ootamatu viga.</string>
     <string name="reading_error_code">Veakood: %1$s</string>
     <string name="reading_retry">Proovi uuesti</string>

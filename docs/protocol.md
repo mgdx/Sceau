@@ -185,13 +185,14 @@ Le verdict se calcule comme pour la CA via DG14 (§6). La CA via DG14 n'est pas 
 
 ## 5. Erreurs : correspondance avec `SceauException`
 
-Seules ces erreurs interrompent la lecture ; l'écran de lecture affiche un message en français, le **code complet en petit, pour toutes les erreurs** (décision D11), et un bouton « Réessayer » (SPEC §5.2). Le message est choisi sur le code de base, avant le premier `-` (`ReadingErrors.messageFor`).
+Seules ces erreurs interrompent la lecture ; l'écran de lecture affiche un message en français, le **code complet en petit, pour toutes les erreurs** (décision D11), et un bouton « Réessayer » (SPEC §5.2), sauf pour `ACCESS_RESTRICTED`, où un nouvel essai ne changerait rien (décision D36 : seul « Annuler » est proposé, `ReadingErrors.canRetry`). Le message est choisi sur le code de base, avant le premier `-` (`ReadingErrors.messageFor`).
 
 | Exception | `code` | Cause | Message de l'écran de lecture |
 |---|---|---|---|
 | `NotIcaoDocument` | `NOT_ICAO` | pas d'application ICAO (`6A82` à la sélection) | Document non conforme ICAO 9303 |
 | `AccessDenied` | `ACCESS_DENIED` | clé refusée par PACE (SW `63xx`) ou échec de BAC ; avec un CAN, tout échec de PACE autre qu'une erreur de transport | CAN ou MRZ incorrects, en rappelant qu'un essai raté peut allonger le délai de la puce |
 | `CanWithoutPace` | `CAN_WITHOUT_PACE` | CAN fourni, PACE non annoncé | Utiliser l'onglet Passeport et la MRZ |
+| `AccessRestricted` | `ACCESS_RESTRICTED-<ÉTAPE>-<élément>` | canal sécurisé établi (PACE ou BAC réussi), puis SW `6982` (*security status not satisfied*) à la sélection de l'application ICAO sous messagerie sécurisée (`SELECT_APPLET`) ou à la lecture d'EF.SOD (`SOD`) ou de DG1 (`DG1`) : puce réservée aux terminaux étatiques (Terminal Authentication), comme les cartes d'identité allemandes délivrées avant le 2021-08-02 (décision D36). Un `6982` avant l'authentification (sélection en clair avant BAC) garde le code `UNEXPECTED-…-6982` ; sur EF.COM, DG2, DG11, DG12, DG14 ou DG15, le fichier est traité comme absent | Puce réservée aux autorités habilitées, un nouvel essai n'y changera rien (cas des cartes allemandes d'avant août 2021), sans bouton « Réessayer » |
 | `ConnectionLost` | `CONNECTION_LOST[-<diag>]` | document retiré (`TagLostException`, liaison coupée, « Tag is out of date »), lecture annulée, reconnexion impossible | Document retiré trop tôt |
 | `Timeout` | `TIMEOUT[-<diag>]` | pas de réponse dans le délai (échec survenu après 90 % du délai effectif, ou message de délai d'`IsoDep`) | Délai dépassé |
 | `Unexpected` | `UNEXPECTED-<diag>` | toute autre erreur | Erreur inattendue |
@@ -206,6 +207,7 @@ Les codes sont stables et ne contiennent aucune donnée personnelle : ni donnée
 | Transport fermé sans demande | `<ÉTAPE>-STATE-INS<xx>-L<n>` | `UNEXPECTED-READ_DATA-STATE-INSB0-L20` |
 | Échec dans `:core` (`technicalCode`) | `<ÉTAPE>[-<étiquette>]-<classe>[-<SW>]` : étiquette `SELECT_APPLET`, `SOD` ou `DG1`, nom simple de la classe d'exception, mot d'état en hexadécimal | `UNEXPECTED-CONNECT-SELECT_APPLET-CardServiceException-6D00` |
 | Erreur hors `readAndVerify` dans l'app (`SessionViewModel`) | `<classe>` | `UNEXPECTED-OutOfMemoryError` |
+| Accès réservé (D36) | `<ÉTAPE>-<élément>` : élément refusé `SELECT_APPLET`, `SOD` ou `DG1` | `ACCESS_RESTRICTED-SECURE_CHANNEL-SELECT_APPLET`, `ACCESS_RESTRICTED-READ_DATA-SOD` |
 
 Un `CONNECTION_LOST` ou un `TIMEOUT` sans diagnostic reste possible (transport de test, fermeture avant toute APDU). Aucune exception de JMRTD n'est attachée comme cause à une `SceauException` : leurs messages contiennent des APDU en hexadécimal (décision D14).
 

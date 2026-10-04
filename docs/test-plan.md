@@ -367,6 +367,20 @@ Pour revenir à un premier lancement : `adb shell pm clear $PKG` (efface aussi l
 - **Attendu** : étape 1 : la page 3 reste affichée, contenu défilable en paysage, boutons visibles. Étape 2 : l'introduction réapparaît (page 3 ou page 1), sans plantage. Étapes 3 et 4 : l'accueil reste affiché, l'introduction ne revient pas.
 - **Résultat** : ☐ OK ☐ KO — Notes :
 
+### TP-35 Carte d'identité allemande délivrée avant août 2021 : puce réservée aux autorités
+
+- **Préconditions** : une carte d'identité allemande (*Personalausweis*) délivrée avant le 2021-08-02, avec son CAN (6 chiffres au recto). Cas rare : à mener seulement si une telle carte est disponible ; sinon, il est couvert par `GermanCardsEndToEndTest` sur la puce simulée (décision D36, `docs/deviations.md` §3.1).
+- **Étapes** : onglet « Carte d'identité », saisir le CAN, lire la carte.
+- **Attendu** : l'ouverture du canal sécurisé aboutit, puis la lecture s'interrompt sur le message « Ce document réserve sa puce aux autorités habilitées… cartes d'identité allemandes délivrées avant août 2021 », avec un code `ACCESS_RESTRICTED-SECURE_CHANNEL-SELECT_APPLET` ou `ACCESS_RESTRICTED-READ_DATA-SOD` (noter lequel) ; **pas de bouton « Réessayer »**, seulement « Annuler », qui ramène à l'accueil. Avec un CAN faux, en revanche : « CAN ou MRZ incorrects » (`ACCESS_DENIED`) et « Réessayer ». Si un autre code s'affiche (`UNEXPECTED-…`), le noter tel quel : le SW `6982` n'est qu'une hypothèse tirée de TR-03127.
+- **Résultat** : ☐ OK ☐ KO — Notes :
+
+### TP-36 Carte eID allemande pour citoyens de l'Union (eID-UB)
+
+- **Préconditions** : une carte eID allemande pour citoyens de l'Union (*eID-Karte für Unionsbürger*, délivrée depuis le 2020-11-01), avec son CAN. Cas rare : à mener seulement si une telle carte est disponible ; sinon, couvert par `GermanCardsEndToEndTest` et par la scène « eID-UB » de `TextOverflowTest`.
+- **Étapes** : onglet « Carte d'identité », saisir le CAN, lire la carte, faire défiler le résultat et déplier les contrôles.
+- **Attendu** : aucune erreur de lecture ; verdict **Authentique** si la Chip Authentication réussit (pas d'Active Authentication sur ces cartes). Sous le verdict, ni photo ni nom : la section « Identité » affiche le bandeau « La puce de cette carte ne contient aucune donnée d'identité : seule son authenticité peut être vérifiée… », puis seulement le type de document (code « UB ») et l'État émetteur (Allemagne). Aucun champ vide, « Inconnu » ou fait de « < ». Ligne « Validité du DS » : non disponible si ni le SOD ni DG1 ne portent de date (jamais en échec pour cette seule raison). Noter le verdict et le statut de chaque ligne.
+- **Résultat** : ☐ OK ☐ KO — Notes :
+
 ---
 
 ## Synthèse
@@ -406,5 +420,7 @@ Pour revenir à un premier lancement : `adb shell pm clear $PKG` (efface aussi l
 | TP-31 | Introduction rejouée depuis À propos | |
 | TP-32 | Écran « Ce que contient la puce » | |
 | TP-33 | Rotation et mort du processus pendant l'introduction | |
+| TP-35 | Carte d'identité allemande antérieure à août 2021 (accès réservé) | |
+| TP-36 | Carte eID-UB allemande (aucune donnée d'identité) | |
 
 Appareil : ………… Android : ………… Version de Sceau : ………… Date : ………… Testeur : …………

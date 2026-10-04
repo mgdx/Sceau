@@ -17,6 +17,7 @@
     <string name="reading_error_not_icao">Níl an cháipéis seo de réir chaighdeán ICAO 9303: ní féidir a sliseog a léamh.</string>
     <string name="reading_error_timeout">Imithe thar am: níor fhreagair an tsliseog in am. Bain triail eile as agus coinnigh an cháipéis gan bhogadh.</string>
     <string name="reading_error_can_without_pace">Ní féidir an cháipéis seo a léamh le CAN. Úsáid an cluaisín Pas agus iontráil sonraí an MRZ.</string>
+    <string name="reading_error_access_restricted">Tá sliseog na cáipéise seo in áirithe d’údaráis údaraithe: ní féidir le Sceau í a léamh, agus ní athróidh iarracht eile é sin. Is amhlaidh atá i gcás cártaí aitheantais Gearmánacha a eisíodh roimh Lúnasa 2021.</string>
     <string name="reading_error_unexpected">Tharla earráid gan choinne.</string>
     <string name="reading_error_code">Cód earráide: %1$s</string>
     <string name="reading_retry">Bain triail eile as</string>

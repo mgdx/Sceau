@@ -17,6 +17,7 @@
     <string name="reading_error_not_icao">Dit document voldoet niet aan de ICAO 9303-norm: de chip kan niet worden uitgelezen.</string>
     <string name="reading_error_timeout">Time-out: de chip heeft niet op tijd gereageerd. Probeer het opnieuw en houd het document stil.</string>
     <string name="reading_error_can_without_pace">Dit document kan niet met een CAN worden uitgelezen. Gebruik het tabblad Paspoort en voer de MRZ-gegevens in.</string>
+    <string name="reading_error_access_restricted">De chip van dit document is voorbehouden aan bevoegde autoriteiten: Sceau kan hem niet uitlezen en opnieuw proberen verandert daar niets aan. Dit geldt voor Duitse identiteitskaarten die vóór augustus 2021 zijn afgegeven.</string>
     <string name="reading_error_unexpected">Er is een onverwachte fout opgetreden.</string>
     <string name="reading_error_code">Foutcode: %1$s</string>
     <string name="reading_retry">Opnieuw proberen</string>

@@ -17,6 +17,7 @@
     <string name="reading_error_not_icao">Овај документ није усклађен са стандардом ICAO 9303: његов чип не може да се прочита.</string>
     <string name="reading_error_timeout">Време је истекло: чип није одговорио на време. Покушајте поново и држите документ мирно.</string>
     <string name="reading_error_can_without_pace">Овај документ се не чита помоћу CAN-а. Користите картицу „Пасош“ и унесите податке из MRZ.</string>
+    <string name="reading_error_access_restricted">Чип овог документа резервисан је за овлашћене органе: Sceau не може да га прочита, а нови покушај то неће променити. То важи за немачке личне карте издате пре августа 2021.</string>
     <string name="reading_error_unexpected">Дошло је до неочекиване грешке.</string>
     <string name="reading_error_code">Кôд грешке: %1$s</string>
     <string name="reading_retry">Покушај поново</string>

@@ -162,8 +162,14 @@ private fun ResultContent(
     ) {
         if (isDemo) DemoBanner()
         VerdictCard(report.verdict, importedAnchor = CheckFormatting.isImportedAnchor(report.chain))
-        PortraitSection(document.portrait, bitmapOwner)
-        IdentitySection(document.dg1, formatDate)
+        // Décision D36 : carte eID-UB, sans donnée d'identité dans sa puce. Ni champs vides, ni
+        // logo eID présenté comme la photo du titulaire.
+        if (IdentityPresentation.isIdentitylessEidUb(report)) {
+            NoIdentitySection(document.dg1)
+        } else {
+            PortraitSection(document.portrait, bitmapOwner)
+            IdentitySection(document.dg1, formatDate)
+        }
         AdditionalSection(document, formatDate, bitmapOwner)
         ChecksSection(report.checks, formatDate)
         Button(
@@ -515,6 +521,34 @@ private fun IdentitySection(
         FieldRow(R.string.result_field_document_number, dg1.documentNumber.replace("<", "").ifBlank { unknown })
         FieldRow(R.string.result_field_issuing_state, countryWithCode(dg1.issuingState))
         FieldRow(R.string.result_field_expiry_date, expiry?.let(formatDate) ?: unknown)
+    }
+}
+
+/** Carte eID-UB (D36) : seuls le genre de document et l'État émetteur sont des données réelles. */
+@Composable
+private fun NoIdentitySection(dg1: Dg1Data) {
+    SectionCard(title = stringResource(R.string.result_section_identity)) {
+        Surface(
+            color = MaterialTheme.colorScheme.secondaryContainer,
+            contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+            shape = MaterialTheme.shapes.small,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text(
+                text = stringResource(R.string.result_no_identity_data),
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(12.dp),
+            )
+        }
+        FieldRow(
+            R.string.result_field_document_type,
+            stringResource(
+                R.string.result_value_with_code,
+                stringResource(DocumentKind.fromMrzCode(dg1.documentCode).label),
+                dg1.documentCode.replace("<", "").trim(),
+            ),
+        )
+        FieldRow(R.string.result_field_issuing_state, countryWithCode(dg1.issuingState))
     }
 }
 

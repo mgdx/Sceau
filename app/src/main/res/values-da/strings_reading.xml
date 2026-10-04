@@ -17,6 +17,7 @@
     <string name="reading_error_not_icao">Dette dokument overholder ikke ICAO 9303-standarden: chippen kan ikke læses.</string>
     <string name="reading_error_timeout">Tiden udløb: chippen svarede ikke i tide. Prøv igen, og hold dokumentet stille.</string>
     <string name="reading_error_can_without_pace">Dette dokument kan ikke læses med et CAN. Brug fanen Pas, og indtast MRZ-oplysningerne.</string>
+    <string name="reading_error_access_restricted">Dokumentets chip er forbeholdt autoriserede myndigheder: Sceau kan ikke læse den, og et nyt forsøg ændrer ikke på det. Det gælder tyske identitetskort udstedt før august 2021.</string>
     <string name="reading_error_unexpected">Der opstod en uventet fejl.</string>
     <string name="reading_error_code">Fejlkode: %1$s</string>
     <string name="reading_retry">Prøv igen</string>

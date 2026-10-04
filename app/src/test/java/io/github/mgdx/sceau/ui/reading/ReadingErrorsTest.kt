@@ -2,6 +2,8 @@ package io.github.mgdx.sceau.ui.reading
 
 import io.github.mgdx.sceau.R
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class ReadingErrorsTest {
@@ -19,6 +21,19 @@ class ReadingErrorsTest {
         assertEquals(R.string.reading_error_timeout, ReadingErrors.messageFor("TIMEOUT-SECURE_CHANNEL-INS86-L10"))
         assertEquals(R.string.reading_error_connection_lost, ReadingErrors.messageFor("CONNECTION_LOST-READ_DATA-INSB0-L20"))
         assertEquals(R.string.reading_error_connection_lost, ReadingErrors.messageFor("CONNECTION_LOST-SECURE_CHANNEL-RECONNECT"))
+    }
+
+    @Test
+    fun `access restricted has its own message and no retry`() {
+        assertEquals(R.string.reading_error_access_restricted, ReadingErrors.messageFor("ACCESS_RESTRICTED-READ_DATA-SOD"))
+        assertEquals(
+            R.string.reading_error_access_restricted,
+            ReadingErrors.messageFor("ACCESS_RESTRICTED-SECURE_CHANNEL-SELECT_APPLET"),
+        )
+        assertFalse(ReadingErrors.canRetry("ACCESS_RESTRICTED-READ_DATA-DG1"))
+        assertTrue(ReadingErrors.canRetry("ACCESS_DENIED"))
+        assertTrue(ReadingErrors.canRetry("TIMEOUT-SECURE_CHANNEL-INS86-L10"))
+        assertTrue(ReadingErrors.canRetry("UNEXPECTED-READ_DATA-SOD-CardServiceException-6982"))
     }
 
     @Test

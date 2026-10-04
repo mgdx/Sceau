@@ -17,6 +17,7 @@
     <string name="reading_error_not_icao">Ova isprava nije u skladu s normom ICAO 9303: njezin čip nije moguće očitati.</string>
     <string name="reading_error_timeout">Vrijeme je isteklo: čip nije odgovorio na vrijeme. Pokušajte ponovno i držite ispravu mirno.</string>
     <string name="reading_error_can_without_pace">Ova se isprava ne očitava pomoću CAN-a. Upotrijebite karticu Putovnica i unesite podatke iz MRZ-a.</string>
+    <string name="reading_error_access_restricted">Čip ove isprave rezerviran je za ovlaštena tijela: Sceau ga ne može očitati, a novi pokušaj to neće promijeniti. To vrijedi za njemačke osobne iskaznice izdane prije kolovoza 2021.</string>
     <string name="reading_error_unexpected">Došlo je do neočekivane pogreške.</string>
     <string name="reading_error_code">Kôd pogreške: %1$s</string>
     <string name="reading_retry">Pokušaj ponovno</string>

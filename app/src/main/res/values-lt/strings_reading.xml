@@ -17,6 +17,7 @@
     <string name="reading_error_not_icao">Šis dokumentas neatitinka ICAO 9303 standarto: jo lusto nuskaityti negalima.</string>
     <string name="reading_error_timeout">Baigėsi laikas: lustas neatsakė laiku. Bandykite dar kartą laikydami dokumentą nejudinamą.</string>
     <string name="reading_error_can_without_pace">Šio dokumento negalima nuskaityti naudojant CAN. Atidarykite skirtuką „Pasas“ ir įveskite MRZ duomenis.</string>
+    <string name="reading_error_access_restricted">Šio dokumento lustas skirtas tik įgaliotoms institucijoms: Sceau negali jo nuskaityti, o naujas bandymas nieko nepakeis. Taip yra su Vokietijos asmens tapatybės kortelėmis, išduotomis iki 2021 m. rugpjūčio.</string>
     <string name="reading_error_unexpected">Įvyko netikėta klaida.</string>
     <string name="reading_error_code">Klaidos kodas: %1$s</string>
     <string name="reading_retry">Bandyti dar kartą</string>

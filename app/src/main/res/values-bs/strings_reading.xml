@@ -17,6 +17,7 @@
     <string name="reading_error_not_icao">Ovaj dokument nije usklađen sa standardom ICAO 9303: njegov čip se ne može očitati.</string>
     <string name="reading_error_timeout">Vrijeme je isteklo: čip nije odgovorio na vrijeme. Pokušajte ponovo i držite dokument mirno.</string>
     <string name="reading_error_can_without_pace">Ovaj dokument se ne očitava pomoću CAN-a. Koristite karticu „Pasoš“ i unesite podatke iz MRZ-a.</string>
+    <string name="reading_error_access_restricted">Čip ovog dokumenta rezervisan je za ovlaštene organe: Sceau ga ne može očitati, a novi pokušaj to neće promijeniti. To važi za njemačke lične karte izdate prije augusta 2021.</string>
     <string name="reading_error_unexpected">Došlo je do neočekivane greške.</string>
     <string name="reading_error_code">Kôd greške: %1$s</string>
     <string name="reading_retry">Pokušaj ponovo</string>

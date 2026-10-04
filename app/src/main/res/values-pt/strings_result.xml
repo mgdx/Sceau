@@ -26,6 +26,7 @@
     <!-- Identité -->
     <string name="result_section_identity">Identidade</string>
     <string name="result_expired">Documento caducado</string>
+    <string name="result_no_identity_data">O chip deste cartão não contém dados de identidade: só é possível verificar a sua autenticidade. É o caso do cartão eID alemão para cidadãos da União.</string>
     <string name="result_field_surname">Apelidos</string>
     <string name="result_field_given_names">Nomes próprios</string>
     <string name="result_field_sex">Sexo</string>

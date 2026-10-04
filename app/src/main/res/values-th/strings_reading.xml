@@ -17,6 +17,7 @@
     <string name="reading_error_not_icao">เอกสารนี้ไม่เป็นไปตามมาตรฐาน ICAO 9303 จึงอ่านชิปไม่ได้</string>
     <string name="reading_error_timeout">หมดเวลา: ชิปไม่ตอบสนองทันเวลา ลองอีกครั้งโดยถือเอกสารให้นิ่ง</string>
     <string name="reading_error_can_without_pace">เอกสารนี้อ่านด้วย CAN ไม่ได้ ใช้แท็บหนังสือเดินทางและป้อนข้อมูล MRZ</string>
+    <string name="reading_error_access_restricted">ชิปของเอกสารนี้สงวนไว้สำหรับหน่วยงานที่ได้รับอนุญาตเท่านั้น Sceau จึงอ่านไม่ได้ และการลองใหม่ก็ไม่ช่วยอะไร กรณีนี้เกิดกับบัตรประจำตัวประชาชนเยอรมันที่ออกก่อนเดือนสิงหาคม 2021</string>
     <string name="reading_error_unexpected">เกิดข้อผิดพลาดที่ไม่คาดคิด</string>
     <string name="reading_error_code">รหัสข้อผิดพลาด: %1$s</string>
     <string name="reading_retry">ลองอีกครั้ง</string>

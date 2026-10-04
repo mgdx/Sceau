@@ -17,6 +17,7 @@
     <string name="reading_error_not_icao">המסמך הזה אינו תואם לתקן ICAO 9303: לא ניתן לקרוא את השבב שלו.</string>
     <string name="reading_error_timeout">חלף הזמן הקצוב: השבב לא הגיב בזמן. יש לנסות שוב ולהחזיק את המסמך ללא תנועה.</string>
     <string name="reading_error_can_without_pace">לא ניתן לקרוא את המסמך הזה באמצעות CAN. יש לעבור לכרטיסייה \"דרכון\" ולהזין את נתוני ה-MRZ.</string>
+    <string name="reading_error_access_restricted">השבב של המסמך הזה שמור לרשויות מוסמכות בלבד: Sceau לא יכולה לקרוא אותו, וניסיון נוסף לא ישנה דבר. כך הדבר בתעודות זהות גרמניות שהונפקו לפני אוגוסט 2021.</string>
     <string name="reading_error_unexpected">אירעה שגיאה בלתי צפויה.</string>
     <string name="reading_error_code">קוד שגיאה: %1$s</string>
     <string name="reading_retry">ניסיון חוזר</string>

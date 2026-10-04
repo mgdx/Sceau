@@ -26,6 +26,7 @@
     <!-- Identité -->
     <string name="result_section_identity">Totožnosť</string>
     <string name="result_expired">Doklad s uplynutou platnosťou</string>
+    <string name="result_no_identity_data">Čip tejto karty neobsahuje žiadne osobné údaje: možno overiť iba jej pravosť. Týka sa to nemeckej karty eID pre občanov Únie.</string>
     <string name="result_field_surname">Priezvisko</string>
     <string name="result_field_given_names">Mená</string>
     <string name="result_field_sex">Pohlavie</string>

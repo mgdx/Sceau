@@ -26,6 +26,7 @@
     <!-- Identité -->
     <string name="result_section_identity">Identité</string>
     <string name="result_expired">Document expiré</string>
+    <string name="result_no_identity_data">La puce de cette carte ne contient aucune donnée d’identité\u00A0: seule son authenticité peut être vérifiée. C’est le cas de la carte eID allemande pour citoyens de l’Union.</string>
     <string name="result_field_surname">Nom</string>
     <string name="result_field_given_names">Prénoms</string>
     <string name="result_field_sex">Sexe</string>

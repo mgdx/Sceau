@@ -17,6 +17,7 @@
     <string name="reading_error_not_icao">Bu belge ICAO 9303 standardına uygun değil: Çipi okunamaz.</string>
     <string name="reading_error_timeout">Zaman aşımı: Çip zamanında yanıt vermedi. Belgeyi sabit tutarak tekrar deneyin.</string>
     <string name="reading_error_can_without_pace">Bu belge CAN ile okunamaz. Pasaport sekmesini kullanın ve MRZ verilerini girin.</string>
+    <string name="reading_error_access_restricted">Bu belgenin çipi yalnızca yetkili makamlara ayrılmıştır: Sceau onu okuyamaz ve yeniden denemek hiçbir şeyi değiştirmez. Ağustos 2021’den önce verilen Alman kimlik kartlarında durum böyledir.</string>
     <string name="reading_error_unexpected">Beklenmeyen bir hata oluştu.</string>
     <string name="reading_error_code">Hata kodu: %1$s</string>
     <string name="reading_retry">Tekrar dene</string>

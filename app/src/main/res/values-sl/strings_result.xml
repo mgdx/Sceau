@@ -26,6 +26,7 @@
     <!-- Identité -->
     <string name="result_section_identity">Osebni podatki</string>
     <string name="result_expired">Dokument je potekel</string>
+    <string name="result_no_identity_data">Čip te kartice ne vsebuje nobenih osebnih podatkov: preveriti je mogoče le njeno pristnost. To velja za nemško kartico eID za državljane Unije.</string>
     <string name="result_field_surname">Priimek</string>
     <string name="result_field_given_names">Imena</string>
     <string name="result_field_sex">Spol</string>
