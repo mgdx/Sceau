@@ -25,6 +25,7 @@
     <string name="about_section_limits">Teorainneacha</string>
     <string name="about_limit_unknown_issuer">Nuair nach bhfuil tír eisiúna cáipéise sa stór iontaobhais, is é “Eisitheoir anaithnid” an toradh, ní “Teip”. D’fhéadfadh Master List níos déanaí a iompórtáil é sin a réiteach.</string>
     <string name="about_limit_revocation">Ní sheiceáiltear liostaí cúlghairme: bheadh an líonra ag teastáil, agus ní úsáideann Sceau an líonra riamh.</string>
+    <string name="about_limit_germany">Cártaí aitheantais na Gearmáine: ní féidir ach cártaí a eisíodh ón 2 Lúnasa 2021 i leith a léamh, mar go gcoinníonn cártaí níos sine a sliseog d’údaráis údaraithe. Ní féidir an seoladh ná an áit bhreithe a léamh riamh: tá siad curtha in áirithe don fheidhm aitheantais ar líne, a éilíonn PIN an chárta agus deimhniú arna eisiúint ag stát na Gearmáine.</string>
 
     <string name="about_section_usage">Téarmaí úsáide</string>
     <string name="about_usage_holder">Ní mór don sealbhóir féin an cháipéis a thaispeáint agus toiliú leis an léamh.</string>

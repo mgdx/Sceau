@@ -25,6 +25,7 @@
     <string name="about_section_limits">Ograničenja</string>
     <string name="about_limit_unknown_issuer">Isprava čija država izdavanja nije među pouzdanim certifikatima dobiva ocjenu „Nepoznat izdavatelj“, a ne „Neuspješno“. Uvoz novijeg popisa Master List može to riješiti.</string>
     <string name="about_limit_revocation">Popisi opozvanih certifikata ne provjeravaju se: zahtijevaju mrežnu vezu, koju Sceau nikad ne koristi.</string>
+    <string name="about_limit_germany">Njemačke osobne iskaznice: mogu se čitati samo iskaznice izdane od 2. kolovoza 2021., jer starije iskaznice svoj čip pridržavaju ovlaštenim tijelima. Adresa i mjesto rođenja nikada se ne mogu pročitati: pridržani su za funkciju mrežne identifikacije, koja zahtijeva PIN iskaznice i certifikat koji izdaje njemačka država.</string>
 
     <string name="about_section_usage">Uvjeti korištenja</string>
     <string name="about_usage_holder">Očitavanje pretpostavlja da nositelj sam predočuje svoju ispravu i da na to pristaje.</string>

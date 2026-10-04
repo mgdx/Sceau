@@ -25,6 +25,7 @@
     <string name="about_section_limits">Korlátok</string>
     <string name="about_limit_unknown_issuer">Ha egy okmány kibocsátó országa nem szerepel a megbízható tanúsítványok között, az eredmény „Ismeretlen kibocsátó”, nem pedig „Sikertelen”. Egy újabb Master List importálása megoldhatja ezt.</string>
     <string name="about_limit_revocation">A visszavonási listák nincsenek ellenőrizve: ehhez hálózat kellene, amelyet a Sceau soha nem használ.</string>
+    <string name="about_limit_germany">Német személyi igazolványok: csak a 2021. augusztus 2. óta kiállított igazolványok olvashatók, a régebbiek chipje a jogosult hatóságok számára van fenntartva. A lakcím és a születési hely soha nem olvasható: ezek az online azonosítási funkcióhoz vannak fenntartva, amelyhez a kártya PIN-kódja és a német állam által kiállított tanúsítvány szükséges.</string>
 
     <string name="about_section_usage">Felhasználási keretek</string>
     <string name="about_usage_holder">Az olvasás feltétele, hogy a tulajdonos maga mutassa be az okmányát, és hozzájáruljon az olvasáshoz.</string>

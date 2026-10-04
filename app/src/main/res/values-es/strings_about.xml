@@ -25,6 +25,7 @@
     <string name="about_section_limits">Limitaciones</string>
     <string name="about_limit_unknown_issuer">Si el país emisor de un documento no figura en el almacén de confianza, el veredicto es «Emisor desconocido», no «Fallo». Importar una Master List más reciente puede solucionarlo.</string>
     <string name="about_limit_revocation">No se consultan las listas de revocación: requieren conexión de red, que Sceau nunca utiliza.</string>
+    <string name="about_limit_germany">Documentos de identidad alemanes: solo se pueden leer los expedidos desde el 2 de agosto de 2021, ya que los anteriores reservan su chip a las autoridades habilitadas. La dirección y el lugar de nacimiento nunca se pueden leer: están reservados a la función de identificación en línea, que exige el PIN de la tarjeta y un certificado expedido por el Estado alemán.</string>
 
     <string name="about_section_usage">Condiciones de uso</string>
     <string name="about_usage_holder">La lectura presupone que el titular presenta personalmente su documento y da su consentimiento.</string>

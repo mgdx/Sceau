@@ -25,6 +25,7 @@
     <string name="about_section_limits">Limitări</string>
     <string name="about_limit_unknown_issuer">Un document a cărui țară emitentă nu figurează în depozitul de încredere primește verdictul „Emitent necunoscut”, nu „Eșec”. Importarea unei Master List mai recente poate rezolva problema.</string>
     <string name="about_limit_revocation">Listele de revocare nu sunt consultate: necesită acces la rețea, pe care Sceau nu îl folosește niciodată.</string>
+    <string name="about_limit_germany">Cărți de identitate germane: pot fi citite doar cărțile eliberate începând cu 2 august 2021, deoarece cele mai vechi își rezervă cipul pentru autoritățile abilitate. Adresa și locul nașterii nu pot fi citite niciodată: sunt rezervate funcției de identificare online, care necesită codul PIN al cărții și un certificat emis de statul german.</string>
 
     <string name="about_section_usage">Cadrul de utilizare</string>
     <string name="about_usage_holder">Citirea presupune că titularul își prezintă personal documentul și își dă consimțământul.</string>

@@ -25,6 +25,7 @@
     <string name="about_section_limits">Limitazzjonijiet</string>
     <string name="about_limit_unknown_issuer">Dokument li l-pajjiż emittenti tiegħu mhuwiex fil-ħażna ta’ fiduċja jingħata r-riżultat “Emittent mhux magħruf”, mhux “Falla”. L-importazzjoni ta’ Master List aktar riċenti tista’ ssolvi dan.</string>
     <string name="about_limit_revocation">Il-listi ta’ revoka ma jiġux ikkonsultati: jeħtieġu n-netwerk, li Sceau qatt ma juża.</string>
+    <string name="about_limit_germany">Karti tal-identità Ġermaniżi: jistgħu jinqraw biss il-karti maħruġa mit-2 ta’ Awwissu 2021, għax il-karti eqdem jirriżervaw iċ-ċippa tagħhom għall-awtoritajiet awtorizzati. L-indirizz u l-post tat-twelid qatt ma jistgħu jinqraw: huma riżervati għall-funzjoni ta’ identifikazzjoni online, li teħtieġ il-PIN tal-karta u ċertifikat maħruġ mill-Istat Ġermaniż.</string>
 
     <string name="about_section_usage">Qafas tal-użu</string>
     <string name="about_usage_holder">Il-qari jippresupponi li d-detentur stess jippreżenta d-dokument u jagħti l-kunsens għalih.</string>

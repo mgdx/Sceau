@@ -25,6 +25,7 @@
     <string name="about_section_limits">Limitations</string>
     <string name="about_limit_unknown_issuer">A document whose issuing country is not in the trust store gets the “Unknown issuer” verdict, not “Failed”. Importing a more recent Master List may fix this.</string>
     <string name="about_limit_revocation">Revocation lists are not checked: they require network access, which Sceau never uses.</string>
+    <string name="about_limit_germany">German identity cards: only cards issued since 2 August 2021 can be read, as older cards reserve their chip to authorised authorities. The address and place of birth can never be read: they are reserved to online identification, which requires the card’s PIN and a certificate issued by the German state.</string>
 
     <string name="about_section_usage">Terms of use</string>
     <string name="about_usage_holder">Reading assumes the holder presents their own document and consents.</string>

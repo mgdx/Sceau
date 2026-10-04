@@ -25,6 +25,7 @@
     <string name="about_section_limits">限制</string>
     <string name="about_limit_unknown_issuer">如果證件的核發國不在信任存放區中，結果會是「核發者不明」，而不是「驗證失敗」。匯入較新的 Master List 或許可以解決這個問題。</string>
     <string name="about_limit_revocation">不會查詢撤銷清單：查詢需要連上網路，而 Sceau 從不使用網路。</string>
+    <string name="about_limit_germany">德國身分證：只能讀取 2021 年 8 月 2 日起核發的身分證，較舊身分證的晶片僅限獲授權的機關讀取。地址和出生地一律無法讀取：這些資訊僅供線上身分認證功能使用，需要身分證的 PIN 碼和德國政府核發的憑證。</string>
 
     <string name="about_section_usage">使用須知</string>
     <string name="about_usage_holder">讀取的前提是持有人親自出示證件並同意讀取。</string>

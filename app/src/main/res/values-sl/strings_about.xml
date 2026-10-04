@@ -25,6 +25,7 @@
     <string name="about_section_limits">Omejitve</string>
     <string name="about_limit_unknown_issuer">Dokument, katerega država izdajateljica ni med zaupanja vrednimi potrdili, dobi oceno „Neznan izdajatelj“, ne „Neuspešno“. To lahko odpravi uvoz novejšega seznama Master List.</string>
     <string name="about_limit_revocation">Seznami preklicanih potrdil se ne preverjajo: zahtevajo omrežno povezavo, ki je Sceau nikoli ne uporablja.</string>
+    <string name="about_limit_germany">Nemške osebne izkaznice: brati je mogoče samo izkaznice, izdane od 2. avgusta 2021, saj je čip starejših izkaznic pridržan za pooblaščene organe. Naslova in kraja rojstva ni mogoče nikoli prebrati: pridržana sta za funkcijo spletne identifikacije, ki zahteva PIN izkaznice in potrdilo, ki ga izda nemška država.</string>
 
     <string name="about_section_usage">Pogoji uporabe</string>
     <string name="about_usage_holder">Branje predpostavlja, da imetnik sam predloži svoj dokument in se z branjem strinja.</string>

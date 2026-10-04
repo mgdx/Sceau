@@ -156,6 +156,7 @@ fun AboutScreen(
             Section(stringResource(R.string.about_section_limits)) {
                 Paragraph(stringResource(R.string.about_limit_unknown_issuer))
                 Paragraph(stringResource(R.string.about_limit_revocation))
+                Paragraph(stringResource(R.string.about_limit_germany))
             }
 
             Section(stringResource(R.string.about_section_usage)) {

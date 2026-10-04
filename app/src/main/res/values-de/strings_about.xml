@@ -25,6 +25,7 @@
     <string name="about_section_limits">Einschränkungen</string>
     <string name="about_limit_unknown_issuer">Ist der Ausstellungsstaat eines Dokuments nicht im Vertrauensspeicher enthalten, lautet das Ergebnis „Unbekannter Aussteller“, nicht „Fehlgeschlagen“. Der Import einer neueren Master List kann Abhilfe schaffen.</string>
     <string name="about_limit_revocation">Sperrlisten werden nicht abgefragt: Dafür wäre eine Netzwerkverbindung nötig, die Sceau nie verwendet.</string>
+    <string name="about_limit_germany">Deutsche Personalausweise: Lesbar sind nur Ausweise, die ab dem 2. August 2021 ausgestellt wurden; bei älteren Ausweisen ist der Chip berechtigten Behörden vorbehalten. Anschrift und Geburtsort sind nie lesbar: Sie sind der Online-Ausweisfunktion vorbehalten, die die PIN des Ausweises und ein vom deutschen Staat ausgestelltes Zertifikat erfordert.</string>
 
     <string name="about_section_usage">Nutzungsrahmen</string>
     <string name="about_usage_holder">Das Auslesen setzt voraus, dass die Inhaberin oder der Inhaber das Dokument selbst vorlegt und einwilligt.</string>

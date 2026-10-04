@@ -25,6 +25,7 @@
     <string name="about_section_limits">제한 사항</string>
     <string name="about_limit_unknown_issuer">발급 국가가 신뢰 저장소에 없는 신분증은 ‘실패’가 아니라 ‘알 수 없는 발급기관’으로 판정됩니다. 최신 Master List를 가져오면 해결될 수 있습니다.</string>
     <string name="about_limit_revocation">인증서 폐기 목록은 확인하지 않습니다. 폐기 목록을 확인하려면 네트워크가 필요하지만 Sceau는 네트워크를 전혀 사용하지 않습니다.</string>
+    <string name="about_limit_germany">독일 신분증: 2021년 8월 2일 이후 발급된 카드만 읽을 수 있으며, 그 이전 카드의 칩은 권한 있는 기관만 사용할 수 있습니다. 주소와 출생지는 읽을 수 없습니다. 이 정보는 온라인 신원 확인 기능 전용이며, 카드 PIN과 독일 정부가 발급한 인증서가 필요합니다.</string>
 
     <string name="about_section_usage">이용 조건</string>
     <string name="about_usage_holder">판독은 소지자가 직접 신분증을 제시하고 이에 동의하는 것을 전제로 합니다.</string>

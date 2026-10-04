@@ -34,6 +34,16 @@ Le magasin de confiance embarqué comprend les 5 CSCA français publiés par l'A
 
 Sceau n'est ni affilié au BSI, ni à l'ANTS, ni à l'ICAO, ni soutenu par eux : il redistribue sans modification des certificats et une liste que ces organismes publient.
 
+### Limites connues par pays
+
+**Cartes d'identité allemandes.** Sceau lit les cartes d'identité allemandes délivrées depuis le 2 août 2021 : il affiche les données de la bande MRZ et la photo, puis vérifie la signature et la puce. Les cartes délivrées avant cette date réservent leur puce aux autorités habilitées : Sceau ne peut pas les lire. L'adresse et le lieu de naissance ne sont jamais lisibles : ils sont réservés à la fonction d'identification en ligne, qui exige le code PIN de la carte et un certificat délivré par l'État allemand.
+
+**Cartes d'identité européennes délivrées avant le 2 août 2021.** Certaines n'ont pas de puce, ou une puce sans application ICAO : Sceau ne les détecte pas ou indique un document non ICAO. Le règlement (UE) 2019/1157 met fin à leur validité au plus tard le 3 août 2031.
+
+**Cartes d'identité italiennes CIE 3.0 délivrées entre fin 2017 et début 2018.** L'Italie a publié une liste d'anomalies : sur environ 346 000 de ces cartes, le groupe de données DG12 (données complémentaires) ne correspond pas à l'empreinte signée par l'État. Sceau reconnaît cette anomalie connue : DG12 est écarté (ni affiché ni utilisé) et le verdict se calcule normalement sur le reste du document (décision D34).
+
+D'autres limites sont rapportées par des tiers sans avoir été vérifiées sur des documents réels, par exemple pour les titres de séjour britanniques et une partie des titres hongrois. Le détail, sources comprises, est dans [`docs/deviations.md`](docs/deviations.md).
+
 ## Captures d'écran
 
 <!-- Captures à ajouter dans fastlane/metadata/android/fr-FR/images/phoneScreenshots/ -->

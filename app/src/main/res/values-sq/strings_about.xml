@@ -25,6 +25,7 @@
     <string name="about_section_limits">Kufizimet</string>
     <string name="about_limit_unknown_issuer">Një dokument, vendi lëshues i të cilit nuk gjendet te certifikatat e besuara, merr rezultatin „Lëshues i panjohur“, jo „Dështim“. Importimi i një Master List më të re mund ta zgjidhë këtë.</string>
     <string name="about_limit_revocation">Listat e revokimit nuk kontrollohen: ato kërkojnë rrjetin, të cilin Sceau nuk e përdor kurrë.</string>
+    <string name="about_limit_germany">Letërnjoftimet gjermane: mund të lexohen vetëm letërnjoftimet e lëshuara që nga 2 gushti 2021, sepse ato më të vjetra e rezervojnë çipin për autoritetet e autorizuara. Adresa dhe vendi i lindjes nuk mund të lexohen kurrë: ato janë të rezervuara për funksionin e identifikimit në internet, që kërkon PIN-in e kartës dhe një certifikatë të lëshuar nga shteti gjerman.</string>
 
     <string name="about_section_usage">Kushtet e përdorimit</string>
     <string name="about_usage_holder">Leximi supozon që mbajtësi e paraqet vetë dokumentin dhe jep pëlqimin.</string>

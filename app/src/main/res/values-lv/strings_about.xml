@@ -25,6 +25,7 @@
     <string name="about_section_limits">Ierobežojumi</string>
     <string name="about_limit_unknown_issuer">Ja dokumenta izdevējvalsts nav uzticamības krātuvē, rezultāts ir “Nezināms izdevējs”, nevis “Neizdevās”. To var novērst, importējot jaunāku Master List.</string>
     <string name="about_limit_revocation">Atsaukšanas saraksti netiek pārbaudīti: tiem nepieciešams tīkls, ko Sceau nekad neizmanto.</string>
+    <string name="about_limit_germany">Vācijas personas apliecības: nolasīt var tikai apliecības, kas izsniegtas kopš 2021. gada 2. augusta, jo vecāku apliecību mikroshēma ir paredzēta tikai pilnvarotām iestādēm. Adresi un dzimšanas vietu nekad nevar nolasīt: tās ir paredzētas tiešsaistes identifikācijas funkcijai, kurai nepieciešams apliecības PIN kods un Vācijas valsts izsniegts sertifikāts.</string>
 
     <string name="about_section_usage">Lietošanas nosacījumi</string>
     <string name="about_usage_holder">Nolasīšana paredz, ka dokumenta turētājs pats uzrāda savu dokumentu un tam piekrīt.</string>
