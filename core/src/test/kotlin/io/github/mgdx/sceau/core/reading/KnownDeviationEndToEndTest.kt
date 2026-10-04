@@ -42,6 +42,7 @@ class KnownDeviationEndToEndTest {
             documentCode = "C"
             issuingState = "ITA"
             documentNumber = DOCUMENT_NUMBER
+            dateOfExpiry = LocalDate.of(2028, 12, 15)
             extraDataGroups = mapOf(12 to signedDg12)
             sod = SodOptions(signingTime = TestCrypto.instant(LocalDate.of(2017, 12, 15)))
         }
