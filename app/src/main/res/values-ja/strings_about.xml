@@ -25,6 +25,7 @@
     <string name="about_section_limits">制限事項</string>
     <string name="about_limit_unknown_issuer">発行国が信頼ストアに含まれていない書類の判定は「発行者不明」となり、「失敗」にはなりません。新しい Master List をインポートすると解決する場合があります。</string>
     <string name="about_limit_revocation">失効リストは確認しません。確認にはネットワークが必要ですが、Sceau はネットワークを一切使用しません。</string>
+    <string name="about_limit_germany">ドイツの身分証明書：読み取れるのは 2021年8月2日以降に発行されたカードのみです。それ以前のカードの IC チップは権限のある当局専用です。住所と出生地は読み取れません。これらはオンライン本人確認機能専用で、カードの PIN とドイツ政府が発行する証明書が必要です。</string>
 
     <string name="about_section_usage">利用上の注意</string>
     <string name="about_usage_holder">読み取りは、所持者本人が書類を提示し、同意していることを前提とします。</string>

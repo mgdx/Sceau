@@ -25,6 +25,7 @@
     <string name="about_section_limits">Begränsningar</string>
     <string name="about_limit_unknown_issuer">En handling vars utfärdande land inte finns i tillitsarkivet får resultatet ”Okänd utfärdare”, inte ”Misslyckades”. Att importera en nyare Master List kan lösa det.</string>
     <string name="about_limit_revocation">Spärrlistor kontrolleras inte: de kräver nätverksåtkomst, som Sceau aldrig använder.</string>
+    <string name="about_limit_germany">Tyska id-kort: endast kort utfärdade från och med den 2 augusti 2021 kan läsas, eftersom äldre kort förbehåller chippet behöriga myndigheter. Adress och födelseort kan aldrig läsas: de är förbehållna funktionen för e-legitimering, som kräver kortets pinkod och ett certifikat utfärdat av den tyska staten.</string>
 
     <string name="about_section_usage">Användningsvillkor</string>
     <string name="about_usage_holder">Läsningen förutsätter att innehavaren själv visar upp sin handling och samtycker till det.</string>

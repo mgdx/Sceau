@@ -25,6 +25,7 @@
     <string name="about_section_limits">Had</string>
     <string name="about_limit_unknown_issuer">Dokumen yang negara pengeluarnya tiada dalam stor sijil dipercayai akan mendapat keputusan “Pengeluar tidak diketahui”, bukan “Gagal”. Mengimport Master List yang lebih baharu mungkin dapat menyelesaikannya.</string>
     <string name="about_limit_revocation">Senarai pembatalan sijil tidak disemak: senarai ini memerlukan rangkaian, yang tidak pernah digunakan oleh Sceau.</string>
+    <string name="about_limit_germany">Kad pengenalan Jerman: hanya kad yang dikeluarkan sejak 2 Ogos 2021 boleh dibaca, kerana cip kad yang lebih lama dikhaskan untuk pihak berkuasa yang diberi kuasa. Alamat dan tempat lahir tidak boleh dibaca sama sekali: maklumat ini dikhaskan untuk fungsi pengenalan dalam talian, yang memerlukan PIN kad dan sijil yang dikeluarkan oleh kerajaan Jerman.</string>
 
     <string name="about_section_usage">Syarat penggunaan</string>
     <string name="about_usage_holder">Bacaan hanya boleh dibuat apabila pemegang sendiri menunjukkan dokumennya dan memberikan persetujuan.</string>

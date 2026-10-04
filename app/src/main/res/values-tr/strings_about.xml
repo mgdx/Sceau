@@ -25,6 +25,7 @@
     <string name="about_section_limits">Sınırlamalar</string>
     <string name="about_limit_unknown_issuer">Düzenleyen ülkesi güven deposunda bulunmayan bir belge için sonuç “Başarısız” değil, “Bilinmeyen düzenleyici” olur. Daha yeni bir Master List içe aktarmak bu sorunu giderebilir.</string>
     <string name="about_limit_revocation">İptal listeleri kontrol edilmez: Bu listeler ağ bağlantısı gerektirir ve Sceau ağı hiçbir zaman kullanmaz.</string>
+    <string name="about_limit_germany">Alman kimlik kartları: Yalnızca 2 Ağustos 2021 ve sonrasında düzenlenen kartlar okunabilir; daha eski kartların çipi yetkili makamlara ayrılmıştır. Adres ve doğum yeri hiçbir zaman okunamaz: Bunlar, kartın PIN kodunu ve Alman devletinin verdiği bir sertifikayı gerektiren çevrim içi kimlik doğrulama işlevine ayrılmıştır.</string>
 
     <string name="about_section_usage">Kullanım çerçevesi</string>
     <string name="about_usage_holder">Okuma işlemi, belge sahibinin belgesini bizzat ibraz etmesini ve buna onay vermesini gerektirir.</string>

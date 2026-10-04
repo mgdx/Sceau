@@ -25,6 +25,7 @@
     <string name="about_section_limits">Beperkingen</string>
     <string name="about_limit_unknown_issuer">Een document waarvan het land van afgifte niet in de vertrouwensopslag staat, krijgt het oordeel ‘Onbekende uitgever’, niet ‘Mislukt’. Een recentere Master List importeren kan dit verhelpen.</string>
     <string name="about_limit_revocation">Intrekkingslijsten worden niet geraadpleegd: daarvoor is een netwerk nodig, en Sceau gebruikt nooit het netwerk.</string>
+    <string name="about_limit_germany">Duitse identiteitskaarten: alleen kaarten die vanaf 2 augustus 2021 zijn afgegeven kunnen worden gelezen, omdat oudere kaarten hun chip voorbehouden aan bevoegde instanties. Adres en geboorteplaats zijn nooit leesbaar: ze zijn voorbehouden aan de functie voor online identificatie, waarvoor de pincode van de kaart en een certificaat van de Duitse staat nodig zijn.</string>
 
     <string name="about_section_usage">Gebruiksvoorwaarden</string>
     <string name="about_usage_holder">Het uitlezen veronderstelt dat de houder het document zelf toont en daarmee instemt.</string>

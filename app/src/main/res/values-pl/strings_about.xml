@@ -25,6 +25,7 @@
     <string name="about_section_limits">Ograniczenia</string>
     <string name="about_limit_unknown_issuer">Dokument, którego państwa wydającego nie ma wśród zaufanych certyfikatów, otrzymuje wynik „Nieznany wystawca”, a nie „Niepowodzenie”. Może pomóc zaimportowanie nowszej Master List.</string>
     <string name="about_limit_revocation">Listy odwołanych certyfikatów nie są sprawdzane: wymagają dostępu do sieci, z którego Sceau nigdy nie korzysta.</string>
+    <string name="about_limit_germany">Niemieckie dowody osobiste: odczytać można tylko dowody wydane od 2 sierpnia 2021 r., ponieważ w starszych dowodach chip jest zastrzeżony dla uprawnionych organów. Adresu i miejsca urodzenia nie da się nigdy odczytać: są zastrzeżone dla funkcji identyfikacji online, która wymaga kodu PIN dowodu i certyfikatu wydanego przez państwo niemieckie.</string>
 
     <string name="about_section_usage">Zasady użytkowania</string>
     <string name="about_usage_holder">Odczyt zakłada, że posiadacz sam okazuje swój dokument i wyraża na to zgodę.</string>

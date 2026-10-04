@@ -25,6 +25,7 @@
     <string name="about_section_limits">Giới hạn</string>
     <string name="about_limit_unknown_issuer">Nếu quốc gia cấp giấy tờ không có trong kho chứng chỉ tin cậy, kết quả sẽ là “Không rõ bên cấp”, không phải “Thất bại”. Nhập một Master List mới hơn có thể khắc phục điều này.</string>
     <string name="about_limit_revocation">Danh sách thu hồi chứng chỉ không được kiểm tra: việc này cần kết nối mạng, mà Sceau không bao giờ sử dụng.</string>
+    <string name="about_limit_germany">Thẻ căn cước Đức: chỉ đọc được thẻ cấp từ ngày 2 tháng 8 năm 2021, vì chip của các thẻ cũ hơn chỉ dành cho cơ quan có thẩm quyền. Địa chỉ và nơi sinh không bao giờ đọc được: các thông tin này chỉ dành cho chức năng định danh trực tuyến, vốn yêu cầu mã PIN của thẻ và chứng chỉ do nhà nước Đức cấp.</string>
 
     <string name="about_section_usage">Phạm vi sử dụng</string>
     <string name="about_usage_holder">Chỉ đọc giấy tờ khi chính người mang giấy tờ xuất trình và đồng ý.</string>

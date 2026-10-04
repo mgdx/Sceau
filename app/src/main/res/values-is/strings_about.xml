@@ -25,6 +25,7 @@
     <string name="about_section_limits">Takmarkanir</string>
     <string name="about_limit_unknown_issuer">Skilríki frá útgáfuríki sem er ekki í traustgeymslunni fá niðurstöðuna „Óþekktur útgefandi“, ekki „Mistókst“. Það getur hjálpað að flytja inn nýrri Master List.</string>
     <string name="about_limit_revocation">Afturköllunarlistar eru ekki skoðaðir: þeir krefjast nettengingar, sem Sceau notar aldrei.</string>
+    <string name="about_limit_germany">Þýsk nafnskírteini: aðeins er hægt að lesa skírteini sem gefin eru út frá og með 2. ágúst 2021, því eldri skírteini takmarka aðgang að kubbnum við viðurkennd stjórnvöld. Heimilisfang og fæðingarstað er aldrei hægt að lesa: þau eru frátekin fyrir rafræna auðkenningu, sem krefst PIN-númers skírteinisins og vottorðs sem þýska ríkið gefur út.</string>
 
     <string name="about_section_usage">Notkunarforsendur</string>
     <string name="about_usage_holder">Lesturinn gerir ráð fyrir að handhafinn framvísi skilríkjunum sjálfur og samþykki lesturinn.</string>

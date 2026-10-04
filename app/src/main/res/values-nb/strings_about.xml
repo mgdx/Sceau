@@ -25,6 +25,7 @@
     <string name="about_section_limits">Begrensninger</string>
     <string name="about_limit_unknown_issuer">Et dokument fra et utstedende land som ikke finnes i tillitslageret, får resultatet «Ukjent utsteder», ikke «Mislyktes». Å importere en nyere Master List kan løse dette.</string>
     <string name="about_limit_revocation">Tilbakekallingslister blir ikke sjekket: de krever nettverk, og Sceau bruker aldri nettverket.</string>
+    <string name="about_limit_germany">Tyske ID-kort: bare kort utstedt fra og med 2. august 2021 kan leses, fordi eldre kort forbeholder brikken autoriserte myndigheter. Adresse og fødested kan aldri leses: de er forbeholdt funksjonen for elektronisk identifisering, som krever kortets PIN-kode og et sertifikat utstedt av den tyske staten.</string>
 
     <string name="about_section_usage">Bruksvilkår</string>
     <string name="about_usage_holder">Avlesingen forutsetter at innehaveren selv viser frem dokumentet og samtykker.</string>

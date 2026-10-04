@@ -25,6 +25,7 @@
     <string name="about_section_limits">Piirangud</string>
     <string name="about_limit_unknown_issuer">Kui dokumendi väljaandnud riiki usaldushoidlas pole, on otsus „Tundmatu väljaandja“, mitte „Ebaõnnestus“. Uuema Master Listi importimine võib selle lahendada.</string>
     <string name="about_limit_revocation">Tühistusnimekirju ei kontrollita: selleks on vaja võrguühendust, mida Sceau kunagi ei kasuta.</string>
+    <string name="about_limit_germany">Saksa ID-kaardid: lugeda saab ainult 2. augustist 2021 välja antud kaarte, vanemate kaartide kiip on reserveeritud volitatud asutustele. Aadressi ja sünnikohta ei saa kunagi lugeda: need on reserveeritud e-tuvastamise funktsioonile, mis nõuab kaardi PIN-koodi ja Saksa riigi väljastatud sertifikaati.</string>
 
     <string name="about_section_usage">Kasutustingimused</string>
     <string name="about_usage_holder">Lugemine eeldab, et dokumendi kasutaja esitab oma dokumendi ise ja on lugemisega nõus.</string>

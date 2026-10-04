@@ -25,6 +25,7 @@
     <string name="about_section_limits">Rajoitukset</string>
     <string name="about_limit_unknown_issuer">Jos asiakirjan myöntäjämaa ei ole luotettujen varmenteiden joukossa, tulos on ”Tuntematon myöntäjä”, ei ”Epäonnistui”. Uudemman Master Listin tuominen voi korjata tämän.</string>
     <string name="about_limit_revocation">Sulkulistoja ei tarkisteta: ne edellyttävät verkkoyhteyttä, jota Sceau ei koskaan käytä.</string>
+    <string name="about_limit_germany">Saksalaiset henkilökortit: vain 2.8.2021 alkaen myönnetyt kortit voidaan lukea, sillä vanhempien korttien siru on varattu valtuutetuille viranomaisille. Osoitetta ja syntymäpaikkaa ei voi koskaan lukea: ne on varattu verkkotunnistautumiseen, joka edellyttää kortin PIN-koodia ja Saksan valtion myöntämää varmennetta.</string>
 
     <string name="about_section_usage">Käyttöehdot</string>
     <string name="about_usage_holder">Lukeminen edellyttää, että haltija esittää asiakirjan itse ja antaa siihen suostumuksensa.</string>

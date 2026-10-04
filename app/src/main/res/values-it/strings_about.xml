@@ -25,6 +25,7 @@
     <string name="about_section_limits">Limiti</string>
     <string name="about_limit_unknown_issuer">Un documento il cui paese emittente non figura nell’archivio attendibile ottiene l’esito «Emittente sconosciuto», non «Esito negativo». Importare una Master List più recente può risolvere il problema.</string>
     <string name="about_limit_revocation">Gli elenchi di revoca non vengono consultati: richiedono la rete, che Sceau non usa mai.</string>
+    <string name="about_limit_germany">Carte d’identità tedesche: si possono leggere solo quelle rilasciate dal 2 agosto 2021, perché le carte più vecchie riservano il chip alle autorità abilitate. L’indirizzo e il luogo di nascita non sono mai leggibili: sono riservati alla funzione di identificazione online, che richiede il PIN della carta e un certificato rilasciato dallo Stato tedesco.</string>
 
     <string name="about_section_usage">Condizioni d’uso</string>
     <string name="about_usage_holder">La lettura presuppone che il titolare presenti di persona il proprio documento e vi acconsenta.</string>

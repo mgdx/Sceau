@@ -26,6 +26,7 @@
     <string name="about_section_limits">Limites</string>
     <string name="about_limit_unknown_issuer">Un document dont le pays émetteur ne figure pas dans le magasin de confiance donne le verdict « Émetteur inconnu », pas « Échec ». Importer une Master List plus récente peut y remédier.</string>
     <string name="about_limit_revocation">Les listes de révocation ne sont pas consultées : elles nécessitent le réseau, que Sceau n’utilise jamais.</string>
+    <string name="about_limit_germany">Cartes d’identité allemandes : seules celles délivrées depuis le 2 août 2021 sont lisibles, les plus anciennes réservant leur puce aux autorités habilitées. L’adresse et le lieu de naissance ne le sont jamais : ils sont réservés à l’identification en ligne, qui exige le code PIN de la carte et un certificat délivré par l’État allemand.</string>
 
     <string name="about_section_usage">Cadre d’usage</string>
     <string name="about_usage_holder">La lecture suppose que le titulaire présente lui-même son document et y consent.</string>

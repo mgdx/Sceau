@@ -25,6 +25,7 @@
     <string name="about_section_limits">局限性</string>
     <string name="about_limit_unknown_issuer">如果证件的签发国不在信任存储中，结果为“签发者未知”，而不是“验证失败”。导入较新的 Master List 可能会解决此问题。</string>
     <string name="about_limit_revocation">不会查询吊销列表：查询需要联网，而 Sceau 从不联网。</string>
+    <string name="about_limit_germany">德国身份证：只能读取 2021 年 8 月 2 日起签发的身份证，更早的身份证芯片仅供获授权的机关读取。地址和出生地始终无法读取：这些信息仅供在线身份认证功能使用，需要身份证 PIN 码和德国政府签发的证书。</string>
 
     <string name="about_section_usage">使用须知</string>
     <string name="about_usage_holder">读取的前提是持证人亲自出示证件并表示同意。</string>

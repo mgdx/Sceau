@@ -25,6 +25,7 @@
     <string name="about_section_limits">Apribojimai</string>
     <string name="about_limit_unknown_issuer">Jei dokumentą išdavusios šalies nėra patikimų sertifikatų saugykloje, rezultatas bus „Nežinomas išdavėjas“, o ne „Nepavyko“. Tai gali padėti išspręsti naujesnio Master List importavimas.</string>
     <string name="about_limit_revocation">Atšauktų sertifikatų sąrašai netikrinami: tam reikia tinklo, o Sceau jo niekada nenaudoja.</string>
+    <string name="about_limit_germany">Vokietijos asmens tapatybės kortelės: galima nuskaityti tik korteles, išduotas nuo 2021 m. rugpjūčio 2 d., nes senesnių kortelių lustas skirtas tik įgaliotoms institucijoms. Adreso ir gimimo vietos niekada negalima nuskaityti: jie skirti elektroninės atpažinties funkcijai, kuriai reikia kortelės PIN kodo ir Vokietijos valstybės išduoto sertifikato.</string>
 
     <string name="about_section_usage">Naudojimo sąlygos</string>
     <string name="about_usage_holder">Nuskaityti galima tik tada, kai dokumentą pateikia pats turėtojas ir su tuo sutinka.</string>

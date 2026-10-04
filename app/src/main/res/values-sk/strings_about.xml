@@ -25,6 +25,7 @@
     <string name="about_section_limits">Obmedzenia</string>
     <string name="about_limit_unknown_issuer">Doklad, ktorého vydávajúci štát nie je medzi dôveryhodnými certifikátmi, dostane verdikt „Neznámy vydavateľ“, nie „Neúspech“. Pomôcť môže import novšieho zoznamu Master List.</string>
     <string name="about_limit_revocation">Zoznamy odvolaných certifikátov sa nekontrolujú: vyžadujú pripojenie k sieti, ktoré Sceau nikdy nepoužíva.</string>
+    <string name="about_limit_germany">Nemecké občianske preukazy: čítať možno len preukazy vydané od 2. augusta 2021, staršie preukazy vyhradzujú svoj čip oprávneným orgánom. Adresu a miesto narodenia nemožno prečítať nikdy: sú vyhradené pre funkciu online identifikácie, ktorá vyžaduje PIN preukazu a certifikát vydaný nemeckým štátom.</string>
 
     <string name="about_section_usage">Podmienky používania</string>
     <string name="about_usage_holder">Čítanie predpokladá, že držiteľ svoj doklad predkladá sám a súhlasí s tým.</string>

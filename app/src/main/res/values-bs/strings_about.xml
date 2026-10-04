@@ -25,6 +25,7 @@
     <string name="about_section_limits">Ograničenja</string>
     <string name="about_limit_unknown_issuer">Dokument čija država izdavanja nije među pouzdanim certifikatima dobiva rezultat „Nepoznat izdavalac“, a ne „Provjera nije uspjela“. Uvoz novije Master List to može riješiti.</string>
     <string name="about_limit_revocation">Liste opozvanih certifikata se ne provjeravaju: za to je potrebna mreža, koju Sceau nikada ne koristi.</string>
+    <string name="about_limit_germany">Njemačke lične karte: mogu se čitati samo karte izdate od 2. augusta 2021., dok starije karte svoj čip rezervišu za ovlaštene organe. Adresa i mjesto rođenja nikada se ne mogu pročitati: rezervisani su za funkciju online identifikacije, koja zahtijeva PIN kartice i certifikat koji izdaje njemačka država.</string>
 
     <string name="about_section_usage">Okvir korištenja</string>
     <string name="about_usage_holder">Očitavanje podrazumijeva da nosilac sam pokazuje svoj dokument i da se s tim slaže.</string>

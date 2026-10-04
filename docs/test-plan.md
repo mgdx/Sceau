@@ -304,7 +304,7 @@ Pour toutes les erreurs, l'écran affiche sous le message le code technique comp
 ### TP-22 Interface en anglais
 
 - **Étapes** : passer le téléphone en anglais (Paramètres → Langues), parcourir l'accueil, une lecture avec erreur (TP-06), un résultat, le magasin de confiance et « À propos ».
-- **Attendu** : tous les textes en anglais, aucun reste de français, aucune troncature.
+- **Attendu** : tous les textes en anglais, aucun reste de français, aucune troncature. Dans « À propos », section « Limitations » : l'entrée sur les cartes d'identité allemandes (« German identity cards: only cards issued since 2 August 2021… ») est présente, en anglais, après celle sur les listes de révocation.
 - **Résultat** : ☐ OK ☐ KO — Notes :
 
 ## H. Mode démo (APK de debug)

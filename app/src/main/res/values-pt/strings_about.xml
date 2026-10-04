@@ -25,6 +25,7 @@
     <string name="about_section_limits">Limitações</string>
     <string name="about_limit_unknown_issuer">Um documento cujo país emissor não conste do repositório de confiança recebe o veredicto «Emissor desconhecido» e não «Falha». Importar uma Master List mais recente pode resolver esta situação.</string>
     <string name="about_limit_revocation">As listas de revogação não são consultadas: exigem acesso à rede, que o Sceau nunca utiliza.</string>
+    <string name="about_limit_germany">Cartões de identidade alemães: só é possível ler os cartões emitidos desde 2 de agosto de 2021, pois os mais antigos reservam o chip às autoridades habilitadas. A morada e o local de nascimento nunca podem ser lidos: estão reservados à função de identificação online, que exige o PIN do cartão e um certificado emitido pelo Estado alemão.</string>
 
     <string name="about_section_usage">Condições de utilização</string>
     <string name="about_usage_holder">A leitura pressupõe que o titular apresenta pessoalmente o seu documento e dá o seu consentimento.</string>
