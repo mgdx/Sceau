@@ -25,11 +25,6 @@ internal class RecognizedMrz(
     val lines: List<List<GlyphCandidates>>,
 )
 
-/** Implémentation du lot B. */
-internal class TemplateLineRecognizer : LineRecognizer {
-    override fun recognize(frame: LumaFrame): RecognizedMrz? = null
-}
-
 /**
  * Décodage des champs (lot A) : correction selon le type de champ, chiffres de contrôle,
  * stabilisation sur deux images successives. `null` en entrée = aucune MRZ dans l'image.
