@@ -26,6 +26,7 @@
     <string name="trust_source_national">National publication</string>
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Imported</string>
+    <string name="trust_source_imported_certificate">Imported certificate</string>
     <string name="trust_link_certificate">Link certificate</string>
 
     <!-- Recherche -->
@@ -34,7 +35,7 @@
     <string name="trust_search_no_result">No country matches your search.</string>
 
     <!-- Import -->
-    <string name="trust_import">Import a Master List</string>
+    <string name="trust_import">Import a Master List or a certificate</string>
     <string name="trust_busy">Please wait…</string>
     <string name="trust_import_confirm_title">Import this Master List?</string>
     <string name="trust_import_confirm_text">Its signature is valid. Before importing, check that the signer’s fingerprint matches the one published by the issuing authority.</string>
@@ -59,10 +60,39 @@
     </plurals>
     <string name="trust_import_limit_size">Import rejected: imported Master Lists would exceed %1$d MB in total. Delete the imported certificates to add another one.</string>
 
+    <!-- Import d'un certificat seul (D33) -->
+    <string name="trust_import_certificate_confirm_title">Import this certificate?</string>
+    <string name="trust_import_certificate_warning">Unlike a Master List, no State’s signature vouches for this file: you are the one who decides to trust it. An imported certificate can make any document from its country appear authentic. Before importing it, compare its fingerprint with the one published by the issuing State.</string>
+    <string name="trust_import_certificate_type">Type</string>
+    <string name="trust_import_certificate_type_csca">Self-signed CSCA</string>
+    <string name="trust_import_certificate_subject">Subject</string>
+    <string name="trust_import_certificate_country">Country</string>
+    <string name="trust_import_certificate_validity">Validity</string>
+    <string name="trust_import_certificate_done">Certificate imported.</string>
+    <string name="trust_import_certificate_invalid">This certificate can’t be imported: only a self-signed CSCA or a link certificate is accepted (%1$s).</string>
+    <string name="trust_import_unrecognized">This file is neither a Master List nor a single DER or PEM certificate.</string>
+    <string name="trust_import_certificate_write_error">Couldn’t save the certificate.</string>
+    <string name="trust_import_certificate_too_large">Certificate rejected: it is larger than %1$d KB.</string>
+    <plurals name="trust_import_certificate_limit_count">
+        <item quantity="one">Import rejected: at most %1$d imported certificate. Delete one to add another.</item>
+        <item quantity="other">Import rejected: at most %1$d imported certificates. Delete one to add another.</item>
+    </plurals>
+
+    <!-- Éléments importés (D33) -->
+    <string name="trust_imported_title">Imported items</string>
+    <string name="trust_imported_master_list">Imported Master List</string>
+    <string name="trust_imported_signed_on">Signed on %1$s</string>
+    <string name="trust_imported_unreadable">Unreadable file, ignored by the trust store.</string>
+    <string name="trust_imported_delete">Delete this item</string>
+    <string name="trust_imported_delete_title">Delete this imported item?</string>
+    <string name="trust_imported_delete_text">Its certificates will no longer be used to verify documents. Other imported items and the built-in certificates are kept.</string>
+    <string name="trust_imported_delete_done">Imported item deleted.</string>
+    <string name="trust_imported_delete_error">Couldn’t delete this item.</string>
+
     <!-- Suppression -->
     <string name="trust_delete_imported">Delete imported certificates</string>
     <string name="trust_delete_confirm_title">Delete imported certificates?</string>
-    <string name="trust_delete_confirm_text">Imported Master Lists will be deleted. The certificates built into the app are kept.</string>
+    <string name="trust_delete_confirm_text">Imported Master Lists and certificates will be deleted. The certificates built into the app are kept.</string>
     <string name="trust_delete_confirm">Delete</string>
     <string name="trust_delete_done">Imported certificates deleted.</string>
     <string name="trust_delete_error">Couldn’t delete the imported certificates.</string>

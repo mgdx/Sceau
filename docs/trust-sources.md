@@ -185,9 +185,52 @@ personal/organizational non-commercial use* ». Le téléchargement passe par un
 
 | Émetteur | Page | Fichier | Contenu |
 |---|---|---|---|
-| IT | <https://csca-ita.interno.gov.it/> (rubrique TDDL) | <https://csca-ita.interno.gov.it/certificatiCSCA/IT_CIE_DeviationList.zip> → `IT/IT_CIE_DeviationList/TDDL-CIE-Signed-20180530.der` | CMS `id-icao-DeviationList` (2.23.136.1.1.7) signé le 2018-05-30. Le signataire `ITDeviationListSigner` est émis par CSCA03 (SHA-1 publiée `33dfc79d…`, concordante). **346 275 cartes d'identité italiennes (CIE 3.0) portent un DG12 erroné** : leur empreinte DG12 ne correspondra pas au SOD. Notes : <https://csca-ita.interno.gov.it/certificatiCSCA/CIE3.0-NotaAnomaliaDG12ITA.pdf>. |
+| IT | <https://csca-ita.interno.gov.it/> (rubrique TDDL) | <https://csca-ita.interno.gov.it/certificatiCSCA/IT_CIE_DeviationList.zip> → `IT/IT_CIE_DeviationList/TDDL-CIE-Signed-20180530.der` | CMS `id-icao-DeviationList` (2.23.136.1.1.7) signé le 2018-05-30. Le signataire `ITDeviationListSigner` est émis par CSCA03 (SHA-1 publiée `33dfc79d…`, concordante). **346 275 cartes d'identité italiennes (CIE 3.0) portent un DG12 erroné** : leur empreinte DG12 ne correspondra pas au SOD. Prise en compte par une règle codée en dur (décision D34, ci-dessous). Notes : <https://csca-ita.interno.gov.it/certificatiCSCA/CIE3.0-NotaAnomaliaDG12ITA.pdf>. |
 | EU | <https://eu-csca.jrc.ec.europa.eu/> | texte de la page | Laissez-passer délivrés à des agents allemands avant le 2022-05-05 : champ nationalité « DEU » dans la MRZ. |
 | EE | <https://pki.politsei.ee/> | — | « No DLs available ». |
+
+#### Liste italienne : contenu et critère retenu (décision D34)
+
+Fichier examiné le 2026-10-04, **non embarqué** : `TDDL-CIE-Signed-20180530.der`, 3 811 896 octets,
+SHA-256 `1219d8c74a7acf13c55e265fa8125230167160f4f999b64b28644275a084d31d` (archive
+`IT_CIE_DeviationList.zip` : `22c6c32a1023333d5226dac8d844878e6aa8e4539a89470594d23c7ef605ffdb`).
+
+- **Signature** : CMS `SignedData` valide (SHA-256 avec RSA, signingTime 2018-05-30 11:02:37 UTC).
+  Signataire `CN=ITDeviationListSigner, serialNumber=001` (SHA-256
+  `9af02c83205cc3506a06b9b1b2f804f2147aa8f578852e0d63850953266d4a41`, valable du 2018-05-30 au
+  2021-05-29), dont la signature est vérifiée par le CSCA03 italien (AKI `436ce392…7f1b`, SHA-1
+  `33dfc79d…`) présent dans la Master List du BSI embarquée.
+- **Contenu** (`DeviationList` version 0) : deux déviations, chacune de type
+  `2.23.136.1.1.7.2.2` (empreinte de groupe de données) avec le paramètre DG 12 :
+  1. 299 400 documents : « the hash of the DG12 inside the EF.SOD does not correspond to the one
+     computed reading the DG12 from the chip. Issuance date inside the DG12 read from the card is set
+     to 05th December 2015 for all the documents » ;
+  2. 46 875 documents : même anomalie, et la mention « non valida per l'espatrio » manque dans le
+     champ des observations (documents non valables pour l'étranger).
+- **Documents visés** : type de document `C`, période de délivrance du 2017-10-01 au 2018-02-05, et
+  la liste explicite des numéros de document : 346 275 numéros distincts, tous de la forme `CA` +
+  5 chiffres + 2 lettres (suffixes `AA` à `AS`). La liste ne désigne aucun certificat DS.
+- **Non-conformité** : les bornes de la période sont des `GeneralizedTime` suivis du texte « UTC »
+  (`20171001000000.000Z UTC`), ce que la syntaxe ASN.1 n'admet pas. Un futur lecteur générique de
+  Deviation Lists devra le tolérer.
+- **Numéros non embarqués** : ils ne forment pas de plages (215 394 séries contiguës, quel que soit
+  l'ordre) ; en texte ils pèsent environ 3,1 Mo, en table de bits 237 Ko (environ 125 Ko
+  compressés). Choix de l'utilisateur : règle codée en dur, sans fichier embarqué.
+- **Critère codé** (`core/…/verify/KnownDeviations.kt`, `ItalianCie3Dg12`), tous cumulatifs, sur des
+  éléments signés : signature du SOD et chaîne DS → CSCA valides, CSCA de pays `IT` ; empreinte de
+  DG1 vérifiée, État émetteur `ITA`, code de document commençant par `C`, numéro de la forme
+  `CA[0-9]{5}[A-Z]{2}` ; signingTime du SOD présent et compris entre le 2017-09-01 et le 2018-03-05
+  (période de la liste élargie d'un mois de chaque côté). Restriction sur une donnée non vérifiée :
+  un DG12 lisible dont la date de délivrance n'est pas le 2015-12-05 n'est pas couvert.
+- **Portée** : plus large que la liste (toute CIE de la période répondant au critère), sans risque :
+  seul l'écart d'empreinte de DG12 est toléré, et DG12 est alors écarté (non affiché, octets remis à
+  zéro, date de délivrance ignorée). Aucune donnée qui fonde le verdict (DG1, DG2, DG14, DG15, SOD,
+  chaîne) n'est touchée.
+- **Péremption** : la règle ne vaut que pour un document dont l'expiration (DG1, signée) ne dépasse
+  pas le **2029-03-05**. Ce plafond vaut 2018-03-05 (dernière délivrance admise) + 10 ans (décret-loi
+  112/2008, art. 31), plus au plus un an jusqu'à l'anniversaire du titulaire (décret-loi 5/2012,
+  art. 7, al. 2). Passé cette date, `KnownDeviationsTest` échoue : supprimer la règle
+  `IT-CIE3-DG12` et la décision D34.
 
 ## 3. Publications nationales, pays par pays
 

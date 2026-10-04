@@ -8,6 +8,7 @@ import io.github.mgdx.sceau.core.report.CheckDetail
 import io.github.mgdx.sceau.core.report.CheckId
 import io.github.mgdx.sceau.core.report.CheckStatus
 import io.github.mgdx.sceau.core.report.IssuanceDateSource
+import io.github.mgdx.sceau.core.report.KnownDeviation
 import io.github.mgdx.sceau.core.trust.TrustSource
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -127,6 +128,26 @@ class CheckFormattingTest {
     }
 
     @Test
+    fun `empreintes - anomalie connue de l'emetteur, DG12 ecarte`() {
+        val detail =
+            CheckDetail.DataGroupHashes(
+                "SHA-256",
+                checked = listOf(1, 2, 12),
+                mismatched = emptyList(),
+                deviations = listOf(KnownDeviation("IT-CIE3-DG12", 12)),
+            )
+        val result = lines(Check(CheckId.DG_HASHES, CheckStatus.OK, detail))
+        assertEquals(
+            listOf(
+                UiText(R.string.result_detail_digest_algorithm, listOf("SHA-256")),
+                UiText(R.string.result_detail_dg_checked, listOf("DG1, DG2, DG12")),
+                UiText(R.string.result_detail_dg_known_deviation, listOf("DG12")),
+            ),
+            result,
+        )
+    }
+
+    @Test
     fun `CA et AA non disponibles, etape non atteinte`() {
         assertEquals(
             listOf(UiText(R.string.result_detail_no_dg14)),
@@ -213,6 +234,8 @@ class CheckFormattingTest {
         fun chain(source: TrustSource?) =
             ChainInfo("CN=DS", "01", Instant.EPOCH, Instant.EPOCH, "SHA256withRSA", "CN=CSCA", "FR", "00", source, emptyList())
         assertTrue(CheckFormatting.isImportedAnchor(chain(TrustSource.IMPORTED_MASTER_LIST)))
+        assertTrue(CheckFormatting.isImportedAnchor(chain(TrustSource.IMPORTED_CERTIFICATE)))
+        assertFalse(CheckFormatting.isImportedAnchor(chain(TrustSource.NATIONAL)))
         assertFalse(CheckFormatting.isImportedAnchor(chain(TrustSource.ANTS)))
         assertFalse(CheckFormatting.isImportedAnchor(chain(TrustSource.EMBEDDED_MASTER_LIST)))
         assertFalse(CheckFormatting.isImportedAnchor(chain(null)))

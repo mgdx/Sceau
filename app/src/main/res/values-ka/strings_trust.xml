@@ -26,6 +26,7 @@
     <string name="trust_source_national">ეროვნული პუბლიკაცია</string>
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">იმპორტირებული</string>
+    <string name="trust_source_imported_certificate">იმპორტირებული სერტიფიკატი</string>
     <string name="trust_link_certificate">დამაკავშირებელი სერტიფიკატი</string>
 
     <!-- Recherche -->
@@ -34,7 +35,7 @@
     <string name="trust_search_no_result">თქვენს ძიებას არცერთი ქვეყანა არ შეესაბამება.</string>
 
     <!-- Import -->
-    <string name="trust_import">Master List-ის იმპორტი</string>
+    <string name="trust_import">Master List-ის ან სერტიფიკატის იმპორტი</string>
     <string name="trust_busy">გთხოვთ, მოიცადოთ…</string>
     <string name="trust_import_confirm_title">გსურთ ამ Master List-ის იმპორტი?</string>
     <string name="trust_import_confirm_text">მისი ხელმოწერა ვალიდურია. იმპორტამდე შეამოწმეთ, ემთხვევა თუ არა ხელმომწერის ანაბეჭდი გამცემი ორგანოს მიერ გამოქვეყნებულს.</string>
@@ -59,10 +60,39 @@
     </plurals>
     <string name="trust_import_limit_size">იმპორტი უარყოფილია: იმპორტირებული Master List-ების ჯამური ზომა გადააჭარბებდა %1$d მბ-ს. სხვის დასამატებლად წაშალეთ იმპორტირებული სერტიფიკატები.</string>
 
+    <!-- Import d'un certificat seul (D33) -->
+    <string name="trust_import_certificate_confirm_title">გსურთ ამ სერტიფიკატის იმპორტი?</string>
+    <string name="trust_import_certificate_warning">Master List-ისგან განსხვავებით, ამ ფაილს არცერთი სახელმწიფოს ხელმოწერა არ ადასტურებს: მისი ნდობის შესახებ გადაწყვეტილებას თქვენ იღებთ. იმპორტირებულ სერტიფიკატს შეუძლია მისი ქვეყნის ნებისმიერი დოკუმენტი ავთენტურად აჩვენოს. იმპორტამდე შეადარეთ მისი ანაბეჭდი გამცემი სახელმწიფოს მიერ გამოქვეყნებულს.</string>
+    <string name="trust_import_certificate_type">ტიპი</string>
+    <string name="trust_import_certificate_type_csca">თვითხელმოწერილი CSCA</string>
+    <string name="trust_import_certificate_subject">სუბიექტი</string>
+    <string name="trust_import_certificate_country">ქვეყანა</string>
+    <string name="trust_import_certificate_validity">მოქმედების ვადა</string>
+    <string name="trust_import_certificate_done">სერტიფიკატი იმპორტირებულია.</string>
+    <string name="trust_import_certificate_invalid">ამ სერტიფიკატის იმპორტი შეუძლებელია: დაიშვება მხოლოდ თვითხელმოწერილი CSCA ან დამაკავშირებელი სერტიფიკატი (%1$s).</string>
+    <string name="trust_import_unrecognized">ეს ფაილი არც Master List-ია და არც ერთი DER ან PEM სერტიფიკატი.</string>
+    <string name="trust_import_certificate_write_error">სერტიფიკატის შენახვა ვერ მოხერხდა.</string>
+    <string name="trust_import_certificate_too_large">სერტიფიკატი უარყოფილია: აღემატება %1$d კბ-ს.</string>
+    <plurals name="trust_import_certificate_limit_count">
+        <item quantity="one">იმპორტი უარყოფილია: შესაძლებელია მაქსიმუმ %1$d სერტიფიკატის იმპორტი. სხვის დასამატებლად წაშალეთ ერთ-ერთი.</item>
+        <item quantity="other">იმპორტი უარყოფილია: შესაძლებელია მაქსიმუმ %1$d სერტიფიკატის იმპორტი. სხვის დასამატებლად წაშალეთ ერთ-ერთი.</item>
+    </plurals>
+
+    <!-- Éléments importés (D33) -->
+    <string name="trust_imported_title">იმპორტირებული ელემენტები</string>
+    <string name="trust_imported_master_list">იმპორტირებული Master List</string>
+    <string name="trust_imported_signed_on">ხელმოწერილია: %1$s</string>
+    <string name="trust_imported_unreadable">ფაილი ვერ იკითხება, საცავი მას უგულებელყოფს.</string>
+    <string name="trust_imported_delete">ამ ელემენტის წაშლა</string>
+    <string name="trust_imported_delete_title">გსურთ ამ იმპორტირებული ელემენტის წაშლა?</string>
+    <string name="trust_imported_delete_text">მისი სერტიფიკატები აღარ გამოიყენება დოკუმენტების შესამოწმებლად. სხვა იმპორტირებული ელემენტები და ჩაშენებული სერტიფიკატები შენარჩუნდება.</string>
+    <string name="trust_imported_delete_done">იმპორტირებული ელემენტი წაიშალა.</string>
+    <string name="trust_imported_delete_error">ამ ელემენტის წაშლა ვერ მოხერხდა.</string>
+
     <!-- Suppression -->
     <string name="trust_delete_imported">იმპორტირებული სერტიფიკატების წაშლა</string>
     <string name="trust_delete_confirm_title">წაიშალოს იმპორტირებული სერტიფიკატები?</string>
-    <string name="trust_delete_confirm_text">იმპორტირებული Master List-ები წაიშლება. აპში ჩაშენებული სერტიფიკატები შენარჩუნდება.</string>
+    <string name="trust_delete_confirm_text">იმპორტირებული Master List-ები და სერტიფიკატები წაიშლება. აპში ჩაშენებული სერტიფიკატები შენარჩუნდება.</string>
     <string name="trust_delete_confirm">წაშლა</string>
     <string name="trust_delete_done">იმპორტირებული სერტიფიკატები წაიშალა.</string>
     <string name="trust_delete_error">იმპორტირებული სერტიფიკატების წაშლა ვერ მოხერხდა.</string>

@@ -63,7 +63,7 @@ Pour chaque cas : cocher OK ou KO, et en cas de KO noter l'écart, les étapes e
 - **Étapes** :
   1. `adb install -r app-debug.apk`, puis lancer l'application.
   2. `adb shell dumpsys package io.github.mgdx.sceau | grep -A5 permission`.
-- **Attendu** : l'application démarre sur l'introduction (premier lancement, TP-26), sans demande de permission à l'exécution. Seules `android.permission.NFC` et la permission interne `io.github.mgdx.sceau.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION` (décision D7) apparaissent ; aucune permission `INTERNET` ni `ACCESS_NETWORK_STATE`.
+- **Attendu** : l'application démarre sur l'introduction (premier lancement, TP-30), sans demande de permission à l'exécution. Seules `android.permission.NFC` et la permission interne `io.github.mgdx.sceau.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION` (décision D7) apparaissent ; aucune permission `INTERNET` ni `ACCESS_NETWORK_STATE`.
 - **Résultat** : ☐ OK ☐ KO — Notes :
 
 ### TP-02 NFC désactivé, puis réactivé
@@ -117,6 +117,13 @@ Pour chaque cas : cocher OK ou KO, et en cas de KO noter l'écart, les étapes e
   5. Revenir à l'accueil depuis le résultat (retour arrière ou « Effacer »).
   6. Si une carte d'identité d'un autre pays de l'UE est disponible : la lire d'abord avec son CAN, puis avec sa MRZ.
 - **Attendu** : étape 4 : lecture complète, canal « PACE » (clé MRZ), même résultat que TP-04 (verdict **Authentique**, chaîne vers le CSCA e-ID de l'ANTS). Étape 5 : l'accueil est revenu à son état initial, comme après toute lecture (TP-15) : onglet Passeport, aucun champ rempli, et l'onglet Carte d'identité de nouveau sur **CAN**. Étape 6 : les deux clés ouvrent la puce (canal PACE, ou BAC par la MRZ si la carte n'annonce pas PACE) ; verdict **Authentique**, ou **Émetteur inconnu** si son CSCA manque au magasin embarqué (TP-19). Si le CAN imprimé n'a pas 6 chiffres, le noter : seule la MRZ est alors utilisable.
+- **Résultat** : ☐ OK ☐ KO — Notes :
+
+### TP-26 CIE italienne à DG12 erroné (anomalie connue de l'émetteur)
+
+- **Préconditions** : une carte d'identité italienne CIE 3.0 délivrée entre octobre 2017 et février 2018 (numéro `CA…`), figurant si possible dans la Deviation List italienne (décision D34, `docs/trust-sources.md` §2.4). Cas rare : à mener seulement si une telle carte est disponible ; sinon, il est couvert par `KnownDeviationsTest` et `KnownDeviationEndToEndTest` sur la puce simulée.
+- **Étapes** : onglet « Carte d'identité », CAN (ou MRZ), lire la carte, déplier la ligne « Empreintes des groupes de données ».
+- **Attendu** : la ligne « Empreintes » est cochée et indique « DG12 : anomalie connue publiée par l'émetteur, données écartées » ; aucune donnée de DG12 n'est affichée (autorité, date de délivrance, observations) ; la ligne « Validité du DS » prend la date de signature du SOD ; verdict **Authentique** si la Chip Authentication ou l'Active Authentication réussit. Une CIE plus récente (DG12 conforme) ne montre aucune anomalie et affiche ses données DG12.
 - **Résultat** : ☐ OK ☐ KO — Notes :
 
 ## C. Erreurs de lecture
@@ -232,11 +239,11 @@ Pour toutes les erreurs, l'écran affiche sous le message le code technique comp
 - **Préconditions** : Master List italienne ou suédoise copiée sur le téléphone (`adb push … /sdcard/Download/`).
 - **Étapes** :
   1. Menu → « Magasin de confiance » : la liste s'affiche en moins de quelques secondes (magasin préchargé au démarrage, décision D16) ; noter le nombre de CSCA par pays (ANTS, Master List embarquée du BSI).
-  2. « Importer une Master List », choisir le fichier dans le sélecteur du système.
+  2. « Importer une Master List ou un certificat », choisir le fichier dans le sélecteur du système.
   3. Comparer l'empreinte SHA-256 du signataire affichée (avec son sujet, la date de signature et le nombre de certificats) à celle publiée par l'autorité émettrice, puis confirmer.
   4. Réimporter le même fichier.
   5. Tuer l'application (`adb shell am kill io.github.mgdx.sceau` après `KEYCODE_HOME`), la relancer, rouvrir le magasin.
-- **Attendu** : l'empreinte du signataire est affichée avant tout import, et « Annuler » n'importe rien ; après confirmation, message « Master List importée : N certificats », les nouveaux CSCA apparaissent, marqués « Importé » ; les CSCA embarqués sont inchangés (un certificat déjà présent garde sa source ANTS ou Master List). Le second import ne crée pas de doublon. Les CSCA importés sont toujours là après redémarrage (un fichier dans `files/trust/`).
+- **Attendu** : l'empreinte du signataire est affichée avant tout import, et « Annuler » n'importe rien ; après confirmation, message « Master List importée : N certificats », la liste apparaît dans la section « Éléments importés » (signataire, date de signature, nombre de certificats), les nouveaux CSCA apparaissent, marqués « Importé » ; les CSCA embarqués sont inchangés (un certificat déjà présent garde sa source ANTS ou Master List). Le second import ne crée pas de doublon. Les CSCA importés sont toujours là après redémarrage (un fichier dans `files/trust/`).
 - **Résultat** : ☐ OK ☐ KO — Notes :
 
 ### TP-18 Import d'une Master List invalide
@@ -256,6 +263,40 @@ Pour toutes les erreurs, l'écran affiche sous le message le code technique comp
   2. Importer la Master List qui contient son CSCA (TP-17), puis relire le document.
   3. « Supprimer les certificats importés », puis relire une troisième fois.
 - **Attendu** : étape 1 : **Émetteur inconnu** (gris), données affichées, ligne « Chaîne de certification » non disponible ; étape 2 : **Authentique** (ou « Signature valide, puce non vérifiée » si le document n'a ni DG14 ni DG15), chaîne vers un CSCA de source « importé » ; étape 3 : de nouveau **Émetteur inconnu**.
+- **Résultat** : ☐ OK ☐ KO — Notes :
+
+### TP-27 Import d'un certificat CSCA seul (D33)
+
+- **Préconditions** : aucun élément importé ; le CSCA de l'émetteur d'un document absent du magasin embarqué (voir Matériel), téléchargé depuis le site de l'État émetteur, copié sur le téléphone en DER (`.der`, `.cer` ou `.crt`) et, si possible, en PEM (`.pem`) ; son empreinte SHA-256 publiée par l'État, ou calculée sur le poste (`openssl x509 -in csca.pem -outform DER | sha256sum`).
+- **Étapes** :
+  1. Lire le document : **Émetteur inconnu**.
+  2. Magasin de confiance → « Importer une Master List ou un certificat », choisir le fichier DER.
+  3. Lire le dialogue, puis « Annuler ». Recommencer et confirmer.
+  4. Réimporter le même certificat, en PEM cette fois.
+  5. Relire le document.
+  6. Tuer l'application, la relancer, rouvrir le magasin.
+- **Attendu** : étape 3 : dialogue « Importer ce certificat ? » avec l'avertissement (aucune signature d'État ne garantit ce fichier, l'utilisateur lui accorde sa confiance, comparer l'empreinte), le type (« CSCA auto-signé » ou « Certificat de lien »), le sujet, le pays, la validité et l'empreinte SHA-256, identique à celle publiée ; « Annuler » n'importe rien. Après confirmation : message « Certificat importé. », section « Éléments importés » avec le sujet, le pays, la validité et l'empreinte ; dans la liste du pays, le certificat marqué « Certificat importé ». Étape 4 : aucun doublon (même empreinte du DER). Étape 5 : **Authentique** (ou « Signature valide, puce non vérifiée »), détail de la chaîne avec la source « Certificat importé ». Étape 6 : le certificat est toujours là (un fichier `<empreinte>.der` dans `files/trust/`).
+- **Résultat** : ☐ OK ☐ KO — Notes :
+
+### TP-28 Certificats refusés (D33)
+
+- **Étapes** : tenter l'import de :
+  1. un certificat de DS ou un certificat de site web (non CA) ;
+  2. un fichier PEM contenant deux certificats (par exemple une chaîne `fullchain.pem`) ;
+  3. un CSCA dont un octet de la signature est altéré (`cp csca.der bad.der && printf '\xff' | dd of=bad.der bs=1 seek=$(( $(stat -c %s csca.der) - 10 )) conv=notrunc`) ;
+  4. un texte quelconque renommé en `.pem`.
+- **Attendu** : aucun dialogue de confirmation, rien n'est importé, aucun plantage. Étape 1 : « Ce certificat ne peut pas être importé… (NOT_CA) » ; étape 3 : même message avec `BAD_SIGNATURE` ; étapes 2 et 4 : « Ce fichier n'est ni une Master List, ni un certificat DER ou PEM unique. »
+- **Résultat** : ☐ OK ☐ KO — Notes :
+
+### TP-29 Suppression à l'unité (D33)
+
+- **Préconditions** : une Master List (TP-17) et un certificat (TP-27) importés.
+- **Étapes** :
+  1. Dans « Éléments importés », toucher l'icône de suppression du certificat, puis « Annuler ».
+  2. Recommencer et confirmer.
+  3. Relire le document de TP-27.
+  4. Supprimer la Master List de la même manière, puis vérifier le bouton « Supprimer les certificats importés ».
+- **Attendu** : étape 1 : dialogue « Supprimer cet élément importé ? », rien n'est supprimé. Étape 2 : « Élément importé supprimé. », le certificat disparaît de la section et de la liste du pays ; la Master List reste. Étape 3 : **Émetteur inconnu** (sauf si la Master List importée contient aussi ce CSCA). Étape 4 : la section disparaît une fois vide, et le bouton « Supprimer les certificats importés » est désactivé.
 - **Résultat** : ☐ OK ☐ KO — Notes :
 
 ## G. Langue
@@ -284,30 +325,30 @@ Pour toutes les erreurs, l'écran affiche sous le message le code technique comp
 
 Pour revenir à un premier lancement : `adb shell pm clear $PKG` (efface aussi les Master Lists importées).
 
-### TP-26 Premier lancement : introduction, « Passer l'intro » et retour arrière
+### TP-30 Premier lancement : introduction, « Passer l'introduction » et retour arrière
 
 - **Préconditions** : application installée sans données (`pm clear`).
 - **Étapes** :
-  1. Lancer l'application : l'introduction s'affiche (4 pages : la puce, la clé d'accès, ce que vérifie Sceau, la confidentialité). Balayer d'une page à l'autre dans les deux sens, puis utiliser « Suivant » ; vérifier l'indicateur de page et, avec TalkBack, l'annonce « Page 2 sur 4 ».
-  2. Sur chacune des pages 1 à 3, le bouton « Passer l'intro » est visible ; sur la page 4, il est remplacé par « Commencer ».
-  3. Toucher « Passer l'intro » sur la page 2 : l'accueil s'affiche. Retour arrière : l'application se ferme (l'introduction n'est pas dans la pile). Relancer : l'accueil s'affiche directement.
+  1. Lancer l'application : l'introduction s'affiche (4 pages : la puce, la clé d'accès, ce que vérifie Sceau, la confidentialité). Balayer d'une page à l'autre dans les deux sens, puis utiliser « Suivant » et « Précédent » (absent de la page 1) ; vérifier l'indicateur de page et, avec TalkBack, l'annonce « Page 2 sur 4 ».
+  2. Sur chacune des pages 1 à 3, le bouton « Passer l'introduction » est visible ; sur la page 4, il est remplacé par « Commencer ».
+  3. Toucher « Passer l'introduction » sur la page 2 : l'accueil s'affiche. Retour arrière : l'application se ferme (l'introduction n'est pas dans la pile). Relancer : l'accueil s'affiche directement.
   4. `pm clear`, relancer, aller à la page 3, appuyer sur le retour arrière du système.
   5. Relancer l'application.
   6. `pm clear`, relancer, aller à la page 4, toucher « Commencer ».
-- **Attendu** : étape 4 : l'accueil s'affiche (le retour arrière fait comme « Passer l'intro », jamais d'écran vide ni de sortie de l'application). Étape 5 : l'accueil, sans introduction. Étape 6 : l'accueil, et l'introduction ne revient plus aux lancements suivants. Mode sombre et police système agrandie (Réglages > Affichage > Taille de police au maximum) : textes lisibles, pages défilables, boutons jamais masqués.
+- **Attendu** : étape 4 : l'accueil s'affiche (le retour arrière fait comme « Passer l'introduction », jamais d'écran vide ni de sortie de l'application). Étape 5 : l'accueil, sans introduction. Étape 6 : l'accueil, et l'introduction ne revient plus aux lancements suivants. Mode sombre et police système agrandie (Réglages > Affichage > Taille de police au maximum) : textes lisibles, pages défilables, boutons passés à la ligne plutôt que tronqués.
 - **Résultat** : ☐ OK ☐ KO — Notes :
 
-### TP-27 Introduction rejouée depuis À propos
+### TP-31 Introduction rejouée depuis À propos
 
 - **Étapes** :
   1. Menu → « À propos » → section « Comprendre Sceau » → « Revoir l'introduction ».
-  2. Toucher « Passer l'intro ».
+  2. Toucher « Passer l'introduction ».
   3. Rejouer l'introduction, aller à la page 4, toucher « Commencer ».
   4. Rejouer l'introduction, appuyer sur le retour arrière.
 - **Attendu** : l'introduction repart de la page 1 ; aux étapes 2, 3 et 4, retour sur « À propos » (pas sur l'accueil), puis le retour arrière ramène à l'accueil.
 - **Résultat** : ☐ OK ☐ KO — Notes :
 
-### TP-28 Écran « Ce que contient la puce »
+### TP-32 Écran « Ce que contient la puce »
 
 - **Étapes** :
   1. « À propos » → « Ce que contient la puce » ; faire défiler tout l'écran ; retour arrière.
@@ -315,13 +356,13 @@ Pour revenir à un premier lancement : `adb shell pm clear $PKG` (efface aussi l
 - **Attendu** : quatre sections (Lu et affiché : DG1, DG2, DG11, DG12 ; Lu pour la vérification seulement : EF.CardAccess, EF.COM, EF.SOD, DG14, DG15, EF.CardSecurity ; Jamais lu : DG3, DG4, autres groupes ; Ce que Sceau ne fait pas). Étape 1 : retour sur « À propos ». Étape 2 : retour sur la page 4 de l'introduction, toujours affichée.
 - **Résultat** : ☐ OK ☐ KO — Notes :
 
-### TP-29 Rotation et mort du processus pendant l'introduction
+### TP-33 Rotation et mort du processus pendant l'introduction
 
 - **Préconditions** : `pm clear`, application lancée sur l'introduction.
 - **Étapes** :
   1. Aller à la page 3, tourner l'écran en paysage puis en portrait.
   2. Sur la page 3, `KEYCODE_HOME`, puis `adb shell am kill $PKG`, puis rouvrir l'application depuis le multitâche.
-  3. Toucher « Passer l'intro », tourner l'écran sur l'accueil.
+  3. Toucher « Passer l'introduction », tourner l'écran sur l'accueil.
   4. `KEYCODE_HOME`, `am kill`, rouvrir depuis le multitâche.
 - **Attendu** : étape 1 : la page 3 reste affichée, contenu défilable en paysage, boutons visibles. Étape 2 : l'introduction réapparaît (page 3 ou page 1), sans plantage. Étapes 3 et 4 : l'accueil reste affiché, l'introduction ne revient pas.
 - **Résultat** : ☐ OK ☐ KO — Notes :
@@ -357,9 +398,13 @@ Pour revenir à un premier lancement : `adb shell pm clear $PKG` (efface aussi l
 | TP-23 | Passeport après tentatives ratées (attente jusqu'à 60 s) | |
 | TP-24 | Mode démo (debug) et absence en release | |
 | TP-25 | Carte d'identité lue par la MRZ | |
-| TP-26 | Premier lancement : introduction, « Passer l'intro », retour arrière | |
-| TP-27 | Introduction rejouée depuis À propos | |
-| TP-28 | Écran « Ce que contient la puce » | |
-| TP-29 | Rotation et mort du processus pendant l'introduction | |
+| TP-26 | CIE italienne à DG12 erroné (anomalie connue) | |
+| TP-27 | Import d'un certificat CSCA seul | |
+| TP-28 | Certificats refusés | |
+| TP-29 | Suppression à l'unité | |
+| TP-30 | Premier lancement : introduction, « Passer l'introduction », retour arrière | |
+| TP-31 | Introduction rejouée depuis À propos | |
+| TP-32 | Écran « Ce que contient la puce » | |
+| TP-33 | Rotation et mort du processus pendant l'introduction | |
 
 Appareil : ………… Android : ………… Version de Sceau : ………… Date : ………… Testeur : …………

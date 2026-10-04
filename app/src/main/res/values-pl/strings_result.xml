@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">Niezgodne skróty: %1$s</string>
     <string name="result_detail_dg_all_match">Wszystkie skróty są zgodne.</string>
     <string name="result_detail_dg_missing">Grupy danych zadeklarowane, ale niedostarczone przez chip: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: znana anomalia opublikowana przez wystawcę, dane odrzucone</string>
     <string name="result_detail_unsupported">Nieobsługiwany algorytm: %1$s</string>
     <string name="result_detail_error">Błąd techniczny: %1$s</string>
     <string name="result_detail_no_dg14">Dokument nie zawiera DG14: chip nie oferuje tej weryfikacji.</string>

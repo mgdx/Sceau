@@ -26,6 +26,7 @@
     <string name="trust_source_national">Nemzeti közzététel</string>
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Importált</string>
+    <string name="trust_source_imported_certificate">Importált tanúsítvány</string>
     <string name="trust_link_certificate">Összekötő tanúsítvány</string>
 
     <!-- Recherche -->
@@ -34,7 +35,7 @@
     <string name="trust_search_no_result">Egyetlen ország sem felel meg a keresésnek.</string>
 
     <!-- Import -->
-    <string name="trust_import">Master List importálása</string>
+    <string name="trust_import">Master List vagy tanúsítvány importálása</string>
     <string name="trust_busy">Kérjük, várjon…</string>
     <string name="trust_import_confirm_title">Importálja ezt a Master Listet?</string>
     <string name="trust_import_confirm_text">Az aláírása érvényes. Importálás előtt ellenőrizze, hogy az aláíró ujjlenyomata megegyezik-e a kibocsátó hatóság által közzétettel.</string>
@@ -59,10 +60,39 @@
     </plurals>
     <string name="trust_import_limit_size">Importálás elutasítva: az importált Master Listek összmérete meghaladná a(z) %1$d MB-ot. Újabb hozzáadásához törölje az importált tanúsítványokat.</string>
 
+    <!-- Import d'un certificat seul (D33) -->
+    <string name="trust_import_certificate_confirm_title">Importálja ezt a tanúsítványt?</string>
+    <string name="trust_import_certificate_warning">A Master Listtel ellentétben ezt a fájlt egyetlen állam aláírása sem szavatolja: Ön dönti el, hogy megbízik-e benne. Egy importált tanúsítvány az országa bármely dokumentumát hitelesnek tüntetheti fel. Importálás előtt vesse össze az ujjlenyomatát a kibocsátó állam által közzétett ujjlenyomattal.</string>
+    <string name="trust_import_certificate_type">Típus</string>
+    <string name="trust_import_certificate_type_csca">Önaláírt CSCA</string>
+    <string name="trust_import_certificate_subject">Tárgy</string>
+    <string name="trust_import_certificate_country">Ország</string>
+    <string name="trust_import_certificate_validity">Érvényesség</string>
+    <string name="trust_import_certificate_done">Tanúsítvány importálva.</string>
+    <string name="trust_import_certificate_invalid">Ez a tanúsítvány nem importálható: csak önaláírt CSCA vagy összekötő tanúsítvány fogadható el (%1$s).</string>
+    <string name="trust_import_unrecognized">Ez a fájl nem Master List, és nem is egyetlen DER vagy PEM tanúsítvány.</string>
+    <string name="trust_import_certificate_write_error">Nem sikerült menteni a tanúsítványt.</string>
+    <string name="trust_import_certificate_too_large">Tanúsítvány elutasítva: nagyobb %1$d KB-nál.</string>
+    <plurals name="trust_import_certificate_limit_count">
+        <item quantity="one">Importálás elutasítva: legfeljebb %1$d importált tanúsítvány lehet. Újabb hozzáadásához töröljön egyet.</item>
+        <item quantity="other">Importálás elutasítva: legfeljebb %1$d importált tanúsítvány lehet. Újabb hozzáadásához töröljön egyet.</item>
+    </plurals>
+
+    <!-- Éléments importés (D33) -->
+    <string name="trust_imported_title">Importált elemek</string>
+    <string name="trust_imported_master_list">Importált Master List</string>
+    <string name="trust_imported_signed_on">Aláírva: %1$s</string>
+    <string name="trust_imported_unreadable">Olvashatatlan fájl, a tároló figyelmen kívül hagyja.</string>
+    <string name="trust_imported_delete">Elem törlése</string>
+    <string name="trust_imported_delete_title">Törli ezt az importált elemet?</string>
+    <string name="trust_imported_delete_text">A tanúsítványai többé nem szolgálnak dokumentumok ellenőrzésére. A többi importált elem és a beépített tanúsítványok megmaradnak.</string>
+    <string name="trust_imported_delete_done">Importált elem törölve.</string>
+    <string name="trust_imported_delete_error">Nem sikerült törölni ezt az elemet.</string>
+
     <!-- Suppression -->
     <string name="trust_delete_imported">Importált tanúsítványok törlése</string>
     <string name="trust_delete_confirm_title">Törli az importált tanúsítványokat?</string>
-    <string name="trust_delete_confirm_text">Az importált Master Listek törlődnek. Az alkalmazásba beépített tanúsítványok megmaradnak.</string>
+    <string name="trust_delete_confirm_text">Az importált Master Listek és tanúsítványok törlődnek. Az alkalmazásba beépített tanúsítványok megmaradnak.</string>
     <string name="trust_delete_confirm">Törlés</string>
     <string name="trust_delete_done">Importált tanúsítványok törölve.</string>
     <string name="trust_delete_error">Nem sikerült törölni az importált tanúsítványokat.</string>

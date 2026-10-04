@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">Heševi koji se ne podudaraju: %1$s</string>
     <string name="result_detail_dg_all_match">Svi heševi se podudaraju.</string>
     <string name="result_detail_dg_missing">Grupe podataka koje su najavljene, ali ih čip nije dostavio: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: poznata anomalija koju je objavio izdavalac, podaci su izostavljeni</string>
     <string name="result_detail_unsupported">Algoritam nije podržan: %1$s</string>
     <string name="result_detail_error">Tehnička greška: %1$s</string>
     <string name="result_detail_no_dg14">Dokument ne sadrži DG14: čip ne nudi ovu provjeru.</string>

@@ -26,6 +26,7 @@
     <string name="trust_source_national">Nasjonal publisering</string>
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Importert</string>
+    <string name="trust_source_imported_certificate">Importert sertifikat</string>
     <string name="trust_link_certificate">Lenkesertifikat</string>
 
     <!-- Recherche -->
@@ -34,7 +35,7 @@
     <string name="trust_search_no_result">Ingen land samsvarer med søket.</string>
 
     <!-- Import -->
-    <string name="trust_import">Importer en Master List</string>
+    <string name="trust_import">Importer en Master List eller et sertifikat</string>
     <string name="trust_busy">Vent litt …</string>
     <string name="trust_import_confirm_title">Vil du importere denne Master List?</string>
     <string name="trust_import_confirm_text">Signaturen er gyldig. Kontroller at signatarens fingeravtrykk samsvarer med det som er publisert av den utstedende myndigheten, før du importerer den.</string>
@@ -59,10 +60,39 @@
     </plurals>
     <string name="trust_import_limit_size">Import avvist: de importerte Master Lists ville til sammen overstige %1$d MB. Slett de importerte sertifikatene for å legge til en annen.</string>
 
+    <!-- Import d'un certificat seul (D33) -->
+    <string name="trust_import_certificate_confirm_title">Vil du importere dette sertifikatet?</string>
+    <string name="trust_import_certificate_warning">I motsetning til en Master List er det ingen signatur fra en stat som går god for denne filen: Det er du som velger å stole på den. Et importert sertifikat kan få ethvert dokument fra landet sitt til å fremstå som ekte. Før du importerer det, må du sammenligne fingeravtrykket med det som er publisert av den utstedende staten.</string>
+    <string name="trust_import_certificate_type">Type</string>
+    <string name="trust_import_certificate_type_csca">Selvsignert CSCA</string>
+    <string name="trust_import_certificate_subject">Emne</string>
+    <string name="trust_import_certificate_country">Land</string>
+    <string name="trust_import_certificate_validity">Gyldighet</string>
+    <string name="trust_import_certificate_done">Sertifikatet er importert.</string>
+    <string name="trust_import_certificate_invalid">Dette sertifikatet kan ikke importeres: Bare et selvsignert CSCA eller et lenkesertifikat godtas (%1$s).</string>
+    <string name="trust_import_unrecognized">Denne filen er verken en Master List eller ett enkelt DER- eller PEM-sertifikat.</string>
+    <string name="trust_import_certificate_write_error">Kan ikke lagre sertifikatet.</string>
+    <string name="trust_import_certificate_too_large">Sertifikatet ble avvist: det er større enn %1$d kB.</string>
+    <plurals name="trust_import_certificate_limit_count">
+        <item quantity="one">Import avvist: maks. %1$d importert sertifikat. Slett ett for å legge til et annet.</item>
+        <item quantity="other">Import avvist: maks. %1$d importerte sertifikater. Slett ett for å legge til et annet.</item>
+    </plurals>
+
+    <!-- Éléments importés (D33) -->
+    <string name="trust_imported_title">Importerte elementer</string>
+    <string name="trust_imported_master_list">Importert Master List</string>
+    <string name="trust_imported_signed_on">Signert %1$s</string>
+    <string name="trust_imported_unreadable">Uleselig fil, ignoreres av tillitslageret.</string>
+    <string name="trust_imported_delete">Slett dette elementet</string>
+    <string name="trust_imported_delete_title">Vil du slette dette importerte elementet?</string>
+    <string name="trust_imported_delete_text">Sertifikatene i elementet brukes ikke lenger til å verifisere dokumenter. De andre importerte elementene og de innebygde sertifikatene beholdes.</string>
+    <string name="trust_imported_delete_done">Det importerte elementet er slettet.</string>
+    <string name="trust_imported_delete_error">Kan ikke slette dette elementet.</string>
+
     <!-- Suppression -->
     <string name="trust_delete_imported">Slett importerte sertifikater</string>
     <string name="trust_delete_confirm_title">Vil du slette de importerte sertifikatene?</string>
-    <string name="trust_delete_confirm_text">De importerte Master Lists blir slettet. Sertifikatene som er innebygd i appen, beholdes.</string>
+    <string name="trust_delete_confirm_text">De importerte Master Lists og sertifikatene blir slettet. Sertifikatene som er innebygd i appen, beholdes.</string>
     <string name="trust_delete_confirm">Slett</string>
     <string name="trust_delete_done">Importerte sertifikater er slettet.</string>
     <string name="trust_delete_error">Kan ikke slette de importerte sertifikatene.</string>

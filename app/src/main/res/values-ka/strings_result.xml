@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">შეუსაბამო ანაბეჭდები: %1$s</string>
     <string name="result_detail_dg_all_match">ყველა ანაბეჭდი შესაბამისია.</string>
     <string name="result_detail_dg_missing">მონაცემთა ჯგუფები, რომლებიც გამოცხადებულია, მაგრამ ჩიპმა არ მოგვაწოდა: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: გამცემის მიერ გამოქვეყნებული ცნობილი ანომალია, მონაცემები გამოტოვებულია</string>
     <string name="result_detail_unsupported">ალგორითმი არ არის მხარდაჭერილი: %1$s</string>
     <string name="result_detail_error">ტექნიკური შეცდომა: %1$s</string>
     <string name="result_detail_no_dg14">დოკუმენტი არ შეიცავს DG14-ს: ჩიპი ამ შემოწმებას არ გვთავაზობს.</string>

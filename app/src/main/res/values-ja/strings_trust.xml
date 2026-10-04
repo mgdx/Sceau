@@ -24,6 +24,7 @@
     <string name="trust_source_national">各国の公開</string>
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">インポート済み</string>
+    <string name="trust_source_imported_certificate">インポートした証明書</string>
     <string name="trust_link_certificate">リンク証明書</string>
 
     <!-- Recherche -->
@@ -32,7 +33,7 @@
     <string name="trust_search_no_result">検索に一致する国はありません。</string>
 
     <!-- Import -->
-    <string name="trust_import">Master List をインポート</string>
+    <string name="trust_import">Master List または証明書をインポート</string>
     <string name="trust_busy">お待ちください…</string>
     <string name="trust_import_confirm_title">この Master List をインポートしますか？</string>
     <string name="trust_import_confirm_text">署名は有効です。インポートする前に、署名者のフィンガープリントが発行機関の公開しているものと一致することを確認してください。</string>
@@ -55,10 +56,38 @@
     </plurals>
     <string name="trust_import_limit_size">インポートできません。インポートした Master List の合計が %1$d MB を超えます。別のものを追加するには、インポートした証明書を削除してください。</string>
 
+    <!-- Import d'un certificat seul (D33) -->
+    <string name="trust_import_certificate_confirm_title">この証明書をインポートしますか？</string>
+    <string name="trust_import_certificate_warning">Master List とは異なり、このファイルはどの国の署名によっても保証されていません。信頼するかどうかはあなた自身の判断です。インポートした証明書により、その国のどの書類も本物と判定される可能性があります。インポートする前に、フィンガープリントを発行国が公開しているものと照合してください。</string>
+    <string name="trust_import_certificate_type">種類</string>
+    <string name="trust_import_certificate_type_csca">自己署名 CSCA</string>
+    <string name="trust_import_certificate_subject">サブジェクト</string>
+    <string name="trust_import_certificate_country">国</string>
+    <string name="trust_import_certificate_validity">有効期間</string>
+    <string name="trust_import_certificate_done">証明書をインポートしました。</string>
+    <string name="trust_import_certificate_invalid">この証明書はインポートできません。自己署名 CSCA またはリンク証明書のみ使用できます（%1$s）。</string>
+    <string name="trust_import_unrecognized">このファイルは Master List でも、単一の DER または PEM 証明書でもありません。</string>
+    <string name="trust_import_certificate_write_error">証明書を保存できません。</string>
+    <string name="trust_import_certificate_too_large">証明書をインポートできません。%1$d KB を超えています。</string>
+    <plurals name="trust_import_certificate_limit_count">
+        <item quantity="other">インポートできません。インポートできる証明書は %1$d 件までです。別の証明書を追加するには、いずれかを削除してください。</item>
+    </plurals>
+
+    <!-- Éléments importés (D33) -->
+    <string name="trust_imported_title">インポートした項目</string>
+    <string name="trust_imported_master_list">インポートした Master List</string>
+    <string name="trust_imported_signed_on">署名日：%1$s</string>
+    <string name="trust_imported_unreadable">ファイルを読み取れないため、信頼ストアでは無視されます。</string>
+    <string name="trust_imported_delete">この項目を削除</string>
+    <string name="trust_imported_delete_title">インポートしたこの項目を削除しますか？</string>
+    <string name="trust_imported_delete_text">この項目の証明書は書類の検証に使用されなくなります。インポートした他の項目と内蔵の証明書は残ります。</string>
+    <string name="trust_imported_delete_done">インポートした項目を削除しました。</string>
+    <string name="trust_imported_delete_error">この項目を削除できません。</string>
+
     <!-- Suppression -->
     <string name="trust_delete_imported">インポートした証明書を削除</string>
     <string name="trust_delete_confirm_title">インポートした証明書を削除しますか？</string>
-    <string name="trust_delete_confirm_text">インポートした Master List が削除されます。アプリに内蔵されている証明書は残ります。</string>
+    <string name="trust_delete_confirm_text">インポートした Master List と証明書が削除されます。アプリに内蔵されている証明書は残ります。</string>
     <string name="trust_delete_confirm">削除</string>
     <string name="trust_delete_done">インポートした証明書を削除しました。</string>
     <string name="trust_delete_error">インポートした証明書を削除できません。</string>

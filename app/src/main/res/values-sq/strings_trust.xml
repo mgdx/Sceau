@@ -26,6 +26,7 @@
     <string name="trust_source_national">Publikim kombëtar</string>
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">E importuar</string>
+    <string name="trust_source_imported_certificate">Certifikatë e importuar</string>
     <string name="trust_link_certificate">Certifikatë lidhëse</string>
 
     <!-- Recherche -->
@@ -34,7 +35,7 @@
     <string name="trust_search_no_result">Asnjë shtet nuk përputhet me kërkimin.</string>
 
     <!-- Import -->
-    <string name="trust_import">Importo një Master List</string>
+    <string name="trust_import">Importo një Master List ose certifikatë</string>
     <string name="trust_busy">Prit pak…</string>
     <string name="trust_import_confirm_title">Të importohet kjo Master List?</string>
     <string name="trust_import_confirm_text">Nënshkrimi i saj është i vlefshëm. Para importimit, kontrollo që gjurma e nënshkruesit të përputhet me atë të publikuar nga autoriteti lëshues.</string>
@@ -59,10 +60,39 @@
     </plurals>
     <string name="trust_import_limit_size">Importimi u refuzua: Master List-at e importuara do të kalonin gjithsej %1$d MB. Fshi certifikatat e importuara për të shtuar një tjetër.</string>
 
+    <!-- Import d'un certificat seul (D33) -->
+    <string name="trust_import_certificate_confirm_title">Të importohet kjo certifikatë?</string>
+    <string name="trust_import_certificate_warning">Ndryshe nga një Master List, asnjë nënshkrim shteti nuk e garanton këtë skedar: je ti që vendos nëse do t’i besosh. Një certifikatë e importuar mund ta bëjë të duket autentik çdo dokument të vendit të saj. Para se ta importosh, krahaso gjurmën e saj me atë të publikuar nga shteti lëshues.</string>
+    <string name="trust_import_certificate_type">Lloji</string>
+    <string name="trust_import_certificate_type_csca">CSCA i vetënënshkruar</string>
+    <string name="trust_import_certificate_subject">Subjekti</string>
+    <string name="trust_import_certificate_country">Vendi</string>
+    <string name="trust_import_certificate_validity">Vlefshmëria</string>
+    <string name="trust_import_certificate_done">Certifikata u importua.</string>
+    <string name="trust_import_certificate_invalid">Kjo certifikatë nuk mund të importohet: pranohet vetëm një CSCA i vetënënshkruar ose një certifikatë lidhëse (%1$s).</string>
+    <string name="trust_import_unrecognized">Ky skedar nuk është as Master List, as një certifikatë e vetme DER ose PEM.</string>
+    <string name="trust_import_certificate_write_error">Certifikata nuk mund të ruhej.</string>
+    <string name="trust_import_certificate_too_large">Certifikata u refuzua: i kalon %1$d KB.</string>
+    <plurals name="trust_import_certificate_limit_count">
+        <item quantity="one">Importimi u refuzua: lejohet të shumtën %1$d certifikatë e importuar. Fshi një për të shtuar një tjetër.</item>
+        <item quantity="other">Importimi u refuzua: lejohen të shumtën %1$d certifikata të importuara. Fshi një për të shtuar një tjetër.</item>
+    </plurals>
+
+    <!-- Éléments importés (D33) -->
+    <string name="trust_imported_title">Elementet e importuara</string>
+    <string name="trust_imported_master_list">Master List e importuar</string>
+    <string name="trust_imported_signed_on">Nënshkruar më %1$s</string>
+    <string name="trust_imported_unreadable">Skedar i palexueshëm, nuk merret parasysh.</string>
+    <string name="trust_imported_delete">Fshi këtë element</string>
+    <string name="trust_imported_delete_title">Të fshihet ky element i importuar?</string>
+    <string name="trust_imported_delete_text">Certifikatat e tij nuk do të përdoren më për të verifikuar dokumentet. Elementet e tjera të importuara dhe certifikatat e integruara ruhen.</string>
+    <string name="trust_imported_delete_done">Elementi i importuar u fshi.</string>
+    <string name="trust_imported_delete_error">Ky element nuk mund të fshihej.</string>
+
     <!-- Suppression -->
     <string name="trust_delete_imported">Fshi certifikatat e importuara</string>
     <string name="trust_delete_confirm_title">Të fshihen certifikatat e importuara?</string>
-    <string name="trust_delete_confirm_text">Master List-at e importuara do të fshihen. Certifikatat e integruara në aplikacion ruhen.</string>
+    <string name="trust_delete_confirm_text">Master List-at dhe certifikatat e importuara do të fshihen. Certifikatat e integruara në aplikacion ruhen.</string>
     <string name="trust_delete_confirm">Fshi</string>
     <string name="trust_delete_done">Certifikatat e importuara u fshinë.</string>
     <string name="trust_delete_error">Certifikatat e importuara nuk mund të fshiheshin.</string>

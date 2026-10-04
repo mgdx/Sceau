@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">Neskladne zgoščene vrednosti: %1$s</string>
     <string name="result_detail_dg_all_match">Vse zgoščene vrednosti se ujemajo.</string>
     <string name="result_detail_dg_missing">Podatkovne skupine, ki so napovedane, a jih čip ni posredoval: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: znana anomalija, ki jo je objavil izdajatelj, podatki izločeni</string>
     <string name="result_detail_unsupported">Nepodprt algoritem: %1$s</string>
     <string name="result_detail_error">Tehnična napaka: %1$s</string>
     <string name="result_detail_no_dg14">Dokument ne vsebuje DG14: čip ne ponuja tega preverjanja.</string>

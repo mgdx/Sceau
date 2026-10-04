@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">Hashes não conformes: %1$s</string>
     <string name="result_detail_dg_all_match">Todos os hashes estão conformes.</string>
     <string name="result_detail_dg_missing">Grupos de dados anunciados mas não fornecidos pelo chip: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: anomalia conhecida publicada pelo emissor, dados descartados</string>
     <string name="result_detail_unsupported">Algoritmo não suportado: %1$s</string>
     <string name="result_detail_error">Erro técnico: %1$s</string>
     <string name="result_detail_no_dg14">O documento não contém DG14: o chip não oferece essa verificação.</string>

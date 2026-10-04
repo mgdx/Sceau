@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">雜湊值不符：%1$s</string>
     <string name="result_detail_dg_all_match">所有雜湊值皆相符。</string>
     <string name="result_detail_dg_missing">已宣告但晶片未提供的資料組：%1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s：核發者公告的已知異常，資料已捨棄</string>
     <string name="result_detail_unsupported">不支援的演算法：%1$s</string>
     <string name="result_detail_error">技術錯誤：%1$s</string>
     <string name="result_detail_no_dg14">證件不含 DG14：晶片不提供這項驗證。</string>

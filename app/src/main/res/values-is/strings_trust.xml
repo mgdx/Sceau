@@ -26,6 +26,7 @@
     <string name="trust_source_national">Birt af ríkinu</string>
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Innflutt</string>
+    <string name="trust_source_imported_certificate">Innflutt vottorð</string>
     <string name="trust_link_certificate">Tengivottorð</string>
 
     <!-- Recherche -->
@@ -34,7 +35,7 @@
     <string name="trust_search_no_result">Ekkert land passar við leitina.</string>
 
     <!-- Import -->
-    <string name="trust_import">Flytja inn Master List</string>
+    <string name="trust_import">Flytja inn Master List eða vottorð</string>
     <string name="trust_busy">Augnablik…</string>
     <string name="trust_import_confirm_title">Flytja inn þennan Master List?</string>
     <string name="trust_import_confirm_text">Undirskriftin er gild. Gakktu úr skugga um að fingrafar undirritarans sé það sama og útgáfuyfirvaldið hefur birt áður en þú flytur inn.</string>
@@ -59,10 +60,39 @@
     </plurals>
     <string name="trust_import_limit_size">Innflutningi hafnað: innfluttir Master List færu yfir %1$d MB samtals. Eyddu innfluttu vottorðunum til að bæta öðrum við.</string>
 
+    <!-- Import d'un certificat seul (D33) -->
+    <string name="trust_import_certificate_confirm_title">Flytja inn þetta vottorð?</string>
+    <string name="trust_import_certificate_warning">Ólíkt Master List ábyrgist engin undirskrift ríkis þessa skrá: það ert þú sem ákveður að treysta henni. Innflutt vottorð getur látið hvaða skilríki sem er frá landi þess virðast ósvikin. Berðu fingrafar þess saman við það sem útgáfuríkið hefur birt áður en þú flytur það inn.</string>
+    <string name="trust_import_certificate_type">Gerð</string>
+    <string name="trust_import_certificate_type_csca">Sjálfundirritað CSCA</string>
+    <string name="trust_import_certificate_subject">Viðfang</string>
+    <string name="trust_import_certificate_country">Land</string>
+    <string name="trust_import_certificate_validity">Gildistími</string>
+    <string name="trust_import_certificate_done">Vottorð flutt inn.</string>
+    <string name="trust_import_certificate_invalid">Ekki er hægt að flytja inn þetta vottorð: aðeins sjálfundirritað CSCA eða tengivottorð er samþykkt (%1$s).</string>
+    <string name="trust_import_unrecognized">Þessi skrá er hvorki Master List né stakt DER- eða PEM-vottorð.</string>
+    <string name="trust_import_certificate_write_error">Ekki tókst að vista vottorðið.</string>
+    <string name="trust_import_certificate_too_large">Vottorði hafnað: það er stærra en %1$d KB.</string>
+    <plurals name="trust_import_certificate_limit_count">
+        <item quantity="one">Innflutningi hafnað: í mesta lagi %1$d innflutt vottorð. Eyddu einu til að bæta öðru við.</item>
+        <item quantity="other">Innflutningi hafnað: í mesta lagi %1$d innflutt vottorð. Eyddu einu til að bæta öðru við.</item>
+    </plurals>
+
+    <!-- Éléments importés (D33) -->
+    <string name="trust_imported_title">Innflutt atriði</string>
+    <string name="trust_imported_master_list">Innfluttur Master List</string>
+    <string name="trust_imported_signed_on">Undirritaður %1$s</string>
+    <string name="trust_imported_unreadable">Ólæsileg skrá, traustgeymslan hunsar hana.</string>
+    <string name="trust_imported_delete">Eyða þessu atriði</string>
+    <string name="trust_imported_delete_title">Eyða þessu innflutta atriði?</string>
+    <string name="trust_imported_delete_text">Vottorð þess verða ekki lengur notuð til að sannprófa skilríki. Önnur innflutt atriði og innbyggð vottorð haldast.</string>
+    <string name="trust_imported_delete_done">Innfluttu atriði eytt.</string>
+    <string name="trust_imported_delete_error">Ekki tókst að eyða þessu atriði.</string>
+
     <!-- Suppression -->
     <string name="trust_delete_imported">Eyða innfluttum vottorðum</string>
     <string name="trust_delete_confirm_title">Eyða innfluttum vottorðum?</string>
-    <string name="trust_delete_confirm_text">Innfluttum Master List verður eytt. Vottorð sem eru innbyggð í forritið haldast.</string>
+    <string name="trust_delete_confirm_text">Innfluttum Master List og vottorðum verður eytt. Vottorð sem eru innbyggð í forritið haldast.</string>
     <string name="trust_delete_confirm">Eyða</string>
     <string name="trust_delete_done">Innfluttum vottorðum eytt.</string>
     <string name="trust_delete_error">Ekki tókst að eyða innfluttu vottorðunum.</string>

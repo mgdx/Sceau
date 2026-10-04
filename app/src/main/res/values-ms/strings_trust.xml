@@ -24,6 +24,7 @@
     <string name="trust_source_national">Terbitan kebangsaan</string>
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Diimport</string>
+    <string name="trust_source_imported_certificate">Sijil diimport</string>
     <string name="trust_link_certificate">Sijil pautan</string>
 
     <!-- Recherche -->
@@ -32,7 +33,7 @@
     <string name="trust_search_no_result">Tiada negara yang sepadan dengan carian anda.</string>
 
     <!-- Import -->
-    <string name="trust_import">Import Master List</string>
+    <string name="trust_import">Import Master List atau sijil</string>
     <string name="trust_busy">Sila tunggu…</string>
     <string name="trust_import_confirm_title">Import Master List ini?</string>
     <string name="trust_import_confirm_text">Tandatangannya sah. Sebelum mengimport, pastikan cap jari penandatangan sepadan dengan cap jari yang diterbitkan oleh pihak berkuasa pengeluar.</string>
@@ -55,10 +56,38 @@
     </plurals>
     <string name="trust_import_limit_size">Import ditolak: jumlah saiz Master List yang diimport akan melebihi %1$d MB. Padamkan sijil yang diimport untuk menambah Master List lain.</string>
 
+    <!-- Import d'un certificat seul (D33) -->
+    <string name="trust_import_certificate_confirm_title">Import sijil ini?</string>
+    <string name="trust_import_certificate_warning">Tidak seperti Master List, fail ini tidak dijamin oleh tandatangan mana-mana negara: anda sendiri yang memutuskan untuk mempercayainya. Sijil yang diimport boleh menjadikan mana-mana dokumen dari negaranya kelihatan tulen. Sebelum mengimportnya, bandingkan cap jarinya dengan cap jari yang diterbitkan oleh negara pengeluar.</string>
+    <string name="trust_import_certificate_type">Jenis</string>
+    <string name="trust_import_certificate_type_csca">CSCA tandatangan sendiri</string>
+    <string name="trust_import_certificate_subject">Subjek</string>
+    <string name="trust_import_certificate_country">Negara</string>
+    <string name="trust_import_certificate_validity">Kesahan</string>
+    <string name="trust_import_certificate_done">Sijil diimport.</string>
+    <string name="trust_import_certificate_invalid">Sijil ini tidak boleh diimport: hanya CSCA tandatangan sendiri atau sijil pautan diterima (%1$s).</string>
+    <string name="trust_import_unrecognized">Fail ini bukan Master List dan bukan juga satu sijil DER atau PEM tunggal.</string>
+    <string name="trust_import_certificate_write_error">Tidak dapat menyimpan sijil.</string>
+    <string name="trust_import_certificate_too_large">Sijil ditolak: saiznya melebihi %1$d KB.</string>
+    <plurals name="trust_import_certificate_limit_count">
+        <item quantity="other">Import ditolak: maksimum %1$d sijil boleh diimport. Padamkan satu sijil untuk menambah sijil lain.</item>
+    </plurals>
+
+    <!-- Éléments importés (D33) -->
+    <string name="trust_imported_title">Item yang diimport</string>
+    <string name="trust_imported_master_list">Master List diimport</string>
+    <string name="trust_imported_signed_on">Ditandatangani pada %1$s</string>
+    <string name="trust_imported_unreadable">Fail tidak dapat dibaca, diabaikan oleh stor sijil dipercayai.</string>
+    <string name="trust_imported_delete">Padamkan item ini</string>
+    <string name="trust_imported_delete_title">Padamkan item yang diimport ini?</string>
+    <string name="trust_imported_delete_text">Sijilnya tidak akan digunakan lagi untuk mengesahkan dokumen. Item lain yang diimport dan sijil terbina dalam akan dikekalkan.</string>
+    <string name="trust_imported_delete_done">Item yang diimport telah dipadamkan.</string>
+    <string name="trust_imported_delete_error">Tidak dapat memadamkan item ini.</string>
+
     <!-- Suppression -->
     <string name="trust_delete_imported">Padamkan sijil yang diimport</string>
     <string name="trust_delete_confirm_title">Padamkan sijil yang diimport?</string>
-    <string name="trust_delete_confirm_text">Master List yang diimport akan dipadamkan. Sijil yang terbina dalam apl akan dikekalkan.</string>
+    <string name="trust_delete_confirm_text">Master List dan sijil yang diimport akan dipadamkan. Sijil yang terbina dalam apl akan dikekalkan.</string>
     <string name="trust_delete_confirm">Padam</string>
     <string name="trust_delete_done">Sijil yang diimport telah dipadamkan.</string>
     <string name="trust_delete_error">Tidak dapat memadamkan sijil yang diimport.</string>

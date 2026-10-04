@@ -57,4 +57,48 @@ class ImportLimitsTest {
         assertEquals(10, ImportLimits.MAX_IMPORTED_LISTS)
         assertEquals(40L * oneMb, ImportLimits.MAX_IMPORTED_TOTAL_BYTES)
     }
+
+    private fun certificates(count: Int): List<ImportedFile> = List(count) { ImportedFile("cert-$it.der", 1500) }
+
+    @Test
+    fun `premier certificat permis`() {
+        assertEquals(ImportDecision.ALLOWED, ImportLimits.decideCertificate(emptyList(), "new.der", 1500))
+    }
+
+    @Test
+    fun `certificat permis juste sous la limite de nombre`() {
+        val existing = certificates(ImportLimits.MAX_IMPORTED_CERTIFICATES - 1)
+        assertEquals(ImportDecision.ALLOWED, ImportLimits.decideCertificate(existing, "new.der", 1500))
+    }
+
+    @Test
+    fun `certificat refuse une fois la limite de nombre atteinte`() {
+        val existing = certificates(ImportLimits.MAX_IMPORTED_CERTIFICATES)
+        assertEquals(ImportDecision.TOO_MANY_CERTIFICATES, ImportLimits.decideCertificate(existing, "new.der", 1500))
+    }
+
+    @Test
+    fun `reimport d'un certificat present sans effet meme a la limite`() {
+        val existing = certificates(ImportLimits.MAX_IMPORTED_CERTIFICATES)
+        assertEquals(ImportDecision.ALREADY_PRESENT, ImportLimits.decideCertificate(existing, "cert-7.der", 1500))
+    }
+
+    @Test
+    fun `certificat a la taille maximale permis, au-dela refuse`() {
+        val max = ImportLimits.MAX_CERTIFICATE_BYTES.toLong()
+        assertEquals(ImportDecision.ALLOWED, ImportLimits.decideCertificate(emptyList(), "new.der", max))
+        assertEquals(ImportDecision.CERTIFICATE_TOO_LARGE, ImportLimits.decideCertificate(emptyList(), "new.der", max + 1))
+    }
+
+    @Test
+    fun `les certificats ne comptent pas dans les limites des Master Lists`() {
+        // Les deux familles sont décidées séparément : 100 certificats n'empêchent pas une Master List.
+        assertEquals(ImportDecision.ALLOWED, ImportLimits.decide(emptyList(), "new.ml", oneMb))
+    }
+
+    @Test
+    fun `limites de la decision D33`() {
+        assertEquals(100, ImportLimits.MAX_IMPORTED_CERTIFICATES)
+        assertEquals(64 * 1024, ImportLimits.MAX_CERTIFICATE_BYTES)
+    }
 }

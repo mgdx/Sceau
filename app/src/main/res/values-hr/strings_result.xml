@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">Neusklađeni sažeci: %1$s</string>
     <string name="result_detail_dg_all_match">Svi se sažeci podudaraju.</string>
     <string name="result_detail_dg_missing">Podatkovne grupe najavljene, ali ih čip nije dostavio: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: poznata anomalija koju je objavio izdavatelj, podaci su izostavljeni</string>
     <string name="result_detail_unsupported">Nepodržani algoritam: %1$s</string>
     <string name="result_detail_error">Tehnička pogreška: %1$s</string>
     <string name="result_detail_no_dg14">Isprava ne sadrži DG14: čip ne nudi ovu provjeru.</string>

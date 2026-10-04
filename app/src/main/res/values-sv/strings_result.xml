@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">Hashvärden som inte stämmer: %1$s</string>
     <string name="result_detail_dg_all_match">Alla hashvärden stämmer.</string>
     <string name="result_detail_dg_missing">Datagrupper som anges men inte levereras av chippet: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: känd avvikelse publicerad av utfärdaren, data förkastade</string>
     <string name="result_detail_unsupported">Algoritmen stöds inte: %1$s</string>
     <string name="result_detail_error">Tekniskt fel: %1$s</string>
     <string name="result_detail_no_dg14">Handlingen innehåller ingen DG14: chippet erbjuder inte denna kontroll.</string>

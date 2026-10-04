@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.semantics.SemanticsActions
@@ -43,6 +44,7 @@ import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.performSemanticsAction
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
@@ -378,10 +380,27 @@ class TextOverflowTest {
         })
     }
 
-    /** Introduction, page par page (D35), puis l'écran « Ce que contient la puce ». */
+    /**
+     * Introduction, page par page (D35), puis l'écran « Ce que contient la puce », à 100 % puis à
+     * 200 % de taille de police (boutons de l'introduction qui doivent passer à la ligne).
+     */
     private fun learnScenes() {
+        learnScenes(fontScale = 1f, suffix = "")
+        learnScenes(fontScale = LARGE_FONT_SCALE, suffix = ", police 200 %")
+    }
+
+    private fun learnScenes(
+        fontScale: Float,
+        suffix: String,
+    ) {
+        val scaled: (@Composable () -> Unit) -> @Composable () -> Unit = { content ->
+            {
+                val density = LocalDensity.current
+                CompositionLocalProvider(LocalDensity provides Density(density.density, fontScale), content = content)
+            }
+        }
         IntroPage.entries.forEachIndexed { index, _ ->
-            render("Introduction, page ${index + 1}", { IntroScreen(onFinish = {}, onOpenChipContents = {}) }, afterShow = {
+            render("Introduction, page ${index + 1}$suffix", scaled { IntroScreen(onFinish = {}, onOpenChipContents = {}) }, afterShow = {
                 repeat(index) {
                     compose.onNode(hasTextRes(R.string.learn_intro_next)).performSemanticsAction(SemanticsActions.OnClick)
                     settle(frames = PAGE_ANIMATION_FRAMES)
@@ -394,7 +413,7 @@ class TextOverflowTest {
                 )
             })
         }
-        render("Contenu de la puce", { ChipContentsScreen(onBack = {}) })
+        render("Contenu de la puce$suffix", scaled { ChipContentsScreen(onBack = {}) })
     }
 
     // --- Rendu et relevé -----------------------------------------------------------------------
@@ -620,6 +639,9 @@ class TextOverflowTest {
 
         /** Images laissées au défilement animé d'une page de l'introduction. */
         const val PAGE_ANIMATION_FRAMES = 60
+
+        /** Taille de police des scènes « police 200 % » (réglage maximal d'Android 14). */
+        const val LARGE_FONT_SCALE = 2f
         val FRAME: Duration = Duration.ofMillis(16)
         val TALL_LIST_HEIGHT = 25_000.dp
         val STATUS_FILE_NOT_FOUND = byteArrayOf(0x6A, 0x82.toByte())

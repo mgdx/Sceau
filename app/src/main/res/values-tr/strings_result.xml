@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">Uyuşmayan parmak izleri: %1$s</string>
     <string name="result_detail_dg_all_match">Tüm parmak izleri uyuşuyor.</string>
     <string name="result_detail_dg_missing">Bildirilen ancak çipin sağlamadığı veri grupları: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: düzenleyicinin yayımladığı bilinen anomali, veriler çıkarıldı</string>
     <string name="result_detail_unsupported">Desteklenmeyen algoritma: %1$s</string>
     <string name="result_detail_error">Teknik hata: %1$s</string>
     <string name="result_detail_no_dg14">Belge DG14 içermiyor: Çip bu doğrulamayı sunmuyor.</string>

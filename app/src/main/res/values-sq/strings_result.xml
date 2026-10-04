@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">Gjurmë që nuk përputhen: %1$s</string>
     <string name="result_detail_dg_all_match">Të gjitha gjurmët përputhen.</string>
     <string name="result_detail_dg_missing">Grupe të dhënash të deklaruara, por të pa ofruara nga çipi: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: anomali e njohur e publikuar nga lëshuesi, të dhënat u përjashtuan</string>
     <string name="result_detail_unsupported">Algoritëm i pambështetur: %1$s</string>
     <string name="result_detail_error">Gabim teknik: %1$s</string>
     <string name="result_detail_no_dg14">Dokumenti nuk përmban DG14: çipi nuk e ofron këtë verifikim.</string>

@@ -28,6 +28,7 @@
     <string name="trust_source_national">Национално објављивање</string>
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Увезено</string>
+    <string name="trust_source_imported_certificate">Увезени сертификат</string>
     <string name="trust_link_certificate">Повезујући сертификат</string>
 
     <!-- Recherche -->
@@ -36,7 +37,7 @@
     <string name="trust_search_no_result">Ниједна држава не одговара претрази.</string>
 
     <!-- Import -->
-    <string name="trust_import">Увези Master List</string>
+    <string name="trust_import">Увези Master List или сертификат</string>
     <string name="trust_busy">Сачекајте…</string>
     <string name="trust_import_confirm_title">Желите ли да увезете ову Master List?</string>
     <string name="trust_import_confirm_text">Њен потпис је важећи. Пре увоза проверите да ли се отисак потписника подудара са оним који је објавио орган издавања.</string>
@@ -63,10 +64,40 @@
     </plurals>
     <string name="trust_import_limit_size">Увоз је одбијен: увезене Master List би укупно премашиле %1$d MB. Избришите увезене сертификате да бисте додали другу.</string>
 
+    <!-- Import d'un certificat seul (D33) -->
+    <string name="trust_import_certificate_confirm_title">Желите ли да увезете овај сертификат?</string>
+    <string name="trust_import_certificate_warning">За разлику од Master List, ову датотеку не гарантује потпис ниједне државе: ви одлучујете да ли ћете јој веровати. Увезени сертификат може било који документ из своје државе да прикаже као аутентичан. Пре увоза упоредите његов отисак са оним који је објавила држава издавања.</string>
+    <string name="trust_import_certificate_type">Тип</string>
+    <string name="trust_import_certificate_type_csca">Самопотписани CSCA</string>
+    <string name="trust_import_certificate_subject">Субјекат</string>
+    <string name="trust_import_certificate_country">Држава</string>
+    <string name="trust_import_certificate_validity">Важење</string>
+    <string name="trust_import_certificate_done">Сертификат је увезен.</string>
+    <string name="trust_import_certificate_invalid">Овај сертификат не може да се увезе: прихвата се само самопотписани CSCA или повезујући сертификат (%1$s).</string>
+    <string name="trust_import_unrecognized">Ова датотека није ни Master List ни појединачни DER или PEM сертификат.</string>
+    <string name="trust_import_certificate_write_error">Чување сертификата није успело.</string>
+    <string name="trust_import_certificate_too_large">Сертификат је одбијен: већи је од %1$d KB.</string>
+    <plurals name="trust_import_certificate_limit_count">
+        <item quantity="one">Увоз је одбијен: може се увести највише %1$d сертификат. Избришите један да бисте додали други.</item>
+        <item quantity="few">Увоз је одбијен: могу се увести највише %1$d сертификата. Избришите један да бисте додали други.</item>
+        <item quantity="other">Увоз је одбијен: може се увести највише %1$d сертификата. Избришите један да бисте додали други.</item>
+    </plurals>
+
+    <!-- Éléments importés (D33) -->
+    <string name="trust_imported_title">Увезене ставке</string>
+    <string name="trust_imported_master_list">Увезена Master List</string>
+    <string name="trust_imported_signed_on">Потписана %1$s</string>
+    <string name="trust_imported_unreadable">Нечитљива датотека, не користи се при провери.</string>
+    <string name="trust_imported_delete">Избриши ову ставку</string>
+    <string name="trust_imported_delete_title">Желите ли да избришете ову увезену ставку?</string>
+    <string name="trust_imported_delete_text">Њени сертификати се више неће користити за проверу докумената. Остале увезене ставке и уграђени сертификати се задржавају.</string>
+    <string name="trust_imported_delete_done">Увезена ставка је избрисана.</string>
+    <string name="trust_imported_delete_error">Брисање ове ставке није успело.</string>
+
     <!-- Suppression -->
     <string name="trust_delete_imported">Избриши увезене сертификате</string>
     <string name="trust_delete_confirm_title">Желите ли да избришете увезене сертификате?</string>
-    <string name="trust_delete_confirm_text">Увезене Master List ће бити избрисане. Сертификати уграђени у апликацију се задржавају.</string>
+    <string name="trust_delete_confirm_text">Увезене Master List и сертификати ће бити избрисани. Сертификати уграђени у апликацију се задржавају.</string>
     <string name="trust_delete_confirm">Избриши</string>
     <string name="trust_delete_done">Увезени сертификати су избрисани.</string>
     <string name="trust_delete_error">Брисање увезених сертификата није успело.</string>

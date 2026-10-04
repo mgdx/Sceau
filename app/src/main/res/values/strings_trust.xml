@@ -26,6 +26,7 @@
     <string name="trust_source_national">Publication nationale</string>
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Importé</string>
+    <string name="trust_source_imported_certificate">Certificat importé</string>
     <string name="trust_link_certificate">Certificat de lien</string>
 
     <!-- Recherche -->
@@ -34,7 +35,7 @@
     <string name="trust_search_no_result">Aucun pays ne correspond à votre recherche.</string>
 
     <!-- Import -->
-    <string name="trust_import">Importer une Master List</string>
+    <string name="trust_import">Importer une Master List ou un certificat</string>
     <string name="trust_busy">Veuillez patienter…</string>
     <string name="trust_import_confirm_title">Importer cette Master List ?</string>
     <string name="trust_import_confirm_text">Sa signature est valide. Vérifiez que l’empreinte du signataire correspond à celle publiée par l’autorité émettrice avant de l’importer.</string>
@@ -59,10 +60,39 @@
     </plurals>
     <string name="trust_import_limit_size">Import refusé : les Master Lists importées dépasseraient %1$d Mo au total. Supprimez les certificats importés pour en ajouter une autre.</string>
 
+    <!-- Import d'un certificat seul (D33) -->
+    <string name="trust_import_certificate_confirm_title">Importer ce certificat ?</string>
+    <string name="trust_import_certificate_warning">Contrairement à une Master List, aucune signature d’un État ne garantit ce fichier : c’est vous qui lui accordez votre confiance. Un certificat importé peut rendre authentique n’importe quel document de son pays. Avant de l’importer, comparez son empreinte avec celle publiée par l’État émetteur.</string>
+    <string name="trust_import_certificate_type">Type</string>
+    <string name="trust_import_certificate_type_csca">CSCA auto-signé</string>
+    <string name="trust_import_certificate_subject">Sujet</string>
+    <string name="trust_import_certificate_country">Pays</string>
+    <string name="trust_import_certificate_validity">Validité</string>
+    <string name="trust_import_certificate_done">Certificat importé.</string>
+    <string name="trust_import_certificate_invalid">Ce certificat ne peut pas être importé : seuls un CSCA auto-signé ou un certificat de lien sont acceptés (%1$s).</string>
+    <string name="trust_import_unrecognized">Ce fichier n’est ni une Master List, ni un certificat DER ou PEM unique.</string>
+    <string name="trust_import_certificate_write_error">Impossible d’enregistrer le certificat.</string>
+    <string name="trust_import_certificate_too_large">Certificat refusé : il dépasse %1$d Ko.</string>
+    <plurals name="trust_import_certificate_limit_count">
+        <item quantity="one">Import refusé : %1$d certificat importé au plus. Supprimez-en un pour en ajouter un autre.</item>
+        <item quantity="other">Import refusé : %1$d certificats importés au plus. Supprimez-en un pour en ajouter un autre.</item>
+    </plurals>
+
+    <!-- Éléments importés (D33) -->
+    <string name="trust_imported_title">Éléments importés</string>
+    <string name="trust_imported_master_list">Master List importée</string>
+    <string name="trust_imported_signed_on">Signée le %1$s</string>
+    <string name="trust_imported_unreadable">Fichier illisible, ignoré par le magasin.</string>
+    <string name="trust_imported_delete">Supprimer cet élément</string>
+    <string name="trust_imported_delete_title">Supprimer cet élément importé ?</string>
+    <string name="trust_imported_delete_text">Ses certificats ne serviront plus à vérifier les documents. Les autres éléments importés et les certificats embarqués sont conservés.</string>
+    <string name="trust_imported_delete_done">Élément importé supprimé.</string>
+    <string name="trust_imported_delete_error">Impossible de supprimer cet élément.</string>
+
     <!-- Suppression -->
     <string name="trust_delete_imported">Supprimer les certificats importés</string>
     <string name="trust_delete_confirm_title">Supprimer les certificats importés ?</string>
-    <string name="trust_delete_confirm_text">Les Master Lists importées seront supprimées. Les certificats embarqués dans l’application sont conservés.</string>
+    <string name="trust_delete_confirm_text">Les Master Lists et les certificats importés seront supprimés. Les certificats embarqués dans l’application sont conservés.</string>
     <string name="trust_delete_confirm">Supprimer</string>
     <string name="trust_delete_done">Certificats importés supprimés.</string>
     <string name="trust_delete_error">Impossible de supprimer les certificats importés.</string>

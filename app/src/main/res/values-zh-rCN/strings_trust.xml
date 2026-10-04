@@ -24,6 +24,7 @@
     <string name="trust_source_national">本国发布</string>
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">已导入</string>
+    <string name="trust_source_imported_certificate">已导入的证书</string>
     <string name="trust_link_certificate">链接证书</string>
 
     <!-- Recherche -->
@@ -32,7 +33,7 @@
     <string name="trust_search_no_result">没有与搜索内容匹配的国家/地区。</string>
 
     <!-- Import -->
-    <string name="trust_import">导入 Master List</string>
+    <string name="trust_import">导入 Master List 或证书</string>
     <string name="trust_busy">请稍候…</string>
     <string name="trust_import_confirm_title">要导入此 Master List 吗？</string>
     <string name="trust_import_confirm_text">其签名有效。导入前，请核实签名者的指纹与签发机构公布的指纹一致。</string>
@@ -55,10 +56,38 @@
     </plurals>
     <string name="trust_import_limit_size">导入被拒绝：已导入的 Master List 总大小将超过 %1$d MB。请先删除已导入的证书，再添加新的 Master List。</string>
 
+    <!-- Import d'un certificat seul (D33) -->
+    <string name="trust_import_certificate_confirm_title">要导入此证书吗？</string>
+    <string name="trust_import_certificate_warning">与 Master List 不同，此文件没有任何国家的签名作担保：是否信任它由您自己决定。导入的证书可使其所属国家/地区的任何证件被判定为真实。导入前，请将其指纹与签发国公布的指纹进行比对。</string>
+    <string name="trust_import_certificate_type">类型</string>
+    <string name="trust_import_certificate_type_csca">自签名 CSCA</string>
+    <string name="trust_import_certificate_subject">主题</string>
+    <string name="trust_import_certificate_country">国家/地区</string>
+    <string name="trust_import_certificate_validity">有效期</string>
+    <string name="trust_import_certificate_done">已导入证书。</string>
+    <string name="trust_import_certificate_invalid">无法导入此证书：仅接受自签名 CSCA 或链接证书（%1$s）。</string>
+    <string name="trust_import_unrecognized">此文件既不是 Master List，也不是单个 DER 或 PEM 证书。</string>
+    <string name="trust_import_certificate_write_error">无法保存证书。</string>
+    <string name="trust_import_certificate_too_large">证书被拒绝：超过 %1$d KB。</string>
+    <plurals name="trust_import_certificate_limit_count">
+        <item quantity="other">导入被拒绝：最多只能导入 %1$d 个证书。请先删除一个，再添加新的证书。</item>
+    </plurals>
+
+    <!-- Éléments importés (D33) -->
+    <string name="trust_imported_title">已导入的项目</string>
+    <string name="trust_imported_master_list">已导入的 Master List</string>
+    <string name="trust_imported_signed_on">签名日期：%1$s</string>
+    <string name="trust_imported_unreadable">文件无法读取，已被信任存储忽略。</string>
+    <string name="trust_imported_delete">删除此项目</string>
+    <string name="trust_imported_delete_title">要删除此导入项目吗？</string>
+    <string name="trust_imported_delete_text">其中的证书将不再用于验证证件。其他导入项目和内置证书会保留。</string>
+    <string name="trust_imported_delete_done">已删除导入项目。</string>
+    <string name="trust_imported_delete_error">无法删除此项目。</string>
+
     <!-- Suppression -->
     <string name="trust_delete_imported">删除已导入的证书</string>
     <string name="trust_delete_confirm_title">要删除已导入的证书吗？</string>
-    <string name="trust_delete_confirm_text">已导入的 Master List 将被删除。应用内置的证书会保留。</string>
+    <string name="trust_delete_confirm_text">已导入的 Master List 和证书将被删除。应用内置的证书会保留。</string>
     <string name="trust_delete_confirm">删除</string>
     <string name="trust_delete_done">已删除导入的证书。</string>
     <string name="trust_delete_error">无法删除已导入的证书。</string>

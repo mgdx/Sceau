@@ -226,8 +226,12 @@ object CheckFormatting {
             }
             if (detail.mismatched.isNotEmpty()) {
                 add(text(R.string.result_detail_dg_mismatched, dataGroupList(detail.mismatched)))
-            } else if (detail.checked.isNotEmpty() && detail.missing.isEmpty()) {
+            } else if (detail.checked.isNotEmpty() && detail.missing.isEmpty() && detail.deviations.isEmpty()) {
                 add(text(R.string.result_detail_dg_all_match))
+            }
+            // Écart toléré : anomalie connue publiée par l'émetteur, DG écarté (décision D34).
+            detail.deviations.forEach { deviation ->
+                add(text(R.string.result_detail_dg_known_deviation, dataGroupList(listOf(deviation.dataGroup))))
             }
             // DG signés dans le SOD mais retenus par la puce (audit V1).
             if (detail.missing.isNotEmpty()) {
@@ -239,10 +243,11 @@ object CheckFormatting {
     fun dataGroupList(numbers: List<Int>): String = numbers.distinct().sorted().joinToString(", ") { "DG$it" }
 
     /**
-     * Vrai si la chaîne remonte à un CSCA importé par l'utilisateur : la carte du verdict
-     * le signale sans qu'il faille déplier le détail (audit V6).
+     * Vrai si la chaîne remonte à un CSCA importé par l'utilisateur, par une Master List ou seul
+     * (D33) : la carte du verdict le signale sans qu'il faille déplier le détail (audit V6).
      */
-    fun isImportedAnchor(chain: ChainInfo?): Boolean = chain?.cscaSource == TrustSource.IMPORTED_MASTER_LIST
+    fun isImportedAnchor(chain: ChainInfo?): Boolean =
+        chain?.cscaSource == TrustSource.IMPORTED_MASTER_LIST || chain?.cscaSource == TrustSource.IMPORTED_CERTIFICATE
 
     @StringRes
     fun sourceLabel(source: TrustSource): Int =
@@ -251,6 +256,7 @@ object CheckFormatting {
             TrustSource.NATIONAL -> R.string.result_detail_source_national
             TrustSource.EMBEDDED_MASTER_LIST -> R.string.result_detail_source_embedded
             TrustSource.IMPORTED_MASTER_LIST -> R.string.result_detail_source_imported
+            TrustSource.IMPORTED_CERTIFICATE -> R.string.trust_source_imported_certificate
         }
 
     /** Méthode de Chip Authentication : clé de DG14, ou PACE-CAM (décision D21). */

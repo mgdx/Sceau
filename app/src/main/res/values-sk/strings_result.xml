@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">Nezhodné odtlačky: %1$s</string>
     <string name="result_detail_dg_all_match">Všetky odtlačky sa zhodujú.</string>
     <string name="result_detail_dg_missing">Dátové skupiny ohlásené, ale čipom neposkytnuté: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: známa anomália zverejnená vydavateľom, údaje vyradené</string>
     <string name="result_detail_unsupported">Nepodporovaný algoritmus: %1$s</string>
     <string name="result_detail_error">Technická chyba: %1$s</string>
     <string name="result_detail_no_dg14">Doklad neobsahuje DG14: čip toto overenie neponúka.</string>

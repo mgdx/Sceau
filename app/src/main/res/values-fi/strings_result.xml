@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">Poikkeavat tiivisteet: %1$s</string>
     <string name="result_detail_dg_all_match">Kaikki tiivisteet täsmäävät.</string>
     <string name="result_detail_dg_missing">Ilmoitetut tietoryhmät, joita siru ei antanut: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: myöntäjän julkaisema tunnettu poikkeama, tiedot hylätty</string>
     <string name="result_detail_unsupported">Algoritmia ei tueta: %1$s</string>
     <string name="result_detail_error">Tekninen virhe: %1$s</string>
     <string name="result_detail_no_dg14">Asiakirjassa ei ole DG14:ää: siru ei tarjoa tätä tarkistusta.</string>

@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">טביעות אצבע לא תואמות: %1$s</string>
     <string name="result_detail_dg_all_match">כל טביעות האצבע תואמות.</string>
     <string name="result_detail_dg_missing">קבוצות נתונים שהוצהרו אך השבב לא סיפק אותן: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: חריגה ידועה שפורסמה על ידי המנפיק, הנתונים הושמטו</string>
     <string name="result_detail_unsupported">אלגוריתם לא נתמך: %1$s</string>
     <string name="result_detail_error">שגיאה טכנית: %1$s</string>
     <string name="result_detail_no_dg14">המסמך אינו מכיל DG14: השבב לא מציע את הבדיקה הזו.</string>

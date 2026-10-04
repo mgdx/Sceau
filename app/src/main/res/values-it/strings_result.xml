@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">Impronte non corrispondenti: %1$s</string>
     <string name="result_detail_dg_all_match">Tutte le impronte corrispondono.</string>
     <string name="result_detail_dg_missing">Gruppi di dati dichiarati ma non forniti dal chip: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: anomalia nota pubblicata dall’emittente, dati scartati</string>
     <string name="result_detail_unsupported">Algoritmo non supportato: %1$s</string>
     <string name="result_detail_error">Errore tecnico: %1$s</string>
     <string name="result_detail_no_dg14">Il documento non contiene il DG14: il chip non offre questa verifica.</string>

@@ -150,6 +150,8 @@ Accessible depuis le menu de l'accueil :
 
 - Liste des CSCA connus, groupés par pays, avec nom du sujet, période de validité, empreinte SHA-256 et source.
 - Bouton « Importer une Master List » : ouvre le sélecteur de fichiers du système (`ACTION_OPEN_DOCUMENT`, sans permission persistante), accepte un fichier CMS (`.ml`, `.der`, `.p7b`) de 20 Mo au plus. La signature CMS est vérifiée avec le certificat signataire embarqué dans le fichier, dont l'empreinte est affichée à l'utilisateur pour confirmation avant import. Le dialogue de confirmation avertit qu'un certificat importé peut rendre authentique n'importe quel document de son pays, et qu'il ne faut importer qu'une liste de provenance sûre (audit V6). Les Master Lists importées sont stockées telles quelles dans le stockage interne de l'appli (`filesDir/trust/`, nom de fichier = SHA-256 du contenu, écriture atomique) et leurs CSCA marqués « importé ».
+- Le même bouton accepte un certificat CSCA auto-signé ou un certificat de lien isolé (DER ou PEM, un seul par fichier), reconnu automatiquement, avec un aperçu (sujet, pays, validité, empreinte SHA-256) et l'avertissement qu'aucune signature d'État ne le garantit ; stocké en DER dans `filesDir/trust/<sha256>.der`, marqué « Certificat importé » (D33).
+- Section « Éléments importés » : chaque Master List ou certificat importé, supprimable à l'unité après confirmation (D33).
 - Bouton « Supprimer les certificats importés ».
 
 Aucune donnée personnelle ne transite par cet écran.
@@ -160,7 +162,7 @@ Version, licence, lien vers le dépôt, rappel du cadre d'usage (voir section 8)
 
 ### 5.6 Introduction et écran « Ce que contient la puce »
 
-Au premier lancement, une introduction de 4 pages balayables explique la puce ICAO 9303, la clé d'accès (CAN ou MRZ) et le canal chiffré, ce que vérifie Sceau et le sens des quatre verdicts, puis la confidentialité. « Passer l'intro » (toutes les pages sauf la dernière), « Commencer » (dernière page) et le retour arrière mènent à l'accueil et la marquent comme vue ; elle est rejouable depuis « À propos ». L'écran « Ce que contient la puce », ouvert depuis « À propos » et depuis la dernière page de l'introduction, liste les fichiers lus et affichés, ceux lus pour la seule vérification, ceux jamais lus (DG3, DG4…) et ce que Sceau ne fait pas (D35).
+Au premier lancement, une introduction de 4 pages balayables explique la puce ICAO 9303, la clé d'accès (CAN ou MRZ) et le canal chiffré, ce que vérifie Sceau et le sens des quatre verdicts, puis la confidentialité. « Passer l'introduction » (toutes les pages sauf la dernière), « Commencer » (dernière page) et le retour arrière mènent à l'accueil et la marquent comme vue ; elle est rejouable depuis « À propos ». L'écran « Ce que contient la puce », ouvert depuis « À propos » et depuis la dernière page de l'introduction, liste les fichiers lus et affichés, ceux lus pour la seule vérification, ceux jamais lus (DG3, DG4…) et ce que Sceau ne fait pas (D35).
 
 ## 6. Protocole de lecture et de vérification (module `:core`)
 
@@ -249,7 +251,7 @@ Ces limites sont affichées dans l'écran « À propos ».
 
 ## 8. Vie privée et sécurité
 
-- Aucune donnée lue n'est écrite sur disque, en cache, en base ou en log, ni en debug ni en release. Aucun `Bundle`, `SavedStateHandle`, `rememberSaveable` ni préférence ne contient de donnée lue ni de clé (la seule préférence est l'indicateur « introduction vue », D35) ; après la mort du processus, l'application redémarre sur l'accueil, vide.
+- Aucune donnée lue n'est écrite sur disque, en cache, en base ou en log, ni en debug ni en release. Aucun `Bundle`, `SavedStateHandle`, `rememberSaveable` ni préférence ne contient de donnée lue ni de clé (la seule préférence est l'indicateur « introduction vue », D35) ; après la mort du processus, l'application redémarre sur l'accueil, vide, ou sur l'introduction tant qu'elle n'a pas été vue.
 - Aucun journal, même temporaire pour déboguer : ni `Log`, ni `println`, ni `printStackTrace`. Le diagnostic passe par le code d'erreur affiché (§5.2). Les loggers `java.util.logging` de JMRTD et SCUBA (`org.jmrtd`, `net.sf.scuba`) sont coupés au début de chaque lecture, car ils écrivent des APDU en clair (D14).
 - `FLAG_SECURE` sur toute l'activité dès sa création : pas de capture d'écran, pas d'aperçu dans le multitâche, sur l'accueil (saisie du CAN et de la MRZ) comme sur la lecture, le résultat et la photo en plein écran (audit V7).
 - Effacement : les tableaux d'octets de DG1, DG2, DG11 et DG12 (DG bruts, portrait, images de DG12) et les images décodées (bitmaps remis à zéro puis recyclés) sont effacés à la sortie de l'écran de résultat (« Effacer », retour arrière), lors de la mise en arrière-plan de l'appli pendant une lecture ou sur le résultat, à l'annulation d'une lecture et à la fin du `ViewModel`. Les bitmaps sont possédés par la session, de sorte que l'effacement les atteigne directement, y compris quand un décodage se termine après la sortie de l'écran (audit V13). Une rotation n'efface rien. Un rapport produit par une lecture abandonnée entre-temps est effacé dès sa réception, sans être publié.

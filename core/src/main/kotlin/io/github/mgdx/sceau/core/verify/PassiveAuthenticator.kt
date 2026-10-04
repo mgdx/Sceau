@@ -6,6 +6,7 @@ import io.github.mgdx.sceau.core.report.CheckDetail
 import io.github.mgdx.sceau.core.report.CheckId
 import io.github.mgdx.sceau.core.report.CheckStatus
 import io.github.mgdx.sceau.core.report.IssuanceDateSource
+import io.github.mgdx.sceau.core.report.KnownDeviation
 import io.github.mgdx.sceau.core.trust.TrustAnchor
 import io.github.mgdx.sceau.core.trust.TrustStore
 import org.bouncycastle.asn1.ASN1Primitive
@@ -107,9 +108,15 @@ internal class CardSecurityVerification(
     }
 }
 
-/** Implémentation de la Passive Authentication (SPEC §6.1 étape 5). */
+/**
+ * Implémentation de la Passive Authentication (SPEC §6.1 étape 5).
+ *
+ * [deviations] : anomalies connues des émetteurs (décision D34), le registre réel par défaut ;
+ * les tests en injectent d'autres pour la PKI factice.
+ */
 internal class PassiveAuthenticator(
     private val trustStore: TrustStore,
+    private val deviations: KnownDeviations = KnownDeviations.REGISTRY,
 ) {
     private class DsCertificate(
         val holder: X509CertificateHolder,
@@ -122,6 +129,7 @@ internal class PassiveAuthenticator(
         dateOfExpiry: LocalDate?,
         documentCode: String,
         issuingState: String? = null,
+        documentNumber: String? = null,
     ): PassiveAuthResult {
         val parsed =
             try {
@@ -130,39 +138,60 @@ internal class PassiveAuthenticator(
                 return malformed(ERROR_SOD_MALFORMED)
             }
         return try {
-            verifyParsed(parsed, dataGroups, dateOfIssue, dateOfExpiry, documentCode, issuingState)
+            verifyParsed(parsed, dataGroups, DocumentFacts(dateOfIssue, dateOfExpiry, documentCode, issuingState, documentNumber))
         } catch (e: Exception) {
             malformed(ERROR_UNEXPECTED)
         }
     }
 
+    /** Données lues (DG1, date de délivrance de DG12) transmises à la vérification. */
+    private class DocumentFacts(
+        val dateOfIssue: LocalDate?,
+        val dateOfExpiry: LocalDate?,
+        val documentCode: String,
+        val issuingState: String?,
+        val documentNumber: String?,
+    )
+
     private fun verifyParsed(
         parsed: ParsedSod,
         dataGroups: Map<Int, ByteArray>,
-        dateOfIssue: LocalDate?,
-        dateOfExpiry: LocalDate?,
-        documentCode: String,
-        issuingState: String?,
+        facts: DocumentFacts,
     ): PassiveAuthResult {
-        val hashes = guarded(CheckId.DG_HASHES) { checkHashes(parsed.securityObject, dataGroups) }
+        val rawHashes = guarded(CheckId.DG_HASHES) { checkHashes(parsed.securityObject, dataGroups) }
         val ds =
             findDsCertificate(parsed.signedData, parsed.signer)
                 ?: return PassiveAuthResult(
                     sodSignature = Check(CheckId.SOD_SIGNATURE, CheckStatus.NOT_AVAILABLE, CheckDetail.DsCertificateMissing),
                     certificateChain = Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.NOT_AVAILABLE, CheckDetail.DsCertificateMissing),
                     dsValidity = Check(CheckId.DS_VALIDITY, CheckStatus.NOT_AVAILABLE),
-                    dataGroupHashes = hashes,
+                    dataGroupHashes = rawHashes,
                     chain = null,
                 )
 
         val signature = guarded(CheckId.SOD_SIGNATURE) { checkSignature(parsed.signer, ds) }
-        val validity = guarded(CheckId.DS_VALIDITY) { checkValidity(parsed.signer, ds, dateOfIssue, dateOfExpiry, documentCode) }
         var chainInfo: ChainInfo? = null
         val chain =
             guarded(CheckId.CERTIFICATE_CHAIN) {
-                val (check, info) = checkChain(ds, issuingState)
+                val (check, info) = checkChain(ds, facts.issuingState)
                 chainInfo = info
                 check
+            }
+        // Décision D34 : une anomalie connue n'est recherchée que sur un SOD dont la signature et
+        // la chaîne sont valides ; sinon, aucune tolérance.
+        val tolerated =
+            if (signature.status == CheckStatus.OK && chain.status == CheckStatus.OK) {
+                knownDeviations(parsed.signer, rawHashes, chainInfo, facts)
+            } else {
+                emptyList()
+            }
+        val hashes = tolerate(rawHashes, tolerated)
+        val discarded = tolerated.map { it.dataGroup }.toSet()
+        // Un DG12 écarté ne fournit pas la date de délivrance : repli sur signingTime ou l'estimation.
+        val dateOfIssue = facts.dateOfIssue.takeUnless { DG12 in discarded }
+        val validity =
+            guarded(CheckId.DS_VALIDITY) {
+                checkValidity(parsed.signer, ds, dateOfIssue, facts.dateOfExpiry, facts.documentCode)
             }
         return PassiveAuthResult(
             sodSignature = signature,
@@ -170,7 +199,51 @@ internal class PassiveAuthenticator(
             dsValidity = validity,
             dataGroupHashes = hashes,
             chain = chainInfo,
+            discardedDataGroups = discarded,
         )
+    }
+
+    // --- Anomalies connues des émetteurs (décision D34) ---------------------------------
+
+    /**
+     * Anomalies connues qui couvrent les écarts d'empreinte de [hashes]. Exige que l'empreinte de
+     * DG1 soit vérifiée (les éléments de DG1 sont alors signés) et qu'aucun DG signé ne manque.
+     */
+    private fun knownDeviations(
+        signer: SignerInformation,
+        hashes: Check,
+        chainInfo: ChainInfo?,
+        facts: DocumentFacts,
+    ): List<KnownDeviation> {
+        val detail = hashes.detail as? CheckDetail.DataGroupHashes ?: return emptyList()
+        val dg1Verified = DG1 in detail.checked && DG1 !in detail.mismatched
+        if (!dg1Verified || detail.missing.isNotEmpty() || detail.mismatched.isEmpty()) return emptyList()
+        val evidence =
+            DeviationEvidence(
+                cscaCountry = chainInfo?.cscaCountry,
+                issuingState = facts.issuingState,
+                documentCode = facts.documentCode,
+                documentNumber = facts.documentNumber,
+                dateOfExpiry = facts.dateOfExpiry,
+                sodSigningTime = signingDate(signer),
+                dg12DateOfIssue = facts.dateOfIssue,
+            )
+        return deviations
+            .applicable(evidence, detail.mismatched)
+            .filter { it.dataGroup in KnownDeviations.TOLERABLE_DATA_GROUPS }
+    }
+
+    /** Retire les DG tolérés de la liste des écarts et recalcule le statut de la ligne. */
+    private fun tolerate(
+        hashes: Check,
+        tolerated: List<KnownDeviation>,
+    ): Check {
+        val detail = hashes.detail as? CheckDetail.DataGroupHashes
+        if (tolerated.isEmpty() || detail == null) return hashes
+        val numbers = tolerated.map { it.dataGroup }.toSet()
+        val mismatched = detail.mismatched.filter { it !in numbers }
+        val status = if (mismatched.isEmpty() && detail.missing.isEmpty()) CheckStatus.OK else CheckStatus.FAILED
+        return Check(CheckId.DG_HASHES, status, detail.copy(mismatched = mismatched, deviations = tolerated))
     }
 
     // --- EF.CardSecurity (PACE-CAM) ------------------------------------------------------
@@ -513,6 +586,8 @@ internal class PassiveAuthenticator(
         const val ERROR_CHAIN_BUDGET = "CHAIN_BUDGET"
         const val USUAL_VALIDITY_YEARS = 10L
         const val HEX = 16
+        const val DG1 = 1
+        const val DG12 = 12
 
         /** eContentType d'EF.CardSecurity : id-SecurityObject (BSI TR-03110 partie 3, ICAO 9303-11). */
         const val ID_SECURITY_OBJECT = "0.4.0.127.0.7.3.2.1"

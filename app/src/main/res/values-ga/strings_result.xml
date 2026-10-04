@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">Haiseanna nach meaitseálann: %1$s</string>
     <string name="result_detail_dg_all_match">Meaitseálann na haiseanna go léir.</string>
     <string name="result_detail_dg_missing">Grúpaí sonraí fógartha nár sholáthair an tsliseog: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: aimhrialtacht aitheanta arna foilsiú ag an eisitheoir, sonraí curtha i leataobh</string>
     <string name="result_detail_unsupported">Algartam gan tacaíocht: %1$s</string>
     <string name="result_detail_error">Earráid theicniúil: %1$s</string>
     <string name="result_detail_no_dg14">Níl DG14 sa cháipéis: ní thairgeann an tsliseog an tseiceáil seo.</string>

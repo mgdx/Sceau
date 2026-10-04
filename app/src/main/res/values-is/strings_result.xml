@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">Tætigildi stemma ekki: %1$s</string>
     <string name="result_detail_dg_all_match">Öll tætigildi stemma.</string>
     <string name="result_detail_dg_missing">Gagnahópar sem eru tilgreindir en kubburinn skilaði ekki: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: þekkt frávik sem útgefandi hefur birt, gögnum hafnað</string>
     <string name="result_detail_unsupported">Reiknirit ekki stutt: %1$s</string>
     <string name="result_detail_error">Tæknileg villa: %1$s</string>
     <string name="result_detail_no_dg14">Skilríkið inniheldur ekki DG14: kubburinn býður ekki upp á þessa prófun.</string>
