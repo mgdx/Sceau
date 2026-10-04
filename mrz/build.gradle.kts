@@ -25,6 +25,13 @@ dependencies {
     testImplementation(libs.junit)
 }
 
+tasks.test {
+    // Les tests rendent des MRZ de synthèse avec Java2D (police OCR-B de fonts/, jamais dans
+    // l'APK). Les variables SCEAU_FUZZ_* du fuzzing sont héritées de l'environnement, comme
+    // pour :core.
+    systemProperty("java.awt.headless", "true")
+}
+
 ktlint {
     version.set(libs.versions.ktlint)
 }
