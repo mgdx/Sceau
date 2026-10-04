@@ -18,6 +18,8 @@ internal class MrzFrameAnalyzer(
     private val analyzeFrame: (LumaFrame) -> MrzScanResult,
     private val resetScanner: () -> Unit,
     private val viewfinder: AtomicReference<ViewfinderGeometry?>,
+    /** Mesures de chaque image analysée, pour le diagnostic de l'APK de debug ; null sinon. */
+    private val onStats: ((FrameStats) -> Unit)? = null,
     private val onResult: (MrzScanResult) -> Unit,
 ) : ImageAnalysis.Analyzer {
     private var luma = ByteArray(0)
@@ -60,6 +62,7 @@ internal class MrzFrameAnalyzer(
             luma.fill(0)
             luma = ByteArray(size)
         }
+        val start = System.nanoTime()
         val result =
             try {
                 ScanGeometry.copyLuma(plane, rowStride, pixelStride, crop, luma)
@@ -68,6 +71,7 @@ internal class MrzFrameAnalyzer(
                 luma.fill(0)
             }
         if (result is MrzScanResult.Found) found = true
+        onStats?.invoke(FrameStats(width, height, crop.width, crop.height, System.nanoTime() - start, ScanOutcome.of(result)))
         onResult(result)
     }
 

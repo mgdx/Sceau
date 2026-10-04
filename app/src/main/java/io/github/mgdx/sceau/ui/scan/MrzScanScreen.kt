@@ -15,8 +15,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.compose.CameraXViewfinder
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.FocusMeteringAction
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
+import androidx.camera.core.SurfaceOrientedMeteringPointFactory
 import androidx.camera.core.SurfaceRequest
 import androidx.camera.core.TorchState
 import androidx.camera.core.resolutionselector.AspectRatioStrategy
@@ -26,6 +28,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.lifecycle.awaitInstance
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -68,6 +71,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -84,6 +88,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import io.github.mgdx.sceau.R
+import io.github.mgdx.sceau.demo.DemoMode
 import io.github.mgdx.sceau.mrz.MrzKeyFields
 import io.github.mgdx.sceau.mrz.MrzScanResult
 import io.github.mgdx.sceau.mrz.MrzScanner
@@ -125,6 +130,13 @@ fun MrzScanScreen(
     session: SessionViewModel,
     onDone: () -> Unit,
 ) {
+    // Écran restauré après la mort du processus (navigation sauvegardée, ViewModel neuf) : retour
+    // à l'accueil, vide (SPEC §8), comme Lecture et Résultat sur l'état Idle.
+    if (!session.scanRequested) {
+        val currentOnDone by rememberUpdatedState(onDone)
+        LaunchedEffect(Unit) { currentOnDone() }
+        return
+    }
     // Onglet Passeport : page de passeport ; onglet Carte d'identité (segment MRZ, D31) : carte TD1.
     val specimen = if (session.form.tab == DocumentTab.PASSPORT) SpecimenKind.PASSPORT else SpecimenKind.ID_CARD
     val context = LocalContext.current
@@ -254,6 +266,7 @@ private fun ScanContent(
     val viewfinder = remember { AtomicReference<ViewfinderGeometry?>(null) }
     var geometry by remember { mutableStateOf<ViewfinderGeometry?>(null) }
     var camera by remember { mutableStateOf<Camera?>(null) }
+    var diagnostics by remember { mutableStateOf<ScanDiagnosticsSnapshot?>(null) }
 
     ScanViewfinderLayout(
         geometry = geometry,
@@ -272,9 +285,11 @@ private fun ScanContent(
             if (cameraActive) {
                 CameraPreview(
                     viewfinder = viewfinder,
+                    geometry = geometry,
                     onCamera = { camera = it },
                     onStatus = onStatus,
                     onFound = onFound,
+                    onDiagnostics = { diagnostics = it },
                 )
             }
         },
@@ -283,6 +298,10 @@ private fun ScanContent(
             if (cameraActive && activeCamera != null && activeCamera.cameraInfo.hasFlashUnit()) {
                 TorchButton(activeCamera)
             }
+        },
+        diagnostics = {
+            // APK de debug uniquement : constante fausse en release, code retiré à la compilation.
+            if (DemoMode.SCAN_DIAGNOSTICS) diagnostics?.let { DemoMode.ScanDiagnosticsBanner(it) }
         },
     )
 }
@@ -305,6 +324,7 @@ internal fun ScanViewfinderLayout(
     modifier: Modifier = Modifier,
     preview: @Composable () -> Unit = {},
     torch: @Composable () -> Unit = {},
+    diagnostics: @Composable () -> Unit = {},
 ) {
     BoxWithConstraints(modifier = modifier.fillMaxSize()) {
         val showSpecimen = status == StatusLine.SEARCHING || status == StatusLine.SEEN || status == StatusLine.SUCCESS
@@ -346,23 +366,33 @@ internal fun ScanViewfinderLayout(
             if (status == StatusLine.UNSUPPORTED || status == StatusLine.CAMERA_UNAVAILABLE) {
                 Button(onClick = onManualEntry) { Text(stringResource(R.string.scan_manual_entry)) }
             }
+            diagnostics()
         }
     }
 }
 
-/** Lie Preview et ImageAnalysis (jamais ImageCapture) au cycle de vie de l'écran. */
+/**
+ * Lie Preview et ImageAnalysis (jamais ImageCapture) au cycle de vie de l'écran. Mise au point
+ * et exposition sur le centre du cadre de visée, relancées toutes les [REFOCUS_INTERVAL_MILLIS]
+ * jusqu'au succès ; un appui sur l'aperçu les déplace sous le doigt.
+ */
 @Composable
 private fun CameraPreview(
     viewfinder: AtomicReference<ViewfinderGeometry?>,
+    geometry: ViewfinderGeometry?,
     onCamera: (Camera?) -> Unit,
     onStatus: (StatusLine) -> Unit,
     onFound: (MrzKeyFields) -> Unit,
+    onDiagnostics: (ScanDiagnosticsSnapshot) -> Unit,
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val currentOnStatus by rememberUpdatedState(onStatus)
     val currentOnFound by rememberUpdatedState(onFound)
     val currentOnCamera by rememberUpdatedState(onCamera)
+    val currentOnDiagnostics by rememberUpdatedState(onDiagnostics)
+    var bound by remember { mutableStateOf<BoundCamera?>(null) }
+    var tap by remember { mutableStateOf<TapPoint?>(null) }
     var provider by remember { mutableStateOf<ProcessCameraProvider?>(null) }
     var surfaceRequest by remember { mutableStateOf<SurfaceRequest?>(null) }
     val scanner = remember { MrzScanner() }
@@ -386,8 +416,17 @@ private fun CameraPreview(
         val delivered = AtomicBoolean(false)
         val mainExecutor = ContextCompat.getMainExecutor(context)
         val executor = Executors.newSingleThreadExecutor()
+        // Diagnostic de l'APK de debug : agrégé sur le fil de l'analyse, affiché sur le principal.
+        val diagnostics = if (DemoMode.SCAN_DIAGNOSTICS) ScanDiagnostics() else null
+        val onStats: ((FrameStats) -> Unit)? =
+            diagnostics?.let { aggregator ->
+                { stats ->
+                    val snapshot = aggregator.add(stats, System.nanoTime())
+                    mainExecutor.execute { if (alive.get()) currentOnDiagnostics(snapshot) }
+                }
+            }
         val analyzer =
-            MrzFrameAnalyzer(scanner::analyze, scanner::reset, viewfinder) { result ->
+            MrzFrameAnalyzer(scanner::analyze, scanner::reset, viewfinder, onStats) { result ->
                 mainExecutor.execute {
                     if (!alive.get()) return@execute
                     if (result is MrzScanResult.Found) {
@@ -432,12 +471,16 @@ private fun CameraPreview(
             }
         if (camera == null) currentOnStatus(StatusLine.CAMERA_UNAVAILABLE)
         currentOnCamera(camera)
+        bound = camera?.let { BoundCamera(it, analysis) }
 
         // Mise en arrière-plan : CameraX ferme la caméra ; on oublie aussi l'état du scan.
         val observer =
             LifecycleEventObserver { _, event ->
                 if (event == Lifecycle.Event.ON_STOP) {
-                    executor.execute { analyzer.reset() }
+                    executor.execute {
+                        analyzer.reset()
+                        diagnostics?.reset()
+                    }
                     tracker.reset()
                     currentOnStatus(StatusLine.SEARCHING)
                 }
@@ -450,14 +493,90 @@ private fun CameraPreview(
             analysis.clearAnalyzer()
             cameraProvider.unbind(preview, analysis)
             surfaceRequest = null
+            bound = null
             currentOnCamera(null)
             executor.execute { analyzer.release() }
             executor.shutdown()
         }
     }
 
+    // Mise au point relancée périodiquement : la distance au document change pendant la visée.
+    LaunchedEffect(bound, geometry, tap) {
+        val target = bound ?: return@LaunchedEffect
+        val frame = geometry ?: return@LaunchedEffect
+        while (true) {
+            focusAndMeter(target, frame, tap)
+            delay(REFOCUS_INTERVAL_MILLIS)
+        }
+    }
+
     surfaceRequest?.let { request ->
-        CameraXViewfinder(surfaceRequest = request, modifier = Modifier.fillMaxSize())
+        CameraXViewfinder(
+            surfaceRequest = request,
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .pointerInput(Unit) { detectTapGestures { tap = TapPoint(it.x, it.y) } },
+        )
+    }
+}
+
+/** Caméra liée et cas d'usage d'analyse, dont le repère sert à placer la mise au point. */
+private class BoundCamera(
+    val camera: Camera,
+    val analysis: ImageAnalysis,
+)
+
+/** Appui sur l'aperçu, en pixels de la vue ; chaque appui est un nouvel objet (relance). */
+private class TapPoint(
+    val x: Float,
+    val y: Float,
+)
+
+/**
+ * Mise au point et exposition (AF et AE) au centre du cadre de visée, ou sous le doigt après un
+ * appui. Sans mise au point réglable (`isFocusMeteringSupported` faux), ne fait rien. Le point
+ * est exprimé dans le repère du tampon d'analyse, qui a le format de l'aperçu (16:9).
+ */
+private fun focusAndMeter(
+    target: BoundCamera,
+    geometry: ViewfinderGeometry,
+    tap: TapPoint?,
+) {
+    try {
+        val info = target.analysis.resolutionInfo ?: return
+        val width = info.resolution.width
+        val height = info.resolution.height
+        val crop = info.cropRect
+        val visible = PixelRect(crop.left, crop.top, crop.width(), crop.height())
+        val point =
+            if (tap == null) {
+                ScanGeometry.meteringPoint(width, height, info.rotationDegrees, geometry, visible)
+            } else {
+                ScanGeometry.viewToBuffer(
+                    width,
+                    height,
+                    info.rotationDegrees,
+                    geometry.viewWidth,
+                    geometry.viewHeight,
+                    tap.x,
+                    tap.y,
+                    visible,
+                )
+            }
+        val factory = SurfaceOrientedMeteringPointFactory(width.toFloat(), height.toFloat(), target.analysis)
+        val action =
+            FocusMeteringAction
+                .Builder(factory.createPoint(point.x, point.y), FocusMeteringAction.FLAG_AF or FocusMeteringAction.FLAG_AE)
+                .disableAutoCancel()
+                .build()
+        if (!target.camera.cameraInfo.isFocusMeteringSupported(action)) return
+        // Résultat ignoré : une demande annulée par la suivante ou refusée n'a pas de suite.
+        target.camera.cameraControl.startFocusAndMetering(action)
+    } catch (_: IllegalStateException) {
+        // Cas d'usage délié entre-temps (sortie de l'écran) : rien à faire.
+    } catch (_: IllegalArgumentException) {
+        // Point ou action refusés par CameraX : la mise au point continue de l'appareil reste.
     }
 }
 
@@ -573,8 +692,16 @@ private fun openAppSettings(context: Context) {
     }
 }
 
-private const val ANALYSIS_WIDTH = 1280
-private const val ANALYSIS_HEIGHT = 720
+/**
+ * Résolution visée pour l'analyse, au format 16:9 de l'aperçu pour que le cadre reste aligné ;
+ * repli sur la plus proche. En 1080p portrait, la zone recadrée fait environ 1 000 × 350 pixels
+ * (tableau d'environ 350 Ko, réutilisé d'une image à l'autre).
+ */
+private const val ANALYSIS_WIDTH = 1920
+private const val ANALYSIS_HEIGHT = 1080
+
+/** Intervalle de relance de la mise au point sur le cadre, tant que la MRZ n'est pas lue. */
+private const val REFOCUS_INTERVAL_MILLIS = 3_000L
 private const val SCRIM_ALPHA = 0.6f
 
 /** Trait du cadre de visée, repris à l'échelle par [MrzSpecimenIllustration]. */
