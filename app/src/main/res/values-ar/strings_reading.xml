@@ -17,6 +17,7 @@
     <string name="reading_error_not_icao">هذه الوثيقة غير مطابقة لمعيار ICAO 9303، ولا يمكن قراءة شريحتها.</string>
     <string name="reading_error_timeout">انتهت المهلة: لم تستجب الشريحة في الوقت المناسب. أعد المحاولة مع إبقاء الوثيقة ثابتة.</string>
     <string name="reading_error_can_without_pace">لا تُقرأ هذه الوثيقة باستخدام رقم CAN. استخدم علامة التبويب «جواز السفر» وأدخل بيانات MRZ.</string>
+    <string name="reading_error_access_restricted">شريحة هذه الوثيقة مخصّصة للسلطات المخوّلة فقط، ولا يستطيع Sceau قراءتها، ولن تغيّر إعادة المحاولة شيئًا. هذا هو حال بطاقات الهوية الألمانية الصادرة قبل أغسطس 2021.</string>
     <string name="reading_error_unexpected">حدث خطأ غير متوقع.</string>
     <string name="reading_error_code">رمز الخطأ: %1$s</string>
     <string name="reading_retry">إعادة المحاولة</string>

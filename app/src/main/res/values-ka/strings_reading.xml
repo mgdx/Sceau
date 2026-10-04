@@ -17,6 +17,7 @@
     <string name="reading_error_not_icao">ეს დოკუმენტი არ შეესაბამება ICAO 9303 სტანდარტს: მისი ჩიპის წაკითხვა შეუძლებელია.</string>
     <string name="reading_error_timeout">დრო ამოიწურა: ჩიპმა დროულად არ უპასუხა. ხელახლა სცადეთ და დოკუმენტი უძრავად დაიჭირეთ.</string>
     <string name="reading_error_can_without_pace">ეს დოკუმენტი CAN-ით არ იკითხება. გამოიყენეთ ჩანართი „პასპორტი“ და შეიყვანეთ MRZ-ის მონაცემები.</string>
+    <string name="reading_error_access_restricted">ამ დოკუმენტის ჩიპი მხოლოდ უფლებამოსილი ორგანოებისთვისაა განკუთვნილი: Sceau ვერ წაიკითხავს მას და ხელახალი ცდა ვერაფერს შეცვლის. ასეა 2021 წლის აგვისტომდე გაცემული გერმანული პირადობის მოწმობების შემთხვევაში.</string>
     <string name="reading_error_unexpected">მოხდა მოულოდნელი შეცდომა.</string>
     <string name="reading_error_code">შეცდომის კოდი: %1$s</string>
     <string name="reading_retry">ხელახლა ცდა</string>

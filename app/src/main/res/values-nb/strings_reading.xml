@@ -17,6 +17,7 @@
     <string name="reading_error_not_icao">Dette dokumentet følger ikke ICAO 9303-standarden: brikken kan ikke leses av.</string>
     <string name="reading_error_timeout">Tidsavbrudd: brikken svarte ikke i tide. Prøv igjen, og hold dokumentet i ro.</string>
     <string name="reading_error_can_without_pace">Dette dokumentet kan ikke leses av med CAN. Bruk fanen Pass og skriv inn MRZ-opplysningene.</string>
+    <string name="reading_error_access_restricted">Dokumentets brikke er forbeholdt autoriserte myndigheter: Sceau kan ikke lese den av, og et nytt forsøk endrer ikke på det. Det gjelder tyske identitetskort utstedt før august 2021.</string>
     <string name="reading_error_unexpected">Det oppstod en uventet feil.</string>
     <string name="reading_error_code">Feilkode: %1$s</string>
     <string name="reading_retry">Prøv igjen</string>

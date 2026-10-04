@@ -26,6 +26,7 @@
     <!-- Identité -->
     <string name="result_section_identity">პირადობა</string>
     <string name="result_expired">დოკუმენტს ვადა გაუვიდა</string>
+    <string name="result_no_identity_data">ამ ბარათის ჩიპი პირად მონაცემებს არ შეიცავს: შესაძლებელია მხოლოდ მისი ნამდვილობის შემოწმება. ასეა ევროკავშირის მოქალაქეებისთვის გაცემული გერმანული eID ბარათის შემთხვევაში.</string>
     <string name="result_field_surname">გვარი</string>
     <string name="result_field_given_names">სახელი</string>
     <string name="result_field_sex">სქესი</string>

@@ -310,18 +310,28 @@ private fun ErrorContent(
         )
     }
     Spacer(Modifier.height(32.dp))
-    Button(
-        onClick = onRetry,
-        modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
-    ) {
-        Text(stringResource(R.string.reading_retry))
-    }
-    Spacer(Modifier.height(8.dp))
-    OutlinedButton(
-        onClick = onCancel,
-        modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
-    ) {
-        Text(stringResource(R.string.reading_cancel))
+    // Décision D36 : pas de « Réessayer » quand un nouvel essai ne peut rien changer.
+    if (ReadingErrors.canRetry(code)) {
+        Button(
+            onClick = onRetry,
+            modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
+        ) {
+            Text(stringResource(R.string.reading_retry))
+        }
+        Spacer(Modifier.height(8.dp))
+        OutlinedButton(
+            onClick = onCancel,
+            modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
+        ) {
+            Text(stringResource(R.string.reading_cancel))
+        }
+    } else {
+        Button(
+            onClick = onCancel,
+            modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
+        ) {
+            Text(stringResource(R.string.reading_cancel))
+        }
     }
 }
 

@@ -17,6 +17,7 @@
     <string name="reading_error_not_icao">この書類は ICAO 9303 規格に準拠していないため、IC チップを読み取れません。</string>
     <string name="reading_error_timeout">タイムアウト：IC チップが時間内に応答しませんでした。書類を動かさずに、もう一度お試しください。</string>
     <string name="reading_error_can_without_pace">この書類は CAN では読み取れません。［パスポート］タブを使用して MRZ のデータを入力してください。</string>
+    <string name="reading_error_access_restricted">この書類の IC チップは権限のある当局専用のため、Sceau では読み取れません。再試行しても結果は変わりません。2021 年 8 月より前に発行されたドイツの身分証明書が該当します。</string>
     <string name="reading_error_unexpected">予期しないエラーが発生しました。</string>
     <string name="reading_error_code">エラーコード：%1$s</string>
     <string name="reading_retry">再試行</string>

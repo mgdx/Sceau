@@ -26,6 +26,7 @@
     <!-- Identité -->
     <string name="result_section_identity">पहचान</string>
     <string name="result_expired">दस्तावेज़ की अवधि समाप्त</string>
+    <string name="result_no_identity_data">इस कार्ड की चिप में पहचान से जुड़ा कोई डेटा नहीं है: केवल इसकी प्रामाणिकता जाँची जा सकती है। यूरोपीय संघ के नागरिकों के लिए जारी जर्मन eID कार्ड के साथ ऐसा ही होता है।</string>
     <string name="result_field_surname">उपनाम</string>
     <string name="result_field_given_names">दिया गया नाम</string>
     <string name="result_field_sex">लिंग</string>

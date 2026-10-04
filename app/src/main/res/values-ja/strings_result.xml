@@ -26,6 +26,7 @@
     <!-- Identité -->
     <string name="result_section_identity">身分事項</string>
     <string name="result_expired">有効期限切れ</string>
+    <string name="result_no_identity_data">このカードの IC チップには身元情報が含まれていないため、確認できるのはカードの真正性のみです。EU 市民向けのドイツの eID カードが該当します。</string>
     <string name="result_field_surname">姓</string>
     <string name="result_field_given_names">名</string>
     <string name="result_field_sex">性別</string>

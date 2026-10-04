@@ -26,6 +26,7 @@
     <!-- Identité -->
     <string name="result_section_identity">Личные данные</string>
     <string name="result_expired">Срок действия истек</string>
+    <string name="result_no_identity_data">Чип этой карты не содержит персональных данных: можно проверить только её подлинность. Так обстоит дело с немецкой картой eID для граждан ЕС.</string>
     <string name="result_field_surname">Фамилия</string>
     <string name="result_field_given_names">Имя</string>
     <string name="result_field_sex">Пол</string>

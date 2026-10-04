@@ -18,9 +18,17 @@ internal object ReadingErrors {
             "NOT_ICAO" -> R.string.reading_error_not_icao
             "TIMEOUT" -> R.string.reading_error_timeout
             "CAN_WITHOUT_PACE" -> R.string.reading_error_can_without_pace
+            ACCESS_RESTRICTED -> R.string.reading_error_access_restricted
             else -> R.string.reading_error_unexpected
         }
 
+    /**
+     * Faux si un nouvel essai ne peut rien changer : puce réservée aux autorités habilitées
+     * (`ACCESS_RESTRICTED`, décision D36). L'écran n'offre alors pas « Réessayer ».
+     */
+    fun canRetry(code: String): Boolean = code.substringBefore(DETAIL_SEPARATOR) != ACCESS_RESTRICTED
+
+    private const val ACCESS_RESTRICTED = "ACCESS_RESTRICTED"
     private const val DETAIL_SEPARATOR = '-'
 }
 

@@ -120,6 +120,76 @@ object SimulatedDocuments {
         return SimulatedIdentityDocument(document, PaceSettings(can), SPECIMEN_DOCUMENT_NUMBER, SPECIMEN_DATE_OF_BIRTH)
     }
 
+    private const val GERMAN_PKI_SEED = 20_201_101L
+
+    /** CAN de la carte eID-UB simulée. */
+    const val EID_UB_CAN = "654321"
+
+    /** PKI de test « allemande » : CSCA-TEST-GERMANY (EC brainpoolP256r1, pays DE), clés reproductibles. */
+    fun germanTestPki(seed: Long = GERMAN_PKI_SEED): TestPki =
+        TestPki(TestKeyType.EC, name = "SCEAU TEST", country = "DE", seed = seed, cscaCommonName = "CSCA-TEST-GERMANY")
+
+    /**
+     * Carte eID allemande pour citoyens de l'Union simulée (eID-UB, BSI TR-03127 v1.40, décision
+     * D36) : l'application ICAO ne porte **aucune donnée d'identité**.
+     *
+     * - EF.CardAccess : même `PACEInfo` que la CNIe ; lecture avec le CAN [EID_UB_CAN] ;
+     * - DG1 : MRZ TD1 de remplacement, écrite octet par octet ([eidUbDg1]) : code « UB », État
+     *   « D », « < » partout ailleurs (ni nom, ni numéro, ni dates, ni chiffres de contrôle) ;
+     * - DG2 : image statique, la même pour toutes les cartes (logo eID sur une vraie carte ; ici
+     *   l'image synthétique des spécimens) ;
+     * - DG14 : clé de Chip Authentication ECDH (CA AES-128). Ni DG15 (pas d'Active
+     *   Authentication, TR-03127 §3.3), ni DG11, ni DG12 ;
+     * - EF.SOD : SHA-256, sans `signingTime`, signé par « DS-TEST-GERMANY ». Sans aucune date
+     *   (ni DG12, ni signingTime, ni date d'expiration), la validité du DS n'est pas évaluable.
+     *
+     * Seule la clé CAN permet la lecture : la clé MRZ de [SimulatedIdentityDocument] n'a pas de
+     * sens pour ce document (numéro vide).
+     */
+    fun germanEidUb(
+        can: String = EID_UB_CAN,
+        pki: TestPki = germanTestPki(),
+    ): SimulatedIdentityDocument {
+        val ds = pki.issueDs(dsKeyType = TestKeyType.EC, commonName = "DS-TEST-GERMANY")
+        val groups = sortedMapOf<Int, ByteArray>()
+        groups[DG1] = eidUbDg1()
+        groups[DG2] = portraitDg2()
+        val caKeys = pki.generateEc(TestPki.CURVE)
+        groups[DG14] =
+            DG14File(
+                listOf<SecurityInfo>(
+                    ChipAuthenticationPublicKeyInfo(caKeys.public),
+                    ChipAuthenticationInfo(SecurityInfo.ID_CA_ECDH_AES_CBC_CMAC_128, CA_VERSION),
+                ),
+            ).encoded
+        val sod = TestSod.build(ds, groups, SodOptions(signingTime = null))
+        val document =
+            TestDocument(
+                pki = pki,
+                ds = ds,
+                sod = sod,
+                dataGroups = groups,
+                caKeyPair = caKeys,
+                aaKeyPair = null,
+                aaDigestAlgorithm = null,
+                dateOfIssue = null,
+                dateOfExpiry = SPECIMEN_DATE_OF_EXPIRY,
+                documentCode = "UB",
+            )
+        return SimulatedIdentityDocument(document, PaceSettings(can), documentNumber = "", dateOfBirth = SPECIMEN_DATE_OF_BIRTH)
+    }
+
+    /**
+     * DG1 d'une eID-UB : tag 61, puis 5F1F et les 90 caractères de la MRZ TD1 « UBD<<<… ».
+     * Écrit à la main : les constructeurs de MRZ de JMRTD calculent des chiffres de contrôle là
+     * où la carte ne porte que des « < ».
+     */
+    fun eidUbDg1(): ByteArray {
+        val mrz = "UBD".padEnd(TD1_MRZ_LENGTH, '<').toByteArray(Charsets.US_ASCII)
+        val inner = byteArrayOf(TAG_MRZ_1, TAG_MRZ_2, TD1_MRZ_LENGTH.toByte()) + mrz
+        return byteArrayOf(TAG_DG1, inner.size.toByte()) + inner
+    }
+
     /** Octets du portrait synthétique JPEG 2000 embarqué. */
     fun specimenPortrait(): ByteArray =
         checkNotNull(SimulatedDocuments::class.java.getResourceAsStream(PORTRAIT_RESOURCE)) { PORTRAIT_RESOURCE }
@@ -209,4 +279,8 @@ object SimulatedDocuments {
     private const val DG12 = 12
     private const val DG14 = 14
     private const val DG15 = 15
+    private const val TD1_MRZ_LENGTH = 90
+    private const val TAG_DG1: Byte = 0x61
+    private const val TAG_MRZ_1: Byte = 0x5F
+    private const val TAG_MRZ_2: Byte = 0x1F
 }

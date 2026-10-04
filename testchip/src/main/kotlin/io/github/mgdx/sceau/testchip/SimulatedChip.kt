@@ -34,6 +34,9 @@ import java.security.PrivateKey
  *   MSE:Set AT + GENERAL AUTHENTICATE (AES), ECDH avec [caPrivateKey], puis nouvelle session
  *   de messagerie sécurisée (SSC = 0).
  *   [refuseChipAuthentication] : la puce répond 6A80 au MSE de la CA, sans changer de session.
+ * - Accès réservé aux terminaux étatiques (D36) : [restrictedApplet] (6982 à la sélection de
+ *   l'applet) et [restrictedFiles] (6982 à la sélection de ces fichiers, même sous messagerie
+ *   sécurisée).
  * - Active Authentication : INTERNAL AUTHENTICATE sous messagerie sécurisée → [aaResponder].
  * - Retrait du document : dès que [removeAfterApdus] APDU ont été reçues, chaque APDU
  *   suivante lève [SceauException.ConnectionLost].
@@ -75,6 +78,14 @@ class SimulatedChip(
     private val cardSecurity: ByteArray? = null,
     /** PACE-CAM : la puce envoie des données de Chip Authentication fausses (CA.IC + 1). */
     tamperChipAuthenticationMapping: Boolean = false,
+    /**
+     * Application ICAO réservée aux terminaux étatiques (carte d'identité allemande délivrée
+     * avant le 2021-08-02, décision D36) : 6982 à sa sélection, en clair comme sous messagerie
+     * sécurisée.
+     */
+    private val restrictedApplet: Boolean = false,
+    /** FID de fichiers de l'applet réservés aux terminaux étatiques : 6982 à leur sélection, même sous messagerie sécurisée (D36). */
+    private val restrictedFiles: Collection<Int> = emptySet(),
 ) : CardTransport {
     /** Lecture d'un fichier servie par la puce : FID, et session sous laquelle (null : en clair). */
     data class FileRead(
@@ -252,6 +263,7 @@ class SimulatedChip(
         return when (command.p1) {
             P1_SELECT_BY_AID -> {
                 if (!command.data.contentEquals(ICAO_AID)) return status(SW_FILE_NOT_FOUND)
+                if (restrictedApplet) return status(SW_SECURITY_STATUS)
                 appletSelected = true
                 clearCurrentFile()
                 status(SW_OK)
@@ -305,6 +317,7 @@ class SimulatedChip(
             return status(SW_OK)
         }
         val content = files[fid] ?: return status(SW_FILE_NOT_FOUND)
+        if (fid in restrictedFiles) return status(SW_SECURITY_STATUS)
         // Les fichiers de l'applet ne sont accessibles qu'après BAC, sous messagerie sécurisée.
         if (!secured) return status(SW_SECURITY_STATUS)
         currentFile = content

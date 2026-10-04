@@ -18,9 +18,10 @@ releaseRuntimeClasspath` ne le mentionne pas (décision D17).
 | `TestDocument`, `TestSod`, `SodOptions` | DG factices et EF.SOD signé, y compris les altérations des cas d'échec. |
 | `TestCardSecurity` | EF.CardSecurity signé par le DS (PACE-CAM), mêmes altérations que le SOD. |
 | `TestTrustStore` | `TrustStore` de test contenant les CSCA choisis. |
-| `SimulatedChip` | `CardTransport` qui se comporte comme une puce : EF.CardAccess, PACE, BAC, messagerie sécurisée 3DES/AES, lecture des fichiers, Chip Authentication, Active Authentication, liaison réinitialisable (`reconnect`). Note sous quelle session chaque fichier est servi (`fileReads`, `sessionsServing`). |
+| `SimulatedChip` | `CardTransport` qui se comporte comme une puce : EF.CardAccess, PACE, BAC, messagerie sécurisée 3DES/AES, lecture des fichiers, Chip Authentication, Active Authentication, liaison réinitialisable (`reconnect`). Note sous quelle session chaque fichier est servi (`fileReads`, `sessionsServing`). Peut réserver l'applet ou des fichiers aux autorités (`restrictedApplet`, `restrictedFiles` : SW 6982, D36). |
 | `PaceSettings`, `PacePassword` | PACE de la puce simulée (EF.CardAccess, CAN). |
 | `SimulatedDocuments.frenchIdCard()` | CNIe française simulée prête à lire (voir ci-dessous). |
+| `SimulatedDocuments.germanEidUb()` | Carte eID allemande pour citoyens de l'Union (eID-UB) : DG1 sans donnée d'identité (MRZ « UBD<<<… »), CA sans AA (décision D36). |
 
 Tous les échanges cryptographiques côté puce (BAC, PACE, messagerie sécurisée, CA) sont écrits
 d'après ICAO 9303-11 et BSI TR-03110 avec les primitives de BouncyCastle, **sans** le code

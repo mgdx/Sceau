@@ -282,6 +282,11 @@ class TextOverflowTest {
                 "CONNECTION_LOST" to DemoCard(FailingTransport { throw SceauException.ConnectionLost() }, can, card.trustStore),
                 "TIMEOUT" to DemoCard(FailingTransport { throw SceauException.Timeout() }, can, card.trustStore),
                 "UNEXPECTED" to DemoCard(FailingTransport { throw IllegalStateException() }, can, card.trustStore),
+                // D36 : EF.SOD réservé aux terminaux étatiques (cartes allemandes d'avant 2021-08). Code
+                // ACCESS_RESTRICTED-READ_DATA-SOD : la variante SELECT_APPLET, d'un seul tenant, est plus
+                // large que l'écran et se coupe en fin de ligne, comme les longs codes UNEXPECTED.
+                "ACCESS_RESTRICTED" to
+                    DemoCard(SimulatedChip(card.document, card.pace, restrictedFiles = setOf(SimulatedChip.FID_SOD)), can, card.trustStore),
             )
         errors.forEach { (code, demoCard) ->
             session.startDemo(demoCard)
@@ -310,6 +315,30 @@ class TextOverflowTest {
         assertEquals(Verdict.UNKNOWN_ISSUER, (session.state.value as ReadState.Done).report.verdict)
         render("Résultat, émetteur inconnu", resultContent, afterShow = ::showResultDetails)
         session.clear()
+
+        // D36 : carte eID-UB, sans donnée d'identité ; ni photo, ni champ vide.
+        val eidUb = SimulatedDocuments.germanEidUb()
+        session.startDemo(DemoCard(eidUb.chip(), checkNotNull(eidUb.canKey), eidUb.trustStore))
+        awaitState("rapport eID-UB") { it is ReadState.Done }
+        assertEquals(Verdict.AUTHENTIC, (session.state.value as ReadState.Done).report.verdict)
+        render("Résultat, eID-UB sans donnée d'identité", resultContent, afterShow = {
+            settle()
+            assertTrue(
+                "bandeau « aucune donnée d'identité » absent",
+                compose.onAllNodes(hasTextRes(R.string.result_no_identity_data)).fetchSemanticsNodes().isNotEmpty(),
+            )
+            assertTrue(
+                "photo affichée pour une eID-UB",
+                compose.onAllNodes(hasTextRes(R.string.result_photo_unavailable)).fetchSemanticsNodes().isEmpty() &&
+                    compose.onAllNodes(hasContentDescriptionRes(R.string.result_photo_description)).fetchSemanticsNodes().isEmpty(),
+            )
+            assertTrue(
+                "nom affiché pour une eID-UB",
+                compose.onAllNodes(hasTextRes(R.string.result_field_surname)).fetchSemanticsNodes().isEmpty(),
+            )
+            expandChecks()
+        })
+        session.clear()
     }
 
     /** Attend la fin du décodage du portrait (indisponible sous Robolectric), puis déplie les contrôles. */
@@ -318,6 +347,11 @@ class TextOverflowTest {
             compose.onAllNodes(hasTextRes(R.string.result_photo_unavailable)).fetchSemanticsNodes().isNotEmpty() ||
                 compose.onAllNodes(hasContentDescriptionRes(R.string.result_photo_description)).fetchSemanticsNodes().isNotEmpty()
         }
+        expandChecks()
+    }
+
+    /** Déplie tous les contrôles de l'écran Résultat. */
+    private fun expandChecks() {
         val expand =
             SemanticsMatcher("déplier") {
                 it.config.getOrNull(SemanticsActions.OnClick)?.label ==

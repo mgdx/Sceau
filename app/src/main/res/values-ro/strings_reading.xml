@@ -17,6 +17,7 @@
     <string name="reading_error_not_icao">Acest document nu respectă standardul ICAO 9303: cipul său nu poate fi citit.</string>
     <string name="reading_error_timeout">Timpul a expirat: cipul nu a răspuns la timp. Reîncercați ținând documentul nemișcat.</string>
     <string name="reading_error_can_without_pace">Acest document nu se citește cu un CAN. Folosiți fila Pașaport și introduceți datele din MRZ.</string>
+    <string name="reading_error_access_restricted">Cipul acestui document este rezervat autorităților abilitate: Sceau nu îl poate citi, iar o nouă încercare nu va schimba nimic. Este cazul cărților de identitate germane eliberate înainte de august 2021.</string>
     <string name="reading_error_unexpected">A apărut o eroare neașteptată.</string>
     <string name="reading_error_code">Cod de eroare: %1$s</string>
     <string name="reading_retry">Reîncercați</string>

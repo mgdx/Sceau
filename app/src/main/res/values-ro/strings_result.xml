@@ -26,6 +26,7 @@
     <!-- Identité -->
     <string name="result_section_identity">Identitate</string>
     <string name="result_expired">Document expirat</string>
+    <string name="result_no_identity_data">Cipul acestui card nu conține date de identitate: se poate verifica doar autenticitatea sa. Este cazul cardului eID german pentru cetățenii Uniunii.</string>
     <string name="result_field_surname">Nume</string>
     <string name="result_field_given_names">Prenume</string>
     <string name="result_field_sex">Sex</string>

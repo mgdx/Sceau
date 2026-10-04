@@ -188,12 +188,18 @@ internal class SecureChannel(
         } catch (e: CardServiceException) {
             chip.rethrowTransportFailure()
             if (e.statusWord() == SW_FILE_NOT_FOUND) throw SceauException.NotIcaoDocument()
-            throw StepFailure("SELECT_APPLET", e)
+            // D36 : application ICAO réservée aux terminaux étatiques, refusée malgré un canal
+            // établi. Une sélection en clair (avant BAC) refusée garde son code technique.
+            if (secure && e.statusWord() == DocumentReader.SW_SECURITY_STATUS_NOT_SATISFIED) {
+                throw SceauException.AccessRestricted(SELECT_APPLET)
+            }
+            throw StepFailure(SELECT_APPLET, e)
         }
     }
 
     companion object {
         private const val SW_FILE_NOT_FOUND = 0x6A82
+        private const val SELECT_APPLET = "SELECT_APPLET"
         private const val SW1_MASK = 0xFF00
         private const val SW1_AUTHENTICATION_FAILED = 0x6300
 

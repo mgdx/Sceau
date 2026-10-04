@@ -26,6 +26,7 @@
     <!-- Identité -->
     <string name="result_section_identity">זהות</string>
     <string name="result_expired">פג תוקף המסמך</string>
+    <string name="result_no_identity_data">השבב של הכרטיס הזה אינו מכיל נתוני זהות: אפשר לאמת רק את מקוריותו. כך הדבר בכרטיס ה-eID הגרמני לאזרחי האיחוד.</string>
     <string name="result_field_surname">שם משפחה</string>
     <string name="result_field_given_names">שמות פרטיים</string>
     <string name="result_field_sex">מין</string>

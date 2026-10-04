@@ -26,6 +26,7 @@
     <!-- Identité -->
     <string name="result_section_identity">Personas dati</string>
     <string name="result_expired">Dokumenta derīguma termiņš ir beidzies</string>
+    <string name="result_no_identity_data">Šīs kartes mikroshēmā nav personas datu: var pārbaudīt tikai kartes autentiskumu. Tā tas ir ar Vācijas eID karti Savienības pilsoņiem.</string>
     <string name="result_field_surname">Uzvārds</string>
     <string name="result_field_given_names">Vārdi</string>
     <string name="result_field_sex">Dzimums</string>

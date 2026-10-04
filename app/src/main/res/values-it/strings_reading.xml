@@ -17,6 +17,7 @@
     <string name="reading_error_not_icao">Questo documento non è conforme allo standard ICAO 9303: il suo chip non può essere letto.</string>
     <string name="reading_error_timeout">Tempo scaduto: il chip non ha risposto in tempo. Riprova tenendo fermo il documento.</string>
     <string name="reading_error_can_without_pace">Questo documento non si legge con un CAN. Usa la scheda Passaporto e inserisci i dati della MRZ.</string>
+    <string name="reading_error_access_restricted">Il chip di questo documento è riservato alle autorità abilitate: Sceau non può leggerlo e un nuovo tentativo non cambierà nulla. È il caso delle carte d’identità tedesche rilasciate prima di agosto 2021.</string>
     <string name="reading_error_unexpected">Si è verificato un errore imprevisto.</string>
     <string name="reading_error_code">Codice di errore: %1$s</string>
     <string name="reading_retry">Riprova</string>

@@ -81,14 +81,16 @@ internal class ReadingSession(
      * Une erreur technique du transport (`UNEXPECTED-IO-…`) ne dit pas à quelle étape elle
      * s'est produite : l'étape est ajoutée en tête de son identifiant. De même pour un délai ou
      * une perte de liaison porteurs d'un diagnostic (`TIMEOUT-INS86-L10` devient
-     * `TIMEOUT-SECURE_CHANNEL-INS86-L10`). Les autres codes (`ACCESS_DENIED`…) sont renvoyés
-     * tels quels.
+     * `TIMEOUT-SECURE_CHANNEL-INS86-L10`), et pour un accès réservé (`ACCESS_RESTRICTED-SOD`
+     * devient `ACCESS_RESTRICTED-READ_DATA-SOD`, D36). Les autres codes (`ACCESS_DENIED`…) sont
+     * renvoyés tels quels.
      */
     private fun SceauException.withStep(step: Step): SceauException =
         when {
             this is SceauException.Unexpected -> SceauException.Unexpected("${step.name}-$detail", this)
             this is SceauException.Timeout && detail != null -> SceauException.Timeout(this, "${step.name}-$detail")
             this is SceauException.ConnectionLost && detail != null -> SceauException.ConnectionLost(this, "${step.name}-$detail")
+            this is SceauException.AccessRestricted -> SceauException.AccessRestricted("${step.name}-$detail")
             else -> this
         }
 

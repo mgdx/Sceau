@@ -17,6 +17,7 @@
     <string name="reading_error_not_icao">이 신분증은 ICAO 9303 표준을 따르지 않아 칩을 읽을 수 없습니다.</string>
     <string name="reading_error_timeout">시간 초과: 칩이 제때 응답하지 않았습니다. 신분증을 움직이지 말고 다시 시도하세요.</string>
     <string name="reading_error_can_without_pace">이 신분증은 CAN으로 읽을 수 없습니다. ‘여권’ 탭에서 MRZ 데이터를 입력하세요.</string>
+    <string name="reading_error_access_restricted">이 신분증의 칩은 권한 있는 기관만 읽을 수 있어 Sceau로는 읽을 수 없으며, 다시 시도해도 결과는 같습니다. 2021년 8월 이전에 발급된 독일 신분증이 이에 해당합니다.</string>
     <string name="reading_error_unexpected">예기치 않은 오류가 발생했습니다.</string>
     <string name="reading_error_code">오류 코드: %1$s</string>
     <string name="reading_retry">다시 시도</string>

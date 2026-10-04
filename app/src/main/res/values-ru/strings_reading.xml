@@ -17,6 +17,7 @@
     <string name="reading_error_not_icao">Документ не соответствует стандарту ICAO 9303: его чип не может быть считан.</string>
     <string name="reading_error_timeout">Время ожидания истекло: чип не ответил вовремя. Повторите попытку, держа документ неподвижно.</string>
     <string name="reading_error_can_without_pace">Этот документ не считывается по CAN. Откройте вкладку «Паспорт» и введите данные MRZ.</string>
+    <string name="reading_error_access_restricted">Чип этого документа доступен только уполномоченным органам: Sceau не может его прочитать, и повторная попытка ничего не изменит. Так обстоит дело с немецкими удостоверениями личности, выданными до августа 2021 года.</string>
     <string name="reading_error_unexpected">Произошла непредвиденная ошибка.</string>
     <string name="reading_error_code">Код ошибки: %1$s</string>
     <string name="reading_retry">Повторить</string>

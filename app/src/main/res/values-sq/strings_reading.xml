@@ -17,6 +17,7 @@
     <string name="reading_error_not_icao">Ky dokument nuk është në përputhje me standardin ICAO 9303: çipi i tij nuk mund të lexohet.</string>
     <string name="reading_error_timeout">Koha mbaroi: çipi nuk u përgjigj në kohë. Provo përsëri duke e mbajtur dokumentin të palëvizur.</string>
     <string name="reading_error_can_without_pace">Ky dokument nuk lexohet me CAN. Përdor skedën Pasaportë dhe fut të dhënat e MRZ-së.</string>
+    <string name="reading_error_access_restricted">Çipi i këtij dokumenti është i rezervuar për autoritetet e autorizuara: Sceau nuk mund ta lexojë dhe një përpjekje e re nuk do të ndryshojë asgjë. Ky është rasti i kartave të identitetit gjermane të lëshuara para gushtit 2021.</string>
     <string name="reading_error_unexpected">Ndodhi një gabim i papritur.</string>
     <string name="reading_error_code">Kodi i gabimit: %1$s</string>
     <string name="reading_retry">Provo përsëri</string>

@@ -88,6 +88,19 @@ sealed class SceauException(
     class CanWithoutPace : SceauException("CAN_WITHOUT_PACE")
 
     /**
+     * Décision D36 : canal sécurisé établi (PACE ou BAC réussi), mais la puce refuse l'accès
+     * (SW 6982, *security status not satisfied*) à l'application ICAO ou à un fichier
+     * indispensable (EF.SOD, DG1). Elle les réserve aux terminaux d'inspection étatiques
+     * (Terminal Authentication), comme les cartes d'identité allemandes délivrées avant le
+     * 2021-08-02 : un nouvel essai n'y changera rien. [detail] est un diagnostic sans donnée
+     * personnelle (étape puis élément refusé : `READ_DATA-SOD`) ; [code] vaut alors
+     * `ACCESS_RESTRICTED-<detail>`.
+     */
+    class AccessRestricted(
+        val detail: String,
+    ) : SceauException("ACCESS_RESTRICTED-$detail")
+
+    /**
      * Le document a été retiré (TagLostException ou équivalent). [detail], facultatif, est un
      * suffixe de diagnostic sans donnée personnelle (étape, INS et longueur de l'APDU) :
      * [code] vaut alors `CONNECTION_LOST-<detail>`.
