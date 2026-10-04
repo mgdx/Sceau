@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">Хешеви који се не подударају: %1$s</string>
     <string name="result_detail_dg_all_match">Сви хешеви се подударају.</string>
     <string name="result_detail_dg_missing">Групе података које су најављене, али их чип није доставио: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: позната аномалија коју је објавио издавалац, подаци су изостављени</string>
     <string name="result_detail_unsupported">Алгоритам није подржан: %1$s</string>
     <string name="result_detail_error">Техничка грешка: %1$s</string>
     <string name="result_detail_no_dg14">Документ не садржи DG14: чип не нуди ову проверу.</string>

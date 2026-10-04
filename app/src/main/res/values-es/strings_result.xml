@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">Huellas no coincidentes: %1$s</string>
     <string name="result_detail_dg_all_match">Todas las huellas coinciden.</string>
     <string name="result_detail_dg_missing">Grupos de datos anunciados pero no proporcionados por el chip: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: anomalía conocida publicada por el emisor, datos descartados</string>
     <string name="result_detail_unsupported">Algoritmo no compatible: %1$s</string>
     <string name="result_detail_error">Error técnico: %1$s</string>
     <string name="result_detail_no_dg14">El documento no contiene DG14: el chip no ofrece esta verificación.</string>

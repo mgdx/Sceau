@@ -95,12 +95,17 @@ sealed class CheckDetail {
      * Numéros des DG contrôlés, de ceux dont l'empreinte diffère du SOD, et de ceux que le SOD
      * annonce parmi les DG que Sceau lit (1, 2, 11, 12, 14, 15) mais que la puce n'a pas fournis
      * ([missing] non vide = échec : une puce ne peut pas retenir un DG signé, SPEC §6.1).
+     *
+     * [deviations] : écarts d'empreinte tolérés parce qu'ils correspondent à une anomalie connue,
+     * publiée par l'émetteur (décision D34). Un DG toléré ne figure pas dans [mismatched] ; ses
+     * données sont écartées du rapport.
      */
     data class DataGroupHashes(
         val digestAlgorithm: String,
         val checked: List<Int>,
         val mismatched: List<Int>,
         val missing: List<Int> = emptyList(),
+        val deviations: List<KnownDeviation> = emptyList(),
     ) : CheckDetail()
 
     /**
@@ -127,6 +132,16 @@ sealed class CheckDetail {
         val code: String,
     ) : CheckDetail()
 }
+
+/**
+ * Anomalie connue, publiée par un émetteur (Deviation List, ICAO 9303-12), qui touche le groupe
+ * de données [dataGroup] (11 ou 12 seulement) d'une série de documents authentiques (décision D34).
+ * [id] est un identifiant stable, sans donnée personnelle (ex. `IT-CIE3-DG12`).
+ */
+data class KnownDeviation(
+    val id: String,
+    val dataGroup: Int,
+)
 
 data class Check(
     val id: CheckId,

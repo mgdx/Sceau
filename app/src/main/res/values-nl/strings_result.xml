@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">Afwijkende hashes: %1$s</string>
     <string name="result_detail_dg_all_match">Alle hashes komen overeen.</string>
     <string name="result_detail_dg_missing">Gegevensgroepen aangekondigd maar niet door de chip geleverd: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: bekende afwijking gepubliceerd door de uitgever, gegevens genegeerd</string>
     <string name="result_detail_unsupported">Algoritme niet ondersteund: %1$s</string>
     <string name="result_detail_error">Technische fout: %1$s</string>
     <string name="result_detail_no_dg14">Het document bevat geen DG14: de chip biedt deze controle niet aan.</string>

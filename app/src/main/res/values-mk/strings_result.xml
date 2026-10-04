@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">Хашови што не се совпаѓаат: %1$s</string>
     <string name="result_detail_dg_all_match">Сите хашови се совпаѓаат.</string>
     <string name="result_detail_dg_missing">Групи податоци најавени, но не доставени од чипот: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: позната аномалија објавена од издавачот, податоците се исфрлени</string>
     <string name="result_detail_unsupported">Неподдржан алгоритам: %1$s</string>
     <string name="result_detail_error">Техничка грешка: %1$s</string>
     <string name="result_detail_no_dg14">Документот не содржи DG14: чипот не нуди ваква проверка.</string>

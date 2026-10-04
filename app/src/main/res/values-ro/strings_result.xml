@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">Amprente neconforme: %1$s</string>
     <string name="result_detail_dg_all_match">Toate amprentele sunt conforme.</string>
     <string name="result_detail_dg_missing">Grupuri de date anunțate, dar nefurnizate de cip: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: anomalie cunoscută publicată de emitent, date eliminate</string>
     <string name="result_detail_unsupported">Algoritm neacceptat: %1$s</string>
     <string name="result_detail_error">Eroare tehnică: %1$s</string>
     <string name="result_detail_no_dg14">Documentul nu conține DG14: cipul nu oferă această verificare.</string>

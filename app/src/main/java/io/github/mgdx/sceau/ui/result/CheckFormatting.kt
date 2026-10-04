@@ -226,8 +226,12 @@ object CheckFormatting {
             }
             if (detail.mismatched.isNotEmpty()) {
                 add(text(R.string.result_detail_dg_mismatched, dataGroupList(detail.mismatched)))
-            } else if (detail.checked.isNotEmpty() && detail.missing.isEmpty()) {
+            } else if (detail.checked.isNotEmpty() && detail.missing.isEmpty() && detail.deviations.isEmpty()) {
                 add(text(R.string.result_detail_dg_all_match))
+            }
+            // Écart toléré : anomalie connue publiée par l'émetteur, DG écarté (décision D34).
+            detail.deviations.forEach { deviation ->
+                add(text(R.string.result_detail_dg_known_deviation, dataGroupList(listOf(deviation.dataGroup))))
             }
             // DG signés dans le SOD mais retenus par la puce (audit V1).
             if (detail.missing.isNotEmpty()) {

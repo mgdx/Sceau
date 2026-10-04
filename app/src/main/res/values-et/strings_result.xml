@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">Mittevastavad räsid: %1$s</string>
     <string name="result_detail_dg_all_match">Kõik räsid vastavad.</string>
     <string name="result_detail_dg_missing">Teatatud, kuid kiibi poolt esitamata andmerühmad: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: väljaandja avaldatud teadaolev kõrvalekalle, andmed jäeti välja</string>
     <string name="result_detail_unsupported">Algoritmi ei toetata: %1$s</string>
     <string name="result_detail_error">Tehniline viga: %1$s</string>
     <string name="result_detail_no_dg14">Dokumendis pole DG14-t: kiip seda kontrolli ei paku.</string>

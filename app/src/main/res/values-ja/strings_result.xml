@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">一致しないハッシュ値：%1$s</string>
     <string name="result_detail_dg_all_match">すべてのハッシュ値が一致しました。</string>
     <string name="result_detail_dg_missing">宣言されているが IC チップから提供されなかったデータグループ：%1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s：発行者が公表している既知の不具合のため、データを破棄しました</string>
     <string name="result_detail_unsupported">サポートされていないアルゴリズム：%1$s</string>
     <string name="result_detail_error">技術的なエラー：%1$s</string>
     <string name="result_detail_no_dg14">この書類には DG14 がありません。IC チップはこの検証に対応していません。</string>

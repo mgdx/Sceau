@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">Mã băm không khớp: %1$s</string>
     <string name="result_detail_dg_all_match">Tất cả mã băm đều khớp.</string>
     <string name="result_detail_dg_missing">Nhóm dữ liệu được khai báo nhưng chip không cung cấp: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: lỗi đã biết do bên cấp công bố, dữ liệu bị loại bỏ</string>
     <string name="result_detail_unsupported">Thuật toán không được hỗ trợ: %1$s</string>
     <string name="result_detail_error">Lỗi kỹ thuật: %1$s</string>
     <string name="result_detail_no_dg14">Giấy tờ không có DG14: chip không hỗ trợ bước kiểm tra này.</string>

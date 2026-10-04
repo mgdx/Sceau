@@ -124,6 +124,7 @@
     <string name="result_detail_dg_mismatched">Hashværdier, der ikke stemmer: %1$s</string>
     <string name="result_detail_dg_all_match">Alle hashværdier stemmer.</string>
     <string name="result_detail_dg_missing">Datagrupper, der er angivet, men ikke leveret af chippen: %1$s</string>
+    <string name="result_detail_dg_known_deviation">%1$s: kendt fejl offentliggjort af udstederen, data udeladt</string>
     <string name="result_detail_unsupported">Algoritmen understøttes ikke: %1$s</string>
     <string name="result_detail_error">Teknisk fejl: %1$s</string>
     <string name="result_detail_no_dg14">Dokumentet indeholder ikke DG14: chippen tilbyder ikke denne kontrol.</string>

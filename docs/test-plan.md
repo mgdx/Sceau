@@ -119,6 +119,13 @@ Pour chaque cas : cocher OK ou KO, et en cas de KO noter l'écart, les étapes e
 - **Attendu** : étape 4 : lecture complète, canal « PACE » (clé MRZ), même résultat que TP-04 (verdict **Authentique**, chaîne vers le CSCA e-ID de l'ANTS). Étape 5 : l'accueil est revenu à son état initial, comme après toute lecture (TP-15) : onglet Passeport, aucun champ rempli, et l'onglet Carte d'identité de nouveau sur **CAN**. Étape 6 : les deux clés ouvrent la puce (canal PACE, ou BAC par la MRZ si la carte n'annonce pas PACE) ; verdict **Authentique**, ou **Émetteur inconnu** si son CSCA manque au magasin embarqué (TP-19). Si le CAN imprimé n'a pas 6 chiffres, le noter : seule la MRZ est alors utilisable.
 - **Résultat** : ☐ OK ☐ KO — Notes :
 
+### TP-26 CIE italienne à DG12 erroné (anomalie connue de l'émetteur)
+
+- **Préconditions** : une carte d'identité italienne CIE 3.0 délivrée entre octobre 2017 et février 2018 (numéro `CA…`), figurant si possible dans la Deviation List italienne (décision D34, `docs/trust-sources.md` §2.4). Cas rare : à mener seulement si une telle carte est disponible ; sinon, il est couvert par `KnownDeviationsTest` et `KnownDeviationEndToEndTest` sur la puce simulée.
+- **Étapes** : onglet « Carte d'identité », CAN (ou MRZ), lire la carte, déplier la ligne « Empreintes des groupes de données ».
+- **Attendu** : la ligne « Empreintes » est cochée et indique « DG12 : anomalie connue publiée par l'émetteur, données écartées » ; aucune donnée de DG12 n'est affichée (autorité, date de délivrance, observations) ; la ligne « Validité du DS » prend la date de signature du SOD ; verdict **Authentique** si la Chip Authentication ou l'Active Authentication réussit. Une CIE plus récente (DG12 conforme) ne montre aucune anomalie et affiche ses données DG12.
+- **Résultat** : ☐ OK ☐ KO — Notes :
+
 ## C. Erreurs de lecture
 
 Pour toutes les erreurs, l'écran affiche sous le message le code technique complet en petit (décision D11), par exemple `TIMEOUT-SECURE_CHANNEL-INS86-L10` : le noter tel quel dans le compte rendu, il ne contient aucune donnée personnelle.
@@ -311,5 +318,6 @@ Pour toutes les erreurs, l'écran affiche sous le message le code technique comp
 | TP-23 | Passeport après tentatives ratées (attente jusqu'à 60 s) | |
 | TP-24 | Mode démo (debug) et absence en release | |
 | TP-25 | Carte d'identité lue par la MRZ | |
+| TP-26 | CIE italienne à DG12 erroné (anomalie connue) | |
 
 Appareil : ………… Android : ………… Version de Sceau : ………… Date : ………… Testeur : …………
