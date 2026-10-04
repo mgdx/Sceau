@@ -217,10 +217,10 @@ Pour toutes les erreurs, l'écran affiche sous le message le code technique comp
 ### TP-16 `FLAG_SECURE` : capture refusée
 
 - **Étapes** :
-  1. Sur l'écran de lecture puis sur le résultat, `adb exec-out screencap -p > capture.png` et ouvrir l'image ; tenter aussi la capture système (touches volume bas + marche).
-  2. Sur le résultat, `adb shell input keyevent KEYCODE_APP_SWITCH`.
-  3. Sur l'accueil, refaire la capture.
-- **Attendu** : captures noires ou refusées par le système sur la lecture et le résultat ; aperçu masqué dans le multitâche ; capture normale sur l'accueil (aucune donnée lue).
+  1. Sur l'accueil (champs MRZ remplis), sur l'écran de scan (aperçu de la caméra actif), sur l'écran de lecture puis sur le résultat, `adb exec-out screencap -p > capture.png` et ouvrir l'image ; tenter aussi la capture système (touches volume bas + marche).
+  2. Sur l'accueil, sur l'écran de scan et sur le résultat, `adb shell input keyevent KEYCODE_APP_SWITCH`.
+  3. Revenir du résultat à l'accueil, puis ouvrir le magasin de confiance et « À propos », et refaire la capture.
+- **Attendu** : captures noires ou refusées par le système sur tous les écrans, accueil, scan, magasin de confiance et « À propos » compris, y compris après être revenu d'un écran de lecture ou de résultat : `FLAG_SECURE` est posé sur toute l'activité dès sa création (SPEC §2 et §8, audit V7). Aperçu masqué dans le multitâche sur tous les écrans.
 - **Résultat** : ☐ OK ☐ KO — Notes :
 
 ### TP-21 Aucune donnée dans les journaux ni sur le disque

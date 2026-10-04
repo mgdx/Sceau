@@ -247,8 +247,8 @@ Aucun appel à `android.util.Log`, `println` ni `printStackTrace` dans le code d
 
 ### Protection de l'écran
 
-- `FLAG_SECURE` est posé sur la fenêtre tant que l'écran de lecture ou de résultat est composé (`SecureWindow()`) : capture d'écran refusée, aperçu masqué dans le multitâche, affichage bloqué sur un écran externe non sécurisé. Les demandes sont comptées par fenêtre pour que la transition Lecture → Résultat ne lève pas la protection.
-- Les autres écrans (accueil, magasin de confiance, à propos) n'affichent aucune donnée lue et restent capturables.
+- `FLAG_SECURE` est posé sur la fenêtre de l'activité dès sa création, dans `MainActivity.onCreate` avant le premier dessin (`secureForLifetime(window)`), pour toute sa durée de vie : capture d'écran refusée, aperçu masqué dans le multitâche, affichage bloqué sur un écran externe non sécurisé, sur tous les écrans (accueil et saisie du CAN et de la MRZ, écran de scan et aperçu de la caméra, lecture, résultat, magasin de confiance, à propos) (SPEC §2 et §8, audit V7).
+- Les écrans de lecture et de résultat demandent en plus la protection tant qu'ils sont composés (`SecureWindow()`), ainsi que la fenêtre du dialogue de la photo en plein écran. Les demandes sont comptées par fenêtre ; celle de `secureForLifetime` n'est jamais rendue, si bien que la sortie d'un écran ne lève jamais la protection.
 
 ### Réseau
 
