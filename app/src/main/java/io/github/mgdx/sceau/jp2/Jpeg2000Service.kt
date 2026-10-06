@@ -2,22 +2,35 @@ package io.github.mgdx.sceau.jp2
 
 import android.app.Service
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Binder
 import android.os.IBinder
 import android.os.Parcel
 import android.os.Process
+import io.github.mgdx.sceau.core.model.ImageFormat
 import io.github.mgdx.sceau.jp2.Jpeg2000Protocol.STATUS_ERROR
 import io.github.mgdx.sceau.jp2.Jpeg2000Protocol.STATUS_OK
+import io.github.mgdx.sceau.ui.result.DecodeLimits
+import io.github.mgdx.sceau.ui.result.detectImageFormat
+import io.github.mgdx.sceau.ui.result.limitSide
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 
 /**
- * Service de décodage JPEG 2000, déclaré `android:isolatedProcess="true"` dans le manifeste
- * (décision D23) : il tourne dans un processus dédié, sous un UID isolé, sans aucune
- * permission ni accès aux fichiers de l'app. C'est le seul endroit où `libsceau_jp2.so`
- * (OpenJPEG) est chargée et où [Jpeg2000Decoder] est appelé.
+ * Service de décodage des images de la puce (JPEG 2000 et JPEG), déclaré
+ * `android:isolatedProcess="true"` dans le manifeste (décision D23) : il tourne dans un
+ * processus dédié, sous un UID isolé, sans aucune permission ni accès aux fichiers de l'app.
+ * C'est le seul endroit où `libsceau_jp2.so` (OpenJPEG) est chargée et où [Jpeg2000Decoder] est
+ * appelé, et le seul où `BitmapFactory` reçoit des octets venus de la puce (audit V18).
+ *
+ * Le format est reconnu aux seuls octets du flux ([detectImageFormat]) : JPEG (`FF D8 FF`) vers
+ * `BitmapFactory`, avec les bornes de [DecodeLimits] ; JP2 ou J2K vers OpenJPEG ; tout le
+ * reste est refusé sans être décodé.
  *
  * Un processus neuf sert un seul décodage : [IsolatedJpeg2000Decoder] se lie, transfère le
- * flux, lit les pixels puis se détache ; [onDestroy] efface alors les tampons et termine le
- * processus, avec tout ce qu'OpenJPEG a pu laisser dans son tas. Protocole : [Jpeg2000Protocol].
+ * flux, lit les pixels puis se détache ; [onDestroy] termine alors le processus, avec tout ce
+ * que le décodeur a pu laisser dans son tas. Protocole : [Jpeg2000Protocol].
  */
 class Jpeg2000Service : Service() {
     private val binder = DecoderBinder()
@@ -25,24 +38,39 @@ class Jpeg2000Service : Service() {
     override fun onBind(intent: Intent?): IBinder = binder
 
     override fun onDestroy() {
-        binder.wipe()
+        // Jamais d'attente du verrou ici (audit V26) : après un délai dépassé, le thread binder
+        // le tient pendant tout le décodage, et le processus survivrait jusqu'à sa fin. Les
+        // tampons ne sont effacés que s'ils sont libres ; sinon ils disparaissent avec le
+        // processus, terminé dans tous les cas.
+        binder.wipeIfIdle()
         super.onDestroy()
-        // Un décodage encore en cours (délai dépassé) meurt avec le processus.
         Process.killProcess(Process.myPid())
     }
 
-    private class DecoderBinder : Binder() {
-        private val lock = Any()
+    internal class DecoderBinder : Binder() {
+        /** Tenu pendant chaque transaction, décodage compris. */
+        internal val lock = ReentrantLock()
         private var input: SequentialBytes? = null
         private var pixels: IntArray? = null
 
-        fun wipe() =
-            synchronized(lock) {
-                input?.wipe()
-                input = null
-                pixels?.fill(0)
-                pixels = null
+        fun wipe() = lock.withLock { wipeLocked() }
+
+        /** Efface les tampons si aucune transaction n'est en cours, sans jamais attendre. */
+        fun wipeIfIdle() {
+            if (!lock.tryLock()) return
+            try {
+                wipeLocked()
+            } finally {
+                lock.unlock()
             }
+        }
+
+        private fun wipeLocked() {
+            input?.wipe()
+            input = null
+            pixels?.fill(0)
+            pixels = null
+        }
 
         override fun onTransact(
             code: Int,
@@ -55,7 +83,7 @@ class Jpeg2000Service : Service() {
             }
             try {
                 data.enforceInterface(Jpeg2000Protocol.DESCRIPTOR)
-                synchronized(lock) {
+                lock.withLock {
                     val handled =
                         when (code) {
                             Jpeg2000Protocol.TX_BEGIN -> begin(data.readInt())
@@ -82,7 +110,7 @@ class Jpeg2000Service : Service() {
         }
 
         private fun begin(length: Int): Boolean {
-            wipe()
+            wipeLocked()
             if (!Jpeg2000Protocol.isValidInputLength(length)) return false
             input = SequentialBytes(length)
             return true
@@ -103,7 +131,11 @@ class Jpeg2000Service : Service() {
             val stream = input?.takeIf { it.isComplete } ?: return false
             val bitmap =
                 try {
-                    Jpeg2000Decoder.decode(stream.data)
+                    when (detectImageFormat(stream.data)) {
+                        ImageFormat.JPEG -> decodeJpeg(stream.data)
+                        ImageFormat.JPEG2000 -> Jpeg2000Decoder.decode(stream.data)
+                        else -> null
+                    }
                 } finally {
                     stream.wipe()
                     input = null
@@ -147,4 +179,24 @@ class Jpeg2000Service : Service() {
             return true
         }
     }
+}
+
+/**
+ * Décodage JPEG par `BitmapFactory`, dans le processus isolé seulement. Bornes de l'audit V2 :
+ * dimensions lues d'abord (`inJustDecodeBounds`), refus au-delà de
+ * [DecodeLimits.MAX_DECLARED_PIXELS], sous-échantillonnage puis réduction pour qu'aucun côté ne
+ * dépasse [DecodeLimits.MAX_SIDE], donc [Jpeg2000Protocol.MAX_OUTPUT_SIDE].
+ */
+private fun decodeJpeg(bytes: ByteArray): Bitmap? {
+    val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+    BitmapFactory.decodeByteArray(bytes, 0, bytes.size, bounds)
+    val sample = DecodeLimits.sampleSize(bounds.outWidth, bounds.outHeight) ?: return null
+    val options =
+        BitmapFactory.Options().apply {
+            inMutable = true
+            inSampleSize = sample
+        }
+    val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size, options) ?: return null
+    // Filet de sécurité : le décodeur ne doit jamais rendre plus grand qu'annoncé.
+    return limitSide(bitmap)
 }

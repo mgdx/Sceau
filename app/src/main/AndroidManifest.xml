@@ -39,7 +39,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- Décodage JPEG 2000 (OpenJPEG) dans un processus isolé, sans permission (D23). -->
+        <!-- Décodage des images de la puce (JPEG 2000 par OpenJPEG, JPEG) dans un processus isolé, sans permission (D23). -->
         <service
             android:name=".jp2.Jpeg2000Service"
             android:exported="false"
