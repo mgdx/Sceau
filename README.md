@@ -18,11 +18,6 @@
   <a href="https://liberapay.com/mgdx"><img alt="Donate on Liberapay" src="https://img.shields.io/badge/donate-Liberapay-1f7a4d?style=flat-square&logo=liberapay&logoColor=white"></a>
 </p>
 
-<p align="center">
-  <a href="https://f-droid.org/packages/io.github.mgdx.sceau/"><img alt="Get it on F-Droid" src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" height="100"></a>
-  <a href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://app/%7B%22id%22%3A%22io.github.mgdx.sceau%22%2C%22url%22%3A%22https%3A%2F%2Fgithub.com%2Fmgdx%2FSceau%22%2C%22author%22%3A%22mgdx%22%2C%22name%22%3A%22Sceau%22%7D"><img alt="Get it on Obtainium" src="https://raw.githubusercontent.com/ImranR98/Obtainium/main/assets/graphics/badge_obtainium.png" height="100"></a>
-</p>
-
 ## Description
 
 **Sceau** is an Android application that reads, over NFC, the chip of identity
@@ -165,28 +160,17 @@ des données sensibles”.
 
 ## Installing
 
-From [F-Droid](https://f-droid.org/packages/io.github.mgdx.sceau/), which
-rebuilds the application from this source. Builds are reproducible, so F-Droid
-serves the very APK signed by the author: an installation from F-Droid and one
-from the releases page can update one another
-([how](docs/reproducible-builds.md)).
+Sceau is not published yet. The first release, `v0.9`, is in preparation: it
+will come first on the [releases page](https://github.com/mgdx/Sceau/releases)
+of this repository — one APK per architecture (`arm64-v8a` for almost any
+recent phone) plus a universal one, and a `SHA256SUMS` file — then on F-Droid.
+Builds are reproducible, so F-Droid will serve the very APK signed by the
+author ([how](docs/reproducible-builds.md)).
 
-Or from the [releases page](https://github.com/mgdx/Sceau/releases/latest),
-from tag `v0.9` onwards: one APK per architecture — `arm64-v8a` for almost any
-recent phone — plus a universal one that runs on all of them, and a
-`SHA256SUMS` file.
-
-To be told when the next version comes out, add the application to
-[Obtainium](https://github.com/ImranR98/Obtainium): it watches this
-repository's releases and downloads the APK matching your phone.
+Until then, you can build it from source (below).
 
 Requires Android 8.0 or later, with NFC. The application also installs without
 NFC and says so when opened.
-
-<p align="center">
-  <a href="https://f-droid.org/packages/io.github.mgdx.sceau/"><img alt="Get it on F-Droid" src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" height="100"></a>
-  <a href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://app/%7B%22id%22%3A%22io.github.mgdx.sceau%22%2C%22url%22%3A%22https%3A%2F%2Fgithub.com%2Fmgdx%2FSceau%22%2C%22author%22%3A%22mgdx%22%2C%22name%22%3A%22Sceau%22%7D"><img alt="Get it on Obtainium" src="https://raw.githubusercontent.com/ImranR98/Obtainium/main/assets/graphics/badge_obtainium.png" height="100"></a>
-</p>
 
 ## Building from source
 
