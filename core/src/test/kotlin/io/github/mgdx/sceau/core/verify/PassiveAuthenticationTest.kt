@@ -279,7 +279,8 @@ class PassiveAuthenticationTest(
         val result = verify(rogue.document(), store = pki.trustStore(pki.oldCsca, pki.newCsca, pki.link))
 
         assertEquals(CheckStatus.NOT_AVAILABLE, result.certificateChain.status)
-        assertEquals(CheckStatus.OK, result.sodSignature.status)
+        // Audit V25 : sans chaîne, la signature du SOD n'est pas présentée comme vérifiée.
+        assertEquals(CheckStatus.NOT_AVAILABLE, result.sodSignature.status)
         val chain = result.chain!!
         assertNull(chain.cscaSubject)
         assertNull(chain.cscaCountry)

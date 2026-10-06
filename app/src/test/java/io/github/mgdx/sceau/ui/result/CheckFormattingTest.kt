@@ -210,6 +210,27 @@ class CheckFormattingTest {
     }
 
     @Test
+    fun `pays connu sans chaine - aucun CSCA, pays, puis DS tente ou absent`() {
+        // Audit V25 : chaînes existantes seulement, aucune nouvelle chaîne à traduire.
+        val chain =
+            ChainInfo("CN=DS", "01", Instant.EPOCH, Instant.EPOCH, "SHA256withECDSA", null, null, null, null, emptyList())
+        val withDs = Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.FAILED, CheckDetail.NoChainForKnownCountry("FR", chain))
+        assertEquals(
+            listOf(
+                UiText(R.string.result_detail_csca_none),
+                UiText(R.string.result_detail_country, listOf("pays:FR")),
+                UiText(R.string.result_detail_algorithm, listOf("SHA256withECDSA")),
+                UiText(R.string.result_detail_ds_subject, listOf("CN=DS")),
+            ),
+            lines(withDs),
+        )
+        assertEquals(listOf("FR"), CheckFormatting.countryCodes(withDs))
+
+        val withoutDs = Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.FAILED, CheckDetail.NoChainForKnownCountry("FR", null))
+        assertEquals(UiText(R.string.result_detail_ds_missing), lines(withoutDs).last())
+    }
+
+    @Test
     fun `pays incoherents`() {
         val check =
             Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.FAILED, CheckDetail.CountryMismatch("DE", "FR", "FRA"))

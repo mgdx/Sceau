@@ -307,13 +307,22 @@ class TextOverflowTest {
         render("Résultat, authentique (démo)", resultContent, afterShow = ::showResultDetails)
         session.clear()
 
-        // Même CNIe simulée lue avec le vrai magasin, qui ne connaît pas son CSCA de test.
+        // Même CNIe simulée lue avec un magasin sans aucun certificat français (audit V25 : un
+        // pays connu du magasin sans chaîne donne « Échec », et non « Émetteur inconnu »).
         val card = SimulatedDocuments.frenchIdCard()
-        val store = runBlocking { repository.get() }
-        session.startDemo(DemoCard(card.chip(), checkNotNull(card.canKey), store))
+        val foreignStore = SimulatedDocuments.germanTestPki().let { it.trustStore(it.oldCsca) }
+        session.startDemo(DemoCard(card.chip(), checkNotNull(card.canKey), foreignStore))
         awaitState("rapport émetteur inconnu") { it is ReadState.Done }
         assertEquals(Verdict.UNKNOWN_ISSUER, (session.state.value as ReadState.Done).report.verdict)
         render("Résultat, émetteur inconnu", resultContent, afterShow = ::showResultDetails)
+        session.clear()
+
+        // Même CNIe lue avec le vrai magasin : la France y est connue, mais pas ce CSCA de test.
+        val store = runBlocking { repository.get() }
+        session.startDemo(DemoCard(SimulatedDocuments.frenchIdCard().chip(), checkNotNull(card.canKey), store))
+        awaitState("rapport pays connu sans chaîne") { it is ReadState.Done }
+        assertEquals(Verdict.FAILED, (session.state.value as ReadState.Done).report.verdict)
+        render("Résultat, pays connu sans chaîne", resultContent, afterShow = ::showResultDetails)
         session.clear()
 
         // D36 : carte eID-UB, sans donnée d'identité ; ni photo, ni champ vide.

@@ -162,23 +162,37 @@ internal class PassiveAuthenticator(
         facts: DocumentFacts,
     ): PassiveAuthResult {
         val rawHashes = guarded(CheckId.DG_HASHES) { checkHashes(parsed.securityObject, dataGroups) }
+        // Audit V25 : pays émetteur dont le magasin contient des certificats ; une chaîne absente
+        // y est un échec, et non un émetteur inconnu.
+        val knownCountry = knownIssuingCountry(facts.issuingState)
         val ds =
             findDsCertificate(parsed.signedData, parsed.signer)
                 ?: return PassiveAuthResult(
                     sodSignature = Check(CheckId.SOD_SIGNATURE, CheckStatus.NOT_AVAILABLE, CheckDetail.DsCertificateMissing),
-                    certificateChain = Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.NOT_AVAILABLE, CheckDetail.DsCertificateMissing),
+                    certificateChain =
+                        knownCountry?.let { noChain(it, null) }
+                            ?: Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.NOT_AVAILABLE, CheckDetail.DsCertificateMissing),
                     dsValidity = Check(CheckId.DS_VALIDITY, CheckStatus.NOT_AVAILABLE),
                     dataGroupHashes = rawHashes,
                     chain = null,
                 )
 
-        val signature = guarded(CheckId.SOD_SIGNATURE) { checkSignature(parsed.signer, ds) }
+        val verifiedSignature = guarded(CheckId.SOD_SIGNATURE) { checkSignature(parsed.signer, ds) }
         var chainInfo: ChainInfo? = null
         val chain =
             guarded(CheckId.CERTIFICATE_CHAIN) {
                 val (check, info) = checkChain(ds, facts.issuingState)
                 chainInfo = info
-                check
+                if (check.status == CheckStatus.NOT_AVAILABLE && knownCountry != null) noChain(knownCountry, info) else check
+            }
+        // Audit V25 : sans chaîne, le DS n'est garanti par personne ; une signature qu'il vérifie
+        // ne prouve rien et n'est pas présentée comme vérifiée.
+        val chainMissing = chain.status == CheckStatus.NOT_AVAILABLE || chain.detail is CheckDetail.NoChainForKnownCountry
+        val signature =
+            if (chainMissing && verifiedSignature.status == CheckStatus.OK) {
+                verifiedSignature.copy(status = CheckStatus.NOT_AVAILABLE)
+            } else {
+                verifiedSignature
             }
         // Décision D34 : une anomalie connue n'est recherchée que sur un SOD dont la signature et
         // la chaîne sont valides ; sinon, aucune tolérance.
@@ -440,6 +454,27 @@ internal class PassiveAuthenticator(
                 Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.FAILED, CheckDetail.Error(ERROR_CHAIN_BUDGET)) to info
             }
         }
+
+    /**
+     * Pays alpha-2 de l'État émetteur [issuingState] si le magasin contient au moins un certificat
+     * de ce pays (CSCA ou lien), null sinon : État absent du magasin, organisation (`UNO`, `EUE`…),
+     * code inconnu ou non fourni (audit V25).
+     */
+    private fun knownIssuingCountry(issuingState: String?): String? {
+        if (issuingState == null || IcaoCountries.isOrganization(issuingState)) return null
+        val country = IcaoCountries.alpha2(issuingState) ?: return null
+        val known =
+            trustStore.anchors.any { anchor ->
+                runCatching { IcaoCountries.consistent(anchor.country, anchor.country, issuingState) }.getOrDefault(false)
+            }
+        return country.takeIf { known }
+    }
+
+    /** Aucune chaîne alors que des certificats du pays [country] sont connus : échec (audit V25). */
+    private fun noChain(
+        country: String,
+        chain: ChainInfo?,
+    ) = Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.FAILED, CheckDetail.NoChainForKnownCountry(country, chain))
 
     /** keyUsage du DS, s'il est présent, avec digitalSignature (ICAO 9303-12) ; absent : toléré. */
     private fun mayBeDocumentSigner(holder: X509CertificateHolder): Boolean =

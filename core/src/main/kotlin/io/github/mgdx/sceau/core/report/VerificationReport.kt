@@ -84,6 +84,16 @@ sealed class CheckDetail {
     /** Chaîne introuvable : le DS n'est ni dans le SOD ni dans le magasin (`DsCertificateMissing`). */
     data object DsCertificateMissing : CheckDetail()
 
+    /**
+     * Aucune chaîne n'aboutit, alors que le magasin contient des certificats du pays émetteur de
+     * DG1 ([country], ISO 3166-1 alpha-2) : échec, et non « Émetteur inconnu » (audit V25, décision
+     * D40). [chain] : chaîne tentée depuis le DS, null si le DS est introuvable.
+     */
+    data class NoChainForKnownCountry(
+        val country: String,
+        val chain: ChainInfo?,
+    ) : CheckDetail()
+
     data class DsValidity(
         val notBefore: Instant,
         val notAfter: Instant,
