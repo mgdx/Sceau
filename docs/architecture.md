@@ -200,6 +200,7 @@ Aucun appel à `android.util.Log`, `println` ni `printStackTrace` dans le code d
 ### Surface exposée aux autres applications
 
 - `MainActivity`, seul composant exporté (lanceur), remplace son intent par celui du lanceur, sans extras, avant `super.onCreate` et dans `onNewIntent` : une autre application ne peut pas choisir l'écran d'ouverture par les extras de deep link de Navigation (`deepLinkIds`…), indépendamment du contrôle de l'appelant que fait Navigation 2.10 (audit V27, `MainActivityIntentTest`).
+- `MainActivity` déclare `android:taskAffinity=""` : aucune application ne peut se glisser dans la tâche de Sceau en déclarant la même affinité pour y présenter une fausse saisie du CAN ou de la MRZ (détournement de tâche, surtout sous Android 8 à 10 ; audit V28). Sans effet fonctionnel, l'application n'ayant qu'une activité.
 
 ### Réseau
 
