@@ -1,6 +1,7 @@
 package io.github.mgdx.sceau.core.reading
 
 import io.github.mgdx.sceau.core.Step
+import io.github.mgdx.sceau.core.report.ChainInfo
 import io.github.mgdx.sceau.core.report.ChannelProtocol
 import io.github.mgdx.sceau.core.report.Check
 import io.github.mgdx.sceau.core.report.CheckDetail
@@ -55,16 +56,43 @@ internal class PaceCamEvidence(
  * (verdict « Émetteur inconnu », comme pour tout document d'un pays absent du magasin), et
  * `FAILED` sinon : un document dont le SOD remonte à un CSCA connu doit avoir un
  * EF.CardSecurity vérifiable.
+ *
+ * Audit V17 (décision D40) : EF.CardSecurity et le SOD sont émis par le même État pour le même
+ * document ; la chaîne d'EF.CardSecurity doit aboutir au même CSCA que celle du SOD (même
+ * certificat, ou même clé publique), sinon `FAILED` (`VERIFY_CHIP-CAM-CARD_SECURITY_ANCHOR`).
+ * Sans cette contrainte, un clone pourrait ancrer sa propre clé de puce sur un CSCA importé par
+ * l'utilisateur, tandis que le SOD copié reste ancré sur un CSCA embarqué.
  */
 internal object ChipAuthenticationMapping {
+    /** Ligne `CHIP_AUTHENTICATION` et chaîne d'EF.CardSecurity, remontée dans le rapport (audit V17). */
+    class Result(
+        val check: Check,
+        val cardSecurityChain: ChainInfo?,
+    )
+
+    /**
+     * [documentChain] : ligne `CERTIFICATE_CHAIN` du SOD ; [documentChainInfo] : sa chaîne, dont
+     * le CSCA doit être celui d'EF.CardSecurity.
+     */
     fun verify(
         evidence: PaceCamEvidence,
         trustStore: TrustStore,
         issuingState: String?,
         documentChain: CheckStatus,
-    ): Check {
-        val cardSecurity = evidence.cardSecurity ?: return failed("CARD_SECURITY_MISSING")
+        documentChainInfo: ChainInfo?,
+    ): Result {
+        val cardSecurity = evidence.cardSecurity ?: return Result(failed("CARD_SECURITY_MISSING"), null)
         val signed = PassiveAuthenticator(trustStore).verifyCardSecurity(cardSecurity, issuingState)
+        return Result(check(evidence, signed, trustStore, documentChain, documentChainInfo), signed.chain)
+    }
+
+    private fun check(
+        evidence: PaceCamEvidence,
+        signed: CardSecurityVerification,
+        trustStore: TrustStore,
+        documentChain: CheckStatus,
+        documentChainInfo: ChainInfo?,
+    ): Check {
         when (signed.status) {
             CheckStatus.UNSUPPORTED_ALGORITHM -> {
                 return Check(CheckId.CHIP_AUTHENTICATION, CheckStatus.UNSUPPORTED_ALGORITHM, signed.unsupported ?: CheckDetail.None)
@@ -74,7 +102,11 @@ internal object ChipAuthenticationMapping {
                 return failed("CARD_SECURITY_${signed.reason ?: CardSecurityVerification.MALFORMED}")
             }
 
-            else -> {}
+            CheckStatus.OK -> {
+                if (!sameAnchor(signed.chain, documentChainInfo, trustStore)) return failed(CARD_SECURITY_ANCHOR)
+            }
+
+            CheckStatus.NOT_AVAILABLE -> {}
         }
         val content = signed.content ?: return failed("CARD_SECURITY_${CardSecurityVerification.MALFORMED}")
         val chipKeys = chipAuthenticationKeys(content)
@@ -104,6 +136,36 @@ internal object ChipAuthenticationMapping {
             else -> failed("CARD_SECURITY_${signed.reason ?: CardSecurityVerification.UNKNOWN_ISSUER}")
         }
     }
+
+    /**
+     * Vrai si les chaînes [cardSecurity] et [document] aboutissent au même CSCA : même empreinte,
+     * ou même clé publique (un même CSCA peut figurer sous deux certificats, par exemple réémis).
+     * Faux si l'une des deux n'a pas de CSCA.
+     */
+    private fun sameAnchor(
+        cardSecurity: ChainInfo?,
+        document: ChainInfo?,
+        trustStore: TrustStore,
+    ): Boolean {
+        val first = cardSecurity?.cscaSha256 ?: return false
+        val second = document?.cscaSha256 ?: return false
+        if (first == second) return true
+        val firstKey = anchorKey(first, trustStore) ?: return false
+        val secondKey = anchorKey(second, trustStore) ?: return false
+        return firstKey.contentEquals(secondKey)
+    }
+
+    private fun anchorKey(
+        sha256: String,
+        trustStore: TrustStore,
+    ): ByteArray? =
+        trustStore.anchors
+            .firstOrNull { it.sha256 == sha256 }
+            ?.certificate
+            ?.publicKey
+            ?.encoded
+
+    private const val CARD_SECURITY_ANCHOR = "CARD_SECURITY_ANCHOR"
 
     private sealed interface KeyAgreement {
         data object Match : KeyAgreement

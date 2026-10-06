@@ -9,6 +9,8 @@ import io.github.mgdx.sceau.core.report.CheckStatus
 import io.github.mgdx.sceau.core.report.ChipAuthenticationMethod
 import io.github.mgdx.sceau.core.report.Verdict
 import io.github.mgdx.sceau.core.report.VerificationReport
+import io.github.mgdx.sceau.core.trust.TrustAnchor
+import io.github.mgdx.sceau.core.trust.TrustSource
 import io.github.mgdx.sceau.core.trust.TrustStore
 import io.github.mgdx.sceau.testchip.PaceSettings
 import io.github.mgdx.sceau.testchip.SessionKind
@@ -19,6 +21,7 @@ import io.github.mgdx.sceau.testchip.SodOptions
 import io.github.mgdx.sceau.testchip.TestCardSecurity
 import io.github.mgdx.sceau.testchip.TestKeyType
 import io.github.mgdx.sceau.testchip.TestPki
+import io.github.mgdx.sceau.testchip.TestTrustStore
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -71,6 +74,8 @@ class PaceCamEndToEndTest {
             assertNull(chip.caAlgorithm)
             assertEquals(0, chip.reconnections)
             assertTrue("EF.CardSecurity lu", chip.fileReads.any { it.fid == SimulatedChip.FID_CARD_SECURITY })
+            // Audit V17 : EF.CardSecurity remonte au même CSCA que le SOD, et sa chaîne est dans le rapport.
+            assertEquals(report.chain?.cscaSha256, checkNotNull(report.cardSecurityChain).cscaSha256)
             for (fid in listOf(0x0101, 0x0102, 0x010B, 0x010C, 0x010E, 0x010F)) {
                 assertEquals("FID $fid", setOf(SessionKind.PACE), chip.sessionsServing(fid))
             }
@@ -132,6 +137,39 @@ class PaceCamEndToEndTest {
             assertEquals(Verdict.FAILED, report.verdict)
             assertEquals(CheckStatus.OK, report.check(CheckId.CERTIFICATE_CHAIN).status)
             assertEquals(CheckDetail.Error("VERIFY_CHIP-CAM-CARD_SECURITY_UNKNOWN_ISSUER"), report.ca().detail)
+        }
+
+    @Test
+    fun cardSecurityAncreSurUnAutreCscaImporteDuMemePays_Echec() =
+        runTest {
+            // Audit V17 : SOD et DG authentiques (CSCA embarqué), EF.CardSecurity forgé avec la clé
+            // de la puce, signé par un DS émis sous un CSCA français que l'utilisateur a importé.
+            val attacker = TestPki(TestKeyType.EC, name = "Piege", country = "FR", seed = STRANGER_SEED)
+            val forged = TestCardSecurity.of(card.document, camSettings, signer = attacker.ds)
+            val store =
+                TestTrustStore(
+                    card.trustStore.anchors + TrustAnchor(attacker.oldCsca.certificate, TrustSource.IMPORTED_CERTIFICATE),
+                )
+
+            val report = read(chip(cardSecurity = forged), trustStore = store)
+
+            assertEquals(Verdict.FAILED, report.verdict)
+            assertEquals(CheckStatus.OK, report.check(CheckId.CERTIFICATE_CHAIN).status)
+            assertEquals(CheckStatus.FAILED, report.ca().status)
+            assertEquals(CheckDetail.Error("VERIFY_CHIP-CAM-CARD_SECURITY_ANCHOR"), report.ca().detail)
+            assertEquals(TrustSource.IMPORTED_CERTIFICATE, report.cardSecurityChain?.cscaSource)
+        }
+
+    @Test
+    fun cardSecuritySigneParUnAutreDsDuMemeCsca_Authentique() =
+        runTest {
+            val otherDs = card.pki.issueDs(dsKeyType = TestKeyType.EC, commonName = "DS-TEST-FRANCE-CARD-SECURITY")
+            val cardSecurity = TestCardSecurity.of(card.document, camSettings, signer = otherDs)
+
+            val report = read(chip(cardSecurity = cardSecurity))
+
+            assertEquals(Verdict.AUTHENTIC, report.verdict)
+            assertEquals(report.chain?.cscaSha256, report.cardSecurityChain?.cscaSha256)
         }
 
     @Test

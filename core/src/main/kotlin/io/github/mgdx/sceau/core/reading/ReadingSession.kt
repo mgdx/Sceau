@@ -4,7 +4,9 @@ import io.github.mgdx.sceau.core.AccessKey
 import io.github.mgdx.sceau.core.CardTransport
 import io.github.mgdx.sceau.core.SceauException
 import io.github.mgdx.sceau.core.Step
+import io.github.mgdx.sceau.core.model.Dg1Data
 import io.github.mgdx.sceau.core.model.DocumentData
+import io.github.mgdx.sceau.core.model.Sex
 import io.github.mgdx.sceau.core.report.Check
 import io.github.mgdx.sceau.core.report.CheckDetail
 import io.github.mgdx.sceau.core.report.CheckId
@@ -127,7 +129,17 @@ internal class ReadingSession(
         val caOutcome = if (cam == null) verifier.chipAuthentication(objects.dg14, signedInSod = dg14Signed) else null
         // CA ratée et puce muette sous la messagerie courante : canal rétabli avec la même clé,
         // pour lire quand même les données (la ligne CA reste en échec, donc le verdict aussi).
-        if (caOutcome?.channelUsable == false) channel.reestablish()
+        // Audit V24 : la CA a déjà échoué ; une erreur au rétablissement (y compris l'accès
+        // réservé de D36, qu'une puce hostile peut répondre à dessein) donne un rapport « Échec »
+        // sans données, et non une erreur de lecture.
+        if (caOutcome?.channelUsable == false) {
+            try {
+                channel.reestablish()
+            } catch (e: Exception) {
+                if (e is CancellationException) throw e
+                return failedChipAuthenticationReport(chip, secureChannel, caOutcome.check, dataGroups, e)
+            }
+        }
         ensureActive()
 
         val content = reader.readDataGroups(objects, dataGroups)
@@ -154,19 +166,81 @@ internal class ReadingSession(
         // La CA est déjà faite (READ_DATA) : l'étape VERIFY_CHIP ne couvre plus que l'AA, et la
         // vérification hors ligne de PACE-CAM, qui a besoin de l'État émetteur de DG1.
         step(Step.VERIFY_CHIP)
-        val ca =
-            cam?.let { ChipAuthenticationMapping.verify(it, trustStore, data.dg1.issuingState, pa.certificateChain.status) }
-                ?: checkNotNull(caOutcome).check
+        val mapping =
+            cam?.let {
+                ChipAuthenticationMapping.verify(
+                    it,
+                    trustStore,
+                    data.dg1.issuingState,
+                    pa.certificateChain.status,
+                    pa.chain,
+                )
+            }
         val aa = verifier.activeAuthentication(content.dataGroups[15], content.dataGroups[14], signedInSod = 15 in content.signedDataGroups)
+        // Audit V20 : protocole mené comparé à ce qu'annonce DG14, signé (EF.CardAccess ne l'est pas).
+        val protocol =
+            ProtocolDowngrade.apply(
+                dg14 = content.dataGroups[DocumentReader.SECURITY_DATA_GROUP],
+                dg14Verified = pa.dataGroupHashes.verifies(DocumentReader.SECURITY_DATA_GROUP),
+                established = established,
+                secureChannel = secureChannel,
+                chipAuthentication = mapping?.check ?: checkNotNull(caOutcome).check,
+                activeAuthentication = aa,
+            )
+        val ca = protocol.chipAuthentication
 
-        val checks = listOf(secureChannel, pa.sodSignature, pa.certificateChain, pa.dsValidity, pa.dataGroupHashes, ca, aa)
+        val checks = listOf(protocol.secureChannel, pa.sodSignature, pa.certificateChain, pa.dsValidity, pa.dataGroupHashes, ca, aa)
         return VerificationReport(
             verdict = Verdicts.compute(checks),
             checks = checks,
             chain = pa.chain,
             document = shown,
+            cardSecurityChain = mapping?.cardSecurityChain,
         )
     }
+
+    /**
+     * Rapport d'une lecture interrompue au rétablissement du canal après une CA ratée (audit V24) :
+     * ligne CA en échec ([chipAuthentication]), donc verdict « Échec » ; les autres vérifications
+     * n'ont pas eu lieu et portent le code du rétablissement raté, sans donnée personnelle. Aucune
+     * donnée d'identité n'a été lue : DG1 est vide, et seul DG14 (déjà lu) figure dans
+     * [dataGroups], remis à zéro avec le rapport.
+     */
+    private fun failedChipAuthenticationReport(
+        chip: Chip,
+        secureChannel: Check,
+        chipAuthentication: Check,
+        dataGroups: Map<Int, ByteArray>,
+        error: Exception,
+    ): VerificationReport {
+        val failure = chip.cardService.transportFailure ?: error as? SceauException ?: error.findTransportFailure()
+        val code = "${Step.READ_DATA.name}-REESTABLISH-${failure?.code ?: technicalCode(Step.READ_DATA.name, error)}"
+        val notDone = { id: CheckId -> Check(id, CheckStatus.NOT_AVAILABLE, CheckDetail.Error(code)) }
+        val checks =
+            listOf(
+                secureChannel,
+                notDone(CheckId.SOD_SIGNATURE),
+                notDone(CheckId.CERTIFICATE_CHAIN),
+                notDone(CheckId.DS_VALIDITY),
+                notDone(CheckId.DG_HASHES),
+                chipAuthentication,
+                notDone(CheckId.ACTIVE_AUTHENTICATION),
+            )
+        val empty =
+            DocumentData(
+                dg1 = Dg1Data("", "", "", "", emptyList(), "", null, Sex.UNSPECIFIED, null, null),
+                portrait = null,
+                dg11 = null,
+                dg12 = null,
+                rawDataGroups = dataGroups,
+            )
+        document = empty
+        return VerificationReport(verdict = Verdicts.compute(checks), checks = checks, chain = null, document = empty)
+    }
+
+    /** Vrai si l'empreinte du DG [number] figure dans le SOD et y est conforme. */
+    private fun Check.verifies(number: Int): Boolean =
+        (detail as? CheckDetail.DataGroupHashes)?.let { number in it.checked && number !in it.mismatched } ?: false
 
     /** Copie sans les DG [numbers] (11 ou 12), dont les octets et les images sont remis à zéro. */
     private fun DocumentData.discarding(numbers: Set<Int>): DocumentData {

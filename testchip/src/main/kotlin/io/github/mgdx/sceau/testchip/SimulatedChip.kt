@@ -86,6 +86,12 @@ class SimulatedChip(
     private val restrictedApplet: Boolean = false,
     /** FID de fichiers de l'applet réservés aux terminaux étatiques : 6982 à leur sélection, même sous messagerie sécurisée (D36). */
     private val restrictedFiles: Collection<Int> = emptySet(),
+    /**
+     * Puce hostile (audit V24) : 6982 à la sélection de l'applet après une réinitialisation de la
+     * liaison ([reconnect]), pour se faire passer pour une carte réservée aux autorités au
+     * rétablissement du canal qui suit une Chip Authentication ratée.
+     */
+    private val restrictAppletAfterReconnect: Boolean = false,
 ) : CardTransport {
     /** Lecture d'un fichier servie par la puce : FID, et session sous laquelle (null : en clair). */
     data class FileRead(
@@ -263,7 +269,7 @@ class SimulatedChip(
         return when (command.p1) {
             P1_SELECT_BY_AID -> {
                 if (!command.data.contentEquals(ICAO_AID)) return status(SW_FILE_NOT_FOUND)
-                if (restrictedApplet) return status(SW_SECURITY_STATUS)
+                if (restrictedApplet || (restrictAppletAfterReconnect && reconnections > 0)) return status(SW_SECURITY_STATUS)
                 appletSelected = true
                 clearCurrentFile()
                 status(SW_OK)

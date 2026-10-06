@@ -196,7 +196,8 @@ class KnownDeviationsTest {
 
         val other = TestPki(TestKeyType.RSA, name = "Autre", country = "IT", seed = SEED + 2)
         val unknownIssuer = verify(cie().withWrongDg12(), trustStore = other.trustStore(other.oldCsca))
-        assertEquals(CheckStatus.NOT_AVAILABLE, unknownIssuer.certificateChain.status)
+        // Audit V25 : des certificats italiens sont connus, aucune chaîne : échec.
+        assertEquals(CheckStatus.FAILED, unknownIssuer.certificateChain.status)
         assertEquals(listOf(12), unknownIssuer.hashes().mismatched)
         assertEquals(emptySet<Int>(), unknownIssuer.discardedDataGroups)
     }

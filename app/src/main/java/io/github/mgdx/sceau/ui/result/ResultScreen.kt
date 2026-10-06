@@ -162,7 +162,7 @@ private fun ResultContent(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         if (isDemo) DemoBanner()
-        VerdictCard(report.verdict, importedAnchor = CheckFormatting.isImportedAnchor(report.chain))
+        VerdictCard(report.verdict, importedAnchor = CheckFormatting.isImportedAnchor(report.chain, report.cardSecurityChain))
         // Décision D36 : carte eID-UB, sans donnée d'identité dans sa puce. Ni champs vides, ni
         // logo eID présenté comme la photo du titulaire.
         if (IdentityPresentation.isIdentitylessEidUb(report)) {

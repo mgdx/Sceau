@@ -84,6 +84,16 @@ sealed class CheckDetail {
     /** Chaîne introuvable : le DS n'est ni dans le SOD ni dans le magasin (`DsCertificateMissing`). */
     data object DsCertificateMissing : CheckDetail()
 
+    /**
+     * Aucune chaîne n'aboutit, alors que le magasin contient des certificats du pays émetteur de
+     * DG1 ([country], ISO 3166-1 alpha-2) : échec, et non « Émetteur inconnu » (audit V25, décision
+     * D40). [chain] : chaîne tentée depuis le DS, null si le DS est introuvable.
+     */
+    data class NoChainForKnownCountry(
+        val country: String,
+        val chain: ChainInfo?,
+    ) : CheckDetail()
+
     data class DsValidity(
         val notBefore: Instant,
         val notAfter: Instant,
@@ -175,8 +185,15 @@ class VerificationReport(
     val verdict: Verdict,
     /** Exactement une entrée par [CheckId], dans l'ordre de l'énumération. */
     val checks: List<Check>,
+    /** Chaîne du SOD. */
     val chain: ChainInfo?,
     val document: DocumentData,
+    /**
+     * Chaîne d'EF.CardSecurity si PACE-CAM a été mené (décision D21), null sinon. Elle fonde la
+     * preuve « puce originale » : l'écran signale un CSCA importé sur l'une ou l'autre chaîne
+     * (audit V17).
+     */
+    val cardSecurityChain: ChainInfo? = null,
 ) {
     fun check(id: CheckId): Check = checks.first { it.id == id }
 

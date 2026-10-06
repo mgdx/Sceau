@@ -24,7 +24,8 @@ import java.util.Locale
  * 2. Sans PACE, l'applet ICAO est sélectionnée en clair dès la connexion (6A82 →
  *    [SceauException.NotIcaoDocument]), puis BAC avec la clé MRZ.
  * 3. Avec PACE, PACE est mené au niveau MF (ICAO 9303-11 : l'applet est sélectionnée après
- *    PACE, sous messagerie sécurisée), en essayant chaque `PACEInfo` annoncé dans l'ordre ;
+ *    PACE, sous messagerie sécurisée), en essayant chaque `PACEInfo` annoncé dans l'ordre,
+ *    ceux de PACE-CAM en premier (audit V20) ;
  *    la sélection de l'applet qui suit détecte alors l'absence d'application ICAO.
  * 4. Si PACE échoue avec une clé MRZ pour une autre raison qu'un refus explicite de la clé
  *    (SW 63xx) ou qu'un délai dépassé, c'est-à-dire perte de liaison, SW inattendu ou erreur de
@@ -147,7 +148,9 @@ internal class SecureChannel(
                 is AccessKey.Can -> PACEKeySpec.createCANKey(key.value)
                 is AccessKey.Mrz -> PACEKeySpec.createMRZKey(bacKey(key))
             }
-        for (info in paceInfos) {
+        // PACE-CAM d'abord s'il est annoncé : un canal établi sans CAM alors que DG14 l'annonce
+        // compte comme un déclassement (audit V20, ProtocolDowngrade). Ordre annoncé conservé sinon.
+        for (info in paceInfos.sortedByDescending { SecurityInfoProtocols.isPaceCam(it.objectIdentifier) }) {
             val parameterId = info.parameterId ?: continue
             val parameters =
                 try {

@@ -109,6 +109,10 @@ object CheckFormatting {
                     listOf(text(R.string.result_detail_ds_missing))
                 }
 
+                is CheckDetail.NoChainForKnownCountry -> {
+                    noChainLines(detail, countryLabel)
+                }
+
                 is CheckDetail.DsValidity -> {
                     dsValidityLines(detail, formatDate)
                 }
@@ -166,6 +170,26 @@ object CheckFormatting {
         }
 
     /**
+     * Pays dont des certificats sont connus, mais aucune chaîne (audit V25) : aucun CSCA ne
+     * correspond, pays émetteur, puis le DS tenté, ou son absence.
+     */
+    private fun noChainLines(
+        detail: CheckDetail.NoChainForKnownCountry,
+        countryLabel: (String) -> String,
+    ): List<UiText> =
+        buildList {
+            add(text(R.string.result_detail_csca_none))
+            add(text(R.string.result_detail_country, countryLabel(detail.country)))
+            val chain = detail.chain
+            if (chain == null) {
+                add(text(R.string.result_detail_ds_missing))
+            } else {
+                add(text(R.string.result_detail_algorithm, chain.signatureAlgorithm))
+                add(text(R.string.result_detail_ds_subject, chain.dsSubject))
+            }
+        }
+
+    /**
      * « Pays incohérents : autorité de certification <pays>, certificat du signataire <pays>,
      * document <code> » (audit V3). Le code du document est le code ICAO brut de DG1.
      */
@@ -191,6 +215,7 @@ object CheckFormatting {
     fun countryCodes(check: Check): List<String> =
         when (val detail = check.detail) {
             is CheckDetail.Chain -> listOfNotNull(detail.chain.cscaCountry)
+            is CheckDetail.NoChainForKnownCountry -> listOf(detail.country)
             is CheckDetail.CountryMismatch -> listOfNotNull(detail.cscaCountry, detail.dsCountry)
             else -> emptyList()
         }.distinct()
@@ -243,11 +268,14 @@ object CheckFormatting {
     fun dataGroupList(numbers: List<Int>): String = numbers.distinct().sorted().joinToString(", ") { "DG$it" }
 
     /**
-     * Vrai si la chaîne remonte à un CSCA importé par l'utilisateur, par une Master List ou seul
-     * (D33) : la carte du verdict le signale sans qu'il faille déplier le détail (audit V6).
+     * Vrai si l'une des [chains] (celle du SOD, et celle d'EF.CardSecurity avec PACE-CAM) remonte
+     * à un CSCA importé par l'utilisateur, par une Master List ou seul (D33) : la carte du verdict
+     * le signale sans qu'il faille déplier le détail (audits V6 et V17).
      */
-    fun isImportedAnchor(chain: ChainInfo?): Boolean =
-        chain?.cscaSource == TrustSource.IMPORTED_MASTER_LIST || chain?.cscaSource == TrustSource.IMPORTED_CERTIFICATE
+    fun isImportedAnchor(vararg chains: ChainInfo?): Boolean =
+        chains.any { chain ->
+            chain?.cscaSource == TrustSource.IMPORTED_MASTER_LIST || chain?.cscaSource == TrustSource.IMPORTED_CERTIFICATE
+        }
 
     @StringRes
     fun sourceLabel(source: TrustSource): Int =

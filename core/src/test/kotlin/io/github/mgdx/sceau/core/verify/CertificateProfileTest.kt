@@ -44,7 +44,8 @@ class CertificateProfileTest {
         val result = chainOf(forged, pki.oldCsca, pki.ds)
 
         assertEquals(CheckStatus.NOT_AVAILABLE, result.certificateChain.status)
-        assertEquals(CheckStatus.OK, result.sodSignature.status)
+        // Audit V25 : sans chaîne, la signature du SOD n'est pas présentée comme vérifiée.
+        assertEquals(CheckStatus.NOT_AVAILABLE, result.sodSignature.status)
     }
 
     @Test

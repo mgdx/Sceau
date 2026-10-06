@@ -3,6 +3,7 @@ package io.github.mgdx.sceau.core.reading
 import io.github.mgdx.sceau.core.AccessKey
 import io.github.mgdx.sceau.core.Step
 import io.github.mgdx.sceau.core.readAndVerify
+import io.github.mgdx.sceau.core.report.CheckDetail
 import io.github.mgdx.sceau.core.report.CheckId
 import io.github.mgdx.sceau.core.report.CheckStatus
 import io.github.mgdx.sceau.core.report.Verdict
@@ -154,6 +155,38 @@ class ChipAuthenticationOrderTest {
             assertEquals(1, chip.reconnections)
             assertServedUnder(chip, SessionKind.PACE, 1, 2, 11, 12, 15)
             assertNotNull(report.document.dg11)
+        }
+
+    @Test
+    fun cloneSansLaCleCaPuisAccesReserveAuRetablissement_EchecEtNonAccesReserve() =
+        runTest {
+            // Audit V24 : la puce rate la CA, puis répond 6982 à la sélection de l'applet quand le
+            // canal est rétabli, pour obtenir le message « réservé aux autorités » au lieu d'un échec.
+            val card = SimulatedDocuments.frenchIdCard()
+            val chip =
+                SimulatedChip(
+                    card.document,
+                    card.pace,
+                    caPrivateKey = card.pki.generateEc(TestPki.CURVE).private,
+                    restrictAppletAfterReconnect = true,
+                )
+
+            val report = read(chip, checkNotNull(card.canKey), card.trustStore)
+
+            assertEquals(Verdict.FAILED, report.verdict)
+            assertEquals(CheckStatus.FAILED, report.check(CheckId.CHIP_AUTHENTICATION).status)
+            assertEquals(1, chip.reconnections)
+            val notDone = report.check(CheckId.SOD_SIGNATURE)
+            assertEquals(CheckStatus.NOT_AVAILABLE, notDone.status)
+            assertEquals(
+                CheckDetail.Error("READ_DATA-REESTABLISH-ACCESS_RESTRICTED-SELECT_APPLET"),
+                notDone.detail,
+            )
+            // Aucune donnée d'identité lue : ni DG1, ni DG2, ni DG11.
+            assertEquals("", report.document.dg1.documentNumber)
+            assertNull(report.document.portrait)
+            assertNull(report.document.dg11)
+            assertTrue(chip.closed)
         }
 
     @Test
