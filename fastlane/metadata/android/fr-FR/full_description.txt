@@ -11,6 +11,7 @@ Sceau lit par NFC la puce des documents d'identité conformes à la norme ICAO 9
 <ul>
 <li>La photo stockée dans la puce</li>
 <li>L'identité : nom, prénoms, sexe, date de naissance, nationalité, numéro de document, État émetteur, date d'expiration</li>
+<li>La signature manuscrite du titulaire, si l'État l'a inscrite dans la puce</li>
 <li>Les données complémentaires quand la puce les contient (lieu de naissance, adresse, autorité et date de délivrance…)</li>
 </ul>
 
@@ -19,22 +20,35 @@ Sceau lit par NFC la puce des documents d'identité conformes à la norme ICAO 9
 <li>La signature des données par l'État émetteur, jusqu'à un certificat racine connu, et l'intégrité de chaque groupe de données (Passive Authentication)</li>
 <li>Que la puce n'est pas un clone, quand le document le permet (Chip Authentication, Active Authentication)</li>
 </ul>
-Le résultat est un verdict clair (Authentique, Signature valide mais puce non vérifiée, Émetteur inconnu, Échec) accompagné d'une liste de contrôle détaillée.
+Le résultat est un verdict (Authentique, Signature valide mais puce non vérifiée, Émetteur inconnu, Échec) accompagné d'une liste de contrôle détaillée.
 
 <b>Magasin de confiance</b>
-Sceau embarque les certificats CSCA français de l'ANTS et la Master List allemande du BSI, qui couvre notamment les pays de l'Union européenne, de l'EEE, la Suisse et le Royaume-Uni. Pour un document dont l'émetteur n'y figure pas, le verdict est « Émetteur inconnu » ; vous pouvez importer une Master List publiée par un autre État. Les listes de révocation ne sont pas consultées. Sceau n'est affilié à aucun de ces organismes.
+Sceau embarque les certificats CSCA français de l'ANTS, des certificats publiés par le Royaume-Uni, la Grèce, la Géorgie et le Luxembourg pour leurs propres documents, et la Master List allemande du BSI, qui couvre notamment les pays de l'Union européenne, de l'EEE, la Suisse et le Royaume-Uni. L'écran du magasin permet de rechercher un pays. Pour un document dont l'émetteur n'y figure pas, le verdict est « Émetteur inconnu » ; vous pouvez importer une Master List publiée par un autre État, ou un certificat CSCA ou de lien seul après avoir vérifié son empreinte, puis supprimer chaque élément importé un par un. Les listes de révocation ne sont pas consultées. Sceau n'est ni affilié à l'ANTS ni au BSI, ni approuvé par eux.
+
+<b>Limites connues</b>
+<ul>
+<li>Cartes d'identité allemandes délivrées avant le 2 août 2021 : la puce est réservée aux autorités, Sceau ne peut pas la lire et l'indique. Sur les cartes plus récentes, l'adresse et le lieu de naissance ne sont pas lisibles.</li>
+<li>Carte eID allemande pour citoyens de l'Union : la puce ne contient aucune donnée d'identité, seule son authenticité est vérifiée.</li>
+<li>Cartes d'identité italiennes CIE 3.0 de fin 2017 à début 2018 : l'Italie a publié une anomalie sur leurs données complémentaires ; Sceau les écarte et vérifie le reste du document.</li>
+</ul>
 
 <b>Vie privée</b>
 <ul>
 <li>Seule permission : NFC</li>
 <li>Aucune donnée lue n'est enregistrée ; la mémoire est effacée en quittant le résultat ou en passant en arrière-plan</li>
-<li>Captures d'écran bloquées pendant la lecture et sur le résultat</li>
+<li>Captures d'écran bloquées dans toute l'application</li>
 <li>Aucune publicité, aucun traceur, aucun service Google</li>
 </ul>
 
+<b>Autres</b>
+<ul>
+<li>Introduction en quatre pages au premier lancement, et écran « Ce que contient la puce »</li>
+<li>Interface en 45 langues</li>
+</ul>
+
 <b>Cadre d'usage</b>
-Sceau est fait pour vérifier son propre document, ou un document que son titulaire présente lui-même. La photo est une donnée biométrique au sens du RGPD si elle sert à une comparaison automatisée : Sceau ne fait pas cette comparaison.
+Sceau est fait pour vérifier son propre document, ou un document que son titulaire présente lui-même. La photo est une donnée biométrique au sens du RGPD si elle sert à une comparaison automatisée : Sceau ne fait pas cette comparaison. Le verdict ne dit pas si le document a été déclaré perdu ou volé.
 
 Sceau ne lit ni les empreintes digitales ni l'iris, et ne lit pas la MRZ par la caméra.
 
-Logiciel libre sous licence GPLv3.
+Logiciel libre sous licence GPL version 3 ou ultérieure.

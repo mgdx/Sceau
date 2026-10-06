@@ -11,6 +11,7 @@ Sceau reads the chip of ICAO 9303 identity documents over NFC and checks that th
 <ul>
 <li>The photo stored in the chip</li>
 <li>Identity: surname, given names, sex, date of birth, nationality, document number, issuing state, expiry date</li>
+<li>The holder's handwritten signature, if the issuing state stored it in the chip</li>
 <li>Additional data when the chip holds it (place of birth, address, issuing authority and date of issue…)</li>
 </ul>
 
@@ -19,22 +20,35 @@ Sceau reads the chip of ICAO 9303 identity documents over NFC and checks that th
 <li>The issuing state's signature over the data, up to a known root certificate, and the integrity of each data group (Passive Authentication)</li>
 <li>That the chip is not a clone, when the document supports it (Chip Authentication, Active Authentication)</li>
 </ul>
-The result is a clear verdict (Genuine, Valid signature but chip not verified, Unknown issuer, Failed) with a detailed checklist.
+The result is a verdict (Authentic, Valid signature but chip not verified, Unknown issuer, Failed) with a detailed checklist.
 
 <b>Trust store</b>
-Sceau ships the French CSCA certificates published by ANTS and the German Master List published by BSI, which covers the European Union, the EEA, Switzerland and the United Kingdom among others. For a document whose issuer is not included, the verdict is "Unknown issuer"; you can import a Master List published by another state. Revocation lists are not checked. Sceau is not affiliated with any of these organisations.
+Sceau ships the French CSCA certificates published by ANTS, certificates published by the United Kingdom, Greece, Georgia and Luxembourg for their own documents, and the German Master List published by BSI, which covers the European Union, the EEA, Switzerland and the United Kingdom among others. The trust store screen can be searched by country. For a document whose issuer is not included, the verdict is "Unknown issuer"; you can import a Master List published by another state, or a single CSCA or link certificate after checking its fingerprint, and remove each imported item individually. Revocation lists are not checked. Sceau is not affiliated with or endorsed by ANTS or BSI.
+
+<b>Known limitations</b>
+<ul>
+<li>German identity cards issued before 2 August 2021: the chip is reserved for authorities; Sceau cannot read it and says so. On newer cards, the address and place of birth cannot be read.</li>
+<li>German eID card for EU citizens: the chip holds no identity data; only its authenticity is verified.</li>
+<li>Italian CIE 3.0 identity cards from late 2017 to early 2018: Italy published an anomaly in their additional data; Sceau discards that data and verifies the rest of the document.</li>
+</ul>
 
 <b>Privacy</b>
 <ul>
 <li>Only permission: NFC</li>
 <li>No data read from the chip is saved; memory is wiped when leaving the result or when the app goes to the background</li>
-<li>Screenshots are blocked while reading and on the result screen</li>
+<li>Screenshots are blocked throughout the app</li>
 <li>No ads, no trackers, no Google services</li>
 </ul>
 
+<b>Other</b>
+<ul>
+<li>Four-page introduction on first launch, and a "What the chip contains" screen</li>
+<li>Interface in 45 languages</li>
+</ul>
+
 <b>Intended use</b>
-Sceau is meant for checking your own document, or a document presented by its holder. Under the GDPR, the photo is biometric data when used for automated comparison: Sceau does not perform such comparison.
+Sceau is meant for checking your own document, or a document presented by its holder. Under the GDPR, the photo is biometric data when used for automated comparison: Sceau does not perform such comparison. The verdict does not tell whether the document has been reported lost or stolen.
 
 Sceau does not read fingerprints or iris data, and does not scan the MRZ with the camera.
 
-Free software under the GPLv3 licence.
+Free software under the GPL version 3 or later.
