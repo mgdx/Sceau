@@ -2,7 +2,7 @@
 
 Toute dépendance embarquée dans l'APK est listée ici avec sa version, sa licence, son rôle et sa compatibilité F-Droid (SPEC §3). Une nouvelle dépendance n'est acceptée qu'après ajout d'une ligne dans ce fichier.
 
-Critères F-Droid appliqués à chaque ligne : code source libre, publiée sur un dépôt Maven standard (Maven Central ou Google Maven), reconstructible, sans binaire natif précompilé, sans service Google, sans télémétrie ni publicité. Toutes les licences retenues sont compatibles avec la GPLv3 de Sceau.
+Critères F-Droid appliqués à chaque ligne : code source libre, publiée sur un dépôt Maven standard (Maven Central ou Google Maven), reconstructible, sans service Google, sans télémétrie ni publicité. Aucune dépendance choisie par Sceau n'apporte de binaire natif précompilé ; une seule transitive d'AndroidX en contient un, `libandroidx.graphics.path.so` (section 2), comme toute application Compose. Toutes les licences retenues sont compatibles avec la licence de Sceau, GPL version 3 ou ultérieure (GPL-3.0-or-later).
 
 Liste établie le 2026-09-25 à partir de :
 
@@ -26,7 +26,7 @@ Les licences ont été vérifiées le 2026-09-25 **sur les artefacts eux-mêmes*
 | `org.bouncycastle:bcpkix-jdk18on` | 1.86 | Licence Bouncy Castle (MIT) | X.509, CMS (SOD, Master Lists), construction de chaînes | oui, pur Java |
 | `org.jetbrains.kotlinx:kotlinx-coroutines-core` | 1.11.0 | Apache 2.0 | `suspend fun readAndVerify`, exécution sur `Dispatchers.IO` | oui |
 
-SPEC §3 et `CLAUDE.md` donnaient JMRTD et SCUBA sous « LGPL 3 » : l'artefact indique LGPL 2.1 ou toute version ultérieure. La conclusion ne change pas : la clause « ou ultérieure » permet de les utiliser sous LGPL 3, compatible avec la GPLv3 de Sceau.
+SPEC §3 et `CLAUDE.md` donnaient JMRTD et SCUBA sous « LGPL 3 » : l'artefact indique LGPL 2.1 ou toute version ultérieure. La conclusion ne change pas : la clause « ou ultérieure » permet de les utiliser sous LGPL 3, compatible avec la licence de Sceau (GPL-3.0-or-later).
 
 Seuls les artefacts BouncyCastle `jdk18on` sont admis : les variantes `jdk15on` et `jdk15to18`, qui dupliqueraient les classes, sont exclues dans les `build.gradle.kts`. SpongyCastle n'est jamais utilisé (SPEC §3).
 
@@ -34,7 +34,7 @@ Seuls les artefacts BouncyCastle `jdk18on` sont admis : les variantes `jdk15on` 
 
 | Artefact | Version | Licence | Rôle | F-Droid |
 |---|---|---|---|---|
-| `project(":core")` | — | GPLv3 | Cœur de Sceau | oui |
+| `project(":core")` | — | GPL 3 ou ultérieure (GPL-3.0-or-later) | Cœur de Sceau | oui |
 | `net.sf.scuba:scuba-sc-android` | 0.0.27 | LGPL 2.1 ou ultérieure (POM « LGPL », en-têtes des sources) | Pont entre `IsoDep` d'Android et SCUBA | oui, pur Java |
 | `androidx.compose:compose-bom` | 2026.02.01 | Apache 2.0 | Alignement des versions Compose | oui (Google Maven, AndroidX libre) |
 | `androidx.compose.ui:ui`, `ui-graphics`, `ui-tooling-preview` | 1.11.2 | Apache 2.0 | Jetpack Compose | oui |
@@ -55,7 +55,7 @@ Ces dépendances sont déclarées en `debugImplementation` : elles n'apparaissen
 | Artefact | Version | Licence | Rôle |
 |---|---|---|---|
 | `androidx.compose.ui:ui-tooling` | 1.11.2 | Apache 2.0 | Outils de prévisualisation Compose |
-| `project(":testchip")` | — | GPLv3 (code de Sceau) | Mode démo : CNIe simulée, PKI de test (décision D17). Tire JMRTD, SCUBA et BouncyCastle, déjà présents. |
+| `project(":testchip")` | — | GPL 3 ou ultérieure (GPL-3.0-or-later, code de Sceau) | Mode démo : CNIe simulée, PKI de test (décision D17). Tire JMRTD, SCUBA et BouncyCastle, déjà présents. |
 | `androidx.compose.ui:ui-test-manifest` | 1.11.2 (BOM Compose) | Apache 2.0 (POM) | Déclare l'activité vide `androidx.activity.ComponentActivity` (exportée, sans contenu) qui accueille les tests Compose sous Robolectric (`TextOverflowTest`, D28). Rien d'autre : ni code, ni permission. Présente dans l'APK de debug seulement. |
 
 Vérification : `./gradlew :app:dependencies --configuration releaseRuntimeClasspath` ne mentionne pas `project :testchip`, `debugRuntimeClasspath` le mentionne (constaté le 2026-09-25).
@@ -85,7 +85,9 @@ Montée de version : se placer dans le sous-module, `git fetch --tags && git che
 | `org.jspecify:jspecify` | 1.0.0 | Apache 2.0 | AndroidX | Annotations de nullité |
 | `org.jetbrains:annotations` | 23.0.0 | Apache 2.0 | kotlin-stdlib, coroutines | Annotations, sans code exécuté |
 
-Autres transitives : bibliothèques AndroidX (`annotation`, `collection`, `arch.core`, `savedstate`, `navigationevent`, `customview-poolingcontainer`, `autofill`, `graphics-path`, `tracing`, `transition`, `dynamicanimation`, `interpolator`, `versionedparcelable`, `legacy-support-core-utils`, `loader`, `localbroadcastmanager`, `print`, `documentfile`, `concurrent-futures`, `core-viewtree`) et modules Compose (`runtime`, `runtime-saveable`, `runtime-retain`, `runtime-annotation`, `animation`, `animation-core`, `foundation`, `foundation-layout`, `material-ripple`, `ui-geometry`, `ui-text`, `ui-unit`, `ui-util`) : Apache 2.0, publiées sur Google Maven, libres. Ces transitives n'ont pas été contrôlées une à une ; la licence Apache 2.0 a été constatée sur l'AAR ou le POM de chaque dépendance directe AndroidX et Compose et de `emoji2`, `profileinstaller`, `startup-runtime` et `window`.
+| `androidx.graphics:graphics-path` | 1.0.1 | Apache 2.0 | Compose (`ui-graphics`) | **Contient une bibliothèque native précompilée**, `lib/<abi>/libandroidx.graphics.path.so` (7 à 11 Ko par architecture, présente dans tous les APK release), qui lit les tracés `android.graphics.Path`. Code AndroidX publié sous Apache 2.0 avec ses sources (AOSP), distribué par Google Maven ; F-Droid l'accepte comme le reste d'AndroidX, présent dans toutes les applications Compose. Ce n'est pas un service Google et elle n'ouvre aucune connexion. Seul binaire natif de l'APK que Sceau ne compile pas lui-même (constaté sur l'APK release 0.9, `unzip -l`). |
+
+Autres transitives : bibliothèques AndroidX (`annotation`, `collection`, `arch.core`, `savedstate`, `navigationevent`, `customview-poolingcontainer`, `autofill`, `tracing`, `transition`, `dynamicanimation`, `interpolator`, `versionedparcelable`, `legacy-support-core-utils`, `loader`, `localbroadcastmanager`, `print`, `documentfile`, `concurrent-futures`, `core-viewtree`) et modules Compose (`runtime`, `runtime-saveable`, `runtime-retain`, `runtime-annotation`, `animation`, `animation-core`, `foundation`, `foundation-layout`, `material-ripple`, `ui-geometry`, `ui-text`, `ui-unit`, `ui-util`) : Apache 2.0, publiées sur Google Maven, libres. Ces transitives n'ont pas été contrôlées une à une ; la licence Apache 2.0 a été constatée sur l'AAR ou le POM de chaque dépendance directe AndroidX et Compose et de `emoji2`, `profileinstaller`, `startup-runtime` et `window`.
 
 Aucune dépendance ne relève de Google Play Services, Firebase, d'une bibliothèque d'analyse, de publicité ou de rapport de plantage.
 
@@ -93,7 +95,8 @@ Aucune dépendance ne relève de Google Play Services, Firebase, d'une biblioth�
 
 Le magasin de confiance de `core/src/main/resources/trust/` est composé de données publiques, pas de bibliothèques (décision D1) :
 
-- certificats CSCA de l'ANTS, publiés sur ants.gouv.fr ;
+- 5 certificats CSCA de l'ANTS, publiés sur ants.gouv.fr ;
+- 7 certificats CSCA et de lien publiés par leur propre État pour ses documents (décision D26) : Royaume-Uni (`gb-csca-2026.der`, `gb-csca-link-2021-2026.der`, sous Open Government Licence v3.0, attribution affichée dans « À propos »), Grèce (titres de séjour, `gr-csca-erp-003.der`, `gr-csca-erp-link-002-003.der`), Géorgie (`ge-csca-5.der`, `ge-csca-6.der`) et Luxembourg (`lu-csca-etravel-link.der`) ;
 - Master List allemande publiée par le BSI, redistribuée sans modification dans le respect de ses conditions de réutilisation (décision D1 dans `docs/decisions.md`).
 
 Provenance et empreintes : `docs/trust-store.md`.

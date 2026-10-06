@@ -1,6 +1,6 @@
 # Sceau : lecteur et vérificateur de documents d'identité ICAO 9303
 
-Version du 2026-09-25, intègre les décisions D1 à D19 et l'audit de sécurité du 2026-09-25 (`docs/audit-securite-2026-09-25.md`).
+Version du 2026-09-25, intègre les décisions D1 à D19 et l'audit de sécurité du 2026-09-25 (`docs/audit-securite-2026-09-25.md`) ; mise à jour au fil des décisions suivantes, renvoyées par leur numéro, en dernier le 2026-10-06 (D36, D38).
 
 Ce document est la source de vérité du projet. Toute décision d'implémentation future qui s'en écarte doit être justifiée dans `docs/decisions.md` et validée. Les décisions D1 à D19, désormais intégrées ici, y restent pour l'historique.
 
@@ -20,7 +20,7 @@ L'application ne conserve rien, n'envoie rien et fonctionne entièrement hors li
 
 ## 2. Contraintes générales
 
-- Licence GPLv3. Publication visée sur F-Droid : aucune dépendance propriétaire, aucun service Google, aucun blob binaire non reconstruisible. Le code natif est compilé depuis les sources à chaque build.
+- Licence GNU GPL version 3 ou ultérieure (GPL-3.0-or-later), comme l'indiquent l'écran « À propos » et les en-têtes des sources C ; logo et icône sous la même licence (D38). Publication visée sur F-Droid : aucune dépendance propriétaire, aucun service Google, aucun blob binaire non reconstruisible. Le code natif est compilé depuis les sources à chaque build.
 - Aucune permission réseau dans le manifeste. Permissions demandées : `android.permission.NFC` uniquement, plus la permission interne de niveau `signature` `<paquet>.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION` qu'ajoute androidx.core (D7). La feature `android.hardware.nfc` est déclarée non obligatoire pour que l'appli s'installe partout et affiche un message clair si le NFC est absent. Sauvegarde Android désactivée.
 - Android 8.0+ (minSdk 26), compileSdk courant, Kotlin, Jetpack Compose, Material 3, mode sombre suivant le système. Palette propre à l'application (celle du logo), couleurs dynamiques désactivées pour garder la lecture des verdicts stable (D18).
 - Identifiant d'application et paquet `io.github.mgdx.sceau`, `io.github.mgdx.sceau.core` pour `:core` (D4).
@@ -44,7 +44,7 @@ L'application ne conserve rien, n'envoie rien et fonctionne entièrement hors li
 | Exécution asynchrone | kotlinx-coroutines | Apache 2 | |
 | UI | Compose, Material 3, Navigation Compose, Lifecycle | Apache 2 | |
 
-La clause « ou ultérieure » permet d'utiliser JMRTD et SCUBA sous LGPL 3, compatible avec la GPLv3 de Sceau.
+La clause « ou ultérieure » permet d'utiliser JMRTD et SCUBA sous LGPL 3, compatible avec la licence de Sceau (GPL-3.0-or-later).
 
 jj2000 (fork JMRTD) est écarté : sa licence d'origine restreint le champ d'usage (non libre, retiré de Debian pour cette raison), ce qui la rend incompatible avec la GPLv3 et avec la politique d'inclusion de F-Droid ; ce fork n'est pas non plus publié sur Maven Central (D3). OpenJPEG, implémentation de référence sous licence libre, le remplace. Le sous-module suit la veille de sécurité amont : il est avancé dès qu'un correctif de sécurité est publié, et le harnais de test natif est rejoué à chaque montée de version (audit V5).
 
@@ -93,16 +93,17 @@ Invite « Posez le document contre le dos du téléphone et ne le retirez pas »
 
 Si l'étape « Ouverture du canal sécurisé » dure plus de 5 s, un message d'attente explique que la puce peut faire patienter jusqu'à une minute après des essais ratés (contre-mesure anti-force brute, §6.1) et invite à ne pas retirer le document (D12).
 
-Erreurs gérées, chacune avec un message en français et un bouton « Réessayer » :
+Erreurs gérées, chacune avec un message en français et un bouton « Réessayer », sauf l'accès réservé :
 
 - CAN ou MRZ incorrects (échec de PACE ou BAC) ; le message prévient qu'un essai raté peut allonger le délai de réponse de la puce
 - CAN fourni pour un document qui n'annonce pas PACE ; le message invite à utiliser l'onglet Passeport et la MRZ
 - Document retiré trop tôt (perte de la connexion)
 - Document sans application ICAO
+- Puce réservée aux autorités habilitées (`ACCESS_RESTRICTED`, cartes d'identité allemandes délivrées avant août 2021) : le message dit qu'un nouvel essai n'y changera rien, et seul « Annuler » est proposé, sans « Réessayer » (D36)
 - Délai dépassé
 - Erreur inattendue
 
-Pour **toutes** les erreurs, le code technique complet est affiché en petit sous le message : aucun journal n'étant permis (section 8), c'est le seul moyen de diagnostic (D11). Le message est choisi sur le code de base (texte avant le premier `-`). Codes de base stables : `NOT_ICAO`, `ACCESS_DENIED`, `CAN_WITHOUT_PACE`, `CONNECTION_LOST`, `TIMEOUT`, `UNEXPECTED`. `CONNECTION_LOST`, `TIMEOUT` et `UNEXPECTED` portent un suffixe de diagnostic fait uniquement d'éléments sans donnée personnelle : étape (`SECURE_CHANNEL`…), octet INS de la commande en cours (`INS86`), longueur de l'APDU arrondie à la dizaine (`L10`), étiquette de l'opération (`SELECT_APPLET`, `SOD`, `DG1`, `RECONNECT`), sous-type d'erreur d'E/S pris dans une liste fermée (`IO-TRANSCEIVE_FAILED`, `IO-TOO_LONG`, `IO-SERVICE_DIED`, `IO-OTHER`, `IO-NO_MESSAGE`), nom simple de la classe d'exception et mot d'état SW. Exemple : `TIMEOUT-SECURE_CHANNEL-INS86-L10`. Un code ne contient jamais de donnée lue, de clé, d'octet d'APDU ni de message d'exception brut. La grammaire complète est dans `docs/protocol.md` §5.
+Pour **toutes** les erreurs, le code technique complet est affiché en petit sous le message : aucun journal n'étant permis (section 8), c'est le seul moyen de diagnostic (D11). Le message est choisi sur le code de base (texte avant le premier `-`). Codes de base stables : `NOT_ICAO`, `ACCESS_DENIED`, `ACCESS_RESTRICTED`, `CAN_WITHOUT_PACE`, `CONNECTION_LOST`, `TIMEOUT`, `UNEXPECTED`. `ACCESS_RESTRICTED` porte en suffixe l'étape et l'élément refusé (`ACCESS_RESTRICTED-SECURE_CHANNEL-SELECT_APPLET`, `ACCESS_RESTRICTED-READ_DATA-SOD`, `ACCESS_RESTRICTED-READ_DATA-DG1`, D36). `CONNECTION_LOST`, `TIMEOUT` et `UNEXPECTED` portent un suffixe de diagnostic fait uniquement d'éléments sans donnée personnelle : étape (`SECURE_CHANNEL`…), octet INS de la commande en cours (`INS86`), longueur de l'APDU arrondie à la dizaine (`L10`), étiquette de l'opération (`SELECT_APPLET`, `SOD`, `DG1`, `RECONNECT`), sous-type d'erreur d'E/S pris dans une liste fermée (`IO-TRANSCEIVE_FAILED`, `IO-TOO_LONG`, `IO-SERVICE_DIED`, `IO-OTHER`, `IO-NO_MESSAGE`), nom simple de la classe d'exception et mot d'état SW. Exemple : `TIMEOUT-SECURE_CHANNEL-INS86-L10`. Un code ne contient jamais de donnée lue, de clé, d'octet d'APDU ni de message d'exception brut. La grammaire complète est dans `docs/protocol.md` §5.
 
 ### 5.3 Écran de résultat
 
@@ -124,6 +125,8 @@ Après une lecture en mode démo (APK de debug), un bandeau « Document simulé 
 **Photo** de DG2 en grand, avec un bouton pour l'afficher en plein écran.
 
 **Identité** (DG1) : nom, prénoms, sexe, date de naissance, nationalité, type et numéro de document, État émetteur (drapeau et nom du pays à partir du code à trois lettres), date d'expiration. Si le document est expiré, un bandeau « Document expiré » s'affiche sans changer le verdict d'authenticité.
+
+**Carte eID allemande pour citoyens de l'Union (eID-UB)** : sa puce ne contient aucune donnée d'identité (DG1 au code de document « UB », État « D », « < » partout ailleurs ; DG2 porte le logo eID, identique pour toutes les cartes). Si la signature du SOD est valide et l'empreinte de DG1 conforme, la section Identité est remplacée par un bandeau qui l'explique, suivi du seul genre de document et de l'État émetteur, et la photo n'est pas affichée ; l'empreinte de DG2 reste contrôlée. Le verdict se calcule normalement (D36).
 
 **Signature du titulaire** (DG7), section affichée uniquement si la puce l'annonce et la fournit : image de la signature manuscrite, décodée comme la photo, sur fond blanc dans les deux thèmes pour rester lisible (D37).
 
@@ -212,6 +215,7 @@ L'ordre suit ICAO 9303 partie 11 : EF.CardAccess est un fichier du MF et PACE s'
 - Type de contenu du SOD : le contenu signé doit être de type `id-icao-ldsSecurityObject` (`2.23.136.1.1.1`) ; sinon la vérification du SOD échoue (audit V10).
 - La recherche de chaîne est bornée : chaque certificat n'est visité qu'une fois par recherche, et le nombre de vérifications de signature est plafonné, pour qu'un magasin hostile ne rende pas la recherche exponentielle (audit V15).
 - Une étape non disponible (DG14 ou DG15 absent du SOD, étape non atteinte) est distinguée d'une étape échouée.
+- Accès réservé : un SW `6982` reçu **après** l'établissement du canal sécurisé, à la sélection de l'application ICAO ou à la lecture d'un fichier indispensable (EF.SOD, DG1), lève `ACCESS_RESTRICTED` : la puce réserve ces fichiers aux terminaux étatiques (Terminal Authentication), qu'un logiciel libre ne peut pas mener. Un `6982` avant l'authentification reste `UNEXPECTED`, un refus de clé reste `ACCESS_DENIED`, et un `6982` sur un fichier facultatif (EF.COM, DG2, DG7, DG11, DG12, DG14, DG15) le rend absent (D36).
 - Aucune donnée personnelle n'apparaît dans les exceptions, les logs ou les identifiants d'erreur. Aucune exception de JMRTD n'est propagée ni attachée comme cause : leurs messages contiennent des APDU en hexadécimal (D14). Les modèles, la clé et le rapport ont un `toString()` masqué.
 - Le rapport ne contient aucune référence Android et n'est ni sérialisé ni persisté : les tests travaillent sur les objets en mémoire produits avec `:testchip` (D19). `:core` ne produit aucun texte destiné à l'utilisateur : l'app met en forme les détails structurés avec ses propres chaînes.
 
@@ -324,7 +328,7 @@ Plan de test manuel dans `docs/test-plan.md`, exécuté via adb sur téléphone 
 ```
 README.md                    présentation, captures, cadre d'usage, installation
 SPEC.md                      ce document
-LICENSE                      GPLv3
+LICENSE                      GNU GPL version 3 (le projet est sous GPL-3.0-or-later)
 CONTRIBUTING.md              règles de contribution (sections 2 et 3)
 docs/architecture.md         modules, flux de données, cycle de vie des données sensibles
 docs/protocol.md             séquence ICAO détaillée, délais, codes d'erreur, table du verdict
@@ -332,6 +336,9 @@ docs/trust-store.md          provenance et empreintes des certificats, procédur
 docs/dependencies.md         dépendances, licences, compatibilité F-Droid
 docs/test-plan.md            plan de test manuel
 docs/decisions.md            décisions et écarts par rapport à SPEC.md, justifiés
+docs/release.md              procédure de release : contrôles, signature, assets, tag, F-Droid
+docs/reproducible-builds.md  builds reproductibles (D25)
+docs/fdroid/                 brouillon de recette fdroiddata (APK universel)
 docs/audit-securite-*.md     rapports de revue de sécurité
 fastlane/metadata/           fr-FR et en-US : description, captures, changelog
 core/                        module Kotlin pur
@@ -342,14 +349,14 @@ app/src/main/cpp/test/       harnais de test hôte sous sanitizers (hors APK)
 testchip/                    PKI factice, puce simulée, CNIe spécimen (tests et debug)
 ```
 
-Releases : APK par architecture et APK universel publiés sur les releases GitHub, tag `vX.Y.Z`, changelog Fastlane à jour. Préparation de la soumission à F-Droid avec le skill `android-fdroid` avant la première release publique.
+Releases : dépôt public https://github.com/mgdx/Sceau ; APK par architecture et APK universel, signés par l'auteur, publiés sur les releases GitHub (`sceau-<version>-<abi>.apk`, `sceau-<version>-universal.apk`, `SHA256SUMS`), tag annoté `vX.Y` (`vX.Y.Z` pour un correctif), changelog Fastlane à jour. F-Droid reconstruit et publie le seul APK universel, signé par l'auteur grâce aux builds reproductibles (D25, D38). Procédure : `docs/release.md`. Préparation de la soumission à F-Droid avec le skill `android-fdroid`.
 
 ## 11. Jalons
 
-État au 2026-09-25 : Socle, Lecture et Vérification atteints ; Finitions en cours (corrections de l'audit de sécurité du 2026-09-25) ; Publication à venir.
+État au 2026-10-06 : Socle, Lecture, Vérification et Finitions atteints ; Publication en cours, première release publique en version 0.9 (tag `v0.9`, D38).
 
 1. **Socle** (atteint) : modules, CI, ktlint, magasin de confiance chargé et testé, fabrique de test crypto.
 2. **Lecture** (atteint) : transport `IsoDep`, PACE et BAC, lecture des DG, affichage brut de DG1 et de la photo.
 3. **Vérification** (atteint) : PA, CA, AA, `VerificationReport`, écran de résultat complet avec verdict et liste de contrôle.
-4. **Finitions** (en cours) : données complémentaires DG11 et DG12, écran magasin de confiance et import, écran À propos, effacement mémoire vérifié, `FLAG_SECURE`, traductions en-US, corrections de l'audit de sécurité.
-5. **Publication** (à venir) : revue sécurité, plan de test sur appareil, métadonnées Fastlane, première release, soumission F-Droid.
+4. **Finitions** (atteint) : données complémentaires DG11 et DG12, écran magasin de confiance et import, écran À propos, effacement mémoire vérifié, `FLAG_SECURE`, traductions en-US, corrections de l'audit de sécurité.
+5. **Publication** (en cours) : revue sécurité, plan de test sur appareil (APK release signé compris), métadonnées Fastlane, première release 0.9, soumission F-Droid.

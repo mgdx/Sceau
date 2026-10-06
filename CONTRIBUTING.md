@@ -102,4 +102,4 @@ Le corps du message explique le pourquoi, et cite le cas échéant la section de
 3. Vérifiez `./gradlew check`.
 4. Ouvrez une demande de fusion décrivant le changement, sa justification et la façon dont il a été vérifié (tests, et cas de [`docs/test-plan.md`](docs/test-plan.md) exécutés sur appareil le cas échéant).
 
-En contribuant, vous acceptez que votre contribution soit distribuée sous licence GPLv3.
+En contribuant, vous acceptez que votre contribution soit distribuée sous la licence du projet, GNU GPL version 3 ou ultérieure (GPL-3.0-or-later).
