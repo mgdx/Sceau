@@ -40,7 +40,7 @@ object IsolatedJpeg2000Decoder {
     /**
      * Portée des transferts binder, bloquants : détachée de l'appelant pour qu'un délai dépassé
      * ou une annulation n'attendent pas la fin d'une transaction (le détachement du service
-     * termine le processus isolé, ce qui la débloque).
+     * termine le processus isolé, même en plein décodage, ce qui la débloque).
      */
     private val transferScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 

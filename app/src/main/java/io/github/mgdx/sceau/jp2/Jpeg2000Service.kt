@@ -14,6 +14,8 @@ import io.github.mgdx.sceau.jp2.Jpeg2000Protocol.STATUS_OK
 import io.github.mgdx.sceau.ui.result.DecodeLimits
 import io.github.mgdx.sceau.ui.result.detectImageFormat
 import io.github.mgdx.sceau.ui.result.limitSide
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 
 /**
  * Service de décodage des images de la puce (JPEG 2000 et JPEG), déclaré
@@ -27,8 +29,8 @@ import io.github.mgdx.sceau.ui.result.limitSide
  * reste est refusé sans être décodé.
  *
  * Un processus neuf sert un seul décodage : [IsolatedJpeg2000Decoder] se lie, transfère le
- * flux, lit les pixels puis se détache ; [onDestroy] efface alors les tampons et termine le
- * processus, avec tout ce que le décodeur a pu laisser dans son tas. Protocole : [Jpeg2000Protocol].
+ * flux, lit les pixels puis se détache ; [onDestroy] termine alors le processus, avec tout ce
+ * que le décodeur a pu laisser dans son tas. Protocole : [Jpeg2000Protocol].
  */
 class Jpeg2000Service : Service() {
     private val binder = DecoderBinder()
@@ -36,24 +38,39 @@ class Jpeg2000Service : Service() {
     override fun onBind(intent: Intent?): IBinder = binder
 
     override fun onDestroy() {
-        binder.wipe()
+        // Jamais d'attente du verrou ici (audit V26) : après un délai dépassé, le thread binder
+        // le tient pendant tout le décodage, et le processus survivrait jusqu'à sa fin. Les
+        // tampons ne sont effacés que s'ils sont libres ; sinon ils disparaissent avec le
+        // processus, terminé dans tous les cas.
+        binder.wipeIfIdle()
         super.onDestroy()
-        // Un décodage encore en cours (délai dépassé) meurt avec le processus.
         Process.killProcess(Process.myPid())
     }
 
-    private class DecoderBinder : Binder() {
-        private val lock = Any()
+    internal class DecoderBinder : Binder() {
+        /** Tenu pendant chaque transaction, décodage compris. */
+        internal val lock = ReentrantLock()
         private var input: SequentialBytes? = null
         private var pixels: IntArray? = null
 
-        fun wipe() =
-            synchronized(lock) {
-                input?.wipe()
-                input = null
-                pixels?.fill(0)
-                pixels = null
+        fun wipe() = lock.withLock { wipeLocked() }
+
+        /** Efface les tampons si aucune transaction n'est en cours, sans jamais attendre. */
+        fun wipeIfIdle() {
+            if (!lock.tryLock()) return
+            try {
+                wipeLocked()
+            } finally {
+                lock.unlock()
             }
+        }
+
+        private fun wipeLocked() {
+            input?.wipe()
+            input = null
+            pixels?.fill(0)
+            pixels = null
+        }
 
         override fun onTransact(
             code: Int,
@@ -66,7 +83,7 @@ class Jpeg2000Service : Service() {
             }
             try {
                 data.enforceInterface(Jpeg2000Protocol.DESCRIPTOR)
-                synchronized(lock) {
+                lock.withLock {
                     val handled =
                         when (code) {
                             Jpeg2000Protocol.TX_BEGIN -> begin(data.readInt())
@@ -93,7 +110,7 @@ class Jpeg2000Service : Service() {
         }
 
         private fun begin(length: Int): Boolean {
-            wipe()
+            wipeLocked()
             if (!Jpeg2000Protocol.isValidInputLength(length)) return false
             input = SequentialBytes(length)
             return true

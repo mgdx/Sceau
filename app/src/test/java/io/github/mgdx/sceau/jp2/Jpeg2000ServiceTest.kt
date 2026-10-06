@@ -3,6 +3,7 @@ package io.github.mgdx.sceau.jp2
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Parcel
+import android.os.Process
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -11,6 +12,11 @@ import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+import org.robolectric.shadows.ShadowProcess
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
+import kotlin.concurrent.thread
 
 /**
  * Service de décodage isolé, appelé directement par son protocole binder (le processus isolé
@@ -21,7 +27,7 @@ import org.robolectric.annotation.GraphicsMode
 @Config(sdk = [37])
 class Jpeg2000ServiceTest {
     private val service = Robolectric.buildService(Jpeg2000Service::class.java).create().get()
-    private val binder = service.onBind(Intent())
+    private val binder = service.onBind(Intent()) as Jpeg2000Service.DecoderBinder
 
     @Test
     fun `JPEG decode dans le service`() {
@@ -44,6 +50,45 @@ class Jpeg2000ServiceTest {
                 TestImages.encode(Bitmap.CompressFormat.WEBP_LOSSY),
             )
         for (bytes in others) assertEquals(null, decode(bytes))
+    }
+
+    @Test
+    fun `onDestroy n'attend pas une transaction en cours (audit V26)`() {
+        val held = CountDownLatch(1)
+        val release = CountDownLatch(1)
+        val decoding =
+            thread {
+                binder.lock.lock()
+                try {
+                    held.countDown()
+                    release.await()
+                } finally {
+                    binder.lock.unlock()
+                }
+            }
+        try {
+            assertTrue(held.await(5, TimeUnit.SECONDS))
+            val executor = Executors.newSingleThreadExecutor()
+            try {
+                // Avant la correction, onDestroy attendait le verrou jusqu'à la fin du décodage.
+                executor.submit { service.onDestroy() }.get(5, TimeUnit.SECONDS)
+            } finally {
+                executor.shutdownNow()
+            }
+            assertTrue(ShadowProcess.wasKilled(Process.myPid()))
+        } finally {
+            release.countDown()
+            decoding.join()
+        }
+    }
+
+    @Test
+    fun `onDestroy efface le flux recu quand le service est libre`() {
+        val bytes = TestImages.encode(Bitmap.CompressFormat.JPEG)
+        assertTrue(send(bytes))
+        service.onDestroy()
+        assertTrue(ShadowProcess.wasKilled(Process.myPid()))
+        assertEquals(null, call(Jpeg2000Protocol.TX_DECODE) {})
     }
 
     /** Transfère [bytes] puis fait décoder : dimensions rendues, ou null sur refus. */
