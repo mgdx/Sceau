@@ -7,6 +7,7 @@ import io.github.mgdx.sceau.core.trust.MasterList
 import io.github.mgdx.sceau.core.trust.TrustStore
 import io.github.mgdx.sceau.core.trust.TrustStores
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
@@ -19,11 +20,25 @@ import java.io.IOException
  * Les Master Lists importées sont stockées telles quelles dans `filesDir/trust/<sha256>.ml`, les
  * certificats importés seuls en DER dans `filesDir/trust/<sha256 du DER>.der` (D33) : ce ne sont
  * pas des données personnelles. Toutes les fonctions s'exécutent sur Dispatchers.IO.
+ *
+ * Deux verrous (audit V22) : [mutex] protège les fichiers et les caches, et n'est jamais tenu
+ * pendant la fusion du magasin ; [loadMutex] évite seulement de fusionner deux fois en parallèle.
+ * La liste des éléments importés et leur suppression n'attendent donc jamais un chargement en
+ * cours, et restent possibles si ce chargement échoue. [loadStore] n'est remplacé que par les tests.
  */
-class TrustStoreRepository(
+class TrustStoreRepository internal constructor(
     private val context: Context,
+    private val loadStore: (masterLists: List<ByteArray>, certificates: List<ByteArray>) -> TrustStore,
 ) {
+    constructor(context: Context) : this(context, { masterLists, certificates -> TrustStores.load(masterLists, certificates) })
+
     private val mutex = Mutex()
+
+    /** Fusion du magasin en cours ; toujours pris avant [mutex], jamais l'inverse. */
+    private val loadMutex = Mutex()
+
+    /** Incrémenté à chaque modification des fichiers : un magasin fusionné entre-temps n'est pas gardé. */
+    private var generation = 0L
 
     /** Magasin fusionné en mémoire ; null tant qu'il n'est pas chargé ou après un import. */
     private var cached: TrustStore? = null
@@ -39,16 +54,41 @@ class TrustStoreRepository(
      */
     private val embeddedMasterListHashes: Set<String> by lazy { readEmbeddedMasterListHashes() }
 
-    /** Magasin fusionné, chargé une fois puis mis en cache en mémoire jusqu'au prochain import. */
+    /**
+     * Magasin fusionné, chargé une fois puis mis en cache en mémoire jusqu'au prochain import.
+     * Les fichiers sont lus sous [mutex], la fusion se fait hors de ce verrou.
+     */
     suspend fun get(): TrustStore =
         withContext(Dispatchers.IO) {
-            mutex.withLock {
-                cached ?: TrustStores.load(read(masterListFiles()), read(certificateFiles())).also { cached = it }
+            loadMutex.withLock {
+                var readGeneration = 0L
+                var masterLists: List<ByteArray> = emptyList()
+                var certificates: List<ByteArray> = emptyList()
+                val ready =
+                    mutex.withLock {
+                        cached ?: run {
+                            readGeneration = generation
+                            masterLists = read(masterListFiles())
+                            certificates = read(certificateFiles())
+                            null
+                        }
+                    }
+                ready ?: loadStore(masterLists, certificates).also { store ->
+                    mutex.withLock { if (generation == readGeneration) cached = store }
+                }
             }
         }
 
-    /** Parse et vérifie une Master List sans l'importer (pour afficher l'empreinte du signataire). */
-    suspend fun preview(bytes: ByteArray): MasterList = withContext(Dispatchers.IO) { TrustStores.parseMasterList(bytes) }
+    /**
+     * Parse et vérifie une Master List sans l'importer (pour afficher l'empreinte du signataire).
+     * Annulable : l'analyse s'interrompt quand l'appelant est annulé, par exemple quand
+     * l'utilisateur quitte l'écran (audit V22).
+     */
+    suspend fun preview(bytes: ByteArray): MasterList =
+        withContext(Dispatchers.IO) {
+            val caller = coroutineContext
+            TrustStores.parseMasterList(bytes) { caller.ensureActive() }
+        }
 
     /**
      * Reconnaît le fichier choisi par l'utilisateur et le vérifie sans l'importer (D33) : d'abord
@@ -123,7 +163,8 @@ class TrustStoreRepository(
 
     /**
      * Éléments importés, Master Lists puis certificats, chacun dans l'ordre d'import. Un fichier
-     * devenu illisible reste listé, sans détail, pour pouvoir être supprimé.
+     * devenu illisible reste listé, sans détail, pour pouvoir être supprimé. Ne dépend pas du
+     * magasin fusionné : la liste s'obtient pendant son chargement ou après un échec (audit V22).
      */
     suspend fun importedItems(): List<ImportedItem> =
         withContext(Dispatchers.IO) {
@@ -233,6 +274,7 @@ class TrustStoreRepository(
         }
 
     private fun invalidate() {
+        generation++
         cached = null
         cachedItems = null
     }

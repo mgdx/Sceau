@@ -1,5 +1,6 @@
 package io.github.mgdx.sceau.ui.trust
 
+import io.github.mgdx.sceau.ui.result.displaySafe
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.util.Locale
@@ -35,3 +36,22 @@ private const val BUFFER_SIZE = 64 * 1024
 
 /** Empreinte hexadécimale regroupée par blocs de quatre caractères, en majuscules. */
 fun formatFingerprint(hex: String): String = hex.uppercase(Locale.ROOT).chunked(4).joinToString(" ")
+
+/** Longueur maximale affichée d'un sujet X.500, en points de code. */
+const val SUBJECT_MAX_LENGTH = 256
+
+/** Nombre maximal de lignes affichées pour un sujet X.500. */
+const val SUBJECT_MAX_LINES = 4
+
+/** Longueur maximale affichée d'un code pays non reconnu, en points de code. */
+const val COUNTRY_CODE_MAX_LENGTH = 8
+
+/**
+ * Sujet X.500 d'un certificat ou du signataire d'une Master List, rendu par
+ * `X500Principal.getName()` qui n'échappe ni les sauts de ligne ni les caractères de contrôle
+ * bidirectionnels : assaini par [displaySafe] avant tout affichage (audit V23).
+ */
+fun displaySubject(subject: String): String = displaySafe(subject, SUBJECT_MAX_LENGTH)
+
+/** Code pays lu dans un certificat (attribut C), assaini quand il n'est pas reconnu (audit V23). */
+fun displayCountryCode(code: String): String = displaySafe(code, COUNTRY_CODE_MAX_LENGTH)

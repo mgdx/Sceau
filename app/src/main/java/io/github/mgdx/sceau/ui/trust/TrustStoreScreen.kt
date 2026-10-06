@@ -62,8 +62,10 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import io.github.mgdx.sceau.R
 import io.github.mgdx.sceau.core.trust.InvalidCertificateException
@@ -116,10 +118,7 @@ private sealed interface StoreUi {
     class Loaded(
         val groups: List<CountryGroup>,
         val total: Int,
-        val imported: List<ImportedItem>,
-    ) : StoreUi {
-        val hasImported: Boolean get() = imported.isNotEmpty()
-    }
+    ) : StoreUi
 }
 
 /** Écran « Magasin de confiance » (SPEC §5.4). */
@@ -137,6 +136,10 @@ fun TrustStoreScreen(
 
     var reloadKey by remember { mutableIntStateOf(0) }
     var store by remember { mutableStateOf<StoreUi>(StoreUi.Loading) }
+
+    // Chargés à part du magasin fusionné (audit V22) : un import qui bloque ou fait échouer le
+    // chargement reste supprimable.
+    var imported by remember { mutableStateOf<List<ImportedItem>>(emptyList()) }
     var busy by remember { mutableStateOf(false) }
     var pending by remember { mutableStateOf<ImportPreview?>(null) }
     var confirmDelete by remember { mutableStateOf(false) }
@@ -144,18 +147,27 @@ fun TrustStoreScreen(
     val expanded = remember { mutableStateMapOf<String, Boolean>() }
     var query by rememberSaveable { mutableStateOf("") }
 
+    LaunchedEffect(reloadKey) {
+        imported =
+            try {
+                repository.importedItems()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                emptyList()
+            }
+    }
+
     LaunchedEffect(reloadKey, locale) {
         store = StoreUi.Loading
         store =
             try {
                 val trustStore = repository.get()
-                val imported = repository.importedItems()
                 withContext(Dispatchers.Default) {
                     val anchors = trustStore.anchors
                     StoreUi.Loaded(
                         groups = groupByCountry(anchors, locale),
                         total = anchors.size,
-                        imported = imported,
                     )
                 }
             } catch (e: CancellationException) {
@@ -224,11 +236,11 @@ fun TrustStoreScreen(
     ) { padding ->
         when (val current = store) {
             StoreUi.Loading -> {
-                CenteredMessage(stringResource(R.string.trust_loading), Modifier.padding(padding), progress = true)
+                PendingStore(stringResource(R.string.trust_loading), imported, busy, { toRemove = it }, padding, progress = true)
             }
 
             StoreUi.Failed -> {
-                CenteredMessage(stringResource(R.string.trust_load_error), Modifier.padding(padding)) {
+                PendingStore(stringResource(R.string.trust_load_error), imported, busy, { toRemove = it }, padding) {
                     Button(onClick = { reloadKey++ }) { Text(stringResource(R.string.trust_retry)) }
                 }
             }
@@ -236,6 +248,7 @@ fun TrustStoreScreen(
             is StoreUi.Loaded -> {
                 StoreList(
                     store = current,
+                    imported = imported,
                     query = query,
                     onQueryChange = { query = it },
                     busy = busy,
@@ -456,9 +469,45 @@ private fun CenteredMessage(
     }
 }
 
+/**
+ * Magasin en cours de chargement ou en échec : [message], puis les éléments importés, qui restent
+ * supprimables à l'unité (audit V22). Sans élément importé, le message seul, centré.
+ */
+@Composable
+private fun PendingStore(
+    message: String,
+    imported: List<ImportedItem>,
+    busy: Boolean,
+    onRemove: (ImportedItem) -> Unit,
+    contentPadding: PaddingValues,
+    progress: Boolean = false,
+    action: @Composable () -> Unit = {},
+) {
+    if (imported.isEmpty()) {
+        CenteredMessage(message, Modifier.padding(contentPadding), progress, action)
+        return
+    }
+    val formatDate = rememberDateFormatter()
+    LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = contentPadding) {
+        item(key = "pending") {
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                if (progress) CircularProgressIndicator()
+                Text(message, style = MaterialTheme.typography.bodyLarge)
+                action()
+            }
+        }
+        importedItems(imported, busy, formatDate, onRemove)
+    }
+}
+
 @Composable
 private fun StoreList(
     store: StoreUi.Loaded,
+    imported: List<ImportedItem>,
     query: String,
     onQueryChange: (String) -> Unit,
     busy: Boolean,
@@ -485,9 +534,9 @@ private fun StoreList(
             // Pendant une recherche, les résultats viennent juste sous le champ.
             if (!searching) {
                 item(key = "header") {
-                    StoreHeader(store, busy, onImport, onDelete)
+                    StoreHeader(store, imported.isNotEmpty(), busy, onImport, onDelete)
                 }
-                importedItems(store.imported, busy, formatDate, onRemove)
+                importedItems(imported, busy, formatDate, onRemove)
             }
             if (groups.isEmpty()) {
                 item(key = "empty") {
@@ -554,6 +603,7 @@ private fun LazyListScope.countryItems(
 @Composable
 private fun StoreHeader(
     store: StoreUi.Loaded,
+    hasImported: Boolean,
     busy: Boolean,
     onImport: () -> Unit,
     onDelete: () -> Unit,
@@ -570,7 +620,7 @@ private fun StoreHeader(
         Button(onClick = onImport, enabled = !busy, modifier = Modifier.fillMaxWidth()) {
             Text(stringResource(R.string.trust_import))
         }
-        OutlinedButton(onClick = onDelete, enabled = !busy && store.hasImported, modifier = Modifier.fillMaxWidth()) {
+        OutlinedButton(onClick = onDelete, enabled = !busy && hasImported, modifier = Modifier.fillMaxWidth()) {
             Icon(SceauIcons.Delete, contentDescription = null)
             Spacer(Modifier.width(8.dp))
             Text(stringResource(R.string.trust_delete_imported))
@@ -597,7 +647,7 @@ private fun CountryHeader(
     val label =
         when {
             group.alpha2.isEmpty() -> stringResource(R.string.trust_country_unknown)
-            name == null -> group.alpha2
+            name == null -> displayCountryCode(group.alpha2)
             flag != null -> "$flag $name"
             else -> name
         }
@@ -643,7 +693,7 @@ private fun AnchorItem(
             Badge(stringResource(sourceBadge(anchor.source)))
             if (anchor.isLink) Badge(stringResource(R.string.trust_link_certificate))
         }
-        Text(anchor.subject, style = MaterialTheme.typography.bodyMedium)
+        SubjectText(anchor.subject, MaterialTheme.typography.bodyMedium)
         Text(
             text =
                 stringResource(
@@ -708,7 +758,7 @@ private fun ImportConfirmDialog(
             ) {
                 Text(stringResource(R.string.trust_import_confirm_text), style = MaterialTheme.typography.bodyMedium)
                 DialogField(stringResource(R.string.trust_import_signer)) {
-                    Text(info.signerSubject, style = MaterialTheme.typography.bodyMedium)
+                    SubjectText(info.signerSubject, MaterialTheme.typography.bodyMedium)
                 }
                 DialogField(stringResource(R.string.trust_import_signer_fingerprint)) {
                     SelectionContainer {
@@ -812,7 +862,7 @@ private fun MasterListItemContent(
         UnreadableItem()
         return
     }
-    Text(info.signerSubject, style = MaterialTheme.typography.bodyMedium)
+    SubjectText(info.signerSubject, MaterialTheme.typography.bodyMedium)
     val details =
         listOfNotNull(
             info.signingTime?.let { stringResource(R.string.trust_imported_signed_on, formatDate(it.toUtcDate())) },
@@ -836,7 +886,7 @@ private fun CertificateItemContent(
         UnreadableItem()
         return
     }
-    Text(summary.subject, style = MaterialTheme.typography.bodyMedium)
+    SubjectText(summary.subject, MaterialTheme.typography.bodyMedium)
     Text(
         text = countryLabel(summary.country),
         style = MaterialTheme.typography.bodySmall,
@@ -865,11 +915,29 @@ private fun UnreadableItem() {
     )
 }
 
-/** Nom localisé du pays [alpha2], le code seul s'il est inconnu, ou « Pays non indiqué ». */
+/**
+ * Sujet X.500 lu dans un fichier importé ou un certificat du magasin, assaini (audit V23) : une
+ * seule ligne logique, sans caractère de contrôle ni de formatage bidirectionnel, longueur et
+ * nombre de lignes affichées bornés.
+ */
+@Composable
+private fun SubjectText(
+    subject: String,
+    style: TextStyle,
+) {
+    Text(
+        text = displaySubject(subject),
+        style = style,
+        maxLines = SUBJECT_MAX_LINES,
+        overflow = TextOverflow.Ellipsis,
+    )
+}
+
+/** Nom localisé du pays [alpha2], le code assaini s'il est inconnu, ou « Pays non indiqué ». */
 @Composable
 private fun countryLabel(alpha2: String): String {
     if (alpha2.isEmpty()) return stringResource(R.string.trust_country_unknown)
-    return Countries.displayName(alpha2, currentLocale()) ?: alpha2
+    return Countries.displayName(alpha2, currentLocale()) ?: displayCountryCode(alpha2)
 }
 
 @Composable
@@ -902,7 +970,7 @@ private fun CertificateConfirmDialog(
                     )
                 }
                 DialogField(stringResource(R.string.trust_import_certificate_subject)) {
-                    Text(summary.subject, style = MaterialTheme.typography.bodyMedium)
+                    SubjectText(summary.subject, MaterialTheme.typography.bodyMedium)
                 }
                 DialogField(stringResource(R.string.trust_import_certificate_country)) {
                     Text(countryLabel(summary.country), style = MaterialTheme.typography.bodyMedium)

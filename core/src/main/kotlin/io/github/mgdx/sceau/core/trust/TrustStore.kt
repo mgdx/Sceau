@@ -92,10 +92,22 @@ class InvalidCertificateException(
 
 object TrustStores {
     /**
+     * Nombre maximal de certificats d'une Master List (audit V22, décision D22) : plus de trois
+     * fois la plus grosse Master List réelle connue (Suède, 646 certificats ; BSI embarquée : 608).
+     * Au-delà, la liste est refusée par `TOO_MANY_CERTIFICATES`.
+     */
+    const val MAX_MASTER_LIST_CERTIFICATES = 2000
+
+    /**
      * Parse une Master List CMS (`.ml`, `.der`, `.p7b`) et vérifie sa signature avec le
      * certificat signataire embarqué. Lève [InvalidMasterListException] si invalide.
+     * [checkpoint] est appelé entre les étapes coûteuses ; une `CancellationException` qu'il lève
+     * abandonne l'analyse et se propage telle quelle.
      */
-    fun parseMasterList(bytes: ByteArray): MasterList = MasterListParser.parse(bytes).masterList
+    fun parseMasterList(
+        bytes: ByteArray,
+        checkpoint: () -> Unit = {},
+    ): MasterList = MasterListParser.parse(bytes, checkpoint).masterList
 
     /**
      * Lit un certificat CSCA ou de lien importé seul, en DER ou en PEM (un seul certificat), et
