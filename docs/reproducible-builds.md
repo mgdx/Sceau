@@ -44,7 +44,7 @@ Les build-tools du SDK ne sont pas utilisés pour produire l'APK (aapt2 vient de
 
 ```bash
 scripts/check-reproducible.sh            # commit HEAD
-scripts/check-reproducible.sh v1.0       # une révision donnée
+scripts/check-reproducible.sh v0.9       # une révision donnée
 KEEP=1 scripts/check-reproducible.sh     # garde les deux arbres pour enquêter
 ```
 
@@ -54,4 +54,10 @@ Le script ne vérifie que ce qui est commité : les changements locaux non commi
 
 ## Côté F-Droid
 
-À renseigner dans la recette fdroiddata à la soumission (non fait ici) : `Binaries:` pointe vers l'URL des APK signés publiés par le développeur, et `AllowedAPKSigningKeys:` donne l'empreinte SHA-256 du certificat de signature. F-Droid construit l'APK depuis le tag, recopie la signature de l'APK du développeur sur son propre APK, vérifie la signature obtenue, et ne publie l'APK du développeur que si elle est valide, c'est-à-dire si le contenu est identique. Une recette par ABI (`VercodeOperation` et `gradle` avec le split voulu) est à prévoir pour les APK par architecture.
+F-Droid ne publie qu'un APK, l'**universel** (D38) : une seule recette, un seul bloc `Builds` par version, sans `VercodeOperation`, au même `versionCode` que `app/build.gradle.kts`. Les APK par architecture restent publiés sur les releases GitHub seulement. Brouillon de recette et mode d'emploi : [`docs/fdroid/`](fdroid/).
+
+- `output:` désigne `build/outputs/apk/release/app-universal-release-unsigned.apk` (chemin relatif à `subdir: app`), produit par `assembleRelease` avec les quatre APK par ABI, qui sont ignorés ;
+- `binary:` pointe vers l'APK universel signé par l'auteur sur la release GitHub, `https://github.com/mgdx/Sceau/releases/download/v%v/sceau-%v-universal.apk` (nommage fixé par [`docs/release.md`](release.md)) ;
+- `AllowedAPKSigningKeys:` donne l'empreinte SHA-256 du certificat de signature de l'auteur.
+
+F-Droid construit l'APK universel depuis le commit du tag, recopie la signature de l'APK de l'auteur sur son propre APK, vérifie la signature obtenue, et ne publie l'APK de l'auteur que si elle est valide, c'est-à-dire si le contenu est identique. La signature doit donc être faite par `apksigner` (schémas v1, v2 et v3) sur l'APK non signé tel que Gradle l'a produit, sans en modifier le contenu (procédure dans `docs/release.md`). Avant de soumettre, `scripts/check-reproducible.sh v0.9` doit donner des APK identiques, l'universel compris.

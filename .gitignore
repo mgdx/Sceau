@@ -12,3 +12,7 @@
 .kotlin/
 .claude/worktrees/
 /certificat/
+
+# Clés de signature : jamais dans le dépôt (docs/release.md)
+*.jks
+*.keystore

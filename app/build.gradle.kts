@@ -15,7 +15,7 @@ android {
         minSdk = 26
         targetSdk = 37
         versionCode = 1
-        versionName = "1.0"
+        versionName = "0.9"
     }
 
     // Décodeur JPEG 2000 natif : OpenJPEG compilé depuis les sources du sous-module

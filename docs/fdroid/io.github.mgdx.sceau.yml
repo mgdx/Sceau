@@ -1,0 +1,53 @@
+# Brouillon de recette fdroiddata pour Sceau (metadata/io.github.mgdx.sceau.yml).
+# Mode d'emploi : docs/fdroid/README.md. Décisions : D25 (builds reproductibles), D38.
+#
+# Un seul APK, l'universel : pas de VercodeOperation, versionCode identique à celui de
+# app/build.gradle.kts. Les APK par architecture restent réservés aux releases GitHub.
+#
+# Environnement à confirmer par `fdroid build -v -l io.github.mgdx.sceau` avant soumission :
+# - JDK 25 pour le démon Gradle (gradle/gradle-daemon-jvm.properties) ; s'il manque sur le
+#   serveur de build, Gradle le provisionne par le plugin foojay-resolver (réseau requis
+#   pendant le build) : à défaut, ajouter un sudo qui installe openjdk-25-jdk-headless.
+# - CMake 4.1.2 (externalNativeBuild.cmake.version) : `sdkmanager "cmake;4.1.2"`, en sudo ou
+#   prebuild si le serveur ne l'installe pas de lui-même.
+# - NDK r28c = 28.2.13676358 (ndkVersion de app/build.gradle.kts).
+# - Sous-module OpenJPEG (app/src/main/cpp/openjpeg) : compilé depuis les sources ; ses
+#   outils et l'interface wx, inutilisés, sont retirés par scandelete.
+
+Categories:
+  - Security
+License: GPL-3.0-or-later
+AuthorName: mgdx
+WebSite: https://github.com/mgdx/Sceau
+SourceCode: https://github.com/mgdx/Sceau
+IssueTracker: https://github.com/mgdx/Sceau/issues
+Liberapay: mgdx
+
+AutoName: Sceau
+
+RepoType: git
+Repo: https://github.com/mgdx/Sceau.git
+
+Builds:
+  - versionName: '0.9'
+    versionCode: 1
+    commit: # À REMPLIR : hash complet du commit pointé par le tag v0.9 (git rev-parse v0.9^{commit})
+    subdir: app
+    submodules: true
+    gradle:
+      - yes
+    output: build/outputs/apk/release/app-universal-release-unsigned.apk
+    binary: https://github.com/mgdx/Sceau/releases/download/v%v/sceau-%v-universal.apk
+    scandelete:
+      - app/src/main/cpp/openjpeg/src/bin/wx
+      - app/src/main/cpp/openjpeg/tools
+    ndk: r28c
+
+# À REMPLIR : SHA-256 du certificat de signature, en minuscules sans « : »
+# (apksigner verify --print-certs sceau-0.9-universal.apk, ligne « certificate SHA-256 digest »).
+AllowedAPKSigningKeys: 0000000000000000000000000000000000000000000000000000000000000000
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags ^v[0-9.]+$
+CurrentVersion: '0.9'
+CurrentVersionCode: 1

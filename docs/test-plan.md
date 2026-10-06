@@ -405,6 +405,44 @@ Pour revenir à un premier lancement : `adb shell pm clear $PKG` (efface aussi l
 - **Attendu** : étape 1 : sous « Identité », une carte « Signature du titulaire » montre le paraphe synthétique (traits noirs) sur fond blanc, lisible dans les deux thèmes, sans déformation ; pas de « Image illisible ». Verdict inchangé (**Authentique**). Étape 2 : DG7 figure parmi les DG contrôlés. Étape 3 : retour à l'accueil et effacement comme pour la photo (TP-13, TP-15). Étape 4 : la signature réelle s'affiche (JPEG ou JPEG 2000) ; sans DG7, aucune section ni emplacement vide. Étape 5 : DG7 figure sous « Lu et affiché » ; la liste des DG non lus cite « DG5, DG6, DG8 à DG10, DG13 et DG16 ». Capture d'écran bloquée sur le résultat (`FLAG_SECURE`, TP-16).
 - **Résultat** : ☐ OK ☐ KO — Notes :
 
+## J. APK release et matériel réel
+
+### TP-38 Lecture réelle d'un passeport avec l'APK release signé
+
+- **Préconditions** : APK release universel signé par la procédure de `docs/release.md` (`sceau-<version>-universal.apk`, R8 actif, D24), installé à la place de l'APK de debug (`adb uninstall io.github.mgdx.sceau`, puis `adb install sceau-<version>-universal.apk`) ; passeport biométrique français.
+- **Étapes** :
+  1. `apksigner verify --print-certs` sur l'APK installé : noter l'empreinte du certificat.
+  2. Lancer l'application : introduction, puis accueil ; vérifier que le menu ne propose pas « Simuler une CNIe (démo) ».
+  3. Lire le passeport comme en TP-05, puis déplier chaque ligne de la liste de contrôle.
+  4. « Effacer », puis À propos : noter la version affichée.
+- **Attendu** : empreinte égale à `AllowedAPKSigningKeys` de la recette F-Droid ; pas d'entrée démo ; lecture complète, même résultat qu'en TP-05 (verdict **Authentique**, photo JPEG 2000 décodée, chaîne vers un CSCA de l'ANTS), aucun plantage ni code `UNEXPECTED-…` dû à une classe retirée par R8 ; version « 0.9 » (ou celle de la release). Toute différence avec l'APK de debug est un KO bloquant pour la release.
+- **Résultat** : ☐ OK ☐ KO — Notes :
+
+### TP-39 Lecture réelle d'une CNIe avec l'APK release signé
+
+- **Préconditions** : celles de TP-38 ; CNIe française.
+- **Étapes** : onglet « Carte d'identité », saisir le CAN, lire la carte, faire défiler le résultat et déplier la liste de contrôle.
+- **Attendu** : même résultat qu'en TP-04 : canal PACE, chaîne vers le CSCA e-ID de l'ANTS, verdict **Authentique**, photo affichée ; aucun plantage ni code `UNEXPECTED-…`.
+- **Résultat** : ☐ OK ☐ KO — Notes :
+
+### TP-40 NFC coupé puis rallumé depuis le volet rapide, sans quitter l'application
+
+- **Préconditions** : NFC activé ; application au premier plan sur l'accueil. Le volet rapide (glisser depuis le haut de l'écran) ne met pas l'activité en pause : c'est le cas que `adb shell svc nfc` et TP-02 (retour depuis les réglages) ne couvrent pas (commit `2dd783a`).
+- **Étapes** :
+  1. Sur l'accueil, couper le NFC depuis le volet rapide, refermer le volet.
+  2. Rallumer le NFC depuis le volet rapide, refermer le volet ; saisir un CAN valide, toucher « Lire » et poser une CNIe.
+  3. Sur l'écran de lecture (document pas encore posé), couper le NFC depuis le volet rapide, refermer le volet.
+  4. Rallumer le NFC depuis le volet rapide, refermer le volet, poser la CNIe.
+- **Attendu** : étape 1 : le bandeau « NFC désactivé » apparaît en une seconde environ. Étape 2 : il disparaît en une seconde environ, et la carte est détectée et lue jusqu'au résultat, sans quitter ni relancer l'application. Étape 3 : le bandeau apparaît aussi sur l'écran de lecture. Étape 4 : il disparaît, la carte est détectée et la lecture aboutit. Jamais de bandeau figé ni de carte ignorée après réactivation.
+- **Résultat** : ☐ OK ☐ KO — Notes :
+
+### TP-41 PACE-CAM sur CNIe : Chip Authentication faite par PACE-CAM
+
+- **Préconditions** : CNIe française (ou toute carte qui annonce le mapping PACE-CAM dans EF.CardAccess), décision D21.
+- **Étapes** : lire la carte par le CAN ; sur le résultat, déplier les lignes « Canal sécurisé établi » et « Chip Authentication (DG14) » (libellé de la ligne inchangé quelle que soit la méthode).
+- **Attendu** : si la carte annonce PACE-CAM : ligne « Chip Authentication » OK, avec « Méthode : PACE-CAM, pendant l'ouverture du canal, avec la clé de EF.CardSecurity » ; la CA via DG14 n'est pas refaite ; verdict **Authentique**. Si la méthode affichée est « Chip Authentication avec la clé de DG14 », la carte n'annonce pas PACE-CAM (ou son mapping n'a pas été retenu) : le noter, ce n'est pas un KO, mais l'absence de PACE-CAM sur une CNIe qui l'annonce en est un. Toute ligne « Chip Authentication » en échec (code `VERIFY_CHIP-CAM-…` dans le détail) est un KO.
+- **Résultat** : ☐ OK ☐ KO — Notes :
+
 ---
 
 ## Synthèse
@@ -448,5 +486,9 @@ Pour revenir à un premier lancement : `adb shell pm clear $PKG` (efface aussi l
 | TP-35 | Carte d'identité allemande antérieure à août 2021 (accès réservé) | |
 | TP-36 | Carte eID-UB allemande (aucune donnée d'identité) | |
 | TP-37 | Signature du titulaire (DG7) | |
+| TP-38 | Passeport avec l'APK release signé | |
+| TP-39 | CNIe avec l'APK release signé | |
+| TP-40 | NFC coupé puis rallumé depuis le volet rapide | |
+| TP-41 | PACE-CAM sur CNIe | |
 
 Appareil : ………… Android : ………… Version de Sceau : ………… Date : ………… Testeur : …………
