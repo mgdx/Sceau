@@ -164,10 +164,20 @@ internal class ReadingSession(
                     pa.chain,
                 )
             }
-        val ca = mapping?.check ?: checkNotNull(caOutcome).check
         val aa = verifier.activeAuthentication(content.dataGroups[15], content.dataGroups[14], signedInSod = 15 in content.signedDataGroups)
+        // Audit V20 : protocole mené comparé à ce qu'annonce DG14, signé (EF.CardAccess ne l'est pas).
+        val protocol =
+            ProtocolDowngrade.apply(
+                dg14 = content.dataGroups[DocumentReader.SECURITY_DATA_GROUP],
+                dg14Verified = pa.dataGroupHashes.verifies(DocumentReader.SECURITY_DATA_GROUP),
+                established = established,
+                secureChannel = secureChannel,
+                chipAuthentication = mapping?.check ?: checkNotNull(caOutcome).check,
+                activeAuthentication = aa,
+            )
+        val ca = protocol.chipAuthentication
 
-        val checks = listOf(secureChannel, pa.sodSignature, pa.certificateChain, pa.dsValidity, pa.dataGroupHashes, ca, aa)
+        val checks = listOf(protocol.secureChannel, pa.sodSignature, pa.certificateChain, pa.dsValidity, pa.dataGroupHashes, ca, aa)
         return VerificationReport(
             verdict = Verdicts.compute(checks),
             checks = checks,
@@ -176,6 +186,10 @@ internal class ReadingSession(
             cardSecurityChain = mapping?.cardSecurityChain,
         )
     }
+
+    /** Vrai si l'empreinte du DG [number] figure dans le SOD et y est conforme. */
+    private fun Check.verifies(number: Int): Boolean =
+        (detail as? CheckDetail.DataGroupHashes)?.let { number in it.checked && number !in it.mismatched } ?: false
 
     /** Copie sans les DG [numbers] (11 ou 12), dont les octets et les images sont remis à zéro. */
     private fun DocumentData.discarding(numbers: Set<Int>): DocumentData {
