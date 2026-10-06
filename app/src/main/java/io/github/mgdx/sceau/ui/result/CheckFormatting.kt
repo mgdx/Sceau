@@ -243,11 +243,14 @@ object CheckFormatting {
     fun dataGroupList(numbers: List<Int>): String = numbers.distinct().sorted().joinToString(", ") { "DG$it" }
 
     /**
-     * Vrai si la chaîne remonte à un CSCA importé par l'utilisateur, par une Master List ou seul
-     * (D33) : la carte du verdict le signale sans qu'il faille déplier le détail (audit V6).
+     * Vrai si l'une des [chains] (celle du SOD, et celle d'EF.CardSecurity avec PACE-CAM) remonte
+     * à un CSCA importé par l'utilisateur, par une Master List ou seul (D33) : la carte du verdict
+     * le signale sans qu'il faille déplier le détail (audits V6 et V17).
      */
-    fun isImportedAnchor(chain: ChainInfo?): Boolean =
-        chain?.cscaSource == TrustSource.IMPORTED_MASTER_LIST || chain?.cscaSource == TrustSource.IMPORTED_CERTIFICATE
+    fun isImportedAnchor(vararg chains: ChainInfo?): Boolean =
+        chains.any { chain ->
+            chain?.cscaSource == TrustSource.IMPORTED_MASTER_LIST || chain?.cscaSource == TrustSource.IMPORTED_CERTIFICATE
+        }
 
     @StringRes
     fun sourceLabel(source: TrustSource): Int =

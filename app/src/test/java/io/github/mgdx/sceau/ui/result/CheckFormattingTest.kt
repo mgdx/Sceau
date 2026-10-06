@@ -240,5 +240,8 @@ class CheckFormattingTest {
         assertFalse(CheckFormatting.isImportedAnchor(chain(TrustSource.EMBEDDED_MASTER_LIST)))
         assertFalse(CheckFormatting.isImportedAnchor(chain(null)))
         assertFalse(CheckFormatting.isImportedAnchor(null))
+        // Audit V17 : chaîne du SOD embarquée, chaîne d'EF.CardSecurity (PACE-CAM) importée.
+        assertTrue(CheckFormatting.isImportedAnchor(chain(TrustSource.ANTS), chain(TrustSource.IMPORTED_CERTIFICATE)))
+        assertFalse(CheckFormatting.isImportedAnchor(chain(TrustSource.ANTS), null))
     }
 }

@@ -142,6 +142,7 @@ Avec le mapping CAM (`id-PACE-ECDH-CAM-AES-CBC-CMAC-128/192/256`), la puce prouv
 | signature d'EF.CardSecurity fausse | `FAILED` | `VERIFY_CHIP-CAM-CARD_SECURITY_SIGNATURE` |
 | chaîne fausse, DS sans digitalSignature, budget dépassé | `FAILED` | `VERIFY_CHIP-CAM-CARD_SECURITY_CHAIN` |
 | pays incohérents | `FAILED` | `VERIFY_CHIP-CAM-CARD_SECURITY_COUNTRY` |
+| chaîne valide, mais vers un autre CSCA que celle du SOD (ni même certificat, ni même clé ; audit V17, décision D40) | `FAILED` | `VERIFY_CHIP-CAM-CARD_SECURITY_ANCHOR` |
 | aucun CSCA connu pour EF.CardSecurity, alors que la chaîne du SOD aboutit | `FAILED` | `VERIFY_CHIP-CAM-CARD_SECURITY_UNKNOWN_ISSUER` (ou `…_DS_MISSING`) |
 | aucun CSCA connu, ni pour EF.CardSecurity ni pour le SOD | `NOT_AVAILABLE` | `ChipAuthentication(PACE_CAM)` ; verdict « Émetteur inconnu » |
 | pas de `ChipAuthenticationPublicKeyInfo` | `FAILED` | `VERIFY_CHIP-CAM-NO_CHIP_KEY` |
@@ -163,7 +164,7 @@ Le verdict se calcule comme pour la CA via DG14 (§6). La CA via DG14 n'est pas 
 
 ### 2.8 Rapport
 
-`VerificationReport` immuable : verdict, exactement une `Check` par `CheckId` dans l'ordre de l'énumération, `ChainInfo` (sans donnée personnelle) et `DocumentData` (données lues). Son `toString()` ne révèle que le verdict. Il n'est jamais persisté. SPEC §6.2 le permet sérialisable pour les tests ; aucun test n'en a eu besoin, et il n'implémente aucune sérialisation.
+`VerificationReport` immuable : verdict, exactement une `Check` par `CheckId` dans l'ordre de l'énumération, `ChainInfo` du SOD et, avec PACE-CAM, celui d'EF.CardSecurity (`cardSecurityChain`, sans donnée personnelle ; l'écran signale un CSCA importé sur l'une ou l'autre chaîne, audit V17), et `DocumentData` (données lues). Son `toString()` ne révèle que le verdict. Il n'est jamais persisté. SPEC §6.2 le permet sérialisable pour les tests ; aucun test n'en a eu besoin, et il n'implémente aucune sérialisation.
 
 ## 3. Règles (SPEC §6.2)
 

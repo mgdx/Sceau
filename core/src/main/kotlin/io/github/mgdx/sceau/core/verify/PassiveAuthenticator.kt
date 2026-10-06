@@ -90,13 +90,16 @@ internal object Tlv {
  * DS ni embarqué ni dans le magasin, ou chaîne sans CSCA connu), `FAILED` ou
  * `UNSUPPORTED_ALGORITHM` (alors [unsupported] porte l'algorithme). [reason] : cause stable,
  * sans donnée personnelle, null si `OK`. [content] : `SET OF SecurityInfo` signé, voir la
- * fonction de vérification pour les cas où il est rendu.
+ * fonction de vérification pour les cas où il est rendu. [chain] : chaîne DS → CSCA
+ * d'EF.CardSecurity, null si le DS est introuvable ou la signature fausse ; elle doit aboutir au
+ * même CSCA que celle du SOD (audit V17, décision D40).
  */
 internal class CardSecurityVerification(
     val status: CheckStatus,
     val reason: String?,
     val content: ByteArray?,
     val unsupported: CheckDetail? = null,
+    val chain: ChainInfo? = null,
 ) {
     companion object {
         const val MALFORMED = "MALFORMED"
@@ -295,7 +298,7 @@ internal class PassiveAuthenticator(
                 return CardSecurityVerification(CheckStatus.FAILED, CardSecurityVerification.SIGNATURE, null)
             }
         }
-        val (chain, _) = checkChain(ds, issuingState)
+        val (chain, chainInfo) = checkChain(ds, issuingState)
         val reason =
             when {
                 chain.status == CheckStatus.OK -> null
@@ -311,6 +314,7 @@ internal class PassiveAuthenticator(
                 chain.status ==
                     CheckStatus.UNSUPPORTED_ALGORITHM
             },
+            chainInfo,
         )
     }
 

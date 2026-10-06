@@ -154,9 +154,17 @@ internal class ReadingSession(
         // La CA est déjà faite (READ_DATA) : l'étape VERIFY_CHIP ne couvre plus que l'AA, et la
         // vérification hors ligne de PACE-CAM, qui a besoin de l'État émetteur de DG1.
         step(Step.VERIFY_CHIP)
-        val ca =
-            cam?.let { ChipAuthenticationMapping.verify(it, trustStore, data.dg1.issuingState, pa.certificateChain.status) }
-                ?: checkNotNull(caOutcome).check
+        val mapping =
+            cam?.let {
+                ChipAuthenticationMapping.verify(
+                    it,
+                    trustStore,
+                    data.dg1.issuingState,
+                    pa.certificateChain.status,
+                    pa.chain,
+                )
+            }
+        val ca = mapping?.check ?: checkNotNull(caOutcome).check
         val aa = verifier.activeAuthentication(content.dataGroups[15], content.dataGroups[14], signedInSod = 15 in content.signedDataGroups)
 
         val checks = listOf(secureChannel, pa.sodSignature, pa.certificateChain, pa.dsValidity, pa.dataGroupHashes, ca, aa)
@@ -165,6 +173,7 @@ internal class ReadingSession(
             checks = checks,
             chain = pa.chain,
             document = shown,
+            cardSecurityChain = mapping?.cardSecurityChain,
         )
     }
 

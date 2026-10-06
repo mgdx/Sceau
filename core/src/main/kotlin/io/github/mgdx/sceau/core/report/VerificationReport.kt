@@ -175,8 +175,15 @@ class VerificationReport(
     val verdict: Verdict,
     /** Exactement une entrée par [CheckId], dans l'ordre de l'énumération. */
     val checks: List<Check>,
+    /** Chaîne du SOD. */
     val chain: ChainInfo?,
     val document: DocumentData,
+    /**
+     * Chaîne d'EF.CardSecurity si PACE-CAM a été mené (décision D21), null sinon. Elle fonde la
+     * preuve « puce originale » : l'écran signale un CSCA importé sur l'une ou l'autre chaîne
+     * (audit V17).
+     */
+    val cardSecurityChain: ChainInfo? = null,
 ) {
     fun check(id: CheckId): Check = checks.first { it.id == id }
 
