@@ -1,18 +1,16 @@
 package io.github.mgdx.sceau.nfc
 
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.nfc.NfcAdapter
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.compose.LifecycleResumeEffect
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flow
 
 /** Disponibilité du NFC sur l'appareil. */
 enum class NfcAvailability {
@@ -31,37 +29,26 @@ fun Context.nfcAvailability(): NfcAvailability {
 }
 
 /**
- * État NFC courant, mis à jour quand l'adaptateur change d'état
- * (`ACTION_ADAPTER_STATE_CHANGED`) et à chaque reprise de l'écran (retour des réglages).
+ * État NFC courant, relu à intervalle régulier tant qu'il est collecté. Pas de récepteur de
+ * `ACTION_ADAPTER_STATE_CHANGED` : la diffusion vient du processus NFC et non du système, si
+ * bien qu'un récepteur non exporté ne reçoit pas toujours le retour à ON (constaté sur
+ * appareil réel) ; la relecture évite d'exposer un récepteur exporté.
  */
+fun Context.nfcAvailabilityFlow(): Flow<NfcAvailability> =
+    flow {
+        while (true) {
+            emit(nfcAvailability())
+            delay(NFC_POLL_INTERVAL_MILLIS)
+        }
+    }.distinctUntilChanged()
+
+/** État NFC courant pour l'interface, relu tant que l'écran est visible. */
 @Composable
 fun rememberNfcAvailability(): State<NfcAvailability> {
     val context = LocalContext.current
-    val availability = remember(context) { mutableStateOf(context.nfcAvailability()) }
-
-    DisposableEffect(context) {
-        val receiver =
-            object : BroadcastReceiver() {
-                override fun onReceive(
-                    receiverContext: Context,
-                    intent: Intent,
-                ) {
-                    availability.value = context.nfcAvailability()
-                }
-            }
-        ContextCompat.registerReceiver(
-            context,
-            receiver,
-            IntentFilter(NfcAdapter.ACTION_ADAPTER_STATE_CHANGED),
-            ContextCompat.RECEIVER_NOT_EXPORTED,
-        )
-        onDispose { context.unregisterReceiver(receiver) }
-    }
-
-    LifecycleResumeEffect(context) {
-        availability.value = context.nfcAvailability()
-        onPauseOrDispose { }
-    }
-
-    return availability
+    val availability = remember(context) { context.nfcAvailabilityFlow() }
+    return availability.collectAsStateWithLifecycle(initialValue = remember(context) { context.nfcAvailability() })
 }
+
+/** Délai maximal entre un changement d'état du NFC et sa prise en compte. */
+private const val NFC_POLL_INTERVAL_MILLIS = 1_000L

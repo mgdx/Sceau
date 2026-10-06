@@ -53,6 +53,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.mgdx.sceau.R
 import io.github.mgdx.sceau.core.Step
+import io.github.mgdx.sceau.nfc.NfcBanner
+import io.github.mgdx.sceau.nfc.rememberNfcAvailability
 import io.github.mgdx.sceau.session.ReadState
 import io.github.mgdx.sceau.session.SessionViewModel
 import io.github.mgdx.sceau.ui.common.SceauIcons
@@ -69,6 +71,7 @@ fun ReadingScreen(
 ) {
     SecureWindow()
     val state by session.state.collectAsStateWithLifecycle()
+    val nfc by rememberNfcAvailability()
     val currentOnDone by rememberUpdatedState(onDone)
     val currentOnCancel by rememberUpdatedState(onCancel)
     val cancel = {
@@ -100,6 +103,7 @@ fun ReadingScreen(
                     .padding(horizontal = 16.dp, vertical = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            NfcBanner(nfc, modifier = Modifier.padding(bottom = 24.dp))
             when (val current = state) {
                 is ReadState.Error -> ErrorContent(code = current.code, onRetry = session::retry, onCancel = cancel)
                 else -> ProgressContent(state = current, onCancel = cancel)

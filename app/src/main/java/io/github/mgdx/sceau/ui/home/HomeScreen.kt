@@ -1,9 +1,5 @@
 package io.github.mgdx.sceau.ui.home
 
-import android.content.ActivityNotFoundException
-import android.content.Context
-import android.content.Intent
-import android.provider.Settings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,8 +13,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,7 +27,6 @@ import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -43,7 +36,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -56,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import io.github.mgdx.sceau.R
 import io.github.mgdx.sceau.demo.DemoMode
 import io.github.mgdx.sceau.nfc.NfcAvailability
+import io.github.mgdx.sceau.nfc.NfcBanner
 import io.github.mgdx.sceau.nfc.rememberNfcAvailability
 import io.github.mgdx.sceau.session.AccessForm
 import io.github.mgdx.sceau.session.DateError
@@ -210,44 +203,6 @@ private fun OverflowMenu(
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun NfcBanner(nfc: NfcAvailability) {
-    if (nfc == NfcAvailability.ENABLED) return
-    val context = LocalContext.current
-    Card(
-        colors =
-            CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.errorContainer,
-                contentColor = MaterialTheme.colorScheme.onErrorContainer,
-            ),
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(
-                text =
-                    stringResource(
-                        if (nfc == NfcAvailability.ABSENT) R.string.home_nfc_absent else R.string.home_nfc_disabled,
-                    ),
-                style = MaterialTheme.typography.bodyMedium,
-            )
-            if (nfc == NfcAvailability.DISABLED) {
-                TextButton(onClick = { openNfcSettings(context) }) {
-                    Text(stringResource(R.string.home_nfc_settings))
-                }
-            }
-        }
-    }
-}
-
-private fun openNfcSettings(context: Context) {
-    try {
-        context.startActivity(Intent(Settings.ACTION_NFC_SETTINGS))
-    } catch (e: ActivityNotFoundException) {
-        // Certains constructeurs n'exposent pas l'écran NFC dédié.
-        context.startActivity(Intent(Settings.ACTION_WIRELESS_SETTINGS))
     }
 }
 

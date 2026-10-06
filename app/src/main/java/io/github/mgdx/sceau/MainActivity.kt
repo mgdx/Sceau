@@ -9,12 +9,18 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import io.github.mgdx.sceau.nfc.IsoDepTransport
+import io.github.mgdx.sceau.nfc.NfcAvailability
+import io.github.mgdx.sceau.nfc.nfcAvailabilityFlow
 import io.github.mgdx.sceau.session.ReadState
 import io.github.mgdx.sceau.session.SessionViewModel
 import io.github.mgdx.sceau.ui.SceauNavHost
 import io.github.mgdx.sceau.ui.common.secureForLifetime
 import io.github.mgdx.sceau.ui.theme.SceauTheme
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     private val session: SessionViewModel by viewModels()
@@ -35,6 +41,16 @@ class MainActivity : ComponentActivity() {
         window.decorView.importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_NO_EXCLUDE_DESCENDANTS
         enableEdgeToEdge()
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
+        // Mode lecteur armé à chaque reprise et chaque fois que le NFC repasse à ON au premier
+        // plan : un enableReaderMode appelé NFC éteint est perdu, et le volet rapide ne fait pas
+        // repasser l'activité par onResume. Sans cela, plus aucune carte n'est détectée.
+        if (nfcAdapter != null) {
+            lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                    nfcAvailabilityFlow().collect { if (it == NfcAvailability.ENABLED) enableReaderMode() }
+                }
+            }
+        }
         val trustStoreRepository = (application as SceauApplication).trustStoreRepository
         setContent {
             SceauTheme {
@@ -46,15 +62,14 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        val options = Bundle().apply { putInt(NfcAdapter.EXTRA_READER_PRESENCE_CHECK_DELAY, PRESENCE_CHECK_DELAY_MILLIS) }
-        nfcAdapter?.enableReaderMode(this, ::onTagDiscovered, READER_FLAGS, options)
-    }
-
     override fun onPause() {
         nfcAdapter?.disableReaderMode(this)
         super.onPause()
+    }
+
+    private fun enableReaderMode() {
+        val options = Bundle().apply { putInt(NfcAdapter.EXTRA_READER_PRESENCE_CHECK_DELAY, PRESENCE_CHECK_DELAY_MILLIS) }
+        nfcAdapter?.enableReaderMode(this, ::onTagDiscovered, READER_FLAGS, options)
     }
 
     override fun onStop() {
