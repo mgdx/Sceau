@@ -17,7 +17,7 @@
     <string name="reading_error_not_icao">Este documento no cumple la norma ICAO 9303: su chip no se puede leer.</string>
     <string name="reading_error_timeout">Tiempo de espera agotado: el chip no ha respondido a tiempo. Vuelve a intentarlo manteniendo el documento inmóvil.</string>
     <string name="reading_error_can_without_pace">Este documento no se lee con un CAN. Usa la pestaña Pasaporte e introduce los datos de la MRZ.</string>
-    <string name="reading_error_access_restricted">El chip de este documento está reservado a las autoridades habilitadas: Sceau no puede leerlo y volver a intentarlo no cambiará nada. Es el caso de los documentos de identidad alemanes expedidos antes de agosto de 2021.</string>
+    <string name="reading_error_access_restricted">El chip deniega el acceso a sus datos: Sceau no puede leerlo y volver a intentarlo no cambiará nada. Por ejemplo, el chip de los documentos de identidad alemanes expedidos antes de agosto de 2021 está reservado a las autoridades habilitadas. Esta denegación no dice nada sobre la autenticidad del documento.</string>
     <string name="reading_error_unexpected">Se ha producido un error inesperado.</string>
     <string name="reading_error_code">Código de error: %1$s</string>
     <string name="reading_retry">Reintentar</string>

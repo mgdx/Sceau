@@ -17,7 +17,7 @@
     <string name="reading_error_not_icao">Dieses Dokument entspricht nicht der Norm ICAO 9303: Sein Chip kann nicht ausgelesen werden.</string>
     <string name="reading_error_timeout">Zeitüberschreitung: Der Chip hat nicht rechtzeitig geantwortet. Versuchen Sie es erneut und halten Sie das Dokument ruhig.</string>
     <string name="reading_error_can_without_pace">Dieses Dokument lässt sich nicht mit einer CAN auslesen. Verwenden Sie den Tab „Reisepass“ und geben Sie die MRZ-Daten ein.</string>
-    <string name="reading_error_access_restricted">Der Chip dieses Dokuments ist berechtigten Behörden vorbehalten: Sceau kann ihn nicht auslesen, und ein neuer Versuch ändert daran nichts. Das betrifft deutsche Personalausweise, die vor August 2021 ausgestellt wurden.</string>
+    <string name="reading_error_access_restricted">Der Chip verweigert den Zugriff auf seine Daten: Sceau kann ihn nicht auslesen, und ein neuer Versuch ändert daran nichts. So ist etwa bei deutschen Personalausweisen, die vor August 2021 ausgestellt wurden, der Chip berechtigten Behörden vorbehalten. Diese Verweigerung sagt nichts über die Echtheit des Dokuments aus.</string>
     <string name="reading_error_unexpected">Ein unerwarteter Fehler ist aufgetreten.</string>
     <string name="reading_error_code">Fehlercode: %1$s</string>
     <string name="reading_retry">Wiederholen</string>

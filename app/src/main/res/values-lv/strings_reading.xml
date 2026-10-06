@@ -17,7 +17,7 @@
     <string name="reading_error_not_icao">Šis dokuments neatbilst standartam ICAO 9303: tā mikroshēmu nevar nolasīt.</string>
     <string name="reading_error_timeout">Noildze: mikroshēma neatbildēja laikā. Mēģiniet vēlreiz, turot dokumentu nekustīgi.</string>
     <string name="reading_error_can_without_pace">Šo dokumentu nevar nolasīt ar CAN. Izmantojiet cilni “Pase” un ievadiet MRZ datus.</string>
-    <string name="reading_error_access_restricted">Šī dokumenta mikroshēma ir paredzēta tikai pilnvarotām iestādēm: Sceau to nevar nolasīt, un jauns mēģinājums neko nemainīs. Tā tas ir ar Vācijas personas apliecībām, kas izdotas pirms 2021. gada augusta.</string>
+    <string name="reading_error_access_restricted">Mikroshēma liedz piekļuvi saviem datiem: Sceau to nevar nolasīt, un jauns mēģinājums neko nemainīs. Piemēram, Vācijas personas apliecību, kas izdotas pirms 2021. gada augusta, mikroshēma ir paredzēta tikai pilnvarotām iestādēm. Šis atteikums neko neliecina par dokumenta autentiskumu.</string>
     <string name="reading_error_unexpected">Radās neparedzēta kļūda.</string>
     <string name="reading_error_code">Kļūdas kods: %1$s</string>
     <string name="reading_retry">Mēģināt vēlreiz</string>

@@ -17,7 +17,7 @@
     <string name="reading_error_not_icao">Dokumen ini tidak mematuhi standard ICAO 9303: cipnya tidak dapat dibaca.</string>
     <string name="reading_error_timeout">Tamat masa: cip tidak memberikan respons dalam masa yang ditetapkan. Cuba lagi dan pastikan dokumen tidak bergerak.</string>
     <string name="reading_error_can_without_pace">Dokumen ini tidak dapat dibaca dengan CAN. Gunakan tab Pasport dan masukkan data MRZ.</string>
-    <string name="reading_error_access_restricted">Cip dokumen ini dikhaskan untuk pihak berkuasa yang diberi kuasa: Sceau tidak dapat membacanya dan cubaan semula tidak akan mengubah apa-apa. Ini berlaku bagi kad pengenalan Jerman yang dikeluarkan sebelum Ogos 2021.</string>
+    <string name="reading_error_access_restricted">Cip menolak akses kepada datanya: Sceau tidak dapat membacanya dan cubaan semula tidak akan mengubah apa-apa. Sebagai contoh, cip kad pengenalan Jerman yang dikeluarkan sebelum Ogos 2021 dikhaskan untuk pihak berkuasa yang diberi kuasa. Penolakan ini tidak menunjukkan apa-apa tentang ketulenan dokumen.</string>
     <string name="reading_error_unexpected">Ralat yang tidak dijangka telah berlaku.</string>
     <string name="reading_error_code">Kod ralat: %1$s</string>
     <string name="reading_retry">Cuba lagi</string>

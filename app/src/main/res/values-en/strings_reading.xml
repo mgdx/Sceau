@@ -17,7 +17,7 @@
     <string name="reading_error_not_icao">This document doesn’t comply with ICAO 9303, so its chip can’t be read.</string>
     <string name="reading_error_timeout">Timed out: the chip didn’t respond in time. Try again, keeping the document still.</string>
     <string name="reading_error_can_without_pace">This document can’t be read with a CAN. Use the Passport tab and enter the MRZ data.</string>
-    <string name="reading_error_access_restricted">This document’s chip is reserved for authorized officials: Sceau can’t read it, and trying again won’t change that. This is the case for German identity cards issued before August 2021.</string>
+    <string name="reading_error_access_restricted">The chip refuses access to its data: Sceau can’t read it, and trying again won’t change that. German identity cards issued before August 2021, for example, reserve their chip for authorized officials. This refusal says nothing about the document’s authenticity.</string>
     <string name="reading_error_unexpected">An unexpected error occurred.</string>
     <string name="reading_error_code">Error code: %1$s</string>
     <string name="reading_retry">Try again</string>
