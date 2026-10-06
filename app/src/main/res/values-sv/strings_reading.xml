@@ -17,7 +17,7 @@
     <string name="reading_error_not_icao">Handlingen följer inte standarden ICAO 9303: chippet kan inte läsas.</string>
     <string name="reading_error_timeout">Tidsgränsen överskreds: chippet svarade inte i tid. Försök igen och håll handlingen stilla.</string>
     <string name="reading_error_can_without_pace">Handlingen kan inte läsas med CAN. Använd fliken Pass och ange MRZ-uppgifterna.</string>
-    <string name="reading_error_access_restricted">Handlingens chip är förbehållet behöriga myndigheter: Sceau kan inte läsa det, och ett nytt försök ändrar inte saken. Det gäller tyska id-kort utfärdade före augusti 2021.</string>
+    <string name="reading_error_access_restricted">Chipet nekar åtkomst till sina data: Sceau kan inte läsa det, och ett nytt försök ändrar inte saken. Chipet i tyska id-kort utfärdade före augusti 2021 är till exempel förbehållet behöriga myndigheter. Att åtkomst nekas säger ingenting om handlingens äkthet.</string>
     <string name="reading_error_unexpected">Ett oväntat fel uppstod.</string>
     <string name="reading_error_code">Felkod: %1$s</string>
     <string name="reading_retry">Försök igen</string>

@@ -199,6 +199,11 @@ Aucun appel à `android.util.Log`, `println` ni `printStackTrace` dans le code d
 - `FLAG_SECURE` est posé sur la fenêtre de l'activité dès sa création, dans `MainActivity.onCreate` avant le premier dessin (`secureForLifetime(window)`), pour toute sa durée de vie : capture d'écran refusée, aperçu masqué dans le multitâche, affichage bloqué sur un écran externe non sécurisé, sur tous les écrans (accueil et saisie du CAN et de la MRZ, lecture, résultat, magasin de confiance, à propos) (SPEC §2 et §8, audit V7).
 - Les écrans de lecture et de résultat demandent en plus la protection tant qu'ils sont composés (`SecureWindow()`), ainsi que la fenêtre du dialogue de la photo en plein écran. Les demandes sont comptées par fenêtre ; celle de `secureForLifetime` n'est jamais rendue, si bien que la sortie d'un écran ne lève jamais la protection.
 
+### Surface exposée aux autres applications
+
+- `MainActivity`, seul composant exporté (lanceur), remplace son intent par celui du lanceur, sans extras, avant `super.onCreate` et dans `onNewIntent` : une autre application ne peut pas choisir l'écran d'ouverture par les extras de deep link de Navigation (`deepLinkIds`…), indépendamment du contrôle de l'appelant que fait Navigation 2.10 (audit V27, `MainActivityIntentTest`).
+- `MainActivity` déclare `android:taskAffinity=""` : aucune application ne peut se glisser dans la tâche de Sceau en déclarant la même affinité pour y présenter une fausse saisie du CAN ou de la MRZ (détournement de tâche, surtout sous Android 8 à 10 ; audit V28). Sans effet fonctionnel, l'application n'ayant qu'une activité.
+
 ### Réseau
 
 Le manifeste ne déclare aucune permission réseau (`android.permission.NFC` seulement, décision D7 pour la permission interne ajoutée par androidx.core). Aucune donnée ne peut quitter l'appareil ; le magasin de confiance n'est jamais mis à jour par le réseau.

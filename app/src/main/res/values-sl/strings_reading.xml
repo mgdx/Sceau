@@ -17,7 +17,7 @@
     <string name="reading_error_not_icao">Ta dokument ni skladen s standardom ICAO 9303: njegovega čipa ni mogoče prebrati.</string>
     <string name="reading_error_timeout">Čas je potekel: čip ni odgovoril pravočasno. Poskusite znova in dokument držite pri miru.</string>
     <string name="reading_error_can_without_pace">Tega dokumenta ni mogoče prebrati s CAN. Uporabite zavihek Potni list in vnesite podatke iz MRZ.</string>
-    <string name="reading_error_access_restricted">Čip tega dokumenta je pridržan pooblaščenim organom: Sceau ga ne more prebrati in nov poskus tega ne bo spremenil. To velja za nemške osebne izkaznice, izdane pred avgustom 2021.</string>
+    <string name="reading_error_access_restricted">Čip zavrača dostop do svojih podatkov: Sceau ga ne more prebrati in nov poskus tega ne bo spremenil. Čip nemških osebnih izkaznic, izdanih pred avgustom 2021, je na primer pridržan pooblaščenim organom. Ta zavrnitev ne pove ničesar o pristnosti dokumenta.</string>
     <string name="reading_error_unexpected">Prišlo je do nepričakovane napake.</string>
     <string name="reading_error_code">Koda napake: %1$s</string>
     <string name="reading_retry">Poskusi znova</string>

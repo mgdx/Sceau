@@ -17,7 +17,7 @@
     <string name="reading_error_not_icao">Giấy tờ này không tuân theo chuẩn ICAO 9303: không thể đọc chip của giấy tờ.</string>
     <string name="reading_error_timeout">Hết thời gian chờ: chip không phản hồi kịp. Hãy thử lại và giữ yên giấy tờ.</string>
     <string name="reading_error_can_without_pace">Không thể đọc giấy tờ này bằng CAN. Hãy dùng thẻ Hộ chiếu và nhập dữ liệu MRZ.</string>
-    <string name="reading_error_access_restricted">Chip của giấy tờ này chỉ dành cho cơ quan có thẩm quyền: Sceau không thể đọc chip và thử lại cũng không thay đổi được gì. Đây là trường hợp của thẻ căn cước Đức cấp trước tháng 8 năm 2021.</string>
+    <string name="reading_error_access_restricted">Chip từ chối cho truy cập dữ liệu của nó: Sceau không thể đọc chip và thử lại cũng không thay đổi được gì. Ví dụ, chip của thẻ căn cước Đức cấp trước tháng 8 năm 2021 chỉ dành cho cơ quan có thẩm quyền. Việc từ chối này không cho biết gì về tính xác thực của giấy tờ.</string>
     <string name="reading_error_unexpected">Đã xảy ra lỗi không mong muốn.</string>
     <string name="reading_error_code">Mã lỗi: %1$s</string>
     <string name="reading_retry">Thử lại</string>

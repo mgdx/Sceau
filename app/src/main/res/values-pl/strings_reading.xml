@@ -17,7 +17,7 @@
     <string name="reading_error_not_icao">Ten dokument nie jest zgodny z normą ICAO 9303: nie można odczytać jego chipu.</string>
     <string name="reading_error_timeout">Przekroczono limit czasu: chip nie odpowiedział na czas. Spróbuj ponownie, trzymając dokument nieruchomo.</string>
     <string name="reading_error_can_without_pace">Tego dokumentu nie można odczytać za pomocą CAN. Użyj karty Paszport i wpisz dane ze strefy MRZ.</string>
-    <string name="reading_error_access_restricted">Chip tego dokumentu jest zastrzeżony dla uprawnionych organów: Sceau nie może go odczytać, a ponowna próba nic nie zmieni. Dotyczy to niemieckich dowodów osobistych wydanych przed sierpniem 2021 r.</string>
+    <string name="reading_error_access_restricted">Chip odmawia dostępu do swoich danych: Sceau nie może go odczytać, a ponowna próba nic nie zmieni. Na przykład chip niemieckich dowodów osobistych wydanych przed sierpniem 2021 r. jest zastrzeżony dla uprawnionych organów. Ta odmowa nic nie mówi o autentyczności dokumentu.</string>
     <string name="reading_error_unexpected">Wystąpił nieoczekiwany błąd.</string>
     <string name="reading_error_code">Kod błędu: %1$s</string>
     <string name="reading_retry">Spróbuj ponownie</string>

@@ -17,7 +17,7 @@
     <string name="reading_error_not_icao">यह दस्तावेज़ ICAO 9303 मानक के मुताबिक नहीं है: इसकी चिप नहीं पढ़ी जा सकती।</string>
     <string name="reading_error_timeout">समय खत्म हो गया: चिप ने समय पर जवाब नहीं दिया। दस्तावेज़ को बिना हिलाए रखकर फिर से कोशिश करें।</string>
     <string name="reading_error_can_without_pace">यह दस्तावेज़ CAN से नहीं पढ़ा जा सकता। पासपोर्ट टैब खोलें और MRZ का डेटा डालें।</string>
-    <string name="reading_error_access_restricted">इस दस्तावेज़ की चिप केवल अधिकृत प्राधिकरणों के लिए आरक्षित है: Sceau इसे नहीं पढ़ सकता, और दोबारा कोशिश करने से कुछ नहीं बदलेगा। अगस्त 2021 से पहले जारी किए गए जर्मन पहचान पत्रों के साथ ऐसा ही होता है।</string>
+    <string name="reading_error_access_restricted">चिप अपने डेटा तक पहुँच देने से इनकार करती है: Sceau इसे नहीं पढ़ सकता, और दोबारा कोशिश करने से कुछ नहीं बदलेगा। उदाहरण के लिए, अगस्त 2021 से पहले जारी किए गए जर्मन पहचान पत्रों की चिप केवल अधिकृत प्राधिकरणों के लिए आरक्षित है। इस इनकार से दस्तावेज़ की प्रामाणिकता के बारे में कुछ पता नहीं चलता।</string>
     <string name="reading_error_unexpected">कोई अनचाही गड़बड़ी हुई।</string>
     <string name="reading_error_code">गड़बड़ी कोड: %1$s</string>
     <string name="reading_retry">फिर से कोशिश करें</string>

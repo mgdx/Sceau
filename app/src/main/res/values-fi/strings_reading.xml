@@ -17,7 +17,7 @@
     <string name="reading_error_not_icao">Asiakirja ei ole ICAO 9303 -standardin mukainen, joten sen sirua ei voi lukea.</string>
     <string name="reading_error_timeout">Aikakatkaisu: siru ei vastannut ajoissa. Yritä uudelleen ja pidä asiakirja paikallaan.</string>
     <string name="reading_error_can_without_pace">Tätä asiakirjaa ei voi lukea CAN-tunnuksella. Valitse Passi-välilehti ja anna MRZ-tiedot.</string>
-    <string name="reading_error_access_restricted">Asiakirjan siru on varattu valtuutetuille viranomaisille: Sceau ei voi lukea sitä, eikä uusi yritys muuta tätä. Näin on ennen elokuuta 2021 myönnetyissä Saksan henkilökorteissa.</string>
+    <string name="reading_error_access_restricted">Siru estää pääsyn tietoihinsa: Sceau ei voi lukea sitä, eikä uusi yritys muuta tätä. Esimerkiksi ennen elokuuta 2021 myönnettyjen Saksan henkilökorttien siru on varattu valtuutetuille viranomaisille. Tämä esto ei kerro mitään asiakirjan aitoudesta.</string>
     <string name="reading_error_unexpected">Tapahtui odottamaton virhe.</string>
     <string name="reading_error_code">Virhekoodi: %1$s</string>
     <string name="reading_retry">Yritä uudelleen</string>

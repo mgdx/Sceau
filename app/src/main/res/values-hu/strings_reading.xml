@@ -17,7 +17,7 @@
     <string name="reading_error_not_icao">Ez az okmány nem felel meg az ICAO 9303 szabványnak, ezért a chipje nem olvasható.</string>
     <string name="reading_error_timeout">Időtúllépés: a chip nem válaszolt időben. Próbálja újra, és tartsa mozdulatlanul az okmányt.</string>
     <string name="reading_error_can_without_pace">Ez az okmány nem olvasható CAN-nal. Válassza az Útlevél lapot, és adja meg az MRZ adatait.</string>
-    <string name="reading_error_access_restricted">Az okmány chipje a jogosult hatóságok számára van fenntartva: a Sceau nem tudja kiolvasni, és egy újabb próbálkozás sem változtat ezen. Ez a helyzet a 2021 augusztusa előtt kiállított német személyazonosító igazolványokkal.</string>
+    <string name="reading_error_access_restricted">A chip megtagadja a hozzáférést az adataihoz: a Sceau nem tudja kiolvasni, és egy újabb próbálkozás sem változtat ezen. Például a 2021 augusztusa előtt kiállított német személyazonosító igazolványok chipje a jogosult hatóságok számára van fenntartva. Ez az elutasítás semmit sem mond az okmány eredetiségéről.</string>
     <string name="reading_error_unexpected">Váratlan hiba történt.</string>
     <string name="reading_error_code">Hibakód: %1$s</string>
     <string name="reading_retry">Újra</string>

@@ -17,7 +17,7 @@
     <string name="reading_error_not_icao">Ce document n’est pas conforme à la norme ICAO 9303\u00A0: sa puce ne peut pas être lue.</string>
     <string name="reading_error_timeout">Délai dépassé\u00A0: la puce n’a pas répondu à temps. Réessayez en gardant le document immobile.</string>
     <string name="reading_error_can_without_pace">Ce document ne se lit pas avec un CAN. Utilisez l’onglet Passeport et saisissez les données de la MRZ.</string>
-    <string name="reading_error_access_restricted">Ce document réserve sa puce aux autorités habilitées\u00A0: Sceau ne peut pas la lire, et un nouvel essai n’y changera rien. C’est le cas des cartes d’identité allemandes délivrées avant août 2021.</string>
+    <string name="reading_error_access_restricted">La puce refuse l’accès à ses données\u00A0: Sceau ne peut pas la lire, et un nouvel essai n’y changera rien. C’est le cas, entre autres, des cartes d’identité allemandes délivrées avant août 2021, qui réservent leur puce aux autorités habilitées. Ce refus ne dit rien de l’authenticité du document.</string>
     <string name="reading_error_unexpected">Une erreur inattendue s’est produite.</string>
     <string name="reading_error_code">Code d’erreur\u00A0: %1$s</string>
     <string name="reading_retry">Réessayer</string>
