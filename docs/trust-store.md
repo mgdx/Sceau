@@ -19,7 +19,7 @@ colonne. Ne change ni l'ordre ni le nombre de colonnes sans adapter le test.
 | `ants-csca-2020.der` | Passeport (CSCA) | `C=FR, O=Gouv, CN=CSCA-FRANCE` | 2020-05-26 → 2035-08-26 | SHA-1 `32b98cdbd85255c07503bfd96049038b241bfffe` | `28df42a7a0ed1b20f994cc96999060619e095b09764159703438ec60b88ee856` |
 | `ants-csca-2025.der` | Passeport (CSCA) | `C=FR, O=Gouv, CN=CSCA-FRANCE` | 2025-02-19 → 2040-05-19 | SHA-1 `59c8be053778295654ed32672a8045ef41405b44` | `d628b5100ddcbed8f3e5fa05e53b6b80bebb1e6264a12583319ef955c91d9349` |
 | `ants-csca-eid-2021.der` | e-ID, CNIe (CSCA) | `C=FR, O=Gouv, CN=eID-FRANCE` | 2021-02-15 → 2036-05-15 | SHA-256 `b33ea63b9be01082d98071a29111757c72257eba80d7205d21fa35436c29fe7c` | `b33ea63b9be01082d98071a29111757c72257eba80d7205d21fa35436c29fe7c` |
-| `de-bsi-master-list.ml` | Master List CSCA (BSI, Allemagne) | signataire `C=DE, O=bund, OU=bsi, serialNumber=0039, CN=CSCA Master List Signer` | signée le 2026-05-28 ; signataire valide 2024-10-17 → 2028-10-17 | aucune pour le fichier (voir « Master List embarquée ») | `e036f8c989193b38cf19493bb2c957bfa2385b35a680bf03300515cad7526dd0` |
+| `de-bsi-master-list.ml` | Master List CSCA (BSI, Allemagne) | signataire `C=DE, O=bund, OU=bsi, serialNumber=0039, CN=CSCA Master List Signer` | signée le 2026-08-19 ; signataire valide 2024-10-17 → 2028-10-17 | aucune pour le fichier (voir « Master List embarquée ») | `b0dfa486ef25ab2d23f62af7214ace207444c384eb5b7f8edbaf9ab42f7831ea` |
 | `gb-csca-2026.der` | Passeport GB (CSCA GBR_2026_Root) | `C=GB, O=UKKPA, CN=Country Signing Authority` | 2026-08-24 → 2042-12-24 | aucune | `737ce248b62d8b6dc1c9e3aaa8b937334406bac17bb37235c1c50281e6ad7edb` |
 | `gb-csca-link-2021-2026.der` | Passeport GB (lien GBR_2021-2026, signé par GBR_2021) | `C=GB, O=UKKPA, CN=Country Signing Authority` | 2026-08-24 → 2038-01-17 | aucune | `81d9f6bf3026a04e6e3847808cf094e34f9473a92ff66eb86a975f4c42055b5d` |
 | `gr-csca-erp-003.der` | Titre de séjour GR (CSCA eRP 003) | `C=GR, O=Hellenic Republic, serialNumber=003, CN=CSCAeRP-HELLAS` | 2026-05-27 → 2041-05-26 | SHA-1 `3dd148e21a8c0d6d31d4269e9123f4bed9c7742b` | `8f01ced4c95d9ee5cc6915e1151432e18fa1615ad6d8e61bb6ea1af025368e3e` |
@@ -47,7 +47,7 @@ ils sont copiés sans conversion et seulement renommés.
 | `ants-csca-2020.der` | `CSCA-FRANCE_2020.zip` | `CSCA-FRANCE_2020.crt`, empreinte dans `CSCA-FRANCE_2020_fingerprint.txt` | page CSCA de l'ANTS | 2026-09-25 |
 | `ants-csca-2025.der` | `csca-france_2025.zip` | `CSCA-FRANCE_2025.crt`, empreinte dans `CSCA-FRANCE_2025_fingerprint.txt` | page CSCA de l'ANTS | 2026-09-25 |
 | `ants-csca-eid-2021.der` | `Certificat_CSCA_PROD_EID.zip` | `eID-FRANCE.crt` (un `eID-FRANCE.pem` identique l'accompagne), empreinte dans `Fingerprint_SHA256.txt` | page CSCA e-ID de l'ANTS | 2026-09-25 |
-| `de-bsi-master-list.ml` | `GermanMasterList.zip` | `DE_ML_2026-05-28-08-28-45.ml`, redistribué inchangé | <https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/ElekAusweise/CSCA/GermanMasterList.html> | 2026-09-25 |
+| `de-bsi-master-list.ml` | `GermanMasterList.zip` | `DE_ML_2026-08-19-10-28-54.ml`, redistribué inchangé | <https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/ElekAusweise/CSCA/GermanMasterList.html> | 2026-10-06 |
 | `gb-csca-2026.der` | aucune (fichier DER direct) | <https://hmpo.gov.uk/csca/certificate/12fd5015-cf50-47b0-a1fb-ca1c3cc0f0ee> | <https://hmpo.gov.uk/csca> | 2026-09-29 |
 | `gb-csca-link-2021-2026.der` | aucune (fichier DER direct) | <https://hmpo.gov.uk/csca/certificate/3a083ccd-5e5d-4e7c-be90-bd4218e335af> | <https://hmpo.gov.uk/csca> | 2026-09-29 |
 | `gr-csca-erp-003.der` | aucune (fichier DER direct) | `http://spoc.immigration.gov.gr/csca/CSCAeRP-HELLAS003.cer` | <http://spoc.immigration.gov.gr/csca/> | 2026-09-29 |
@@ -69,7 +69,9 @@ archive à celles recalculées (voir « Procédure de mise à jour »).
 ## Publications nationales
 
 Sept certificats publiés par un État pour ses **propres** documents complètent la Master List
-embarquée (décision D26). Ils sont absents de la liste du BSI, encore valides, et leur source a
+embarquée (décision D26). Ils étaient absents de la liste du BSI quand ils ont été ajoutés (depuis
+la liste du 2026-08-19, les deux certificats grecs y figurent aussi : la source `NATIONAL` garde
+la priorité), ils sont encore valides, et leur source a
 le statut A de `docs/trust-sources.md` : licence ouverte (A1) ou publication officielle sans
 restriction de réutilisation (A2). Le chargeur les reconnaît à leur nom : un fichier `.der` qui
 ne commence pas par `ants-` porte la source `NATIONAL`, affichée « Publication nationale ».
@@ -99,6 +101,11 @@ Contrôles faits le 2026-09-29 sur chaque fichier, avant de l'embarquer :
   du magasin ;
 - extensions : `basicConstraints` cA=TRUE et `keyUsage` keyCertSign présents sur les sept.
 
+Revérification le 2026-10-06 (release 0.9) : les quatre pages ont été retéléchargées, aucun
+nouveau certificat ni lien n'y est publié, et les sept fichiers embarqués y sont toujours
+servis à l'identique (SHA-256 égales). Le pied de page de la page grecque affiche désormais
+« © 2026 All rights reserved » (voir `docs/trust-sources.md`, fiche GR titres de séjour).
+
 Les deux CSCA géorgiens n° 5 et n° 6 partagent la même clé (même SKI) sous deux noms. Le n° 6 est
 aussi dans les Master Lists italienne, suédoise et néerlandaise, qui ne sont pas embarquées.
 
@@ -118,16 +125,24 @@ in der Informationstechnik). Ce n'est pas la Master List de l'ICAO que cite la S
 d'où le nom du fichier.
 
 - Page : <https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/ElekAusweise/CSCA/GermanMasterList.html>
-- Archive : <https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/ElekAusweise/CSCA/GermanMasterList.zip?__blob=publicationFile&v=108>,
-  SHA-256 constatée de l'archive `ac294f59876129ce682350bead0f7025373bf2d833bbd879bb536201226b612c`.
-- Fichier : `DE_ML_2026-05-28-08-28-45.ml` extrait de l'archive, 902 359 octets, signé le
-  2026-05-28, redistribué **inchangé** et seulement renommé. Le BSI ne publie pas d'empreinte
+- Archive : <https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/ElekAusweise/CSCA/GermanMasterList.zip?__blob=publicationFile&v=109>,
+  SHA-256 constatée de l'archive `6bb3db08b87062ef64fcc4e4ed8abb55e201ac38e30cab81bafd10d28dd591a5`.
+- Fichier : `DE_ML_2026-08-19-10-28-54.ml` extrait de l'archive, 933 097 octets, signé le
+  2026-08-19, redistribué **inchangé** et seulement renommé. Le BSI ne publie pas d'empreinte
   pour le fichier : l'intégrité repose sur la signature CMS et sur l'ancrage du signataire
   décrit ci-dessous.
-- Contenu : 588 certificats CSCA et certificats de lien de 112 émetteurs, tous lisibles par
-  BouncyCastle, dont 160 clés EC à paramètres de courbe explicites et un numéro de série
-  négatif. Les 3 certificats français déjà fournis par l'ANTS gardent la source `ANTS`.
-- Téléchargé le 2026-09-25.
+- Contenu : 608 certificats CSCA et certificats de lien de 117 émetteurs, tous lisibles par
+  BouncyCastle, dont 171 clés EC à paramètres de courbe explicites et deux numéros de série
+  négatifs. Les 3 certificats français déjà fournis par l'ANTS gardent la source `ANTS`, les 2
+  certificats grecs des titres de séjour (CSCAeRP-HELLAS 003 et son lien) la source `NATIONAL`.
+- Téléchargé le 2026-10-06.
+
+#### Historique
+
+| Date | Version | Changement |
+|---|---|---|
+| 2026-09-25 | `DE_ML_2026-05-28-08-28-45.ml` (archive `v=108`), SHA-256 `e036f8c989193b38cf19493bb2c957bfa2385b35a680bf03300515cad7526dd0` | Première Master List embarquée : 588 certificats, 112 émetteurs. |
+| 2026-10-06 | `DE_ML_2026-08-19-10-28-54.ml` (archive `v=109`), SHA-256 `b0dfa486ef25ab2d23f62af7214ace207444c384eb5b7f8edbaf9ab42f7831ea` | Revérification de la release 0.9. Même signataire (serialNumber=0039), toujours émis par csca-germany 10-2024 dont l'empreinte épinglée est encore celle publiée par le BSI. 608 certificats (+30, −10), 117 émetteurs (+5 : AO, ID, KN, MZ, TG ; aucun retiré). Ajouts : AO, BY ×2, CL ×2, CO, GR ×2 (titres de séjour 003 et lien, déjà embarqués en publication nationale), ID, IQ ×2, KN ×7, ME, MX ×2, MZ, RU ×2, SA ×2, TG, TJ, UZ ×2 ; tous ont `basicConstraints` cA=TRUE et `keyUsage` keyCertSign. Retraits : dix CSCA expirés entre juin et août 2026 (AT ×3, CZ ×2, GB 2010, QA, SG, TR ×2). Aucun nouveau certificat pour DK ni NO. |
 
 Conditions de réutilisation fixées par le BSI : usage, y compris commercial, autorisé ; pas
 d'usage publicitaire ; ne rien laisser croire d'une coopération avec le BSI ou d'une
@@ -305,6 +320,6 @@ La procédure manuelle reste la référence de ce que fait le script.
    présent, validité et empreinte publiée. Nommer le fichier `<pays>-csca-<désignation>.der`,
    jamais avec le préfixe `ants-`. Ne l'ajouter que si la source garde un statut A, et mettre à
    jour la liste attendue de `TrustStoreTest.nationalSha256`. Surveiller les bascules
-   annoncées (DK en septembre 2026, NO en janvier 2027).
+   annoncées (DK prévue en septembre 2026 mais non publiée au 2026-10-06, NO en janvier 2027).
 9. Lancer `./gradlew :core:test` : `TrustStoreFingerprintTest` et `TrustStoreTest` doivent
    passer.
