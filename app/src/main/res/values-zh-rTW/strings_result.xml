@@ -28,6 +28,7 @@
     <string name="result_section_identity">身分資料</string>
     <string name="result_expired">證件已過期</string>
     <string name="result_no_identity_data">這張卡的晶片不含任何身分資料：只能驗證其真偽。核發給歐盟公民的德國 eID 卡即屬此類。</string>
+    <string name="result_data_not_read">晶片驗證失敗後，無法讀取證件資料。</string>
     <string name="result_field_surname">姓</string>
     <string name="result_field_given_names">名</string>
     <string name="result_field_sex">性別</string>

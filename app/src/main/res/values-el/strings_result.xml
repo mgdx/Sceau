@@ -28,6 +28,7 @@
     <string name="result_section_identity">Ταυτότητα</string>
     <string name="result_expired">Το έγγραφο έχει λήξει</string>
     <string name="result_no_identity_data">Το τσιπ αυτής της κάρτας δεν περιέχει στοιχεία ταυτότητας: μπορεί να ελεγχθεί μόνο η γνησιότητά της. Αυτό ισχύει για τη γερμανική κάρτα eID για πολίτες της Ένωσης.</string>
+    <string name="result_data_not_read">Δεν ήταν δυνατή η ανάγνωση των στοιχείων του εγγράφου μετά την αποτυχία της επαλήθευσης του τσιπ.</string>
     <string name="result_field_surname">Επώνυμο</string>
     <string name="result_field_given_names">Όνομα</string>
     <string name="result_field_sex">Φύλο</string>

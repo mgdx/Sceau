@@ -28,6 +28,7 @@
     <string name="result_section_identity">ข้อมูลบุคคล</string>
     <string name="result_expired">เอกสารหมดอายุแล้ว</string>
     <string name="result_no_identity_data">ชิปของบัตรนี้ไม่มีข้อมูลระบุตัวตน ตรวจสอบได้เพียงความแท้ของบัตรเท่านั้น กรณีนี้เกิดกับบัตร eID ของเยอรมนีสำหรับพลเมืองสหภาพยุโรป</string>
+    <string name="result_data_not_read">ไม่สามารถอ่านข้อมูลของเอกสารได้หลังจากการตรวจสอบชิปล้มเหลว</string>
     <string name="result_field_surname">ชื่อสกุล</string>
     <string name="result_field_given_names">ชื่อตัว</string>
     <string name="result_field_sex">เพศ</string>

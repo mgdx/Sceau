@@ -28,6 +28,7 @@
     <string name="result_section_identity">신원 정보</string>
     <string name="result_expired">만료된 신분증</string>
     <string name="result_no_identity_data">이 카드의 칩에는 신원 정보가 없어 카드의 진위만 확인할 수 있습니다. EU 시민용 독일 eID 카드가 이에 해당합니다.</string>
+    <string name="result_data_not_read">칩 검증에 실패한 후 신분증의 데이터를 읽을 수 없었습니다.</string>
     <string name="result_field_surname">성</string>
     <string name="result_field_given_names">이름</string>
     <string name="result_field_sex">성별</string>

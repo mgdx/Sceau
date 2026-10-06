@@ -28,6 +28,7 @@
     <string name="result_section_identity">Isikuandmed</string>
     <string name="result_expired">Dokument on aegunud</string>
     <string name="result_no_identity_data">Selle kaardi kiip ei sisalda isikuandmeid: kontrollida saab ainult kaardi ehtsust. Nii on liidu kodanikele mõeldud Saksa eID-kaardiga.</string>
+    <string name="result_data_not_read">Dokumendi andmeid ei õnnestunud pärast kiibi kontrollimise nurjumist lugeda.</string>
     <string name="result_field_surname">Perekonnanimi</string>
     <string name="result_field_given_names">Eesnimed</string>
     <string name="result_field_sex">Sugu</string>

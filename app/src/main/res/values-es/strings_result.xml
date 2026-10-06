@@ -28,6 +28,7 @@
     <string name="result_section_identity">Identidad</string>
     <string name="result_expired">Documento caducado</string>
     <string name="result_no_identity_data">El chip de esta tarjeta no contiene ningún dato de identidad: solo se puede verificar su autenticidad. Es el caso de la tarjeta eID alemana para ciudadanos de la Unión.</string>
+    <string name="result_data_not_read">No se han podido leer los datos del documento tras fallar la verificación del chip.</string>
     <string name="result_field_surname">Apellidos</string>
     <string name="result_field_given_names">Nombre</string>
     <string name="result_field_sex">Sexo</string>

@@ -17,6 +17,7 @@ import io.github.mgdx.sceau.testchip.TestPki
 import io.github.mgdx.sceau.testchip.TestTrustStore
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
@@ -140,6 +141,7 @@ class ChipAuthenticationOrderTest {
             assertEquals(CheckStatus.OK, report.check(CheckId.DG_HASHES).status)
             assertEquals(CheckStatus.OK, report.check(CheckId.ACTIVE_AUTHENTICATION).status)
             assertEquals(DOCUMENT_NUMBER, report.document.dg1.documentNumber)
+            assertTrue(report.identityRead)
         }
 
     @Test
@@ -183,6 +185,7 @@ class ChipAuthenticationOrderTest {
                 notDone.detail,
             )
             // Aucune donnée d'identité lue : ni DG1, ni DG2, ni DG11.
+            assertFalse(report.identityRead)
             assertEquals("", report.document.dg1.documentNumber)
             assertNull(report.document.portrait)
             assertNull(report.document.dg11)

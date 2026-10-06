@@ -28,6 +28,7 @@
     <string name="result_section_identity">Identidade</string>
     <string name="result_expired">Documento vencido</string>
     <string name="result_no_identity_data">O chip deste cartão não contém dados de identidade: só é possível verificar a autenticidade dele. É o caso do cartão eID alemão para cidadãos da União Europeia.</string>
+    <string name="result_data_not_read">Não foi possível ler os dados do documento depois que a verificação do chip falhou.</string>
     <string name="result_field_surname">Sobrenome</string>
     <string name="result_field_given_names">Nome</string>
     <string name="result_field_sex">Sexo</string>

@@ -28,6 +28,7 @@
     <string name="result_section_identity">Identität</string>
     <string name="result_expired">Dokument abgelaufen</string>
     <string name="result_no_identity_data">Der Chip dieser Karte enthält keine Identitätsdaten: Nur ihre Echtheit kann geprüft werden. Das ist bei der deutschen eID-Karte für Unionsbürger der Fall.</string>
+    <string name="result_data_not_read">Die Daten des Dokuments konnten nach der fehlgeschlagenen Prüfung des Chips nicht ausgelesen werden.</string>
     <string name="result_field_surname">Name</string>
     <string name="result_field_given_names">Vornamen</string>
     <string name="result_field_sex">Geschlecht</string>

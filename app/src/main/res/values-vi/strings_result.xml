@@ -28,6 +28,7 @@
     <string name="result_section_identity">Nhân thân</string>
     <string name="result_expired">Giấy tờ đã hết hạn</string>
     <string name="result_no_identity_data">Chip của thẻ này không chứa dữ liệu nhận dạng nào: chỉ có thể xác minh tính xác thực của thẻ. Đây là trường hợp của thẻ eID Đức dành cho công dân Liên minh châu Âu.</string>
+    <string name="result_data_not_read">Không thể đọc dữ liệu của giấy tờ sau khi xác minh chip không thành công.</string>
     <string name="result_field_surname">Họ</string>
     <string name="result_field_given_names">Chữ đệm và tên</string>
     <string name="result_field_sex">Giới tính</string>

@@ -8,6 +8,27 @@ import io.github.mgdx.sceau.core.report.VerificationReport
 
 /** Présentation de l'identité sur l'écran Résultat. */
 internal object IdentityPresentation {
+    enum class Mode {
+        /** Photo, identité, signature et données complémentaires. */
+        FULL,
+
+        /** Carte eID-UB authentifiée, sans donnée d'identité dans sa puce ([isIdentitylessEidUb]). */
+        IDENTITYLESS_EID_UB,
+
+        /**
+         * Aucune donnée lue (lecture interrompue après une Chip Authentication ratée, audit V24) :
+         * ni photo, ni identité, ni donnée complémentaire, seulement une phrase qui le dit.
+         */
+        NOT_READ,
+    }
+
+    fun mode(report: VerificationReport): Mode =
+        when {
+            !report.identityRead -> Mode.NOT_READ
+            isIdentitylessEidUb(report) -> Mode.IDENTITYLESS_EID_UB
+            else -> Mode.FULL
+        }
+
     /**
      * Carte eID allemande pour citoyens de l'Union (eID-UB, BSI TR-03127, décision D36) dont DG1
      * est authentifié : signature du SOD valide, chaîne de certificats du SOD valide jusqu'à un

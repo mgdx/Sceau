@@ -194,6 +194,13 @@ class VerificationReport(
      * (audit V17).
      */
     val cardSecurityChain: ChainInfo? = null,
+    /**
+     * Faux si aucune donnée d'identité n'a pu être lue : lecture interrompue au rétablissement du
+     * canal après une Chip Authentication ratée (audit V24, décision D40). [document] porte alors
+     * un DG1 vide, sans portrait, DG7, DG11 ni DG12, que l'écran ne doit pas présenter comme
+     * l'identité du titulaire.
+     */
+    val identityRead: Boolean = true,
 ) {
     fun check(id: CheckId): Check = checks.first { it.id == id }
 
