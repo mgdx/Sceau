@@ -262,6 +262,10 @@ tout identifiant qui n'est pas `<64 chiffres hexadécimaux minuscules>.ml` ou `.
 
 La liste des éléments importés est lue indépendamment du magasin fusionné (audit V22) : elle
 s'affiche, et chaque élément se supprime, pendant le chargement du magasin comme après un échec.
+Les sujets X.500 venus des fichiers importés (signataire d'une Master List, sujet d'un
+certificat), dans les dialogues de confirmation comme dans les listes, sont assainis avant
+affichage (audit V23) : une ligne, sans caractère de contrôle ni de formatage bidirectionnel,
+longueur bornée avec ellipse.
 
 ## Procédure de mise à jour (à chaque release)
 

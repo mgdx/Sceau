@@ -62,8 +62,10 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import io.github.mgdx.sceau.R
 import io.github.mgdx.sceau.core.trust.InvalidCertificateException
@@ -645,7 +647,7 @@ private fun CountryHeader(
     val label =
         when {
             group.alpha2.isEmpty() -> stringResource(R.string.trust_country_unknown)
-            name == null -> group.alpha2
+            name == null -> displayCountryCode(group.alpha2)
             flag != null -> "$flag $name"
             else -> name
         }
@@ -691,7 +693,7 @@ private fun AnchorItem(
             Badge(stringResource(sourceBadge(anchor.source)))
             if (anchor.isLink) Badge(stringResource(R.string.trust_link_certificate))
         }
-        Text(anchor.subject, style = MaterialTheme.typography.bodyMedium)
+        SubjectText(anchor.subject, MaterialTheme.typography.bodyMedium)
         Text(
             text =
                 stringResource(
@@ -756,7 +758,7 @@ private fun ImportConfirmDialog(
             ) {
                 Text(stringResource(R.string.trust_import_confirm_text), style = MaterialTheme.typography.bodyMedium)
                 DialogField(stringResource(R.string.trust_import_signer)) {
-                    Text(info.signerSubject, style = MaterialTheme.typography.bodyMedium)
+                    SubjectText(info.signerSubject, MaterialTheme.typography.bodyMedium)
                 }
                 DialogField(stringResource(R.string.trust_import_signer_fingerprint)) {
                     SelectionContainer {
@@ -860,7 +862,7 @@ private fun MasterListItemContent(
         UnreadableItem()
         return
     }
-    Text(info.signerSubject, style = MaterialTheme.typography.bodyMedium)
+    SubjectText(info.signerSubject, MaterialTheme.typography.bodyMedium)
     val details =
         listOfNotNull(
             info.signingTime?.let { stringResource(R.string.trust_imported_signed_on, formatDate(it.toUtcDate())) },
@@ -884,7 +886,7 @@ private fun CertificateItemContent(
         UnreadableItem()
         return
     }
-    Text(summary.subject, style = MaterialTheme.typography.bodyMedium)
+    SubjectText(summary.subject, MaterialTheme.typography.bodyMedium)
     Text(
         text = countryLabel(summary.country),
         style = MaterialTheme.typography.bodySmall,
@@ -913,11 +915,29 @@ private fun UnreadableItem() {
     )
 }
 
-/** Nom localisé du pays [alpha2], le code seul s'il est inconnu, ou « Pays non indiqué ». */
+/**
+ * Sujet X.500 lu dans un fichier importé ou un certificat du magasin, assaini (audit V23) : une
+ * seule ligne logique, sans caractère de contrôle ni de formatage bidirectionnel, longueur et
+ * nombre de lignes affichées bornés.
+ */
+@Composable
+private fun SubjectText(
+    subject: String,
+    style: TextStyle,
+) {
+    Text(
+        text = displaySubject(subject),
+        style = style,
+        maxLines = SUBJECT_MAX_LINES,
+        overflow = TextOverflow.Ellipsis,
+    )
+}
+
+/** Nom localisé du pays [alpha2], le code assaini s'il est inconnu, ou « Pays non indiqué ». */
 @Composable
 private fun countryLabel(alpha2: String): String {
     if (alpha2.isEmpty()) return stringResource(R.string.trust_country_unknown)
-    return Countries.displayName(alpha2, currentLocale()) ?: alpha2
+    return Countries.displayName(alpha2, currentLocale()) ?: displayCountryCode(alpha2)
 }
 
 @Composable
@@ -950,7 +970,7 @@ private fun CertificateConfirmDialog(
                     )
                 }
                 DialogField(stringResource(R.string.trust_import_certificate_subject)) {
-                    Text(summary.subject, style = MaterialTheme.typography.bodyMedium)
+                    SubjectText(summary.subject, MaterialTheme.typography.bodyMedium)
                 }
                 DialogField(stringResource(R.string.trust_import_certificate_country)) {
                     Text(countryLabel(summary.country), style = MaterialTheme.typography.bodyMedium)
