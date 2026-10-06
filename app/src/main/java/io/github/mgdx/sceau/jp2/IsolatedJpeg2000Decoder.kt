@@ -22,8 +22,10 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withTimeoutOrNull
 
 /**
- * Décodage JPEG 2000 (portrait DG2, signature DG7, images DG12) confié au processus isolé de
- * [Jpeg2000Service] (décision D23) : OpenJPEG n'est jamais chargé dans le processus de l'app.
+ * Décodage des images de la puce (portrait DG2, signature DG7, images DG12), en JPEG 2000 comme
+ * en JPEG, confié au processus isolé de [Jpeg2000Service] (décision D23, audit V18) : ni
+ * OpenJPEG ni le décodeur JPEG d'Android ne reçoivent d'octets de la puce dans le processus de
+ * l'app. Le service n'accepte que le JPEG et le JPEG 2000, reconnus à leurs octets.
  *
  * Renvoie un [Bitmap] ARGB_8888 mutable, ou null si le flux n'est pas décodable, si le
  * processus isolé meurt (bombe, bug natif), si le décodage dépasse

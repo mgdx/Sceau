@@ -3,6 +3,7 @@ package io.github.mgdx.sceau.screenshots
 import android.content.ComponentName
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.nfc.NfcAdapter
 import android.os.Binder
 import android.os.Handler
@@ -72,10 +73,11 @@ import kotlin.math.abs
  * `TextOverflowTest` (D28), sur un téléphone de 1080 × 2400 px (360 × 800 dp en xxhdpi), thème
  * clair. Seules les données du mode démo y figurent : CNIe spécimen de `:testchip`.
  *
- * Le portrait spécimen est en JPEG 2000, décodé en production par OpenJPEG dans un processus
- * isolé (D23), absent sous Robolectric. Le service est remplacé ici, et ici seulement, par
- * [SpecimenPortraitBinder], qui parle le même protocole binder et rend les pixels de la
- * silhouette synthétique d'origine (`testchip/tools/generate-specimen-portrait.sh`).
+ * Les images de la puce sont décodées en production dans un processus isolé (D23, audit V18),
+ * le portrait spécimen en JPEG 2000 par OpenJPEG, absent sous Robolectric. Le service est
+ * remplacé ici, et ici seulement, par [SpecimenPortraitBinder], qui parle le même protocole
+ * binder et rend les pixels de la silhouette synthétique d'origine
+ * (`testchip/tools/generate-specimen-portrait.sh`) ou de la signature spécimen.
  *
  * Exclu de `./gradlew check` : la tâche de test ne le lance que si `SCEAU_SCREENSHOTS=1`
  * (voir `app/build.gradle.kts`), qui fournit aussi le dossier de sortie.
@@ -301,13 +303,16 @@ private class HoldingTransport(
 
 /**
  * Remplaçant de `Jpeg2000Service` pour les captures seulement : même protocole binder
- * ([Jpeg2000Protocol]), mais n'accepte que le flux du portrait spécimen de `:testchip`, et rend
- * à sa place les pixels de la silhouette synthétique dont il est l'encodage JPEG 2000.
+ * ([Jpeg2000Protocol]), mais n'accepte que les deux images de la CNIe spécimen de `:testchip`.
+ * Pour le portrait (JPEG 2000), il rend les pixels de la silhouette synthétique dont il est
+ * l'encodage ; la signature (JPEG, décodée elle aussi par le service depuis l'audit V18) est
+ * décodée par `BitmapFactory`, comme dans le vrai service.
  */
 private class SpecimenPortraitBinder : Binder() {
     private val expected = SimulatedDocuments.specimenPortrait()
+    private val signature = SimulatedDocuments.specimenSignature()
     private var received = ByteArray(0)
-    private val pixels = specimenSilhouette()
+    private var pixels = IntArray(0)
 
     override fun onTransact(
         code: Int,
@@ -332,10 +337,17 @@ private class SpecimenPortraitBinder : Binder() {
             }
 
             Jpeg2000Protocol.TX_DECODE -> {
-                if (received.contentEquals(expected)) {
+                val decoded =
+                    when {
+                        received.contentEquals(expected) -> Triple(PORTRAIT_WIDTH, PORTRAIT_HEIGHT, specimenSilhouette())
+                        received.contentEquals(signature) -> decodeSignature()
+                        else -> null
+                    }
+                if (decoded != null) {
+                    pixels = decoded.third
                     reply.writeInt(Jpeg2000Protocol.STATUS_OK)
-                    reply.writeInt(PORTRAIT_WIDTH)
-                    reply.writeInt(PORTRAIT_HEIGHT)
+                    reply.writeInt(decoded.first)
+                    reply.writeInt(decoded.second)
                 } else {
                     reply.writeInt(Jpeg2000Protocol.STATUS_ERROR)
                 }
@@ -349,6 +361,13 @@ private class SpecimenPortraitBinder : Binder() {
             }
         }
         return true
+    }
+
+    private fun decodeSignature(): Triple<Int, Int, IntArray> {
+        val bitmap = checkNotNull(BitmapFactory.decodeByteArray(signature, 0, signature.size))
+        val argb = IntArray(bitmap.width * bitmap.height)
+        bitmap.getPixels(argb, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
+        return Triple(bitmap.width, bitmap.height, argb).also { bitmap.recycle() }
     }
 
     private companion object {

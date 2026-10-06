@@ -12,19 +12,18 @@ private val JP2_MAGIC =
 private val J2K_MAGIC = byteArrayOf(0xFF.toByte(), 0x4F, 0xFF.toByte(), 0x51)
 
 /**
- * Format à utiliser pour décoder une image de la puce. Le format déclaré prime ; s'il est
- * inconnu, il est déduit des premiers octets.
+ * Format d'une image de la puce, déduit de ses seuls premiers octets : [ImageFormat.JPEG]
+ * (`FF D8 FF`), [ImageFormat.JPEG2000] (boîte de signature JP2 ou flux J2K brut), sinon null,
+ * et l'image n'est pas décodée. Le format déclaré par la puce n'est jamais pris en compte
+ * (audit V18) : les décodeurs d'image détectent le format au contenu, et une puce forgée
+ * pourrait sinon leur soumettre du PNG, du WebP, du GIF ou tout autre format sous l'étiquette
+ * JPEG. Appliqué par l'écran de résultat et, de nouveau, par le service de décodage isolé.
  */
-fun resolveImageFormat(
-    declared: ImageFormat,
-    bytes: ByteArray,
-): ImageFormat {
-    if (declared != ImageFormat.UNKNOWN) return declared
-    return when {
+fun detectImageFormat(bytes: ByteArray): ImageFormat? =
+    when {
         bytes.startsWith(JPEG_MAGIC) -> ImageFormat.JPEG
         bytes.startsWith(JP2_MAGIC) || bytes.startsWith(J2K_MAGIC) -> ImageFormat.JPEG2000
-        else -> ImageFormat.UNKNOWN
+        else -> null
     }
-}
 
 private fun ByteArray.startsWith(prefix: ByteArray): Boolean = size >= prefix.size && prefix.indices.all { this[it] == prefix[it] }

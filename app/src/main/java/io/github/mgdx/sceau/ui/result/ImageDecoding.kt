@@ -2,27 +2,28 @@ package io.github.mgdx.sceau.ui.result
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import androidx.core.graphics.scale
 import io.github.mgdx.sceau.core.model.EncodedImage
-import io.github.mgdx.sceau.core.model.ImageFormat
 import io.github.mgdx.sceau.jp2.IsolatedJpeg2000Decoder
 import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * Décode une image de la puce en un [Bitmap] mutable, uniquement en mémoire (aucun cache).
  * À appeler hors du thread principal. Renvoie null si l'image est illisible ou démesurée :
- * l'écran affiche alors un emplacement vide, jamais de plantage. Le JPEG 2000 est décodé dans
- * un processus isolé (D23), le JPEG par le décodeur d'Android.
+ * l'écran affiche alors un emplacement vide, jamais de plantage. Seuls le JPEG et le JPEG 2000,
+ * reconnus à leurs octets ([detectImageFormat]), sont acceptés, et les deux sont décodés dans le
+ * processus isolé (D23, audit V18) : aucun octet d'image venu de la puce n'atteint un décodeur
+ * natif dans le processus de l'app.
  */
 suspend fun decodeToBitmap(
     context: Context,
     image: EncodedImage,
 ): Bitmap? =
     try {
-        when (resolveImageFormat(image.format, image.bytes)) {
-            ImageFormat.JPEG2000 -> IsolatedJpeg2000Decoder.decode(context, image.bytes)?.let(::limitSide)
-            ImageFormat.JPEG, ImageFormat.UNKNOWN -> decodeWithPlatform(image.bytes)
+        if (detectImageFormat(image.bytes) == null) {
+            null
+        } else {
+            IsolatedJpeg2000Decoder.decode(context, image.bytes)?.let(::limitSide)
         }
     } catch (e: CancellationException) {
         throw e
@@ -36,7 +37,8 @@ suspend fun decodeToBitmap(
  * Bornes du décodage (audit V2) : une puce forgée peut déclarer une image immense dans
  * quelques centaines d'octets. Au-delà de [MAX_DECLARED_PIXELS], l'image est refusée ;
  * en deçà, elle est sous-échantillonnée pour qu'aucun côté ne dépasse [MAX_SIDE], soit au
- * plus 16 Mo en ARGB_8888, bien en dessous de la limite de dessin du canevas.
+ * plus 16 Mo en ARGB_8888, bien en dessous de la limite de dessin du canevas. Appliquées au
+ * JPEG par le service de décodage isolé (`Jpeg2000Service`, D23).
  */
 object DecodeLimits {
     /** Pixels déclarés au-delà desquels l'image n'est pas décodée (40 mégapixels). */
@@ -65,22 +67,8 @@ object DecodeLimits {
     }
 }
 
-private fun decodeWithPlatform(bytes: ByteArray): Bitmap? {
-    val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-    BitmapFactory.decodeByteArray(bytes, 0, bytes.size, bounds)
-    val sample = DecodeLimits.sampleSize(bounds.outWidth, bounds.outHeight) ?: return null
-    val options =
-        BitmapFactory.Options().apply {
-            inMutable = true
-            inSampleSize = sample
-        }
-    val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size, options) ?: return null
-    // Filet de sécurité : le décodeur ne doit jamais rendre plus grand qu'annoncé.
-    return limitSide(bitmap)
-}
-
 /** Réduit [bitmap] si l'un de ses côtés dépasse [DecodeLimits.MAX_SIDE] ; l'original est effacé. */
-private fun limitSide(bitmap: Bitmap): Bitmap {
+internal fun limitSide(bitmap: Bitmap): Bitmap {
     val longest = maxOf(bitmap.width, bitmap.height)
     if (longest <= DecodeLimits.MAX_SIDE) return bitmap
     val scale = DecodeLimits.MAX_SIDE.toDouble() / longest
