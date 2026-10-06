@@ -28,6 +28,7 @@
     <string name="result_section_identity">Személyazonosság</string>
     <string name="result_expired">Lejárt okmány</string>
     <string name="result_no_identity_data">A kártya chipje nem tartalmaz személyazonosító adatokat: csak a kártya eredetisége ellenőrizhető. Ez a helyzet az uniós polgároknak kiállított német eID-kártyával.</string>
+    <string name="result_data_not_read">Az okmány adatai nem olvashatók be, miután a chip ellenőrzése sikertelen volt.</string>
     <string name="result_field_surname">Családi név</string>
     <string name="result_field_given_names">Utónév</string>
     <string name="result_field_sex">Nem</string>

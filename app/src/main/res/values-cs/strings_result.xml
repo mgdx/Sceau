@@ -28,6 +28,7 @@
     <string name="result_section_identity">Totožnost</string>
     <string name="result_expired">Doklad s prošlou platností</string>
     <string name="result_no_identity_data">Čip této karty neobsahuje žádné osobní údaje: lze ověřit pouze její pravost. Týká se to německé karty eID pro občany Unie.</string>
+    <string name="result_data_not_read">Údaje dokladu se po neúspěšném ověření čipu nepodařilo přečíst.</string>
     <string name="result_field_surname">Příjmení</string>
     <string name="result_field_given_names">Jména</string>
     <string name="result_field_sex">Pohlaví</string>

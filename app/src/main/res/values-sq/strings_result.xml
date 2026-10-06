@@ -28,6 +28,7 @@
     <string name="result_section_identity">Identiteti</string>
     <string name="result_expired">Dokument i skaduar</string>
     <string name="result_no_identity_data">Çipi i kësaj karte nuk përmban asnjë të dhënë identiteti: mund të verifikohet vetëm vërtetësia e saj. Ky është rasti i kartës gjermane eID për qytetarët e Bashkimit.</string>
+    <string name="result_data_not_read">Të dhënat e dokumentit nuk mund të lexoheshin pasi dështoi verifikimi i çipit.</string>
     <string name="result_field_surname">Mbiemri</string>
     <string name="result_field_given_names">Emri</string>
     <string name="result_field_sex">Gjinia</string>

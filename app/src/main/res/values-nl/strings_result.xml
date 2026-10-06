@@ -28,6 +28,7 @@
     <string name="result_section_identity">Identiteit</string>
     <string name="result_expired">Document verlopen</string>
     <string name="result_no_identity_data">De chip van deze kaart bevat geen identiteitsgegevens: alleen de echtheid ervan kan worden gecontroleerd. Dit geldt voor de Duitse eID-kaart voor burgers van de Unie.</string>
+    <string name="result_data_not_read">De gegevens van het document konden niet worden gelezen nadat de controle van de chip was mislukt.</string>
     <string name="result_field_surname">Naam</string>
     <string name="result_field_given_names">Voornamen</string>
     <string name="result_field_sex">Geslacht</string>

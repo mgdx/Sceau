@@ -235,7 +235,13 @@ internal class ReadingSession(
                 rawDataGroups = dataGroups,
             )
         document = empty
-        return VerificationReport(verdict = Verdicts.compute(checks), checks = checks, chain = null, document = empty)
+        return VerificationReport(
+            verdict = Verdicts.compute(checks),
+            checks = checks,
+            chain = null,
+            document = empty,
+            identityRead = false,
+        )
     }
 
     /** Vrai si l'empreinte du DG [number] figure dans le SOD et y est conforme. */

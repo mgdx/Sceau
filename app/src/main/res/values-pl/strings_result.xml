@@ -28,6 +28,7 @@
     <string name="result_section_identity">Tożsamość</string>
     <string name="result_expired">Dokument utracił ważność</string>
     <string name="result_no_identity_data">Chip tej karty nie zawiera żadnych danych osobowych: można sprawdzić jedynie jej autentyczność. Dotyczy to niemieckiej karty eID dla obywateli Unii.</string>
+    <string name="result_data_not_read">Nie udało się odczytać danych dokumentu po nieudanej weryfikacji chipu.</string>
     <string name="result_field_surname">Nazwisko</string>
     <string name="result_field_given_names">Imiona</string>
     <string name="result_field_sex">Płeć</string>

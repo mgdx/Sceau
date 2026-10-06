@@ -65,6 +65,7 @@ import io.github.mgdx.sceau.session.ReadState
 import io.github.mgdx.sceau.session.SessionViewModel
 import io.github.mgdx.sceau.testchip.SimulatedChip
 import io.github.mgdx.sceau.testchip.SimulatedDocuments
+import io.github.mgdx.sceau.testchip.TestPki
 import io.github.mgdx.sceau.trust.TrustStoreRepository
 import io.github.mgdx.sceau.ui.about.AboutScreen
 import io.github.mgdx.sceau.ui.home.HomeScreen
@@ -79,6 +80,7 @@ import io.github.mgdx.sceau.ui.trust.TrustStoreScreen
 import io.github.mgdx.sceau.ui.trust.groupByCountry
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Rule
@@ -304,7 +306,15 @@ class TextOverflowTest {
         session.startDemo(checkNotNull(DemoMode.newSimulatedCnie()))
         awaitState("rapport de la démo") { it is ReadState.Done }
         assertEquals(Verdict.AUTHENTIC, (session.state.value as ReadState.Done).report.verdict)
-        render("Résultat, authentique (démo)", resultContent, afterShow = ::showResultDetails)
+        render("Résultat, authentique (démo)", resultContent, afterShow = {
+            showResultDetails()
+            // Rapport complet : identité affichée, sans la phrase des données non lues (audit V24).
+            assertTrue(
+                "identité absente d'un rapport complet",
+                compose.onAllNodes(hasTextRes(R.string.result_field_surname)).fetchSemanticsNodes().isNotEmpty() &&
+                    compose.onAllNodes(hasTextRes(R.string.result_data_not_read)).fetchSemanticsNodes().isEmpty(),
+            )
+        })
         session.clear()
 
         // Même CNIe simulée lue avec un magasin sans aucun certificat français (audit V25 : un
@@ -346,6 +356,45 @@ class TextOverflowTest {
                 compose.onAllNodes(hasTextRes(R.string.result_field_surname)).fetchSemanticsNodes().isEmpty(),
             )
             expandChecks()
+        })
+        session.clear()
+
+        // Audit V24 : CA ratée, puis accès refusé au rétablissement du canal ; rapport « Échec »
+        // sans aucune donnée lue. Ni identité, ni emplacement de photo : une phrase le dit.
+        val clone =
+            SimulatedChip(
+                card.document,
+                card.pace,
+                caPrivateKey = card.pki.generateEc(TestPki.CURVE).private,
+                restrictAppletAfterReconnect = true,
+            )
+        session.startDemo(DemoCard(clone, checkNotNull(card.canKey), card.trustStore))
+        awaitState("rapport sans donnée lue") { it is ReadState.Done }
+        val notRead = (session.state.value as ReadState.Done).report
+        assertEquals(Verdict.FAILED, notRead.verdict)
+        assertFalse(notRead.identityRead)
+        render("Résultat, échec sans donnée lue", resultContent, afterShow = {
+            settle()
+            assertTrue(
+                "phrase « données non lues » absente",
+                compose.onAllNodes(hasTextRes(R.string.result_data_not_read)).fetchSemanticsNodes().isNotEmpty(),
+            )
+            assertTrue(
+                "photo ou emplacement de photo affiché sans donnée lue",
+                compose.onAllNodes(hasTextRes(R.string.result_photo_unavailable)).fetchSemanticsNodes().isEmpty() &&
+                    compose.onAllNodes(hasContentDescriptionRes(R.string.result_photo_description)).fetchSemanticsNodes().isEmpty(),
+            )
+            assertTrue(
+                "section Identité affichée sans donnée lue",
+                compose.onAllNodes(hasTextRes(R.string.result_section_identity)).fetchSemanticsNodes().isEmpty() &&
+                    compose.onAllNodes(hasTextRes(R.string.result_field_surname)).fetchSemanticsNodes().isEmpty(),
+            )
+            assertTrue(
+                "bouton Effacer absent",
+                compose.onAllNodes(hasTextRes(R.string.result_clear)).fetchSemanticsNodes().isNotEmpty(),
+            )
+            // Contrôles laissés repliés : leurs détails sont des codes techniques
+            // (READ_DATA-REESTABLISH-…), sans texte traduit propre à cette scène.
         })
         session.clear()
     }

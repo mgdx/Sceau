@@ -28,6 +28,7 @@
     <string name="result_section_identity">Aitheantas</string>
     <string name="result_expired">Cáipéis as feidhm</string>
     <string name="result_no_identity_data">Níl aon sonraí aitheantais ar shliseog an chárta seo: ní féidir ach a bharántúlacht a fhíorú. Is amhlaidh atá i gcás chárta eID na Gearmáine do shaoránaigh an Aontais.</string>
+    <string name="result_data_not_read">Níorbh fhéidir sonraí na cáipéise a léamh tar éis gur theip ar fhíorú na sliseoige.</string>
     <string name="result_field_surname">Sloinne</string>
     <string name="result_field_given_names">Réamhainmneacha</string>
     <string name="result_field_sex">Gnéas</string>

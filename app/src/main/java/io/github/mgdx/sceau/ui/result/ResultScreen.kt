@@ -163,16 +163,27 @@ private fun ResultContent(
     ) {
         if (isDemo) DemoBanner()
         VerdictCard(report.verdict, importedAnchor = CheckFormatting.isImportedAnchor(report.chain, report.cardSecurityChain))
-        // Décision D36 : carte eID-UB, sans donnée d'identité dans sa puce. Ni champs vides, ni
-        // logo eID présenté comme la photo du titulaire.
-        if (IdentityPresentation.isIdentitylessEidUb(report)) {
-            NoIdentitySection(document.dg1)
-        } else {
-            PortraitSection(document.portrait, bitmapOwner)
-            IdentitySection(document.dg1, formatDate)
+        when (IdentityPresentation.mode(report)) {
+            // Décision D36 : carte eID-UB, sans donnée d'identité dans sa puce. Ni champs vides, ni
+            // logo eID présenté comme la photo du titulaire.
+            IdentityPresentation.Mode.IDENTITYLESS_EID_UB -> {
+                NoIdentitySection(document.dg1)
+                document.signature?.let { SignatureSection(it, bitmapOwner) }
+                AdditionalSection(document, formatDate, bitmapOwner)
+            }
+
+            // Audit V24 : rien n'a été lu ; ni champs vides, ni emplacement de photo.
+            IdentityPresentation.Mode.NOT_READ -> {
+                DataNotReadNotice()
+            }
+
+            IdentityPresentation.Mode.FULL -> {
+                PortraitSection(document.portrait, bitmapOwner)
+                IdentitySection(document.dg1, formatDate)
+                document.signature?.let { SignatureSection(it, bitmapOwner) }
+                AdditionalSection(document, formatDate, bitmapOwner)
+            }
         }
-        document.signature?.let { SignatureSection(it, bitmapOwner) }
-        AdditionalSection(document, formatDate, bitmapOwner)
         ChecksSection(report.checks, formatDate)
         Button(
             onClick = onClear,
@@ -554,6 +565,23 @@ private fun NoIdentitySection(dg1: Dg1Data) {
             ),
         )
         FieldRow(R.string.result_field_issuing_state, countryWithCode(dg1.issuingState))
+    }
+}
+
+/** Aucune donnée lue après l'échec de la Chip Authentication (audit V24, décision D40). */
+@Composable
+private fun DataNotReadNotice() {
+    Surface(
+        color = MaterialTheme.colorScheme.secondaryContainer,
+        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+        shape = MaterialTheme.shapes.small,
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Text(
+            text = stringResource(R.string.result_data_not_read),
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.padding(12.dp),
+        )
     }
 }
 

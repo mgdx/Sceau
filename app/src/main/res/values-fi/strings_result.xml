@@ -28,6 +28,7 @@
     <string name="result_section_identity">Henkilötiedot</string>
     <string name="result_expired">Asiakirja on vanhentunut</string>
     <string name="result_no_identity_data">Kortin sirulla ei ole henkilötietoja: vain kortin aitous voidaan tarkistaa. Näin on Saksan unionin kansalaisille myöntämässä eID-kortissa.</string>
+    <string name="result_data_not_read">Asiakirjan tietoja ei voitu lukea sirun varmennuksen epäonnistuttua.</string>
     <string name="result_field_surname">Sukunimi</string>
     <string name="result_field_given_names">Etunimet</string>
     <string name="result_field_sex">Sukupuoli</string>

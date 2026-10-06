@@ -28,6 +28,7 @@
     <string name="result_section_identity">Identitet</string>
     <string name="result_expired">Handlingen har gått ut</string>
     <string name="result_no_identity_data">Kortets chip innehåller inga identitetsuppgifter: bara kortets äkthet kan kontrolleras. Det gäller det tyska eID-kortet för unionsmedborgare.</string>
+    <string name="result_data_not_read">Handlingens uppgifter kunde inte läsas efter att verifieringen av chippet misslyckades.</string>
     <string name="result_field_surname">Efternamn</string>
     <string name="result_field_given_names">Förnamn</string>
     <string name="result_field_sex">Kön</string>

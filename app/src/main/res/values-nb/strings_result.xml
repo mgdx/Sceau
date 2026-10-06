@@ -28,6 +28,7 @@
     <string name="result_section_identity">Identitet</string>
     <string name="result_expired">Dokumentet er utløpt</string>
     <string name="result_no_identity_data">Kortets brikke inneholder ingen identitetsopplysninger: bare kortets ekthet kan kontrolleres. Det gjelder det tyske eID-kortet for unionsborgere.</string>
+    <string name="result_data_not_read">Dokumentets opplysninger kunne ikke leses etter at verifiseringen av brikken mislyktes.</string>
     <string name="result_field_surname">Etternavn</string>
     <string name="result_field_given_names">Fornavn</string>
     <string name="result_field_sex">Kjønn</string>

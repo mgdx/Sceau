@@ -28,6 +28,7 @@
     <string name="result_section_identity">Идентитет</string>
     <string name="result_expired">Документот е истечен</string>
     <string name="result_no_identity_data">Чипот на оваа картичка не содржи лични податоци: може да се провери само нејзината автентичност. Тоа важи за германската eID-картичка за граѓаните на Унијата.</string>
+    <string name="result_data_not_read">Податоците од документот не можеа да се прочитаат по неуспешната проверка на чипот.</string>
     <string name="result_field_surname">Презиме</string>
     <string name="result_field_given_names">Име</string>
     <string name="result_field_sex">Пол</string>

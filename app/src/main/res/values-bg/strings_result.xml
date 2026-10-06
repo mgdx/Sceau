@@ -28,6 +28,7 @@
     <string name="result_section_identity">Самоличност</string>
     <string name="result_expired">Документът е с изтекъл срок</string>
     <string name="result_no_identity_data">Чипът на тази карта не съдържа лични данни: може да се провери само нейната автентичност. Такъв е случаят с германската eID карта за граждани на Съюза.</string>
+    <string name="result_data_not_read">Данните на документа не можаха да бъдат прочетени след неуспешната проверка на чипа.</string>
     <string name="result_field_surname">Фамилия</string>
     <string name="result_field_given_names">Име</string>
     <string name="result_field_sex">Пол</string>
