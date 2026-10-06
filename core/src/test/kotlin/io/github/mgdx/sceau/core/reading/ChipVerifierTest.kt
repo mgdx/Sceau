@@ -4,10 +4,24 @@ import io.github.mgdx.sceau.core.SceauException
 import io.github.mgdx.sceau.core.reading.ScriptedTransport.Companion.raise
 import io.github.mgdx.sceau.core.reading.ScriptedTransport.Companion.respond
 import io.github.mgdx.sceau.core.reading.TestFixtures.AID_SELECT
+import io.github.mgdx.sceau.core.report.Check
 import io.github.mgdx.sceau.core.report.CheckDetail
 import io.github.mgdx.sceau.core.report.CheckId
 import io.github.mgdx.sceau.core.report.CheckStatus
+import io.github.mgdx.sceau.core.report.Verdict
+import io.github.mgdx.sceau.core.verify.Verdicts
+import org.bouncycastle.asn1.ASN1Encodable
+import org.bouncycastle.asn1.ASN1ObjectIdentifier
+import org.bouncycastle.asn1.BERTags
+import org.bouncycastle.asn1.DERSequence
+import org.bouncycastle.asn1.DERSet
+import org.bouncycastle.asn1.DERTaggedObject
+import org.bouncycastle.asn1.bsi.BSIObjectIdentifiers
+import org.bouncycastle.asn1.x509.AlgorithmIdentifier
+import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo
+import org.bouncycastle.asn1.x9.X9ObjectIdentifiers
 import org.bouncycastle.jce.provider.BouncyCastleProvider
+import org.jmrtd.lds.ActiveAuthenticationInfo
 import org.jmrtd.lds.ChipAuthenticationInfo
 import org.jmrtd.lds.ChipAuthenticationPublicKeyInfo
 import org.jmrtd.lds.SecurityInfo
@@ -95,6 +109,67 @@ class ChipVerifierTest {
     }
 
     @Test
+    fun dg14AvecUneCleCaQueJmrtdEcarte_AlgorithmeNonPrisEnCharge() {
+        // Audit V19 : SubjectPublicKeyInfo sans clé ; SecurityInfo.getInstance de JMRTD rend null
+        // et l'entrée disparaît. DG14 annonce pourtant une clé : pas de « non disponible ».
+        val keyWithoutBits = DERSequence(AlgorithmIdentifier(X9ObjectIdentifiers.id_ecPublicKey, X9ObjectIdentifiers.prime256v1))
+        val dg14 = dg14With(keyWithoutBits)
+        assertTrue(
+            "JMRTD doit écarter la clé",
+            DG14File(dg14.inputStream()).securityInfos.none { it is ChipAuthenticationPublicKeyInfo },
+        )
+        assertCaUnsupported(dg14)
+    }
+
+    @Test
+    fun dg14AvecUneCleCaSurUneCourbeInconnue_AlgorithmeNonPrisEnCharge() {
+        // Audit V19 : courbe inconnue ; JMRTD garde l'entrée, mais sans clé publique.
+        val unknownCurveKey =
+            SubjectPublicKeyInfo(
+                AlgorithmIdentifier(X9ObjectIdentifiers.id_ecPublicKey, ASN1ObjectIdentifier("1.3.6.1.4.1.99999.1")),
+                ByteArray(65).also { it[0] = 0x04 },
+            )
+        assertCaUnsupported(dg14With(unknownCurveKey))
+    }
+
+    /** DG14 réduit à une `ChipAuthenticationPublicKeyInfo` id-PK-ECDH de clé [key]. */
+    private fun dg14With(key: ASN1Encodable): ByteArray {
+        val publicKeyInfo = DERSequence(arrayOf(ASN1ObjectIdentifier(ID_PK_ECDH), key))
+        return DERTaggedObject(true, BERTags.APPLICATION, DG14_TAG_NUMBER, DERSet(publicKeyInfo)).encoded
+    }
+
+    private fun assertCaUnsupported(dg14: ByteArray) {
+        val transport = ScriptedTransport(respond(AID_SELECT, "9000"))
+
+        val check = verifier(transport).chipAuthentication(dg14, signedInSod = true).check
+
+        assertEquals(CheckStatus.UNSUPPORTED_ALGORITHM, check.status)
+        assertEquals(CheckDetail.UnsupportedAlgorithm(ID_PK_ECDH), check.detail)
+        assertEquals(Verdict.FAILED, Verdicts.compute(nominalChecks(check)))
+        assertEquals("aucune commande de CA envoyée", 1, transport.sent.size)
+    }
+
+    @Test
+    fun dg14AvecSeulementUneInfoAa_NonDisponible() {
+        val transport = ScriptedTransport(respond(AID_SELECT, "9000"))
+        val onlyAa = DG14File(listOf<SecurityInfo>(ActiveAuthenticationInfo(BSIObjectIdentifiers.ecdsa_plain_SHA256.id))).encoded
+
+        val check = verifier(transport).chipAuthentication(onlyAa, signedInSod = true).check
+
+        assertEquals(CheckStatus.NOT_AVAILABLE, check.status)
+    }
+
+    /** Lignes d'une PA réussie, sans AA, avec la ligne CA [ca]. */
+    private fun nominalChecks(ca: Check): List<Check> =
+        CheckId.entries.map { id ->
+            when (id) {
+                CheckId.CHIP_AUTHENTICATION -> ca
+                CheckId.ACTIVE_AUTHENTICATION -> Check(id, CheckStatus.NOT_AVAILABLE)
+                else -> Check(id, CheckStatus.OK)
+            }
+        }
+
+    @Test
     fun dg15Illisible_AlgorithmeNonPrisEnCharge() {
         val transport = ScriptedTransport(respond(AID_SELECT, "9000"))
         val check = verifier(transport).activeAuthentication(TestFixtures.opaqueDataGroup(15), null, signedInSod = true)
@@ -166,5 +241,10 @@ class ChipVerifierTest {
         } catch (e: SceauException.ConnectionLost) {
             assertSame(lost, e)
         }
+    }
+
+    private companion object {
+        const val ID_PK_ECDH = "0.4.0.127.0.7.2.2.1.2"
+        const val DG14_TAG_NUMBER = 14
     }
 }

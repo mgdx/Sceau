@@ -533,3 +533,12 @@ Format : date, contexte, décision, justification, écart à la SPEC concerné.
 - **Justification** : des captures fidèles (vrais écrans, vraies polices, vraies traductions) sans jamais relâcher la protection d'écran, et reproductibles par n'importe qui sans appareil. La génération à la demande évite de réécrire des fichiers suivis par git à chaque `check`.
 - **Limites** : rendu d'Android 37 par Robolectric, sans barres système (ni état, ni navigation) ; le portrait affiché est la silhouette source, non le résultat du décodage par OpenJPEG (écart de compression invisible à cette taille) ; seules les captures fr-FR et en-US sont produites.
 - **Écart à la SPEC** : aucun sur le produit (SPEC §8 inchangée) ; ajoute un générateur de captures en test JVM.
+
+## D40. Chemin du verdict durci (audit de sécurité du 2026-10-06 : V17, V19, V20, V24, V25)
+
+- **Date** : 2026-10-06.
+- **Contexte** : l'audit de sécurité du 2026-10-06 relève plusieurs cas où une puce clonée ou forgée obtient un verdict plus favorable que « Échec », ou un « non disponible » qui devrait être un échec. Les corrections ne changent pas la table des verdicts (`Verdicts.compute`, `docs/protocol.md` §6) : elles changent le statut de certaines lignes.
+- **Décision** :
+  - **V19, clé de CA illisible** : DG14 est relu dans ses octets bruts (`SecurityInfoProtocols`, sans JMRTD), car `SecurityInfo.getInstance` de JMRTD écarte en silence une `ChipAuthenticationPublicKeyInfo` qu'il ne sait pas reconstruire, ou la garde sans clé publique (courbe inconnue). Un DG14 qui annonce une clé (OID `id-PK-*`, préfixe `0.4.0.127.0.7.2.2.1.`) sans clé exploitable donne `CHIP_AUTHENTICATION` `UNSUPPORTED_ALGORITHM` (détail : l'OID), donc « Échec », sans rien envoyer à la puce. Seul un DG14 sans aucun `id-PK` laisse la ligne à `NOT_AVAILABLE` ;
+- **Justification** : un verdict ne doit jamais devenir plus favorable parce qu'un élément signé n'a pas été compris ou qu'un protocole annoncé n'a pas été mené.
+- **Écart à la SPEC** : §6.1 étape 6 (CA : un DG14 annonçant une clé inexploitable est un algorithme non pris en charge, et non une étape absente).

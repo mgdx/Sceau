@@ -77,7 +77,12 @@ internal class ChipVerifier(
                 .orEmpty()
                 .filterIsInstance<ChipAuthenticationPublicKeyInfo>()
                 .firstOrNull()
-                ?: return unchanged(check(CheckId.CHIP_AUTHENTICATION, CheckStatus.NOT_AVAILABLE))
+                ?: return unchanged(withoutChipAuthenticationKey(dg14Bytes))
+        // JMRTD garde l'entrée mais sans clé quand il ne sait pas la reconstruire (courbe ou
+        // algorithme inconnus) : rien à envoyer à la puce (audit V19).
+        val chipKey =
+            publicKeyInfo.subjectPublicKey
+                ?: return unchanged(unsupported(CheckId.CHIP_AUTHENTICATION, publicKeyInfo.objectIdentifier ?: "CA"))
         val keyId = publicKeyInfo.keyId
         val caInfo =
             dg14.securityInfos.orEmpty().filterIsInstance<ChipAuthenticationInfo>().let { infos ->
@@ -86,7 +91,7 @@ internal class ChipVerifier(
         // Sans ChipAuthenticationInfo, JMRTD déduit l'OID du protocole de celui de la clé.
         val protocolOid = caInfo?.objectIdentifier
         try {
-            service.doEACCA(keyId, protocolOid, publicKeyInfo.objectIdentifier, publicKeyInfo.subjectPublicKey)
+            service.doEACCA(keyId, protocolOid, publicKeyInfo.objectIdentifier, chipKey)
         } catch (e: Exception) {
             chip.rethrowTransportFailure()
             val check =
@@ -106,6 +111,20 @@ internal class ChipVerifier(
     }
 
     private fun unchanged(check: Check) = ChipAuthenticationOutcome(check, channelUsable = true)
+
+    /**
+     * DG14 sans `ChipAuthenticationPublicKeyInfo` reconnue par JMRTD (audit V19) : « non
+     * disponible » seulement si ses octets n'annoncent aucune clé (aucun OID id-PK-*). Une clé
+     * annoncée mais que JMRTD n'a pas su reconstruire (`SecurityInfo.getInstance` rend alors
+     * null) donne `UNSUPPORTED_ALGORITHM`, donc le verdict « Échec », et non un échec silencieux.
+     */
+    private fun withoutChipAuthenticationKey(dg14Bytes: ByteArray): Check {
+        val oids = SecurityInfoProtocols.of(dg14Bytes) ?: return unsupported(CheckId.CHIP_AUTHENTICATION, "DG14")
+        val announcedKey =
+            SecurityInfoProtocols.chipAuthenticationKey(oids)
+                ?: return check(CheckId.CHIP_AUTHENTICATION, CheckStatus.NOT_AVAILABLE)
+        return unsupported(CheckId.CHIP_AUTHENTICATION, announcedKey)
+    }
 
     /** Active Authentication : challenge de 8 octets tiré de [random], réponse vérifiée par le lot B. */
     fun activeAuthentication(
