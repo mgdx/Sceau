@@ -1,5 +1,6 @@
 package io.github.mgdx.sceau
 
+import android.content.Intent
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.nfc.tech.IsoDep
@@ -28,6 +29,11 @@ class MainActivity : ComponentActivity() {
     private var nfcAdapter: NfcAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Activité exportée (lanceur) : aucune autre application ne doit pouvoir choisir l'écran
+        // d'ouverture par les extras de deep link que Navigation lit dans l'intent au premier
+        // setGraph (audit V27). Sceau n'attend rien de son intent : il est remplacé, avant
+        // la composition, par celui du lanceur, sans extras.
+        intent = launcherIntent()
         super.onCreate(savedInstanceState)
         // FLAG_SECURE sur toute l'activité, avant le premier dessin : l'accueil affiche le CAN
         // et la MRZ saisis, que ni l'aperçu du multitâche (écrit sur disque par le système) ni
@@ -61,6 +67,16 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    /** `singleTop` : un nouvel intent extérieur est neutralisé de la même façon (audit V27). */
+    override fun onNewIntent(intent: Intent) {
+        val launcher = launcherIntent()
+        setIntent(launcher)
+        super.onNewIntent(launcher)
+    }
+
+    private fun launcherIntent(): Intent =
+        Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER).setClass(this, MainActivity::class.java)
 
     override fun onPause() {
         nfcAdapter?.disableReaderMode(this)
