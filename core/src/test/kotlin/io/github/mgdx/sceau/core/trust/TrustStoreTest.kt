@@ -53,13 +53,14 @@ class TrustStoreTest {
         val info = store.embeddedMasterList
 
         assertNotNull(info)
-        assertEquals(Instant.parse("2026-05-28T06:28:45Z"), info!!.signingTime)
-        assertEquals(588, info.certificateCount)
+        assertEquals(Instant.parse("2026-08-19T08:28:54Z"), info!!.signingTime)
+        assertEquals(608, info.certificateCount)
         assertTrue(info.signerSubject.contains("CN=CSCA Master List Signer"))
         val embedded = store.anchors.filter { it.source == TrustSource.EMBEDDED_MASTER_LIST }
-        // 588 certificats, dont 3 déjà fournis par l'ANTS (qui garde la priorité).
-        assertEquals(585, embedded.size)
-        assertEquals(597, store.anchors.size)
+        // 608 certificats, dont 3 déjà fournis par l'ANTS et 2 publiés par la Grèce (CSCAeRP-HELLAS
+        // 003 et son lien), qui gardent la priorité.
+        assertEquals(603, embedded.size)
+        assertEquals(615, store.anchors.size)
         val countries = embedded.map { it.country }.toSet()
         listOf("DE", "IT", "ES", "BE", "NL", "AT", "PL", "LU").forEach { assertTrue("CSCA $it attendu", it in countries) }
         assertTrue(store.findBySubject(X500Principal("CN=csca-germany, OU=bsi, O=bund, C=DE")).isNotEmpty())

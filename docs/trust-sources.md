@@ -12,6 +12,11 @@ indique si Sceau peut l'embarquer dans un APK libre (GPLv3, F-Droid).
   Depuis le 2026-09-29, les 7 certificats valides de statut A (GB 2026 et son lien, GR titres de
   séjour 003 et son lien, GE n° 5 et n° 6, lien eTravel LU) sont embarqués (décision D26) : les
   chiffres de gain ci-dessous restent calculés sur le magasin du 2026-09-25.
+- **Revérification du 2026-10-06** (release 0.9) : la Master List BSI embarquée est remplacée par
+  celle signée le 2026-08-19 (608 certificats, 117 émetteurs ; détail dans `docs/trust-store.md`,
+  « Historique »). Les sources nationales embarquées (GB, GR, GE, LU) et les bascules annoncées
+  (DK, NO, KW) ont été revues à cette date ; les fiches concernées le signalent. Les autres fiches
+  et les chiffres de gain ne sont pas recalculés.
 - **Méthode** : téléchargement uniquement depuis des domaines gouvernementaux ou institutionnels.
   Des agrégateurs tiers ont servi seulement à trouver des URL. Aucun captcha, aucun pare-feu
   applicatif et aucune condition d'utilisation n'ont été contournés.
@@ -75,7 +80,7 @@ C'est pourquoi une Master List sans aucune mention est classée B, et non A2.
 
 | ML | Page officielle | Fichier | Signée le | Certificats / émetteurs | Nouveaux valides | Signataire → CSCA du pays (empreinte publiée par l'État) | Empreinte publiée du fichier | Statut |
 |---|---|---|---|---|---|---|---|---|
-| **DE** (BSI) | <https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/ElekAusweise/CSCA/GermanMasterList.html> | <https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/ElekAusweise/CSCA/GermanMasterList.zip?__blob=publicationFile&v=108> (ZIP → `.ml` CMS) | 2026-05-28 | 588 / 112 | 0 (déjà embarquée) | `CN=CSCA Master List Signer`, serialNumber=0039 → csca-germany, SHA-256 `2084aed7…ada8` (publiée, concordante) | aucune | A\* |
+| **DE** (BSI) | <https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/ElekAusweise/CSCA/GermanMasterList.html> | <https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/ElekAusweise/CSCA/GermanMasterList.zip?__blob=publicationFile&v=109> (ZIP → `.ml` CMS) ; au 2026-09-25, `v=108`, signée le 2026-05-28, 588 / 112 | 2026-08-19 (relevé le 2026-10-06) | 608 / 117 | 0 (déjà embarquée) | `CN=CSCA Master List Signer`, serialNumber=0039 → csca-germany, SHA-256 `2084aed7…ada8` (publiée, concordante) | aucune | A\* |
 | **IT** (ministère de l'Intérieur) | <https://csca-ita.interno.gov.it/html/csca.html> | <https://csca-ita.interno.gov.it/certificatiCSCA/IT_MasterListCSCA.zip> (ZIP → `.ml`) | 2026-09-07 | 670 / 136 | **96** | `CN=MasterListSigner`, serialNumber=004 → CSCA05 « Italian Country Signer CA », SHA-1 `e8e99576…d263` (publiée, concordante) | aucune | B |
 | **SE** (Polismyndigheten) | <http://cert.polisen.se/CSCA/> | <http://cert.polisen.se/CSCA/SWE.ml> (**HTTP seulement**) | 2026-06-02 | 646 / 134 | 84 | `CN=Swedish Master List Signer` → « Swedish Country Signing CA v2 » (2024), SHA-1 `f7fd7b82…7fdb` (publiée, concordante) | SHA-1 `a2057b07…da55`, concordante | B |
 | **NL** (RvIG, NPKD) | <https://www.npkd.nl/masterlist.html> | <https://www.npkd.nl/files/ml/NL_MASTERLIST.mls> | 2026-07-23 | 411 / 129 (auto-signés seulement) | 39 | `CN=Masterlist Signer NL`, serialNumber=8 → CSCA NL serialNumber=7, SHA-256 `411356d2…1a24` (publiée, concordante) | SHA-1, SHA-256 et SHA-512 concordantes | B |
@@ -324,7 +329,8 @@ fichiers sont rangés dans `trust-catalog/<code pays>/`.
   <https://www.bsi.bund.de/EN/Themen/Oeffentliche-Verwaltung/Elektronische-Identitaeten/Public-Key-Infrastrukturen/CSCA/Root_Cert_Germany/Zertifikate_der_CSCA-PKI.html>
 - Fichiers : `csca-germany_10-2024_self_signed.zip` et `csca-germany_10-2024_link.zip`.
 - Empreintes : SHA-256 publiées, concordantes (`2084aed7…ada8` et `5f28cb69…20bd`). Les deux
-  certificats sont déjà dans le magasin.
+  certificats sont déjà dans le magasin. Inchangées au 2026-10-06 (le CSCA courant est toujours
+  csca-germany 10-2024).
 - Conditions : celles du BSI (section 2.2). Statut : **A\***.
 - Contact : csca-germany@bsi.bund.de, poststelle@bsi.bund.de
 
@@ -334,7 +340,10 @@ fichiers sont rangés dans `trust-catalog/<code pays>/`.
 - Empreintes : SHA-256 publiées, 9 sur 9 concordantes.
 - Certificats : actuel CSCA 2023, `84fbb2a1…8892`, déjà dans le magasin. Deux nouveaux, expirés
   (2006 et 2009).
-- Une bascule est annoncée pour septembre 2026 ; rien n'est publié au 2026-09-25.
+- Une bascule est annoncée pour septembre 2026 ; rien n'est publié au 2026-09-25. Au 2026-10-06,
+  la page annonce toujours la bascule pour septembre 2026 mais ne publie rien de nouveau (9
+  certificats, actuel CSCA 2023), et la ML BSI du 2026-08-19 n'apporte aucun certificat danois.
+  À revérifier avant la release suivante.
 - Conditions : aucune mention trouvée. Statut : **A2**. Contact : POL-forretningsejerskaber@politi.dk
   (adresse relevée dans le certificat).
 
@@ -396,6 +405,8 @@ fichiers sont rangés dans `trust-catalog/<code pays>/`.
 
   Ils ne sont dans aucune Master List. **La bascule du CSCA britannique est annoncée pour le
   26 septembre 2026.** Deux autres certificats nouveaux, de 2005, sont expirés.
+- Au 2026-10-06 : page inchangée (mêmes 14 certificats), GBR_2026 et son lien sont embarqués
+  (D26) et toujours absents de la ML BSI du 2026-08-19, qui a retiré GBR_2010 (expiré).
 - Conditions (pied de page) : « *All content is available under the Open Government Licence v3.0,
   except where otherwise stated © Crown copyright* ».
 - Statut : **A1**. Attribution à prévoir : « Contains public sector information licensed under the
@@ -426,8 +437,14 @@ fichiers sont rangés dans `trust-catalog/<code pays>/`.
 - Certificats : **nouveaux et valides** : CSCAeRP-HELLAS 003 (2026-05-27 → 2041-05-26),
   `8f01ced4c95d9ee5cc6915e1151432e18fa1615ad6d8e61bb6ea1af025368e3e`, et son lien
   `5bbdb09b12bc25f9373142409d9b52da806b764294baf4f028a2c13da15bdfc5`, en service depuis le
-  2026-06-19. Dans les ML, on ne les trouve que dans la ML CH.
-- Conditions : aucune mention. Statut : **A2**. Contact : csca@migration.gov.gr
+  2026-06-19. Dans les ML, on ne les trouve que dans la ML CH ; au 2026-10-06, ils figurent
+  aussi dans la ML BSI du 2026-08-19. Page inchangée à cette date, prochaine bascule annoncée
+  pour 2031.
+- Conditions : aucune mention au 2026-09-29. **Au 2026-10-06, le pied de page affiche « © 2026
+  All rights reserved »** : c'est la mention générique qui, selon la grille ci-dessus, classe une
+  source en B. Statut à réexaminer par le mainteneur ; les deux certificats sont désormais aussi
+  couverts par la ML BSI (A\*). Statut retenu jusqu'à décision : **A2**. Contact :
+  csca@migration.gov.gr
 
 **HR — Croatie** : aucune page officielle trouvée (recherches sur mup.gov.hr et akd.hr). Le magasin
 actuel contient 7 certificats croates. Statut : sans objet.
@@ -497,7 +514,9 @@ actuel contient 7 certificats croates. Statut : sans objet.
   etc. (13 fichiers).
 - Empreintes : aucune publiée.
 - Certificats : actuel « Grand Duchy of Luxembourg CSCA » 2023, `2985657f…9fa2`, déjà dans le
-  magasin. Nouveau et valide : le lien eTravel `5acb0c02…f95c`.
+  magasin. Nouveau et valide : le lien eTravel `5acb0c02…f95c`. Au 2026-10-06 : mêmes 13
+  certificats, rien de nouveau (la page sert aussi `ppkirca.cer` et `ppkiqca.cer`, CA « PPKI1 »
+  d'INCERT, qui ne sont pas des CSCA).
 - Conditions : aucune. Statut : **A2**. Contact : csca@incert.lu (adresse relevée dans le certificat).
 
 **LV — Lettonie, PMLP**
@@ -535,7 +554,8 @@ actuel contient 7 certificats croates. Statut : sans objet.
 - Fichier : `https://edit.politiet.no/globalassets/03-rad-og-forebygging/csca/csca_no.zip`, 7 DER.
 - Empreintes : SHA-1 publiée pour le CSCA 06 seulement, concordante.
 - Certificats : actuel CSCA_NO 06 (2022 → 2037), `4f8176db…27ba`, déjà dans le magasin. Trois
-  nouveaux, expirés. Prochaine bascule annoncée pour janvier 2027.
+  nouveaux, expirés. Prochaine bascule annoncée pour janvier 2027 (toujours annoncée ainsi au
+  2026-10-06, archive inchangée).
 - Conditions : aucune trouvée. Statut : **A2**. Contact : pki.eDocuments@politiet.no
 
 **PL — Pologne, ministère du Numérique**
@@ -655,7 +675,7 @@ IT.
 | RS Serbie | <https://crl.mup.gov.rs/CSCA.html> | `https://crl.mup.gov.rs/RS_CSCA_{1,4,25,53,78,101}.crt` | SHA-1, concordantes | 0 (actuel n° 101, 2024, déjà présent) | « © Министарство унутрашњих послова Републике Србије » | B | ca@mup.gov.rs |
 | BA Bosnie-Herzégovine | <https://www.iddeea.gov.ba/en/pki-system-for-digital-signing-of-travel-documents-and-e-ids/> | `…/wp-content/uploads/WEB/Dokumenti/CSCA_SertifikatBA.der`, `Link_SertifikatBA.der` | aucune | 0 | « Copyright 2026 © IDDEEA all rights reserved. » | B | iddeea@iddeea.gov.ba |
 | MK Macédoine du Nord | <https://mvr.gov.mk/mk-MK/uslugi/csca> | `https://mvr.gov.mk/csca/ZIPs/*.zip` | SHA-256 et SHA-1, concordantes | 0 | « Сите права задржани » (tous droits réservés) | B | csca-mk@moi.gov.mk |
-| GE Géorgie | <https://id.ge/en/tsp/csca/> | `https://id.ge/en/pki/GEO-CSCA-{1..6}.crt` | SHA-256, concordantes | **2** : n° 6 « G2 », actif (`277fcd17…de3c`, aussi dans les ML IT, SE et NL), et n° 5 (`2ef9e14c…c844`, dans aucune ML) | aucune mention | **A2** | online@sda.gov.ge |
+| GE Géorgie | <https://id.ge/en/tsp/csca/> | `https://id.ge/en/pki/GEO-CSCA-{1..6}.crt` | SHA-256, concordantes | **2** : n° 6 « G2 », actif (`277fcd17…de3c`, aussi dans les ML IT, SE et NL), et n° 5 (`2ef9e14c…c844`, dans aucune ML) ; inchangé au 2026-10-06 | aucune mention | **A2** | online@sda.gov.ge |
 | ME, AL, MD, UA, AM, AZ, TR, XK, BY, RU, KZ, UZ | non trouvées | — | — | via les ML seulement | — | — | — |
 
 ### 3.3 Hors d'Europe
@@ -664,7 +684,7 @@ IT.
 |---|---|---|---|---|---|---|---|
 | TW Taïwan | <https://www.boca.gov.tw/cp-243-4449-23912-2.html> | `https://www.boca.gov.tw/dl-4026-3f56bf17866c4ad8a9abee7dff57d84f.html` (CSCA 2024), etc. : 4 auto-signés et 2 liens | SHA-1 et SHA-256, 6 sur 6 concordantes | 0 | <https://www.boca.gov.tw/np-359-2.html> : « *provided under "Open Government Data License, version 1.0 (OGDL-Taiwan-1.0)" […] The users are granted a perpetual, worldwide, license […] the attribution shall be provided* » | **A1** | CSCA-TWN@boca.gov.tw |
 | MY Malaisie | <https://www.imi.gov.my/index.php/en/main-services/passport/the-malaysian-country-signing-ca-csca-en/> | `https://www.imi.gov.my/wp-content/uploads/2026/01/CurrentPublicKeyCert.der`, etc. (4) | SHA-256, 4 sur 4 concordantes | 0 | « Copyright © 2021 \| Immigration Department of Malaysia » ; aucune licence | B | pbh@imi.gov.my |
-| KW Koweït | <https://epp.moi.gov.kw/csca/> | `CSCAKuwait.cer`, `1May2021Link.cer`, `1April2016.cer` | SHA-1 du CSCA actuel, concordante | 1 lien (`e2ff8c3b…1d36`) | « جميع الحقوق محفوظة » (tous droits réservés) | B | csca-kuwait@moi.gov.kw |
+| KW Koweït | <https://epp.moi.gov.kw/csca/> | `CSCAKuwait.cer`, `1May2021Link.cer`, `1April2016.cer` | SHA-1 du CSCA actuel, concordante | 1 lien (`e2ff8c3b…1d36`) ; bascule annoncée pour mars 2026, toujours non publiée au 2026-10-06 (page modifiée pour la dernière fois le 2023-04-13) | « جميع الحقوق محفوظة » (tous droits réservés) | B | csca-kuwait@moi.gov.kw |
 | JP Japon | <https://www.mofa.go.jp/ca/pss/page23e_000598.html> | 403 (Akamai), rien n'a été téléchargé | publiées d'après les extraits | ? | non lues (le Government of Japan Standard Terms of Use v2.0, compatible CC BY 4.0, est probable mais non vérifié) | à déterminer | — |
 | AU Australie | <https://www.passports.gov.au/help/australian-country-signing-certificate-authority-csca> | connexion bloquée | SHA-1 du lien d'après les extraits | ? | CC BY 4.0 sur dfat.gov.au, application à passports.gov.au non vérifiée | à déterminer | csca-australia@dfat.gov.au |
 | IL Israël | <https://www.gov.il/en/departments/guides/israeli_passport_and_id_certificates> | 403 (Cloudflare) | ? | ? | non lues | à déterminer | — |
@@ -731,7 +751,9 @@ absents du magasin, avec pour chacun le meilleur statut disponible.
 Angola, République dominicaine, Égypte, Éthiopie, Ghana, Gambie, Indonésie, Iran, Jordanie,
 Kirghizstan, Saint-Christophe-et-Niévès, Corée du Nord, Kazakhstan, Mozambique, Nigéria, Pakistan,
 Palestine, Soudan, Sierra Leone, Sénégal, Syrie, Togo, Ordre de Malte (XO) et Yémen. Deux autres,
-Maldives et « United Nations CSCA » 2012, sont seulement dans la ML ES et expirés.
+Maldives et « United Nations CSCA » 2012, sont seulement dans la ML ES et expirés. Depuis la ML BSI
+du 2026-08-19 (embarquée le 2026-10-06), cinq d'entre eux sont couverts : Angola,
+Indonésie, Saint-Christophe-et-Niévès, Mozambique et Togo.
 
 **Certificats valides qui ne figurent dans aucune Master List** (source nationale seulement) :
 - GB 2026 et son lien (A1) ;
@@ -747,8 +769,9 @@ statut) est dans `_notes/inventory.tsv` du catalogue. On le régénère avec `py
 
 ## 5. Procédure de mise à jour
 
-À faire avant chaque release, et dès qu'une bascule est annoncée (GB le 2026-09-26, DK en
-septembre 2026, NO en janvier 2027, KW annoncée pour mars 2026 mais toujours pas publiée).
+À faire avant chaque release, et dès qu'une bascule est annoncée (GB le 2026-09-26, déjà
+embarquée ; DK en septembre 2026, non publiée au 2026-10-06 ; NO en janvier 2027 ; KW annoncée
+pour mars 2026, non publiée au 2026-10-06).
 
 1. **Master Lists embarquées** :
    - retélécharger le fichier depuis l'URL officielle de la section 2 ;
