@@ -51,6 +51,10 @@
         <item quantity="other">Master List u importua: %1$d certifikata.</item>
     </plurals>
     <string name="trust_import_invalid">Ky skedar nuk është Master List e vlefshme: format i palexueshëm ose nënshkrim i pasaktë (%1$s).</string>
+    <plurals name="trust_import_master_list_too_many_certificates">
+        <item quantity="one">Master List u refuzua: përmban tepër certifikata (të shumtën %1$d).</item>
+        <item quantity="other">Master List u refuzua: përmban tepër certifikata (të shumtën %1$d).</item>
+    </plurals>
     <string name="trust_import_too_large">Skedari u refuzua: i kalon 20 MB.</string>
     <string name="trust_import_read_error">Ky skedar nuk mund të lexohej.</string>
     <string name="trust_import_write_error">Master List nuk mund të ruhej.</string>

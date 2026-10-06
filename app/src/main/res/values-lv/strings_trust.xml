@@ -54,6 +54,11 @@
         <item quantity="other">Master List importēta: %1$d sertifikāti.</item>
     </plurals>
     <string name="trust_import_invalid">Šis fails nav derīga Master List: nenolasāms formāts vai nepareizs paraksts (%1$s).</string>
+    <plurals name="trust_import_master_list_too_many_certificates">
+        <item quantity="zero">Master List noraidīta: tajā ir pārāk daudz sertifikātu (ne vairāk kā %1$d).</item>
+        <item quantity="one">Master List noraidīta: tajā ir pārāk daudz sertifikātu (ne vairāk kā %1$d).</item>
+        <item quantity="other">Master List noraidīta: tajā ir pārāk daudz sertifikātu (ne vairāk kā %1$d).</item>
+    </plurals>
     <string name="trust_import_too_large">Fails noraidīts: tas pārsniedz 20 MB.</string>
     <string name="trust_import_read_error">Neizdevās nolasīt šo failu.</string>
     <string name="trust_import_write_error">Neizdevās saglabāt Master List.</string>

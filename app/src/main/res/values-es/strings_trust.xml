@@ -54,6 +54,11 @@
         <item quantity="other">Master List importada: %1$d certificados.</item>
     </plurals>
     <string name="trust_import_invalid">Este archivo no es una Master List válida: formato ilegible o firma incorrecta (%1$s).</string>
+    <plurals name="trust_import_master_list_too_many_certificates">
+        <item quantity="one">Master List rechazada: contiene demasiados certificados (%1$d como máximo).</item>
+        <item quantity="many">Master List rechazada: contiene demasiados certificados (%1$d como máximo).</item>
+        <item quantity="other">Master List rechazada: contiene demasiados certificados (%1$d como máximo).</item>
+    </plurals>
     <string name="trust_import_too_large">Archivo rechazado: supera los 20 MB.</string>
     <string name="trust_import_read_error">No se ha podido leer este archivo.</string>
     <string name="trust_import_write_error">No se ha podido guardar la Master List.</string>

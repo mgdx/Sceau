@@ -48,6 +48,9 @@
         <item quantity="other">已匯入 Master List：%1$d 個憑證。</item>
     </plurals>
     <string name="trust_import_invalid">這個檔案不是有效的 Master List：格式無法辨識或簽章不正確（%1$s）。</string>
+    <plurals name="trust_import_master_list_too_many_certificates">
+        <item quantity="other">Master List 遭拒：其中的憑證過多（最多 %1$d 個）。</item>
+    </plurals>
     <string name="trust_import_too_large">檔案遭拒：超過 20 MB。</string>
     <string name="trust_import_read_error">無法讀取這個檔案。</string>
     <string name="trust_import_write_error">無法儲存 Master List。</string>

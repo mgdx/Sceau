@@ -57,6 +57,12 @@
         <item quantity="other">Seznam Master List importován: %1$d certifikátů.</item>
     </plurals>
     <string name="trust_import_invalid">Tento soubor není platný seznam Master List: nečitelný formát nebo neplatný podpis (%1$s).</string>
+    <plurals name="trust_import_master_list_too_many_certificates">
+        <item quantity="one">Seznam Master List odmítnut: obsahuje příliš mnoho certifikátů (nejvýše %1$d).</item>
+        <item quantity="few">Seznam Master List odmítnut: obsahuje příliš mnoho certifikátů (nejvýše %1$d).</item>
+        <item quantity="many">Seznam Master List odmítnut: obsahuje příliš mnoho certifikátů (nejvýše %1$d).</item>
+        <item quantity="other">Seznam Master List odmítnut: obsahuje příliš mnoho certifikátů (nejvýše %1$d).</item>
+    </plurals>
     <string name="trust_import_too_large">Soubor odmítnut: je větší než 20 MB.</string>
     <string name="trust_import_read_error">Tento soubor nelze přečíst.</string>
     <string name="trust_import_write_error">Seznam Master List nelze uložit.</string>

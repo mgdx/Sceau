@@ -51,6 +51,10 @@
         <item quantity="other">Master List importerad: %1$d certifikat.</item>
     </plurals>
     <string name="trust_import_invalid">Filen är ingen giltig Master List: oläsligt format eller felaktig signatur (%1$s).</string>
+    <plurals name="trust_import_master_list_too_many_certificates">
+        <item quantity="one">Master List avvisades: den innehåller för många certifikat (högst %1$d).</item>
+        <item quantity="other">Master List avvisades: den innehåller för många certifikat (högst %1$d).</item>
+    </plurals>
     <string name="trust_import_too_large">Filen avvisades: den är större än 20 MB.</string>
     <string name="trust_import_read_error">Det gick inte att läsa filen.</string>
     <string name="trust_import_write_error">Det gick inte att spara Master List.</string>

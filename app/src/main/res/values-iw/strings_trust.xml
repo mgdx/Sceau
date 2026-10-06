@@ -54,6 +54,11 @@
         <item quantity="other">רשימת ה-Master List יובאה: %1$d תעודות.</item>
     </plurals>
     <string name="trust_import_invalid">הקובץ הזה אינו Master List תקינה: הפורמט אינו קריא או שהחתימה שגויה (%1$s).</string>
+    <plurals name="trust_import_master_list_too_many_certificates">
+        <item quantity="one">ה-Master List נדחתה: היא מכילה יותר מדי תעודות (לכל היותר %1$d).</item>
+        <item quantity="two">ה-Master List נדחתה: היא מכילה יותר מדי תעודות (לכל היותר %1$d).</item>
+        <item quantity="other">ה-Master List נדחתה: היא מכילה יותר מדי תעודות (לכל היותר %1$d).</item>
+    </plurals>
     <string name="trust_import_too_large">הקובץ נדחה: הוא גדול מ-20 MB.</string>
     <string name="trust_import_read_error">לא ניתן לקרוא את הקובץ הזה.</string>
     <string name="trust_import_write_error">לא ניתן לשמור את רשימת ה-Master List.</string>

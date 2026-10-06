@@ -51,6 +51,10 @@
         <item quantity="other">Master List fluttur inn: %1$d vottorð.</item>
     </plurals>
     <string name="trust_import_invalid">Þessi skrá er ekki gildur Master List: ólæsilegt snið eða röng undirskrift (%1$s).</string>
+    <plurals name="trust_import_master_list_too_many_certificates">
+        <item quantity="one">Master List hafnað: hann inniheldur of mörg vottorð (í mesta lagi %1$d).</item>
+        <item quantity="other">Master List hafnað: hann inniheldur of mörg vottorð (í mesta lagi %1$d).</item>
+    </plurals>
     <string name="trust_import_too_large">Skránni hafnað: hún er stærri en 20 MB.</string>
     <string name="trust_import_read_error">Ekki tókst að lesa þessa skrá.</string>
     <string name="trust_import_write_error">Ekki tókst að vista Master List.</string>

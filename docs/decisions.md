@@ -265,6 +265,7 @@ Format : date, contexte, décision, justification, écart à la SPEC concerné.
   - L'analyse est **annulable** : `TrustStores.parseMasterList` appelle un point de contrôle entre les étapes coûteuses ; l'aperçu d'import (`TrustStoreRepository.preview`) s'interrompt quand l'utilisateur quitte l'écran.
   - La **liste des éléments importés ne dépend plus du magasin fusionné** : `TrustStoreRepository` ne tient plus son verrou des fichiers pendant la fusion (un second verrou évite seulement deux fusions simultanées), et un magasin fusionné pendant une suppression n'est pas mis en cache. L'écran affiche les éléments importés, supprimables à l'unité, pendant le chargement et après un échec.
   - Les nouveaux codes s'affichent dans le message existant « Ce fichier n'est pas une Master List valide (…) », sans nouvelle chaîne.
+  - **2026-10-06** : ce message générique (« format illisible ou signature incorrecte ») était faux pour une liste lisible et bien signée mais trop grosse. `TOO_MANY_CERTIFICATES` reçoit désormais un message dédié qui donne le plafond (`trust_import_master_list_too_many_certificates`, `plurals` dans les 45 langues, choisi par `invalidMasterListMessage` dans `TrustFormatting.kt`), distinct de la limite de 100 certificats importés seuls (D33). `NO_SIGNER` et `MULTIPLE_SIGNERS` gardent le message générique : une Master List ICAO a un seul signataire, c'est bien un format invalide.
 
 ## D23. Décodage JPEG 2000 dans un processus isolé
 

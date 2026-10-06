@@ -60,6 +60,13 @@
         <item quantity="other">Master List iompórtáilte: %1$d deimhniú.</item>
     </plurals>
     <string name="trust_import_invalid">Ní Master List bhailí é an comhad seo: formáid dholéite nó síniú neamhbhailí (%1$s).</string>
+    <plurals name="trust_import_master_list_too_many_certificates">
+        <item quantity="one">Diúltaíodh don Master List: tá an iomarca deimhnithe ann (%1$d ar a mhéad).</item>
+        <item quantity="two">Diúltaíodh don Master List: tá an iomarca deimhnithe ann (%1$d ar a mhéad).</item>
+        <item quantity="few">Diúltaíodh don Master List: tá an iomarca deimhnithe ann (%1$d ar a mhéad).</item>
+        <item quantity="many">Diúltaíodh don Master List: tá an iomarca deimhnithe ann (%1$d ar a mhéad).</item>
+        <item quantity="other">Diúltaíodh don Master List: tá an iomarca deimhnithe ann (%1$d ar a mhéad).</item>
+    </plurals>
     <string name="trust_import_too_large">Diúltaíodh don chomhad: tá sé níos mó ná 20 MB.</string>
     <string name="trust_import_read_error">Níorbh fhéidir an comhad seo a léamh.</string>
     <string name="trust_import_write_error">Níorbh fhéidir an Master List a shábháil.</string>

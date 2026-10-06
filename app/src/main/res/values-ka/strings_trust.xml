@@ -51,6 +51,10 @@
         <item quantity="other">Master List იმპორტირებულია: %1$d სერტიფიკატი.</item>
     </plurals>
     <string name="trust_import_invalid">ეს ფაილი არ არის ვალიდური Master List: ფორმატი ვერ იკითხება ან ხელმოწერა არასწორია (%1$s).</string>
+    <plurals name="trust_import_master_list_too_many_certificates">
+        <item quantity="one">Master List უარყოფილია: ის შეიცავს ზედმეტად ბევრ სერტიფიკატს (მაქსიმუმ %1$d).</item>
+        <item quantity="other">Master List უარყოფილია: ის შეიცავს ზედმეტად ბევრ სერტიფიკატს (მაქსიმუმ %1$d).</item>
+    </plurals>
     <string name="trust_import_too_large">ფაილი უარყოფილია: აღემატება 20 მბ-ს.</string>
     <string name="trust_import_read_error">ამ ფაილის წაკითხვა ვერ მოხერხდა.</string>
     <string name="trust_import_write_error">Master List-ის შენახვა ვერ მოხერხდა.</string>

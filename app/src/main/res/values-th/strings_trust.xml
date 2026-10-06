@@ -48,6 +48,9 @@
         <item quantity="other">นำเข้า Master List แล้ว: ใบรับรอง %1$d รายการ</item>
     </plurals>
     <string name="trust_import_invalid">ไฟล์นี้ไม่ใช่ Master List ที่ถูกต้อง: อ่านรูปแบบไม่ได้หรือลายมือชื่อไม่ถูกต้อง (%1$s)</string>
+    <plurals name="trust_import_master_list_too_many_certificates">
+        <item quantity="other">ปฏิเสธ Master List: มีใบรับรองมากเกินไป (ไม่เกิน %1$d รายการ)</item>
+    </plurals>
     <string name="trust_import_too_large">ปฏิเสธไฟล์: ขนาดเกิน 20 MB</string>
     <string name="trust_import_read_error">อ่านไฟล์นี้ไม่ได้</string>
     <string name="trust_import_write_error">บันทึก Master List ไม่ได้</string>

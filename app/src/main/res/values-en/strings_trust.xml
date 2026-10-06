@@ -51,6 +51,10 @@
         <item quantity="other">Master List imported: %1$d certificates.</item>
     </plurals>
     <string name="trust_import_invalid">This file isn’t a valid Master List: unreadable format or invalid signature (%1$s).</string>
+    <plurals name="trust_import_master_list_too_many_certificates">
+        <item quantity="one">Master List rejected: it contains too many certificates (%1$d at most).</item>
+        <item quantity="other">Master List rejected: it contains too many certificates (%1$d at most).</item>
+    </plurals>
     <string name="trust_import_too_large">File rejected: it is larger than 20 MB.</string>
     <string name="trust_import_read_error">Couldn’t read this file.</string>
     <string name="trust_import_write_error">Couldn’t save the Master List.</string>

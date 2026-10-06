@@ -57,6 +57,12 @@
         <item quantity="other">Master List importuotas: %1$d sertifikatų.</item>
     </plurals>
     <string name="trust_import_invalid">Šis failas nėra galiojantis Master List: neįskaitomas formatas arba neteisingas parašas (%1$s).</string>
+    <plurals name="trust_import_master_list_too_many_certificates">
+        <item quantity="one">Master List atmestas: jame per daug sertifikatų (ne daugiau kaip %1$d).</item>
+        <item quantity="few">Master List atmestas: jame per daug sertifikatų (ne daugiau kaip %1$d).</item>
+        <item quantity="many">Master List atmestas: jame per daug sertifikatų (ne daugiau kaip %1$d).</item>
+        <item quantity="other">Master List atmestas: jame per daug sertifikatų (ne daugiau kaip %1$d).</item>
+    </plurals>
     <string name="trust_import_too_large">Failas atmestas: jis didesnis nei 20 MB.</string>
     <string name="trust_import_read_error">Nepavyko nuskaityti šio failo.</string>
     <string name="trust_import_write_error">Nepavyko išsaugoti Master List.</string>

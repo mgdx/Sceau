@@ -51,6 +51,10 @@
         <item quantity="other">Master List е импортиран: %1$d сертификата.</item>
     </plurals>
     <string name="trust_import_invalid">Този файл не е валиден Master List: форматът е нечетлив или подписът е неправилен (%1$s).</string>
+    <plurals name="trust_import_master_list_too_many_certificates">
+        <item quantity="one">Master List е отказан: съдържа твърде много сертификати (най-много %1$d).</item>
+        <item quantity="other">Master List е отказан: съдържа твърде много сертификати (най-много %1$d).</item>
+    </plurals>
     <string name="trust_import_too_large">Файлът е отхвърлен: надвишава 20 МБ.</string>
     <string name="trust_import_read_error">Файлът не може да бъде прочетен.</string>
     <string name="trust_import_write_error">Master List не може да бъде запазен.</string>

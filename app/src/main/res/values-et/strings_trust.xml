@@ -51,6 +51,10 @@
         <item quantity="other">Master List imporditud: %1$d sertifikaati.</item>
     </plurals>
     <string name="trust_import_invalid">See fail ei ole kehtiv Master List: loetamatu vorming või vale allkiri (%1$s).</string>
+    <plurals name="trust_import_master_list_too_many_certificates">
+        <item quantity="one">Master List lükati tagasi: selles on liiga palju sertifikaate (kõige rohkem %1$d).</item>
+        <item quantity="other">Master List lükati tagasi: selles on liiga palju sertifikaate (kõige rohkem %1$d).</item>
+    </plurals>
     <string name="trust_import_too_large">Fail lükati tagasi: see on suurem kui 20 MB.</string>
     <string name="trust_import_read_error">Seda faili ei õnnestunud lugeda.</string>
     <string name="trust_import_write_error">Master Listi ei õnnestunud salvestada.</string>

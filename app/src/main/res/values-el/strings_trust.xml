@@ -51,6 +51,10 @@
         <item quantity="other">Η Master List εισήχθη: %1$d πιστοποιητικά.</item>
     </plurals>
     <string name="trust_import_invalid">Αυτό το αρχείο δεν είναι έγκυρη Master List: μη αναγνώσιμη μορφή ή εσφαλμένη υπογραφή (%1$s).</string>
+    <plurals name="trust_import_master_list_too_many_certificates">
+        <item quantity="one">Η Master List απορρίφθηκε: περιέχει πάρα πολλά πιστοποιητικά (έως %1$d).</item>
+        <item quantity="other">Η Master List απορρίφθηκε: περιέχει πάρα πολλά πιστοποιητικά (έως %1$d).</item>
+    </plurals>
     <string name="trust_import_too_large">Το αρχείο απορρίφθηκε: υπερβαίνει τα 20 MB.</string>
     <string name="trust_import_read_error">Δεν ήταν δυνατή η ανάγνωση αυτού του αρχείου.</string>
     <string name="trust_import_write_error">Δεν ήταν δυνατή η αποθήκευση της Master List.</string>

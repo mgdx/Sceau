@@ -57,6 +57,12 @@
         <item quantity="other">Master List импортирован: %1$d сертификата.</item>
     </plurals>
     <string name="trust_import_invalid">Этот файл не является действительным Master List: формат не распознан или подпись неверна (%1$s).</string>
+    <plurals name="trust_import_master_list_too_many_certificates">
+        <item quantity="one">Master List отклонен: он содержит слишком много сертификатов (не более %1$d).</item>
+        <item quantity="few">Master List отклонен: он содержит слишком много сертификатов (не более %1$d).</item>
+        <item quantity="many">Master List отклонен: он содержит слишком много сертификатов (не более %1$d).</item>
+        <item quantity="other">Master List отклонен: он содержит слишком много сертификатов (не более %1$d).</item>
+    </plurals>
     <string name="trust_import_too_large">Файл отклонен: его размер превышает 20 МБ.</string>
     <string name="trust_import_read_error">Не удалось прочитать файл.</string>
     <string name="trust_import_write_error">Не удалось сохранить Master List.</string>

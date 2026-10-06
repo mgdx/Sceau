@@ -51,6 +51,10 @@
         <item quantity="other">Master List geïmporteerd: %1$d certificaten.</item>
     </plurals>
     <string name="trust_import_invalid">Dit bestand is geen geldige Master List: onleesbare indeling of onjuiste handtekening (%1$s).</string>
+    <plurals name="trust_import_master_list_too_many_certificates">
+        <item quantity="one">Master List geweigerd: deze bevat te veel certificaten (maximaal %1$d).</item>
+        <item quantity="other">Master List geweigerd: deze bevat te veel certificaten (maximaal %1$d).</item>
+    </plurals>
     <string name="trust_import_too_large">Bestand geweigerd: het is groter dan 20 MB.</string>
     <string name="trust_import_read_error">Kan dit bestand niet lezen.</string>
     <string name="trust_import_write_error">Kan de Master List niet opslaan.</string>

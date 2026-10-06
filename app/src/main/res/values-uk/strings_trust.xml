@@ -57,6 +57,12 @@
         <item quantity="other">Master List імпортовано: %1$d сертифіката.</item>
     </plurals>
     <string name="trust_import_invalid">Цей файл не є дійсним Master List: нечитабельний формат або неправильний підпис (%1$s).</string>
+    <plurals name="trust_import_master_list_too_many_certificates">
+        <item quantity="one">Master List відхилено: він містить забагато сертифікатів (щонайбільше %1$d).</item>
+        <item quantity="few">Master List відхилено: він містить забагато сертифікатів (щонайбільше %1$d).</item>
+        <item quantity="many">Master List відхилено: він містить забагато сертифікатів (щонайбільше %1$d).</item>
+        <item quantity="other">Master List відхилено: він містить забагато сертифікатів (щонайбільше %1$d).</item>
+    </plurals>
     <string name="trust_import_too_large">Файл відхилено: він перевищує 20 МБ.</string>
     <string name="trust_import_read_error">Не вдалося прочитати цей файл.</string>
     <string name="trust_import_write_error">Не вдалося зберегти Master List.</string>
