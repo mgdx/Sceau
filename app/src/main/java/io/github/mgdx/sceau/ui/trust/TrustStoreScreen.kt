@@ -116,10 +116,7 @@ private sealed interface StoreUi {
     class Loaded(
         val groups: List<CountryGroup>,
         val total: Int,
-        val imported: List<ImportedItem>,
-    ) : StoreUi {
-        val hasImported: Boolean get() = imported.isNotEmpty()
-    }
+    ) : StoreUi
 }
 
 /** Écran « Magasin de confiance » (SPEC §5.4). */
@@ -137,6 +134,10 @@ fun TrustStoreScreen(
 
     var reloadKey by remember { mutableIntStateOf(0) }
     var store by remember { mutableStateOf<StoreUi>(StoreUi.Loading) }
+
+    // Chargés à part du magasin fusionné (audit V22) : un import qui bloque ou fait échouer le
+    // chargement reste supprimable.
+    var imported by remember { mutableStateOf<List<ImportedItem>>(emptyList()) }
     var busy by remember { mutableStateOf(false) }
     var pending by remember { mutableStateOf<ImportPreview?>(null) }
     var confirmDelete by remember { mutableStateOf(false) }
@@ -144,18 +145,27 @@ fun TrustStoreScreen(
     val expanded = remember { mutableStateMapOf<String, Boolean>() }
     var query by rememberSaveable { mutableStateOf("") }
 
+    LaunchedEffect(reloadKey) {
+        imported =
+            try {
+                repository.importedItems()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                emptyList()
+            }
+    }
+
     LaunchedEffect(reloadKey, locale) {
         store = StoreUi.Loading
         store =
             try {
                 val trustStore = repository.get()
-                val imported = repository.importedItems()
                 withContext(Dispatchers.Default) {
                     val anchors = trustStore.anchors
                     StoreUi.Loaded(
                         groups = groupByCountry(anchors, locale),
                         total = anchors.size,
-                        imported = imported,
                     )
                 }
             } catch (e: CancellationException) {
@@ -224,11 +234,11 @@ fun TrustStoreScreen(
     ) { padding ->
         when (val current = store) {
             StoreUi.Loading -> {
-                CenteredMessage(stringResource(R.string.trust_loading), Modifier.padding(padding), progress = true)
+                PendingStore(stringResource(R.string.trust_loading), imported, busy, { toRemove = it }, padding, progress = true)
             }
 
             StoreUi.Failed -> {
-                CenteredMessage(stringResource(R.string.trust_load_error), Modifier.padding(padding)) {
+                PendingStore(stringResource(R.string.trust_load_error), imported, busy, { toRemove = it }, padding) {
                     Button(onClick = { reloadKey++ }) { Text(stringResource(R.string.trust_retry)) }
                 }
             }
@@ -236,6 +246,7 @@ fun TrustStoreScreen(
             is StoreUi.Loaded -> {
                 StoreList(
                     store = current,
+                    imported = imported,
                     query = query,
                     onQueryChange = { query = it },
                     busy = busy,
@@ -456,9 +467,45 @@ private fun CenteredMessage(
     }
 }
 
+/**
+ * Magasin en cours de chargement ou en échec : [message], puis les éléments importés, qui restent
+ * supprimables à l'unité (audit V22). Sans élément importé, le message seul, centré.
+ */
+@Composable
+private fun PendingStore(
+    message: String,
+    imported: List<ImportedItem>,
+    busy: Boolean,
+    onRemove: (ImportedItem) -> Unit,
+    contentPadding: PaddingValues,
+    progress: Boolean = false,
+    action: @Composable () -> Unit = {},
+) {
+    if (imported.isEmpty()) {
+        CenteredMessage(message, Modifier.padding(contentPadding), progress, action)
+        return
+    }
+    val formatDate = rememberDateFormatter()
+    LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = contentPadding) {
+        item(key = "pending") {
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                if (progress) CircularProgressIndicator()
+                Text(message, style = MaterialTheme.typography.bodyLarge)
+                action()
+            }
+        }
+        importedItems(imported, busy, formatDate, onRemove)
+    }
+}
+
 @Composable
 private fun StoreList(
     store: StoreUi.Loaded,
+    imported: List<ImportedItem>,
     query: String,
     onQueryChange: (String) -> Unit,
     busy: Boolean,
@@ -485,9 +532,9 @@ private fun StoreList(
             // Pendant une recherche, les résultats viennent juste sous le champ.
             if (!searching) {
                 item(key = "header") {
-                    StoreHeader(store, busy, onImport, onDelete)
+                    StoreHeader(store, imported.isNotEmpty(), busy, onImport, onDelete)
                 }
-                importedItems(store.imported, busy, formatDate, onRemove)
+                importedItems(imported, busy, formatDate, onRemove)
             }
             if (groups.isEmpty()) {
                 item(key = "empty") {
@@ -554,6 +601,7 @@ private fun LazyListScope.countryItems(
 @Composable
 private fun StoreHeader(
     store: StoreUi.Loaded,
+    hasImported: Boolean,
     busy: Boolean,
     onImport: () -> Unit,
     onDelete: () -> Unit,
@@ -570,7 +618,7 @@ private fun StoreHeader(
         Button(onClick = onImport, enabled = !busy, modifier = Modifier.fillMaxWidth()) {
             Text(stringResource(R.string.trust_import))
         }
-        OutlinedButton(onClick = onDelete, enabled = !busy && store.hasImported, modifier = Modifier.fillMaxWidth()) {
+        OutlinedButton(onClick = onDelete, enabled = !busy && hasImported, modifier = Modifier.fillMaxWidth()) {
             Icon(SceauIcons.Delete, contentDescription = null)
             Spacer(Modifier.width(8.dp))
             Text(stringResource(R.string.trust_delete_imported))

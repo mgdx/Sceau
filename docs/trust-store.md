@@ -183,10 +183,18 @@ Codes de rejet (`InvalidMasterListException.code`, sans donnée personnelle) :
 | `BAD_CONTENT_TYPE` | Le contenu signé n'est pas de type `id-icao-cscaMasterList` (2.23.136.1.1.2). |
 | `BAD_CONTENT` | Contenu absent (signature détachée) ou structure `CscaMasterList` invalide. |
 | `NO_SIGNER` | Aucun signataire, ou certificat signataire absent du CMS. |
+| `MULTIPLE_SIGNERS` | Plus d'un SignerInfo : une Master List n'a qu'un signataire (audit V22). |
+| `TOO_MANY_CERTIFICATES` | Plus de 2 000 certificats dans la liste ou dans le bloc `certificates` du CMS (audit V22, D22). |
 | `BAD_SIGNATURE` | La signature CMS ne se vérifie pas. |
 | `SIGNER_NOT_VALID` | Le certificat signataire n'était pas valide à la date de signature déclarée. |
 | `UNSUPPORTED_ALGORITHM` | Algorithme de signature inconnu de BouncyCastle. |
 | `UNTRUSTED_SIGNER` | Liste embarquée seulement : signataire non émis par un certificat épinglé. |
+
+Le coût d'analyse est borné quel que soit le fichier (D22, audit V22) : un seul signataire, et
+au plus 2 000 certificats (`TrustStores.MAX_MASTER_LIST_CERTIFICATES`), comptés avant d'être
+lus. La plus grosse Master List réelle relevée (Suède) en compte 646, celle du BSI embarquée 608 ;
+la liste embarquée passe par le même contrôle. L'analyse de l'aperçu s'interrompt si
+l'utilisateur quitte l'écran.
 
 Un certificat illisible à l'intérieur d'une liste valide est ignoré et ne fait pas rejeter la
 liste. Les certificats sont lus par BouncyCastle, qui accepte les clés EC à paramètres de
@@ -251,6 +259,9 @@ supprime à l'unité, après confirmation ; le bouton « Supprimer les certifica
 toujours tout, Master Lists et certificats. Un fichier importé devenu illisible reste listé pour
 pouvoir être supprimé. L'identifiant d'un élément est son nom de fichier ; la suppression refuse
 tout identifiant qui n'est pas `<64 chiffres hexadécimaux minuscules>.ml` ou `.der`.
+
+La liste des éléments importés est lue indépendamment du magasin fusionné (audit V22) : elle
+s'affiche, et chaque élément se supprime, pendant le chargement du magasin comme après un échec.
 
 ## Procédure de mise à jour (à chaque release)
 

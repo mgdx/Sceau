@@ -16,6 +16,11 @@ import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo
 import org.bouncycastle.cert.X509CertificateHolder
+import org.bouncycastle.cms.CMSProcessableByteArray
+import org.bouncycastle.cms.CMSSignedDataGenerator
+import org.bouncycastle.cms.jcajce.JcaSignerInfoGeneratorBuilder
+import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder
+import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -23,6 +28,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Test
 import java.math.BigInteger
+import java.util.concurrent.CancellationException
 
 class MasterListTest {
     private val fixture = TestMasterLists.Fixture()
@@ -114,6 +120,84 @@ class MasterListTest {
 
         assertEquals(1, list.certificates.size)
         assertEquals(1, list.info.certificateCount)
+    }
+
+    /** Audit V22 : chaque SignerInfo parcourait tout le bloc `certificates` ; un seul est admis. */
+    @Test
+    fun masterListWithTwoSignersIsRejected() {
+        val secondKey = TestMasterLists.rsaKeyPair()
+        val secondSigner =
+            TestMasterLists.certificate(
+                subject = "C=ZZ,O=Test,CN=Second Master List Signer",
+                issuer = "C=ZZ,O=Test,CN=CSCA RSA",
+                subjectKey = SubjectPublicKeyInfo.getInstance(secondKey.public.encoded),
+                signingKey = fixture.rsaCscaKey,
+                ca = false,
+            )
+        val generator = CMSSignedDataGenerator()
+        val digests = JcaDigestCalculatorProviderBuilder().setProvider(TestMasterLists.provider).build()
+        listOf(fixture.signer to fixture.signerKey, secondSigner to secondKey).forEach { (certificate, key) ->
+            val contentSigner = JcaContentSignerBuilder("SHA256withRSA").setProvider(TestMasterLists.provider).build(key.private)
+            generator.addSignerInfoGenerator(JcaSignerInfoGeneratorBuilder(digests).build(contentSigner, certificate))
+            generator.addCertificate(certificate)
+        }
+        val bytes = generator.generate(CMSProcessableByteArray(TestMasterLists.CSCA_MASTER_LIST, fixture.content), true).encoded
+
+        assertRejected("MULTIPLE_SIGNERS", bytes)
+    }
+
+    /** Audit V22 : au-delà du plafond, la liste est refusée avant toute lecture de certificat. */
+    @Test
+    fun masterListAboveCertificateCapIsRejected() {
+        val content = contentWithFillers(TrustStores.MAX_MASTER_LIST_CERTIFICATES + 1)
+
+        assertRejected("TOO_MANY_CERTIFICATES", TestMasterLists.signedMasterList(content, fixture.signer, fixture.signerKey))
+    }
+
+    /** Exactement le plafond : acceptée (les éléments de remplissage, illisibles, sont ignorés). */
+    @Test
+    fun masterListAtCertificateCapIsAccepted() {
+        val content = contentWithFillers(TrustStores.MAX_MASTER_LIST_CERTIFICATES)
+        val list = TrustStores.parseMasterList(TestMasterLists.signedMasterList(content, fixture.signer, fixture.signerKey))
+
+        assertArrayEquals(fixture.rsaCsca.encoded, list.certificates.single().encoded)
+    }
+
+    /** Audit V22 : le bloc `certificates` du CMS est plafonné lui aussi. */
+    @Test
+    fun cmsCertificatesAboveCapAreRejected() {
+        val fillers = (0..TrustStores.MAX_MASTER_LIST_CERTIFICATES).map { ASN1Integer(it.toLong()) }
+
+        assertRejected("TOO_MANY_CERTIFICATES", rebuiltSignedData(certificates = DERSet(fillers.toTypedArray())))
+    }
+
+    /** La Master List réelle du BSI (608 certificats) reste acceptée à l'import, sous le plafond. */
+    @Test
+    fun bsiMasterListIsAcceptedAsImport() {
+        val bytes = checkNotNull(TrustStores::class.java.getResourceAsStream("/trust/de-bsi-master-list.ml")).use { it.readBytes() }
+        val list = TrustStores.parseMasterList(bytes)
+
+        assertEquals(608, list.info.certificateCount)
+        assertTrue(list.info.certificateCount < TrustStores.MAX_MASTER_LIST_CERTIFICATES)
+    }
+
+    /** Audit V22 : l'analyse est abandonnable, et l'abandon n'est pas déguisé en liste invalide. */
+    @Test
+    fun cancellationFromCheckpointPropagates() {
+        try {
+            TrustStores.parseMasterList(fixture.bytes) { throw CancellationException("test") }
+            fail("analyse non interrompue")
+        } catch (_: CancellationException) {
+            // attendu
+        }
+    }
+
+    /** Contenu `CscaMasterList` de [size] éléments : le CSCA RSA et des entiers de remplissage. */
+    private fun contentWithFillers(size: Int): ByteArray {
+        val elements = ASN1EncodableVector()
+        elements.add(fixture.rsaCsca.toASN1Structure())
+        for (i in 1 until size) elements.add(ASN1Integer(i.toLong()))
+        return DERSequence(arrayOf(ASN1Integer(0), DERSet(elements))).encoded
     }
 
     /**
