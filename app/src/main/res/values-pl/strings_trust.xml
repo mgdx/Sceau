@@ -57,6 +57,12 @@
         <item quantity="other">Zaimportowano Master List: %1$d certyfikatu.</item>
     </plurals>
     <string name="trust_import_invalid">Ten plik nie jest prawidłową Master List: nieczytelny format lub nieprawidłowy podpis (%1$s).</string>
+    <plurals name="trust_import_master_list_too_many_certificates">
+        <item quantity="one">Master List odrzucona: zawiera zbyt wiele certyfikatów (maksymalnie %1$d).</item>
+        <item quantity="few">Master List odrzucona: zawiera zbyt wiele certyfikatów (maksymalnie %1$d).</item>
+        <item quantity="many">Master List odrzucona: zawiera zbyt wiele certyfikatów (maksymalnie %1$d).</item>
+        <item quantity="other">Master List odrzucona: zawiera zbyt wiele certyfikatów (maksymalnie %1$d).</item>
+    </plurals>
     <string name="trust_import_too_large">Plik odrzucony: przekracza 20 MB.</string>
     <string name="trust_import_read_error">Nie udało się odczytać tego pliku.</string>
     <string name="trust_import_write_error">Nie udało się zapisać Master List.</string>

@@ -51,6 +51,10 @@
         <item quantity="other">Master List importeret: %1$d certifikater.</item>
     </plurals>
     <string name="trust_import_invalid">Denne fil er ikke en gyldig Master List: ulæseligt format eller forkert signatur (%1$s).</string>
+    <plurals name="trust_import_master_list_too_many_certificates">
+        <item quantity="one">Master List afvist: den indeholder for mange certifikater (højst %1$d).</item>
+        <item quantity="other">Master List afvist: den indeholder for mange certifikater (højst %1$d).</item>
+    </plurals>
     <string name="trust_import_too_large">Filen blev afvist: den er større end 20 MB.</string>
     <string name="trust_import_read_error">Filen kunne ikke læses.</string>
     <string name="trust_import_write_error">Master Listen kunne ikke gemmes.</string>

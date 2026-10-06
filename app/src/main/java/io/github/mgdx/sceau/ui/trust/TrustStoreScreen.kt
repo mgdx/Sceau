@@ -206,7 +206,7 @@ fun TrustStoreScreen(
                 } catch (_: FileTooLargeException) {
                     showMessage(resources.getString(R.string.trust_import_too_large))
                 } catch (e: InvalidMasterListException) {
-                    showMessage(resources.getString(R.string.trust_import_invalid, e.code))
+                    showMessage(invalidMasterListMessage(resources, e.code))
                 } catch (e: InvalidCertificateException) {
                     showMessage(resources.getString(R.string.trust_import_certificate_invalid, e.code))
                 } catch (_: UnrecognizedFileException) {
@@ -293,7 +293,7 @@ fun TrustStoreScreen(
                 } catch (e: ImportLimitException) {
                     showMessage(importLimitMessage(resources, e.decision))
                 } catch (e: InvalidMasterListException) {
-                    showMessage(resources.getString(R.string.trust_import_invalid, e.code))
+                    showMessage(invalidMasterListMessage(resources, e.code))
                 } catch (e: InvalidCertificateException) {
                     showMessage(resources.getString(R.string.trust_import_certificate_invalid, e.code))
                 } catch (_: Exception) {

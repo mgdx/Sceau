@@ -51,6 +51,10 @@
         <item quantity="other">Master List tuotu: %1$d varmennetta.</item>
     </plurals>
     <string name="trust_import_invalid">Tiedosto ei ole kelvollinen Master List: muotoa ei voi lukea tai allekirjoitus on virheellinen (%1$s).</string>
+    <plurals name="trust_import_master_list_too_many_certificates">
+        <item quantity="one">Master List hylättiin: siinä on liikaa varmenteita (enintään %1$d).</item>
+        <item quantity="other">Master List hylättiin: siinä on liikaa varmenteita (enintään %1$d).</item>
+    </plurals>
     <string name="trust_import_too_large">Tiedosto hylättiin: se on yli 20 Mt.</string>
     <string name="trust_import_read_error">Tiedoston lukeminen epäonnistui.</string>
     <string name="trust_import_write_error">Master Listin tallentaminen epäonnistui.</string>

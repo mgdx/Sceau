@@ -1,5 +1,8 @@
 package io.github.mgdx.sceau.ui.trust
 
+import android.content.res.Resources
+import io.github.mgdx.sceau.R
+import io.github.mgdx.sceau.core.trust.TrustStores
 import io.github.mgdx.sceau.ui.result.displaySafe
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
@@ -55,3 +58,25 @@ fun displaySubject(subject: String): String = displaySafe(subject, SUBJECT_MAX_L
 
 /** Code pays lu dans un certificat (attribut C), assaini quand il n'est pas reconnu (audit V23). */
 fun displayCountryCode(code: String): String = displaySafe(code, COUNTRY_CODE_MAX_LENGTH)
+
+/** Code de `MasterListParser` pour une Master List de plus de [TrustStores.MAX_MASTER_LIST_CERTIFICATES] certificats. */
+internal const val MASTER_LIST_TOO_MANY_CERTIFICATES = "TOO_MANY_CERTIFICATES"
+
+/**
+ * Message d'une Master List refusée par `MasterListParser` (`InvalidMasterListException`). Une
+ * liste trop grosse (D22, audit V22) peut être lisible et bien signée : elle reçoit un message
+ * qui donne le plafond. Les autres codes gardent le message générique, code compris.
+ */
+fun invalidMasterListMessage(
+    resources: Resources,
+    code: String,
+): String =
+    if (code == MASTER_LIST_TOO_MANY_CERTIFICATES) {
+        resources.getQuantityString(
+            R.plurals.trust_import_master_list_too_many_certificates,
+            TrustStores.MAX_MASTER_LIST_CERTIFICATES,
+            TrustStores.MAX_MASTER_LIST_CERTIFICATES,
+        )
+    } else {
+        resources.getString(R.string.trust_import_invalid, code)
+    }

@@ -48,6 +48,9 @@
         <item quantity="other">Master List를 가져왔습니다(인증서 %1$d개).</item>
     </plurals>
     <string name="trust_import_invalid">유효한 Master List 파일이 아닙니다. 형식을 읽을 수 없거나 서명이 올바르지 않습니다(%1$s).</string>
+    <plurals name="trust_import_master_list_too_many_certificates">
+        <item quantity="other">Master List를 가져올 수 없습니다. 인증서가 너무 많습니다(최대 %1$d개).</item>
+    </plurals>
     <string name="trust_import_too_large">파일이 거부되었습니다. 20MB를 초과합니다.</string>
     <string name="trust_import_read_error">이 파일을 읽을 수 없습니다.</string>
     <string name="trust_import_write_error">Master List를 저장할 수 없습니다.</string>
