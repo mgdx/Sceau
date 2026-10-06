@@ -1,6 +1,6 @@
 # Sceau : lecteur et vérificateur de documents d'identité ICAO 9303
 
-Version du 2026-09-25, intègre les décisions D1 à D19 et l'audit de sécurité du 2026-09-25 (`docs/audit-securite-2026-09-25.md`) ; mise à jour au fil des décisions suivantes, renvoyées par leur numéro, en dernier le 2026-10-06 (D36, D38).
+Version du 2026-09-25, intègre les décisions D1 à D19 et l'audit de sécurité du 2026-09-25 (constats V1 à V16) ; mise à jour au fil des décisions suivantes, renvoyées par leur numéro, en dernier le 2026-10-06 (D36, D38).
 
 Ce document est la source de vérité du projet. Toute décision d'implémentation future qui s'en écarte doit être justifiée dans `docs/decisions.md` et validée. Les décisions D1 à D19, désormais intégrées ici, y restent pour l'historique.
 

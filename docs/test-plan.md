@@ -427,7 +427,7 @@ Pour revenir à un premier lancement : `adb shell pm clear $PKG` (efface aussi l
 
 ### TP-40 NFC coupé puis rallumé depuis le volet rapide, sans quitter l'application
 
-- **Préconditions** : NFC activé ; application au premier plan sur l'accueil. Le volet rapide (glisser depuis le haut de l'écran) ne met pas l'activité en pause : c'est le cas que `adb shell svc nfc` et TP-02 (retour depuis les réglages) ne couvrent pas (commit `82439a6`).
+- **Préconditions** : NFC activé ; application au premier plan sur l'accueil. Le volet rapide (glisser depuis le haut de l'écran) ne met pas l'activité en pause : c'est le cas que `adb shell svc nfc` et TP-02 (retour depuis les réglages) ne couvrent pas (commit `f6cd14b`).
 - **Étapes** :
   1. Sur l'accueil, couper le NFC depuis le volet rapide, refermer le volet.
   2. Rallumer le NFC depuis le volet rapide, refermer le volet ; saisir un CAN valide, toucher « Lire » et poser une CNIe.

@@ -16,3 +16,6 @@
 # Clés de signature : jamais dans le dépôt (docs/release.md)
 *.jks
 *.keystore
+
+# Rapports d'audit et de revue datés : gardés hors du dépôt
+/rapports/
