@@ -70,7 +70,7 @@ uses no Google service.
   - shipped with the application: the 5 French CSCA certificates published by
     ANTS, 7 CSCA and link certificates published by their own state (United
     Kingdom, Greece, Georgia, Luxembourg), and the German Master List published
-    by BSI, with 112 issuers: the European Union, the EEA, Switzerland, the
+    by BSI, with 117 issuers: the European Union, the EEA, Switzerland, the
     United Kingdom and other states;
   - listed by country, with a search by country;
   - import a Master List published by another state (Italy, Sweden…), or a

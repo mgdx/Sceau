@@ -80,7 +80,7 @@ Toolchain : JDK 17 pour la compilation, JDK 25 pour le démon Gradle.
 
 ## Commits
 
-Format : `type(portée): description`, en français, au présent, sans point final. Un commit = un changement cohérent.
+Format : `type(portée): description`, en anglais, à l'impératif, sans point final. Un commit = un changement cohérent.
 
 | Type | Usage |
 |---|---|
