@@ -94,7 +94,7 @@ Format : date, contexte, décision, justification, écart à la SPEC concerné.
 - **Justification** : un émetteur absent du magasin n'est pas une preuve de falsification (SPEC §7.4) ; une estimation ne peut pas fonder un échec, sous peine de déclarer faux un passeport de mineur authentique.
 - **Écart à la SPEC** : aucun sur le fond ; précise §5.3 et §6.1.
 
-## D7. Permission interne `DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`
+## D7. Permission interne `DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION` (retirée le 2026-10-06)
 
 - **Date** : 2026-09-25.
 - **Contexte** : SPEC §2 n'autorise que `android.permission.NFC`. Le manifeste fusionné contient en plus `io.github.mgdx.sceau.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`, ajoutée par androidx.core.
@@ -102,6 +102,7 @@ Format : date, contexte, décision, justification, écart à la SPEC concerné.
 - **Justification** : c'est une permission de niveau `signature`, déclarée et détenue par l'application elle-même, qui protège les récepteurs dynamiques non exportés ; elle est nécessaire à `ContextCompat.registerReceiver` sous l'API 33. Elle n'ouvre aucun accès au réseau ni à une donnée de l'utilisateur, et n'est pas présentée à l'utilisateur.
 - **Écart à la SPEC** : §2 (lettre de la règle « `android.permission.NFC` uniquement »), sans effet sur son objet.
 - **Mise à jour du 2026-10-06** : depuis le commit `f6cd14b`, Sceau n'enregistre plus aucun récepteur de diffusion (`nfc/NfcStatus.kt` relit l'état du NFC par sondage, plus aucun `registerReceiver` dans le code). La permission reste pourtant dans le manifeste fusionné : androidx.core la déclare dans son propre manifeste, que l'application s'en serve ou non. Constaté sur l'APK release universel de la version 0.9 (`aapt2 dump permissions` : `uses-permission android.permission.NFC`, `permission` et `uses-permission io.github.mgdx.sceau.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`, rien d'autre). Elle n'est donc plus nécessaire à Sceau ; la retirer (`tools:node="remove"` dans `AndroidManifest.xml`) est possible mais n'est pas fait ici : une dépendance AndroidX qui appellerait `ContextCompat.registerReceiver` sous l'API 33 échouerait alors à l'exécution. Décision laissée à l'auteur, la justification ci-dessus (permission `signature`, sans accès) restant valable.
+- **Révision du 2026-10-06** : décision inversée, la permission est retirée du manifeste fusionné (`tools:node="remove"` sur la `<permission>` et la `<uses-permission>` dans `AndroidManifest.xml`). Aucune classe de l'APK release n'appelle `registerReceiver` (chaînes du dex de l'APK universel 0.9) : le risque décrit ci-dessus ne s'applique pas. Le manifeste ne demande plus que `android.permission.NFC`, conformément à la lettre de SPEC §2. À revérifier à chaque montée de version d'AndroidX (une dépendance qui se mettrait à appeler `ContextCompat.registerReceiver` sous l'API 33 lèverait une `SecurityException`) et sur appareil Android 8 à 12 (TP-01).
 
 ## D8. Règles lint désactivées ou ignorées
 

@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Jalons atteints (SPEC §11) : Socle, Lecture, Vérification et l'essentiel des Finitions (DG11/DG12, écran Magasin de confiance et import, À propos, effacement mémoire, `FLAG_SECURE`, traductions en-US). La lecture réelle d'un passeport français a été validée sur Fairphone 3 le 2026-09-25. Jalon Publication en cours : première release publique **0.9** (`versionName = "0.9"`, `versionCode = 1`, tag `v0.9`), licence GPL-3.0-or-later, dépôt https://github.com/mgdx/Sceau, APK universel pour F-Droid et splits ABI pour les releases GitHub (D38). Procédure de release (contrôles, signature hors dépôt, assets, tag, F-Droid) : `docs/release.md`.
 
-`SPEC.md` est la source de vérité : lis-le en entier avant toute modification. Tout écart est consigné et justifié dans `docs/decisions.md` (D1 à D38 à ce jour). La documentation vit dans `docs/` : `architecture.md`, `protocol.md` (séquence ICAO réelle, délais, codes d'erreur), `trust-store.md`, `deviations.md` (déviations connues des émetteurs et limites par pays), `dependencies.md`, `test-plan.md`, `decisions.md`, `release.md`, `reproducible-builds.md`, `fdroid/` (brouillon de recette fdroiddata).
+`SPEC.md` est la source de vérité : lis-le en entier avant toute modification. Tout écart est consigné et justifié dans `docs/decisions.md` (D1 à D39 à ce jour). La documentation vit dans `docs/` : `architecture.md`, `protocol.md` (séquence ICAO réelle, délais, codes d'erreur), `trust-store.md`, `deviations.md` (déviations connues des émetteurs et limites par pays), `dependencies.md`, `test-plan.md`, `decisions.md`, `release.md`, `reproducible-builds.md`, `fdroid/` (brouillon de recette fdroiddata).
 
 ## Ce qu'est Sceau
 
@@ -70,7 +70,7 @@ JMRTD et SCUBA (`scuba-smartcards`, `scuba-sc-android` ; LGPL 2.1 ou ultérieure
 
 ## Contraintes non négociables
 
-- Manifeste : permission `android.permission.NFC` uniquement (plus la permission interne ajoutée par androidx.core, D7), aucune permission réseau, `android.hardware.nfc` en `required="false"`. minSdk 26.
+- Manifeste : permission `android.permission.NFC` uniquement (la permission interne ajoutée par androidx.core est retirée par `tools:node="remove"`, D7), aucune permission réseau, `android.hardware.nfc` en `required="false"`. minSdk 26.
 - Aucune donnée lue n'est écrite sur disque, en cache, en base ni en log, en debug comme en release. **Aucun journal, même temporaire pour déboguer** : ni `Log`, ni `println`, ni `printStackTrace` ; le diagnostic passe par le code d'erreur affiché. Les loggers de JMRTD et SCUBA sont coupés, et aucune exception de JMRTD n'est attachée comme cause (leurs messages contiennent des APDU). Aucune donnée personnelle dans les exceptions ou les identifiants d'erreur.
 - `FLAG_SECURE` posé sur toute l'activité dès sa création (`secureForLifetime`), donc sur tous les écrans, accueil compris ; Lecture, Résultat et la photo en plein écran le demandent en plus (`SecureWindow()`). Tableaux d'octets DG1/DG2/DG7/DG11/DG12 remis à zéro et libérés à la sortie du résultat et en arrière-plan. CAN/MRZ jamais mémorisés entre deux lectures.
 - Nonce AA tiré d'un `SecureRandom`.
