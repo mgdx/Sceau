@@ -23,6 +23,7 @@ Le décodeur JPEG 2000 (OpenJPEG) est un sous-module git : après un clone, `git
 ./gradlew :core:test --tests "io.github.mgdx.sceau.core.SomeTest"       # un seul test
 ./gradlew :testchip:test                                               # tests de la puce simulée
 SCEAU_FUZZ_ITERATIONS=200000 ./gradlew :core:test --tests '*fuzz*' --rerun   # fuzzing long des parseurs (docs/architecture.md §5)
+SCEAU_SCREENSHOTS=1 ./gradlew :app:testDebugUnitTest --tests '*StoreScreenshots*' --rerun   # captures F-Droid fr-FR/en-US dans fastlane/ (D39)
 ./gradlew :app:testDebugUnitTest                                        # tests JVM de l'app (dont le mode démo)
 ./gradlew :app:assembleDebug                                            # APK de debug (mode démo inclus)
 ./gradlew :app:assembleRelease                                          # APK release (R8), non signés

@@ -98,6 +98,18 @@ tasks.withType<Test>().configureEach {
     jvmArgs("--add-exports=java.base/jdk.internal.access=ALL-UNNAMED", "--enable-native-access=ALL-UNNAMED")
 }
 
+// Captures d'écran F-Droid (D39) : StoreScreenshots n'est lancé que si SCEAU_SCREENSHOTS=1,
+// jamais par ./gradlew check ; il écrit alors dans fastlane/metadata/android.
+val storeScreenshots = providers.environmentVariable("SCEAU_SCREENSHOTS").orNull == "1"
+val fastlaneMetadata = rootProject.file("fastlane/metadata/android").absolutePath
+tasks.withType<Test>().configureEach {
+    if (storeScreenshots) {
+        systemProperty("sceau.screenshots.dir", fastlaneMetadata)
+    } else {
+        filter.excludeTestsMatching("*.StoreScreenshots")
+    }
+}
+
 configurations.configureEach {
     // Voir core/build.gradle.kts : BouncyCastle uniquement en jdk18on.
     exclude(group = "org.bouncycastle", module = "bcprov-jdk15on")
