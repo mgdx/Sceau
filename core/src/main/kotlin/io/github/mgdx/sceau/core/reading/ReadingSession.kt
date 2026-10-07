@@ -177,11 +177,18 @@ internal class ReadingSession(
                 )
             }
         val aa = verifier.activeAuthentication(content.dataGroups[15], content.dataGroups[14], signedInSod = 15 in content.signedDataGroups)
-        // Audit V20 : protocole mené comparé à ce qu'annonce DG14, signé (EF.CardAccess ne l'est pas).
+        // Audits V20 et V32 : protocole mené comparé à ce qu'annoncent DG14 et EF.CardSecurity,
+        // signés (EF.CardAccess ne l'est pas). Avec PACE-CAM, EF.CardSecurity est vérifié plus haut.
         val protocol =
             ProtocolDowngrade.apply(
                 dg14 = content.dataGroups[DocumentReader.SECURITY_DATA_GROUP],
                 dg14Verified = pa.dataGroupHashes.verifies(DocumentReader.SECURITY_DATA_GROUP),
+                cardSecurity =
+                    if (cam == null) {
+                        ProtocolDowngrade.cardSecurity(channel.cardSecurity, trustStore, data.dg1.issuingState)
+                    } else {
+                        ProtocolDowngrade.CardSecurity.Absent
+                    },
                 established = established,
                 secureChannel = secureChannel,
                 chipAuthentication = mapping?.check ?: checkNotNull(caOutcome).check,

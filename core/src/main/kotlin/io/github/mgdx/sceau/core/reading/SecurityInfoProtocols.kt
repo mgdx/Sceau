@@ -10,7 +10,8 @@ import org.bouncycastle.asn1.ASN1Set
  * OID de protocole des `SecurityInfo` de DG14, lus dans les octets bruts (ICAO 9303-11 §9.2),
  * sans passer par JMRTD : `SecurityInfo.getInstance` écarte en silence (null) une entrée qu'il ne
  * sait pas reconstruire, par exemple une clé de Chip Authentication à paramètres inhabituels
- * (audit V19). Ces OID disent ce que DG14, signé, annonce, que JMRTD l'ait compris ou non.
+ * (audit V19). Ces OID disent ce que DG14, signé, annonce, que JMRTD l'ait compris ou non. Même
+ * lecture pour le contenu signé d'EF.CardSecurity ([ofSet], audit V32).
  */
 internal object SecurityInfoProtocols {
     /** Préfixe des `ChipAuthenticationPublicKeyInfo` : id-PK-DH (…1.1), id-PK-ECDH (…1.2). */
@@ -30,8 +31,19 @@ internal object SecurityInfoProtocols {
     /** OID de protocole de chaque `SecurityInfo` de [dg14] ; null si DG14 est illisible. */
     fun of(dg14: ByteArray): List<String>? =
         try {
+            ofSet(Tlv.value(dg14, DG14_TAG))
+        } catch (e: Exception) {
+            null
+        }
+
+    /**
+     * OID de protocole de chaque `SecurityInfo` d'un `SET OF SecurityInfo` nu, comme le contenu
+     * signé d'EF.CardSecurity (audit V32) ; null s'il est illisible.
+     */
+    fun ofSet(securityInfos: ByteArray): List<String>? =
+        try {
             ASN1Set
-                .getInstance(ASN1Primitive.fromByteArray(Tlv.value(dg14, DG14_TAG)))
+                .getInstance(ASN1Primitive.fromByteArray(securityInfos))
                 .map { ASN1ObjectIdentifier.getInstance(ASN1Sequence.getInstance(it).getObjectAt(0)).id }
         } catch (e: Exception) {
             null
