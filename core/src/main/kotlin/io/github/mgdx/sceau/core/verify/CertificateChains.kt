@@ -58,6 +58,12 @@ internal sealed interface ChainOutcome {
  * certificats croisés partageant un AKI (Master List importée hostile) coûtaient sinon
  * jusqu'à k^8 vérifications. Une chaîne réelle en demande quelques-unes.
  *
+ * Ordre des candidats (audit V31) : les émetteurs possibles sont examinés source par source
+ * (ANTS, publications nationales, Master List embarquée, puis imports), et la recherche s'arrête
+ * à la première chaîne trouvée. Sans cela, une Master List importée contenant des dizaines de
+ * leurres au SKI d'un CSCA embarqué épuisait le budget avant que le vrai CSCA, déjà vérifié,
+ * ne soit retenu : « Échec » sur tous les documents authentiques du pays visé.
+ *
  * Une instance par recherche : [build] n'est pas réentrant.
  */
 internal class CertificateChains(
@@ -99,26 +105,55 @@ internal class CertificateChains(
         val candidates = issuerCandidates(certificate).filter { Crypto.fingerprint(it.certificate) !in explored }
         if (candidates.isEmpty()) return ChainOutcome.NotFound
 
+        // Audit V31 : candidats examinés source par source, dans l'ordre de [TrustSource] (ANTS,
+        // national, Master List embarquée, imports) ; la recherche s'arrête dès qu'une chaîne
+        // aboutit. Des leurres importés ne consomment donc pas le budget d'une chaîne qu'une
+        // source embarquée résout.
         var failure: ChainOutcome = ChainOutcome.NotFound
-        val verified = mutableListOf<Pair<TrustAnchor, X509CertificateHolder>>()
-        for (candidate in candidates) {
-            val holder = JcaX509CertificateHolder(candidate.certificate)
-            when (val check = verifySignature(certificate, holder)) {
-                SignatureCheck.Valid -> verified += candidate to holder
-                SignatureCheck.Invalid -> failure = worst(failure, ChainOutcome.BadSignature(candidate))
-                is SignatureCheck.Unsupported -> failure = worst(failure, ChainOutcome.Unsupported(check.algorithm))
+        for (group in candidates.groupBy { it.source }.toSortedMap().values) {
+            when (val outcome = searchGroup(certificate, group, depth)) {
+                is ChainOutcome.Found -> return outcome
+                else -> failure = worst(failure, outcome)
             }
         }
+        return failure
+    }
 
-        for ((candidate, holder) in verified) {
-            if (holder.subject != holder.issuer) continue
-            when (val self = verifySignature(holder, holder)) {
-                SignatureCheck.Valid -> return ChainOutcome.Found(emptyList(), candidate)
+    /**
+     * Recherche parmi les candidats [group] d'une même source : un CSCA auto-signé qui vérifie
+     * [certificate] termine la recherche aussitôt (audit V31) ; sinon les liens vérifiés sont
+     * explorés à leur tour.
+     */
+    private fun searchGroup(
+        certificate: X509CertificateHolder,
+        group: List<TrustAnchor>,
+        depth: Int,
+    ): ChainOutcome {
+        var failure: ChainOutcome = ChainOutcome.NotFound
+        val verified = mutableListOf<Pair<TrustAnchor, X509CertificateHolder>>()
+        for (candidate in group) {
+            val holder = JcaX509CertificateHolder(candidate.certificate)
+            when (val check = verifySignature(certificate, holder)) {
+                SignatureCheck.Valid -> {
+                    verified += candidate to holder
+                    if (holder.subject != holder.issuer) continue
+                    when (val self = verifySignature(holder, holder)) {
+                        SignatureCheck.Valid -> return ChainOutcome.Found(emptyList(), candidate)
 
-                SignatureCheck.Invalid -> Unit
+                        SignatureCheck.Invalid -> Unit
 
-                // CSCA auto-signé avec un algorithme refusé (audit V9) : échec, pas « émetteur inconnu ».
-                is SignatureCheck.Unsupported -> failure = worst(failure, ChainOutcome.Unsupported(self.algorithm))
+                        // CSCA auto-signé avec un algorithme refusé (audit V9) : échec, pas « émetteur inconnu ».
+                        is SignatureCheck.Unsupported -> failure = worst(failure, ChainOutcome.Unsupported(self.algorithm))
+                    }
+                }
+
+                SignatureCheck.Invalid -> {
+                    failure = worst(failure, ChainOutcome.BadSignature(candidate))
+                }
+
+                is SignatureCheck.Unsupported -> {
+                    failure = worst(failure, ChainOutcome.Unsupported(check.algorithm))
+                }
             }
         }
         if (depth >= MAX_DEPTH) return failure
@@ -147,7 +182,10 @@ internal class CertificateChains(
                 val ski = subjectKeyId(anchor)
                 aki == null || ski == null || ski.contentEquals(aki)
             }
+        // Tri stable par source avant dédoublonnage : un certificat embarqué et importé à la fois
+        // garde sa provenance embarquée (audit V31).
         return (byKeyId + bySubject)
+            .sortedBy { it.source }
             .distinctBy { Crypto.fingerprint(it.certificate) }
             .filter { canIssueCertificates(JcaX509CertificateHolder(it.certificate)) }
     }
