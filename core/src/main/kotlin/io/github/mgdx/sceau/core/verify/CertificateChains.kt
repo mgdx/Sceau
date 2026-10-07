@@ -7,7 +7,6 @@ import org.bouncycastle.asn1.x509.BasicConstraints
 import org.bouncycastle.asn1.x509.KeyUsage
 import org.bouncycastle.asn1.x509.SubjectKeyIdentifier
 import org.bouncycastle.cert.X509CertificateHolder
-import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter
 import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder
 import org.bouncycastle.operator.jcajce.JcaContentVerifierProviderBuilder
 
@@ -167,10 +166,8 @@ internal class CertificateChains(
         if (Crypto.isWeakAlgorithm(certificate.signatureAlgorithm)) {
             return SignatureCheck.Unsupported(Crypto.algorithmName(certificate.signatureAlgorithm.algorithm))
         }
-        val weakKey =
-            runCatching { Crypto.weakKey(JcaX509CertificateConverter().setProvider(Crypto.provider).getCertificate(issuer).publicKey) }
-                .getOrNull()
-        if (weakKey != null) return SignatureCheck.Unsupported(weakKey)
+        // Audit V30 : clé de l'émetteur hors bornes, lue encodée, refusée avant toute reconstruction.
+        Crypto.unsupportedKey(issuer.subjectPublicKeyInfo)?.let { return SignatureCheck.Unsupported(it) }
         return try {
             val verifierProvider = JcaContentVerifierProviderBuilder().setProvider(Crypto.provider).build(issuer)
             if (certificate.isSignatureValid(verifierProvider)) SignatureCheck.Valid else SignatureCheck.Invalid

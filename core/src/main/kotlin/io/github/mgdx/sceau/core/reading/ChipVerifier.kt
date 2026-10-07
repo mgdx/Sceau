@@ -16,6 +16,7 @@ import org.jmrtd.lds.icao.DG14File
 import org.jmrtd.lds.icao.DG15File
 import java.security.GeneralSecurityException
 import java.security.SecureRandom
+import io.github.mgdx.sceau.core.verify.Crypto as KeyBounds
 
 /** Résultat de la Chip Authentication : sa ligne de contrôle, et l'état du canal pour la suite. */
 internal class ChipAuthenticationOutcome(
@@ -83,6 +84,8 @@ internal class ChipVerifier(
         val chipKey =
             publicKeyInfo.subjectPublicKey
                 ?: return unchanged(unsupported(CheckId.CHIP_AUTHENTICATION, publicKeyInfo.objectIdentifier ?: "CA"))
+        // Audit V30 : clé hors bornes refusée avant l'accord de clé, rien n'est envoyé à la puce.
+        KeyBounds.unsupportedKey(chipKey)?.let { return unchanged(unsupported(CheckId.CHIP_AUTHENTICATION, it)) }
         val keyId = publicKeyInfo.keyId
         val caInfo =
             dg14.securityInfos.orEmpty().filterIsInstance<ChipAuthenticationInfo>().let { infos ->

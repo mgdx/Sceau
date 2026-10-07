@@ -374,12 +374,16 @@ internal class PassiveAuthenticator(
         ) {
             return Check(CheckId.SOD_SIGNATURE, CheckStatus.UNSUPPORTED_ALGORITHM, CheckDetail.UnsupportedAlgorithm(algorithm))
         }
+        // Audits V9 et V30 : clé du DS hors bornes, lue encodée, refusée avant toute reconstruction.
+        Crypto.unsupportedKey(ds.holder.subjectPublicKeyInfo)?.let { key ->
+            return Check(CheckId.SOD_SIGNATURE, CheckStatus.UNSUPPORTED_ALGORITHM, CheckDetail.UnsupportedAlgorithm(key))
+        }
         return try {
             // Vérifieur construit sur la clé seule : BouncyCastle refuserait sinon la signature d'un
             // DS expiré au signingTime, ce qui relève de la ligne DS_VALIDITY et non de celle-ci.
             val publicKey = JcaX509CertificateConverter().setProvider(Crypto.provider).getCertificate(ds.holder).publicKey
-            Crypto.weakKey(publicKey)?.let { weak ->
-                return Check(CheckId.SOD_SIGNATURE, CheckStatus.UNSUPPORTED_ALGORITHM, CheckDetail.UnsupportedAlgorithm(weak))
+            Crypto.unsupportedKey(publicKey)?.let { key ->
+                return Check(CheckId.SOD_SIGNATURE, CheckStatus.UNSUPPORTED_ALGORITHM, CheckDetail.UnsupportedAlgorithm(key))
             }
             val verifier = JcaSimpleSignerInfoVerifierBuilder().setProvider(Crypto.provider).build(publicKey)
             val valid = signer.verify(verifier)
