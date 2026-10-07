@@ -38,6 +38,18 @@ internal object FileSizeLimits {
     /** Plafond des fichiers d'images (DG2, DG7, DG12) et de tout fichier non listé. */
     private const val IMAGE_FILE_MAX = 256 * KIB
 
+    /**
+     * Audit V29 : nombre maximal de READ BINARY pour lire le fichier [fid] : son plafond lu par
+     * blocs de [Chip.BLOCK_SIZE] octets, plus une marge (lecture de l'en-tête, puce qui répond
+     * par blocs plus courts). Un fichier réel en demande bien moins : un DG2 de 40 Ko, 180.
+     */
+    fun maxReadBinaryCommands(fid: Short): Long = maxSize(fid) / Chip.BLOCK_SIZE + READ_BINARY_MARGIN
+
+    /** Réponses READ BINARY vides consécutives au-delà desquelles la lecture est abandonnée (V29). */
+    const val MAX_CONSECUTIVE_EMPTY_RESPONSES = 3
+
+    private const val READ_BINARY_MARGIN = 16L
+
     /** Nom court du fichier pour les identifiants d'erreur (`SOD`, `DG1`…). */
     fun nameOf(fid: Short): String =
         when (fid) {
@@ -82,15 +94,27 @@ internal object FileSizeLimits {
 /** Fichier dont l'en-tête annonce une taille supérieure à son plafond ; sans message. */
 internal class FileTooLargeException : RuntimeException()
 
+/** Lecture d'un fichier qui n'avance plus (audit V29) ; sans message. */
+internal class FileReadStalledException : RuntimeException()
+
 /**
  * Émetteur de SELECT et READ BINARY pour le `DefaultFileSystem` de JMRTD : contrôle la taille
  * annoncée par l'en-tête de chaque fichier (lecture à l'offset 0) et lève
  * [FileTooLargeException] au-delà du plafond, avant que JMRTD n'alloue le tampon du fichier.
+ *
+ * Audit V29 : SCUBA (`CardFileInputStream`) relance un READ BINARY tant que la réponse est vide,
+ * et JMRTD accepte une réponse vide ; une puce forgée qui répond `90 00` sans donnée ferait
+ * donc boucler la lecture sans fin. Les échanges sont comptés par fichier (remis à zéro à chaque
+ * SELECT) : au-delà de [FileSizeLimits.MAX_CONSECUTIVE_EMPTY_RESPONSES] réponses vides
+ * consécutives, ou de [FileSizeLimits.maxReadBinaryCommands] READ BINARY, la lecture lève
+ * [FileReadStalledException] sans envoyer d'autre commande.
  */
 internal class BoundedReadBinarySender(
     private val delegate: APDULevelReadBinaryCapable,
 ) : APDULevelReadBinaryCapable {
     private var selectedFid: Short = 0
+    private var readCommands = 0L
+    private var consecutiveEmpty = 0
 
     override fun sendSelectApplet(
         wrapper: APDUWrapper?,
@@ -104,6 +128,8 @@ internal class BoundedReadBinarySender(
         fid: Short,
     ) {
         selectedFid = fid
+        readCommands = 0
+        consecutiveEmpty = 0
         delegate.sendSelectFile(wrapper, fid)
     }
 
@@ -115,7 +141,13 @@ internal class BoundedReadBinarySender(
         isSFIEnabled: Boolean,
         isTLVEncodedOffsetNeeded: Boolean,
     ): ByteArray? {
+        if (++readCommands > FileSizeLimits.maxReadBinaryCommands(selectedFid)) throw FileReadStalledException()
         val response = delegate.sendReadBinary(wrapper, sfi, offset, le, isSFIEnabled, isTLVEncodedOffsetNeeded)
+        if (response == null || response.isEmpty()) {
+            if (++consecutiveEmpty >= FileSizeLimits.MAX_CONSECUTIVE_EMPTY_RESPONSES) throw FileReadStalledException()
+        } else {
+            consecutiveEmpty = 0
+        }
         if (offset == 0 && response != null) {
             val size = FileSizeLimits.announcedSize(response)
             if (size != null && size > FileSizeLimits.maxSize(selectedFid)) throw FileTooLargeException()

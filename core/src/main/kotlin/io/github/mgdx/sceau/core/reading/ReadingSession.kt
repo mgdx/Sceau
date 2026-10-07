@@ -34,6 +34,11 @@ import kotlin.coroutines.cancellation.CancellationException
  * (relancée telle quelle).
  *
  * Le nonce d'Active Authentication est tiré de [random], un `SecureRandom` (SPEC §8).
+ *
+ * Délai global (audit V29) : hors authentification (étape SECURE_CHANNEL, qui a ses propres
+ * délais), la lecture dispose de [globalTimeoutMillis] au total. À l'échéance, le transport est
+ * fermé et la lecture se termine par [SceauException.Timeout] (`TIMEOUT-<ÉTAPE>-GLOBAL`), même
+ * si un rapport a pu être produit entre-temps : il est alors effacé.
  */
 internal class ReadingSession(
     private val transport: CardTransport,
@@ -41,8 +46,15 @@ internal class ReadingSession(
     private val trustStore: TrustStore,
     private val progress: (Step) -> Unit,
     private val random: SecureRandom = SecureRandom(),
+    private val globalTimeoutMillis: Long = GLOBAL_TIMEOUT_MILLIS,
 ) {
+    @Volatile
     private var currentStep = Step.CONNECT
+    private var deadline: ReadDeadline? = null
+
+    /** Étape en cours à l'échéance du délai global, null s'il n'a pas expiré. */
+    @Volatile
+    private var expiredDuring: Step? = null
     private var document: DocumentData? = null
 
     /** DG bruts lus, effacés en cas d'échec même si leur analyse n'a pas abouti. */
@@ -58,19 +70,27 @@ internal class ReadingSession(
             Crypto.ensureInstalled()
             LibraryLogging.silence()
             val chip = Chip(transport)
+            deadline =
+                ReadDeadline(this, globalTimeoutMillis) {
+                    expiredDuring = currentStep
+                    closeQuietly(transport)
+                }
             try {
-                execute(chip)
+                execute(chip).also { checkDeadline() }
             } catch (e: Throwable) {
                 // Effacement sur toute erreur, `Error` comprises (OutOfMemoryError…) ;
                 // CancellationException est relancée telle quelle, après effacement.
                 wipeRead()
                 if (e !is Exception || e is CancellationException) throw e
+                // Délai global dépassé : l'erreur ressortie (transport fermé…) n'en est qu'une suite.
+                expiredDuring?.let { throw globalTimeout(it) }
                 val failure =
                     chip.cardService.transportFailure
                         ?: e as? SceauException
                         ?: e.findTransportFailure()
                 throw failure?.withStep(currentStep) ?: SceauException.Unexpected(technicalCode(currentStep.name, e))
             } finally {
+                deadline?.stop()
                 try {
                     chip.close()
                 } catch (e: Exception) {
@@ -78,6 +98,21 @@ internal class ReadingSession(
                 }
             }
         }
+
+    /** Lève le délai global s'il a expiré pendant la lecture (le rapport produit est alors effacé). */
+    private fun checkDeadline() {
+        expiredDuring?.let { throw globalTimeout(it) }
+    }
+
+    private fun globalTimeout(step: Step) = SceauException.Timeout(detail = "${step.name}-$GLOBAL_TIMEOUT_DETAIL")
+
+    private fun closeQuietly(transport: CardTransport) {
+        try {
+            transport.close()
+        } catch (e: Exception) {
+            // Déjà fermé : la lecture échouera de toute façon sur le délai global.
+        }
+    }
 
     /**
      * Une erreur technique du transport (`UNEXPECTED-IO-…`) ne dit pas à quelle étape elle
@@ -93,12 +128,15 @@ internal class ReadingSession(
             this is SceauException.Timeout && detail != null -> SceauException.Timeout(this, "${step.name}-$detail")
             this is SceauException.ConnectionLost && detail != null -> SceauException.ConnectionLost(this, "${step.name}-$detail")
             this is SceauException.AccessRestricted -> SceauException.AccessRestricted("${step.name}-$detail")
+            this is SceauException.ReadStalled -> SceauException.ReadStalled("${step.name}-$detail")
             else -> this
         }
 
     private fun CoroutineScope.step(step: Step) {
         ensureActive()
         currentStep = step
+        // Délai global (V29) : suspendu pendant l'authentification, qui a ses propres délais.
+        if (step == Step.SECURE_CHANNEL) deadline?.pause() else deadline?.resume()
         progress(step)
     }
 
@@ -265,8 +303,15 @@ internal class ReadingSession(
         )
     }
 
-    private companion object {
-        const val DG11 = 11
-        const val DG12 = 12
+    internal companion object {
+        private const val DG11 = 11
+        private const val DG12 = 12
+
+        /**
+         * Délai global d'une lecture hors authentification (audit V29) : une lecture réelle
+         * complète (DG2 de 40 Ko compris) prend quelques secondes à une vingtaine de secondes.
+         */
+        const val GLOBAL_TIMEOUT_MILLIS = 120_000L
+        private const val GLOBAL_TIMEOUT_DETAIL = "GLOBAL"
     }
 }

@@ -67,6 +67,8 @@ Réponse `6A82` (fichier introuvable) à la sélection : `SceauException.NotIcao
 
 - **APDU courtes uniquement** : la longueur maximale transmise à JMRTD est celle du transport (`IsoDep.getMaxTransceiveLength()`), plafonnée à 256 (`Chip`) ; aucune APDU étendue n'est émise (décision D14).
 - Lecture des fichiers par `SELECT` puis `READ BINARY`, par blocs de 223 octets ; l'adressage court (SFI) n'est pas utilisé.
+- **Lecture qui n'avance plus** (audit V29, décision D41) : SCUBA relance un `READ BINARY` tant que la réponse est vide, et JMRTD accepte une réponse `90 00` sans donnée. Les échanges sont donc comptés par fichier, remis à zéro à chaque `SELECT` (`BoundedReadBinarySender`) : au-delà de 3 réponses vides consécutives, ou de `plafond du fichier / 223 + 16` `READ BINARY` (20 pour DG1, 1 191 pour DG2), la lecture s'arrête sur `READ_STALLED-<ÉTAPE>-<fichier>` (ex. `READ_STALLED-READ_DATA-DG2`), y compris pour un fichier facultatif, qui n'est pas traité comme absent. Un DG2 réel de 40 Ko demande environ 180 `READ BINARY`.
+- **Délai global** (audit V29, décision D41) : hors authentification, une lecture dispose de 120 s au total (`ReadingSession.GLOBAL_TIMEOUT_MILLIS`), décomptées pendant les étapes `CONNECT`, `READ_DATA` (rétablissement du canal après une CA ratée compris), `VERIFY_SIGNATURE` et `VERIFY_CHIP`, et suspendues pendant `SECURE_CHANNEL`, dont PACE et BAC gardent leur délai propre de 60 s par réponse. À l'échéance, le transport est fermé (ce qui débloque l'APDU en cours) et la lecture se termine par `TIMEOUT-<ÉTAPE>-GLOBAL`, même si un rapport a pu être produit entre-temps (il est effacé). Une lecture réelle complète prend de quelques secondes à une vingtaine de secondes.
 - Côté app, `IsoDepTransport` lit en mode lecteur NFC (`NfcAdapter.enableReaderMode`, NFC-A et NFC-B, sans vérification NDEF), avec des tests de présence espacés de 2 s pour ne pas perturber une puce lente pendant PACE.
 
 ### 2.3 EF.COM puis EF.SOD
@@ -198,7 +200,8 @@ Seules ces erreurs interrompent la lecture ; l'écran de lecture affiche un mess
 | `CanWithoutPace` | `CAN_WITHOUT_PACE` | CAN fourni, PACE non annoncé | Utiliser l'onglet Passeport et la MRZ |
 | `AccessRestricted` | `ACCESS_RESTRICTED-<ÉTAPE>-<élément>` | canal sécurisé établi (PACE ou BAC réussi), puis SW `6982` (*security status not satisfied*) à la sélection de l'application ICAO sous messagerie sécurisée (`SELECT_APPLET`) ou à la lecture d'EF.SOD (`SOD`) ou de DG1 (`DG1`) : puce réservée aux terminaux étatiques (Terminal Authentication), comme les cartes d'identité allemandes délivrées avant le 2021-08-02 (décision D36). Un `6982` avant l'authentification (sélection en clair avant BAC) garde le code `UNEXPECTED-…-6982` ; sur EF.COM, DG2, DG7, DG11, DG12, DG14 ou DG15, le fichier est traité comme absent. Au rétablissement du canal après une CA ratée, ce n'est plus une erreur : rapport « Échec » (§2.6, audit V24) | Puce réservée aux autorités habilitées, un nouvel essai n'y changera rien (cas des cartes allemandes d'avant août 2021), sans bouton « Réessayer » |
 | `ConnectionLost` | `CONNECTION_LOST[-<diag>]` | document retiré (`TagLostException`, liaison coupée, « Tag is out of date »), lecture annulée, reconnexion impossible | Document retiré trop tôt |
-| `Timeout` | `TIMEOUT[-<diag>]` | pas de réponse dans le délai (échec survenu après 90 % du délai effectif, ou message de délai d'`IsoDep`) | Délai dépassé |
+| `Timeout` | `TIMEOUT[-<diag>]` | pas de réponse dans le délai (échec survenu après 90 % du délai effectif, ou message de délai d'`IsoDep`) ; délai global de 120 s hors authentification dépassé (`TIMEOUT-<ÉTAPE>-GLOBAL`, D41) | Délai dépassé |
+| `ReadStalled` | `READ_STALLED-<ÉTAPE>-<fichier>` | la puce ne livre plus le fichier en cours : 3 réponses `READ BINARY` vides consécutives, ou plus de `READ BINARY` que le plafond du fichier n'en justifie (§2.2, audit V29, D41) | Délai dépassé, avec « Réessayer » |
 | `Unexpected` | `UNEXPECTED-<diag>` | toute autre erreur | Erreur inattendue |
 
 Les codes sont stables et ne contiennent aucune donnée personnelle : ni donnée lue, ni clé, ni octet d'APDU, ni message d'exception brut. Le diagnostic `<diag>` se compose ainsi :
@@ -212,6 +215,8 @@ Les codes sont stables et ne contiennent aucune donnée personnelle : ni donnée
 | Échec dans `:core` (`technicalCode`) | `<ÉTAPE>[-<étiquette>]-<classe>[-<SW>]` : étiquette `SELECT_APPLET`, `SOD` ou `DG1`, nom simple de la classe d'exception, mot d'état en hexadécimal | `UNEXPECTED-CONNECT-SELECT_APPLET-CardServiceException-6D00` |
 | Erreur hors `readAndVerify` dans l'app (`SessionViewModel`) | `<classe>` | `UNEXPECTED-OutOfMemoryError` |
 | Accès réservé (D36) | `<ÉTAPE>-<élément>` : élément refusé `SELECT_APPLET`, `SOD` ou `DG1` | `ACCESS_RESTRICTED-SECURE_CHANNEL-SELECT_APPLET`, `ACCESS_RESTRICTED-READ_DATA-SOD` |
+| Lecture qui n'avance plus (D41) | `<ÉTAPE>-<fichier>` : `CARD_ACCESS`, `COM`, `SOD`, `DG<n>` | `READ_STALLED-CONNECT-CARD_ACCESS`, `READ_STALLED-READ_DATA-DG2` |
+| Délai global dépassé (D41) | `<ÉTAPE>-GLOBAL` : étape en cours à l'échéance | `TIMEOUT-READ_DATA-GLOBAL` |
 
 Un `CONNECTION_LOST` ou un `TIMEOUT` sans diagnostic reste possible (transport de test, fermeture avant toute APDU). Aucune exception de JMRTD n'est attachée comme cause à une `SceauException` : leurs messages contiennent des APDU en hexadécimal (décision D14).
 
