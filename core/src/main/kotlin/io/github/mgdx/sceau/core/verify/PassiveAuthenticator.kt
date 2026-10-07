@@ -171,6 +171,7 @@ internal class PassiveAuthenticator(
                     sodSignature = Check(CheckId.SOD_SIGNATURE, CheckStatus.NOT_AVAILABLE, CheckDetail.DsCertificateMissing),
                     certificateChain =
                         knownCountry?.let { noChain(it, null) }
+                            ?: unknownStateCode(facts.issuingState)
                             ?: Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.NOT_AVAILABLE, CheckDetail.DsCertificateMissing),
                     dsValidity = Check(CheckId.DS_VALIDITY, CheckStatus.NOT_AVAILABLE),
                     dataGroupHashes = rawHashes,
@@ -179,15 +180,23 @@ internal class PassiveAuthenticator(
 
         val verifiedSignature = guarded(CheckId.SOD_SIGNATURE) { checkSignature(parsed.signer, ds) }
         var chainInfo: ChainInfo? = null
+        var chainMissing = false
         val chain =
             guarded(CheckId.CERTIFICATE_CHAIN) {
                 val (check, info) = checkChain(ds, facts.issuingState)
                 chainInfo = info
-                if (check.status == CheckStatus.NOT_AVAILABLE && knownCountry != null) noChain(knownCountry, info) else check
+                chainMissing = check.status == CheckStatus.NOT_AVAILABLE
+                when {
+                    !chainMissing -> check
+
+                    knownCountry != null -> noChain(knownCountry, info)
+
+                    // Audit V35 : sans chaîne, code d'État inconnu ou DS d'un autre pays : échec.
+                    else -> unknownStateCode(facts.issuingState) ?: dsCountryMismatch(ds, facts.issuingState) ?: check
+                }
             }
         // Audit V25 : sans chaîne, le DS n'est garanti par personne ; une signature qu'il vérifie
         // ne prouve rien et n'est pas présentée comme vérifiée.
-        val chainMissing = chain.status == CheckStatus.NOT_AVAILABLE || chain.detail is CheckDetail.NoChainForKnownCountry
         val signature =
             if (chainMissing && verifiedSignature.status == CheckStatus.OK) {
                 verifiedSignature.copy(status = CheckStatus.NOT_AVAILABLE)
@@ -474,6 +483,32 @@ internal class PassiveAuthenticator(
         return country.takeIf { known }
     }
 
+    /**
+     * Sans chaîne, État émetteur [issuingState] inconnu d'ICAO 9303-3 (ni pays, ni organisation :
+     * `UTO`, `ZZZ`, `FR<`…) : échec, car aucun document signé ne peut l'annoncer (audit V35). Null
+     * si le code est un pays, une organisation, ou s'il n'est pas fourni.
+     */
+    private fun unknownStateCode(issuingState: String?): Check? {
+        if (issuingState == null || IcaoCountries.isOrganization(issuingState) || IcaoCountries.alpha2(issuingState) != null) return null
+        return Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.FAILED, CheckDetail.Error(ERROR_UNKNOWN_STATE_CODE))
+    }
+
+    /**
+     * Sans chaîne, pays du DS (attribut C, absent compris) différent de l'État émetteur de DG1 :
+     * échec avec [CheckDetail.CountryMismatch], comme avec une chaîne (audit V35). Null si les pays
+     * concordent, si l'État est une organisation (le DS porte alors un code comme `UN` ou `EU`), ou
+     * s'il n'est pas fourni.
+     */
+    private fun dsCountryMismatch(
+        ds: DsCertificate,
+        issuingState: String?,
+    ): Check? {
+        if (issuingState == null) return null
+        val dsCountry = Crypto.country(ds.holder.subject)
+        if (IcaoCountries.consistent(dsCountry, dsCountry, issuingState)) return null
+        return Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.FAILED, CheckDetail.CountryMismatch(null, dsCountry, issuingState))
+    }
+
     /** Aucune chaîne alors que des certificats du pays [country] sont connus : échec (audit V25). */
     private fun noChain(
         country: String,
@@ -627,6 +662,7 @@ internal class PassiveAuthenticator(
         const val ERROR_UNEXPECTED = "PA_UNEXPECTED"
         const val ERROR_DS_KEY_USAGE = "DS_KEY_USAGE"
         const val ERROR_CHAIN_BUDGET = "CHAIN_BUDGET"
+        const val ERROR_UNKNOWN_STATE_CODE = "UNKNOWN_STATE_CODE"
         const val USUAL_VALIDITY_YEARS = 10L
         const val HEX = 16
         const val DG1 = 1
