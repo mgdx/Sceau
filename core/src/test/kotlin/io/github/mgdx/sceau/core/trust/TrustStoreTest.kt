@@ -148,7 +148,8 @@ class TrustStoreTest {
 
         val store = TrustStores.load(listOf(imported, imported))
 
-        val importedAnchors = store.anchors.filter { it.source == TrustSource.IMPORTED_MASTER_LIST }
+        // Signataire émis par un CSCA que la liste transporte elle-même : liste non ancrée (audit V34).
+        val importedAnchors = store.anchors.filter { it.source == TrustSource.IMPORTED_MASTER_LIST_UNANCHORED }
         assertEquals(setOf("ZZ", "YY"), importedAnchors.map { it.country }.toSet())
         assertEquals(2, importedAnchors.size)
         // Le certificat ANTS également présent dans l'import reste marqué ANTS.

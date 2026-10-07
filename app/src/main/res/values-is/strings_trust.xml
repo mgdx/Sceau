@@ -27,6 +27,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Innflutt</string>
     <string name="trust_source_imported_certificate">Innflutt vottorð</string>
+    <string name="trust_source_imported_unanchored">Innfluttur listi, uppruni óstaðfestur</string>
     <string name="trust_link_certificate">Tengivottorð</string>
 
     <!-- Recherche -->
@@ -39,6 +40,8 @@
     <string name="trust_busy">Augnablik…</string>
     <string name="trust_import_confirm_title">Flytja inn þennan Master List?</string>
     <string name="trust_import_confirm_text">Undirskriftin er gild. Gakktu úr skugga um að fingrafar undirritarans sé það sama og útgáfuyfirvaldið hefur birt áður en þú flytur inn.</string>
+    <string name="trust_import_unanchored_warning">Undirritari þessa lista tengist engu þekktu CSCA: ekkert tryggir uppruna hans. Flyttu þessa skrá aðeins inn ef þú fékkst hana beint frá yfirvaldinu sem birti hana.</string>
+    <string name="trust_import_unanchored_acknowledge">Ég fékk þessa skrá beint frá yfirvaldinu sem birti hana</string>
     <string name="trust_import_signer">Undirritari</string>
     <string name="trust_import_signer_fingerprint">SHA-256-fingrafar undirritara</string>
     <string name="trust_import_signing_date">Undirritunardagur</string>
@@ -57,6 +60,7 @@
     </plurals>
     <string name="trust_import_too_large">Skránni hafnað: hún er stærri en 20 MB.</string>
     <string name="trust_import_read_error">Ekki tókst að lesa þessa skrá.</string>
+    <string name="trust_import_read_timeout">Hætt var að lesa skrána: lestrinum lauk ekki innan 30 sekúndna.</string>
     <string name="trust_import_write_error">Ekki tókst að vista Master List.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Innflutningi hafnað: í mesta lagi %1$d innfluttur Master List. Eyddu innfluttu vottorðunum til að bæta öðrum við.</item>

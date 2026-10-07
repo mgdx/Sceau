@@ -31,6 +31,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Importovaný</string>
     <string name="trust_source_imported_certificate">Importovaný certifikát</string>
+    <string name="trust_source_imported_unanchored">Importovaný zoznam, neoverený pôvod</string>
     <string name="trust_link_certificate">Prepojovací certifikát</string>
 
     <!-- Recherche -->
@@ -43,6 +44,8 @@
     <string name="trust_busy">Čakajte, prosím…</string>
     <string name="trust_import_confirm_title">Importovať tento zoznam Master List?</string>
     <string name="trust_import_confirm_text">Jeho podpis je platný. Pred importom overte, či odtlačok podpisovateľa zodpovedá odtlačku zverejnenému vydávajúcim orgánom.</string>
+    <string name="trust_import_unanchored_warning">Podpisovateľ tohto zoznamu nie je naviazaný na žiadny známy CSCA: nič nezaručuje jeho pôvod. Súbor importujte, len ak ste ho získali priamo od orgánu, ktorý ho zverejnil.</string>
+    <string name="trust_import_unanchored_acknowledge">Tento súbor mám priamo od orgánu, ktorý ho zverejnil</string>
     <string name="trust_import_signer">Podpisovateľ</string>
     <string name="trust_import_signer_fingerprint">Odtlačok SHA-256 podpisovateľa</string>
     <string name="trust_import_signing_date">Dátum podpisu</string>
@@ -65,6 +68,7 @@
     </plurals>
     <string name="trust_import_too_large">Súbor odmietnutý: je väčší ako 20 MB.</string>
     <string name="trust_import_read_error">Tento súbor sa nepodarilo prečítať.</string>
+    <string name="trust_import_read_timeout">Čítanie súboru bolo prerušené: nedokončilo sa do 30 sekúnd.</string>
     <string name="trust_import_write_error">Zoznam Master List sa nepodarilo uložiť.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Import odmietnutý: najvyšší počet importovaných zoznamov Master List je %1$d. Ak chcete pridať ďalší, odstráňte importované certifikáty.</item>

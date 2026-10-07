@@ -35,6 +35,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">مستوردة</string>
     <string name="trust_source_imported_certificate">شهادة مستوردة</string>
+    <string name="trust_source_imported_unanchored">قائمة مستوردة، مصدرها غير موثَّق</string>
     <string name="trust_link_certificate">شهادة ربط</string>
 
     <!-- Recherche -->
@@ -47,6 +48,8 @@
     <string name="trust_busy">يُرجى الانتظار…</string>
     <string name="trust_import_confirm_title">هل تريد استيراد قائمة Master List هذه؟</string>
     <string name="trust_import_confirm_text">توقيعها صالح. قبل استيرادها، تحقق من أن بصمة الموقِّع تطابق البصمة التي نشرتها الجهة المُصدِرة.</string>
+    <string name="trust_import_unanchored_warning">الموقِّع على هذه القائمة غير مرتبط بأي CSCA معروف، فلا شيء يضمن مصدرها. لا تستورد هذا الملف إلا إذا حصلت عليه مباشرةً من الجهة التي نشرته.</string>
+    <string name="trust_import_unanchored_acknowledge">حصلتُ على هذا الملف مباشرةً من الجهة التي نشرته</string>
     <string name="trust_import_signer">الموقِّع</string>
     <string name="trust_import_signer_fingerprint">بصمة SHA-256 للموقِّع</string>
     <string name="trust_import_signing_date">تاريخ التوقيع</string>
@@ -73,6 +76,7 @@
     </plurals>
     <string name="trust_import_too_large">تم رفض الملف: حجمه يتجاوز 20 ميغابايت.</string>
     <string name="trust_import_read_error">تعذّرت قراءة هذا الملف.</string>
+    <string name="trust_import_read_timeout">تم إيقاف قراءة الملف: لم تكتمل خلال 30 ثانية.</string>
     <string name="trust_import_write_error">تعذّر حفظ قائمة Master List.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="zero">تم رفض الاستيراد: الحد الأقصى للقوائم المستوردة من نوع Master List هو %1$d. احذف الشهادات المستوردة لإضافة قائمة أخرى.</item>

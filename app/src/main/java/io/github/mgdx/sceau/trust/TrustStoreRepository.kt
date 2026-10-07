@@ -117,14 +117,17 @@ class TrustStoreRepository internal constructor(
                 throw e
             }
         val store = get()
-        val newCertificates =
-            withContext(Dispatchers.Default) {
+        // Mêmes certificats que ceux qui ancreront la liste au chargement (audit V34).
+        val importedCertificates = withContext(Dispatchers.IO) { mutex.withLock { read(certificateFiles()) } }
+        return withContext(Dispatchers.Default) {
+            val newCertificates =
                 ImportDuplicates.newCertificateCount(
                     masterList.certificates.map { sha256Hex(it.encoded) },
                     store.anchors.mapTo(HashSet()) { it.sha256 },
                 )
-            }
-        return ImportPreview.MasterList(bytes, masterList.info, newCertificates)
+            val anchored = TrustStores.isMasterListAnchored(masterList, store, importedCertificates)
+            ImportPreview.MasterList(bytes, masterList.info, newCertificates, anchored)
+        }
     }
 
     /**

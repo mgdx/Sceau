@@ -27,6 +27,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Εισαγόμενο</string>
     <string name="trust_source_imported_certificate">Εισαγόμενο πιστοποιητικό</string>
+    <string name="trust_source_imported_unanchored">Εισαγόμενη λίστα, μη επαληθευμένη προέλευση</string>
     <string name="trust_link_certificate">Πιστοποιητικό σύνδεσης</string>
 
     <!-- Recherche -->
@@ -39,6 +40,8 @@
     <string name="trust_busy">Περιμένετε…</string>
     <string name="trust_import_confirm_title">Εισαγωγή αυτής της Master List;</string>
     <string name="trust_import_confirm_text">Η υπογραφή της είναι έγκυρη. Πριν από την εισαγωγή, βεβαιωθείτε ότι το αποτύπωμα του υπογράφοντος αντιστοιχεί σε αυτό που δημοσιεύει η αρχή έκδοσης.</string>
+    <string name="trust_import_unanchored_warning">Ο υπογράφων αυτής της λίστας δεν συνδέεται με κανένα γνωστό CSCA: τίποτα δεν εγγυάται την προέλευσή της. Εισαγάγετε το αρχείο μόνο αν το λάβατε απευθείας από την αρχή που το δημοσίευσε.</string>
+    <string name="trust_import_unanchored_acknowledge">Έλαβα αυτό το αρχείο απευθείας από την αρχή που το δημοσίευσε</string>
     <string name="trust_import_signer">Υπογράφων</string>
     <string name="trust_import_signer_fingerprint">Αποτύπωμα SHA-256 του υπογράφοντος</string>
     <string name="trust_import_signing_date">Ημερομηνία υπογραφής</string>
@@ -57,6 +60,7 @@
     </plurals>
     <string name="trust_import_too_large">Το αρχείο απορρίφθηκε: υπερβαίνει τα 20 MB.</string>
     <string name="trust_import_read_error">Δεν ήταν δυνατή η ανάγνωση αυτού του αρχείου.</string>
+    <string name="trust_import_read_timeout">Η ανάγνωση του αρχείου διακόπηκε: δεν ολοκληρώθηκε μέσα σε 30 δευτερόλεπτα.</string>
     <string name="trust_import_write_error">Δεν ήταν δυνατή η αποθήκευση της Master List.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Η εισαγωγή απορρίφθηκε: επιτρέπεται έως %1$d εισαγόμενη Master List. Διαγράψτε τα εισαγόμενα πιστοποιητικά για να προσθέσετε άλλη.</item>

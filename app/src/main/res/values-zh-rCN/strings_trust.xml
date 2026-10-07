@@ -25,6 +25,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">已导入</string>
     <string name="trust_source_imported_certificate">已导入的证书</string>
+    <string name="trust_source_imported_unanchored">导入的列表，来源未经验证</string>
     <string name="trust_link_certificate">链接证书</string>
 
     <!-- Recherche -->
@@ -37,6 +38,8 @@
     <string name="trust_busy">请稍候…</string>
     <string name="trust_import_confirm_title">要导入此 Master List 吗？</string>
     <string name="trust_import_confirm_text">其签名有效。导入前，请核实签名者的指纹与签发机构公布的指纹一致。</string>
+    <string name="trust_import_unanchored_warning">此列表的签名者未关联到任何已知的 CSCA，其来源无法保证。仅当您直接从发布该文件的机构获得此文件时才导入。</string>
+    <string name="trust_import_unanchored_acknowledge">我直接从发布该文件的机构获得了此文件</string>
     <string name="trust_import_signer">签名者</string>
     <string name="trust_import_signer_fingerprint">签名者的 SHA-256 指纹</string>
     <string name="trust_import_signing_date">签名日期</string>
@@ -53,6 +56,7 @@
     </plurals>
     <string name="trust_import_too_large">文件被拒绝：超过 20 MB。</string>
     <string name="trust_import_read_error">无法读取此文件。</string>
+    <string name="trust_import_read_timeout">已停止读取文件：未在 30 秒内完成。</string>
     <string name="trust_import_write_error">无法保存 Master List。</string>
     <plurals name="trust_import_limit_count">
         <item quantity="other">导入被拒绝：最多只能导入 %1$d 个 Master List。请先删除已导入的证书，再添加新的 Master List。</item>

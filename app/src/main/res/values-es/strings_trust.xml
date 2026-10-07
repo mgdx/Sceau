@@ -29,6 +29,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Importado</string>
     <string name="trust_source_imported_certificate">Certificado importado</string>
+    <string name="trust_source_imported_unanchored">Lista importada, origen no verificado</string>
     <string name="trust_link_certificate">Certificado de enlace</string>
 
     <!-- Recherche -->
@@ -41,6 +42,8 @@
     <string name="trust_busy">Espera…</string>
     <string name="trust_import_confirm_title">¿Importar esta Master List?</string>
     <string name="trust_import_confirm_text">Su firma es válida. Antes de importarla, comprueba que la huella del firmante coincide con la publicada por la autoridad emisora.</string>
+    <string name="trust_import_unanchored_warning">El firmante de esta lista no está vinculado a ningún CSCA conocido: nada garantiza su origen. Importa este archivo solo si lo has obtenido directamente de la autoridad que lo publicó.</string>
+    <string name="trust_import_unanchored_acknowledge">He obtenido este archivo directamente de la autoridad que lo publicó</string>
     <string name="trust_import_signer">Firmante</string>
     <string name="trust_import_signer_fingerprint">Huella SHA-256 del firmante</string>
     <string name="trust_import_signing_date">Fecha de firma</string>
@@ -61,6 +64,7 @@
     </plurals>
     <string name="trust_import_too_large">Archivo rechazado: supera los 20 MB.</string>
     <string name="trust_import_read_error">No se ha podido leer este archivo.</string>
+    <string name="trust_import_read_timeout">Se ha interrumpido la lectura del archivo: no ha terminado en 30 segundos.</string>
     <string name="trust_import_write_error">No se ha podido guardar la Master List.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Importación rechazada: solo se puede importar %1$d Master List como máximo. Elimina los certificados importados para añadir otra.</item>

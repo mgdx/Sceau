@@ -31,6 +31,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Uvoženo</string>
     <string name="trust_source_imported_certificate">Uvoženo potrdilo</string>
+    <string name="trust_source_imported_unanchored">Uvožen seznam, nepreverjen izvor</string>
     <string name="trust_link_certificate">Povezovalno potrdilo</string>
 
     <!-- Recherche -->
@@ -43,6 +44,8 @@
     <string name="trust_busy">Počakajte …</string>
     <string name="trust_import_confirm_title">Želite uvoziti ta seznam Master List?</string>
     <string name="trust_import_confirm_text">Njegov podpis je veljaven. Pred uvozom preverite, ali se prstni odtis podpisnika ujema s tistim, ki ga je objavil izdajatelj.</string>
+    <string name="trust_import_unanchored_warning">Podpisnik tega seznama ni povezan z nobenim znanim CSCA: nič ne zagotavlja njegovega izvora. To datoteko uvozite le, če ste jo dobili neposredno od organa, ki jo je objavil.</string>
+    <string name="trust_import_unanchored_acknowledge">Ta datoteka je pridobljena neposredno od organa, ki jo je objavil</string>
     <string name="trust_import_signer">Podpisnik</string>
     <string name="trust_import_signer_fingerprint">Prstni odtis SHA-256 podpisnika</string>
     <string name="trust_import_signing_date">Datum podpisa</string>
@@ -65,6 +68,7 @@
     </plurals>
     <string name="trust_import_too_large">Datoteka zavrnjena: presega 20 MB.</string>
     <string name="trust_import_read_error">Te datoteke ni mogoče prebrati.</string>
+    <string name="trust_import_read_timeout">Branje datoteke je bilo prekinjeno: ni se končalo v 30 sekundah.</string>
     <string name="trust_import_write_error">Seznama Master List ni mogoče shraniti.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Uvoz zavrnjen: največje število uvoženih seznamov Master List je %1$d. Če želite dodati novega, izbrišite uvožena potrdila.</item>

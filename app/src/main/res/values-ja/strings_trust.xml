@@ -25,6 +25,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">インポート済み</string>
     <string name="trust_source_imported_certificate">インポートした証明書</string>
+    <string name="trust_source_imported_unanchored">インポートしたリスト（出所未確認）</string>
     <string name="trust_link_certificate">リンク証明書</string>
 
     <!-- Recherche -->
@@ -37,6 +38,8 @@
     <string name="trust_busy">お待ちください…</string>
     <string name="trust_import_confirm_title">この Master List をインポートしますか？</string>
     <string name="trust_import_confirm_text">署名は有効です。インポートする前に、署名者のフィンガープリントが発行機関の公開しているものと一致することを確認してください。</string>
+    <string name="trust_import_unanchored_warning">このリストの署名者は既知の CSCA に結び付いていないため、出所は保証されません。発行機関から直接入手したファイルである場合にのみインポートしてください。</string>
+    <string name="trust_import_unanchored_acknowledge">このファイルは発行機関から直接入手しました</string>
     <string name="trust_import_signer">署名者</string>
     <string name="trust_import_signer_fingerprint">署名者の SHA-256 フィンガープリント</string>
     <string name="trust_import_signing_date">署名日</string>
@@ -53,6 +56,7 @@
     </plurals>
     <string name="trust_import_too_large">20 MB を超えるファイルはインポートできません。</string>
     <string name="trust_import_read_error">このファイルを読み取れません。</string>
+    <string name="trust_import_read_timeout">ファイルの読み取りを中止しました：30 秒以内に完了しませんでした。</string>
     <string name="trust_import_write_error">Master List を保存できません。</string>
     <plurals name="trust_import_limit_count">
         <item quantity="other">インポートできません。インポートできる Master List は %1$d 件までです。別のものを追加するには、インポートした証明書を削除してください。</item>

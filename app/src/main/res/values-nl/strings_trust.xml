@@ -27,6 +27,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Geïmporteerd</string>
     <string name="trust_source_imported_certificate">Geïmporteerd certificaat</string>
+    <string name="trust_source_imported_unanchored">Geïmporteerde lijst, herkomst niet geverifieerd</string>
     <string name="trust_link_certificate">Koppelingscertificaat</string>
 
     <!-- Recherche -->
@@ -39,6 +40,8 @@
     <string name="trust_busy">Even geduld…</string>
     <string name="trust_import_confirm_title">Deze Master List importeren?</string>
     <string name="trust_import_confirm_text">De handtekening is geldig. Controleer vóór het importeren of de vingerafdruk van de ondertekenaar overeenkomt met die van de uitgevende instantie.</string>
+    <string name="trust_import_unanchored_warning">De ondertekenaar van deze lijst is niet gekoppeld aan een bekende CSCA: niets garandeert de herkomst. Importeer dit bestand alleen als je het rechtstreeks hebt gekregen van de instantie die het heeft gepubliceerd.</string>
+    <string name="trust_import_unanchored_acknowledge">Ik heb dit bestand rechtstreeks van de publicerende instantie gekregen</string>
     <string name="trust_import_signer">Ondertekenaar</string>
     <string name="trust_import_signer_fingerprint">SHA-256-vingerafdruk van de ondertekenaar</string>
     <string name="trust_import_signing_date">Ondertekeningsdatum</string>
@@ -57,6 +60,7 @@
     </plurals>
     <string name="trust_import_too_large">Bestand geweigerd: het is groter dan 20 MB.</string>
     <string name="trust_import_read_error">Kan dit bestand niet lezen.</string>
+    <string name="trust_import_read_timeout">Lezen van het bestand gestopt: het was niet binnen 30 seconden klaar.</string>
     <string name="trust_import_write_error">Kan de Master List niet opslaan.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Import geweigerd: maximaal %1$d geïmporteerde Master List. Verwijder de geïmporteerde certificaten om een andere toe te voegen.</item>

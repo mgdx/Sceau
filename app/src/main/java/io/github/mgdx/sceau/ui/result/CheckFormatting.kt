@@ -274,7 +274,9 @@ object CheckFormatting {
      */
     fun isImportedAnchor(vararg chains: ChainInfo?): Boolean =
         chains.any { chain ->
-            chain?.cscaSource == TrustSource.IMPORTED_MASTER_LIST || chain?.cscaSource == TrustSource.IMPORTED_CERTIFICATE
+            chain?.cscaSource == TrustSource.IMPORTED_MASTER_LIST ||
+                chain?.cscaSource == TrustSource.IMPORTED_CERTIFICATE ||
+                chain?.cscaSource == TrustSource.IMPORTED_MASTER_LIST_UNANCHORED
         }
 
     @StringRes
@@ -285,6 +287,7 @@ object CheckFormatting {
             TrustSource.EMBEDDED_MASTER_LIST -> R.string.result_detail_source_embedded
             TrustSource.IMPORTED_MASTER_LIST -> R.string.result_detail_source_imported
             TrustSource.IMPORTED_CERTIFICATE -> R.string.trust_source_imported_certificate
+            TrustSource.IMPORTED_MASTER_LIST_UNANCHORED -> R.string.trust_source_imported_unanchored
         }
 
     /** Méthode de Chip Authentication : clé de DG14, ou PACE-CAM (décision D21). */

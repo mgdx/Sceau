@@ -27,6 +27,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Importiert</string>
     <string name="trust_source_imported_certificate">Importiertes Zertifikat</string>
+    <string name="trust_source_imported_unanchored">Importierte Liste, Herkunft nicht geprüft</string>
     <string name="trust_link_certificate">Link-Zertifikat</string>
 
     <!-- Recherche -->
@@ -39,6 +40,8 @@
     <string name="trust_busy">Bitte warten…</string>
     <string name="trust_import_confirm_title">Diese Master List importieren?</string>
     <string name="trust_import_confirm_text">Ihre Signatur ist gültig. Prüfen Sie vor dem Import, ob der Fingerabdruck des Signierers mit dem von der ausstellenden Stelle veröffentlichten übereinstimmt.</string>
+    <string name="trust_import_unanchored_warning">Der Signierer dieser Liste ist mit keiner bekannten CSCA verknüpft: Nichts garantiert ihre Herkunft. Importieren Sie die Datei nur, wenn Sie sie direkt von der Behörde erhalten haben, die sie veröffentlicht hat.</string>
+    <string name="trust_import_unanchored_acknowledge">Ich habe diese Datei direkt von der veröffentlichenden Behörde erhalten</string>
     <string name="trust_import_signer">Signierer</string>
     <string name="trust_import_signer_fingerprint">SHA-256-Fingerabdruck des Signierers</string>
     <string name="trust_import_signing_date">Signaturdatum</string>
@@ -57,6 +60,7 @@
     </plurals>
     <string name="trust_import_too_large">Datei abgelehnt: Sie ist größer als 20 MB.</string>
     <string name="trust_import_read_error">Diese Datei kann nicht gelesen werden.</string>
+    <string name="trust_import_read_timeout">Lesen der Datei abgebrochen: Es wurde nicht innerhalb von 30 Sekunden abgeschlossen.</string>
     <string name="trust_import_write_error">Die Master List kann nicht gespeichert werden.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Import abgelehnt: höchstens %1$d importierte Master List. Löschen Sie die importierten Zertifikate, um eine weitere hinzuzufügen.</item>

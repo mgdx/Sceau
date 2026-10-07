@@ -27,6 +27,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Importeret</string>
     <string name="trust_source_imported_certificate">Importeret certifikat</string>
+    <string name="trust_source_imported_unanchored">Importeret liste, ubekræftet oprindelse</string>
     <string name="trust_link_certificate">Linkcertifikat</string>
 
     <!-- Recherche -->
@@ -39,6 +40,8 @@
     <string name="trust_busy">Vent venligst…</string>
     <string name="trust_import_confirm_title">Vil du importere denne Master List?</string>
     <string name="trust_import_confirm_text">Signaturen er gyldig. Kontrollér, at underskriverens fingeraftryk svarer til det, som den udstedende myndighed har offentliggjort, før du importerer den.</string>
+    <string name="trust_import_unanchored_warning">Signeren af denne liste er ikke knyttet til nogen kendt CSCA: intet garanterer, hvor den kommer fra. Importér kun filen, hvis du har fået den direkte fra den myndighed, der har udgivet den.</string>
+    <string name="trust_import_unanchored_acknowledge">Jeg har fået filen direkte fra den myndighed, der har udgivet den</string>
     <string name="trust_import_signer">Underskriver</string>
     <string name="trust_import_signer_fingerprint">Underskriverens SHA-256-fingeraftryk</string>
     <string name="trust_import_signing_date">Underskriftsdato</string>
@@ -57,6 +60,7 @@
     </plurals>
     <string name="trust_import_too_large">Filen blev afvist: den er større end 20 MB.</string>
     <string name="trust_import_read_error">Filen kunne ikke læses.</string>
+    <string name="trust_import_read_timeout">Læsningen af filen blev afbrudt: den blev ikke fuldført inden for 30 sekunder.</string>
     <string name="trust_import_write_error">Master Listen kunne ikke gemmes.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Import afvist: højst %1$d importeret Master List. Slet de importerede certifikater for at tilføje en anden.</item>

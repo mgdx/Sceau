@@ -27,6 +27,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Importált</string>
     <string name="trust_source_imported_certificate">Importált tanúsítvány</string>
+    <string name="trust_source_imported_unanchored">Importált lista, ellenőrizetlen eredet</string>
     <string name="trust_link_certificate">Összekötő tanúsítvány</string>
 
     <!-- Recherche -->
@@ -39,6 +40,8 @@
     <string name="trust_busy">Kérjük, várjon…</string>
     <string name="trust_import_confirm_title">Importálja ezt a Master Listet?</string>
     <string name="trust_import_confirm_text">Az aláírása érvényes. Importálás előtt ellenőrizze, hogy az aláíró ujjlenyomata megegyezik-e a kibocsátó hatóság által közzétettel.</string>
+    <string name="trust_import_unanchored_warning">A lista aláírója egyetlen ismert CSCA-hoz sem kapcsolódik, így semmi sem garantálja az eredetét. Csak akkor importálja a fájlt, ha közvetlenül a közzétevő hatóságtól kapta.</string>
+    <string name="trust_import_unanchored_acknowledge">A fájlt közvetlenül a közzétevő hatóságtól kaptam</string>
     <string name="trust_import_signer">Aláíró</string>
     <string name="trust_import_signer_fingerprint">Az aláíró SHA-256 ujjlenyomata</string>
     <string name="trust_import_signing_date">Aláírás dátuma</string>
@@ -57,6 +60,7 @@
     </plurals>
     <string name="trust_import_too_large">Fájl elutasítva: nagyobb 20 MB-nál.</string>
     <string name="trust_import_read_error">Nem sikerült beolvasni a fájlt.</string>
+    <string name="trust_import_read_timeout">A fájl beolvasása megszakadt: nem fejeződött be 30 másodpercen belül.</string>
     <string name="trust_import_write_error">Nem sikerült menteni a Master Listet.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Importálás elutasítva: legfeljebb %1$d importált Master List lehet. Újabb hozzáadásához törölje az importált tanúsítványokat.</item>

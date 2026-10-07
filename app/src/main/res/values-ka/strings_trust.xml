@@ -27,6 +27,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">იმპორტირებული</string>
     <string name="trust_source_imported_certificate">იმპორტირებული სერტიფიკატი</string>
+    <string name="trust_source_imported_unanchored">იმპორტირებული სია, წარმომავლობა დაუდასტურებელია</string>
     <string name="trust_link_certificate">დამაკავშირებელი სერტიფიკატი</string>
 
     <!-- Recherche -->
@@ -39,6 +40,8 @@
     <string name="trust_busy">გთხოვთ, მოიცადოთ…</string>
     <string name="trust_import_confirm_title">გსურთ ამ Master List-ის იმპორტი?</string>
     <string name="trust_import_confirm_text">მისი ხელმოწერა ვალიდურია. იმპორტამდე შეამოწმეთ, ემთხვევა თუ არა ხელმომწერის ანაბეჭდი გამცემი ორგანოს მიერ გამოქვეყნებულს.</string>
+    <string name="trust_import_unanchored_warning">ამ სიის ხელმომწერი არცერთ ცნობილ CSCA-სთან არ არის დაკავშირებული: მის წარმომავლობას არაფერი უზრუნველყოფს. ამ ფაილის იმპორტი მხოლოდ მაშინ მოახდინეთ, თუ ის პირდაპირ გამომქვეყნებელი ორგანოსგან მიიღეთ.</string>
+    <string name="trust_import_unanchored_acknowledge">ეს ფაილი პირდაპირ გამომქვეყნებელი ორგანოსგან მივიღე</string>
     <string name="trust_import_signer">ხელმომწერი</string>
     <string name="trust_import_signer_fingerprint">ხელმომწერის SHA-256 ანაბეჭდი</string>
     <string name="trust_import_signing_date">ხელმოწერის თარიღი</string>
@@ -57,6 +60,7 @@
     </plurals>
     <string name="trust_import_too_large">ფაილი უარყოფილია: აღემატება 20 მბ-ს.</string>
     <string name="trust_import_read_error">ამ ფაილის წაკითხვა ვერ მოხერხდა.</string>
+    <string name="trust_import_read_timeout">ფაილის წაკითხვა შეწყდა: 30 წამში არ დასრულდა.</string>
     <string name="trust_import_write_error">Master List-ის შენახვა ვერ მოხერხდა.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">იმპორტი უარყოფილია: შესაძლებელია მაქსიმუმ %1$d Master List-ის იმპორტი. სხვის დასამატებლად წაშალეთ იმპორტირებული სერტიფიკატები.</item>

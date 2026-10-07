@@ -14,6 +14,9 @@ internal object TrustStoreLoader {
     private const val INDEX = DIRECTORY + "index.txt"
     private const val ANTS_PREFIX = "ants-"
 
+    /** Sources embarquées, qui peuvent ancrer le signataire d'une Master List importée (audit V34). */
+    val EMBEDDED_SOURCES: Set<TrustSource> = setOf(TrustSource.ANTS, TrustSource.NATIONAL, TrustSource.EMBEDDED_MASTER_LIST)
+
     /**
      * Empreintes SHA-256 des certificats autorisés à signer le signataire d'une Master List
      * embarquée : CSCA Allemagne et son certificat de lien, publiés par le BSI.
@@ -62,20 +65,18 @@ internal object TrustStoreLoader {
                     null
                 }
             }
-        val certificates =
-            importedCertificates.mapNotNull { bytes ->
-                try {
-                    CertificateParser.parse(bytes)
-                } catch (ignored: InvalidCertificateException) {
-                    null
-                }
-            }
-        return merge(ants, national, embedded, imported, certificates)
+        val certificates = TrustStores.parseCertificates(importedCertificates)
+        // Ancrage du signataire de chaque liste importée (audit V34) : seuls comptent les
+        // certificats embarqués et ceux importés seuls, jamais ceux d'une liste importée.
+        val known = ants + national + embedded?.certificates.orEmpty() + certificates
+        val (anchored, unanchored) = imported.partition { MasterListParser.isSignerAnchored(it.signerCertificate, known) }
+        return merge(ants, national, embedded, anchored, certificates, unanchored)
     }
 
     /**
      * Fusion par ordre de priorité : ANTS, publications nationales, Master List embarquée,
-     * Master Lists importées, certificats importés. Un certificat déjà présent garde sa source.
+     * Master Lists importées ancrées, certificats importés, Master Lists importées non ancrées.
+     * Un certificat déjà présent garde sa source.
      */
     fun merge(
         ants: List<X509Certificate>,
@@ -83,6 +84,7 @@ internal object TrustStoreLoader {
         embedded: MasterList?,
         imported: List<MasterList>,
         importedCertificates: List<X509Certificate> = emptyList(),
+        unanchored: List<MasterList> = emptyList(),
     ): TrustStore {
         val bySha256 = LinkedHashMap<String, TrustAnchor>()
 
@@ -98,6 +100,7 @@ internal object TrustStoreLoader {
         embedded?.certificates?.forEach { add(it, TrustSource.EMBEDDED_MASTER_LIST) }
         imported.forEach { list -> list.certificates.forEach { add(it, TrustSource.IMPORTED_MASTER_LIST) } }
         importedCertificates.forEach { add(it, TrustSource.IMPORTED_CERTIFICATE) }
+        unanchored.forEach { list -> list.certificates.forEach { add(it, TrustSource.IMPORTED_MASTER_LIST_UNANCHORED) } }
         return IndexedTrustStore(bySha256.values.toList(), embedded?.info)
     }
 

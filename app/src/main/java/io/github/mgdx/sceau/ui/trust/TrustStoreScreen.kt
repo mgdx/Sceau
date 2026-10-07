@@ -21,12 +21,14 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -60,6 +62,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
@@ -91,7 +94,6 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.IOException
 import java.time.LocalDate
 
 /**
@@ -189,11 +191,9 @@ fun TrustStoreScreen(
             scope.launch {
                 busy = true
                 try {
-                    val bytes =
-                        withContext(Dispatchers.IO) {
-                            context.contentResolver.openInputStream(uri)?.use { readAtMost(it, MAX_MASTER_LIST_BYTES) }
-                                ?: throw IOException("OPEN")
-                        }
+                    // Bornée en taille et en durée (audit V38) : `busy` revient à faux même si le
+                    // fournisseur ne livre jamais le fichier.
+                    val bytes = readImportedFile({ context.contentResolver.openInputStream(uri) }, MAX_MASTER_LIST_BYTES)
                     // Master List ou certificat seul, reconnu automatiquement (D33) ; limites
                     // vérifiées avant la confirmation (D22).
                     pending = repository.previewImport(bytes)
@@ -205,6 +205,8 @@ fun TrustStoreScreen(
                     showMessage(importLimitMessage(resources, e.decision))
                 } catch (_: FileTooLargeException) {
                     showMessage(resources.getString(R.string.trust_import_too_large))
+                } catch (_: ImportReadTimeoutException) {
+                    showMessage(resources.getString(R.string.trust_import_read_timeout))
                 } catch (e: InvalidMasterListException) {
                     showMessage(invalidMasterListMessage(resources, e.code))
                 } catch (e: InvalidCertificateException) {
@@ -311,7 +313,7 @@ fun TrustStoreScreen(
         }
         when (request) {
             is ImportPreview.MasterList -> {
-                ImportConfirmDialog(request.info, request.newCertificates, onConfirm, onDismiss = {
+                ImportConfirmDialog(request.info, request.newCertificates, request.anchored, onConfirm, onDismiss = {
                     pending =
                         null
                 })
@@ -445,6 +447,7 @@ private fun duplicateMessage(
                     TrustSource.EMBEDDED_MASTER_LIST -> R.string.trust_import_duplicate_known_embedded_master_list
                     TrustSource.IMPORTED_MASTER_LIST -> R.string.trust_import_duplicate_known_imported_master_list
                     TrustSource.IMPORTED_CERTIFICATE -> R.string.trust_import_duplicate_certificate
+                    TrustSource.IMPORTED_MASTER_LIST_UNANCHORED -> R.string.trust_import_duplicate_known_imported_master_list
                 }
             }
         },
@@ -727,6 +730,7 @@ private fun sourceBadge(source: TrustSource): Int =
         TrustSource.EMBEDDED_MASTER_LIST -> R.string.trust_source_master_list
         TrustSource.IMPORTED_MASTER_LIST -> R.string.trust_source_imported
         TrustSource.IMPORTED_CERTIFICATE -> R.string.trust_source_imported_certificate
+        TrustSource.IMPORTED_MASTER_LIST_UNANCHORED -> R.string.trust_source_imported_unanchored
     }
 
 @Composable
@@ -740,14 +744,21 @@ private fun Badge(text: String) {
     }
 }
 
+/**
+ * Aperçu d'une Master List avant import. Si son signataire n'est émis par aucun CSCA déjà connu
+ * ([anchored] faux), un avertissement s'affiche et « Importer » reste inactif tant que
+ * l'utilisateur n'a pas coché une confirmation distincte (audit V34, D44).
+ */
 @Composable
-private fun ImportConfirmDialog(
+internal fun ImportConfirmDialog(
     info: MasterListInfo,
     newCertificates: Int,
+    anchored: Boolean,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
 ) {
     val formatDate = rememberDateFormatter()
+    var acknowledged by rememberSaveable { mutableStateOf(false) }
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(stringResource(R.string.trust_import_confirm_title)) },
@@ -756,6 +767,13 @@ private fun ImportConfirmDialog(
                 modifier = Modifier.verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
+                if (!anchored) {
+                    Text(
+                        text = stringResource(R.string.trust_import_unanchored_warning),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.error,
+                    )
+                }
                 Text(stringResource(R.string.trust_import_confirm_text), style = MaterialTheme.typography.bodyMedium)
                 DialogField(stringResource(R.string.trust_import_signer)) {
                     SubjectText(info.signerSubject, MaterialTheme.typography.bodyMedium)
@@ -789,9 +807,24 @@ private fun ImportConfirmDialog(
                         style = MaterialTheme.typography.bodyMedium,
                     )
                 }
+                if (!anchored) {
+                    Row(
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .toggleable(value = acknowledged, role = Role.Checkbox, onValueChange = { acknowledged = it }),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Checkbox(checked = acknowledged, onCheckedChange = null)
+                        Spacer(Modifier.width(8.dp))
+                        Text(stringResource(R.string.trust_import_unanchored_acknowledge), style = MaterialTheme.typography.bodyMedium)
+                    }
+                }
             }
         },
-        confirmButton = { TextButton(onClick = onConfirm) { Text(stringResource(R.string.trust_import_confirm)) } },
+        confirmButton = {
+            TextButton(onClick = onConfirm, enabled = anchored || acknowledged) { Text(stringResource(R.string.trust_import_confirm)) }
+        },
         dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.trust_cancel)) } },
     )
 }

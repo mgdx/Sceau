@@ -31,6 +31,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Импортирован</string>
     <string name="trust_source_imported_certificate">Импортированный сертификат</string>
+    <string name="trust_source_imported_unanchored">Импортированный список, происхождение не подтверждено</string>
     <string name="trust_link_certificate">Связующий сертификат</string>
 
     <!-- Recherche -->
@@ -43,6 +44,8 @@
     <string name="trust_busy">Подождите…</string>
     <string name="trust_import_confirm_title">Импортировать этот Master List?</string>
     <string name="trust_import_confirm_text">Его подпись действительна. Перед импортом убедитесь, что отпечаток подписанта совпадает с отпечатком, опубликованным выдающим органом.</string>
+    <string name="trust_import_unanchored_warning">Подписант этого списка не связан ни с одним известным CSCA: ничто не гарантирует его происхождение. Импортируйте файл, только если получили его напрямую от опубликовавшего его органа.</string>
+    <string name="trust_import_unanchored_acknowledge">Этот файл получен напрямую от опубликовавшего его органа</string>
     <string name="trust_import_signer">Подписант</string>
     <string name="trust_import_signer_fingerprint">Отпечаток SHA-256 подписанта</string>
     <string name="trust_import_signing_date">Дата подписи</string>
@@ -65,6 +68,7 @@
     </plurals>
     <string name="trust_import_too_large">Файл отклонен: его размер превышает 20 МБ.</string>
     <string name="trust_import_read_error">Не удалось прочитать файл.</string>
+    <string name="trust_import_read_timeout">Чтение файла прервано: оно не завершилось за 30 секунд.</string>
     <string name="trust_import_write_error">Не удалось сохранить Master List.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Импорт отклонен: можно импортировать не более %1$d Master List. Удалите импортированные сертификаты, чтобы добавить новый.</item>

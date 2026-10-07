@@ -29,6 +29,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Uvezeno</string>
     <string name="trust_source_imported_certificate">Uvezeni certifikat</string>
+    <string name="trust_source_imported_unanchored">Uvezeni popis, neprovjereno podrijetlo</string>
     <string name="trust_link_certificate">Povezni certifikat</string>
 
     <!-- Recherche -->
@@ -41,6 +42,8 @@
     <string name="trust_busy">Pričekajte…</string>
     <string name="trust_import_confirm_title">Uvesti ovaj popis Master List?</string>
     <string name="trust_import_confirm_text">Njegov je potpis valjan. Prije uvoza provjerite odgovara li otisak potpisnika onome koji je objavio izdavatelj.</string>
+    <string name="trust_import_unanchored_warning">Potpisnik ovog popisa nije povezan ni s jednim poznatim CSCA-om: ništa ne jamči njegovo podrijetlo. Uvezite ovu datoteku samo ako ste je dobili izravno od tijela koje ju je objavilo.</string>
+    <string name="trust_import_unanchored_acknowledge">Ova datoteka potječe izravno od tijela koje ju je objavilo</string>
     <string name="trust_import_signer">Potpisnik</string>
     <string name="trust_import_signer_fingerprint">Otisak SHA-256 potpisnika</string>
     <string name="trust_import_signing_date">Datum potpisa</string>
@@ -61,6 +64,7 @@
     </plurals>
     <string name="trust_import_too_large">Datoteka odbijena: veća je od 20 MB.</string>
     <string name="trust_import_read_error">Čitanje ove datoteke nije uspjelo.</string>
+    <string name="trust_import_read_timeout">Čitanje datoteke je prekinuto: nije završeno u roku od 30 sekundi.</string>
     <string name="trust_import_write_error">Spremanje popisa Master List nije uspjelo.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Uvoz odbijen: najveći broj uvezenih popisa Master List je %1$d. Da biste dodali novi, izbrišite uvezene certifikate.</item>
