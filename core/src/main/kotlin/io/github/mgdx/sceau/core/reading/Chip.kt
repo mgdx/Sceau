@@ -86,7 +86,8 @@ internal class Chip(
     /**
      * Lit un fichier entier (EF.CardAccess au niveau MF, ou un fichier de l'applet ICAO). Un
      * fichier dont l'en-tête annonce plus que son plafond lève [SceauException.Unexpected]
-     * (`<fichier>-TOO_LARGE`) sans être lu.
+     * (`<fichier>-TOO_LARGE`) sans être lu ; une lecture qui n'avance plus lève
+     * [SceauException.ReadStalled] (`<fichier>`, audit V29).
      */
     fun readFile(fid: Short): ByteArray {
         val current = link
@@ -102,15 +103,24 @@ internal class Chip(
     /**
      * Lit un fichier du MF sous la messagerie sécurisée courante : EF.CardSecurity, après PACE
      * et avant la sélection de l'applet ICAO (ICAO 9303-11 §4.4, PACE-CAM). Null s'il est absent
-     * ou illisible ; une erreur de transport est relancée.
+     * ou illisible ; une erreur de transport, ou une lecture qui n'avance plus (V29), est relancée.
      */
     fun readOptionalSecuredMasterFile(fid: Short): ByteArray? =
         try {
             read(link.securedMasterFileSystem.withCurrentWrapper(), fid)
         } catch (e: Exception) {
             rethrowTransportFailure()
+            rethrowReadStalled(e)
             null
         }
+
+    /**
+     * Audit V29 : une puce qui cesse de livrer un fichier, même facultatif, interrompt la lecture
+     * ([SceauException.ReadStalled]) au lieu de le faire passer pour absent.
+     */
+    private fun rethrowReadStalled(e: Exception) {
+        if (e is SceauException.ReadStalled) throw e
+    }
 
     private fun DefaultFileSystem.withCurrentWrapper(): DefaultFileSystem =
         also { fs -> service.wrapper.let { if (fs.wrapper !== it) fs.setWrapper(it) } }
@@ -126,15 +136,22 @@ internal class Chip(
             if (e.causeChain().any { it is FileTooLargeException }) {
                 throw SceauException.Unexpected("${FileSizeLimits.nameOf(fid)}-TOO_LARGE")
             }
+            if (e.causeChain().any { it is FileReadStalledException }) {
+                throw SceauException.ReadStalled(FileSizeLimits.nameOf(fid))
+            }
             throw e
         }
 
-    /** Lit un fichier ; null s'il est absent ou illisible. Une erreur de transport est relancée. */
+    /**
+     * Lit un fichier ; null s'il est absent ou illisible. Une erreur de transport, ou une lecture
+     * qui n'avance plus (audit V29), est relancée.
+     */
     fun readOptionalFile(fid: Short): ByteArray? =
         try {
             readFile(fid)
         } catch (e: Exception) {
             rethrowTransportFailure()
+            rethrowReadStalled(e)
             null
         }
 

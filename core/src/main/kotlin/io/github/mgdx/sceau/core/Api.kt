@@ -110,7 +110,20 @@ sealed class SceauException(
         val detail: String? = null,
     ) : SceauException(withDetail("CONNECTION_LOST", detail), cause)
 
-    /** Délai dépassé. [code] vaut `TIMEOUT-<detail>` si [detail] est donné (voir [ConnectionLost]). */
+    /**
+     * Audit V29 : la puce ne livre plus le fichier en cours de lecture (réponses READ BINARY
+     * vides répétées, ou plus d'échanges que la taille maximale du fichier n'en justifie).
+     * [detail] est un diagnostic sans donnée personnelle (étape puis fichier : `READ_DATA-DG2`) ;
+     * [code] vaut alors `READ_STALLED-<detail>`.
+     */
+    class ReadStalled(
+        val detail: String,
+    ) : SceauException("READ_STALLED-$detail")
+
+    /**
+     * Délai dépassé. [code] vaut `TIMEOUT-<detail>` si [detail] est donné (voir [ConnectionLost]) ;
+     * le délai global de lecture (audit V29) donne `TIMEOUT-<ÉTAPE>-GLOBAL`.
+     */
     class Timeout(
         cause: Throwable? = null,
         val detail: String? = null,

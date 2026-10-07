@@ -24,6 +24,14 @@ class ReadingErrorsTest {
     }
 
     @Test
+    fun `stalled read and global timeout show the timeout message with retry`() {
+        assertEquals(R.string.reading_error_timeout, ReadingErrors.messageFor("READ_STALLED-READ_DATA-DG2"))
+        assertEquals(R.string.reading_error_timeout, ReadingErrors.messageFor("TIMEOUT-READ_DATA-GLOBAL"))
+        assertTrue(ReadingErrors.canRetry("READ_STALLED-CONNECT-CARD_ACCESS"))
+        assertTrue(ReadingErrors.canRetry("TIMEOUT-VERIFY_CHIP-GLOBAL"))
+    }
+
+    @Test
     fun `access restricted has its own message and no retry`() {
         assertEquals(R.string.reading_error_access_restricted, ReadingErrors.messageFor("ACCESS_RESTRICTED-READ_DATA-SOD"))
         assertEquals(
