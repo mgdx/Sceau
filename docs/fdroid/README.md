@@ -8,6 +8,14 @@ F-Droid construit l'APK **universel** depuis le tag (`app-universal-release-unsi
 
 L'asset attendu sur la release GitHub s'appelle **`sceau-<version>-universal.apk`** (par exemple `sceau-0.9-universal.apk`, URL `https://github.com/mgdx/Sceau/releases/download/v0.9/sceau-0.9-universal.apk`). Ce nom est fixé par [`../release.md`](../release.md) : le changer impose de changer la recette.
 
+## Manifeste
+
+L'APK release ne demande que `android.permission.NFC` et n'exporte qu'un composant, `MainActivity` : la permission interne d'androidx.core (D7), le récepteur exporté `ProfileInstallReceiver` et les initialiseurs de profileinstaller et d'emoji2 (D46) sont retirés du manifeste fusionné. À contrôler sur l'APK universel avant soumission :
+
+```bash
+aapt2 dump xmltree --file AndroidManifest.xml app-universal-release-unsigned.apk | grep -B2 exported
+```
+
 ## Remplir avant soumission
 
 1. **`commit:`** : hash complet du commit du tag, jamais le nom du tag (un tag peut être déplacé) :

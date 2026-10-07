@@ -46,6 +46,31 @@
             android:exported="false"
             android:isolatedProcess="true"
             android:process=":jp2" />
+
+        <!--
+            Composants ajoutés par des dépendances AndroidX dont Sceau n'a pas l'usage (D46) :
+            récepteur exporté de profileinstaller (seul composant exporté hors MainActivity),
+            initialiseurs androidx.startup de profileinstaller et d'emoji2.
+            ProcessLifecycleInitializer (lifecycle) est conservé. MissingClass ignoré : ces classes
+            viennent de dépendances transitives absentes du classpath de compilation.
+        -->
+        <receiver
+            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+            tools:ignore="MissingClass"
+            tools:node="remove" />
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:ignore="MissingClass"
+            tools:node="merge">
+            <meta-data
+                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+                tools:node="remove" />
+            <meta-data
+                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+                tools:node="remove" />
+        </provider>
     </application>
 
 </manifest>
