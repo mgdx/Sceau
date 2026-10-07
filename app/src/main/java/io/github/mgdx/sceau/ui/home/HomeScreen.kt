@@ -124,10 +124,13 @@ fun HomeScreen(
                 if (form.tab == DocumentTab.ID_CARD) {
                     IdCardKeySelector(selected = form.idCardKey, onSelect = session::selectIdCardKey)
                 }
-                if (form.usesCan) {
-                    CanFields(form = form, onCanChange = session::onCanChange)
-                } else {
-                    MrzFields(form = form, session = session, order = dateOrder)
+                // Ni Copier ni Couper sur la clé d'accès (V37, D45).
+                NoCopyTextToolbarProvider {
+                    if (form.usesCan) {
+                        CanFields(form = form, onCanChange = session::onCanChange)
+                    } else {
+                        MrzFields(form = form, session = session, order = dateOrder)
+                    }
                 }
                 Text(
                     text = stringResource(R.string.home_holder_notice),
@@ -367,6 +370,6 @@ private fun DateField(
  * Clé d'accès en cours de saisie : sur Android 14+, seuls les services d'accessibilité déclarés
  * outils d'accessibilité (`isAccessibilityTool`, comme TalkBack) voient le champ et reçoivent
  * ses événements ; les autres services, qui pourraient lire le CAN ou la MRZ, ne les voient pas.
- * Sans effet avant Android 14.
+ * Sans effet avant Android 14. Le menu contextuel n'offre ni Copier ni Couper (V37, D45).
  */
-private fun Modifier.sensitiveInput(): Modifier = semantics { isSensitiveData = true }
+private fun Modifier.sensitiveInput(): Modifier = semantics { isSensitiveData = true }.noCopyContextMenu()
