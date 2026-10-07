@@ -24,6 +24,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.jmrtd.lds.ActiveAuthenticationInfo
 import org.jmrtd.lds.ChipAuthenticationInfo
 import org.jmrtd.lds.ChipAuthenticationPublicKeyInfo
+import org.jmrtd.lds.PACEInfo
 import org.jmrtd.lds.SecurityInfo
 import org.jmrtd.lds.icao.DG14File
 import org.jmrtd.lds.icao.DG15File
@@ -33,6 +34,7 @@ import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Test
+import java.math.BigInteger
 import java.security.KeyPairGenerator
 import java.security.SecureRandom
 import java.security.spec.ECGenParameterSpec
@@ -150,6 +152,34 @@ class ChipVerifierTest {
     }
 
     @Test
+    fun dg14AvecUneInfoCaSansCle_AlgorithmeNonPrisEnCharge() {
+        // Audit V33 : DG14 annonce le protocole CA (id-CA-*) sans aucune clé (id-PK-*) ; la clé
+        // n'est peut-être que dans EF.CardSecurity. Ce n'est pas un document sans CA.
+        val transport = ScriptedTransport(respond(AID_SELECT, "9000"))
+        val caInfoOnly = DG14File(listOf<SecurityInfo>(ChipAuthenticationInfo(SecurityInfo.ID_CA_ECDH_AES_CBC_CMAC_128, 1))).encoded
+
+        val check = verifier(transport).chipAuthentication(caInfoOnly, signedInSod = true).check
+
+        assertEquals(CheckStatus.UNSUPPORTED_ALGORITHM, check.status)
+        assertEquals(CheckDetail.UnsupportedAlgorithm(SecurityInfo.ID_CA_ECDH_AES_CBC_CMAC_128), check.detail)
+        assertEquals(Verdict.FAILED, Verdicts.compute(nominalChecks(check)))
+        assertEquals("aucune commande de CA envoyée", 1, transport.sent.size)
+    }
+
+    @Test
+    fun dg14AvecSeulementUneInfoPace_NonDisponible() {
+        val transport = ScriptedTransport(respond(AID_SELECT, "9000"))
+        val paceOnly =
+            DG14File(
+                listOf<SecurityInfo>(PACEInfo(SecurityInfo.ID_PACE_ECDH_GM_AES_CBC_CMAC_128, 2, BigInteger.valueOf(BRAINPOOL_P256_R1))),
+            ).encoded
+
+        val check = verifier(transport).chipAuthentication(paceOnly, signedInSod = true).check
+
+        assertEquals(CheckStatus.NOT_AVAILABLE, check.status)
+    }
+
+    @Test
     fun dg14AvecSeulementUneInfoAa_NonDisponible() {
         val transport = ScriptedTransport(respond(AID_SELECT, "9000"))
         val onlyAa = DG14File(listOf<SecurityInfo>(ActiveAuthenticationInfo(BSIObjectIdentifiers.ecdsa_plain_SHA256.id))).encoded
@@ -246,5 +276,6 @@ class ChipVerifierTest {
     private companion object {
         const val ID_PK_ECDH = "0.4.0.127.0.7.2.2.1.2"
         const val DG14_TAG_NUMBER = 14
+        const val BRAINPOOL_P256_R1 = 13L
     }
 }

@@ -93,12 +93,13 @@ object Verdicts {
      * un seul des deux challenges suffit.
      *
      * CA (resp. AA) ne vaut NOT_AVAILABLE que si DG14 (resp. DG15) est absent du SOD, ou si DG14
-     * n'annonce aucune clé de Chip Authentication. Un DG
+     * n'annonce ni clé ni protocole de Chip Authentication. Un DG
      * annoncé par le SOD mais non fourni par la puce met DG_HASHES (détail
      * `DataGroupHashes.missing`) et la ligne CA ou AA à FAILED : la règle 4 ne s'applique
      * donc qu'à un document dont le SOD, signé, ne contient ni DG14 ni DG15 (audit V1). Un DG14
      * signé qui annonce une clé de CA (OID id-PK-*) que l'app ne sait pas exploiter met la ligne CA
-     * à UNSUPPORTED_ALGORITHM, jamais à NOT_AVAILABLE (audit V19).
+     * à UNSUPPORTED_ALGORITHM, jamais à NOT_AVAILABLE (audit V19) ; de même pour un DG14 qui
+     * annonce le protocole CA (OID id-CA-*) sans aucune clé (audit V33, décision D43).
      */
     fun compute(checks: List<Check>): Verdict {
         if (checks.any { it.status == CheckStatus.FAILED || it.status == CheckStatus.UNSUPPORTED_ALGORITHM }) {

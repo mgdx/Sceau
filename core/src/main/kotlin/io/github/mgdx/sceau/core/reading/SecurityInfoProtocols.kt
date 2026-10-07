@@ -16,6 +16,9 @@ internal object SecurityInfoProtocols {
     /** Préfixe des `ChipAuthenticationPublicKeyInfo` : id-PK-DH (…1.1), id-PK-ECDH (…1.2). */
     private const val ID_PK_PREFIX = "0.4.0.127.0.7.2.2.1."
 
+    /** Préfixe des `ChipAuthenticationInfo` : id-CA-DH-* (…3.1.x), id-CA-ECDH-* (…3.2.x). */
+    private const val ID_CA_PREFIX = "0.4.0.127.0.7.2.2.3."
+
     /** Préfixe de PACE : `PACEInfo` et `PACEDomainParameterInfo` (GM, IM, CAM). */
     private const val ID_PACE_PREFIX = "0.4.0.127.0.7.2.2.4."
 
@@ -36,6 +39,12 @@ internal object SecurityInfoProtocols {
 
     /** Premier OID id-PK-* de [oids] : DG14 annonce une clé de Chip Authentication. */
     fun chipAuthenticationKey(oids: List<String>): String? = oids.firstOrNull { it.startsWith(ID_PK_PREFIX) }
+
+    /** Premier OID id-CA-* de [oids] : le protocole de Chip Authentication est annoncé (audit V33). */
+    fun chipAuthenticationProtocol(oids: List<String>): String? = oids.firstOrNull { it.startsWith(ID_CA_PREFIX) }
+
+    /** Vrai si [oids] annonce le protocole de Chip Authentication (`ChipAuthenticationInfo`). */
+    fun announcesChipAuthentication(oids: List<String>): Boolean = chipAuthenticationProtocol(oids) != null
 
     /** Vrai si [oids] annonce PACE, quel que soit le mapping. */
     fun announcesPace(oids: List<String>): Boolean = oids.any { it.startsWith(ID_PACE_PREFIX) }

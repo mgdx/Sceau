@@ -560,3 +560,12 @@ Format : date, contexte, décision, justification, écart à la SPEC concerné.
   - **2026-10-06, rapport sans donnée lue** (complète V24) : le rapport porte l'indicateur explicite `VerificationReport.identityRead` (vrai par défaut), mis à faux par `ReadingSession` sur ce seul chemin, plutôt que de déduire l'absence de lecture d'un DG1 vide. L'écran Résultat (`IdentityPresentation.mode`, `Mode.NOT_READ`) n'affiche alors ni photo ni emplacement de photo, ni section Identité, ni signature ni données complémentaires, mais la phrase `result_data_not_read` (« Les données du document n'ont pas pu être lues après l'échec de la vérification de la puce. », 45 langues), avec le verdict, la liste de contrôle et le bouton Effacer ;
 - **Justification** : un verdict ne doit jamais devenir plus favorable parce qu'un élément signé n'a pas été compris ou qu'un protocole annoncé n'a pas été mené.
 - **Écart à la SPEC** : §6.1 étape 6 (CA : un DG14 annonçant une clé inexploitable est un algorithme non pris en charge, et non une étape absente) ; §5.3 et §6.1 étape 5 (« Émetteur inconnu » limité aux pays dont le magasin ne contient aucun certificat ; signature du SOD non vérifiable sans chaîne) ; §6.1 étape 2 (protocole mené comparé à DG14, PACE-CAM essayé en premier).
+
+## D43. Déclassement et CA annoncée sans clé : révision de D40 (audit de sécurité du 2026-10-07 : V32, V33)
+
+- **Date** : 2026-10-07.
+- **Contexte** : D40 ne détecte un déclassement de protocole, et une CA annoncée mais inexploitable, que d'après DG14 et ses clés `id-PK-*`. L'audit du 2026-10-07 relève deux cas où un clone sans clé privée de puce obtient encore « Signature valide, puce non vérifiée » au lieu d'« Échec ».
+- **Décision** :
+  - **V33, CA annoncée sans clé** (complète V19) : un DG14 qui contient une `ChipAuthenticationInfo` (OID `id-CA-*`, préfixe `0.4.0.127.0.7.2.2.3.`) sans aucune `ChipAuthenticationPublicKeyInfo` (`id-PK-*`) donne `CHIP_AUTHENTICATION` `UNSUPPORTED_ALGORITHM` (détail : l'OID `id-CA-*`), donc « Échec », sans rien envoyer à la puce. `NOT_AVAILABLE` reste réservé à un DG14 qui n'annonce ni clé ni protocole de CA. Avec PACE-CAM, la CA via DG14 n'est pas menée (D21) : la règle ne touche pas la CNIe ;
+- **Justification** : comme pour D40, un verdict ne doit jamais devenir plus favorable parce qu'un élément signé annonce une vérification que l'application n'a pas pu mener.
+- **Écart à la SPEC** : §6.1 étape 6 (un DG14 qui annonce la CA sans clé exploitable est un algorithme non pris en charge, et non une étape absente).
