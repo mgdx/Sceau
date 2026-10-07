@@ -100,6 +100,62 @@ class KnownCountryWithoutChainTest {
         assertEquals(Verdict.UNKNOWN_ISSUER, verdict(result))
     }
 
+    // --- Audit V35 : code d'État inconnu, DS d'un autre pays ------------------------------
+
+    @Test
+    fun `code d Etat inconnu d ICAO sans chaine - echec`() {
+        for (state in listOf("UTO", "ZZZ", "FR<")) {
+            val result = verify(forger.document { issuingState = state }, state)
+
+            assertEquals(state, CheckStatus.FAILED, result.certificateChain.status)
+            assertEquals(state, CheckDetail.Error("UNKNOWN_STATE_CODE"), result.certificateChain.detail)
+            assertEquals(state, CheckStatus.NOT_AVAILABLE, result.sodSignature.status)
+            assertEquals(state, Verdict.FAILED, verdict(result))
+        }
+    }
+
+    @Test
+    fun `code d Etat inconnu sans certificat DS - echec`() {
+        val forged =
+            forger.document {
+                issuingState = "UTO"
+                sod = SodOptions(embedDs = false)
+            }
+
+        val result = verify(forged, "UTO")
+
+        assertEquals(CheckStatus.FAILED, result.certificateChain.status)
+        assertEquals(CheckDetail.Error("UNKNOWN_STATE_CODE"), result.certificateChain.detail)
+        assertEquals(Verdict.FAILED, verdict(result))
+    }
+
+    @Test
+    fun `pays reel absent du magasin - emetteur inconnu inchange`() {
+        val netherlands = TestPki(TestKeyType.EC, name = "Pays-Bas", country = "NL", seed = SEED + 3)
+
+        val result = verify(netherlands.document { issuingState = "NLD" }, "NLD")
+
+        assertEquals(CheckStatus.NOT_AVAILABLE, result.certificateChain.status)
+        assertEquals(Verdict.UNKNOWN_ISSUER, verdict(result))
+    }
+
+    @Test
+    fun `DS d un autre pays que DG1 sans chaine - echec`() {
+        val elsewhere = TestPki(TestKeyType.EC, name = "Ailleurs", country = "XX", seed = SEED + 4)
+
+        val dutch = verify(elsewhere.document { issuingState = "NLD" }, "NLD")
+
+        assertEquals(CheckStatus.FAILED, dutch.certificateChain.status)
+        assertEquals(CheckDetail.CountryMismatch(null, "XX", "NLD"), dutch.certificateChain.detail)
+        assertEquals(CheckStatus.NOT_AVAILABLE, dutch.sodSignature.status)
+        assertEquals(Verdict.FAILED, verdict(dutch))
+
+        // Pays présent dans le magasin : la règle V25 s'applique d'abord, l'issue est la même.
+        val french = verify(elsewhere.document { issuingState = "FRA" }, "FRA")
+        assertEquals(CheckStatus.FAILED, french.certificateChain.status)
+        assertEquals(Verdict.FAILED, verdict(french))
+    }
+
     companion object {
         private const val SEED = 20_261_007L
     }

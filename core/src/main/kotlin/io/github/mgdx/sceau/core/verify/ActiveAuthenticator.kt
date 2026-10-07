@@ -63,10 +63,16 @@ internal object ActiveAuthenticator {
         response: ByteArray,
     ): Check =
         try {
+            // Audits V9 et V30 : clé hors bornes (RSA de moins de 1024 bits, clé géante) refusée
+            // avant tout calcul.
+            val unsupportedKey = Crypto.unsupportedKey(publicKey)
             when {
+                unsupportedKey != null -> {
+                    unsupported(unsupportedKey)
+                }
+
                 publicKey is RSAPublicKey -> {
-                    // Audit V9 : clé RSA de moins de 1024 bits refusée.
-                    Crypto.weakKey(publicKey)?.let(::unsupported) ?: verifyRsa(publicKey, challenge, response)
+                    verifyRsa(publicKey, challenge, response)
                 }
 
                 digestAlgorithm != null && Crypto.isWeakDigestName(digestAlgorithm) -> {

@@ -9,6 +9,7 @@ import io.github.mgdx.sceau.core.report.IssuanceDateSource
 import io.github.mgdx.sceau.core.report.KnownDeviation
 import io.github.mgdx.sceau.core.trust.TrustAnchor
 import io.github.mgdx.sceau.core.trust.TrustStore
+import org.bouncycastle.asn1.ASN1ObjectIdentifier
 import org.bouncycastle.asn1.ASN1Primitive
 import org.bouncycastle.asn1.cms.CMSAttributes
 import org.bouncycastle.asn1.cms.Time
@@ -49,9 +50,28 @@ internal class ParsedSod(
                 throw IllegalArgumentException("SOD_CONTENT_TYPE")
             }
             val signer = signedData.signerInfos.signers.singleOrNull() ?: throw IllegalArgumentException("SOD_SIGNER_COUNT")
+            if (!hasRequiredSignedAttributes(signer, ICAOObjectIdentifiers.id_icao_ldsSecurityObject)) {
+                throw IllegalArgumentException("SOD_SIGNED_ATTRIBUTES")
+            }
             val content = signedData.signedContent?.content as? ByteArray ?: throw IllegalArgumentException("SOD_NO_CONTENT")
             val securityObject = LDSSecurityObject.getInstance(ASN1Primitive.fromByteArray(content))
             return ParsedSod(signedData, signer, securityObject)
+        }
+
+        /**
+         * Audit V40 : ICAO 9303-10 impose des attributs signés, dont `messageDigest` ; leur
+         * `contentType` doit être le type de contenu encapsulé [contentType]. BouncyCastle accepte
+         * sinon un `SignerInfo` sans attributs (signature directe du contenu), qu'aucun émetteur
+         * ne produit. Vaut pour EF.SOD et pour EF.CardSecurity.
+         */
+        fun hasRequiredSignedAttributes(
+            signer: SignerInformation,
+            contentType: ASN1ObjectIdentifier,
+        ): Boolean {
+            val attributes = signer.signedAttributes ?: return false
+            if (attributes.get(CMSAttributes.messageDigest) == null) return false
+            val declared = attributes.get(CMSAttributes.contentType)?.attrValues ?: return false
+            return declared.size() == 1 && declared.getObjectAt(0) == contentType
         }
     }
 }
@@ -171,6 +191,7 @@ internal class PassiveAuthenticator(
                     sodSignature = Check(CheckId.SOD_SIGNATURE, CheckStatus.NOT_AVAILABLE, CheckDetail.DsCertificateMissing),
                     certificateChain =
                         knownCountry?.let { noChain(it, null) }
+                            ?: unknownStateCode(facts.issuingState)
                             ?: Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.NOT_AVAILABLE, CheckDetail.DsCertificateMissing),
                     dsValidity = Check(CheckId.DS_VALIDITY, CheckStatus.NOT_AVAILABLE),
                     dataGroupHashes = rawHashes,
@@ -179,15 +200,23 @@ internal class PassiveAuthenticator(
 
         val verifiedSignature = guarded(CheckId.SOD_SIGNATURE) { checkSignature(parsed.signer, ds) }
         var chainInfo: ChainInfo? = null
+        var chainMissing = false
         val chain =
             guarded(CheckId.CERTIFICATE_CHAIN) {
                 val (check, info) = checkChain(ds, facts.issuingState)
                 chainInfo = info
-                if (check.status == CheckStatus.NOT_AVAILABLE && knownCountry != null) noChain(knownCountry, info) else check
+                chainMissing = check.status == CheckStatus.NOT_AVAILABLE
+                when {
+                    !chainMissing -> check
+
+                    knownCountry != null -> noChain(knownCountry, info)
+
+                    // Audit V35 : sans chaîne, code d'État inconnu ou DS d'un autre pays : échec.
+                    else -> unknownStateCode(facts.issuingState) ?: dsCountryMismatch(ds, facts.issuingState) ?: check
+                }
             }
         // Audit V25 : sans chaîne, le DS n'est garanti par personne ; une signature qu'il vérifie
         // ne prouve rien et n'est pas présentée comme vérifiée.
-        val chainMissing = chain.status == CheckStatus.NOT_AVAILABLE || chain.detail is CheckDetail.NoChainForKnownCountry
         val signature =
             if (chainMissing && verifiedSignature.status == CheckStatus.OK) {
                 verifiedSignature.copy(status = CheckStatus.NOT_AVAILABLE)
@@ -294,7 +323,12 @@ internal class PassiveAuthenticator(
         val signedData = CMSSignedData(cardSecurity)
         val signer = signedData.signerInfos.signers.singleOrNull()
         val content = signedData.signedContent?.content as? ByteArray
-        if (signedData.signedContentTypeOID != ID_SECURITY_OBJECT || signer == null || content == null) {
+        if (signedData.signedContentTypeOID != ID_SECURITY_OBJECT ||
+            signer == null ||
+            content == null ||
+            // Audit V40 : mêmes attributs signés exigés que pour le SOD.
+            !ParsedSod.hasRequiredSignedAttributes(signer, ASN1ObjectIdentifier(ID_SECURITY_OBJECT))
+        ) {
             return CardSecurityVerification(CheckStatus.FAILED, CardSecurityVerification.MALFORMED, null)
         }
         val ds =
@@ -374,12 +408,16 @@ internal class PassiveAuthenticator(
         ) {
             return Check(CheckId.SOD_SIGNATURE, CheckStatus.UNSUPPORTED_ALGORITHM, CheckDetail.UnsupportedAlgorithm(algorithm))
         }
+        // Audits V9 et V30 : clé du DS hors bornes, lue encodée, refusée avant toute reconstruction.
+        Crypto.unsupportedKey(ds.holder.subjectPublicKeyInfo)?.let { key ->
+            return Check(CheckId.SOD_SIGNATURE, CheckStatus.UNSUPPORTED_ALGORITHM, CheckDetail.UnsupportedAlgorithm(key))
+        }
         return try {
             // Vérifieur construit sur la clé seule : BouncyCastle refuserait sinon la signature d'un
             // DS expiré au signingTime, ce qui relève de la ligne DS_VALIDITY et non de celle-ci.
             val publicKey = JcaX509CertificateConverter().setProvider(Crypto.provider).getCertificate(ds.holder).publicKey
-            Crypto.weakKey(publicKey)?.let { weak ->
-                return Check(CheckId.SOD_SIGNATURE, CheckStatus.UNSUPPORTED_ALGORITHM, CheckDetail.UnsupportedAlgorithm(weak))
+            Crypto.unsupportedKey(publicKey)?.let { key ->
+                return Check(CheckId.SOD_SIGNATURE, CheckStatus.UNSUPPORTED_ALGORITHM, CheckDetail.UnsupportedAlgorithm(key))
             }
             val verifier = JcaSimpleSignerInfoVerifierBuilder().setProvider(Crypto.provider).build(publicKey)
             val valid = signer.verify(verifier)
@@ -468,6 +506,32 @@ internal class PassiveAuthenticator(
                 runCatching { IcaoCountries.consistent(anchor.country, anchor.country, issuingState) }.getOrDefault(false)
             }
         return country.takeIf { known }
+    }
+
+    /**
+     * Sans chaîne, État émetteur [issuingState] inconnu d'ICAO 9303-3 (ni pays, ni organisation :
+     * `UTO`, `ZZZ`, `FR<`…) : échec, car aucun document signé ne peut l'annoncer (audit V35). Null
+     * si le code est un pays, une organisation, ou s'il n'est pas fourni.
+     */
+    private fun unknownStateCode(issuingState: String?): Check? {
+        if (issuingState == null || IcaoCountries.isOrganization(issuingState) || IcaoCountries.alpha2(issuingState) != null) return null
+        return Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.FAILED, CheckDetail.Error(ERROR_UNKNOWN_STATE_CODE))
+    }
+
+    /**
+     * Sans chaîne, pays du DS (attribut C, absent compris) différent de l'État émetteur de DG1 :
+     * échec avec [CheckDetail.CountryMismatch], comme avec une chaîne (audit V35). Null si les pays
+     * concordent, si l'État est une organisation (le DS porte alors un code comme `UN` ou `EU`), ou
+     * s'il n'est pas fourni.
+     */
+    private fun dsCountryMismatch(
+        ds: DsCertificate,
+        issuingState: String?,
+    ): Check? {
+        if (issuingState == null) return null
+        val dsCountry = Crypto.country(ds.holder.subject)
+        if (IcaoCountries.consistent(dsCountry, dsCountry, issuingState)) return null
+        return Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.FAILED, CheckDetail.CountryMismatch(null, dsCountry, issuingState))
     }
 
     /** Aucune chaîne alors que des certificats du pays [country] sont connus : échec (audit V25). */
@@ -623,6 +687,7 @@ internal class PassiveAuthenticator(
         const val ERROR_UNEXPECTED = "PA_UNEXPECTED"
         const val ERROR_DS_KEY_USAGE = "DS_KEY_USAGE"
         const val ERROR_CHAIN_BUDGET = "CHAIN_BUDGET"
+        const val ERROR_UNKNOWN_STATE_CODE = "UNKNOWN_STATE_CODE"
         const val USUAL_VALIDITY_YEARS = 10L
         const val HEX = 16
         const val DG1 = 1

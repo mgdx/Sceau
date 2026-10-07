@@ -11,8 +11,12 @@ import io.github.mgdx.sceau.core.report.ChipAuthenticationMethod
 import io.github.mgdx.sceau.core.trust.TrustStore
 import io.github.mgdx.sceau.core.verify.CardSecurityVerification
 import io.github.mgdx.sceau.core.verify.PassiveAuthenticator
+import org.bouncycastle.asn1.ASN1Encodable
+import org.bouncycastle.asn1.ASN1ObjectIdentifier
 import org.bouncycastle.asn1.ASN1Primitive
+import org.bouncycastle.asn1.ASN1Sequence
 import org.bouncycastle.asn1.ASN1Set
+import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo
 import org.bouncycastle.jcajce.provider.asymmetric.util.EC5Util
 import org.jmrtd.lds.ChipAuthenticationPublicKeyInfo
 import org.jmrtd.lds.SecurityInfo
@@ -20,6 +24,7 @@ import java.math.BigInteger
 import java.security.PublicKey
 import java.security.interfaces.ECPublicKey
 import javax.crypto.interfaces.DHPublicKey
+import io.github.mgdx.sceau.core.verify.Crypto as KeyBounds
 
 /** Canal établi par [SecureChannel] : protocole, et éléments de PACE-CAM s'il a été mené. */
 internal class EstablishedChannel(
@@ -110,9 +115,11 @@ internal object ChipAuthenticationMapping {
         }
         val content = signed.content ?: return failed("CARD_SECURITY_${CardSecurityVerification.MALFORMED}")
         val chipKeys = chipAuthenticationKeys(content)
-        if (chipKeys.isEmpty()) return failed("NO_CHIP_KEY")
+        if (chipKeys.keys.isEmpty()) return chipKeys.unsupported?.let(::unsupported) ?: failed("NO_CHIP_KEY")
         val caIc = evidence.chipAuthenticationData?.takeIf { it.isNotEmpty() } ?: return failed("NO_CHIP_AUTHENTICATION_DATA")
         val mappingKey = evidence.mappingKey ?: return failed("NO_MAPPING_KEY")
+        // Audit V30 : clé de mapping hors bornes refusée avant tout calcul.
+        KeyBounds.unsupportedKey(mappingKey)?.let { return unsupported(it) }
 
         when (val outcome = keyAgreementMatches(chipKeys, BigInteger(1, caIc), mappingKey)) {
             KeyAgreement.Match -> {}
@@ -122,11 +129,7 @@ internal object ChipAuthenticationMapping {
             }
 
             is KeyAgreement.Unsupported -> {
-                return Check(
-                    CheckId.CHIP_AUTHENTICATION,
-                    CheckStatus.UNSUPPORTED_ALGORITHM,
-                    CheckDetail.UnsupportedAlgorithm(outcome.algorithm),
-                )
+                return unsupported(outcome.algorithm)
             }
         }
         val method = CheckDetail.ChipAuthentication(ChipAuthenticationMethod.PACE_CAM)
@@ -177,31 +180,61 @@ internal object ChipAuthenticationMapping {
         ) : KeyAgreement
     }
 
-    /** Clés `ChipAuthenticationPublicKeyInfo` du `SET OF SecurityInfo` signé. */
-    private fun chipAuthenticationKeys(content: ByteArray): List<PublicKey> =
-        try {
-            ASN1Set
-                .getInstance(ASN1Primitive.fromByteArray(content))
-                .mapNotNull { runCatching { SecurityInfo.getInstance(it) }.getOrNull() }
-                .filterIsInstance<ChipAuthenticationPublicKeyInfo>()
-                .mapNotNull { it.subjectPublicKey }
-        } catch (e: Exception) {
-            emptyList()
-        }
+    /**
+     * Clés de la puce : [keys] reconstruites par JMRTD ; [unsupported] décrit la dernière clé
+     * écartée parce que sa taille sort des bornes (audit V30), null s'il n'y en a pas.
+     */
+    private class ChipKeys(
+        val keys: List<PublicKey>,
+        val unsupported: String?,
+    )
+
+    /**
+     * Clés `ChipAuthenticationPublicKeyInfo` du `SET OF SecurityInfo` signé. Audit V30 : la taille
+     * de chaque clé est contrôlée sur sa forme encodée, avant que JMRTD ne la reconstruise (la
+     * reconstruction valide la clé, à un coût qui croît avec sa taille).
+     */
+    private fun chipAuthenticationKeys(content: ByteArray): ChipKeys {
+        var unsupported: String? = null
+        val keys =
+            try {
+                ASN1Set
+                    .getInstance(ASN1Primitive.fromByteArray(content))
+                    .filter { element -> oversizedKey(element)?.also { unsupported = it } == null }
+                    .mapNotNull { runCatching { SecurityInfo.getInstance(it) }.getOrNull() }
+                    .filterIsInstance<ChipAuthenticationPublicKeyInfo>()
+                    .mapNotNull { it.subjectPublicKey }
+            } catch (e: Exception) {
+                emptyList()
+            }
+        return ChipKeys(keys, unsupported)
+    }
+
+    /** Taille hors bornes de la clé d'une `ChipAuthenticationPublicKeyInfo` encodée, ou null. */
+    private fun oversizedKey(element: ASN1Encodable): String? =
+        runCatching {
+            val sequence = ASN1Sequence.getInstance(element)
+            val protocol = ASN1ObjectIdentifier.getInstance(sequence.getObjectAt(0)).id
+            if (SecurityInfoProtocols.chipAuthenticationKey(listOf(protocol)) == null) return null
+            KeyBounds.unsupportedKey(SubjectPublicKeyInfo.getInstance(sequence.getObjectAt(1)))
+        }.getOrNull()
 
     /**
      * Vrai si l'une des clés de la puce vérifie PK_Map,IC = KA(CA_IC, PK_IC, D_IC). Une clé dont
-     * le type ou les paramètres de domaine diffèrent de ceux de PK_Map,IC ne convient pas.
+     * le type ou les paramètres de domaine diffèrent de ceux de PK_Map,IC ne convient pas. Une clé
+     * hors bornes (audit V30) n'est pas essayée.
      */
     private fun keyAgreementMatches(
-        chipKeys: List<PublicKey>,
+        chipKeys: ChipKeys,
         caIc: BigInteger,
         mappingKey: PublicKey,
     ): KeyAgreement {
-        var unsupported: String? = null
-        for (chipKey in chipKeys) {
+        var unsupported: String? = chipKeys.unsupported
+        for (chipKey in chipKeys.keys) {
+            val oversized = KeyBounds.unsupportedKey(chipKey)
             val matches =
                 when {
+                    oversized != null -> null
                     chipKey is ECPublicKey && mappingKey is ECPublicKey -> ecMatches(chipKey, caIc, mappingKey)
                     chipKey is DHPublicKey && mappingKey is DHPublicKey -> dhMatches(chipKey, caIc, mappingKey)
                     chipKey is ECPublicKey || chipKey is DHPublicKey -> false
@@ -215,7 +248,7 @@ internal object ChipAuthenticationMapping {
                 false -> {}
 
                 null -> {
-                    unsupported = chipKey.algorithm ?: "CAM"
+                    unsupported = oversized ?: chipKey.algorithm ?: "CAM"
                 }
             }
         }
@@ -252,6 +285,9 @@ internal object ChipAuthenticationMapping {
         if (caIc.signum() <= 0 || caIc >= p) return false
         return chipKey.y.modPow(caIc, p) == mappingKey.y
     }
+
+    private fun unsupported(algorithm: String) =
+        Check(CheckId.CHIP_AUTHENTICATION, CheckStatus.UNSUPPORTED_ALGORITHM, CheckDetail.UnsupportedAlgorithm(algorithm))
 
     private fun failed(reason: String) =
         Check(CheckId.CHIP_AUTHENTICATION, CheckStatus.FAILED, CheckDetail.Error("${Step.VERIFY_CHIP.name}-CAM-$reason"))
