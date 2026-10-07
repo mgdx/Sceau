@@ -9,6 +9,7 @@ import io.github.mgdx.sceau.core.report.IssuanceDateSource
 import io.github.mgdx.sceau.core.report.KnownDeviation
 import io.github.mgdx.sceau.core.trust.TrustAnchor
 import io.github.mgdx.sceau.core.trust.TrustStore
+import org.bouncycastle.asn1.ASN1ObjectIdentifier
 import org.bouncycastle.asn1.ASN1Primitive
 import org.bouncycastle.asn1.cms.CMSAttributes
 import org.bouncycastle.asn1.cms.Time
@@ -49,9 +50,28 @@ internal class ParsedSod(
                 throw IllegalArgumentException("SOD_CONTENT_TYPE")
             }
             val signer = signedData.signerInfos.signers.singleOrNull() ?: throw IllegalArgumentException("SOD_SIGNER_COUNT")
+            if (!hasRequiredSignedAttributes(signer, ICAOObjectIdentifiers.id_icao_ldsSecurityObject)) {
+                throw IllegalArgumentException("SOD_SIGNED_ATTRIBUTES")
+            }
             val content = signedData.signedContent?.content as? ByteArray ?: throw IllegalArgumentException("SOD_NO_CONTENT")
             val securityObject = LDSSecurityObject.getInstance(ASN1Primitive.fromByteArray(content))
             return ParsedSod(signedData, signer, securityObject)
+        }
+
+        /**
+         * Audit V40 : ICAO 9303-10 impose des attributs signés, dont `messageDigest` ; leur
+         * `contentType` doit être le type de contenu encapsulé [contentType]. BouncyCastle accepte
+         * sinon un `SignerInfo` sans attributs (signature directe du contenu), qu'aucun émetteur
+         * ne produit. Vaut pour EF.SOD et pour EF.CardSecurity.
+         */
+        fun hasRequiredSignedAttributes(
+            signer: SignerInformation,
+            contentType: ASN1ObjectIdentifier,
+        ): Boolean {
+            val attributes = signer.signedAttributes ?: return false
+            if (attributes.get(CMSAttributes.messageDigest) == null) return false
+            val declared = attributes.get(CMSAttributes.contentType)?.attrValues ?: return false
+            return declared.size() == 1 && declared.getObjectAt(0) == contentType
         }
     }
 }
@@ -303,7 +323,12 @@ internal class PassiveAuthenticator(
         val signedData = CMSSignedData(cardSecurity)
         val signer = signedData.signerInfos.signers.singleOrNull()
         val content = signedData.signedContent?.content as? ByteArray
-        if (signedData.signedContentTypeOID != ID_SECURITY_OBJECT || signer == null || content == null) {
+        if (signedData.signedContentTypeOID != ID_SECURITY_OBJECT ||
+            signer == null ||
+            content == null ||
+            // Audit V40 : mêmes attributs signés exigés que pour le SOD.
+            !ParsedSod.hasRequiredSignedAttributes(signer, ASN1ObjectIdentifier(ID_SECURITY_OBJECT))
+        ) {
             return CardSecurityVerification(CheckStatus.FAILED, CardSecurityVerification.MALFORMED, null)
         }
         val ds =
