@@ -8,6 +8,8 @@ import org.bouncycastle.asn1.ASN1Set
 import org.bouncycastle.asn1.cms.CMSAttributes
 import org.bouncycastle.asn1.cms.SignedData
 import org.bouncycastle.asn1.cms.Time
+import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers
+import org.bouncycastle.asn1.pkcs.RSAPublicKey
 import org.bouncycastle.asn1.x509.Certificate
 import org.bouncycastle.asn1.x509.ExtendedKeyUsage
 import org.bouncycastle.asn1.x509.KeyPurposeId
@@ -232,10 +234,28 @@ internal object MasterListParser {
      */
     private fun toX509OrNull(holder: X509CertificateHolder): X509Certificate? =
         try {
-            TrustCrypto.toX509(holder).takeIf { it.publicKey != null }
+            TrustCrypto.toX509(holder).takeIf { hasReadableKey(holder, it) }
         } catch (ignored: Exception) {
             null
         }
+
+    /**
+     * Clé RSA : seule sa structure est lue ici (module impair, exposant positif). La décoder
+     * fait faire à BouncyCastle un test de Miller-Rabin sur le module (il ne doit pas être
+     * premier) qui coûtait, pour les quelque 430 clés RSA du magasin, plus de 40 s de calcul
+     * sur un Fairphone 3 à chaque démarrage (D47). Ce contrôle n'est pas retiré mais reporté :
+     * la clé d'une ancre n'est décodée, donc contrôlée, que lorsqu'elle sert à vérifier une
+     * signature, et son échec y vaut refus. Autres clés : décodées ici, comme avant.
+     */
+    private fun hasReadableKey(
+        holder: X509CertificateHolder,
+        certificate: X509Certificate,
+    ): Boolean {
+        val keyInfo = holder.subjectPublicKeyInfo
+        if (keyInfo.algorithm.algorithm != PKCSObjectIdentifiers.rsaEncryption) return certificate.publicKey != null
+        val key = RSAPublicKey.getInstance(keyInfo.parsePublicKey())
+        return key.modulus.signum() > 0 && key.modulus.testBit(0) && key.publicExponent.signum() > 0
+    }
 
     private fun signingTime(signer: SignerInformation): Instant? {
         val attribute = signer.signedAttributes?.get(CMSAttributes.signingTime) ?: return null
