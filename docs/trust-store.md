@@ -116,7 +116,8 @@ listé dans `trust/index.txt` est parsé au chargement. Sa signature CMS est vé
 signataire doit être émis par un certificat dont l'empreinte est épinglée dans le code (voir
 « Ancrage du signataire »). Sinon le chargement échoue (`InvalidMasterListException`). Ses
 certificats portent la source `EMBEDDED_MASTER_LIST`. En cas de doublon, l'ordre de priorité
-est ANTS, puis publications nationales, puis Master List embarquée, puis Master List importée.
+est ANTS, puis publications nationales, puis Master List embarquée, puis Master List importée
+ancrée, puis certificat importé seul, puis Master List importée non ancrée (D44).
 
 ### Master List embarquée : German Master List du BSI
 
@@ -171,9 +172,31 @@ Entre deux releases, l'utilisateur peut importer une Master List plus récente d
 fichiers CMS `.ml`, `.der` et `.p7b`, par exemple la German Master List publiée par le BSI ou
 une Master List obtenue auprès d'une autorité nationale. La signature CMS est vérifiée avec le
 certificat signataire contenu dans le fichier, dont l'empreinte SHA-256 est présentée à
-l'utilisateur avant l'import. Il n'y a pas d'ancrage épinglé pour les imports : c'est
-l'utilisateur qui décide de faire confiance au signataire. Une liste invalide est rejetée. Les
-certificats importés portent la source `IMPORTED_MASTER_LIST` et s'affichent « importé ».
+l'utilisateur avant l'import. Une liste invalide est rejetée.
+
+Cette signature ne prouve rien sur l'origine de la liste : n'importe qui peut fabriquer un
+signataire nommé « CSCA XY ». Le signataire est donc rattaché, si possible, à un CSCA déjà connu
+(audit V34, D44) : il doit être émis par un certificat embarqué (ANTS, publication nationale,
+Master List embarquée) ou importé seul par l'utilisateur, même nom d'émetteur et signature
+vérifiée avec sa clé (`TrustStores.isMasterListAnchored`, même règle au chargement). Les CSCA
+d'une autre Master List importée, et ceux de la liste elle-même, ne comptent pas.
+
+- **Signataire ancré** : les certificats portent la source `IMPORTED_MASTER_LIST` et s'affichent
+  « Importé ». C'est le cas des listes nationales signées sous un CSCA déjà présent dans la liste
+  du BSI.
+- **Signataire non ancré** : l'aperçu d'import affiche un avertissement (« Le signataire de
+  cette liste n'est rattaché à aucun CSCA connu […] ») et le bouton « Importer » reste inactif
+  tant que l'utilisateur n'a pas coché « J'ai obtenu ce fichier directement de l'autorité qui l'a
+  publié ». Les certificats portent la source `IMPORTED_MASTER_LIST_UNANCHORED`, dernière en
+  priorité, et s'affichent « Liste importée, origine non vérifiée », dans le magasin comme dans le
+  détail du résultat ; le verdict porte la mention « Vérifié grâce à un certificat que vous avez
+  importé ». Importer d'abord seul le CSCA émetteur du signataire, après en avoir comparé
+  l'empreinte, rend la liste ancrée.
+
+L'usage étendu (EKU) du signataire n'est contrôlé que s'il est présent : il doit alors contenir
+`id-icao-cscaMasterListSigningKey` (2.23.136.1.1.3) ou `anyExtendedKeyUsage`. Il n'est pas
+exigé, certaines Master Lists réelles ne le portant pas ; le signataire de la liste du BSI le
+porte (extension critique).
 
 Codes de rejet (`InvalidMasterListException.code`, sans donnée personnelle) :
 
@@ -189,6 +212,7 @@ Codes de rejet (`InvalidMasterListException.code`, sans donnée personnelle) :
 | `SIGNER_NOT_VALID` | Le certificat signataire n'était pas valide à la date de signature déclarée. |
 | `UNSUPPORTED_ALGORITHM` | Algorithme de signature inconnu de BouncyCastle. |
 | `UNTRUSTED_SIGNER` | Liste embarquée seulement : signataire non émis par un certificat épinglé. |
+| `BAD_SIGNER_USAGE` | Le signataire porte un usage étendu sans `id-icao-cscaMasterListSigningKey` ni `anyExtendedKeyUsage`, ou illisible (audit V34). |
 
 Le coût d'analyse est borné quel que soit le fichier (D22, audit V22) : un seul signataire, et
 au plus 2 000 certificats (`TrustStores.MAX_MASTER_LIST_CERTIFICATES`), comptés avant d'être

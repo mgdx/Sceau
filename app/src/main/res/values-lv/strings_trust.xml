@@ -29,6 +29,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Importēts</string>
     <string name="trust_source_imported_certificate">Importēts sertifikāts</string>
+    <string name="trust_source_imported_unanchored">Importēts saraksts, izcelsme nav pārbaudīta</string>
     <string name="trust_link_certificate">Saites sertifikāts</string>
 
     <!-- Recherche -->
@@ -41,6 +42,8 @@
     <string name="trust_busy">Lūdzu, uzgaidiet…</string>
     <string name="trust_import_confirm_title">Vai importēt šo Master List?</string>
     <string name="trust_import_confirm_text">Tās paraksts ir derīgs. Pirms importēšanas pārbaudiet, vai parakstītāja nospiedums sakrīt ar izdevējiestādes publicēto.</string>
+    <string name="trust_import_unanchored_warning">Šī saraksta parakstītājs nav saistīts ne ar vienu zināmu CSCA: nekas negarantē tā izcelsmi. Importējiet šo failu tikai tad, ja to saņēmāt tieši no iestādes, kas to publicēja.</string>
+    <string name="trust_import_unanchored_acknowledge">Šo failu saņēmu tieši no iestādes, kas to publicēja</string>
     <string name="trust_import_signer">Parakstītājs</string>
     <string name="trust_import_signer_fingerprint">Parakstītāja SHA-256 nospiedums</string>
     <string name="trust_import_signing_date">Parakstīšanas datums</string>

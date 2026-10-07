@@ -27,6 +27,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">İçe aktarıldı</string>
     <string name="trust_source_imported_certificate">İçe aktarılan sertifika</string>
+    <string name="trust_source_imported_unanchored">İçe aktarılan liste, kaynağı doğrulanmadı</string>
     <string name="trust_link_certificate">Bağlantı sertifikası</string>
 
     <!-- Recherche -->
@@ -39,6 +40,8 @@
     <string name="trust_busy">Lütfen bekleyin…</string>
     <string name="trust_import_confirm_title">Bu Master List içe aktarılsın mı?</string>
     <string name="trust_import_confirm_text">İmzası geçerli. İçe aktarmadan önce, imzalayanın parmak izinin düzenleyen makamın yayımladığı parmak iziyle eşleştiğini kontrol edin.</string>
+    <string name="trust_import_unanchored_warning">Bu listenin imzalayanı bilinen hiçbir CSCA’ya bağlı değil: kaynağını hiçbir şey garanti etmiyor. Bu dosyayı yalnızca doğrudan yayımlayan kurumdan aldıysanız içe aktarın.</string>
+    <string name="trust_import_unanchored_acknowledge">Bu dosyayı doğrudan yayımlayan kurumdan aldım</string>
     <string name="trust_import_signer">İmzalayan</string>
     <string name="trust_import_signer_fingerprint">İmzalayanın SHA-256 parmak izi</string>
     <string name="trust_import_signing_date">İmza tarihi</string>

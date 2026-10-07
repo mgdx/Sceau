@@ -31,6 +31,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Zaimportowany</string>
     <string name="trust_source_imported_certificate">Zaimportowany certyfikat</string>
+    <string name="trust_source_imported_unanchored">Zaimportowana lista, niezweryfikowane pochodzenie</string>
     <string name="trust_link_certificate">Certyfikat łączący</string>
 
     <!-- Recherche -->
@@ -43,6 +44,8 @@
     <string name="trust_busy">Proszę czekać…</string>
     <string name="trust_import_confirm_title">Zaimportować tę Master List?</string>
     <string name="trust_import_confirm_text">Jej podpis jest ważny. Przed zaimportowaniem sprawdź, czy odcisk podpisującego zgadza się z odciskiem opublikowanym przez organ wydający.</string>
+    <string name="trust_import_unanchored_warning">Podpisujący tę listę nie jest powiązany z żadnym znanym CSCA: nic nie gwarantuje jej pochodzenia. Importuj ten plik tylko wtedy, gdy otrzymano go bezpośrednio od organu, który go opublikował.</string>
+    <string name="trust_import_unanchored_acknowledge">Ten plik pochodzi bezpośrednio od organu, który go opublikował</string>
     <string name="trust_import_signer">Podpisujący</string>
     <string name="trust_import_signer_fingerprint">Odcisk SHA-256 podpisującego</string>
     <string name="trust_import_signing_date">Data podpisania</string>

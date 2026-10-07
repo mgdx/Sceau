@@ -59,6 +59,11 @@ sealed interface ImportPreview {
         val info: MasterListInfo,
         /** Certificats distincts de la liste absents du magasin actuel (D33). */
         val newCertificates: Int,
+        /**
+         * Vrai si le signataire est émis par un CSCA déjà connu (embarqué ou certificat importé
+         * seul) ; faux, l'aperçu avertit et demande une confirmation distincte (audit V34, D44).
+         */
+        val anchored: Boolean,
     ) : ImportPreview
 
     class Certificate(

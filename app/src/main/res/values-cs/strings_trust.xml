@@ -31,6 +31,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Importovaný</string>
     <string name="trust_source_imported_certificate">Importovaný certifikát</string>
+    <string name="trust_source_imported_unanchored">Importovaný seznam, neověřený původ</string>
     <string name="trust_link_certificate">Propojovací certifikát</string>
 
     <!-- Recherche -->
@@ -43,6 +44,8 @@
     <string name="trust_busy">Čekejte prosím…</string>
     <string name="trust_import_confirm_title">Importovat tento seznam Master List?</string>
     <string name="trust_import_confirm_text">Jeho podpis je platný. Před importem ověřte, že otisk podepisujícího odpovídá otisku zveřejněnému vydávajícím orgánem.</string>
+    <string name="trust_import_unanchored_warning">Podepisující tohoto seznamu není navázán na žádný známý CSCA: nic nezaručuje jeho původ. Soubor importujte, jen pokud jste ho získali přímo od orgánu, který ho zveřejnil.</string>
+    <string name="trust_import_unanchored_acknowledge">Tento soubor mám přímo od orgánu, který ho zveřejnil</string>
     <string name="trust_import_signer">Podepisující</string>
     <string name="trust_import_signer_fingerprint">Otisk SHA-256 podepisujícího</string>
     <string name="trust_import_signing_date">Datum podpisu</string>

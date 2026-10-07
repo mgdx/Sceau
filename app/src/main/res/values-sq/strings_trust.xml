@@ -27,6 +27,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">E importuar</string>
     <string name="trust_source_imported_certificate">Certifikatë e importuar</string>
+    <string name="trust_source_imported_unanchored">Listë e importuar, origjinë e paverifikuar</string>
     <string name="trust_link_certificate">Certifikatë lidhëse</string>
 
     <!-- Recherche -->
@@ -39,6 +40,8 @@
     <string name="trust_busy">Prit pak…</string>
     <string name="trust_import_confirm_title">Të importohet kjo Master List?</string>
     <string name="trust_import_confirm_text">Nënshkrimi i saj është i vlefshëm. Para importimit, kontrollo që gjurma e nënshkruesit të përputhet me atë të publikuar nga autoriteti lëshues.</string>
+    <string name="trust_import_unanchored_warning">Nënshkruesi i kësaj liste nuk lidhet me asnjë CSCA të njohur: asgjë nuk e garanton origjinën e saj. Importojeni këtë skedar vetëm nëse e keni marrë drejtpërdrejt nga autoriteti që e ka publikuar.</string>
+    <string name="trust_import_unanchored_acknowledge">E kam marrë këtë skedar drejtpërdrejt nga autoriteti që e ka publikuar</string>
     <string name="trust_import_signer">Nënshkruesi</string>
     <string name="trust_import_signer_fingerprint">Gjurma SHA-256 e nënshkruesit</string>
     <string name="trust_import_signing_date">Data e nënshkrimit</string>

@@ -27,6 +27,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Εισαγόμενο</string>
     <string name="trust_source_imported_certificate">Εισαγόμενο πιστοποιητικό</string>
+    <string name="trust_source_imported_unanchored">Εισαγόμενη λίστα, μη επαληθευμένη προέλευση</string>
     <string name="trust_link_certificate">Πιστοποιητικό σύνδεσης</string>
 
     <!-- Recherche -->
@@ -39,6 +40,8 @@
     <string name="trust_busy">Περιμένετε…</string>
     <string name="trust_import_confirm_title">Εισαγωγή αυτής της Master List;</string>
     <string name="trust_import_confirm_text">Η υπογραφή της είναι έγκυρη. Πριν από την εισαγωγή, βεβαιωθείτε ότι το αποτύπωμα του υπογράφοντος αντιστοιχεί σε αυτό που δημοσιεύει η αρχή έκδοσης.</string>
+    <string name="trust_import_unanchored_warning">Ο υπογράφων αυτής της λίστας δεν συνδέεται με κανένα γνωστό CSCA: τίποτα δεν εγγυάται την προέλευσή της. Εισαγάγετε το αρχείο μόνο αν το λάβατε απευθείας από την αρχή που το δημοσίευσε.</string>
+    <string name="trust_import_unanchored_acknowledge">Έλαβα αυτό το αρχείο απευθείας από την αρχή που το δημοσίευσε</string>
     <string name="trust_import_signer">Υπογράφων</string>
     <string name="trust_import_signer_fingerprint">Αποτύπωμα SHA-256 του υπογράφοντος</string>
     <string name="trust_import_signing_date">Ημερομηνία υπογραφής</string>

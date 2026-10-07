@@ -29,6 +29,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">מיובאת</string>
     <string name="trust_source_imported_certificate">תעודה מיובאת</string>
+    <string name="trust_source_imported_unanchored">רשימה מיובאת, מקור לא מאומת</string>
     <string name="trust_link_certificate">תעודת קישור</string>
 
     <!-- Recherche -->
@@ -41,6 +42,8 @@
     <string name="trust_busy">רק רגע…</string>
     <string name="trust_import_confirm_title">לייבא את רשימת ה-Master List הזו?</string>
     <string name="trust_import_confirm_text">החתימה שלה תקפה. לפני הייבוא, יש לוודא שטביעת האצבע של החותם תואמת לזו שפרסמה הרשות המנפיקה.</string>
+    <string name="trust_import_unanchored_warning">החותם על הרשימה הזו אינו מקושר לאף CSCA מוכר: אין שום ערובה למקורה. יש לייבא את הקובץ רק אם קיבלת אותו ישירות מהרשות שפרסמה אותו.</string>
+    <string name="trust_import_unanchored_acknowledge">קיבלתי את הקובץ ישירות מהרשות שפרסמה אותו</string>
     <string name="trust_import_signer">החותם</string>
     <string name="trust_import_signer_fingerprint">טביעת אצבע SHA-256 של החותם</string>
     <string name="trust_import_signing_date">תאריך החתימה</string>

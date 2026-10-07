@@ -8,7 +8,9 @@ import org.bouncycastle.asn1.DERSet
 import org.bouncycastle.asn1.x500.X500Name
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier
 import org.bouncycastle.asn1.x509.BasicConstraints
+import org.bouncycastle.asn1.x509.ExtendedKeyUsage
 import org.bouncycastle.asn1.x509.Extension
+import org.bouncycastle.asn1.x509.KeyPurposeId
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo
 import org.bouncycastle.asn1.x9.ECNamedCurveTable
 import org.bouncycastle.asn1.x9.X962Parameters
@@ -61,11 +63,15 @@ internal object TestMasterLists {
         signingKey: KeyPair,
         serial: BigInteger = BigInteger.valueOf(System.nanoTime()),
         ca: Boolean = true,
+        extendedKeyUsage: List<KeyPurposeId>? = null,
     ): X509CertificateHolder {
         val builder =
             X509v3CertificateBuilder(X500Name(issuer), serial, notBefore, notAfter, X500Name(subject), subjectKey)
                 .addExtension(Extension.basicConstraints, true, BasicConstraints(ca))
                 .addExtension(Extension.subjectKeyIdentifier, false, JcaX509ExtensionUtils().createSubjectKeyIdentifier(subjectKey))
+        if (extendedKeyUsage != null) {
+            builder.addExtension(Extension.extendedKeyUsage, true, ExtendedKeyUsage(extendedKeyUsage.toTypedArray()))
+        }
         val algorithm = if (signingKey.private.algorithm == "EC") "SHA256withECDSA" else "SHA256withRSA"
         return builder.build(JcaContentSignerBuilder(algorithm).setProvider(provider).build(signingKey.private))
     }

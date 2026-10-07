@@ -33,6 +33,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Iompórtáilte</string>
     <string name="trust_source_imported_certificate">Deimhniú iompórtáilte</string>
+    <string name="trust_source_imported_unanchored">Liosta iompórtáilte, bunús gan fíorú</string>
     <string name="trust_link_certificate">Deimhniú naisc</string>
 
     <!-- Recherche -->
@@ -45,6 +46,8 @@
     <string name="trust_busy">Fan go fóill…</string>
     <string name="trust_import_confirm_title">An Master List seo a iompórtáil?</string>
     <string name="trust_import_confirm_text">Tá a síniú bailí. Roimh iompórtáil, seiceáil go bhfuil méarlorg an tsínitheora mar an gcéanna leis an méarlorg a d’fhoilsigh an t-údarás eisiúna.</string>
+    <string name="trust_import_unanchored_warning">Níl sínitheoir an liosta seo nasctha le haon CSCA aitheanta: níl aon ráthaíocht faoina bhunús. Ná hiompórtáil an comhad seo ach amháin má fuair tú go díreach é ón údarás a d’fhoilsigh é.</string>
+    <string name="trust_import_unanchored_acknowledge">Fuair mé an comhad seo go díreach ón údarás a d’fhoilsigh é</string>
     <string name="trust_import_signer">Sínitheoir</string>
     <string name="trust_import_signer_fingerprint">Méarlorg SHA-256 an tsínitheora</string>
     <string name="trust_import_signing_date">Dáta sínithe</string>

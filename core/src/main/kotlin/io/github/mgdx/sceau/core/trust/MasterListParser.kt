@@ -9,6 +9,8 @@ import org.bouncycastle.asn1.cms.CMSAttributes
 import org.bouncycastle.asn1.cms.SignedData
 import org.bouncycastle.asn1.cms.Time
 import org.bouncycastle.asn1.x509.Certificate
+import org.bouncycastle.asn1.x509.ExtendedKeyUsage
+import org.bouncycastle.asn1.x509.KeyPurposeId
 import org.bouncycastle.cert.X509CertificateHolder
 import org.bouncycastle.cms.CMSSignedData
 import org.bouncycastle.cms.CMSVerifierCertificateNotValidException
@@ -35,6 +37,9 @@ internal class ParsedMasterList(
 internal object MasterListParser {
     /** id-icao-cscaMasterList. */
     val CSCA_MASTER_LIST_OID = ASN1ObjectIdentifier("2.23.136.1.1.2")
+
+    /** id-icao-cscaMasterListSigningKey : usage étendu du certificat signataire d'une Master List. */
+    val MASTER_LIST_SIGNING_KEY_OID = ASN1ObjectIdentifier("2.23.136.1.1.3")
 
     /** Nombre maximal de certificats d'une Master List, et du bloc `certificates` de son CMS (V22). */
     const val MAX_CERTIFICATES = TrustStores.MAX_MASTER_LIST_CERTIFICATES
@@ -85,6 +90,7 @@ internal object MasterListParser {
         // Un seul signataire, comme pour le SOD : chaque SignerInfo parcourrait tout le bloc `certificates`.
         val signer = signed.signerInfos.signers.singleOrNull() ?: throw InvalidMasterListException("NO_SIGNER")
         val signerHolder = verifySigner(signed, signer)
+        requireMasterListSigningUsage(signerHolder)
         checkpoint()
 
         val certificates = parseContent(content, checkpoint)
@@ -100,9 +106,10 @@ internal object MasterListParser {
                 signerSha256 = TrustCrypto.sha256Hex(signerHolder.encoded),
                 certificateCount = certificates.size,
             )
+        val signerCertificate = TrustCrypto.toX509(signerHolder)
         return ParsedMasterList(
-            masterList = MasterList(info, certificates),
-            signerCertificate = TrustCrypto.toX509(signerHolder),
+            masterList = MasterList(info, certificates, signerCertificate),
+            signerCertificate = signerCertificate,
             cmsCertificates = cmsCertificates,
         )
     }
@@ -117,16 +124,42 @@ internal object MasterListParser {
         parsed: ParsedMasterList,
         pinnedSha256: Set<String>,
     ) {
-        val signer = parsed.signerCertificate
-        val anchored =
+        val pinned =
             (parsed.masterList.certificates + parsed.cmsCertificates)
-                .asSequence()
                 .filter { TrustCrypto.sha256Hex(it.encoded) in pinnedSha256 }
-                .any { pinned ->
-                    signer.issuerX500Principal == pinned.subjectX500Principal &&
-                        TrustCrypto.isSignedBy(signer, pinned.publicKey)
-                }
-        if (!anchored) throw InvalidMasterListException("UNTRUSTED_SIGNER")
+        if (!isSignerAnchored(parsed.signerCertificate, pinned)) throw InvalidMasterListException("UNTRUSTED_SIGNER")
+    }
+
+    /**
+     * Vrai si [signer] est émis par l'un des [anchors] : même nom que l'émetteur et signature
+     * vérifiée avec sa clé (audit V34). Un CSCA transporté par la liste elle-même ne doit jamais
+     * figurer dans [anchors] : la liste s'ancrerait sur elle-même.
+     */
+    fun isSignerAnchored(
+        signer: X509Certificate,
+        anchors: Collection<X509Certificate>,
+    ): Boolean =
+        anchors.any { anchor ->
+            signer.issuerX500Principal == anchor.subjectX500Principal && TrustCrypto.isSignedBy(signer, anchor.publicKey)
+        }
+
+    /**
+     * Usage étendu du signataire (audit V34) : contrôlé seulement s'il est présent, car certaines
+     * Master Lists réelles ne le portent pas ; présent, il doit contenir
+     * `id-icao-cscaMasterListSigningKey` (ou `anyExtendedKeyUsage`), sinon `BAD_SIGNER_USAGE`.
+     */
+    private fun requireMasterListSigningUsage(signer: X509CertificateHolder) {
+        val extensions = signer.extensions ?: return
+        val usage =
+            try {
+                ExtendedKeyUsage.fromExtensions(extensions)
+            } catch (e: Exception) {
+                throw InvalidMasterListException("BAD_SIGNER_USAGE", e)
+            } ?: return
+        val allowed =
+            usage.hasKeyPurposeId(KeyPurposeId.getInstance(MASTER_LIST_SIGNING_KEY_OID)) ||
+                usage.hasKeyPurposeId(KeyPurposeId.anyExtendedKeyUsage)
+        if (!allowed) throw InvalidMasterListException("BAD_SIGNER_USAGE")
     }
 
     /**

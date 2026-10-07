@@ -25,6 +25,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">นำเข้า</string>
     <string name="trust_source_imported_certificate">ใบรับรองที่นำเข้า</string>
+    <string name="trust_source_imported_unanchored">รายการที่นำเข้า ยังไม่ได้ยืนยันแหล่งที่มา</string>
     <string name="trust_link_certificate">ใบรับรองเชื่อมโยง</string>
 
     <!-- Recherche -->
@@ -37,6 +38,8 @@
     <string name="trust_busy">โปรดรอสักครู่…</string>
     <string name="trust_import_confirm_title">นำเข้า Master List นี้ใช่ไหม</string>
     <string name="trust_import_confirm_text">ลายมือชื่อถูกต้อง ก่อนนำเข้า โปรดตรวจสอบว่าลายนิ้วมือของผู้ลงนามตรงกับที่หน่วยงานผู้ออกเผยแพร่ไว้</string>
+    <string name="trust_import_unanchored_warning">ผู้ลงนามรายการนี้ไม่ได้เชื่อมโยงกับ CSCA ที่รู้จักใดๆ จึงไม่มีสิ่งใดรับรองแหล่งที่มาได้ นำเข้าไฟล์นี้เฉพาะเมื่อคุณได้รับไฟล์โดยตรงจากหน่วยงานที่เผยแพร่เท่านั้น</string>
+    <string name="trust_import_unanchored_acknowledge">ฉันได้รับไฟล์นี้โดยตรงจากหน่วยงานที่เผยแพร่</string>
     <string name="trust_import_signer">ผู้ลงนาม</string>
     <string name="trust_import_signer_fingerprint">ลายนิ้วมือ SHA-256 ของผู้ลงนาม</string>
     <string name="trust_import_signing_date">วันที่ลงนาม</string>

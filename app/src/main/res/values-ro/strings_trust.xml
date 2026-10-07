@@ -29,6 +29,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Importat</string>
     <string name="trust_source_imported_certificate">Certificat importat</string>
+    <string name="trust_source_imported_unanchored">Listă importată, origine neverificată</string>
     <string name="trust_link_certificate">Certificat de legătură</string>
 
     <!-- Recherche -->
@@ -41,6 +42,8 @@
     <string name="trust_busy">Așteptați…</string>
     <string name="trust_import_confirm_title">Importați această Master List?</string>
     <string name="trust_import_confirm_text">Semnătura sa este validă. Înainte de import, verificați dacă amprenta semnatarului corespunde celei publicate de autoritatea emitentă.</string>
+    <string name="trust_import_unanchored_warning">Semnatarul acestei liste nu este legat de niciun CSCA cunoscut: nimic nu garantează originea ei. Importați acest fișier doar dacă l-ați obținut direct de la autoritatea care l-a publicat.</string>
+    <string name="trust_import_unanchored_acknowledge">Am obținut acest fișier direct de la autoritatea care l-a publicat</string>
     <string name="trust_import_signer">Semnatar</string>
     <string name="trust_import_signer_fingerprint">Amprenta SHA-256 a semnatarului</string>
     <string name="trust_import_signing_date">Data semnării</string>

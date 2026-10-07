@@ -27,6 +27,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Tuotu</string>
     <string name="trust_source_imported_certificate">Tuotu varmenne</string>
+    <string name="trust_source_imported_unanchored">Tuotu luettelo, alkuperää ei vahvistettu</string>
     <string name="trust_link_certificate">Linkkivarmenne</string>
 
     <!-- Recherche -->
@@ -39,6 +40,8 @@
     <string name="trust_busy">Odota…</string>
     <string name="trust_import_confirm_title">Tuodaanko tämä Master List?</string>
     <string name="trust_import_confirm_text">Sen allekirjoitus on kelvollinen. Varmista ennen tuontia, että allekirjoittajan sormenjälki vastaa myöntävän viranomaisen julkaisemaa sormenjälkeä.</string>
+    <string name="trust_import_unanchored_warning">Tämän luettelon allekirjoittaja ei liity mihinkään tunnettuun CSCA:han, joten mikään ei takaa sen alkuperää. Tuo tiedosto vain, jos sait sen suoraan sen julkaisseelta viranomaiselta.</string>
+    <string name="trust_import_unanchored_acknowledge">Sain tiedoston suoraan sen julkaisseelta viranomaiselta</string>
     <string name="trust_import_signer">Allekirjoittaja</string>
     <string name="trust_import_signer_fingerprint">Allekirjoittajan SHA-256-sormenjälki</string>
     <string name="trust_import_signing_date">Allekirjoituspäivä</string>

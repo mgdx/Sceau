@@ -29,6 +29,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Importato</string>
     <string name="trust_source_imported_certificate">Certificato importato</string>
+    <string name="trust_source_imported_unanchored">Lista importata, origine non verificata</string>
     <string name="trust_link_certificate">Certificato di collegamento</string>
 
     <!-- Recherche -->
@@ -41,6 +42,8 @@
     <string name="trust_busy">Attendi…</string>
     <string name="trust_import_confirm_title">Importare questa Master List?</string>
     <string name="trust_import_confirm_text">La firma è valida. Prima di importarla, verifica che l’impronta del firmatario corrisponda a quella pubblicata dall’autorità emittente.</string>
+    <string name="trust_import_unanchored_warning">Il firmatario di questa lista non è collegato ad alcun CSCA noto: nulla ne garantisce l’origine. Importa questo file solo se lo hai ottenuto direttamente dall’autorità che lo ha pubblicato.</string>
+    <string name="trust_import_unanchored_acknowledge">Ho ottenuto questo file direttamente dall’autorità che lo ha pubblicato</string>
     <string name="trust_import_signer">Firmatario</string>
     <string name="trust_import_signer_fingerprint">Impronta SHA-256 del firmatario</string>
     <string name="trust_import_signing_date">Data di firma</string>

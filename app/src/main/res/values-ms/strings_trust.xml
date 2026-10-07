@@ -25,6 +25,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Diimport</string>
     <string name="trust_source_imported_certificate">Sijil diimport</string>
+    <string name="trust_source_imported_unanchored">Senarai diimport, asal tidak disahkan</string>
     <string name="trust_link_certificate">Sijil pautan</string>
 
     <!-- Recherche -->
@@ -37,6 +38,8 @@
     <string name="trust_busy">Sila tunggu…</string>
     <string name="trust_import_confirm_title">Import Master List ini?</string>
     <string name="trust_import_confirm_text">Tandatangannya sah. Sebelum mengimport, pastikan cap jari penandatangan sepadan dengan cap jari yang diterbitkan oleh pihak berkuasa pengeluar.</string>
+    <string name="trust_import_unanchored_warning">Penandatangan senarai ini tidak dikaitkan dengan mana-mana CSCA yang diketahui: tiada apa-apa yang menjamin asalnya. Import fail ini hanya jika anda mendapatkannya terus daripada pihak berkuasa yang menerbitkannya.</string>
+    <string name="trust_import_unanchored_acknowledge">Saya mendapatkan fail ini terus daripada pihak berkuasa yang menerbitkannya</string>
     <string name="trust_import_signer">Penandatangan</string>
     <string name="trust_import_signer_fingerprint">Cap jari SHA-256 penandatangan</string>
     <string name="trust_import_signing_date">Tarikh tandatangan</string>

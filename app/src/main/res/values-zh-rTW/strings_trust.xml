@@ -25,6 +25,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">已匯入</string>
     <string name="trust_source_imported_certificate">已匯入的憑證</string>
+    <string name="trust_source_imported_unanchored">匯入的清單，來源未經驗證</string>
     <string name="trust_link_certificate">連結憑證</string>
 
     <!-- Recherche -->
@@ -37,6 +38,8 @@
     <string name="trust_busy">請稍候…</string>
     <string name="trust_import_confirm_title">要匯入這份 Master List 嗎？</string>
     <string name="trust_import_confirm_text">其簽章有效。匯入前，請確認簽署者的指紋與核發機關公布的指紋相符。</string>
+    <string name="trust_import_unanchored_warning">這份清單的簽署者未連結到任何已知的 CSCA，無法保證其來源。只有在您直接從發布此檔案的機關取得時，才匯入這個檔案。</string>
+    <string name="trust_import_unanchored_acknowledge">我直接從發布此檔案的機關取得這個檔案</string>
     <string name="trust_import_signer">簽署者</string>
     <string name="trust_import_signer_fingerprint">簽署者的 SHA-256 指紋</string>
     <string name="trust_import_signing_date">簽署日期</string>

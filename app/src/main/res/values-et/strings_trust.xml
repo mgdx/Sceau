@@ -27,6 +27,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Imporditud</string>
     <string name="trust_source_imported_certificate">Imporditud sertifikaat</string>
+    <string name="trust_source_imported_unanchored">Imporditud loend, päritolu kontrollimata</string>
     <string name="trust_link_certificate">Lingisertifikaat</string>
 
     <!-- Recherche -->
@@ -39,6 +40,8 @@
     <string name="trust_busy">Palun oodake…</string>
     <string name="trust_import_confirm_title">Kas importida see Master List?</string>
     <string name="trust_import_confirm_text">Selle allkiri on kehtiv. Enne importimist kontrollige, et allkirjastaja sõrmejälg vastab väljaandva asutuse avaldatud sõrmejäljele.</string>
+    <string name="trust_import_unanchored_warning">Selle loendi allkirjastaja ei ole seotud ühegi teadaoleva CSCA-ga: miski ei taga loendi päritolu. Impordi fail ainult siis, kui said selle otse asutuselt, kes selle avaldas.</string>
+    <string name="trust_import_unanchored_acknowledge">Sain selle faili otse asutuselt, kes selle avaldas</string>
     <string name="trust_import_signer">Allkirjastaja</string>
     <string name="trust_import_signer_fingerprint">Allkirjastaja SHA-256 sõrmejälg</string>
     <string name="trust_import_signing_date">Allkirjastamise kuupäev</string>

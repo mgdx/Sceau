@@ -25,6 +25,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">가져옴</string>
     <string name="trust_source_imported_certificate">가져온 인증서</string>
+    <string name="trust_source_imported_unanchored">가져온 목록, 출처 미확인</string>
     <string name="trust_link_certificate">링크 인증서</string>
 
     <!-- Recherche -->
@@ -37,6 +38,8 @@
     <string name="trust_busy">잠시 기다려 주세요…</string>
     <string name="trust_import_confirm_title">이 Master List를 가져오시겠습니까?</string>
     <string name="trust_import_confirm_text">서명이 유효합니다. 가져오기 전에 서명자의 지문이 발급기관에서 공개한 지문과 일치하는지 확인하세요.</string>
+    <string name="trust_import_unanchored_warning">이 목록의 서명자는 알려진 CSCA와 연결되어 있지 않아 출처를 보장할 수 없습니다. 이 파일을 게시한 기관에서 직접 받은 경우에만 가져오세요.</string>
+    <string name="trust_import_unanchored_acknowledge">게시한 기관에서 이 파일을 직접 받았습니다</string>
     <string name="trust_import_signer">서명자</string>
     <string name="trust_import_signer_fingerprint">서명자의 SHA-256 지문</string>
     <string name="trust_import_signing_date">서명일</string>

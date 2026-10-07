@@ -29,6 +29,7 @@
     <string name="trust_source_master_list">Master List</string>
     <string name="trust_source_imported">Увезено</string>
     <string name="trust_source_imported_certificate">Увезени сертификат</string>
+    <string name="trust_source_imported_unanchored">Увезена листа, непроверено порекло</string>
     <string name="trust_link_certificate">Повезујући сертификат</string>
 
     <!-- Recherche -->
@@ -41,6 +42,8 @@
     <string name="trust_busy">Сачекајте…</string>
     <string name="trust_import_confirm_title">Желите ли да увезете ову Master List?</string>
     <string name="trust_import_confirm_text">Њен потпис је важећи. Пре увоза проверите да ли се отисак потписника подудара са оним који је објавио орган издавања.</string>
+    <string name="trust_import_unanchored_warning">Потписник ове листе није повезан ни са једним познатим CSCA: ништа не гарантује њено порекло. Увезите ову датотеку само ако сте је добили директно од органа који ју је објавио.</string>
+    <string name="trust_import_unanchored_acknowledge">Ова датотека потиче директно од органа који ју је објавио</string>
     <string name="trust_import_signer">Потписник</string>
     <string name="trust_import_signer_fingerprint">SHA-256 отисак потписника</string>
     <string name="trust_import_signing_date">Датум потписивања</string>
