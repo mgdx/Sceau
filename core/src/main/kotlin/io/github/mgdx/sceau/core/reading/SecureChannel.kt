@@ -47,12 +47,22 @@ import java.util.Locale
  *    MF sous la nouvelle messagerie sécurisée, avant la sélection de l'applet ; sa vérification
  *    et celle des données de Chip Authentication ont lieu plus tard
  *    ([ChipAuthenticationMapping]), quand DG1 (État émetteur) est connu.
+ * 7. Après tout PACE abouti (GM, IM ou CAM), EF.CardSecurity est lu au MF de la même façon
+ *    ([cardSecurity], audit V32, décision D43) : signé, il dit si l'État annonce PACE-CAM ou une
+ *    clé de Chip Authentication, que [ProtocolDowngrade] compare au canal mené. Jamais sous BAC.
  */
 internal class SecureChannel(
     private val chip: Chip,
     private val key: AccessKey,
 ) {
     private val service get() = chip.service
+
+    /**
+     * EF.CardSecurity lu au MF après le dernier PACE abouti (audit V32) ; null s'il est absent ou
+     * illisible, et toujours null après BAC.
+     */
+    var cardSecurity: ByteArray? = null
+        private set
 
     /** Étape CONNECT. Renvoie les `PACEInfo` annoncés (vide : pas de PACE). */
     fun connect(): List<PACEInfo> {
@@ -70,10 +80,14 @@ internal class SecureChannel(
      * [ChipAuthenticationMapping], décision D21).
      */
     fun establish(paceInfos: List<PACEInfo>): EstablishedChannel {
+        cardSecurity = null
         if (paceInfos.isNotEmpty()) {
             val pace = withAuthenticationTimeout { tryPace(paceInfos) }
             if (pace != null) {
-                val cam = if (pace.mappingType == PACEInfo.MappingType.CAM) camEvidence(pace) else null
+                // Au MF, avant la sélection de l'applet (même FID que EF.SOD dans l'applet).
+                val cardSecurity = chip.readOptionalSecuredMasterFile(PassportService.EF_CARD_SECURITY)
+                this.cardSecurity = cardSecurity
+                val cam = if (pace.mappingType == PACEInfo.MappingType.CAM) camEvidence(pace, cardSecurity) else null
                 selectApplet(secure = true)
                 return EstablishedChannel(ChannelProtocol.PACE, cam)
             }
@@ -93,11 +107,14 @@ internal class SecureChannel(
      * Authentication déchiffrées par JMRTD (CA_IC) et clé publique de mapping de la puce
      * (PK_Map,IC). Tout élément manquant est laissé à null : la vérification le signalera.
      */
-    private fun camEvidence(pace: PACEResult): PaceCamEvidence =
+    private fun camEvidence(
+        pace: PACEResult,
+        cardSecurity: ByteArray?,
+    ): PaceCamEvidence =
         PaceCamEvidence(
             chipAuthenticationData = (pace as? PACECAMResult)?.chipAuthenticationData,
             mappingKey = (pace.mappingResult as? PACEGMMappingResult)?.piccMappingPublicKey,
-            cardSecurity = chip.readOptionalSecuredMasterFile(PassportService.EF_CARD_SECURITY),
+            cardSecurity = cardSecurity,
         )
 
     /**

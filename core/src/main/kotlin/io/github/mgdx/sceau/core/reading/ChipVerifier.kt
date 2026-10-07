@@ -114,16 +114,20 @@ internal class ChipVerifier(
 
     /**
      * DG14 sans `ChipAuthenticationPublicKeyInfo` reconnue par JMRTD (audit V19) : « non
-     * disponible » seulement si ses octets n'annoncent aucune clé (aucun OID id-PK-*). Une clé
-     * annoncée mais que JMRTD n'a pas su reconstruire (`SecurityInfo.getInstance` rend alors
-     * null) donne `UNSUPPORTED_ALGORITHM`, donc le verdict « Échec », et non un échec silencieux.
+     * disponible » seulement si ses octets n'annoncent ni clé (aucun OID id-PK-*) ni protocole de
+     * Chip Authentication (aucun OID id-CA-*). Une clé annoncée mais que JMRTD n'a pas su
+     * reconstruire (`SecurityInfo.getInstance` rend alors null) donne `UNSUPPORTED_ALGORITHM`,
+     * donc le verdict « Échec », et non un échec silencieux. De même pour une
+     * `ChipAuthenticationInfo` sans aucune clé (audit V33) : DG14, signé, annonce une CA que
+     * l'application ne peut pas mener, ce n'est pas un document sans CA.
      */
     private fun withoutChipAuthenticationKey(dg14Bytes: ByteArray): Check {
         val oids = SecurityInfoProtocols.of(dg14Bytes) ?: return unsupported(CheckId.CHIP_AUTHENTICATION, "DG14")
-        val announcedKey =
+        val announced =
             SecurityInfoProtocols.chipAuthenticationKey(oids)
+                ?: SecurityInfoProtocols.chipAuthenticationProtocol(oids)
                 ?: return check(CheckId.CHIP_AUTHENTICATION, CheckStatus.NOT_AVAILABLE)
-        return unsupported(CheckId.CHIP_AUTHENTICATION, announcedKey)
+        return unsupported(CheckId.CHIP_AUTHENTICATION, announced)
     }
 
     /** Active Authentication : challenge de 8 octets tiré de [random], réponse vérifiée par le lot B. */
