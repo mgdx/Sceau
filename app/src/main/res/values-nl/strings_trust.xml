@@ -57,6 +57,7 @@
     </plurals>
     <string name="trust_import_too_large">Bestand geweigerd: het is groter dan 20 MB.</string>
     <string name="trust_import_read_error">Kan dit bestand niet lezen.</string>
+    <string name="trust_import_read_timeout">Lezen van het bestand gestopt: het was niet binnen 30 seconden klaar.</string>
     <string name="trust_import_write_error">Kan de Master List niet opslaan.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Import geweigerd: maximaal %1$d geïmporteerde Master List. Verwijder de geïmporteerde certificaten om een andere toe te voegen.</item>

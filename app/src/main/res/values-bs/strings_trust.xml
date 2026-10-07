@@ -61,6 +61,7 @@
     </plurals>
     <string name="trust_import_too_large">Fajl je odbijen: veći je od 20 MB.</string>
     <string name="trust_import_read_error">Čitanje fajla nije uspjelo.</string>
+    <string name="trust_import_read_timeout">Čitanje fajla je prekinuto: nije završeno u roku od 30 sekundi.</string>
     <string name="trust_import_write_error">Spremanje Master List nije uspjelo.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Uvoz je odbijen: može se uvesti najviše %1$d Master List. Izbrišite uvezene certifikate da biste dodali drugu.</item>

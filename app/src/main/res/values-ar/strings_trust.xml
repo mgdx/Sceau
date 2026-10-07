@@ -73,6 +73,7 @@
     </plurals>
     <string name="trust_import_too_large">تم رفض الملف: حجمه يتجاوز 20 ميغابايت.</string>
     <string name="trust_import_read_error">تعذّرت قراءة هذا الملف.</string>
+    <string name="trust_import_read_timeout">تم إيقاف قراءة الملف: لم تكتمل خلال 30 ثانية.</string>
     <string name="trust_import_write_error">تعذّر حفظ قائمة Master List.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="zero">تم رفض الاستيراد: الحد الأقصى للقوائم المستوردة من نوع Master List هو %1$d. احذف الشهادات المستوردة لإضافة قائمة أخرى.</item>

@@ -53,6 +53,7 @@
     </plurals>
     <string name="trust_import_too_large">20 MB を超えるファイルはインポートできません。</string>
     <string name="trust_import_read_error">このファイルを読み取れません。</string>
+    <string name="trust_import_read_timeout">ファイルの読み取りを中止しました：30 秒以内に完了しませんでした。</string>
     <string name="trust_import_write_error">Master List を保存できません。</string>
     <plurals name="trust_import_limit_count">
         <item quantity="other">インポートできません。インポートできる Master List は %1$d 件までです。別のものを追加するには、インポートした証明書を削除してください。</item>

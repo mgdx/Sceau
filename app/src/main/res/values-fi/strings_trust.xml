@@ -57,6 +57,7 @@
     </plurals>
     <string name="trust_import_too_large">Tiedosto hylättiin: se on yli 20 Mt.</string>
     <string name="trust_import_read_error">Tiedoston lukeminen epäonnistui.</string>
+    <string name="trust_import_read_timeout">Tiedoston lukeminen keskeytettiin: se ei valmistunut 30 sekunnissa.</string>
     <string name="trust_import_write_error">Master Listin tallentaminen epäonnistui.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Tuonti hylättiin: enintään %1$d tuotu Master List. Poista tuodut varmenteet, jos haluat lisätä uuden.</item>

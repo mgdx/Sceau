@@ -57,6 +57,7 @@
     </plurals>
     <string name="trust_import_too_large">Датотеката е одбиена: поголема е од 20 MB.</string>
     <string name="trust_import_read_error">Датотеката не може да се прочита.</string>
+    <string name="trust_import_read_timeout">Читањето на датотеката е прекинато: не заврши во рок од 30 секунди.</string>
     <string name="trust_import_write_error">Master List не може да се зачува.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Увезувањето е одбиено: може да се увезе најмногу %1$d Master List. Избришете ги увезените сертификати за да додадете друга.</item>

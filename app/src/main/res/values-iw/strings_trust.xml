@@ -61,6 +61,7 @@
     </plurals>
     <string name="trust_import_too_large">הקובץ נדחה: הוא גדול מ-20 MB.</string>
     <string name="trust_import_read_error">לא ניתן לקרוא את הקובץ הזה.</string>
+    <string name="trust_import_read_timeout">קריאת הקובץ הופסקה: היא לא הסתיימה בתוך 30 שניות.</string>
     <string name="trust_import_write_error">לא ניתן לשמור את רשימת ה-Master List.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">הייבוא נדחה: ניתן לייבא לכל היותר %1$d רשימת Master List. כדי להוסיף רשימה אחרת, יש למחוק את התעודות המיובאות.</item>

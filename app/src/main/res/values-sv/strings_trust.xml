@@ -57,6 +57,7 @@
     </plurals>
     <string name="trust_import_too_large">Filen avvisades: den är större än 20 MB.</string>
     <string name="trust_import_read_error">Det gick inte att läsa filen.</string>
+    <string name="trust_import_read_timeout">Läsningen av filen avbröts: den blev inte klar inom 30 sekunder.</string>
     <string name="trust_import_write_error">Det gick inte att spara Master List.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Importen avvisades: högst %1$d importerad Master List tillåts. Ta bort de importerade certifikaten för att lägga till en annan.</item>

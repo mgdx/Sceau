@@ -57,6 +57,7 @@
     </plurals>
     <string name="trust_import_too_large">Datei abgelehnt: Sie ist größer als 20 MB.</string>
     <string name="trust_import_read_error">Diese Datei kann nicht gelesen werden.</string>
+    <string name="trust_import_read_timeout">Lesen der Datei abgebrochen: Es wurde nicht innerhalb von 30 Sekunden abgeschlossen.</string>
     <string name="trust_import_write_error">Die Master List kann nicht gespeichert werden.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Import abgelehnt: höchstens %1$d importierte Master List. Löschen Sie die importierten Zertifikate, um eine weitere hinzuzufügen.</item>

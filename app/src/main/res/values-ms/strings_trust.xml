@@ -53,6 +53,7 @@
     </plurals>
     <string name="trust_import_too_large">Fail ditolak: saiznya melebihi 20 MB.</string>
     <string name="trust_import_read_error">Tidak dapat membaca fail ini.</string>
+    <string name="trust_import_read_timeout">Pembacaan fail dihentikan: ia tidak selesai dalam masa 30 saat.</string>
     <string name="trust_import_write_error">Tidak dapat menyimpan Master List.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="other">Import ditolak: maksimum %1$d Master List boleh diimport. Padamkan sijil yang diimport untuk menambah Master List lain.</item>

@@ -53,6 +53,7 @@
     </plurals>
     <string name="trust_import_too_large">파일이 거부되었습니다. 20MB를 초과합니다.</string>
     <string name="trust_import_read_error">이 파일을 읽을 수 없습니다.</string>
+    <string name="trust_import_read_timeout">파일 읽기를 중단했습니다. 30초 안에 완료되지 않았습니다.</string>
     <string name="trust_import_write_error">Master List를 저장할 수 없습니다.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="other">가져오기가 거부되었습니다. Master List는 최대 %1$d개까지 가져올 수 있습니다. 다른 Master List를 추가하려면 가져온 인증서를 삭제하세요.</item>

@@ -57,6 +57,7 @@
     </plurals>
     <string name="trust_import_too_large">Το αρχείο απορρίφθηκε: υπερβαίνει τα 20 MB.</string>
     <string name="trust_import_read_error">Δεν ήταν δυνατή η ανάγνωση αυτού του αρχείου.</string>
+    <string name="trust_import_read_timeout">Η ανάγνωση του αρχείου διακόπηκε: δεν ολοκληρώθηκε μέσα σε 30 δευτερόλεπτα.</string>
     <string name="trust_import_write_error">Δεν ήταν δυνατή η αποθήκευση της Master List.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Η εισαγωγή απορρίφθηκε: επιτρέπεται έως %1$d εισαγόμενη Master List. Διαγράψτε τα εισαγόμενα πιστοποιητικά για να προσθέσετε άλλη.</item>

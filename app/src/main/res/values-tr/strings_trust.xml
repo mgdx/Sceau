@@ -57,6 +57,7 @@
     </plurals>
     <string name="trust_import_too_large">Dosya reddedildi: 20 MB’ı aşıyor.</string>
     <string name="trust_import_read_error">Bu dosya okunamadı.</string>
+    <string name="trust_import_read_timeout">Dosya okuma durduruldu: 30 saniye içinde tamamlanmadı.</string>
     <string name="trust_import_write_error">Master List kaydedilemedi.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">İçe aktarma reddedildi: En fazla %1$d Master List içe aktarılabilir. Başka bir tane eklemek için içe aktarılan sertifikaları silin.</item>

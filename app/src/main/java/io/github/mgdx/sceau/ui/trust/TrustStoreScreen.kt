@@ -91,7 +91,6 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.IOException
 import java.time.LocalDate
 
 /**
@@ -189,11 +188,9 @@ fun TrustStoreScreen(
             scope.launch {
                 busy = true
                 try {
-                    val bytes =
-                        withContext(Dispatchers.IO) {
-                            context.contentResolver.openInputStream(uri)?.use { readAtMost(it, MAX_MASTER_LIST_BYTES) }
-                                ?: throw IOException("OPEN")
-                        }
+                    // Bornée en taille et en durée (audit V38) : `busy` revient à faux même si le
+                    // fournisseur ne livre jamais le fichier.
+                    val bytes = readImportedFile({ context.contentResolver.openInputStream(uri) }, MAX_MASTER_LIST_BYTES)
                     // Master List ou certificat seul, reconnu automatiquement (D33) ; limites
                     // vérifiées avant la confirmation (D22).
                     pending = repository.previewImport(bytes)
@@ -205,6 +202,8 @@ fun TrustStoreScreen(
                     showMessage(importLimitMessage(resources, e.decision))
                 } catch (_: FileTooLargeException) {
                     showMessage(resources.getString(R.string.trust_import_too_large))
+                } catch (_: ImportReadTimeoutException) {
+                    showMessage(resources.getString(R.string.trust_import_read_timeout))
                 } catch (e: InvalidMasterListException) {
                     showMessage(invalidMasterListMessage(resources, e.code))
                 } catch (e: InvalidCertificateException) {

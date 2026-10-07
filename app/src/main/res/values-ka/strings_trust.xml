@@ -57,6 +57,7 @@
     </plurals>
     <string name="trust_import_too_large">ფაილი უარყოფილია: აღემატება 20 მბ-ს.</string>
     <string name="trust_import_read_error">ამ ფაილის წაკითხვა ვერ მოხერხდა.</string>
+    <string name="trust_import_read_timeout">ფაილის წაკითხვა შეწყდა: 30 წამში არ დასრულდა.</string>
     <string name="trust_import_write_error">Master List-ის შენახვა ვერ მოხერხდა.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">იმპორტი უარყოფილია: შესაძლებელია მაქსიმუმ %1$d Master List-ის იმპორტი. სხვის დასამატებლად წაშალეთ იმპორტირებული სერტიფიკატები.</item>

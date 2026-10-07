@@ -57,6 +57,7 @@
     </plurals>
     <string name="trust_import_too_large">Файлът е отхвърлен: надвишава 20 МБ.</string>
     <string name="trust_import_read_error">Файлът не може да бъде прочетен.</string>
+    <string name="trust_import_read_timeout">Четенето на файла е прекратено: не завърши в рамките на 30 секунди.</string>
     <string name="trust_import_write_error">Master List не може да бъде запазен.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Импортирането е отказано: може да се импортира най-много %1$d Master List. Изтрийте импортираните сертификати, за да добавите друг.</item>

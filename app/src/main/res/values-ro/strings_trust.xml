@@ -61,6 +61,7 @@
     </plurals>
     <string name="trust_import_too_large">Fișier refuzat: depășește 20 MB.</string>
     <string name="trust_import_read_error">Nu s-a putut citi acest fișier.</string>
+    <string name="trust_import_read_timeout">Citirea fișierului a fost întreruptă: nu s-a încheiat în 30 de secunde.</string>
     <string name="trust_import_write_error">Nu s-a putut salva Master List.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Import refuzat: se poate importa cel mult %1$d Master List. Ștergeți certificatele importate pentru a adăuga alta.</item>

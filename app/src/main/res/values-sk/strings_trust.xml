@@ -65,6 +65,7 @@
     </plurals>
     <string name="trust_import_too_large">Súbor odmietnutý: je väčší ako 20 MB.</string>
     <string name="trust_import_read_error">Tento súbor sa nepodarilo prečítať.</string>
+    <string name="trust_import_read_timeout">Čítanie súboru bolo prerušené: nedokončilo sa do 30 sekúnd.</string>
     <string name="trust_import_write_error">Zoznam Master List sa nepodarilo uložiť.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Import odmietnutý: najvyšší počet importovaných zoznamov Master List je %1$d. Ak chcete pridať ďalší, odstráňte importované certifikáty.</item>

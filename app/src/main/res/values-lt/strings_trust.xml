@@ -65,6 +65,7 @@
     </plurals>
     <string name="trust_import_too_large">Failas atmestas: jis didesnis nei 20 MB.</string>
     <string name="trust_import_read_error">Nepavyko nuskaityti šio failo.</string>
+    <string name="trust_import_read_timeout">Failo skaitymas nutrauktas: jis nebuvo baigtas per 30 sekundžių.</string>
     <string name="trust_import_write_error">Nepavyko išsaugoti Master List.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Importuoti neleidžiama: galima importuoti ne daugiau kaip %1$d Master List. Ištrinkite importuotus sertifikatus, kad pridėtumėte kitą.</item>

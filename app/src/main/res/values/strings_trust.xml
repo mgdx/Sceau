@@ -57,6 +57,7 @@
     </plurals>
     <string name="trust_import_too_large">Fichier refusé : il dépasse 20 Mo.</string>
     <string name="trust_import_read_error">Impossible de lire ce fichier.</string>
+    <string name="trust_import_read_timeout">Lecture du fichier abandonnée : elle n’a pas abouti en 30 secondes.</string>
     <string name="trust_import_write_error">Impossible d’enregistrer la Master List.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Import refusé : %1$d Master List importée au plus. Supprimez les certificats importés pour en ajouter une autre.</item>

@@ -65,6 +65,7 @@
     </plurals>
     <string name="trust_import_too_large">Plik odrzucony: przekracza 20 MB.</string>
     <string name="trust_import_read_error">Nie udało się odczytać tego pliku.</string>
+    <string name="trust_import_read_timeout">Przerwano odczyt pliku: nie zakończył się w ciągu 30 sekund.</string>
     <string name="trust_import_write_error">Nie udało się zapisać Master List.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Import odrzucony: maksymalna liczba zaimportowanych Master List to %1$d. Usuń zaimportowane certyfikaty, aby dodać kolejną.</item>

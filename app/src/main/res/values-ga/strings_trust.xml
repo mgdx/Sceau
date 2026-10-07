@@ -69,6 +69,7 @@
     </plurals>
     <string name="trust_import_too_large">Diúltaíodh don chomhad: tá sé níos mó ná 20 MB.</string>
     <string name="trust_import_read_error">Níorbh fhéidir an comhad seo a léamh.</string>
+    <string name="trust_import_read_timeout">Stopadh léamh an chomhaid: níor críochnaíodh é laistigh de 30 soicind.</string>
     <string name="trust_import_write_error">Níorbh fhéidir an Master List a shábháil.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Diúltaíodh don iompórtáil: %1$d Master List iompórtáilte ar a mhéad. Scrios na deimhnithe iompórtáilte chun ceann eile a chur leis.</item>

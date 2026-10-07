@@ -57,6 +57,7 @@
     </plurals>
     <string name="trust_import_too_large">Fail lükati tagasi: see on suurem kui 20 MB.</string>
     <string name="trust_import_read_error">Seda faili ei õnnestunud lugeda.</string>
+    <string name="trust_import_read_timeout">Faili lugemine katkestati: see ei lõppenud 30 sekundi jooksul.</string>
     <string name="trust_import_write_error">Master Listi ei õnnestunud salvestada.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Import lükati tagasi: imporditud Master Liste võib olla kõige rohkem %1$d. Uue lisamiseks kustutage imporditud sertifikaadid.</item>

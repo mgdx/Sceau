@@ -57,6 +57,7 @@
     </plurals>
     <string name="trust_import_too_large">Skránni hafnað: hún er stærri en 20 MB.</string>
     <string name="trust_import_read_error">Ekki tókst að lesa þessa skrá.</string>
+    <string name="trust_import_read_timeout">Hætt var að lesa skrána: lestrinum lauk ekki innan 30 sekúndna.</string>
     <string name="trust_import_write_error">Ekki tókst að vista Master List.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Innflutningi hafnað: í mesta lagi %1$d innfluttur Master List. Eyddu innfluttu vottorðunum til að bæta öðrum við.</item>

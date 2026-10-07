@@ -57,6 +57,7 @@
     </plurals>
     <string name="trust_import_too_large">Skedari u refuzua: i kalon 20 MB.</string>
     <string name="trust_import_read_error">Ky skedar nuk mund të lexohej.</string>
+    <string name="trust_import_read_timeout">Leximi i skedarit u ndërpre: nuk përfundoi brenda 30 sekondave.</string>
     <string name="trust_import_write_error">Master List nuk mund të ruhej.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Importimi u refuzua: lejohet të shumtën %1$d Master List e importuar. Fshi certifikatat e importuara për të shtuar një tjetër.</item>

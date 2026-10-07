@@ -4,9 +4,17 @@ import android.content.res.Resources
 import io.github.mgdx.sceau.R
 import io.github.mgdx.sceau.core.trust.TrustStores
 import io.github.mgdx.sceau.ui.result.displaySafe
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.withTimeoutOrNull
 import java.io.ByteArrayOutputStream
+import java.io.IOException
 import java.io.InputStream
 import java.util.Locale
+import java.util.concurrent.atomic.AtomicReference
 
 /** Taille maximale d'une Master List importée : 20 Mo. */
 const val MAX_MASTER_LIST_BYTES: Int = 20 * 1024 * 1024
@@ -36,6 +44,53 @@ fun readAtMost(
 }
 
 private const val BUFFER_SIZE = 64 * 1024
+
+/**
+ * Délai maximal de lecture d'un fichier importé (audit V38) : très au-delà du temps de lecture
+ * d'une Master List de 20 Mo sur un appareil lent, même depuis un fournisseur de documents distant.
+ */
+const val IMPORT_READ_TIMEOUT_MILLIS: Long = 30_000 // repris en clair par `trust_import_read_timeout`
+
+/** Lecture abandonnée : le fournisseur n'a pas livré le fichier dans le délai. */
+class ImportReadTimeoutException : Exception("READ_TIMEOUT")
+
+/**
+ * Ouvre puis lit, par [readAtMost], le flux rendu par [open] (null : fichier introuvable,
+ * [IOException]), en abandonnant après [timeoutMillis] (audit V38). Un `DocumentsProvider` hostile
+ * peut rendre un tube qui ne livre jamais d'octets, et l'annulation d'une coroutine n'interrompt
+ * pas une lecture bloquante : la lecture tourne donc dans une tâche à part, que l'appelant
+ * n'attend pas au-delà du délai, et le flux est fermé dès l'abandon (délai dépassé ou appelant
+ * annulé), ce qui débloque `read` sur Android. Lève [ImportReadTimeoutException] après le délai.
+ */
+suspend fun readImportedFile(
+    open: () -> InputStream?,
+    limit: Int,
+    timeoutMillis: Long = IMPORT_READ_TIMEOUT_MILLIS,
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+): ByteArray {
+    val stream = AtomicReference<InputStream?>()
+    // Hors de la portée de l'appelant : son annulation ne doit pas attendre la fin d'une lecture bloquée.
+    val reading =
+        CoroutineScope(dispatcher).async {
+            val input = open() ?: throw IOException("OPEN")
+            stream.set(input)
+            // Abandon décidé pendant l'ouverture : le flux n'a pas pu être fermé par l'appelant.
+            if (!isActive) stream.getAndSet(null)?.close()
+            input.use { readAtMost(it, limit) }
+        }
+    try {
+        return withTimeoutOrNull(timeoutMillis) { reading.await() } ?: throw ImportReadTimeoutException()
+    } finally {
+        if (!reading.isCompleted) {
+            reading.cancel()
+            try {
+                stream.getAndSet(null)?.close()
+            } catch (_: IOException) {
+                // Fermeture au mieux : le flux est abandonné de toute façon.
+            }
+        }
+    }
+}
 
 /** Empreinte hexadécimale regroupée par blocs de quatre caractères, en majuscules. */
 fun formatFingerprint(hex: String): String = hex.uppercase(Locale.ROOT).chunked(4).joinToString(" ")

@@ -65,6 +65,7 @@
     </plurals>
     <string name="trust_import_too_large">Soubor odmítnut: je větší než 20 MB.</string>
     <string name="trust_import_read_error">Tento soubor nelze přečíst.</string>
+    <string name="trust_import_read_timeout">Čtení souboru bylo přerušeno: nedokončilo se do 30 sekund.</string>
     <string name="trust_import_write_error">Seznam Master List nelze uložit.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Import odmítnut: nejvyšší počet importovaných seznamů Master List je %1$d. Chcete-li přidat další, smažte importované certifikáty.</item>

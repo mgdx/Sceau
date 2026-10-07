@@ -53,6 +53,7 @@
     </plurals>
     <string name="trust_import_too_large">Tệp bị từ chối: dung lượng vượt quá 20 MB.</string>
     <string name="trust_import_read_error">Không thể đọc tệp này.</string>
+    <string name="trust_import_read_timeout">Đã dừng đọc tệp: quá trình đọc không hoàn tất trong 30 giây.</string>
     <string name="trust_import_write_error">Không thể lưu Master List.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="other">Không thể nhập: chỉ được nhập tối đa %1$d Master List. Hãy xóa các chứng chỉ đã nhập để thêm Master List khác.</item>

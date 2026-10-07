@@ -57,6 +57,7 @@
     </plurals>
     <string name="trust_import_too_large">Fájl elutasítva: nagyobb 20 MB-nál.</string>
     <string name="trust_import_read_error">Nem sikerült beolvasni a fájlt.</string>
+    <string name="trust_import_read_timeout">A fájl beolvasása megszakadt: nem fejeződött be 30 másodpercen belül.</string>
     <string name="trust_import_write_error">Nem sikerült menteni a Master Listet.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Importálás elutasítva: legfeljebb %1$d importált Master List lehet. Újabb hozzáadásához törölje az importált tanúsítványokat.</item>

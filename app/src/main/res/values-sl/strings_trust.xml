@@ -65,6 +65,7 @@
     </plurals>
     <string name="trust_import_too_large">Datoteka zavrnjena: presega 20 MB.</string>
     <string name="trust_import_read_error">Te datoteke ni mogoče prebrati.</string>
+    <string name="trust_import_read_timeout">Branje datoteke je bilo prekinjeno: ni se končalo v 30 sekundah.</string>
     <string name="trust_import_write_error">Seznama Master List ni mogoče shraniti.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Uvoz zavrnjen: največje število uvoženih seznamov Master List je %1$d. Če želite dodati novega, izbrišite uvožena potrdila.</item>

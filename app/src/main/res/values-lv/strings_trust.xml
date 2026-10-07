@@ -61,6 +61,7 @@
     </plurals>
     <string name="trust_import_too_large">Fails noraidīts: tas pārsniedz 20 MB.</string>
     <string name="trust_import_read_error">Neizdevās nolasīt šo failu.</string>
+    <string name="trust_import_read_timeout">Faila nolasīšana pārtraukta: tā netika pabeigta 30 sekunžu laikā.</string>
     <string name="trust_import_write_error">Neizdevās saglabāt Master List.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="zero">Importēšana noraidīta: var importēt ne vairāk kā %1$d Master List. Lai pievienotu citu, dzēsiet importētos sertifikātus.</item>

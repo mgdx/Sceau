@@ -57,6 +57,7 @@
     </plurals>
     <string name="trust_import_too_large">फ़ाइल अस्वीकार की गई: यह 20 MB से बड़ी है।</string>
     <string name="trust_import_read_error">यह फ़ाइल पढ़ी नहीं जा सकी।</string>
+    <string name="trust_import_read_timeout">फ़ाइल पढ़ना रोक दिया गया: यह 30 सेकंड में पूरा नहीं हुआ।</string>
     <string name="trust_import_write_error">Master List सेव नहीं की जा सकी।</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">इंपोर्ट अस्वीकार किया गया: ज़्यादा से ज़्यादा %1$d Master List इंपोर्ट की जा सकती है। दूसरी जोड़ने के लिए इंपोर्ट किए गए प्रमाणपत्र मिटाएं।</item>

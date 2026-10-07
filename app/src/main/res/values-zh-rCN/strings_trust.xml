@@ -53,6 +53,7 @@
     </plurals>
     <string name="trust_import_too_large">文件被拒绝：超过 20 MB。</string>
     <string name="trust_import_read_error">无法读取此文件。</string>
+    <string name="trust_import_read_timeout">已停止读取文件：未在 30 秒内完成。</string>
     <string name="trust_import_write_error">无法保存 Master List。</string>
     <plurals name="trust_import_limit_count">
         <item quantity="other">导入被拒绝：最多只能导入 %1$d 个 Master List。请先删除已导入的证书，再添加新的 Master List。</item>

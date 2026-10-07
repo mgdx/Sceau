@@ -53,6 +53,7 @@
     </plurals>
     <string name="trust_import_too_large">檔案遭拒：超過 20 MB。</string>
     <string name="trust_import_read_error">無法讀取這個檔案。</string>
+    <string name="trust_import_read_timeout">已停止讀取檔案：未在 30 秒內完成。</string>
     <string name="trust_import_write_error">無法儲存 Master List。</string>
     <plurals name="trust_import_limit_count">
         <item quantity="other">匯入遭拒：最多只能匯入 %1$d 份 Master List。請先刪除已匯入的憑證，再新增其他 Master List。</item>

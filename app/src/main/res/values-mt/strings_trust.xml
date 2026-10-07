@@ -69,6 +69,7 @@
     </plurals>
     <string name="trust_import_too_large">Fajl miċħud: jaqbeż l-20 MB.</string>
     <string name="trust_import_read_error">Dan il-fajl ma setax jinqara.</string>
+    <string name="trust_import_read_timeout">Il-qari tal-fajl twaqqaf: ma spiċċax fi żmien 30 sekonda.</string>
     <string name="trust_import_write_error">Il-Master List ma setgħetx tiġi salvata.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Importazzjoni miċħuda: massimu ta’ %1$d Master List importata. Ħassar iċ-ċertifikati importati biex iżżid oħra.</item>

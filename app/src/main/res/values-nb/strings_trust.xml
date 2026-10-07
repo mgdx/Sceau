@@ -57,6 +57,7 @@
     </plurals>
     <string name="trust_import_too_large">Filen ble avvist: den er større enn 20 MB.</string>
     <string name="trust_import_read_error">Kan ikke lese denne filen.</string>
+    <string name="trust_import_read_timeout">Lesingen av filen ble avbrutt: den ble ikke fullført innen 30 sekunder.</string>
     <string name="trust_import_write_error">Kan ikke lagre Master List.</string>
     <plurals name="trust_import_limit_count">
         <item quantity="one">Import avvist: maks. %1$d importert Master List. Slett de importerte sertifikatene for å legge til en annen.</item>

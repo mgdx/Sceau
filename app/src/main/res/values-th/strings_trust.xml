@@ -53,6 +53,7 @@
     </plurals>
     <string name="trust_import_too_large">ปฏิเสธไฟล์: ขนาดเกิน 20 MB</string>
     <string name="trust_import_read_error">อ่านไฟล์นี้ไม่ได้</string>
+    <string name="trust_import_read_timeout">หยุดอ่านไฟล์แล้ว: อ่านไม่เสร็จภายใน 30 วินาที</string>
     <string name="trust_import_write_error">บันทึก Master List ไม่ได้</string>
     <plurals name="trust_import_limit_count">
         <item quantity="other">ปฏิเสธการนำเข้า: นำเข้า Master List ได้ไม่เกิน %1$d รายการ ลบใบรับรองที่นำเข้าก่อนเพิ่มรายการใหม่</item>
