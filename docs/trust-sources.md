@@ -10,7 +10,8 @@ indique si Sceau peut l'embarquer dans un APK libre (GPLv3, F-Droid).
   la German Master List du BSI signée le 2026-05-28. Cela fait 590 certificats distincts (SHA-256)
   pour 112 émetteurs. Il est appelé « magasin actuel » ci-dessous (voir `docs/trust-store.md`).
   Depuis le 2026-09-29, les 7 certificats valides de statut A (GB 2026 et son lien, GR titres de
-  séjour 003 et son lien, GE n° 5 et n° 6, lien eTravel LU) sont embarqués (décision D26) : les
+  séjour 003 et son lien, GE n° 5 et n° 6, lien eTravel LU) sont embarqués (décision D26) ; les
+  deux certificats grecs en sont retirés le 2026-10-11 (D48), la ML BSI les fournissant. Les
   chiffres de gain ci-dessous restent calculés sur le magasin du 2026-09-25.
 - **Revérification du 2026-10-06** (release 0.9) : la Master List BSI embarquée est remplacée par
   celle signée le 2026-08-19 (608 certificats, 117 émetteurs ; détail dans `docs/trust-store.md`,
@@ -58,7 +59,7 @@ C'est pourquoi une Master List sans aucune mention est classée B, et non A2.
   (statut C).
 - **Statuts des sources** (hors ICAO) :
   - A1 : GB, BE (passeport), PL, TW, EU ;
-  - A2 : EE, RO, GE, NO, DK, IS, VA, CY, LU, FI, BE (eID), GR (titres de séjour), NL (certificats
+  - A2 : EE, RO, GE, NO, DK, IS, VA, CY, LU, FI, BE (eID), NL (certificats
     nationaux), IT (certificats nationaux) ;
   - A\* : DE (Master List et certificats) ;
   - B : Master Lists IT, SE, NL et EE ; certificats nationaux de MY, KW, LV, LT, CZ, SK, HU, SI, RS,
@@ -442,8 +443,8 @@ fichiers sont rangés dans `trust-catalog/<code pays>/`.
   pour 2031.
 - Conditions : aucune mention au 2026-09-29. **Au 2026-10-06, le pied de page affiche « © 2026
   All rights reserved »** : c'est la mention générique qui, selon la grille ci-dessus, classe une
-  source en B. Statut à réexaminer par le mainteneur ; les deux certificats sont désormais aussi
-  couverts par la ML BSI (A\*). Statut retenu jusqu'à décision : **A2**. Contact :
+  source en B. Statut : **B** depuis le 2026-10-06. Les deux fichiers nationaux sont retirés du
+  magasin le 2026-10-11 (D48) ; les certificats restent couverts par la ML BSI (A\*). Contact :
   csca@migration.gov.gr
 
 **HR — Croatie** : aucune page officielle trouvée (recherches sur mup.gov.hr et akd.hr). Le magasin
@@ -715,7 +716,7 @@ absents du magasin, avec pour chacun le meilleur statut disponible.
 | FI | 5 | 0 | national, ML | ML BSI | A\* |
 | FR | 6 | 0 | ANTS, ML | ANTS (eID-FRANCE dans aucune ML) | A2 |
 | GB | 8 | **2 (A1)** : CSCA 2026 et lien | national, ML DE | **national HMPO** | **A1** |
-| GR | 12 | 2 (A2, titres de séjour 2026), 3 (B), 5 (C, clés de secours) | national passeport, national titres de séjour, ML | national titres de séjour + ML IT | A2/B |
+| GR | 12 | 2 (titres de séjour 2026, B depuis le 2026-10-06, couverts par la ML BSI), 3 (B), 5 (C, clés de secours) | national passeport, national titres de séjour, ML | ML BSI + ML IT | B |
 | HR | 7 | 0 | ML seulement | ML BSI | A\* |
 | HU | 21 | **8 (B)**, dont les 2 CSCA 2024 | national, ML IT/SE/NL/EE/CH | ML IT (tout sauf 2 liens) + national | B |
 | IE | 6 | 0 | ML seulement | ML BSI | A\* |

@@ -25,8 +25,6 @@ class TrustStoreTest {
         mapOf(
             "737ce248b62d8b6dc1c9e3aaa8b937334406bac17bb37235c1c50281e6ad7edb" to ("GB" to true),
             "81d9f6bf3026a04e6e3847808cf094e34f9473a92ff66eb86a975f4c42055b5d" to ("GB" to false),
-            "8f01ced4c95d9ee5cc6915e1151432e18fa1615ad6d8e61bb6ea1af025368e3e" to ("GR" to true),
-            "5bbdb09b12bc25f9373142409d9b52da806b764294baf4f028a2c13da15bdfc5" to ("GR" to false),
             "2ef9e14c6155c315b8d7681168774a063e6fd2639f51f7d5c904ef862933c844" to ("GE" to true),
             "277fcd17b53b3e2f20cfee967db499189bf23e0ef0a9e1040c5a24c8b09cde3c" to ("GE" to true),
             "5acb0c0264ad18912ad80139b318ab507d00dc77a86ac4eb832d3510ff6ef95c" to ("LU" to false),
@@ -57,10 +55,16 @@ class TrustStoreTest {
         assertEquals(608, info.certificateCount)
         assertTrue(info.signerSubject.contains("CN=CSCA Master List Signer"))
         val embedded = store.anchors.filter { it.source == TrustSource.EMBEDDED_MASTER_LIST }
-        // 608 certificats, dont 3 déjà fournis par l'ANTS et 2 publiés par la Grèce (CSCAeRP-HELLAS
-        // 003 et son lien), qui gardent la priorité.
-        assertEquals(603, embedded.size)
+        // 608 certificats, dont 3 déjà fournis par l'ANTS, qui garde la priorité.
+        assertEquals(605, embedded.size)
         assertEquals(615, store.anchors.size)
+        // Titres de séjour grecs (CSCAeRP-HELLAS 003 et son lien) : fournis par la Master List
+        // depuis le retrait des fichiers nationaux (D48).
+        val embeddedSha256 = embedded.map { it.sha256 }.toSet()
+        listOf(
+            "8f01ced4c95d9ee5cc6915e1151432e18fa1615ad6d8e61bb6ea1af025368e3e",
+            "5bbdb09b12bc25f9373142409d9b52da806b764294baf4f028a2c13da15bdfc5",
+        ).forEach { assertTrue("certificat grec $it attendu dans la Master List", it in embeddedSha256) }
         val countries = embedded.map { it.country }.toSet()
         listOf("DE", "IT", "ES", "BE", "NL", "AT", "PL", "LU").forEach { assertTrue("CSCA $it attendu", it in countries) }
         assertTrue(store.findBySubject(X500Principal("CN=csca-germany, OU=bsi, O=bund, C=DE")).isNotEmpty())
@@ -83,7 +87,7 @@ class TrustStoreTest {
     fun nationalLinksAreSignedByAnEmbeddedAnchor() {
         val store = TrustStores.load()
         // Chaque certificat de lien ajouté se vérifie avec la clé d'un CSCA déjà dans le magasin
-        // (GBR_2021, CSCAeRP-HELLAS 002, CSCA ePassport du Luxembourg).
+        // (GBR_2021, CSCA ePassport du Luxembourg).
         store.anchors
             .filter { it.source == TrustSource.NATIONAL && !it.isSelfSigned }
             .forEach { link ->

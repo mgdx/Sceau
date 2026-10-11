@@ -27,7 +27,7 @@ Règles :
 - `:core` n'importe **aucune** classe `android.*` : il est compilé et testé sur la JVM (`./gradlew :core:test`). Ses tests remplacent la puce soit par un transport qui rejoue des APDU enregistrés (`ScriptedTransport`), soit par la puce simulée de `:testchip`, et génèrent à la volée une PKI factice (CSCA, lien, DS, SOD, clés CA et AA, en RSA et ECDSA).
 - `:testchip` n'entre jamais dans l'APK release : `testImplementation` de `:core`, `debugImplementation` de `:app` (décision D17). Le code principal de `:core` n'en dépend pas.
 - Les dépendances de `:core` sont en `implementation` (décision D9) : son API publique n'expose que des types Kotlin, `java.security` et `java.time`, jamais JMRTD ni BouncyCastle.
-- Les ressources du magasin de confiance embarqué sont dans `core/src/main/resources/trust/` : 5 certificats CSCA de l'ANTS, 7 certificats CSCA et de lien publiés par leur propre État (GB, GR, GE, LU ; source `NATIONAL`, décision D26) et la Master List allemande du BSI (décision D1), provenance dans `docs/trust-store.md`, énumérés par `trust/index.txt` (décision D16).
+- Les ressources du magasin de confiance embarqué sont dans `core/src/main/resources/trust/` : 5 certificats CSCA de l'ANTS, 5 certificats CSCA et de lien publiés par leur propre État (GB, GE, LU ; source `NATIONAL`, décision D26) et la Master List allemande du BSI (décision D1), provenance dans `docs/trust-store.md`, énumérés par `trust/index.txt` (décision D16).
 
 ### Organisation des sources
 
