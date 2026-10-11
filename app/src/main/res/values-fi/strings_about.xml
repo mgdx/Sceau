@@ -33,4 +33,9 @@
     <string name="about_usage_privacy">Luettuja tietoja ei tallenneta eikä lähetetä: kaikki poistetaan muistista, kun poistut tulosnäkymästä tai siirrät sovelluksen taustalle.</string>
     <string name="about_usage_no_warranty">Sceau toimitetaan ilman minkäänlaista takuuta. Tulos koskee sirun ja myöntäjävaltion allekirjoittamien tietojen aitoutta; sillä ei ole todistusarvoa, eikä se kerro, onko asiakirja ilmoitettu kadonneeksi tai varastetuksi.</string>
     <string name="about_usage_not_official">Sceau ei ole virallinen työkalu eikä sertifioitu henkilöllisyyden tarkistuspalvelu: se ei korvaa henkilöllisyyden tarkistuksia, joita säädökset edellyttävät tietyiltä ammateilta.</string>
+
+    <string name="about_section_libraries">Avoimen lähdekoodin kirjastot</string>
+    <string name="about_libraries_intro">Sceau sisältää seuraavat avoimen lähdekoodin kirjastot: %1$s. Niiden tekijänoikeus- ja lisenssitiedot esitetään alkuperäisinä englanniksi.</string>
+    <string name="about_libraries_show">Näytä lisenssitiedot</string>
+    <string name="about_libraries_hide">Piilota lisenssitiedot</string>
 </resources>

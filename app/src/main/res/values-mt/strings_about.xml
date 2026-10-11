@@ -33,4 +33,9 @@
     <string name="about_usage_privacy">L-ebda data moqrija ma tinżamm jew tintbagħat: kollox jitħassar mill-memorja meta toħroġ mir-riżultat jew meta tpoġġi l-app fl-isfond.</string>
     <string name="about_usage_no_warranty">Sceau huwa pprovdut mingħajr ebda garanzija. Ir-riżultat jirrigwarda l-awtentiċità taċ-ċippa u tad-data ffirmata mill-Istat li ħareġ id-dokument; m’għandux valur ta’ prova u ma jindikax jekk id-dokument ġiex irrappurtat mitluf jew misruq.</string>
     <string name="about_usage_not_official">Sceau mhuwiex għodda uffiċjali u lanqas servizz ċertifikat ta’ verifika tal-identità: ma jissostitwixxix il-kontrolli tal-identità li r-regolamenti jimponu fuq ċerti professjonijiet.</string>
+
+    <string name="about_section_libraries">Libreriji b’sors miftuħ</string>
+    <string name="about_libraries_intro">Sceau jinkludi l-libreriji b’sors miftuħ li ġejjin: %1$s. L-avviżi tagħhom dwar id-drittijiet tal-awtur u l-liċenzji huma riprodotti fil-verżjoni oriġinali bl-Ingliż.</string>
+    <string name="about_libraries_show">Uri l-avviżi tal-liċenzji</string>
+    <string name="about_libraries_hide">Aħbi l-avviżi tal-liċenzji</string>
 </resources>

@@ -29,9 +29,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
@@ -166,6 +168,10 @@ fun AboutScreen(
                 Paragraph(stringResource(R.string.about_usage_no_warranty))
                 Paragraph(stringResource(R.string.about_usage_not_official))
             }
+
+            Section(stringResource(R.string.about_section_libraries)) {
+                ThirdPartyNotices()
+            }
         }
     }
 }
@@ -203,6 +209,27 @@ private fun EmbeddedTrustStore(embedded: EmbeddedUi) {
                 Paragraph(stringResource(R.string.about_trust_ogl_notice))
             }
         }
+    }
+}
+
+/**
+ * Bibliothèques embarquées et leurs mentions de copyright et de licence (D50). Les mentions,
+ * textes juridiques, restent en anglais dans `res/raw/third_party_notices.txt`, non traduit.
+ */
+@Composable
+private fun ThirdPartyNotices() {
+    var expanded by rememberSaveable { mutableStateOf(false) }
+    Paragraph(stringResource(R.string.about_libraries_intro, stringResource(R.string.about_libraries_names)))
+    OutlinedButton(onClick = { expanded = !expanded }) {
+        Text(stringResource(if (expanded) R.string.about_libraries_hide else R.string.about_libraries_show))
+    }
+    if (expanded) {
+        val resources = LocalResources.current
+        val notices =
+            remember(resources) {
+                resources.openRawResource(R.raw.third_party_notices).bufferedReader().use { it.readText() }
+            }
+        Text(notices, style = MaterialTheme.typography.bodySmall)
     }
 }
 

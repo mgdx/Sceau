@@ -33,4 +33,9 @@
     <string name="about_usage_privacy">Không dữ liệu nào đã đọc được lưu lại hay gửi đi: mọi thứ bị xóa khỏi bộ nhớ khi bạn rời màn hình kết quả hoặc chuyển ứng dụng xuống nền.</string>
     <string name="about_usage_no_warranty">Sceau được cung cấp mà không có bất kỳ bảo đảm nào. Kết quả chỉ liên quan đến tính xác thực của chip và của dữ liệu do quốc gia cấp ký; kết quả này không có giá trị chứng cứ và không cho biết giấy tờ đã được báo mất hay bị đánh cắp hay chưa.</string>
     <string name="about_usage_not_official">Sceau không phải là công cụ chính thức, cũng không phải là dịch vụ xác minh danh tính được chứng nhận: ứng dụng không thay thế các bước kiểm tra danh tính mà quy định bắt buộc đối với một số ngành nghề.</string>
+
+    <string name="about_section_libraries">Thư viện nguồn mở</string>
+    <string name="about_libraries_intro">Sceau sử dụng các thư viện nguồn mở sau: %1$s. Thông báo bản quyền và giấy phép của các thư viện này được giữ nguyên bản tiếng Anh gốc.</string>
+    <string name="about_libraries_show">Hiện thông báo giấy phép</string>
+    <string name="about_libraries_hide">Ẩn thông báo giấy phép</string>
 </resources>

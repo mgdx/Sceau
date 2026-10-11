@@ -33,4 +33,9 @@
     <string name="about_usage_privacy">Nicio dată citită nu este păstrată sau trimisă: totul este șters din memorie la ieșirea din rezultat sau la trecerea aplicației în fundal.</string>
     <string name="about_usage_no_warranty">Sceau este oferit fără nicio garanție. Rezultatul privește autenticitatea cipului și a datelor semnate de statul emitent; nu are valoare de probă și nu arată dacă documentul a fost declarat pierdut sau furat.</string>
     <string name="about_usage_not_official">Sceau nu este un instrument oficial și nici un serviciu certificat de verificare a identității: nu înlocuiește verificările de identitate pe care reglementările le impun anumitor profesii.</string>
+
+    <string name="about_section_libraries">Biblioteci open source</string>
+    <string name="about_libraries_intro">Sceau include următoarele biblioteci open source: %1$s. Notificările lor privind drepturile de autor și licențele sunt reproduse în versiunea originală, în limba engleză.</string>
+    <string name="about_libraries_show">Afișați notificările de licență</string>
+    <string name="about_libraries_hide">Ascundeți notificările de licență</string>
 </resources>

@@ -33,4 +33,9 @@
     <string name="about_usage_privacy">読み取ったデータは保存も送信もされません。結果画面を閉じたとき、またはアプリがバックグラウンドに移ったときに、すべてメモリから消去されます。</string>
     <string name="about_usage_no_warranty">Sceau は一切の保証なしに提供されます。判定は IC チップと発行国が署名したデータの真正性に関するもので、証明力はありません。また、書類の紛失・盗難の届出があるかどうかは分かりません。</string>
     <string name="about_usage_not_official">Sceau は公式のツールでも、認証を受けた本人確認サービスでもありません。法令により特定の職業に義務付けられている本人確認の代わりにはなりません。</string>
+
+    <string name="about_section_libraries">オープンソース ライブラリ</string>
+    <string name="about_libraries_intro">Sceau は次のオープンソース ライブラリを使用しています: %1$s。著作権表示とライセンス表示は英語の原文のまま掲載しています。</string>
+    <string name="about_libraries_show">ライセンス情報を表示</string>
+    <string name="about_libraries_hide">ライセンス情報を非表示</string>
 </resources>

@@ -33,4 +33,9 @@
     <string name="about_usage_privacy">读取的数据不会保存，也不会发送：退出结果页面或将应用切换到后台时，所有数据都会从内存中清除。</string>
     <string name="about_usage_no_warranty">Sceau 不提供任何担保。其结果仅涉及芯片以及签发国所签名数据的真实性，不具有证明效力，也无法显示该证件是否已挂失或被报失窃。</string>
     <string name="about_usage_not_official">Sceau 不是官方工具，也不是经认证的身份核验服务，不能替代法规要求某些行业进行的身份核验。</string>
+
+    <string name="about_section_libraries">开源库</string>
+    <string name="about_libraries_intro">Sceau 使用了以下开源库：%1$s。其版权和许可声明以英文原文提供。</string>
+    <string name="about_libraries_show">显示许可声明</string>
+    <string name="about_libraries_hide">隐藏许可声明</string>
 </resources>

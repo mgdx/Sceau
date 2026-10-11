@@ -33,4 +33,9 @@
     <string name="about_usage_privacy">Tiada data yang dibaca disimpan atau dihantar: semuanya dipadamkan daripada memori apabila anda keluar dari keputusan atau apabila apl beralih ke latar belakang.</string>
     <string name="about_usage_no_warranty">Sceau disediakan tanpa sebarang jaminan. Keputusannya berkaitan dengan kesahihan cip dan data yang ditandatangani oleh negara pengeluar; ia tidak mempunyai nilai sebagai bukti dan tidak menunjukkan sama ada dokumen telah dilaporkan hilang atau dicuri.</string>
     <string name="about_usage_not_official">Sceau bukan alat rasmi dan bukan perkhidmatan pengesahan identiti yang diperakui: ia tidak menggantikan semakan identiti yang diwajibkan oleh peraturan bagi profesion tertentu.</string>
+
+    <string name="about_section_libraries">Pustaka sumber terbuka</string>
+    <string name="about_libraries_intro">Sceau mengandungi pustaka sumber terbuka berikut: %1$s. Notis hak cipta dan lesennya diterbitkan semula dalam versi asal bahasa Inggeris.</string>
+    <string name="about_libraries_show">Tunjukkan notis lesen</string>
+    <string name="about_libraries_hide">Sembunyikan notis lesen</string>
 </resources>

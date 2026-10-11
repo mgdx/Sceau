@@ -33,4 +33,9 @@
     <string name="about_usage_privacy">שום מידע שנקרא אינו נשמר או נשלח: הכול נמחק מהזיכרון ביציאה ממסך התוצאה או כשהאפליקציה עוברת לרקע.</string>
     <string name="about_usage_no_warranty">Sceau מסופק ללא כל אחריות. התוצאה נוגעת לאמיתות השבב ושל הנתונים שנחתמו על ידי המדינה המנפיקה; אין לה ערך ראייתי והיא אינה מראה אם דווח על אובדן המסמך או על גניבתו.</string>
     <string name="about_usage_not_official">Sceau אינו כלי רשמי ואינו שירות מוסמך לאימות זהות: הוא אינו מחליף את בדיקות הזהות שהתקנות מחייבות בעלי מקצועות מסוימים לבצע.</string>
+
+    <string name="about_section_libraries">ספריות קוד פתוח</string>
+    <string name="about_libraries_intro">Sceau כולל את ספריות הקוד הפתוח הבאות: %1$s. הודעות זכויות היוצרים והרישיון שלהן מובאות בגרסתן המקורית באנגלית.</string>
+    <string name="about_libraries_show">הצגת הודעות הרישיון</string>
+    <string name="about_libraries_hide">הסתרת הודעות הרישיון</string>
 </resources>

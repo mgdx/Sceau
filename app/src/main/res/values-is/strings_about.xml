@@ -33,4 +33,9 @@
     <string name="about_usage_privacy">Engin lesin gögn eru geymd eða send: allt er hreinsað úr minninu þegar farið er af niðurstöðuskjánum eða forritið fer í bakgrunn.</string>
     <string name="about_usage_no_warranty">Sceau er látið í té án nokkurrar ábyrgðar. Niðurstaðan varðar ósvikni kubbsins og gagnanna sem útgáfuríkið hefur undirritað; hún hefur ekkert sönnunargildi og segir ekki til um hvort tilkynnt hafi verið að skjalið sé glatað eða stolið.</string>
     <string name="about_usage_not_official">Sceau er hvorki opinbert verkfæri né vottuð þjónusta til að staðfesta auðkenni: það kemur ekki í stað þeirra auðkennisathugana sem reglur leggja á tilteknar starfsstéttir.</string>
+
+    <string name="about_section_libraries">Opin forritasöfn</string>
+    <string name="about_libraries_intro">Sceau inniheldur eftirfarandi opin forritasöfn: %1$s. Höfundarréttar- og leyfistilkynningar þeirra birtast í upprunalegri enskri útgáfu.</string>
+    <string name="about_libraries_show">Sýna leyfistilkynningar</string>
+    <string name="about_libraries_hide">Fela leyfistilkynningar</string>
 </resources>
