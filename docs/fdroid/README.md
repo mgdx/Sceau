@@ -16,6 +16,15 @@ L'APK release ne demande que `android.permission.NFC` et n'exporte qu'un composa
 aapt2 dump xmltree --file AndroidManifest.xml app-universal-release-unsigned.apk | grep -B2 exported
 ```
 
+## Environnement de build
+
+Le serveur de build de F-Droid (Debian trixie) ne fournit ni les JDK ni le CMake du projet, et F-Droid refuse tout JDK binaire téléchargé pendant le build. La recette les installe elle-même (D49) :
+
+- **`sudo:`** : JDK 17 (toolchains `jvmToolchain(17)` des trois modules), pris dans bookworm puisque trixie ne l'a plus, et JDK 25 (démon Gradle, `gradle/gradle-daemon-jvm.properties`), puis `update-java-alternatives -a`. Gradle trouve seul les JDK installés dans `/usr/lib/jvm`.
+- **`prebuild:`** (lancé depuis `app/`, d'où les `../`) : retrait du plugin `foojay-resolver-convention` de `settings.gradle.kts` et `org.gradle.java.installations.auto-download=false` ajouté à `gradle.properties`, pour qu'un JDK manquant fasse échouer le build au lieu d'être téléchargé (les `toolchainUrl` du démon pointent aussi vers foojay) ; `sdkmanager 'cmake;4.1.2'` (`externalNativeBuild.cmake.version`). Le NDK r28c vient du champ `ndk:`.
+
+Ces modifications ne changent pas l'APK. Vérifié dans un clone : `./gradlew :app:assembleRelease --offline` après le prebuild donne un `app-universal-release-unsigned.apk` identique octet pour octet (`cmp`) à celui construit sans. Le build local et la CI gardent foojay.
+
 ## Remplir avant soumission
 
 1. **`commit:`** : hash complet du commit du tag, jamais le nom du tag (un tag peut être déplacé) :
@@ -45,6 +54,6 @@ fdroid lint io.github.mgdx.sceau
 fdroid build -v -l io.github.mgdx.sceau                       # construit et compare à l'APK de l'auteur
 ```
 
-Les besoins d'environnement listés en tête de la recette (JDK 25 du démon Gradle, CMake 4.1.2, NDK r28c) sont à confirmer à cette étape ; ajouter un `sudo:` ou un `prebuild:` si le serveur de build ne les fournit pas. Puis ouvrir une merge request sur fdroiddata (branche nommée d'après l'identifiant de l'application), en joignant le rapport du skill `android-fdroid`.
+Puis ouvrir une merge request sur fdroiddata (branche nommée d'après l'identifiant de l'application), en joignant le rapport du skill `android-fdroid`.
 
 Pour une nouvelle version, F-Droid ajoute lui-même le bloc `Builds` (`AutoUpdateMode: Version`, tags `v0.9`, `v1.0`, `v1.0.1`…), à condition que l'asset `sceau-<version>-universal.apk` soit publié sous ce nom.
