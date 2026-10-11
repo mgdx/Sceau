@@ -96,7 +96,7 @@ Aucune dépendance ne relève de Google Play Services, Firebase, d'une biblioth�
 Le magasin de confiance de `core/src/main/resources/trust/` est composé de données publiques, pas de bibliothèques (décision D1) :
 
 - 5 certificats CSCA de l'ANTS, publiés sur ants.gouv.fr ;
-- 7 certificats CSCA et de lien publiés par leur propre État pour ses documents (décision D26) : Royaume-Uni (`gb-csca-2026.der`, `gb-csca-link-2021-2026.der`, sous Open Government Licence v3.0, attribution affichée dans « À propos »), Grèce (titres de séjour, `gr-csca-erp-003.der`, `gr-csca-erp-link-002-003.der`), Géorgie (`ge-csca-5.der`, `ge-csca-6.der`) et Luxembourg (`lu-csca-etravel-link.der`) ;
+- 5 certificats CSCA et de lien publiés par leur propre État pour ses documents (décision D26) : Royaume-Uni (`gb-csca-2026.der`, `gb-csca-link-2021-2026.der`, sous Open Government Licence v3.0, attribution affichée dans « À propos »), Géorgie (`ge-csca-5.der`, `ge-csca-6.der`) et Luxembourg (`lu-csca-etravel-link.der`) ;
 - Master List allemande publiée par le BSI, redistribuée sans modification dans le respect de ses conditions de réutilisation (décision D1 dans `docs/decisions.md`).
 
 Provenance et empreintes : `docs/trust-store.md`.

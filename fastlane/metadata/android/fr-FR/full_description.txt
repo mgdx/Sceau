@@ -23,7 +23,7 @@ Sceau lit par NFC la puce des documents d'identité conformes à la norme ICAO 9
 Le résultat est un verdict (Authentique, Signature valide mais puce non vérifiée, Émetteur inconnu, Échec) accompagné d'une liste de contrôle détaillée.
 
 <b>Magasin de confiance</b>
-Sceau embarque les certificats CSCA français de l'ANTS, des certificats publiés par le Royaume-Uni, la Grèce, la Géorgie et le Luxembourg pour leurs propres documents, et la Master List allemande du BSI, qui couvre notamment les pays de l'Union européenne, de l'EEE, la Suisse et le Royaume-Uni. L'écran du magasin permet de rechercher un pays. Pour un document dont l'émetteur n'y figure pas, le verdict est « Émetteur inconnu » ; vous pouvez importer une Master List publiée par un autre État, ou un certificat CSCA ou de lien seul après avoir vérifié son empreinte, puis supprimer chaque élément importé un par un. Les listes de révocation ne sont pas consultées. Sceau n'est ni affilié à l'ANTS ni au BSI, ni approuvé par eux.
+Sceau embarque les certificats CSCA français de l'ANTS, des certificats publiés par le Royaume-Uni, la Géorgie et le Luxembourg pour leurs propres documents, et la Master List allemande du BSI, qui couvre notamment les pays de l'Union européenne, de l'EEE, la Suisse et le Royaume-Uni. L'écran du magasin permet de rechercher un pays. Pour un document dont l'émetteur n'y figure pas, le verdict est « Émetteur inconnu » ; vous pouvez importer une Master List publiée par un autre État, ou un certificat CSCA ou de lien seul après avoir vérifié son empreinte, puis supprimer chaque élément importé un par un. Les listes de révocation ne sont pas consultées. Sceau n'est ni affilié à l'ANTS ni au BSI, ni approuvé par eux.
 
 <b>Limites connues</b>
 <ul>

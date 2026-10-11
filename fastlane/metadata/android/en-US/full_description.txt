@@ -23,7 +23,7 @@ Sceau reads the chip of ICAO 9303 identity documents over NFC and checks that th
 The result is a verdict (Authentic, Valid signature but chip not verified, Unknown issuer, Failed) with a detailed checklist.
 
 <b>Trust store</b>
-Sceau ships the French CSCA certificates published by ANTS, certificates published by the United Kingdom, Greece, Georgia and Luxembourg for their own documents, and the German Master List published by BSI, which covers the European Union, the EEA, Switzerland and the United Kingdom among others. The trust store screen can be searched by country. For a document whose issuer is not included, the verdict is "Unknown issuer"; you can import a Master List published by another state, or a single CSCA or link certificate after checking its fingerprint, and remove each imported item individually. Revocation lists are not checked. Sceau is not affiliated with or endorsed by ANTS or BSI.
+Sceau ships the French CSCA certificates published by ANTS, certificates published by the United Kingdom, Georgia and Luxembourg for their own documents, and the German Master List published by BSI, which covers the European Union, the EEA, Switzerland and the United Kingdom among others. The trust store screen can be searched by country. For a document whose issuer is not included, the verdict is "Unknown issuer"; you can import a Master List published by another state, or a single CSCA or link certificate after checking its fingerprint, and remove each imported item individually. Revocation lists are not checked. Sceau is not affiliated with or endorsed by ANTS or BSI.
 
 <b>Known limitations</b>
 <ul>
