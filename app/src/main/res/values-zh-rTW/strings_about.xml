@@ -33,4 +33,9 @@
     <string name="about_usage_privacy">讀取的資料不會保存，也不會傳送：離開結果畫面或將應用程式切換到背景時，所有資料都會從記憶體中清除。</string>
     <string name="about_usage_no_warranty">Sceau 不提供任何擔保。其結果僅涉及晶片及簽發國所簽署資料的真實性，不具證明效力，也無法顯示該證件是否已申報遺失或失竊。</string>
     <string name="about_usage_not_official">Sceau 並非官方工具，也不是經認證的身分驗證服務，無法取代法規要求特定行業執行的身分查核。</string>
+
+    <string name="about_section_libraries">開放原始碼程式庫</string>
+    <string name="about_libraries_intro">Sceau 使用了以下開放原始碼程式庫：%1$s。其著作權與授權聲明以英文原文提供。</string>
+    <string name="about_libraries_show">顯示授權聲明</string>
+    <string name="about_libraries_hide">隱藏授權聲明</string>
 </resources>

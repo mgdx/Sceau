@@ -33,4 +33,9 @@
     <string name="about_usage_privacy">Okunan hiçbir veri saklanmaz veya gönderilmez: Sonuç ekranından çıkıldığında ya da uygulama arka plana alındığında tüm veriler bellekten silinir.</string>
     <string name="about_usage_no_warranty">Sceau hiçbir garanti olmaksızın sunulur. Sonuç, çipin ve düzenleyen devlet tarafından imzalanan verilerin özgünlüğüyle ilgilidir; ispat değeri taşımaz ve belgenin kayıp ya da çalıntı olarak bildirilip bildirilmediğini göstermez.</string>
     <string name="about_usage_not_official">Sceau resmî bir araç ya da sertifikalı bir kimlik doğrulama hizmeti değildir: mevzuatın bazı meslekler için zorunlu kıldığı kimlik kontrollerinin yerini tutmaz.</string>
+
+    <string name="about_section_libraries">Açık kaynak kitaplıklar</string>
+    <string name="about_libraries_intro">Sceau şu açık kaynak kitaplıkları içerir: %1$s. Telif hakkı ve lisans bildirimleri İngilizce orijinal sürümleriyle verilmiştir.</string>
+    <string name="about_libraries_show">Lisans bildirimlerini göster</string>
+    <string name="about_libraries_hide">Lisans bildirimlerini gizle</string>
 </resources>

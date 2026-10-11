@@ -33,4 +33,9 @@
     <string name="about_usage_privacy">Az alkalmazás egyetlen beolvasott adatot sem tárol és nem küld el: az eredmény elhagyásakor vagy az alkalmazás háttérbe helyezésekor minden törlődik a memóriából.</string>
     <string name="about_usage_no_warranty">A Sceau mindenféle garancia nélkül érhető el. Az eredmény a chip és a kibocsátó állam által aláírt adatok hitelességére vonatkozik; nincs bizonyító ereje, és nem mutatja meg, hogy a dokumentumot elveszettként vagy ellopottként jelentették-e be.</string>
     <string name="about_usage_not_official">A Sceau nem hivatalos eszköz és nem tanúsított személyazonosság-ellenőrzési szolgáltatás: nem helyettesíti azokat a személyazonosság-ellenőrzéseket, amelyeket jogszabály ír elő egyes szakmák számára.</string>
+
+    <string name="about_section_libraries">Nyílt forráskódú könyvtárak</string>
+    <string name="about_libraries_intro">A Sceau a következő nyílt forráskódú könyvtárakat tartalmazza: %1$s. Szerzői jogi és licencnyilatkozataik az eredeti angol nyelvű változatban olvashatók.</string>
+    <string name="about_libraries_show">Licencnyilatkozatok megjelenítése</string>
+    <string name="about_libraries_hide">Licencnyilatkozatok elrejtése</string>
 </resources>

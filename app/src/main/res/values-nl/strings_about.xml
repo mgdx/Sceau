@@ -33,4 +33,9 @@
     <string name="about_usage_privacy">Er worden geen uitgelezen gegevens bewaard of verzonden: alles wordt uit het geheugen gewist wanneer je het resultaat verlaat of de app naar de achtergrond gaat.</string>
     <string name="about_usage_no_warranty">Sceau wordt geleverd zonder enige garantie. Het resultaat gaat over de echtheid van de chip en van de gegevens die de staat van afgifte heeft ondertekend; het heeft geen bewijskracht en zegt niet of het document als verloren of gestolen is opgegeven.</string>
     <string name="about_usage_not_official">Sceau is geen officieel hulpmiddel en geen gecertificeerde dienst voor identiteitsverificatie: het vervangt niet de identiteitscontroles die de regelgeving aan bepaalde beroepen oplegt.</string>
+
+    <string name="about_section_libraries">Opensourcebibliotheken</string>
+    <string name="about_libraries_intro">Sceau bevat de volgende opensourcebibliotheken: %1$s. Hun auteursrecht- en licentievermeldingen worden weergegeven in de oorspronkelijke Engelse versie.</string>
+    <string name="about_libraries_show">Licentievermeldingen tonen</string>
+    <string name="about_libraries_hide">Licentievermeldingen verbergen</string>
 </resources>

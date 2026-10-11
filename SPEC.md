@@ -163,7 +163,7 @@ Aucune donnée personnelle ne transite par cet écran.
 
 ### 5.5 Écran « À propos »
 
-Version, licence, lien vers le dépôt, rappel du cadre d'usage (voir section 8), et description du magasin de confiance embarqué : CSCA français de l'ANTS et Master List allemande du BSI, avec la date de signature de cette Master List, puis les pays dont des certificats publiés par l'État lui-même sont embarqués. Une mention précise que la Master List du BSI est redistribuée sans modification, sans coopération ni approbation du BSI (conditions de réutilisation, D1). L'attribution de l'Open Government Licence v3.0 accompagne les certificats britanniques (D26). Les limites de la section 7.4 y sont rappelées.
+Version, licence, lien vers le dépôt, rappel du cadre d'usage (voir section 8), et description du magasin de confiance embarqué : CSCA français de l'ANTS et Master List allemande du BSI, avec la date de signature de cette Master List, puis les pays dont des certificats publiés par l'État lui-même sont embarqués. Une mention précise que la Master List du BSI est redistribuée sans modification, sans coopération ni approbation du BSI (conditions de réutilisation, D1). L'attribution de l'Open Government Licence v3.0 accompagne les certificats britanniques (D26). Les limites de la section 7.4 y sont rappelées. Une section « Bibliothèques libres » nomme les bibliothèques embarquées et déplie, sur demande, leurs mentions de copyright et de licence, en anglais et non traduites, dont le texte complet de la BSD-2-Clause d'OpenJPEG (D50).
 
 ### 5.6 Introduction et écran « Ce que contient la puce »
 

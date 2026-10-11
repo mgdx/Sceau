@@ -33,4 +33,9 @@
     <string name="about_usage_privacy">Jokie nuskaityti duomenys nesaugomi ir niekur nesiunčiami: išėjus iš rezultato ekrano arba perjungus programą į foninį režimą, viskas ištrinama iš atminties.</string>
     <string name="about_usage_no_warranty">Sceau teikiama be jokių garantijų. Rezultatas susijęs su lusto ir išdavusios valstybės pasirašytų duomenų autentiškumu; jis neturi įrodomosios galios ir nerodo, ar apie dokumento praradimą ar vagystę buvo pranešta.</string>
     <string name="about_usage_not_official">Sceau nėra nei oficiali priemonė, nei sertifikuota tapatybės tikrinimo paslauga: ji nepakeičia tapatybės patikrinimų, kuriuos teisės aktai nustato tam tikroms profesijoms.</string>
+
+    <string name="about_section_libraries">Atvirojo kodo bibliotekos</string>
+    <string name="about_libraries_intro">Sceau naudoja šias atvirojo kodo bibliotekas: %1$s. Jų autorių teisių ir licencijų pranešimai pateikiami originalia anglų kalba.</string>
+    <string name="about_libraries_show">Rodyti licencijų pranešimus</string>
+    <string name="about_libraries_hide">Slėpti licencijų pranešimus</string>
 </resources>

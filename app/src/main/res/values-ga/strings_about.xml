@@ -33,4 +33,9 @@
     <string name="about_usage_privacy">Ní choinnítear ná ní sheoltar aon sonraí a léitear: scriostar gach rud ón gcuimhne nuair a fhágann tú an toradh nó nuair a chuireann tú an aip sa chúlra.</string>
     <string name="about_usage_no_warranty">Cuirtear Sceau ar fáil gan baránta ar bith. Baineann an toradh le barántúlacht na sliseoige agus na sonraí atá sínithe ag an Stát eisiúna; níl feidhm cruthúnais leis agus ní léiríonn sé ar tuairiscíodh go raibh an doiciméad caillte nó goidte.</string>
     <string name="about_usage_not_official">Ní uirlis oifigiúil ná seirbhís dheimhnithe fíoraithe aitheantais é Sceau: ní thagann sé in áit na seiceálacha aitheantais a éilíonn rialacháin ar ghairmeacha áirithe.</string>
+
+    <string name="about_section_libraries">Leabharlanna foinse oscailte</string>
+    <string name="about_libraries_intro">Tá na leabharlanna foinse oscailte seo a leanas in Sceau: %1$s. Atáirgtear a bhfógraí cóipchirt agus ceadúnais sa leagan bunaidh Béarla.</string>
+    <string name="about_libraries_show">Taispeáin fógraí ceadúnais</string>
+    <string name="about_libraries_hide">Folaigh fógraí ceadúnais</string>
 </resources>

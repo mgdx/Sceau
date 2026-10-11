@@ -89,6 +89,8 @@ Montée de version : se placer dans le sous-module, `git fetch --tags && git che
 
 Autres transitives : bibliothèques AndroidX (`annotation`, `collection`, `arch.core`, `savedstate`, `navigationevent`, `customview-poolingcontainer`, `autofill`, `tracing`, `transition`, `dynamicanimation`, `interpolator`, `versionedparcelable`, `legacy-support-core-utils`, `loader`, `localbroadcastmanager`, `print`, `documentfile`, `concurrent-futures`, `core-viewtree`) et modules Compose (`runtime`, `runtime-saveable`, `runtime-retain`, `runtime-annotation`, `animation`, `animation-core`, `foundation`, `foundation-layout`, `material-ripple`, `ui-geometry`, `ui-text`, `ui-unit`, `ui-util`) : Apache 2.0, publiées sur Google Maven, libres. Ces transitives n'ont pas été contrôlées une à une ; la licence Apache 2.0 a été constatée sur l'AAR ou le POM de chaque dépendance directe AndroidX et Compose et de `emoji2`, `profileinstaller`, `startup-runtime` et `window`.
 
+Mentions dans l'application (D50) : « À propos » → « Bibliothèques libres » reproduit, depuis `app/src/main/res/raw/third_party_notices.txt`, la licence et le copyright de chaque bibliothèque embarquée (JMRTD, SCUBA, Bouncy Castle, OpenJPEG avec le texte complet de sa BSD-2-Clause, AndroidX/Compose, Kotlin, kotlinx). Tout ajout ou retrait de dépendance embarquée met aussi ce fichier à jour. cert-cvc n'y figure pas tant que R8 le retire de l'APK release (vérifié le 2026-10-12 : aucune classe `org.ejbca` dans `mapping.txt` ni dans le `dexdump` de l'APK universel).
+
 Aucune dépendance ne relève de Google Play Services, Firebase, d'une bibliothèque d'analyse, de publicité ou de rapport de plantage.
 
 ## 3. Contenu embarqué qui n'est pas du code

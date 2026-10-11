@@ -33,4 +33,9 @@
     <string name="about_usage_privacy">لا يتم الاحتفاظ بأي بيانات مقروءة أو إرسالها: تُمحى جميعها من الذاكرة عند مغادرة شاشة النتيجة أو نقل التطبيق إلى الخلفية.</string>
     <string name="about_usage_no_warranty">يُقدَّم Sceau دون أي ضمان. تتعلق النتيجة بأصالة الشريحة والبيانات الموقّعة من الدولة المُصدِرة؛ وليست لها قيمة إثباتية، ولا تبيّن ما إذا كان قد أُبلغ عن فقدان الوثيقة أو سرقتها.</string>
     <string name="about_usage_not_official">ليس Sceau أداة رسمية ولا خدمة معتمدة للتحقق من الهوية: فهو لا يغني عن عمليات التحقق من الهوية التي تفرضها اللوائح على بعض المهن.</string>
+
+    <string name="about_section_libraries">مكتبات مفتوحة المصدر</string>
+    <string name="about_libraries_intro">يتضمن Sceau المكتبات مفتوحة المصدر التالية: %1$s. وتُعرض إشعارات حقوق النشر والترخيص الخاصة بها بنسختها الأصلية باللغة الإنجليزية.</string>
+    <string name="about_libraries_show">عرض إشعارات الترخيص</string>
+    <string name="about_libraries_hide">إخفاء إشعارات الترخيص</string>
 </resources>

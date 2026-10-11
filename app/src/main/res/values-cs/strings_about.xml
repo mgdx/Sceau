@@ -33,4 +33,9 @@
     <string name="about_usage_privacy">Žádné přečtené údaje se neukládají ani neodesílají: vše se vymaže z paměti při opuštění výsledku nebo přesunutí aplikace na pozadí.</string>
     <string name="about_usage_no_warranty">Sceau je poskytován bez jakékoli záruky. Výsledek se týká pravosti čipu a údajů podepsaných vydávajícím státem; nemá důkazní hodnotu a neuvádí, zda byl doklad nahlášen jako ztracený nebo odcizený.</string>
     <string name="about_usage_not_official">Sceau není oficiální nástroj ani certifikovaná služba ověřování totožnosti: nenahrazuje kontroly totožnosti, které předpisy ukládají některým profesím.</string>
+
+    <string name="about_section_libraries">Knihovny s otevřeným zdrojovým kódem</string>
+    <string name="about_libraries_intro">Sceau obsahuje tyto knihovny s otevřeným zdrojovým kódem: %1$s. Jejich upozornění na autorská práva a licence jsou uvedena v původním anglickém znění.</string>
+    <string name="about_libraries_show">Zobrazit licenční upozornění</string>
+    <string name="about_libraries_hide">Skrýt licenční upozornění</string>
 </resources>

@@ -33,4 +33,9 @@
     <string name="about_usage_privacy">Asnjë e dhënë e lexuar nuk ruhet as nuk dërgohet: gjithçka fshihet nga memoria kur del nga rezultati ose kur e kalon aplikacionin në sfond.</string>
     <string name="about_usage_no_warranty">Sceau ofrohet pa asnjë garanci. Rezultati ka të bëjë me vërtetësinë e çipit dhe të të dhënave të nënshkruara nga shteti lëshues; nuk ka vlerë prove dhe nuk tregon nëse dokumenti është deklaruar i humbur ose i vjedhur.</string>
     <string name="about_usage_not_official">Sceau nuk është mjet zyrtar dhe as shërbim i certifikuar për verifikimin e identitetit: nuk zëvendëson kontrollet e identitetit që rregulloret u kërkojnë disa profesioneve.</string>
+
+    <string name="about_section_libraries">Biblioteka me burim të hapur</string>
+    <string name="about_libraries_intro">Sceau përfshin bibliotekat e mëposhtme me burim të hapur: %1$s. Njoftimet e tyre për të drejtat e autorit dhe licencat jepen në versionin origjinal në anglisht.</string>
+    <string name="about_libraries_show">Shfaq njoftimet e licencave</string>
+    <string name="about_libraries_hide">Fshih njoftimet e licencave</string>
 </resources>

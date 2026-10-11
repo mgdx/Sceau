@@ -33,4 +33,9 @@
     <string name="about_usage_privacy">Loetud andmeid ei salvestata ega saadeta: kõik kustutatakse mälust, kui lahkute tulemuse ekraanilt või viite rakenduse taustale.</string>
     <string name="about_usage_no_warranty">Sceau on saadaval ilma igasuguse garantiita. Tulemus puudutab kiibi ja väljaandnud riigi allkirjastatud andmete ehtsust; sellel ei ole tõendusjõudu ja see ei näita, kas dokument on kadunuks või varastatuks teatatud.</string>
     <string name="about_usage_not_official">Sceau ei ole ametlik tööriist ega sertifitseeritud isikutuvastusteenus: see ei asenda isikusamasuse kontrolle, mida õigusaktid teatud ametitelt nõuavad.</string>
+
+    <string name="about_section_libraries">Avatud lähtekoodiga teegid</string>
+    <string name="about_libraries_intro">Sceau sisaldab järgmisi avatud lähtekoodiga teeke: %1$s. Nende autoriõiguse ja litsentsi teated on esitatud ingliskeelses originaalis.</string>
+    <string name="about_libraries_show">Kuva litsentsiteated</string>
+    <string name="about_libraries_hide">Peida litsentsiteated</string>
 </resources>

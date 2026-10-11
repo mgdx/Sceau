@@ -33,4 +33,9 @@
     <string name="about_usage_privacy">Ausgelesene Daten werden weder gespeichert noch gesendet: Beim Verlassen des Ergebnisses oder wenn die App in den Hintergrund wechselt, wird alles aus dem Arbeitsspeicher gelöscht.</string>
     <string name="about_usage_no_warranty">Sceau wird ohne jede Gewährleistung bereitgestellt. Das Ergebnis betrifft die Echtheit des Chips und der vom ausstellenden Staat signierten Daten; es hat keine Beweiskraft und sagt nicht aus, ob das Dokument als verloren oder gestohlen gemeldet wurde.</string>
     <string name="about_usage_not_official">Sceau ist weder ein amtliches Werkzeug noch ein zertifizierter Dienst zur Identitätsprüfung: Es ersetzt nicht die Identitätsprüfungen, die bestimmten Berufen gesetzlich vorgeschrieben sind.</string>
+
+    <string name="about_section_libraries">Open-Source-Bibliotheken</string>
+    <string name="about_libraries_intro">Sceau enthält die folgenden Open-Source-Bibliotheken: %1$s. Ihre Urheberrechts- und Lizenzhinweise sind in der englischen Originalfassung wiedergegeben.</string>
+    <string name="about_libraries_show">Lizenzhinweise anzeigen</string>
+    <string name="about_libraries_hide">Lizenzhinweise ausblenden</string>
 </resources>

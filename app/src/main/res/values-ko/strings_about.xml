@@ -33,4 +33,9 @@
     <string name="about_usage_privacy">읽은 데이터는 저장되거나 전송되지 않습니다. 결과 화면을 나가거나 앱이 백그라운드로 전환되면 모든 데이터가 메모리에서 삭제됩니다.</string>
     <string name="about_usage_no_warranty">Sceau는 어떠한 보증도 없이 제공됩니다. 판정 결과는 칩과 발급 국가가 서명한 데이터의 진위에 관한 것으로, 증명력이 없으며 문서의 분실 또는 도난 신고 여부를 알려 주지 않습니다.</string>
     <string name="about_usage_not_official">Sceau는 공식 도구나 인증된 신원 확인 서비스가 아닙니다. 법령에 따라 일부 직업에 요구되는 신원 확인을 대신할 수 없습니다.</string>
+
+    <string name="about_section_libraries">오픈소스 라이브러리</string>
+    <string name="about_libraries_intro">Sceau는 다음 오픈소스 라이브러리를 사용합니다: %1$s. 저작권 및 라이선스 고지는 영어 원문 그대로 실려 있습니다.</string>
+    <string name="about_libraries_show">라이선스 고지 표시</string>
+    <string name="about_libraries_hide">라이선스 고지 숨기기</string>
 </resources>
