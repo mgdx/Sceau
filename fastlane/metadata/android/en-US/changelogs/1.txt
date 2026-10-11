@@ -2,5 +2,5 @@ First public release.
 • NFC reading of biometric passports, the French ID card and European ID cards (PACE or BAC)
 • Photo, identity, signature and additional data
 • Passive, Chip and Active Authentication, verdict and checklist
-• CSCAs from ANTS and 4 states, BSI Master List, Master List and certificate import
+• CSCAs from ANTS and 3 states, BSI Master List, Master List and certificate import
 • Offline, no data kept, 45 languages
