@@ -30,10 +30,10 @@ import org.junit.Assert.fail
 import org.junit.Test
 
 /**
- * Tests de bout en bout de `readAndVerify` contre une CNIe française simulée
- * ([SimulatedDocuments.frenchIdCard]) : PACE-CAN (ECDH GM, AES-128, brainpoolP256r1) mené par
- * JMRTD face à une puce qui implémente PACE de son côté, lecture sous messagerie sécurisée AES,
- * Passive Authentication, Chip Authentication AES et Active Authentication ECDSA.
+ * End-to-end tests of `readAndVerify` against a simulated French CNIe
+ * ([SimulatedDocuments.frenchIdCard]): PACE-CAN (ECDH GM, AES-128, brainpoolP256r1) run by
+ * JMRTD against a chip that implements PACE on its side, reading under AES secure messaging,
+ * Passive Authentication, AES Chip Authentication and ECDSA Active Authentication.
  */
 class FrenchIdCardEndToEndTest {
     private val card: SimulatedIdentityDocument by lazy { SimulatedDocuments.frenchIdCard() }
@@ -44,7 +44,7 @@ class FrenchIdCardEndToEndTest {
         steps: MutableList<Step> = mutableListOf(),
     ): VerificationReport {
         val report = readAndVerify(chip, key, card.trustStore) { steps += it }
-        assertTrue("transport fermé", chip.closed)
+        assertTrue("transport closed", chip.closed)
         assertNoForbiddenDataGroup(chip)
         return report
     }
@@ -57,18 +57,18 @@ class FrenchIdCardEndToEndTest {
         try {
             readAndVerify(chip, key, card.trustStore) { steps += it }
         } catch (e: SceauException) {
-            if (e !is E) throw AssertionError("${E::class.simpleName} attendue, reçu ${e.code}", e)
-            assertTrue("transport fermé", chip.closed)
+            if (e !is E) throw AssertionError("${E::class.simpleName} expected, got ${e.code}", e)
+            assertTrue("transport closed", chip.closed)
             assertNoForbiddenDataGroup(chip)
             return e
         }
-        fail("${E::class.simpleName} attendue")
+        fail("${E::class.simpleName} expected")
         throw IllegalStateException()
     }
 
     private fun assertNoForbiddenDataGroup(chip: SimulatedChip) {
-        assertFalse("DG3 demandé", SimulatedChip.FID_DG3 in chip.selectedFids)
-        assertFalse("DG4 demandé", SimulatedChip.FID_DG4 in chip.selectedFids)
+        assertFalse("DG3 requested", SimulatedChip.FID_DG3 in chip.selectedFids)
+        assertFalse("DG4 requested", SimulatedChip.FID_DG4 in chip.selectedFids)
     }
 
     private fun assertAllOk(report: VerificationReport) {
@@ -79,7 +79,7 @@ class FrenchIdCardEndToEndTest {
     private fun hashes(report: VerificationReport) = report.check(CheckId.DG_HASHES).detail as CheckDetail.DataGroupHashes
 
     @Test
-    fun canCorrect_PaceAuthentique() =
+    fun correctCan_PaceAuthentic() =
         runTest {
             val chip = card.chip()
             val steps = mutableListOf<Step>()
@@ -88,7 +88,7 @@ class FrenchIdCardEndToEndTest {
 
             assertEquals(Verdict.AUTHENTIC, report.verdict)
             assertAllOk(report)
-            assertEquals("progression dans l'ordre, sans répétition", Step.entries.toList(), steps)
+            assertEquals("progress in order, without repetition", Step.entries.toList(), steps)
             assertEquals(CheckDetail.SecureChannel(ChannelProtocol.PACE), report.check(CheckId.SECURE_CHANNEL).detail)
             assertEquals(listOf(1, 2, 7, 11, 12, 14, 15), hashes(report).checked)
             assertEquals(emptyList<Int>(), hashes(report).mismatched)
@@ -99,12 +99,12 @@ class FrenchIdCardEndToEndTest {
                     .contains("CSCA-TEST-FRANCE"),
             )
 
-            // La puce a mené PACE avec le CAN (et non BAC), puis la CA AES et l'AA ECDSA.
+            // The chip ran PACE with the CAN (not BAC), then AES CA and ECDSA AA.
             assertEquals(PacePassword.CAN, chip.paceCompletedWith)
             assertFalse(chip.bacCompleted)
             assertEquals(SimCrypto.Algorithm.AES, chip.caAlgorithm)
             assertEquals(1, chip.aaChallenges.size)
-            assertEquals("EF.CardAccess lu en premier", SimulatedChip.FID_CARD_ACCESS, chip.selectedFids.first())
+            assertEquals("EF.CardAccess read first", SimulatedChip.FID_CARD_ACCESS, chip.selectedFids.first())
 
             val dg1 = report.document.dg1
             assertEquals("ID", dg1.documentCode)
@@ -121,7 +121,7 @@ class FrenchIdCardEndToEndTest {
             assertEquals(ImageFormat.JPEG2000, portrait.format)
             assertArrayEquals(SimulatedDocuments.specimenPortrait(), portrait.bytes)
 
-            // DG7 (D37) : signature manuscrite synthétique, JPEG reconnu à ses premiers octets.
+            // DG7 (D37): synthetic handwritten signature, JPEG recognized by its first bytes.
             val signature = checkNotNull(report.document.signature)
             assertEquals(ImageFormat.JPEG, signature.format)
             assertArrayEquals(SimulatedDocuments.specimenSignature(), signature.bytes)
@@ -138,10 +138,10 @@ class FrenchIdCardEndToEndTest {
         }
 
     @Test
-    fun cloneRetenantDg2Dg14Dg15_Echec() =
+    fun cloneWithholdingDg2Dg14Dg15_Failure() =
         runTest {
-            // Clone d'une CNIe : SOD, DG1, DG11, DG12 rejoués ; photo, DG14 et DG15 retenus et
-            // absents d'EF.COM. Sans la correction V1, le verdict serait « puce non vérifiée ».
+            // Clone of a CNIe: SOD, DG1, DG11, DG12 replayed; photo, DG14 and DG15 withheld and
+            // missing from EF.COM. Without the V1 fix, the verdict would be "chip not verified".
             val chip =
                 SimulatedChip(
                     card.document,
@@ -162,7 +162,7 @@ class FrenchIdCardEndToEndTest {
         }
 
     @Test
-    fun canFaux_AccessDenied() =
+    fun wrongCan_AccessDenied() =
         runTest {
             val chip = card.chip()
             val steps = mutableListOf<Step>()
@@ -173,13 +173,13 @@ class FrenchIdCardEndToEndTest {
             assertEquals(listOf(Step.CONNECT, Step.SECURE_CHANNEL), steps)
             assertNull(chip.paceCompletedWith)
             assertFalse(chip.bacCompleted)
-            // Jeton T.PCD refusé à la dernière étape : 63C2, une seule tentative, pas de repli BAC.
+            // T.PCD token refused at the last step: 63C2, a single attempt, no BAC fallback.
             assertEquals(2, chip.paceRetries)
-            assertTrue("aucun fichier de l'applet lu", chip.selectedFids.all { it == SimulatedChip.FID_CARD_ACCESS })
+            assertTrue("no applet file read", chip.selectedFids.all { it == SimulatedChip.FID_CARD_ACCESS })
         }
 
     @Test
-    fun mrzSurCartePace_PaceMrzAuthentique() =
+    fun mrzOnPaceCard_PaceMrzAuthentic() =
         runTest {
             val chip = card.chip()
             val steps = mutableListOf<Step>()
@@ -190,14 +190,14 @@ class FrenchIdCardEndToEndTest {
             assertAllOk(report)
             assertEquals(Step.entries.toList(), steps)
             assertEquals(CheckDetail.SecureChannel(ChannelProtocol.PACE), report.check(CheckId.SECURE_CHANNEL).detail)
-            assertEquals("PACE-MRZ, sans repli sur BAC", PacePassword.MRZ, chip.paceCompletedWith)
+            assertEquals("PACE-MRZ, without BAC fallback", PacePassword.MRZ, chip.paceCompletedWith)
             assertFalse(chip.bacCompleted)
         }
 
     @Test
-    fun canSurPuceSansCardAccess_CanWithoutPace() =
+    fun canOnChipWithoutCardAccess_CanWithoutPace() =
         runTest {
-            // Même document, mais puce sans EF.CardAccess : BAC seul.
+            // Same document, but chip without EF.CardAccess: BAC only.
             val chip = SimulatedChip(card.document)
             val steps = mutableListOf<Step>()
 
@@ -206,11 +206,11 @@ class FrenchIdCardEndToEndTest {
             assertEquals("CAN_WITHOUT_PACE", error.code)
             assertEquals(listOf(Step.CONNECT, Step.SECURE_CHANNEL), steps)
             assertFalse(chip.bacCompleted)
-            assertTrue("aucun fichier de l'applet lu", chip.selectedFids.all { it == SimulatedChip.FID_CARD_ACCESS })
+            assertTrue("no applet file read", chip.selectedFids.all { it == SimulatedChip.FID_CARD_ACCESS })
         }
 
     @Test
-    fun dg3Dg4AnnoncesDansComEtSod_JamaisDemandes() =
+    fun dg3Dg4ListedInComAndSod_NeverRequested() =
         runTest {
             val fakeHash = ByteArray(32) { 0x33 }
             val document =

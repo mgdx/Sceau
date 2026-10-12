@@ -30,33 +30,33 @@ import java.security.MessageDigest
 import java.time.Instant
 import java.util.Date
 
-/** Options de construction d'un EF.SOD de test, y compris les altérations pour les cas d'échec. */
+/** Build options for a test EF.SOD, including the alterations for failure cases. */
 data class SodOptions(
-    /** Algorithme de hachage des DG, déclaré dans le LDSSecurityObject. */
+    /** DG hash algorithm, declared in the LDSSecurityObject. */
     val digestAlgorithm: String = "SHA-256",
-    /** Algorithme de signature CMS ; par défaut celui du type de clé du DS. */
+    /** CMS signature algorithm; defaults to the one of the DS key type. */
     val signatureAlgorithm: String? = null,
-    /** Attribut signé signingTime ; null pour l'omettre. */
+    /** signingTime signed attribute; null to omit it. */
     val signingTime: Instant? = TestCrypto.instant(TestDocument.DEFAULT_DATE_OF_ISSUE),
-    /** Embarque le certificat DS dans le SignedData. */
+    /** Embeds the DS certificate in the SignedData. */
     val embedDs: Boolean = true,
-    /** Altère un octet de la signature après signature. */
+    /** Alters one byte of the signature after signing. */
     val tamperSignature: Boolean = false,
-    /** Remplace l'OID de l'algorithme de signature du SignerInfo (algorithme inconnu). */
+    /** Replaces the SignerInfo signature algorithm OID (unknown algorithm). */
     val signatureAlgorithmOid: String? = null,
-    /** Déclare cet OID comme algorithme de hachage des DG (les empreintes restent en [digestAlgorithm]). */
+    /** Declares this OID as the DG hash algorithm (the hashes stay in [digestAlgorithm]). */
     val declaredDigestOid: String? = null,
-    /** Empreintes supplémentaires signées, pour des DG non lus (DG3…). */
+    /** Additional signed hashes, for DGs that are not read (DG3…). */
     val extraHashes: Map<Int, ByteArray> = emptyMap(),
-    /** Type de contenu encapsulé (eContentType) ; par défaut id-icao-ldsSecurityObject. */
+    /** Encapsulated content type (eContentType); defaults to id-icao-ldsSecurityObject. */
     val contentTypeOid: String? = null,
 )
 
-/** Fabrique d'EF.SOD : LDSSecurityObject signé en CMS par le DS, encapsulé sous le tag 0x77. */
+/** EF.SOD factory: LDSSecurityObject CMS-signed by the DS, wrapped under tag 0x77. */
 object TestSod {
     const val SOD_TAG = 0x77
 
-    /** OID fictif utilisé pour simuler un algorithme inconnu de BouncyCastle. */
+    /** Fictitious OID used to simulate an algorithm unknown to BouncyCastle. */
     const val UNKNOWN_OID = "1.3.6.1.4.1.99999.42.1"
 
     fun build(
@@ -77,8 +77,8 @@ object TestSod {
     }
 
     /**
-     * ContentInfo CMS `SignedData` encodé en DER : [content] encapsulé sous [contentType], signé
-     * par [ds] avec les attributs et altérations de [options] (hors options propres au SOD).
+     * DER-encoded CMS `SignedData` ContentInfo: [content] encapsulated under [contentType], signed
+     * by [ds] with the attributes and alterations of [options] (except the SOD-specific options).
      */
     internal fun signedData(
         ds: TestCredential,
@@ -105,7 +105,7 @@ object TestSod {
         return contentInfo.getEncoded(ASN1Encoding.DER)
     }
 
-    /** Attributs signés d'un SOD : contentType, messageDigest et, si fourni, signingTime. */
+    /** Signed attributes of a SOD: contentType, messageDigest and, if given, signingTime. */
     private fun signedAttributes(signingTime: Instant?) =
         CMSAttributeTableGenerator { parameters ->
             val attributes = ASN1EncodableVector()
@@ -150,7 +150,7 @@ object TestSod {
         return ContentInfo(CMSObjectIdentifiers.signedData, alteredSignedData)
     }
 
-    /** Encode un TLV à tag sur un octet, longueur DER. */
+    /** Encodes a TLV with a one-byte tag and DER length. */
     fun tlv(
         tag: Int,
         value: ByteArray,

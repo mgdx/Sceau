@@ -8,7 +8,7 @@ import java.text.Normalizer
 import java.time.Instant
 import java.util.Locale
 
-/** Ligne de la liste, précalculée hors du thread principal. */
+/** List row, precomputed off the main thread. */
 class AnchorRow(
     val subject: String,
     val notBefore: Instant,
@@ -17,11 +17,11 @@ class AnchorRow(
     val source: TrustSource,
     val isLink: Boolean,
 ) {
-    /** Clé stable pour LazyColumn : un même certificat peut venir de deux sources. */
+    /** Stable key for LazyColumn: the same certificate may come from two sources. */
     val key: String get() = "cert:$sha256:${source.name}"
 }
 
-/** Certificats d'un pays ; [alpha2] vide si le certificat n'indique pas de pays. */
+/** Certificates of one country; [alpha2] is empty if the certificate does not specify a country. */
 class CountryGroup(
     val alpha2: String,
     val displayName: String?,
@@ -29,17 +29,17 @@ class CountryGroup(
 ) {
     val key: String get() = "country:$alpha2"
 
-    /** Nom localisé normalisé par [searchForm], calculé une fois pour la recherche. */
+    /** Localized name normalized by [searchForm], computed once for searching. */
     internal val searchName: String? = displayName?.let(::searchForm)
 
-    /** Code ISO 3166-1 alpha-3, accepté par la recherche comme le code alpha-2. */
+    /** ISO 3166-1 alpha-3 code, accepted by the search just like the alpha-2 code. */
     internal val alpha3: String? = alpha2.takeIf { it.isNotEmpty() }?.let(Countries::alpha3)
 }
 
 /**
- * Garde les pays dont le nom localisé contient [query], sans tenir compte de la casse ni des
- * accents, ou dont le code ISO alpha-2 ou alpha-3 est exactement [query]. Une requête vide
- * ou blanche rend la liste entière.
+ * Keeps the countries whose localized name contains [query], ignoring case and accents, or
+ * whose ISO alpha-2 or alpha-3 code is exactly [query]. An empty or blank query returns the
+ * whole list.
  */
 fun filterGroups(
     groups: List<CountryGroup>,
@@ -53,7 +53,7 @@ fun filterGroups(
     }
 }
 
-/** Forme de comparaison : décomposée, sans diacritiques, en minuscules, espaces réduits. */
+/** Comparison form: decomposed, without diacritics, lowercase, whitespace collapsed. */
 private fun searchForm(text: String): String =
     Normalizer
         .normalize(text, Normalizer.Form.NFD)
@@ -66,9 +66,9 @@ private val DIACRITICS = Regex("\\p{Mn}+")
 private val BLANKS = Regex("\\s+")
 
 /**
- * Regroupe les ancres par pays, triés par nom localisé (pays sans nom connu à la fin),
- * et dans chaque pays par source puis par date de début de validité décroissante.
- * Les doublons exacts (même empreinte, même source) sont fusionnés.
+ * Groups the anchors by country, sorted by localized name (countries without a known name last),
+ * and within each country by source, then by descending validity start date.
+ * Exact duplicates (same fingerprint, same source) are merged.
  */
 fun groupByCountry(
     anchors: List<TrustAnchor>,
@@ -89,7 +89,7 @@ fun groupByCountry(
     return groupRows(rows, locale)
 }
 
-/** Partie pure de [groupByCountry], testable sans certificat. */
+/** Pure part of [groupByCountry], testable without a certificate. */
 fun groupRows(
     rows: List<Pair<String, AnchorRow>>,
     locale: Locale,

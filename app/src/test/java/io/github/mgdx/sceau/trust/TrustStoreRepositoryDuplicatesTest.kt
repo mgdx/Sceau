@@ -17,7 +17,7 @@ import org.robolectric.annotation.Config
 import java.io.File
 import java.util.Base64
 
-/** Doublons refusés dès l'aperçu, sans rien écrire (D33). */
+/** Duplicates are refused at preview time, without writing anything (D33). */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [37])
 class TrustStoreRepositoryDuplicatesTest {
@@ -40,32 +40,32 @@ class TrustStoreRepositoryDuplicatesTest {
         runBlocking {
             try {
                 repository.previewImport(bytes)
-                fail("doublon attendu")
-                error("inaccessible")
+                fail("duplicate expected")
+                error("unreachable")
             } catch (e: DuplicateImportException) {
                 e.duplicate
             }
         }
 
     @Test
-    fun `certificat ANTS embarque refuse des l apercu`() {
+    fun `embedded ANTS certificate is refused at preview`() {
         assertEquals(Duplicate.KnownCertificate(TrustSource.ANTS), duplicateOf(resource("ants-csca-2025.der")))
         assertTrue(importedFiles().isEmpty())
     }
 
     @Test
-    fun `certificat de publication nationale embarque refuse des l apercu`() {
+    fun `embedded nationally published certificate is refused at preview`() {
         assertEquals(Duplicate.KnownCertificate(TrustSource.NATIONAL), duplicateOf(resource("ge-csca-6.der")))
         assertTrue(importedFiles().isEmpty())
     }
 
     @Test
-    fun `certificat embarque refuse aussi a l import`() {
+    fun `embedded certificate is also refused at import`() {
         val bytes = resource("ants-csca-2025.der")
         runBlocking {
             try {
                 repository.importCertificate(bytes)
-                fail("doublon attendu")
+                fail("duplicate expected")
             } catch (e: DuplicateImportException) {
                 assertEquals(Duplicate.KnownCertificate(TrustSource.ANTS), e.duplicate)
             }
@@ -74,7 +74,7 @@ class TrustStoreRepositoryDuplicatesTest {
     }
 
     @Test
-    fun `certificat reimporte en DER puis en PEM refuse comme deja importe`() {
+    fun `certificate reimported as DER then PEM is refused as already imported`() {
         val der = TestPki(name = "Doublon").oldCsca.certificate.encoded
         val pem =
             (
@@ -93,14 +93,14 @@ class TrustStoreRepositoryDuplicatesTest {
     }
 
     @Test
-    fun `Master List identique a la Master List embarquee refusee`() {
+    fun `Master List identical to the embedded Master List is refused`() {
         assertEquals(Duplicate.EmbeddedMasterList, duplicateOf(resource("de-bsi-master-list.ml")))
         assertTrue(importedFiles().isEmpty())
     }
 
     @Test
-    fun `Master List deja importee refusee comme deja importee`() {
-        // Fichier importé avant cette vérification : déjà importé prime sur embarqué.
+    fun `already imported Master List is refused as already imported`() {
+        // File imported before this check existed: already imported takes precedence over embedded.
         val bytes = resource("de-bsi-master-list.ml")
         directory.mkdirs()
         File(directory, TrustStoreRepository.importFileName(bytes)).writeBytes(bytes)

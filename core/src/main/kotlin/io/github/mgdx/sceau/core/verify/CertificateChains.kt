@@ -10,15 +10,15 @@ import org.bouncycastle.cert.X509CertificateHolder
 import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder
 import org.bouncycastle.operator.jcajce.JcaContentVerifierProviderBuilder
 
-/** Issue de la recherche d'une chaîne DS → (liens) → CSCA auto-signé du magasin. */
+/** Outcome of the search for a DS → (links) → self-signed CSCA chain in the store. */
 internal sealed interface ChainOutcome {
-    /** Chaîne complète : [links] du plus proche du DS au plus proche de [root]. */
+    /** Complete chain: [links] from the closest to the DS to the closest to [root]. */
     class Found(
         val links: List<TrustAnchor>,
         val root: TrustAnchor,
     ) : ChainOutcome
 
-    /** Un émetteur du magasin correspond, mais la signature ne se vérifie pas. */
+    /** An issuer in the store matches, but the signature does not verify. */
     class BadSignature(
         val issuer: TrustAnchor,
     ) : ChainOutcome
@@ -27,44 +27,45 @@ internal sealed interface ChainOutcome {
         val algorithm: String,
     ) : ChainOutcome
 
-    /** Aucun certificat du magasin ne correspond : émetteur inconnu. */
+    /** No certificate in the store matches: unknown issuer. */
     data object NotFound : ChainOutcome
 
-    /** Recherche abandonnée, budget de vérifications épuisé : magasin hostile (audit V15). */
+    /** Search abandoned, verification budget exhausted: hostile store (audit V15). */
     data object BudgetExceeded : ChainOutcome
 }
 
 /**
- * Construit la chaîne d'un certificat vers un CSCA auto-signé du magasin, en traversant
- * les certificats de lien (sujet du nouveau CSCA, signés par l'ancienne clé).
+ * Builds the chain from a certificate to a self-signed CSCA in the store, traversing
+ * link certificates (subject of the new CSCA, signed by the old key).
  *
- * La validité calendaire des CSCA et des liens n'est pas exigée, un document restant valide
- * jusqu'à dix ans après l'expiration de son CSCA.
+ * Calendar validity of CSCAs and links is not required, since a document remains valid
+ * up to ten years after its CSCA expires.
  *
- * Profil des émetteurs (audit V8) : un certificat du magasin n'est retenu comme émetteur que
- * s'il peut signer des certificats ([canIssueCertificates]) : `basicConstraints` avec cA=TRUE
- * et `keyUsage` avec keyCertSign, **quand ces extensions sont présentes**. Leur absence est
- * tolérée : mesuré sur les 590 ancres embarquées (ANTS et Master List BSI ; les 7 publications nationales ajoutées ensuite, D26, sont conformes), tous les CSCA
- * auto-signés sont conformes ; seuls des certificats de lien ne le sont pas (un sans
- * `basicConstraints`, un sans `keyUsage`, sept avec cA=FALSE — Cameroun, Italie, Portugal,
- * Turquie ×2, Luxembourg ×2). Ces sept liens sont écartés, sans effet : chacun a pour clé et
- * SKI ceux d'un CSCA auto-signé conforme du magasin, qui ancre la chaîne directement. Un DS
- * (keyUsage digitalSignature seul, sans keyCertSign) glissé dans une Master List importée ne
- * peut donc plus servir d'émetteur.
+ * Issuer profile (audit V8): a certificate in the store is only accepted as an issuer if it
+ * can sign certificates ([canIssueCertificates]): `basicConstraints` with cA=TRUE and
+ * `keyUsage` with keyCertSign, **when these extensions are present**. Their absence is
+ * tolerated: measured on the 590 embedded anchors (ANTS and BSI Master List; the 7 national
+ * publications added later, D26, are compliant), all self-signed CSCAs are compliant; only
+ * some link certificates are not (one without `basicConstraints`, one without `keyUsage`,
+ * seven with cA=FALSE — Cameroon, Italy, Portugal, Turkey ×2, Luxembourg ×2). These seven
+ * links are discarded, with no effect: each has the key and SKI of a compliant self-signed
+ * CSCA in the store, which anchors the chain directly. A DS (keyUsage digitalSignature only,
+ * without keyCertSign) slipped into an imported Master List therefore can no longer serve as
+ * an issuer.
  *
- * Coût borné (audit V15) : chaque certificat du magasin est exploré au plus une fois par
- * recherche (ensemble global, et non par chemin), et au-delà de [MAX_SIGNATURE_CHECKS]
- * vérifications de signature la recherche s'arrête sur [ChainOutcome.BudgetExceeded]. Des
- * certificats croisés partageant un AKI (Master List importée hostile) coûtaient sinon
- * jusqu'à k^8 vérifications. Une chaîne réelle en demande quelques-unes.
+ * Bounded cost (audit V15): each certificate in the store is explored at most once per
+ * search (global set, not per path), and beyond [MAX_SIGNATURE_CHECKS] signature
+ * verifications the search stops with [ChainOutcome.BudgetExceeded]. Otherwise, cross
+ * certificates sharing an AKI (hostile imported Master List) cost up to k^8 verifications.
+ * A real chain needs a few.
  *
- * Ordre des candidats (audit V31) : les émetteurs possibles sont examinés source par source
- * (ANTS, publications nationales, Master List embarquée, puis imports), et la recherche s'arrête
- * à la première chaîne trouvée. Sans cela, une Master List importée contenant des dizaines de
- * leurres au SKI d'un CSCA embarqué épuisait le budget avant que le vrai CSCA, déjà vérifié,
- * ne soit retenu : « Échec » sur tous les documents authentiques du pays visé.
+ * Candidate order (audit V31): possible issuers are examined source by source (ANTS,
+ * national publications, embedded Master List, then imports), and the search stops at the
+ * first chain found. Without this, an imported Master List containing dozens of decoys with
+ * the SKI of an embedded CSCA exhausted the budget before the real CSCA, already verified,
+ * was accepted: "Failure" on every authentic document of the targeted country.
  *
- * Une instance par recherche : [build] n'est pas réentrant.
+ * One instance per search: [build] is not reentrant.
  */
 internal class CertificateChains(
     private val store: TrustStore,
@@ -79,11 +80,11 @@ internal class CertificateChains(
         ) : SignatureCheck
     }
 
-    /** Empreintes des certificats du magasin déjà explorés pendant la recherche en cours. */
+    /** Fingerprints of the store certificates already explored during the current search. */
     private val explored = mutableSetOf<String>()
     private var signatureChecks = 0
 
-    /** Levée quand le budget de vérifications est épuisé ; ne sort jamais de [build]. */
+    /** Thrown when the verification budget is exhausted; never escapes [build]. */
     private class BudgetExhausted : RuntimeException() {
         override fun fillInStackTrace(): Throwable = this
     }
@@ -105,10 +106,10 @@ internal class CertificateChains(
         val candidates = issuerCandidates(certificate).filter { Crypto.fingerprint(it.certificate) !in explored }
         if (candidates.isEmpty()) return ChainOutcome.NotFound
 
-        // Audit V31 : candidats examinés source par source, dans l'ordre de [TrustSource] (ANTS,
-        // national, Master List embarquée, imports) ; la recherche s'arrête dès qu'une chaîne
-        // aboutit. Des leurres importés ne consomment donc pas le budget d'une chaîne qu'une
-        // source embarquée résout.
+        // Audit V31: candidates examined source by source, in [TrustSource] order (ANTS,
+        // national, embedded Master List, imports); the search stops as soon as a chain
+        // completes. Imported decoys therefore do not consume the budget of a chain that an
+        // embedded source resolves.
         var failure: ChainOutcome = ChainOutcome.NotFound
         for (group in candidates.groupBy { it.source }.toSortedMap().values) {
             when (val outcome = searchGroup(certificate, group, depth)) {
@@ -120,9 +121,9 @@ internal class CertificateChains(
     }
 
     /**
-     * Recherche parmi les candidats [group] d'une même source : un CSCA auto-signé qui vérifie
-     * [certificate] termine la recherche aussitôt (audit V31) ; sinon les liens vérifiés sont
-     * explorés à leur tour.
+     * Search among the candidates [group] of a single source: a self-signed CSCA that verifies
+     * [certificate] ends the search immediately (audit V31); otherwise the verified links are
+     * explored in turn.
      */
     private fun searchGroup(
         certificate: X509CertificateHolder,
@@ -142,7 +143,7 @@ internal class CertificateChains(
 
                         SignatureCheck.Invalid -> Unit
 
-                        // CSCA auto-signé avec un algorithme refusé (audit V9) : échec, pas « émetteur inconnu ».
+                        // Self-signed CSCA with a rejected algorithm (audit V9): failure, not "unknown issuer".
                         is SignatureCheck.Unsupported -> failure = worst(failure, ChainOutcome.Unsupported(self.algorithm))
                     }
                 }
@@ -159,7 +160,7 @@ internal class CertificateChains(
         if (depth >= MAX_DEPTH) return failure
 
         for ((link, holder) in verified) {
-            // Déjà exploré (par ce chemin ou un autre) : son issue est connue, inutile d'y revenir.
+            // Already explored (via this path or another): its outcome is known, no need to revisit.
             if (!explored.add(Crypto.fingerprint(link.certificate))) continue
             when (val next = search(holder, depth + 1)) {
                 is ChainOutcome.Found -> return ChainOutcome.Found(listOf(link) + next.links, next.root)
@@ -170,9 +171,9 @@ internal class CertificateChains(
     }
 
     /**
-     * Candidats émetteurs : par Authority Key Identifier, puis par nom d'émetteur. Un
-     * candidat trouvé par le nom mais dont l'identifiant de clé diffère de l'AKI est écarté
-     * (même nom de CSCA, autre génération de clé : ce n'est pas l'émetteur).
+     * Issuer candidates: by Authority Key Identifier, then by issuer name. A candidate found
+     * by name but whose key identifier differs from the AKI is discarded (same CSCA name,
+     * another key generation: it is not the issuer).
      */
     private fun issuerCandidates(certificate: X509CertificateHolder): List<TrustAnchor> {
         val aki = AuthorityKeyIdentifier.fromExtensions(certificate.extensions)?.keyIdentifierOctets
@@ -182,8 +183,8 @@ internal class CertificateChains(
                 val ski = subjectKeyId(anchor)
                 aki == null || ski == null || ski.contentEquals(aki)
             }
-        // Tri stable par source avant dédoublonnage : un certificat embarqué et importé à la fois
-        // garde sa provenance embarquée (audit V31).
+        // Stable sort by source before deduplication: a certificate both embedded and imported
+        // keeps its embedded origin (audit V31).
         return (byKeyId + bySubject)
             .sortedBy { it.source }
             .distinctBy { Crypto.fingerprint(it.certificate) }
@@ -200,11 +201,11 @@ internal class CertificateChains(
         issuer: X509CertificateHolder,
     ): SignatureCheck {
         if (++signatureChecks > MAX_SIGNATURE_CHECKS) throw BudgetExhausted()
-        // Audit V9 : hachage cassé (MD5, RIPEMD-128…) ou clé RSA de moins de 1024 bits refusés.
+        // Audit V9: broken hash (MD5, RIPEMD-128…) or RSA key under 1024 bits rejected.
         if (Crypto.isWeakAlgorithm(certificate.signatureAlgorithm)) {
             return SignatureCheck.Unsupported(Crypto.algorithmName(certificate.signatureAlgorithm.algorithm))
         }
-        // Audit V30 : clé de l'émetteur hors bornes, lue encodée, refusée avant toute reconstruction.
+        // Audit V30: out-of-bounds issuer key, read encoded, rejected before any reconstruction.
         Crypto.unsupportedKey(issuer.subjectPublicKeyInfo)?.let { return SignatureCheck.Unsupported(it) }
         return try {
             val verifierProvider = JcaContentVerifierProviderBuilder().setProvider(Crypto.provider).build(issuer)
@@ -233,13 +234,13 @@ internal class CertificateChains(
         }
 
     companion object {
-        /** Profondeur maximale de liens traversés : largement au-delà des chaînes réelles. */
+        /** Maximum depth of traversed links: well beyond real chains. */
         private const val MAX_DEPTH = 8
 
-        /** Vérifications de signature par recherche : une chaîne réelle en demande quelques-unes. */
+        /** Signature verifications per search: a real chain needs a few. */
         const val MAX_SIGNATURE_CHECKS = 64
 
-        /** Vrai si [holder] peut émettre des certificats (voir la règle de la classe, audit V8). */
+        /** True if [holder] can issue certificates (see the class rule, audit V8). */
         fun canIssueCertificates(holder: X509CertificateHolder): Boolean =
             runCatching {
                 val basicConstraints = BasicConstraints.fromExtensions(holder.extensions)

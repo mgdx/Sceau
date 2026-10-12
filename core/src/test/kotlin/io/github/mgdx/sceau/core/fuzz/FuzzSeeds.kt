@@ -27,9 +27,9 @@ import java.security.spec.ECGenParameterSpec
 import java.time.LocalDate
 
 /**
- * Document signé servant de graine, avec le magasin qui en connaît le CSCA. Le certificat DS
- * et EF.SOD sont resignés de façon déterministe ([DeterministicSigning]) par [cscaKey] et la
- * clé du DS : mêmes contenus que ceux de `:testchip`, mêmes octets à chaque exécution.
+ * Signed document used as a seed, with the trust store that knows its CSCA. The DS certificate
+ * and EF.SOD are re-signed deterministically ([DeterministicSigning]) by [cscaKey] and the DS
+ * key: same contents as those from `:testchip`, same bytes on every run.
  */
 internal class SeedDocument(
     val name: String,
@@ -39,26 +39,26 @@ internal class SeedDocument(
 ) {
     val dsKey: PrivateKey get() = document.ds.privateKey
 
-    /** Certificat DS de `:testchip`, resigné par le CSCA. */
+    /** DS certificate from `:testchip`, re-signed by the CSCA. */
     val ds: X509CertificateHolder = DeterministicSigning.reissue(document.ds.holder, cscaKey)
 
-    /** Contenu signé du SOD de `:testchip` (LDSSecurityObject DER). */
+    /** Signed content of the `:testchip` SOD (DER LDSSecurityObject). */
     val securityObject: ByteArray =
         CMSSignedData(document.sod.copyOfRange(FuzzSeeds.tlvHeaderSize(document.sod), document.sod.size)).signedContent.content
             as ByteArray
 
-    /** EF.SOD (tag 0x77) signant [content], par défaut le LDSSecurityObject d'origine. */
+    /** EF.SOD (tag 0x77) signing [content], by default the original LDSSecurityObject. */
     fun sod(content: ByteArray = securityObject): ByteArray =
         TestSod.tlv(TestSod.SOD_TAG, DeterministicSigning.signedData(ICAOObjectIdentifiers.id_icao_ldsSecurityObject, content, ds, dsKey))
 
     val sod: ByteArray = sod()
 
-    /** Réponse d'Active Authentication reproductible à [challenge], ou null sans DG15. */
+    /** Reproducible Active Authentication response to [challenge], or null without DG15. */
     fun aaResponse(challenge: ByteArray): ByteArray? =
         document.aaKeyPair?.let { DeterministicSigning.aaResponse(it.private, document.aaDigestAlgorithm, challenge) }
 }
 
-/** Master List de test reproductible : CSCA RSA, CSCA EC à paramètres explicites, signataire RSA. */
+/** Reproducible test Master List: RSA CSCA, EC CSCA with explicit parameters, RSA signer. */
 internal class MasterListSeed {
     private val random = TestCrypto.seededRandom(SEED)
     val rsaCscaKey: KeyPair = rsa()
@@ -94,7 +94,7 @@ internal class MasterListSeed {
     val content: ByteArray = TestMasterLists.content(listOf(rsaCsca, ecCsca))
     val bytes: ByteArray = sign(content)
 
-    /** Master List dont le contenu signé est [content]. */
+    /** Master List whose signed content is [content]. */
     fun sign(content: ByteArray): ByteArray =
         DeterministicSigning.signedData(TestMasterLists.CSCA_MASTER_LIST, content, signer, signerKey.private)
 
@@ -112,19 +112,19 @@ internal class MasterListSeed {
 }
 
 /**
- * Graines valides, produites par la PKI factice et la puce simulée de `:testchip` (identités
- * fictives), plus la Master List embarquée. Construites une fois : la génération des clés
- * RSA et EC coûte plusieurs secondes.
+ * Valid seeds, produced by the fake PKI and the simulated chip from `:testchip` (fictitious
+ * identities), plus the embedded Master List. Built once: generating the RSA and EC keys takes
+ * several seconds.
  */
 internal object FuzzSeeds {
     val TODAY: LocalDate = LocalDate.of(2026, 9, 25)
 
     init {
-        // Comme readAndVerify : JMRTD journalise chaque tag inconnu, soit des Mo par campagne.
+        // Like readAndVerify: JMRTD logs every unknown tag, which adds up to megabytes per campaign.
         LibraryLogging.silence()
     }
 
-    /** Passeport TD3, hiérarchie RSA, AA RSA 1024 ; CNIe TD1 EC ; passeport EC à courbe explicite, AA EC. */
+    /** TD3 passport, RSA hierarchy, RSA 1024 AA; EC TD1 CNIe; EC passport with explicit curve, EC AA. */
     val documents: List<SeedDocument> by lazy {
         val rsa = TestPki(TestKeyType.RSA)
         val explicit = TestPki(TestKeyType.EC_EXPLICIT)
@@ -141,7 +141,7 @@ internal object FuzzSeeds {
         )
     }
 
-    /** Toutes les variantes d'un DG parmi les documents graines, et quelques DG construits ici. */
+    /** All variants of a DG among the seed documents, plus a few DGs built here. */
     fun dataGroup(number: Int): List<ByteArray> =
         documents.mapNotNull { it.document.dataGroups[number] } +
             when (number) {
@@ -171,7 +171,7 @@ internal object FuzzSeeds {
         checkNotNull(FuzzSeeds::class.java.getResourceAsStream("/trust/de-bsi-master-list.ml")).use { it.readBytes() }
     }
 
-    /** DG11 dont tous les champs sont renseignés (identité fictive). */
+    /** DG11 with every field filled in (fictitious identity). */
     private val richDg11: ByteArray by lazy {
         DG11File(
             "SPECIMEN<<ANNA<MARIA",
@@ -190,7 +190,7 @@ internal object FuzzSeeds {
         ).encoded
     }
 
-    /** DG7 à deux images (JPEG et JPEG 2000 réduits à leur signature). */
+    /** DG7 with two images (JPEG and JPEG 2000 reduced to their magic bytes). */
     private val richDg7: ByteArray by lazy {
         TestDataGroups.dg7(
             byteArrayOf(0xFF.toByte(), 0xD8.toByte(), 0xFF.toByte(), 0xE0.toByte(), 0, 0x10),
@@ -198,7 +198,7 @@ internal object FuzzSeeds {
         )
     }
 
-    /** DG12 avec images recto et verso (JPEG et JPEG 2000 réduits à leur signature). */
+    /** DG12 with front and back images (JPEG and JPEG 2000 reduced to their magic bytes). */
     private val richDg12: ByteArray by lazy {
         DG12File(
             "AUTORITE FICTIVE",
@@ -215,7 +215,7 @@ internal object FuzzSeeds {
 
     private const val PROOF_OF_CITIZENSHIP = 16
 
-    /** Taille de l'en-tête (tag sur un octet, longueur) d'un TLV bien formé. */
+    /** Header size (one-byte tag, length) of a well-formed TLV. */
     fun tlvHeaderSize(bytes: ByteArray): Int {
         val first = bytes[1].toInt() and 0xFF
         return if (first < 0x80) 2 else 2 + (first and 0x7F)

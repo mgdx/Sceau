@@ -13,10 +13,10 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-/** Garde-fous de la fabrique : ce qu'elle produit est bien ce que les tests croient vérifier. */
+/** Safeguards for the factory: what it produces is really what the tests think they verify. */
 class TestPkiTest {
     @Test
-    fun `EC_EXPLICIT - parametres de courbe explicites dans le certificat`() {
+    fun `EC_EXPLICIT - explicit curve parameters in the certificate`() {
         val pki = TestPki(TestKeyType.EC_EXPLICIT)
         for (credential in listOf(pki.oldCsca, pki.ds)) {
             val parameters = credential.holder.subjectPublicKeyInfo.algorithm.parameters
@@ -29,7 +29,7 @@ class TestPkiTest {
     }
 
     @Test
-    fun `certificat de lien - sujet et cle du nouveau CSCA, emetteur l ancien`() {
+    fun `link certificate - subject and key of the new CSCA, issuer the old one`() {
         val pki = TestPki(TestKeyType.RSA)
         assertEquals(pki.newCsca.holder.subject, pki.link.holder.subject)
         assertEquals(pki.oldCsca.holder.subject, pki.link.holder.issuer)
@@ -42,7 +42,7 @@ class TestPkiTest {
     }
 
     @Test
-    fun `document - DG et SOD relisibles par JMRTD`() {
+    fun `document - DGs and SOD readable by JMRTD`() {
         val pki = TestPki(TestKeyType.EC)
         val document = pki.document { activeAuthentication = AaKeyType.EC }
 
@@ -57,7 +57,7 @@ class TestPkiTest {
     }
 
     @Test
-    fun `options - DS non embarque, signingTime absent`() {
+    fun `options - DS not embedded, signingTime missing`() {
         val pki = TestPki(TestKeyType.RSA)
         val document = pki.document { sod = SodOptions(embedDs = false, signingTime = null) }
         val sod = SODFile(document.sod.inputStream())

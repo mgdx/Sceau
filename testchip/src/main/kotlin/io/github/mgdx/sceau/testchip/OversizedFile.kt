@@ -1,8 +1,8 @@
 package io.github.mgdx.sceau.testchip
 
 /**
- * Fichier forgé par une puce hostile : son en-tête TLV (tag [tag], longueur sur quatre octets)
- * annonce [valueLength] octets de valeur, servis à zéro à la demande sans jamais être alloués.
+ * File forged by a hostile chip: its TLV header (tag [tag], four-byte length) announces
+ * [valueLength] bytes of value, served as zeros on demand without ever being allocated.
  */
 class OversizedFile(
     val tag: Int,
@@ -12,15 +12,15 @@ class OversizedFile(
         require(tag in 1..MAX_ONE_BYTE && valueLength in 0..MAX_LENGTH)
     }
 
-    /** En-tête : tag, 0x84, longueur sur quatre octets. */
+    /** Header: tag, 0x84, four-byte length. */
     val header: ByteArray =
         byteArrayOf(tag.toByte(), LONG_FORM_4.toByte()) +
             ByteArray(LENGTH_BYTES) { ((valueLength shr (Byte.SIZE_BITS * (LENGTH_BYTES - 1 - it))) and BYTE_MASK).toByte() }
 
-    /** Taille totale annoncée, en-tête compris. */
+    /** Total announced size, header included. */
     val size: Long get() = header.size + valueLength
 
-    /** [length] octets à partir de [offset] (moins en fin de fichier). */
+    /** [length] bytes from [offset] (fewer at the end of the file). */
     fun read(
         offset: Int,
         length: Int,

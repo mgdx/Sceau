@@ -1,23 +1,23 @@
 /*
- * Sceau - harnais de test hôte du cœur de décodage JPEG 2000 (jp2_decode.c).
+ * Sceau - host test harness of the JPEG 2000 decoding core (jp2_decode.c).
  * SPDX-License-Identifier: GPL-3.0-only
  *
- * Non compilé dans l'APK : piloté par run-host-tests.sh, qui encode les images de référence
- * avec opj_compress (construit depuis le même sous-module OpenJPEG).
+ * Not compiled into the APK: driven by run-host-tests.sh, which encodes the reference images
+ * with opj_compress (built from the same OpenJPEG submodule).
  *
- * Commandes :
- *   gen DIR                           écrit les images de référence (PPM, PGM, YUV brut)
- *   check FICHIER REF MAX MOYENNE     décode et compare à REF (écart max et moyen tolérés)
- *   expect-fail FICHIER               le décodage doit échouer proprement
- *   truncate FICHIER PAS              décode chaque préfixe (tous les PAS octets)
- *   fuzz FICHIER N GRAINE             décode N variantes aux octets altérés
- *   patch-siz ENTREE SORTIE L H [TL TH]
- *                                     réécrit les dimensions annoncées (SIZ et ihdr) et,
- *                                     si TL et TH sont donnés, celles des tuiles (SIZ)
- *   budget FICHIER refuse|decode [L H] bombe de décompression : le pic d'allocation d'OpenJPEG
- *                                     reste sous le budget ; « refuse » exige un refus,
- *                                     « decode » un décodage réduit à L x H au plus, « any »
- *                                     accepte les deux (flux dont les données sont incohérentes)
+ * Commands:
+ *   gen DIR                           writes the reference images (PPM, PGM, raw YUV)
+ *   check FILE REF MAX MEAN           decodes and compares to REF (tolerated max and mean diff)
+ *   expect-fail FILE                  decoding must fail cleanly
+ *   truncate FILE STEP                decodes each prefix (every STEP bytes)
+ *   fuzz FILE N SEED                  decodes N variants with altered bytes
+ *   patch-siz INPUT OUTPUT W H [TW TH]
+ *                                     rewrites the declared dimensions (SIZ and ihdr) and,
+ *                                     if TW and TH are given, those of the tiles (SIZ)
+ *   budget FILE refuse|decode [W H]   decompression bomb: OpenJPEG's peak allocation stays
+ *                                     under the budget; "refuse" requires a refusal,
+ *                                     "decode" a decoding reduced to at most W x H, "any"
+ *                                     accepts both (streams whose data is inconsistent)
  */
 #include <stdint.h>
 #include <stdio.h>
@@ -34,7 +34,7 @@ typedef struct {
 } rgb_image;
 
 static int fail(const char *message) {
-    fprintf(stderr, "ÉCHEC : %s\n", message);
+    fprintf(stderr, "FAILURE: %s\n", message);
     return 1;
 }
 
@@ -70,7 +70,7 @@ static int write_file(const char *path, const uint8_t *data, size_t length) {
     return fclose(file) == 0 && ok;
 }
 
-/* ---- Images de référence --------------------------------------------------------------- */
+/* ---- Reference images ------------------------------------------------------------------ */
 
 static uint8_t clamp_u8(float value) {
     if (value <= 0.0f) {
@@ -95,9 +95,9 @@ static int write_ppm(const char *path, const rgb_image *image) {
 }
 
 /*
- * Dégradé RGB de full_width x full_height, échantillonné un point sur step : step = 2 donne la
- * référence d'une image décodée à demi-résolution (le filtre passe-bas de la transformée en
- * ondelettes conserve un dégradé linéaire aux points pairs).
+ * RGB gradient of full_width x full_height, sampled one point every step: step = 2 gives the
+ * reference of an image decoded at half resolution (the low-pass filter of the wavelet
+ * transform preserves a linear gradient at even points).
  */
 static int write_gradient(const char *path, uint32_t full_width, uint32_t full_height, uint32_t step) {
     rgb_image image;
@@ -132,12 +132,12 @@ static int gen(const char *dir) {
     uint32_t y;
     FILE *file;
 
-    /* Dégradé RGB 8 bits, dimensions impaires. */
+    /* 8-bit RGB gradient, odd dimensions. */
     image.width = 97;
     image.height = 61;
     image.rgb = (uint8_t *) malloc((size_t) image.width * image.height * 3u);
     if (image.rgb == NULL) {
-        return fail("mémoire");
+        return fail("memory");
     }
     for (y = 0; y < image.height; y++) {
         for (x = 0; x < image.width; x++) {
@@ -149,15 +149,15 @@ static int gen(const char *dir) {
     }
     snprintf(path, sizeof(path), "%s/rgb.ppm", dir);
     if (!write_ppm(path, &image)) {
-        return fail("écriture rgb.ppm");
+        return fail("write rgb.ppm");
     }
     free(image.rgb);
 
-    /* Niveaux de gris 8 bits. */
+    /* 8-bit grayscale. */
     snprintf(path, sizeof(path), "%s/gray.pgm", dir);
     file = fopen(path, "wb");
     if (file == NULL) {
-        return fail("écriture gray.pgm");
+        return fail("write gray.pgm");
     }
     fprintf(file, "P5\n80 50\n255\n");
     for (y = 0; y < 50; y++) {
@@ -167,11 +167,11 @@ static int gen(const char *dir) {
     }
     fclose(file);
 
-    /* Niveaux de gris 12 bits (échantillons 16 bits gros-boutiens). */
+    /* 12-bit grayscale (16-bit big-endian samples). */
     snprintf(path, sizeof(path), "%s/gray12.pgm", dir);
     file = fopen(path, "wb");
     if (file == NULL) {
-        return fail("écriture gray12.pgm");
+        return fail("write gray12.pgm");
     }
     fprintf(file, "P5\n64 40\n4095\n");
     for (y = 0; y < 40; y++) {
@@ -183,7 +183,7 @@ static int gen(const char *dir) {
     }
     fclose(file);
 
-    /* YCbCr 4:2:0 brut (plans Y, Cb, Cr) et son équivalent RGB attendu. */
+    /* Raw YCbCr 4:2:0 (Y, Cb, Cr planes) and its expected RGB equivalent. */
     {
         const uint32_t w = 64;
         const uint32_t h = 48;
@@ -191,7 +191,7 @@ static int gen(const char *dir) {
         uint8_t *cb_plane;
         uint8_t *cr_plane;
         if (yuv == NULL) {
-            return fail("mémoire");
+            return fail("memory");
         }
         cb_plane = yuv + w * h;
         cr_plane = cb_plane + (w / 2u) * (h / 2u);
@@ -208,13 +208,13 @@ static int gen(const char *dir) {
         }
         snprintf(path, sizeof(path), "%s/yuv420.raw", dir);
         if (!write_file(path, yuv, w * h + 2u * (w / 2u) * (h / 2u))) {
-            return fail("écriture yuv420.raw");
+            return fail("write yuv420.raw");
         }
         image.width = w;
         image.height = h;
         image.rgb = (uint8_t *) malloc((size_t) w * h * 3u);
         if (image.rgb == NULL) {
-            return fail("mémoire");
+            return fail("memory");
         }
         for (y = 0; y < h; y++) {
             for (x = 0; x < w; x++) {
@@ -229,27 +229,27 @@ static int gen(const char *dir) {
         }
         snprintf(path, sizeof(path), "%s/yuv420.expected.ppm", dir);
         if (!write_ppm(path, &image)) {
-            return fail("écriture yuv420.expected.ppm");
+            return fail("write yuv420.expected.ppm");
         }
         free(image.rgb);
         free(yuv);
     }
 
-    /* Grande image légitime (plus de 2048 pixels de large) : décodée à demi-résolution. */
+    /* Large legitimate image (more than 2048 pixels wide): decoded at half resolution. */
     snprintf(path, sizeof(path), "%s/big.ppm", dir);
     if (!write_gradient(path, 2500u, 1700u, 1u)) {
-        return fail("écriture big.ppm");
+        return fail("write big.ppm");
     }
     snprintf(path, sizeof(path), "%s/big-half.ppm", dir);
     if (!write_gradient(path, 2500u, 1700u, 2u)) {
-        return fail("écriture big-half.ppm");
+        return fail("write big-half.ppm");
     }
 
-    /* Petite image RGBA 16 bits brute (plans gros-boutiens), base d'une bombe à 4 composantes. */
+    /* Small raw 16-bit RGBA image (big-endian planes), basis of a 4-component bomb. */
     snprintf(path, sizeof(path), "%s/rgba16.raw", dir);
     file = fopen(path, "wb");
     if (file == NULL) {
-        return fail("écriture rgba16.raw");
+        return fail("write rgba16.raw");
     }
     for (y = 0; y < 4u * 64u * 64u; y++) {
         fputc((int) ((y >> 4) & 0xFFu), file);
@@ -259,7 +259,7 @@ static int gen(const char *dir) {
     return 0;
 }
 
-/* Lit un PPM (P6) ou un PGM (P5, 8 ou 16 bits) et le ramène en RGB 8 bits. */
+/* Reads a PPM (P6) or a PGM (P5, 8 or 16 bits) and converts it to 8-bit RGB. */
 static int read_pnm(const char *path, rgb_image *image) {
     FILE *file = fopen(path, "rb");
     char magic[3] = {0};
@@ -327,21 +327,21 @@ static int check(const char *path, const char *reference_path, int max_tolerance
     double total = 0.0;
     double mean;
     if (data == NULL) {
-        return fail("lecture du fichier encodé");
+        return fail("reading the encoded file");
     }
     if (!read_pnm(reference_path, &reference)) {
         free(data);
-        return fail("lecture de la référence");
+        return fail("reading the reference");
     }
     status = sceau_jp2_decode(data, length, &decoded);
     free(data);
     if (status != SCEAU_JP2_OK) {
-        fprintf(stderr, "ÉCHEC : %s non décodé (statut %d)\n", path, (int) status);
+        fprintf(stderr, "FAILURE: %s not decoded (status %d)\n", path, (int) status);
         free(reference.rgb);
         return 1;
     }
     if (decoded.width != reference.width || decoded.height != reference.height) {
-        fprintf(stderr, "ÉCHEC : %s dimensions %ux%u, attendu %ux%u\n", path, decoded.width,
+        fprintf(stderr, "FAILURE: %s dimensions %ux%u, expected %ux%u\n", path, decoded.width,
                 decoded.height, reference.width, reference.height);
         sceau_jp2_image_free(&decoded);
         free(reference.rgb);
@@ -353,7 +353,7 @@ static int check(const char *path, const char *reference_path, int max_tolerance
                                  (int) (pixel & 0xFFu)};
         int c;
         if ((pixel >> 24) != 0xFFu) {
-            fprintf(stderr, "ÉCHEC : %s alpha non opaque\n", path);
+            fprintf(stderr, "FAILURE: %s alpha not opaque\n", path);
             sceau_jp2_image_free(&decoded);
             free(reference.rgb);
             return 1;
@@ -367,12 +367,12 @@ static int check(const char *path, const char *reference_path, int max_tolerance
         }
     }
     mean = total / ((double) decoded.width * decoded.height * 3.0);
-    printf("%-28s %ux%u  écart max %3d  écart moyen %.3f\n", path + (strrchr(path, '/') ? strrchr(path, '/') - path + 1 : 0),
+    printf("%-28s %ux%u  max diff %3d  mean diff %.3f\n", path + (strrchr(path, '/') ? strrchr(path, '/') - path + 1 : 0),
            decoded.width, decoded.height, max_diff, mean);
     sceau_jp2_image_free(&decoded);
     free(reference.rgb);
     if (max_diff > max_tolerance || mean > mean_tolerance) {
-        fprintf(stderr, "ÉCHEC : %s hors tolérance (max %d, moyenne %.3f)\n", path, max_tolerance,
+        fprintf(stderr, "FAILURE: %s out of tolerance (max %d, mean %.3f)\n", path, max_tolerance,
                 mean_tolerance);
         return 1;
     }
@@ -385,19 +385,19 @@ static int expect_fail(const char *path) {
     sceau_jp2_image decoded;
     sceau_jp2_status status;
     if (data == NULL) {
-        return fail("lecture");
+        return fail("read");
     }
     status = sceau_jp2_decode(data, length, &decoded);
     free(data);
     if (status == SCEAU_JP2_OK) {
         sceau_jp2_image_free(&decoded);
-        fprintf(stderr, "ÉCHEC : %s décodé alors qu'il devait être refusé\n", path);
+        fprintf(stderr, "FAILURE: %s decoded although it should have been refused\n", path);
         return 1;
     }
     if (decoded.argb != NULL || decoded.width != 0 || decoded.height != 0) {
-        return fail("sortie non remise à zéro après échec");
+        return fail("output not zeroed after failure");
     }
-    printf("%-28s refusé (statut %d)\n", strrchr(path, '/') ? strrchr(path, '/') + 1 : path, (int) status);
+    printf("%-28s refused (status %d)\n", strrchr(path, '/') ? strrchr(path, '/') + 1 : path, (int) status);
     return 0;
 }
 
@@ -409,15 +409,15 @@ static int truncate_all(const char *path, size_t step) {
     unsigned refused = 0;
     if (data == NULL || step == 0) {
         free(data);
-        return fail("lecture");
+        return fail("read");
     }
     for (prefix = 0; prefix < length; prefix += step) {
-        /* Copie exacte de la taille du préfixe : ASan détecte toute lecture au-delà. */
+        /* Copy of exactly the prefix size: ASan detects any read beyond it. */
         uint8_t *copy = (uint8_t *) malloc(prefix > 0 ? prefix : 1u);
         sceau_jp2_image decoded;
         if (copy == NULL) {
             free(data);
-            return fail("mémoire");
+            return fail("memory");
         }
         memcpy(copy, data, prefix);
         if (sceau_jp2_decode(copy, prefix, &decoded) == SCEAU_JP2_OK) {
@@ -429,13 +429,13 @@ static int truncate_all(const char *path, size_t step) {
         free(copy);
     }
     free(data);
-    printf("%-28s %u préfixes tronqués : %u refusés, %u décodés\n",
+    printf("%-28s %u truncated prefixes: %u refused, %u decoded\n",
            strrchr(path, '/') ? strrchr(path, '/') + 1 : path, ok + refused, refused, ok);
     return 0;
 }
 
 static uint32_t next_random(uint32_t *state) {
-    /* xorshift32 : reproductible d'une exécution à l'autre. */
+    /* xorshift32: reproducible from one run to the next. */
     uint32_t x = *state;
     x ^= x << 13;
     x ^= x >> 17;
@@ -453,7 +453,7 @@ static int fuzz(const char *path, unsigned iterations, uint32_t seed) {
     uint32_t state = seed != 0 ? seed : 1u;
     if (data == NULL || length == 0) {
         free(data);
-        return fail("lecture");
+        return fail("read");
     }
     for (i = 0; i < iterations; i++) {
         uint8_t *copy = (uint8_t *) malloc(length);
@@ -462,7 +462,7 @@ static int fuzz(const char *path, unsigned iterations, uint32_t seed) {
         unsigned f;
         if (copy == NULL) {
             free(data);
-            return fail("mémoire");
+            return fail("memory");
         }
         memcpy(copy, data, length);
         for (f = 0; f < flips; f++) {
@@ -477,7 +477,7 @@ static int fuzz(const char *path, unsigned iterations, uint32_t seed) {
         free(copy);
     }
     free(data);
-    printf("%-28s %u variantes altérées : %u refusées, %u décodées\n",
+    printf("%-28s %u altered variants: %u refused, %u decoded\n",
            strrchr(path, '/') ? strrchr(path, '/') + 1 : path, iterations, refused, ok);
     return 0;
 }
@@ -497,19 +497,19 @@ static int patch_siz(const char *in, const char *out, uint32_t width, uint32_t h
     int patched = 0;
     int ok;
     if (data == NULL) {
-        return fail("lecture");
+        return fail("read");
     }
     for (i = 0; i + 16u <= length; i++) {
-        /* Boîte ihdr d'un JP2 : HEIGHT puis WIDTH. */
+        /* ihdr box of a JP2: HEIGHT then WIDTH. */
         if (memcmp(&data[i], "ihdr", 4) == 0) {
             put_be32(&data[i + 4u], height);
             put_be32(&data[i + 8u], width);
         }
-        /* SOC + SIZ : Lsiz(2) Rsiz(2) Xsiz(4) Ysiz(4) XOsiz(4) YOsiz(4). */
+        /* SOC + SIZ: Lsiz(2) Rsiz(2) Xsiz(4) Ysiz(4) XOsiz(4) YOsiz(4). */
         if (data[i] == 0xFF && data[i + 1u] == 0x4F && data[i + 2u] == 0xFF && data[i + 3u] == 0x51) {
             put_be32(&data[i + 8u], width);
             put_be32(&data[i + 12u], height);
-            /* Puis XTsiz(4) YTsiz(4). */
+            /* Then XTsiz(4) YTsiz(4). */
             if (tile_width != 0u && tile_height != 0u && i + 32u <= length) {
                 put_be32(&data[i + 24u], tile_width);
                 put_be32(&data[i + 28u], tile_height);
@@ -520,7 +520,7 @@ static int patch_siz(const char *in, const char *out, uint32_t width, uint32_t h
     }
     ok = patched && write_file(out, data, length);
     free(data);
-    return ok ? 0 : fail("marqueur SIZ introuvable");
+    return ok ? 0 : fail("SIZ marker not found");
 }
 
 static int budget(const char *path, const char *mode, uint32_t max_width, uint32_t max_height) {
@@ -531,31 +531,31 @@ static int budget(const char *path, const char *mode, uint32_t max_width, uint32
     size_t peak;
     const char *name = strrchr(path, '/') ? strrchr(path, '/') + 1 : path;
     if (data == NULL) {
-        return fail("lecture");
+        return fail("read");
     }
     status = sceau_jp2_decode(data, length, &decoded);
     peak = sceau_jp2_alloc_peak();
     free(data);
-    printf("%-28s statut %d  %ux%u  pic OpenJPEG %.1f Mo (budget %u Mo)\n", name, (int) status,
+    printf("%-28s status %d  %ux%u  OpenJPEG peak %.1f MB (budget %u MB)\n", name, (int) status,
            decoded.width, decoded.height, (double) peak / (1024.0 * 1024.0),
            SCEAU_JP2_MEMORY_BUDGET / (1024u * 1024u));
     if (peak > SCEAU_JP2_MEMORY_BUDGET) {
         sceau_jp2_image_free(&decoded);
-        return fail("budget mémoire dépassé");
+        return fail("memory budget exceeded");
     }
     if (strcmp(mode, "refuse") == 0 && status == SCEAU_JP2_OK) {
         sceau_jp2_image_free(&decoded);
-        fprintf(stderr, "ÉCHEC : %s décodé alors qu'il devait être refusé\n", name);
+        fprintf(stderr, "FAILURE: %s decoded although it should have been refused\n", name);
         return 1;
     }
     if (strcmp(mode, "decode") == 0 &&
         (status != SCEAU_JP2_OK || decoded.width > max_width || decoded.height > max_height)) {
         sceau_jp2_image_free(&decoded);
-        fprintf(stderr, "ÉCHEC : %s non décodé ou non réduit à %ux%u\n", name, max_width, max_height);
+        fprintf(stderr, "FAILURE: %s not decoded or not reduced to %ux%u\n", name, max_width, max_height);
         return 1;
     }
     if (status != SCEAU_JP2_OK && (decoded.argb != NULL || decoded.width != 0 || decoded.height != 0)) {
-        return fail("sortie non remise à zéro après échec");
+        return fail("output not zeroed after failure");
     }
     sceau_jp2_image_free(&decoded);
     return 0;
@@ -587,6 +587,6 @@ int main(int argc, char **argv) {
         return budget(argv[2], argv[3], argc == 6 ? (uint32_t) strtoul(argv[4], NULL, 10) : 0u,
                       argc == 6 ? (uint32_t) strtoul(argv[5], NULL, 10) : 0u);
     }
-    fprintf(stderr, "usage : voir l'en-tête de jp2_host_test.c\n");
+    fprintf(stderr, "usage: see the header of jp2_host_test.c\n");
     return 2;
 }

@@ -8,14 +8,14 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-/** Audit V23 : sujets X.500 des fichiers importés assainis avant affichage. */
+/** Audit V23: X.500 subjects from imported files are sanitized before display. */
 class SubjectDisplayTest {
     @Test
-    fun `sujet avec controle bidirectionnel et saut de ligne affiche sur une ligne`() {
+    fun `subject with bidi control and line break shown on one line`() {
         val hostileCommonName = "CSCA‮ Test\nEmpreinte du signataire\r\n2084 AED7⁦"
         val der = TestPki(name = "Piege", cscaCommonName = hostileCommonName).oldCsca.certificate.encoded
         val summary = CertificateSummary.of(TrustStores.parseCertificate(der))
-        // Le sujet brut transporte bien les caractères piégés : le test n'est pas vide de sens.
+        // The raw subject does carry the trap characters, so the test is meaningful.
         assertTrue(summary.subject.contains('‮'))
 
         val shown = displaySubject(summary.subject)
@@ -26,7 +26,7 @@ class SubjectDisplayTest {
     }
 
     @Test
-    fun `sujet demesure borne avec ellipse`() {
+    fun `oversized subject truncated with an ellipsis`() {
         val shown = displaySubject("CN=" + "A".repeat(10_000))
 
         assertEquals(SUBJECT_MAX_LENGTH, shown.codePointCount(0, shown.length))
@@ -34,7 +34,7 @@ class SubjectDisplayTest {
     }
 
     @Test
-    fun `code pays inconnu assaini et borne`() {
+    fun `unknown country code sanitized and bounded`() {
         assertEquals("ZZ", displayCountryCode("Z‮Z"))
         assertEquals(COUNTRY_CODE_MAX_LENGTH, displayCountryCode("X".repeat(100)).length)
     }

@@ -5,7 +5,7 @@ import android.graphics.Color
 import androidx.core.graphics.createBitmap
 import java.io.ByteArrayOutputStream
 
-/** Images réelles encodées par Android (rendu natif de Robolectric), pour les tests de décodage. */
+/** Real images encoded by Android (Robolectric native graphics), for decoding tests. */
 internal object TestImages {
     fun encode(
         format: Bitmap.CompressFormat,

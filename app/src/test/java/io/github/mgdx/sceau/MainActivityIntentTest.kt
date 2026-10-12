@@ -19,16 +19,15 @@ import org.robolectric.android.controller.ActivityController
 import org.robolectric.annotation.Config
 
 /**
- * Un intent venu de l'extérieur ne pilote pas la navigation (audit V27) : les extras de deep link
- * de Navigation (`deepLinkIds`…) sont retirés avant la composition, Sceau s'ouvre sur
- * l'introduction au premier lancement (ou l'accueil ensuite), jamais directement sur un écran
- * choisi par l'appelant.
+ * An intent from outside does not drive navigation (audit V27): Navigation deep link extras
+ * (`deepLinkIds`...) are removed before composition, and Sceau opens on the introduction on first
+ * launch (or the home screen afterwards), never directly on a screen chosen by the caller.
  *
- * Navigation 2.10 écarte déjà ces extras quand l'appelant n'est pas Sceau lui-même
- * (`NavController.shouldTrustIntent`, d'après le paquet appelant ou le referrer). Les tests se
- * placent donc dans le cas le plus défavorable, celui d'un intent que Navigation accepterait
- * (paquet appelant = Sceau) : c'est l'activité qui doit les neutraliser, sans dépendre de ce
- * contrôle interne à la bibliothèque.
+ * Navigation 2.10 already drops these extras when the caller is not Sceau itself
+ * (`NavController.shouldTrustIntent`, based on the calling package or the referrer). The tests
+ * therefore cover the worst case, an intent that Navigation would accept (calling package =
+ * Sceau): the activity itself must neutralize them, without relying on this internal check of
+ * the library.
  */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [37])
@@ -39,8 +38,8 @@ class MainActivityIntentTest {
     private val context: Context = ApplicationProvider.getApplicationContext()
 
     /**
-     * Intent explicite tel qu'une autre application peut le construire : identifiant du graphe
-     * (0, graphe sans route), puis celui de la destination visée, calculé comme Navigation.
+     * Explicit intent as another app can build it: the graph ID (0, graph without a route), then
+     * the ID of the target destination, computed the way Navigation does.
      */
     private fun deepLinkIntent(route: String): Intent =
         Intent(context, MainActivity::class.java)
@@ -59,7 +58,7 @@ class MainActivityIntentTest {
     }
 
     @Test
-    fun `deepLinkIds vers le magasin de confiance ignore au lancement`() {
+    fun `deepLinkIds to the trust store are ignored at launch`() {
         val controller = launch(deepLinkIntent(Routes.TRUST))
         assertIntroShownAndNotTrustStore()
         assertNull(controller.get().intent.extras)
@@ -67,7 +66,7 @@ class MainActivityIntentTest {
     }
 
     @Test
-    fun `deepLinkIds ignore quand l'activite deja ouverte recoit un nouvel intent`() {
+    fun `deepLinkIds are ignored when the already open activity receives a new intent`() {
         val controller = launch(Intent(context, MainActivity::class.java))
         compose.waitForIdle()
         controller.newIntent(deepLinkIntent(Routes.TRUST))

@@ -30,30 +30,30 @@ import java.security.interfaces.RSAPrivateKey
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-/** Type de la clé d'Active Authentication (DG15). */
+/** Active Authentication key type (DG15). */
 enum class AaKeyType { RSA, EC }
 
 /**
- * Document factice : DG bruts, EF.SOD signé et clés privées de la puce (CA, AA).
+ * Fake document: raw DGs, signed EF.SOD and the chip's private keys (CA, AA).
  *
- * Les champs sont ceux qu'attend [io.github.mgdx.sceau.core.verify.PassiveAuthentication.verify].
+ * The fields are the ones expected by [io.github.mgdx.sceau.core.verify.PassiveAuthentication.verify].
  */
 class TestDocument(
     val pki: TestPki,
     val ds: TestCredential,
     val sod: ByteArray,
     val dataGroups: Map<Int, ByteArray>,
-    /** Paire de clés de Chip Authentication (DG14), null si DG14 n'en contient pas. */
+    /** Chip Authentication key pair (DG14), null if DG14 holds none. */
     val caKeyPair: KeyPair?,
-    /** Paire de clés d'Active Authentication (DG15), null sans DG15. */
+    /** Active Authentication key pair (DG15), null without DG15. */
     val aaKeyPair: KeyPair?,
-    /** Algorithme de hachage ECDSA annoncé dans DG14 pour l'AA, null en RSA. */
+    /** ECDSA hash algorithm announced in DG14 for AA, null with RSA. */
     val aaDigestAlgorithm: String?,
     val dateOfIssue: LocalDate?,
     val dateOfExpiry: LocalDate,
     val documentCode: String,
 ) {
-    /** Copie dont le DG [number] diffère d'un octet de celui qui a été signé. */
+    /** Copy whose DG [number] differs by one byte from the signed one. */
     fun withModifiedDataGroup(number: Int): TestDocument {
         val modified = dataGroups.getValue(number).copyOf()
         modified[modified.size - 1] = (modified[modified.size - 1].toInt() xor 0x01).toByte()
@@ -63,13 +63,13 @@ class TestDocument(
     fun withDataGroups(groups: Map<Int, ByteArray>): TestDocument =
         TestDocument(pki, ds, sod, groups, caKeyPair, aaKeyPair, aaDigestAlgorithm, dateOfIssue, dateOfExpiry, documentCode)
 
-    /** Réponse de la puce au challenge AA, signée avec la clé de DG15. */
+    /** Chip response to the AA challenge, signed with the DG15 key. */
     fun aaResponse(challenge: ByteArray): ByteArray =
         TestActiveAuthentication.respond(checkNotNull(aaKeyPair).private, challenge, aaDigestAlgorithm ?: "SHA-1", pki)
 
     /**
-     * Options du document. Par défaut : DG1 (passeport TD3), DG2, DG14 (clé CA EC),
-     * DG15 (clé AA RSA 1024), SOD SHA-256 signé par [TestPki.ds] avec DS embarqué.
+     * Document options. Defaults: DG1 (TD3 passport), DG2, DG14 (EC CA key),
+     * DG15 (RSA 1024 AA key), SHA-256 SOD signed by [TestPki.ds] with the DS embedded.
      */
     class Builder(
         private val pki: TestPki,
@@ -79,22 +79,22 @@ class TestDocument(
         var chipAuthentication: Boolean = true
         var activeAuthentication: AaKeyType? = AaKeyType.RSA
 
-        /** Algorithme de hachage ECDSA déclaré dans DG14 pour une AA EC (null : pas d'ActiveAuthenticationInfo). */
+        /** ECDSA hash algorithm declared in DG14 for an EC AA (null: no ActiveAuthenticationInfo). */
         var aaDigestAlgorithm: String? = "SHA-256"
 
-        /** Taille de la clé RSA d'Active Authentication (DG15). */
+        /** RSA key size for Active Authentication (DG15). */
         var aaRsaBits: Int = AA_RSA_BITS
         var dateOfIssue: LocalDate? = DEFAULT_DATE_OF_ISSUE
         var dateOfExpiry: LocalDate = DEFAULT_DATE_OF_EXPIRY
         var documentCode: String = "P"
 
-        /** État émetteur de DG1 (code ICAO à trois lettres) ; par défaut le pays fictif des spécimens. */
+        /** Issuing state in DG1 (three-letter ICAO code); defaults to the fictitious specimen country. */
         var issuingState: String = TestDataGroups.SPECIMEN_STATE
 
-        /** Numéro du document dans DG1. */
+        /** Document number in DG1. */
         var documentNumber: String = TestDataGroups.SPECIMEN_DOCUMENT_NUMBER
 
-        /** DG supplémentaires (DG11, DG12…), signés dans le SOD comme les autres. */
+        /** Additional DGs (DG11, DG12…), signed in the SOD like the others. */
         var extraDataGroups: Map<Int, ByteArray> = emptyMap()
 
         fun build(): TestDocument {
@@ -128,11 +128,11 @@ class TestDocument(
     }
 }
 
-/** DG factices. Aucune donnée réelle : identité fictive. */
+/** Fake DGs. No real data: fictitious identity. */
 object TestDataGroups {
     private val YYMMDD = DateTimeFormatter.ofPattern("yyMMdd")
 
-    /** DG1 valide construit avec JMRTD : MRZ TD1 (carte) pour un code « A », « C » ou « I », TD3 sinon. */
+    /** Valid DG1 built with JMRTD: TD1 MRZ (card) for code "A", "C" or "I", TD3 otherwise. */
     fun dg1(
         documentCode: String = "P",
         dateOfExpiry: LocalDate = TestDocument.DEFAULT_DATE_OF_EXPIRY,
@@ -171,33 +171,33 @@ object TestDataGroups {
         return DG1File(mrz).encoded
     }
 
-    /** DG2 : octets quelconques sous le tag 0x75 (le contenu biométrique n'est pas vérifié ici). */
+    /** DG2: arbitrary bytes under tag 0x75 (the biometric content is not checked here). */
     fun dg2(pki: TestPki): ByteArray {
         val payload = ByteArray(DG2_PAYLOAD).also { pki.random.nextBytes(it) }
         return TestSod.tlv(DG2_TAG, payload)
     }
 
     /**
-     * DG7 (signature manuscrite, ICAO 9303-10) construit avec JMRTD : une image par élément de
-     * [images], de type « signature ou marque usuelle ». Par défaut, la signature synthétique de
-     * la CNIe simulée.
+     * DG7 (handwritten signature, ICAO 9303-10) built with JMRTD: one image per element of
+     * [images], of type "signature or usual mark". Defaults to the synthetic signature of the
+     * simulated CNIe.
      */
     fun dg7(vararg images: ByteArray = arrayOf(SimulatedDocuments.specimenSignature())): ByteArray =
         DG7File(images.map { DisplayedImageInfo(ImageInfo.TYPE_SIGNATURE_OR_MARK, it) }).encoded
 
-    /** Pays fictif des spécimens ICAO 9303 (Utopia). */
+    /** Fictitious country of the ICAO 9303 specimens (Utopia). */
     const val SPECIMEN_STATE = "UTO"
 
-    /** Numéro de document du spécimen ICAO 9303. */
+    /** Document number of the ICAO 9303 specimen. */
     const val SPECIMEN_DOCUMENT_NUMBER = "L898902C3"
 
     private const val DG2_TAG = 0x75
     private const val DG2_PAYLOAD = 512
 }
 
-/** Réponses d'Active Authentication telles que les produirait la puce. */
+/** Active Authentication responses as the chip would produce them. */
 object TestActiveAuthentication {
-    /** OID ecdsa-plain-SHAxxx (BSI TR-03111) de l'`ActiveAuthenticationInfo` de DG14 (ICAO 9303-11). */
+    /** ecdsa-plain-SHAxxx OID (BSI TR-03111) of the DG14 `ActiveAuthenticationInfo` (ICAO 9303-11). */
     fun ecdsaOid(digestAlgorithm: String): String =
         when (digestAlgorithm.uppercase().replace("-", "")) {
             "SHA1" -> BSIObjectIdentifiers.ecdsa_plain_SHA1.id
@@ -209,9 +209,9 @@ object TestActiveAuthentication {
         }
 
     /**
-     * RSA : ISO/IEC 9796-2 schéma 1, récupération partielle ; M1 aléatoire remplit toute la
-     * capacité du bloc, M2 = challenge. SHA-1 → trailer implicite 0xBC, sinon explicite.
-     * EC : signature ECDSA brute r‖s (chaque moitié de la taille du corps de la courbe).
+     * RSA: ISO/IEC 9796-2 scheme 1, partial recovery; a random M1 fills the whole block
+     * capacity, M2 = challenge. SHA-1 → implicit trailer 0xBC, explicit otherwise.
+     * EC: raw ECDSA signature r‖s (each half the size of the curve's field).
      */
     fun respond(
         key: PrivateKey,

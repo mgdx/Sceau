@@ -1,19 +1,19 @@
 package io.github.mgdx.sceau.ui.result
 
-/** Longueur maximale, en points de code, d'un texte venu de la puce ou d'un certificat. */
+/** Maximum length, in code points, of a text coming from the chip or from a certificate. */
 const val DISPLAY_MAX_LENGTH = 512
 
 private const val ELLIPSIS = '…'
 
 /**
- * Assainit pour l'affichage un texte venu de la puce ou d'un certificat (audit V12) :
- * - retire les caractères de contrôle (Cc) et de formatage (Cf : marques et isolats
- *   bidirectionnels U+202A–U+202E, U+2066–U+2069, caractères de largeur nulle…) ;
- * - remplace sauts de ligne, tabulations et séparateurs de ligne ou de paragraphe (Zl, Zp)
- *   par une espace, sans doubler les espaces ;
- * - tronque à [maxLength] points de code, le dernier devenant « … ».
+ * Sanitizes for display a text coming from the chip or from a certificate (audit V12):
+ * - removes control (Cc) and format (Cf: bidirectional marks and isolates
+ *   U+202A–U+202E, U+2066–U+2069, zero-width characters…) characters;
+ * - replaces line breaks, tabs and line or paragraph separators (Zl, Zp)
+ *   with a space, without doubling spaces;
+ * - truncates to [maxLength] code points, the last one becoming "…".
  *
- * Le texte n'est parcouru que jusqu'à la limite : un texte démesuré ne coûte rien de plus.
+ * The text is only scanned up to the limit: an oversized text costs nothing more.
  */
 fun displaySafe(
     text: String,
@@ -34,7 +34,7 @@ fun displaySafe(
             }
         if (kept == ' '.code && (out.isEmpty() || out.last() == ' ')) continue
         if (count == maxLength) {
-            // Un point de code de plus que la limite : on remplace le dernier par l'ellipse.
+            // One code point beyond the limit: the last one is replaced with the ellipsis.
             out.setLength(out.length - Character.charCount(out.codePointBefore(out.length)))
             out.append(ELLIPSIS)
             return out.toString().trimEnd()

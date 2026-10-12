@@ -10,13 +10,13 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
 /**
- * Réglages du fuzzing, lus dans les propriétés système `sceau.fuzz.*` puis, à défaut, dans les
- * variables d'environnement `SCEAU_FUZZ_*` (seules ces dernières traversent `./gradlew`, qui
- * ne transmet pas ses `-D` à la JVM des tests) :
- * - `iterations` : itérations par cible (sinon, le nombre par défaut de chaque cible) ;
- * - `seed` : graine aléatoire (sinon [DEFAULT_SEED]) ;
- * - `index` : ne rejouer que cette itération (reproduction d'un échec) ;
- * - `timeoutMillis` : délai par entrée (sinon [DEFAULT_TIMEOUT_MILLIS]).
+ * Fuzzing settings, read from the `sceau.fuzz.*` system properties and, failing that, from the
+ * `SCEAU_FUZZ_*` environment variables (only the latter get through `./gradlew`, which does
+ * not pass its `-D` options to the test JVM):
+ * - `iterations`: iterations per target (otherwise, each target's default count);
+ * - `seed`: random seed (otherwise [DEFAULT_SEED]);
+ * - `index`: replay only this iteration (to reproduce a failure);
+ * - `timeoutMillis`: timeout per input (otherwise [DEFAULT_TIMEOUT_MILLIS]).
  */
 internal object FuzzConfig {
     const val DEFAULT_SEED = 0x5CEA_2026L
@@ -27,7 +27,7 @@ internal object FuzzConfig {
     val index: Int? get() = setting("index")?.toInt()
     val timeoutMillis: Long get() = setting("timeoutMillis")?.toLong() ?: DEFAULT_TIMEOUT_MILLIS
 
-    /** Nombre d'itérations d'une cible : réglage global, ou [default] ; [scale] allège une cible lente. */
+    /** Iteration count for a target: the global setting, or [default]; [scale] lightens a slow target. */
     fun iterations(
         default: Int,
         scale: Int = 1,
@@ -40,30 +40,30 @@ internal object FuzzConfig {
     private fun parseLong(value: String): Long = if (value.startsWith("0x")) value.substring(2).toLong(16) else value.toLong()
 }
 
-/** Entrée soumise à la propriété : [pristine] vaut vrai pour une graine non mutée. */
+/** Input passed to the property: [pristine] is true for an unmutated seed. */
 internal class FuzzInput(
     val bytes: ByteArray,
     val seedIndex: Int,
     val pristine: Boolean,
 )
 
-/** Violation d'une propriété par une entrée (résultat faux, exception inattendue). */
+/** Property violated by an input (wrong result, unexpected exception). */
 internal class PropertyViolation(
     message: String,
     cause: Throwable? = null,
 ) : AssertionError(message, cause)
 
 /**
- * Campagne de fuzzing d'une cible : chaque itération tire une graine et des mutations d'un
- * générateur dérivé de (graine globale, cible, index), donc rejouable seule avec
- * `SCEAU_FUZZ_SEED` et `SCEAU_FUZZ_INDEX`. La propriété s'exécute dans un fil dédié, avec un
- * délai par entrée : une boucle infinie, une `StackOverflowError` ou une `OutOfMemoryError`
- * sont des échecs comme les autres.
+ * Fuzzing campaign for one target: each iteration draws a seed and mutations from a generator
+ * derived from (global seed, target, index), so it can be replayed alone with
+ * `SCEAU_FUZZ_SEED` and `SCEAU_FUZZ_INDEX`. The property runs in a dedicated thread, with a
+ * timeout per input: an infinite loop, a `StackOverflowError` or an `OutOfMemoryError` are
+ * failures like any other.
  *
- * Les échecs sont regroupés par signature (classe d'exception et première ligne de pile du
- * projet) : la campagne va jusqu'au bout et rapporte chaque signature avec la première
- * itération qui la produit ; seul un délai dépassé l'arrête (le fil bloqué est abandonné, sa
- * pile est jointe). Les messages ne contiennent jamais les octets des entrées.
+ * Failures are grouped by signature (exception class and first stack frame in the project):
+ * the campaign runs to the end and reports each signature with the first iteration that
+ * produces it; only a timeout stops it (the stuck thread is abandoned, its stack is attached).
+ * Messages never contain the input bytes.
  */
 internal class FuzzCampaign(
     private val target: String,
@@ -71,7 +71,7 @@ internal class FuzzCampaign(
     private val maxSize: Int,
     private val iterations: Int,
     private val timeoutMillis: Long = FuzzConfig.timeoutMillis,
-    /** Entrées que l'appelant réel ne soumet jamais au parseur (fichier refusé plus tôt) : ignorées. */
+    /** Inputs the real caller never passes to the parser (file rejected earlier): skipped. */
     private val precondition: (ByteArray) -> Boolean = { true },
 ) {
     private class Failure(
@@ -86,14 +86,14 @@ internal class FuzzCampaign(
     private val failures = LinkedHashMap<String, Failure>()
 
     fun run(property: (FuzzInput) -> Unit) {
-        require(seeds.isNotEmpty()) { "aucune graine pour $target" }
+        require(seeds.isNotEmpty()) { "no seed for $target" }
         val seed = FuzzConfig.seed
         try {
             val only = FuzzConfig.index
             if (only == null) {
-                // Les graines intactes d'abord, avec un délai large (chargement des classes).
+                // Intact seeds first, with a generous timeout (class loading).
                 seeds.forEachIndexed { i, bytes ->
-                    execute(FuzzInput(bytes, i, pristine = true), "graine $i intacte", WARM_UP_TIMEOUT_MILLIS, property)
+                    execute(FuzzInput(bytes, i, pristine = true), "intact seed $i", WARM_UP_TIMEOUT_MILLIS, property)
                 }
             }
             val indices = if (only != null) only..only else 0 until iterations
@@ -101,7 +101,7 @@ internal class FuzzCampaign(
                 val random = Random(mix(seed, target.hashCode(), index))
                 val seedIndex = random.nextInt(seeds.size)
                 val mutant = Mutator(random, maxSize).mutate(seeds[seedIndex])
-                val where = "seed=0x${seed.toString(16)} index=$index graine=$seedIndex mutations=${mutant.operations}"
+                val where = "seed=0x${seed.toString(16)} index=$index seedIndex=$seedIndex mutations=${mutant.operations}"
                 if (!precondition(mutant.bytes)) continue
                 if (!execute(FuzzInput(mutant.bytes, seedIndex, pristine = false), where, timeoutMillis, property)) break
             }
@@ -111,13 +111,13 @@ internal class FuzzCampaign(
         if (failures.isNotEmpty()) {
             val summary =
                 failures.entries.joinToString("\n") { (signature, failure) ->
-                    "  - $signature ×${failure.count}, première : ${failure.first}"
+                    "  - $signature ×${failure.count}, first: ${failure.first}"
                 }
-            throw AssertionError("fuzz[$target] : ${failures.size} signature(s) d'échec\n$summary", failures.values.first().error)
+            throw AssertionError("fuzz[$target]: ${failures.size} failure signature(s)\n$summary", failures.values.first().error)
         }
     }
 
-    /** Faux si la campagne doit s'arrêter (délai dépassé : le fil bloqué est abandonné). */
+    /** False if the campaign must stop (timeout: the stuck thread is abandoned). */
     private fun execute(
         input: FuzzInput,
         where: String,
@@ -128,12 +128,12 @@ internal class FuzzCampaign(
         try {
             future.get(timeout, TimeUnit.MILLISECONDS)
         } catch (e: TimeoutException) {
-            // Pile du fil bloqué, pour situer la boucle.
+            // Stack of the stuck thread, to locate the loop.
             worker?.let { e.stackTrace = it.stackTrace }
             future.cancel(true)
             executor.shutdownNow()
             executor = newExecutor()
-            record("délai de ${timeout}ms dépassé", where, e)
+            record("timeout of ${timeout}ms exceeded", where, e)
             return false
         } catch (e: ExecutionException) {
             val cause = e.cause ?: e
@@ -151,12 +151,12 @@ internal class FuzzCampaign(
     }
 
     private fun signature(error: Throwable): String {
-        if (error is PropertyViolation) return "propriété : ${error.message?.lineSequence()?.first()}"
+        if (error is PropertyViolation) return "property: ${error.message?.lineSequence()?.first()}"
         val frame =
             error.stackTrace.firstOrNull { it.className.startsWith(PROJECT_PACKAGE) && !it.className.contains(".fuzz.") }
                 ?: error.stackTrace.firstOrNull()
-        return "${error.javaClass.name} à ${frame?.let { "${it.className}.${it.methodName}:${it.lineNumber}" }}" +
-            " (origine ${error.stackTrace.firstOrNull()?.let { "${it.className}.${it.methodName}" }})"
+        return "${error.javaClass.name} at ${frame?.let { "${it.className}.${it.methodName}:${it.lineNumber}" }}" +
+            " (origin ${error.stackTrace.firstOrNull()?.let { "${it.className}.${it.methodName}" }})"
     }
 
     private fun newExecutor(): ExecutorService =
@@ -168,7 +168,7 @@ internal class FuzzCampaign(
         const val PROJECT_PACKAGE = "io.github.mgdx.sceau"
         const val WARM_UP_TIMEOUT_MILLIS = 60_000L
 
-        /** Pile d'un fil d'E/S ordinaire (1 Mo) : une récursion non bornée doit y déborder. */
+        /** Stack of an ordinary I/O thread (1 MB): unbounded recursion must overflow it. */
         const val WORKER_STACK_BYTES = 1L shl 20
 
         fun mix(
@@ -185,13 +185,13 @@ internal class FuzzCampaign(
 }
 
 /**
- * Précondition des fichiers lus sur la puce : `BoundedReadBinarySender` refuse, avant tout
- * parseur, un fichier dont l'en-tête annonce plus que le plafond de [fid].
+ * Precondition for files read from the chip: `BoundedReadBinarySender` rejects, before any
+ * parser, a file whose header announces more than the cap for [fid].
  */
 internal fun withinSizeLimit(fid: Short): (ByteArray) -> Boolean =
     { bytes -> FileSizeLimits.announcedSize(bytes)?.let { it <= FileSizeLimits.maxSize(fid) } ?: true }
 
-/** Lève une [PropertyViolation] si [condition] est fausse. */
+/** Throws a [PropertyViolation] if [condition] is false. */
 internal fun property(
     condition: Boolean,
     message: () -> String,

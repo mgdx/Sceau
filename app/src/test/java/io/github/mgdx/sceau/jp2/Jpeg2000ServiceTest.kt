@@ -19,8 +19,8 @@ import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
 
 /**
- * Service de décodage isolé, appelé directement par son protocole binder (le processus isolé
- * n'existe pas sous Robolectric ; OpenJPEG non plus, donc seul le chemin JPEG décode ici).
+ * Isolated decoding service, called directly through its binder protocol (the isolated process
+ * does not exist under Robolectric, nor does OpenJPEG, so only the JPEG path decodes here).
  */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
@@ -30,19 +30,19 @@ class Jpeg2000ServiceTest {
     private val binder = service.onBind(Intent()) as Jpeg2000Service.DecoderBinder
 
     @Test
-    fun `JPEG decode dans le service`() {
+    fun `JPEG decoded in the service`() {
         val size = decode(TestImages.encode(Bitmap.CompressFormat.JPEG))
         assertEquals(40 to 30, size)
     }
 
     @Test
-    fun `JPEG demesure reduit sous la borne du protocole`() {
+    fun `oversized JPEG is scaled down below the protocol bound`() {
         val (width, height) = checkNotNull(decode(TestImages.encode(Bitmap.CompressFormat.JPEG, width = 4100, height = 8)))
         assertTrue(Jpeg2000Protocol.isValidOutput(width, height))
     }
 
     @Test
-    fun `formats autres que JPEG et JPEG 2000 refuses (audit V18)`() {
+    fun `formats other than JPEG and JPEG 2000 are refused (audit V18)`() {
         val others =
             listOf(
                 TestImages.encode(Bitmap.CompressFormat.PNG),
@@ -53,7 +53,7 @@ class Jpeg2000ServiceTest {
     }
 
     @Test
-    fun `onDestroy n'attend pas une transaction en cours (audit V26)`() {
+    fun `onDestroy does not wait for an ongoing transaction (audit V26)`() {
         val held = CountDownLatch(1)
         val release = CountDownLatch(1)
         val decoding =
@@ -70,7 +70,7 @@ class Jpeg2000ServiceTest {
             assertTrue(held.await(5, TimeUnit.SECONDS))
             val executor = Executors.newSingleThreadExecutor()
             try {
-                // Avant la correction, onDestroy attendait le verrou jusqu'à la fin du décodage.
+                // Before the fix, onDestroy waited for the lock until decoding finished.
                 executor.submit { service.onDestroy() }.get(5, TimeUnit.SECONDS)
             } finally {
                 executor.shutdownNow()
@@ -83,7 +83,7 @@ class Jpeg2000ServiceTest {
     }
 
     @Test
-    fun `onDestroy efface le flux recu quand le service est libre`() {
+    fun `onDestroy wipes the received stream when the service is idle`() {
         val bytes = TestImages.encode(Bitmap.CompressFormat.JPEG)
         assertTrue(send(bytes))
         service.onDestroy()
@@ -91,7 +91,7 @@ class Jpeg2000ServiceTest {
         assertEquals(null, call(Jpeg2000Protocol.TX_DECODE) {})
     }
 
-    /** Transfère [bytes] puis fait décoder : dimensions rendues, ou null sur refus. */
+    /** Sends [bytes] then requests decoding: returns the dimensions, or null if refused. */
     private fun decode(bytes: ByteArray): Pair<Int, Int>? {
         check(send(bytes))
         return call(Jpeg2000Protocol.TX_DECODE) {}?.let { reply -> reply.readInt() to reply.readInt() }
@@ -110,7 +110,7 @@ class Jpeg2000ServiceTest {
         return true
     }
 
-    /** Une transaction ; la réponse, positionnée après le statut, ou null sur statut d'erreur. */
+    /** One transaction; returns the reply positioned after the status, or null on an error status. */
     private fun call(
         code: Int,
         write: Parcel.() -> Unit,

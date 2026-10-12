@@ -15,8 +15,8 @@ import java.time.LocalDate
 import java.time.ZoneOffset
 
 /**
- * Texte à résoudre côté interface : une ressource et ses arguments, qui peuvent eux-mêmes
- * être des [UiText]. Permet de mettre en forme sans Compose, et de le tester sur JVM.
+ * Text to be resolved on the UI side: a resource and its arguments, which may themselves
+ * be [UiText]s. Allows formatting without Compose, and testing it on the JVM.
  */
 data class UiText(
     @param:StringRes val res: Int,
@@ -28,7 +28,7 @@ private fun text(
     vararg args: Any,
 ): UiText = UiText(res, args.toList())
 
-/** Genre de document déduit du code MRZ (ICAO 9303 partie 4 et 5). */
+/** Document kind derived from the MRZ code (ICAO 9303 parts 4 and 5). */
 enum class DocumentKind(
     @param:StringRes val label: Int,
 ) {
@@ -38,7 +38,7 @@ enum class DocumentKind(
     ;
 
     companion object {
-        /** « P… » : passeport ; « I… », « A… », « C… » (dont « ID ») : carte d'identité. */
+        /** "P…": passport; "I…", "A…", "C…" (including "ID"): identity card. */
         fun fromMrzCode(code: String): DocumentKind =
             when (code.trim().firstOrNull()?.uppercaseChar()) {
                 'P' -> PASSPORT
@@ -48,7 +48,7 @@ enum class DocumentKind(
     }
 }
 
-/** Mise en forme de la liste de contrôle (SPEC §5.3). */
+/** Formatting of the checklist (SPEC §5.3). */
 object CheckFormatting {
     @StringRes
     fun title(id: CheckId): Int =
@@ -72,15 +72,15 @@ object CheckFormatting {
         }
 
     /**
-     * Les sept lignes dans l'ordre de [CheckId], complétées par une ligne « non disponible »
-     * si le rapport n'en contient pas une (il doit toujours les contenir toutes).
+     * The seven rows in [CheckId] order, completed with a "Not available" row if the report
+     * lacks one of them (it must always contain all of them).
      */
     fun orderedChecks(checks: List<Check>): List<Check> =
         CheckId.entries.map { id -> checks.firstOrNull { it.id == id } ?: Check(id, CheckStatus.NOT_AVAILABLE) }
 
     /**
-     * Lignes du détail dépliable. [formatDate] met une date en forme selon la locale ;
-     * [countryLabel] donne le drapeau et le nom d'un pays à partir de son code alpha-2.
+     * Lines of the expandable detail. [formatDate] formats a date according to the locale;
+     * [countryLabel] gives the flag and name of a country from its alpha-2 code.
      */
     fun detailLines(
         check: Check,
@@ -170,8 +170,8 @@ object CheckFormatting {
         }
 
     /**
-     * Pays dont des certificats sont connus, mais aucune chaîne (audit V25) : aucun CSCA ne
-     * correspond, pays émetteur, puis le DS tenté, ou son absence.
+     * Country with known certificates, but no chain (audit V25): no matching CSCA, issuing
+     * country, then the attempted DS, or its absence.
      */
     private fun noChainLines(
         detail: CheckDetail.NoChainForKnownCountry,
@@ -190,8 +190,8 @@ object CheckFormatting {
         }
 
     /**
-     * « Pays incohérents : autorité de certification <pays>, certificat du signataire <pays>,
-     * document <code> » (audit V3). Le code du document est le code ICAO brut de DG1.
+     * "Inconsistent countries: certification authority <country>, signer certificate <country>,
+     * document <code>" (audit V3). The document code is the raw ICAO code from DG1.
      */
     private fun countryMismatchLine(
         detail: CheckDetail.CountryMismatch,
@@ -211,7 +211,7 @@ object CheckFormatting {
         )
     }
 
-    /** Codes pays alpha-2 dont le détail de [check] a besoin du libellé. */
+    /** Alpha-2 country codes whose label the detail of [check] needs. */
     fun countryCodes(check: Check): List<String> =
         when (val detail = check.detail) {
             is CheckDetail.Chain -> listOfNotNull(detail.chain.cscaCountry)
@@ -254,23 +254,23 @@ object CheckFormatting {
             } else if (detail.checked.isNotEmpty() && detail.missing.isEmpty() && detail.deviations.isEmpty()) {
                 add(text(R.string.result_detail_dg_all_match))
             }
-            // Écart toléré : anomalie connue publiée par l'émetteur, DG écarté (décision D34).
+            // Tolerated mismatch: known anomaly published by the issuer, DG excluded (decision D34).
             detail.deviations.forEach { deviation ->
                 add(text(R.string.result_detail_dg_known_deviation, dataGroupList(listOf(deviation.dataGroup))))
             }
-            // DG signés dans le SOD mais retenus par la puce (audit V1).
+            // DGs signed in the SOD but withheld by the chip (audit V1).
             if (detail.missing.isNotEmpty()) {
                 add(text(R.string.result_detail_dg_missing, dataGroupList(detail.missing)))
             }
         }
 
-    /** « DG1, DG2, DG14 » : numéros triés, sans doublon. */
+    /** "DG1, DG2, DG14": sorted numbers, without duplicates. */
     fun dataGroupList(numbers: List<Int>): String = numbers.distinct().sorted().joinToString(", ") { "DG$it" }
 
     /**
-     * Vrai si l'une des [chains] (celle du SOD, et celle d'EF.CardSecurity avec PACE-CAM) remonte
-     * à un CSCA importé par l'utilisateur, par une Master List ou seul (D33) : la carte du verdict
-     * le signale sans qu'il faille déplier le détail (audits V6 et V17).
+     * True if one of the [chains] (the SOD's, and EF.CardSecurity's with PACE-CAM) leads up to a
+     * CSCA imported by the user, through a Master List or on its own (D33): the verdict card flags
+     * it without the detail having to be expanded (audits V6 and V17).
      */
     fun isImportedAnchor(vararg chains: ChainInfo?): Boolean =
         chains.any { chain ->
@@ -290,7 +290,7 @@ object CheckFormatting {
             TrustSource.IMPORTED_MASTER_LIST_UNANCHORED -> R.string.trust_source_imported_unanchored
         }
 
-    /** Méthode de Chip Authentication : clé de DG14, ou PACE-CAM (décision D21). */
+    /** Chip Authentication method: DG14 key, or PACE-CAM (decision D21). */
     @StringRes
     fun chipAuthenticationMethodLabel(method: ChipAuthenticationMethod): Int =
         when (method) {
@@ -307,5 +307,5 @@ object CheckFormatting {
         }
 }
 
-/** Date calendaire UTC d'un instant de certificat. */
+/** UTC calendar date of a certificate instant. */
 fun Instant.toUtcDate(): LocalDate = atZone(ZoneOffset.UTC).toLocalDate()

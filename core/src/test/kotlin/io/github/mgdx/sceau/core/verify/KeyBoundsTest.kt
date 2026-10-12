@@ -36,19 +36,19 @@ import java.security.interfaces.RSAPublicKey
 import org.bouncycastle.asn1.pkcs.RSAPublicKey as Asn1RsaPublicKey
 
 /**
- * Bornes hautes des clés publiques (audit V30) : une clé géante fournie par la puce (DG15, DG14,
- * EF.CardSecurity) ou par un certificat (DS, émetteur de la chaîne) est refusée avant tout calcul,
- * en `UNSUPPORTED_ALGORITHM`, au lieu de minutes de `modPow` non interruptible.
+ * Upper bounds on public keys (audit V30): a giant key supplied by the chip (DG15, DG14,
+ * EF.CardSecurity) or by a certificate (DS, chain issuer) is rejected before any computation,
+ * as `UNSUPPORTED_ALGORITHM`, instead of minutes of non-interruptible `modPow`.
  */
 class KeyBoundsTest {
     private val pki = TestPki(TestKeyType.RSA, seed = 30_303L)
     private val random = TestCrypto.seededRandom(30)
     private val challenge = ByteArray(8).also { random.nextBytes(it) }
 
-    /** Entier impair de [bits] bits exactement : modulus fictif, jamais factorisé ni reconstruit. */
+    /** Odd integer of exactly [bits] bits: dummy modulus, never factored or rebuilt. */
     private fun oddNumber(bits: Int): BigInteger = BigInteger(bits, random).setBit(bits - 1).setBit(0)
 
-    /** Clé RSA publique fictive : aucune vérification de structure, comme une clé lue dans DG15. */
+    /** Dummy RSA public key: no structure check, like a key read from DG15. */
     private class FakeRsaKey(
         private val n: BigInteger,
         private val e: BigInteger,
@@ -69,7 +69,7 @@ class KeyBoundsTest {
     // --- Crypto.unsupportedKey ----------------------------------------------------------
 
     @Test
-    fun `bornes RSA - basse, haute et exposant`() {
+    fun `RSA bounds - lower, upper and exponent`() {
         val e = BigInteger.valueOf(65_537)
         assertEquals("RSA-512", Crypto.unsupportedKey(FakeRsaKey(oddNumber(512), e)))
         assertNull(Crypto.unsupportedKey(FakeRsaKey(oddNumber(4096), e)))
@@ -80,7 +80,7 @@ class KeyBoundsTest {
     }
 
     @Test
-    fun `cles reelles - acceptees, courbes nommees et explicites`() {
+    fun `real keys - accepted, named and explicit curves`() {
         for (type in TestKeyType.entries) {
             val csca = TestPki(type, seed = 30_304L).oldCsca
             assertNull(type.name, Crypto.unsupportedKey(csca.holder.subjectPublicKeyInfo))
@@ -89,7 +89,7 @@ class KeyBoundsTest {
     }
 
     @Test
-    fun `parametres DH et EC explicites geants - refuses sans construire la cle`() {
+    fun `giant explicit DH and EC parameters - rejected without building the key`() {
         val dh =
             SubjectPublicKeyInfo(
                 AlgorithmIdentifier(X9ObjectIdentifiers.dhpublicnumber, DERSequence(arrayOf(ASN1Integer(oddNumber(9000)), ASN1Integer(2)))),
@@ -102,7 +102,7 @@ class KeyBoundsTest {
     // --- Active Authentication (DG15) ---------------------------------------------------
 
     @Test(timeout = 10_000)
-    fun `AA avec une cle RSA de 16 384 bits - non prise en charge, sans calcul`() {
+    fun `AA with a 16 384-bit RSA key - unsupported, without computation`() {
         val key = FakeRsaKey(oddNumber(16_384), oddNumber(16_384))
         val response = oddNumber(16_000).toByteArray()
 
@@ -116,14 +116,14 @@ class KeyBoundsTest {
     }
 
     @Test
-    fun `AA avec une cle RSA de 4 096 bits - toujours acceptee`() {
+    fun `AA with a 4 096-bit RSA key - still accepted`() {
         val keys = pki.generateRsa(4096)
         val response = TestActiveAuthentication.respond(keys.private, challenge, "SHA-256", pki)
 
         assertEquals(CheckStatus.OK, ActiveAuthentication.verifyResponse(keys.public, null, challenge, response).status)
     }
 
-    // --- Passive Authentication (DS, chaîne) --------------------------------------------
+    // --- Passive Authentication (DS, chain) ---------------------------------------------
 
     private fun verify(
         ds: TestCredential,
@@ -141,7 +141,7 @@ class KeyBoundsTest {
     }
 
     @Test(timeout = 10_000)
-    fun `DS a cle RSA de 16 384 bits - signature du SOD non prise en charge`() {
+    fun `DS with a 16 384-bit RSA key - SOD signature unsupported`() {
         val signing = pki.generateRsa(TestPki.RSA_BITS)
         val ds = pki.issueDs(dsKeyPair = KeyPair(FakeRsaKey(oddNumber(16_384), BigInteger.valueOf(65_537)), signing.private))
 
@@ -152,7 +152,7 @@ class KeyBoundsTest {
     }
 
     @Test(timeout = 10_000)
-    fun `emetteur de la chaine a cle RSA de 16 384 bits - chaine non prise en charge`() {
+    fun `chain issuer with a 16 384-bit RSA key - chain unsupported`() {
         val signing = pki.generateRsa(TestPki.RSA_BITS)
         val giant = KeyPair(FakeRsaKey(oddNumber(16_384), BigInteger.valueOf(65_537)), signing.private)
         val link = pki.issueCustom(pki.oldCsca, "LIEN", basicConstraintsCa = true, keyUsage = KeyUsage.keyCertSign, keyPair = giant)
@@ -167,7 +167,7 @@ class KeyBoundsTest {
     // --- PACE-CAM (EF.CardSecurity) -----------------------------------------------------
 
     @Test(timeout = 10_000)
-    fun `EF CardSecurity avec une cle EC a parametres explicites de 2 048 bits - non prise en charge`() {
+    fun `EF CardSecurity with a 2 048-bit explicit-parameter EC key - unsupported`() {
         val keyInfo =
             DERSequence(
                 arrayOf<ASN1Encodable>(ASN1ObjectIdentifier(ID_PK_ECDH), explicitEcKey(fieldBits = 2048), ASN1Integer(1)),
@@ -183,7 +183,7 @@ class KeyBoundsTest {
         assertEquals(CheckDetail.UnsupportedAlgorithm("EC-2048"), result.check.detail)
     }
 
-    /** EF.CardSecurity signé par le DS de la PKI factice, avec les attributs signés usuels. */
+    /** EF.CardSecurity signed by the dummy PKI's DS, with the usual signed attributes. */
     private fun signedCardSecurity(content: ByteArray): ByteArray {
         val provider = TestCrypto.provider
         val signer = JcaContentSignerBuilder(pki.ds.keyType.signatureAlgorithm).setProvider(provider).build(pki.ds.privateKey)
@@ -195,7 +195,7 @@ class KeyBoundsTest {
         return generator.generate(CMSProcessableByteArray(ASN1ObjectIdentifier(ID_SECURITY_OBJECT), content), true).encoded
     }
 
-    /** Clé EC à paramètres explicites (X9.62) sur un corps premier de [fieldBits] bits, fictive. */
+    /** Dummy EC key with explicit parameters (X9.62) over a prime field of [fieldBits] bits. */
     private fun explicitEcKey(fieldBits: Int): SubjectPublicKeyInfo {
         val p = oddNumber(fieldBits)
         val coordinateBytes = fieldBits / 8

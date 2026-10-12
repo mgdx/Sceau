@@ -3,19 +3,19 @@ package io.github.mgdx.sceau.core.fuzz
 import java.io.ByteArrayOutputStream
 
 /**
- * Arbre BER tolérant, pour les mutations conscientes du TLV. Seules les longueurs définies
- * (au plus quatre octets) sont décodées ; une région qui ne se découpe pas exactement en TLV
- * reste une valeur opaque. Le contenu d'un OCTET STRING ou d'un BIT STRING qui est lui-même
- * du DER (eContent du SOD, clé publique d'un certificat) est décodé comme des enfants.
+ * Lenient BER tree, for TLV-aware mutations. Only definite lengths (at most four bytes) are
+ * decoded; a region that does not split exactly into TLVs stays an opaque value. The content
+ * of an OCTET STRING or a BIT STRING that is itself DER (SOD eContent, certificate public key)
+ * is decoded as children.
  *
- * [lengthEncoding] remplace l'encodage DER minimal de la longueur : les ancêtres sont toujours
- * recalculés sur le contenu réel, seule la longueur de ce nœud peut donc mentir.
+ * [lengthEncoding] replaces the minimal DER length encoding: ancestors are always recomputed
+ * from the actual content, so only this node's length can lie.
  */
 internal class BerNode(
     var tag: ByteArray,
     var children: MutableList<BerNode>?,
     var value: ByteArray,
-    /** Octet des bits inutilisés d'un BIT STRING décodé comme enfants. */
+    /** Unused-bits byte of a BIT STRING decoded as children. */
     var prefix: ByteArray = ByteArray(0),
     var lengthEncoding: LengthEncoding? = null,
 ) {
@@ -39,7 +39,7 @@ internal class BerNode(
         if (encoding is LengthEncoding.Indefinite) out.write(byteArrayOf(0, 0))
     }
 
-    /** Ce nœud puis tous ses descendants, en préordre. */
+    /** This node then all its descendants, in preorder. */
     fun flatten(into: MutableList<BerNode>) {
         into += this
         children?.forEach { it.flatten(into) }
@@ -50,18 +50,18 @@ internal class BerNode(
     }
 }
 
-/** Encodage de la longueur d'un nœud, éventuellement mensonger. */
+/** Length encoding of a node, possibly lying. */
 internal sealed class LengthEncoding {
     abstract fun header(actual: Int): ByteArray
 
-    /** Forme DER minimale ; [declared] remplace la longueur réelle s'il est donné. */
+    /** Minimal DER form; [declared] replaces the actual length if given. */
     class Minimal(
         private val declared: Long? = null,
     ) : LengthEncoding() {
         override fun header(actual: Int): ByteArray = definite(declared ?: actual.toLong(), minimalBytes(declared ?: actual.toLong()))
     }
 
-    /** Forme longue sur [bytes] octets (0x80 + bytes, puis la longueur). */
+    /** Long form on [bytes] bytes (0x80 + bytes, then the length). */
     class LongForm(
         private val bytes: Int,
         private val declared: Long? = null,
@@ -69,7 +69,7 @@ internal sealed class LengthEncoding {
         override fun header(actual: Int): ByteArray = definite(declared ?: actual.toLong(), bytes, forceLong = true)
     }
 
-    /** Longueur indéfinie (0x80), contenu terminé par 00 00. */
+    /** Indefinite length (0x80), content terminated by 00 00. */
     object Indefinite : LengthEncoding() {
         override fun header(actual: Int): ByteArray = byteArrayOf(0x80.toByte())
     }
@@ -102,7 +102,7 @@ internal sealed class LengthEncoding {
     }
 }
 
-/** Entrée découpée en TLV de tête, plus les octets de fin qui ne se découpent pas. */
+/** Input split into top-level TLVs, plus the trailing bytes that do not split. */
 internal class BerDocument(
     val roots: MutableList<BerNode>,
     val trailer: ByteArray,
@@ -124,7 +124,7 @@ internal class BerDocument(
         private const val MORE = 0x80
         private const val MAX_LENGTH_BYTES = 4
 
-        /** Null si l'entrée ne commence pas par un TLV décodable. */
+        /** Null if the input does not start with a decodable TLV. */
         fun parse(bytes: ByteArray): BerDocument? {
             val roots = mutableListOf<BerNode>()
             var offset = 0
@@ -179,7 +179,7 @@ internal class BerDocument(
                 repeat(count) { value = (value shl Byte.SIZE_BITS) or (bytes[offset++].toLong() and 0xFF) }
                 if (value > end - offset) return null
                 length = value.toInt()
-                // Longueur non minimale dans l'original : conservée telle quelle au réencodage.
+                // Non-minimal length in the original: kept as is when re-encoding.
                 if (count != LengthEncoding.minimalBytes(value)) encoding = LengthEncoding.LongForm(count)
             }
             if (length > end - offset) return null

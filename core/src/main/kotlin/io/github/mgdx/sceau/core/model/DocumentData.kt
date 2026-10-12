@@ -3,25 +3,25 @@ package io.github.mgdx.sceau.core.model
 import java.time.LocalDate
 
 /*
- * Modèles des données lues. Ce sont des données personnelles : aucune classe ici n'est
- * une `data class` (pas de toString / equals révélateurs), rien n'est jamais journalisé.
+ * Models of the data read. This is personal data: no class here is
+ * a `data class` (no revealing toString / equals), nothing is ever logged.
  */
 
 enum class Sex { MALE, FEMALE, UNSPECIFIED }
 
 enum class ImageFormat { JPEG, JPEG2000, UNKNOWN }
 
-/** Image brute telle que stockée dans la puce (DG2, DG7, DG12). Remise à zéro par [wipe]. */
+/** Raw image as stored in the chip (DG2, DG7, DG12). Zeroed by [wipe]. */
 class EncodedImage(
     val format: ImageFormat,
     val bytes: ByteArray,
 ) {
     fun wipe() = bytes.fill(0)
 
-    override fun toString(): String = "EncodedImage($format, ${bytes.size} octets)"
+    override fun toString(): String = "EncodedImage($format, ${bytes.size} bytes)"
 }
 
-/** Image décodée en pixels ARGB 32 bits (sortie du décodeur JPEG 2000). */
+/** Image decoded into 32-bit ARGB pixels (output of the JPEG 2000 decoder). */
 class ArgbImage(
     val width: Int,
     val height: Int,
@@ -32,11 +32,11 @@ class ArgbImage(
     override fun toString(): String = "ArgbImage(${width}x$height)"
 }
 
-/** DG1 : zone MRZ. Les dates sont converties depuis AAMMJJ (null si illisibles). */
+/** DG1: MRZ. Dates are converted from YYMMDD (null if unreadable). */
 class Dg1Data(
-    /** Code de document MRZ : "P", "ID", "I<"… */
+    /** MRZ document code: "P", "ID", "I<"… */
     val documentCode: String,
-    /** Code pays ICAO à trois lettres (ex. "FRA", "D<<"). */
+    /** Three-letter ICAO country code (e.g. "FRA", "D<<"). */
     val issuingState: String,
     val documentNumber: String,
     val primaryIdentifier: String,
@@ -50,7 +50,7 @@ class Dg1Data(
     override fun toString(): String = "Dg1Data(***)"
 }
 
-/** DG11 : seuls les champs présents dans la puce sont non nuls / non vides. */
+/** DG11: only the fields present in the chip are non-null / non-empty. */
 class Dg11Data(
     val fullName: String?,
     val otherNames: List<String>,
@@ -68,7 +68,7 @@ class Dg11Data(
     override fun toString(): String = "Dg11Data(***)"
 }
 
-/** DG12 : seuls les champs présents dans la puce sont non nuls / non vides. */
+/** DG12: only the fields present in the chip are non-null / non-empty. */
 class Dg12Data(
     val issuingAuthority: String?,
     val dateOfIssue: LocalDate?,
@@ -84,8 +84,8 @@ class Dg12Data(
 }
 
 /**
- * Ensemble des données lues. [rawDataGroups] conserve les octets bruts des DG lus
- * (clé = numéro de DG) ; [wipe] les remet à zéro, ainsi que les images.
+ * All the data read. [rawDataGroups] keeps the raw bytes of the DGs read
+ * (key = DG number); [wipe] zeroes them, as well as the images.
  */
 class DocumentData(
     val dg1: Dg1Data,
@@ -93,7 +93,7 @@ class DocumentData(
     val dg11: Dg11Data?,
     val dg12: Dg12Data?,
     val rawDataGroups: Map<Int, ByteArray>,
-    /** DG7 : image de la signature manuscrite du titulaire, si l'État l'inscrit (D37). */
+    /** DG7: image of the holder's handwritten signature, if the State records it (D37). */
     val signature: EncodedImage? = null,
 ) {
     fun wipe() {

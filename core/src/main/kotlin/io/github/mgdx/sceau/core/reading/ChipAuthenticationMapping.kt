@@ -26,58 +26,58 @@ import java.security.interfaces.ECPublicKey
 import javax.crypto.interfaces.DHPublicKey
 import io.github.mgdx.sceau.core.verify.Crypto as KeyBounds
 
-/** Canal établi par [SecureChannel] : protocole, et éléments de PACE-CAM s'il a été mené. */
+/** Channel established by [SecureChannel]: protocol, and PACE-CAM evidence if it was performed. */
 internal class EstablishedChannel(
     val protocol: ChannelProtocol,
-    /** Non null si PACE a abouti avec le mapping CAM : la CA via DG14 n'est alors pas menée. */
+    /** Non-null if PACE succeeded with the CAM mapping: CA via DG14 is then not performed. */
     val cam: PaceCamEvidence?,
 )
 
-/** Éléments de PACE-CAM recueillis pendant l'établissement du canal. Aucune donnée personnelle. */
+/** PACE-CAM evidence collected while establishing the channel. No personal data. */
 internal class PaceCamEvidence(
-    /** CA_IC, déchiffré par JMRTD avec KSenc ; null si absent ou indéchiffrable. */
+    /** CA_IC, decrypted by JMRTD with KSenc; null if absent or undecryptable. */
     val chipAuthenticationData: ByteArray?,
-    /** PK_Map,IC : clé publique de mapping envoyée par la puce à la deuxième étape de PACE. */
+    /** PK_Map,IC: mapping public key sent by the chip in the second step of PACE. */
     val mappingKey: PublicKey?,
-    /** EF.CardSecurity, lu au MF sous la messagerie de PACE ; null s'il est absent ou illisible. */
+    /** EF.CardSecurity, read at the MF under PACE secure messaging; null if absent or unreadable. */
     val cardSecurity: ByteArray?,
 )
 
 /**
- * Vérification de PACE-CAM, Chip Authentication Mapping (ICAO 9303-11 §4.4.3.5 ; décision D21) :
+ * Verification of PACE-CAM, Chip Authentication Mapping (ICAO 9303-11 §4.4.3.5; decision D21):
  *
- * 1. EF.CardSecurity est vérifié comme le SOD, par [PassiveAuthenticator.verifyCardSecurity]
- *    (signature CMS, chaîne DS → CSCA, pays, algorithmes admis) ;
- * 2. la clé statique de la puce, PK_IC, est prise dans ses `ChipAuthenticationPublicKeyInfo` ;
- * 3. la puce prouve détenir SK_IC si PK_Map,IC = KA(CA_IC, PK_IC, D_IC), c'est-à-dire
- *    CA_IC · PK_IC en ECDH (PK_IC^CA_IC mod p en DH), sur les paramètres de domaine de PK_IC,
- *    qui doivent être ceux de PK_Map,IC. Les algorithmes viennent des clés, jamais codés en dur :
- *    une clé ni EC ni DH donne `UNSUPPORTED_ALGORITHM`.
+ * 1. EF.CardSecurity is verified like the SOD, by [PassiveAuthenticator.verifyCardSecurity]
+ *    (CMS signature, DS → CSCA chain, country, accepted algorithms);
+ * 2. the chip's static key, PK_IC, is taken from its `ChipAuthenticationPublicKeyInfo`;
+ * 3. the chip proves it holds SK_IC if PK_Map,IC = KA(CA_IC, PK_IC, D_IC), that is
+ *    CA_IC · PK_IC in ECDH (PK_IC^CA_IC mod p in DH), over the domain parameters of PK_IC,
+ *    which must be those of PK_Map,IC. Algorithms come from the keys, never hard-coded:
+ *    a key that is neither EC nor DH gives `UNSUPPORTED_ALGORITHM`.
  *
- * Résultat : ligne `CHIP_AUTHENTICATION`, détail [CheckDetail.ChipAuthentication] (PACE-CAM)
- * si elle réussit. Tout élément manquant, une signature ou une chaîne fausse, un contrôle KA
- * faux donnent `FAILED` (codes `VERIFY_CHIP-CAM-…`). EF.CardSecurity dont l'émetteur est
- * inconnu du magasin donne `NOT_AVAILABLE` si la chaîne du SOD est elle aussi sans CSCA connu
- * (verdict « Émetteur inconnu », comme pour tout document d'un pays absent du magasin), et
- * `FAILED` sinon : un document dont le SOD remonte à un CSCA connu doit avoir un
- * EF.CardSecurity vérifiable.
+ * Result: `CHIP_AUTHENTICATION` line, detail [CheckDetail.ChipAuthentication] (PACE-CAM)
+ * if it succeeds. Any missing element, a wrong signature or chain, or a wrong KA check give
+ * `FAILED` (codes `VERIFY_CHIP-CAM-…`). An EF.CardSecurity whose issuer is unknown to the
+ * store gives `NOT_AVAILABLE` if the SOD chain also has no known CSCA ("Unknown issuer"
+ * verdict, as for any document from a country absent from the store), and `FAILED`
+ * otherwise: a document whose SOD chains up to a known CSCA must have a verifiable
+ * EF.CardSecurity.
  *
- * Audit V17 (décision D40) : EF.CardSecurity et le SOD sont émis par le même État pour le même
- * document ; la chaîne d'EF.CardSecurity doit aboutir au même CSCA que celle du SOD (même
- * certificat, ou même clé publique), sinon `FAILED` (`VERIFY_CHIP-CAM-CARD_SECURITY_ANCHOR`).
- * Sans cette contrainte, un clone pourrait ancrer sa propre clé de puce sur un CSCA importé par
- * l'utilisateur, tandis que le SOD copié reste ancré sur un CSCA embarqué.
+ * Audit V17 (decision D40): EF.CardSecurity and the SOD are issued by the same State for the same
+ * document; the EF.CardSecurity chain must end at the same CSCA as the SOD chain (same
+ * certificate, or same public key), otherwise `FAILED` (`VERIFY_CHIP-CAM-CARD_SECURITY_ANCHOR`).
+ * Without this constraint, a clone could anchor its own chip key on a CSCA imported by the
+ * user, while the copied SOD remains anchored on a built-in CSCA.
  */
 internal object ChipAuthenticationMapping {
-    /** Ligne `CHIP_AUTHENTICATION` et chaîne d'EF.CardSecurity, remontée dans le rapport (audit V17). */
+    /** `CHIP_AUTHENTICATION` line and EF.CardSecurity chain, passed up into the report (audit V17). */
     class Result(
         val check: Check,
         val cardSecurityChain: ChainInfo?,
     )
 
     /**
-     * [documentChain] : ligne `CERTIFICATE_CHAIN` du SOD ; [documentChainInfo] : sa chaîne, dont
-     * le CSCA doit être celui d'EF.CardSecurity.
+     * [documentChain]: `CERTIFICATE_CHAIN` line of the SOD; [documentChainInfo]: its chain, whose
+     * CSCA must be that of EF.CardSecurity.
      */
     fun verify(
         evidence: PaceCamEvidence,
@@ -118,7 +118,7 @@ internal object ChipAuthenticationMapping {
         if (chipKeys.keys.isEmpty()) return chipKeys.unsupported?.let(::unsupported) ?: failed("NO_CHIP_KEY")
         val caIc = evidence.chipAuthenticationData?.takeIf { it.isNotEmpty() } ?: return failed("NO_CHIP_AUTHENTICATION_DATA")
         val mappingKey = evidence.mappingKey ?: return failed("NO_MAPPING_KEY")
-        // Audit V30 : clé de mapping hors bornes refusée avant tout calcul.
+        // Audit V30: out-of-bounds mapping key rejected before any computation.
         KeyBounds.unsupportedKey(mappingKey)?.let { return unsupported(it) }
 
         when (val outcome = keyAgreementMatches(chipKeys, BigInteger(1, caIc), mappingKey)) {
@@ -141,9 +141,9 @@ internal object ChipAuthenticationMapping {
     }
 
     /**
-     * Vrai si les chaînes [cardSecurity] et [document] aboutissent au même CSCA : même empreinte,
-     * ou même clé publique (un même CSCA peut figurer sous deux certificats, par exemple réémis).
-     * Faux si l'une des deux n'a pas de CSCA.
+     * True if the [cardSecurity] and [document] chains end at the same CSCA: same fingerprint,
+     * or same public key (a single CSCA may appear under two certificates, for example reissued).
+     * False if either has no CSCA.
      */
     private fun sameAnchor(
         cardSecurity: ChainInfo?,
@@ -181,8 +181,8 @@ internal object ChipAuthenticationMapping {
     }
 
     /**
-     * Clés de la puce : [keys] reconstruites par JMRTD ; [unsupported] décrit la dernière clé
-     * écartée parce que sa taille sort des bornes (audit V30), null s'il n'y en a pas.
+     * Chip keys: [keys] rebuilt by JMRTD; [unsupported] describes the last key discarded
+     * because its size is out of bounds (audit V30), null if there is none.
      */
     private class ChipKeys(
         val keys: List<PublicKey>,
@@ -190,9 +190,9 @@ internal object ChipAuthenticationMapping {
     )
 
     /**
-     * Clés `ChipAuthenticationPublicKeyInfo` du `SET OF SecurityInfo` signé. Audit V30 : la taille
-     * de chaque clé est contrôlée sur sa forme encodée, avant que JMRTD ne la reconstruise (la
-     * reconstruction valide la clé, à un coût qui croît avec sa taille).
+     * `ChipAuthenticationPublicKeyInfo` keys of the signed `SET OF SecurityInfo`. Audit V30: the size
+     * of each key is checked on its encoded form, before JMRTD rebuilds it (rebuilding validates
+     * the key, at a cost that grows with its size).
      */
     private fun chipAuthenticationKeys(content: ByteArray): ChipKeys {
         var unsupported: String? = null
@@ -210,7 +210,7 @@ internal object ChipAuthenticationMapping {
         return ChipKeys(keys, unsupported)
     }
 
-    /** Taille hors bornes de la clé d'une `ChipAuthenticationPublicKeyInfo` encodée, ou null. */
+    /** Out-of-bounds key size of an encoded `ChipAuthenticationPublicKeyInfo`, or null. */
     private fun oversizedKey(element: ASN1Encodable): String? =
         runCatching {
             val sequence = ASN1Sequence.getInstance(element)
@@ -220,9 +220,9 @@ internal object ChipAuthenticationMapping {
         }.getOrNull()
 
     /**
-     * Vrai si l'une des clés de la puce vérifie PK_Map,IC = KA(CA_IC, PK_IC, D_IC). Une clé dont
-     * le type ou les paramètres de domaine diffèrent de ceux de PK_Map,IC ne convient pas. Une clé
-     * hors bornes (audit V30) n'est pas essayée.
+     * True if one of the chip keys satisfies PK_Map,IC = KA(CA_IC, PK_IC, D_IC). A key whose
+     * type or domain parameters differ from those of PK_Map,IC does not qualify. An
+     * out-of-bounds key (audit V30) is not tried.
      */
     private fun keyAgreementMatches(
         chipKeys: ChipKeys,
@@ -255,7 +255,7 @@ internal object ChipAuthenticationMapping {
         return unsupported?.let { KeyAgreement.Unsupported(it) } ?: KeyAgreement.Mismatch
     }
 
-    /** ECDH : CA_IC · PK_IC = PK_Map,IC, CA_IC dans [1, n − 1], mêmes paramètres de domaine. */
+    /** ECDH: CA_IC · PK_IC = PK_Map,IC, CA_IC in [1, n − 1], same domain parameters. */
     private fun ecMatches(
         chipKey: ECPublicKey,
         caIc: BigInteger,
@@ -274,7 +274,7 @@ internal object ChipAuthenticationMapping {
         return chipPoint.multiply(caIc).normalize().equals(mappingPoint.normalize())
     }
 
-    /** DH : PK_IC^CA_IC mod p = PK_Map,IC, mêmes p et g. */
+    /** DH: PK_IC^CA_IC mod p = PK_Map,IC, same p and g. */
     private fun dhMatches(
         chipKey: DHPublicKey,
         caIc: BigInteger,

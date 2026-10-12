@@ -8,17 +8,17 @@ import net.sf.scuba.smartcards.CommandAPDU
 import net.sf.scuba.smartcards.ResponseAPDU
 
 /**
- * Adaptateur [CardTransport] → [CardService] SCUBA, pour `org.jmrtd.PassportService`.
+ * [CardTransport] → SCUBA [CardService] adapter, for `org.jmrtd.PassportService`.
  *
- * JMRTD enveloppe les erreurs d'E/S dans des [CardServiceException], parfois plusieurs fois,
- * et en avale certaines (lecture binaire). La première [SceauException] levée par le
- * transport (document retiré, délai dépassé) est donc mémorisée dans [transportFailure] :
- * l'appelant la relance telle quelle, quelle que soit l'exception ressortie de JMRTD.
- * Les messages des exceptions JMRTD contiennent des APDU en hexadécimal (données
- * personnelles) : ils ne sont jamais propagés.
+ * JMRTD wraps I/O errors in [CardServiceException]s, sometimes several times over, and
+ * swallows some of them (binary reads). The first [SceauException] thrown by the transport
+ * (document removed, timeout) is therefore stored in [transportFailure]: the caller rethrows
+ * it unchanged, whatever exception came out of JMRTD.
+ * JMRTD exception messages contain APDUs in hexadecimal (personal data): they are never
+ * propagated.
  *
- * Chaque réponse est contrôlée ([ResponseShape], audit V36) avant d'être rendue à JMRTD ; une
- * réponse malformée lève une [CardServiceException], traitée comme toute erreur de la puce.
+ * Each response is checked ([ResponseShape], audit V36) before being handed to JMRTD; a
+ * malformed response throws a [CardServiceException], handled like any chip error.
  */
 internal class TransportCardService(
     private val transport: CardTransport,
@@ -30,7 +30,7 @@ internal class TransportCardService(
     @Volatile
     private var opened = false
 
-    /** Oublie l'erreur du transport, une fois la liaison réinitialisée (repli de PACE sur BAC). */
+    /** Forgets the transport error, once the connection has been reset (PACE fallback to BAC). */
     fun clearTransportFailure() {
         transportFailure = null
     }
@@ -64,30 +64,30 @@ internal class TransportCardService(
 }
 
 /**
- * Contrôle des réponses de la puce avant JMRTD (audit V36).
+ * Checks chip responses before JMRTD (audit V36).
  *
- * JMRTD alloue la longueur annoncée d'un DO'85 ou DO'87 de messagerie sécurisée
- * (`SecureMessagingWrapper.readDO87`) **avant** de vérifier le MAC, et celle des objets de la
- * réponse de GENERAL AUTHENTICATE de PACE (`TLVInputStream.readValue`) : une réponse de quelques
- * octets annonçant 2 Go provoque une `OutOfMemoryError`, qui traverse les `catch (Exception)` du
- * cœur. Sont donc refusées :
- * - toute réponse de moins de 2 octets (pas de SW) ou de plus de 64 Kio de données (APDU
- *   courtes seulement : 256 au plus en pratique ; `FragmentBuffer` de JMRTD double sinon ses
- *   tampons sans borne) ;
- * - pour une commande protégée (CLA avec les bits de messagerie sécurisée `0C`, que JMRTD pose
- *   sur toute commande emballée), une réponse dont un DO'85 ou DO'87 ne tient pas dans les
- *   données. Le parcours reproduit celui de JMRTD, octet par octet (un octet inconnu est sauté
- *   seul, le parcours s'arrête au DO'8E) : un contrôle TLV ordinaire (`BerStructure`) se laisse
- *   contourner par un DO'87 caché dans la valeur d'un autre TLV, que JMRTD lit quand même ;
- * - pour GENERAL AUTHENTICATE en clair (étapes de PACE), une réponse dont les longueurs BER ne
- *   tiennent pas ([BerStructure.lengthsFit], qui lit les en-têtes comme SCUBA).
+ * JMRTD allocates the announced length of a secure messaging DO'85 or DO'87
+ * (`SecureMessagingWrapper.readDO87`) **before** verifying the MAC, and that of the objects in the
+ * PACE GENERAL AUTHENTICATE response (`TLVInputStream.readValue`): a response of a few bytes
+ * announcing 2 GB causes an `OutOfMemoryError`, which passes through the core's
+ * `catch (Exception)` blocks. The following are therefore rejected:
+ * - any response shorter than 2 bytes (no SW) or with more than 64 KiB of data (short APDUs
+ *   only: at most 256 in practice; otherwise JMRTD's `FragmentBuffer` doubles its buffers
+ *   without bound);
+ * - for a protected command (CLA with the secure messaging bits `0C`, which JMRTD sets on
+ *   every wrapped command), a response in which a DO'85 or DO'87 does not fit in the data.
+ *   The scan reproduces JMRTD's, byte by byte (an unknown byte is skipped on its own, the scan
+ *   stops at DO'8E): an ordinary TLV check (`BerStructure`) can be bypassed by a DO'87 hidden
+ *   in the value of another TLV, which JMRTD reads anyway;
+ * - for GENERAL AUTHENTICATE in clear (PACE steps), a response whose BER lengths do not fit
+ *   ([BerStructure.lengthsFit], which reads headers the way SCUBA does).
  *
- * Les réponses en clair des autres commandes (SELECT, READ BINARY d'EF.CardAccess, GET
- * CHALLENGE, EXTERNAL AUTHENTICATE de BAC) ne sont pas interprétées : leurs données sont
- * quelconques (un défi aléatoire peut commencer par `87`).
+ * Responses in clear to other commands (SELECT, READ BINARY of EF.CardAccess, GET
+ * CHALLENGE, BAC's EXTERNAL AUTHENTICATE) are not interpreted: their data is arbitrary
+ * (a random challenge may start with `87`).
  */
 internal object ResponseShape {
-    /** Données d'une réponse au plus (hors SW), bien au-delà des APDU courtes (256). */
+    /** Maximum response data (excluding SW), well beyond short APDUs (256). */
     const val MAX_RESPONSE_DATA = 64 * 1024
 
     private const val SW_LENGTH = 2
@@ -119,8 +119,8 @@ internal object ResponseShape {
     }
 
     /**
-     * Vrai si chaque DO'85 et DO'87 que JMRTD lirait dans [bytes] (jusqu'à [end], SW exclu) tient
-     * dans les données, en-tête et octet de bourrage `01` du DO'87 compris.
+     * True if every DO'85 and DO'87 that JMRTD would read in [bytes] (up to [end], SW excluded) fits
+     * in the data, including the header and the DO'87 padding byte `01`.
      */
     fun secureMessagingLengthsFit(
         bytes: ByteArray,
@@ -141,7 +141,7 @@ internal object ResponseShape {
                         repeat(count) { length = (length shl Byte.SIZE_BITS) or (bytes[index++].toLong() and BYTE_MASK.toLong()) }
                     }
                     if (tag == DO87) {
-                        // Octet `01` (bourrage) compris dans la longueur.
+                        // `01` (padding) byte included in the length.
                         if (length < 1 || index >= end) return false
                         index++
                         length--
@@ -150,14 +150,14 @@ internal object ResponseShape {
                     index += length.toInt()
                 }
 
-                // JMRTD s'arrête au MAC (8 ou 16 octets, toute autre longueur refusée).
+                // JMRTD stops at the MAC (8 or 16 bytes, any other length rejected).
                 DO8E -> {
                     return true
                 }
 
                 DO99 -> {
                     index++
-                    // Longueur autre que 2 : JMRTD refuse la réponse sans rien allouer.
+                    // Length other than 2: JMRTD rejects the response without allocating anything.
                     if (index >= end || bytes[index].toInt() and BYTE_MASK != DO99_LENGTH) return true
                     index += 1 + DO99_LENGTH
                 }
@@ -171,10 +171,10 @@ internal object ResponseShape {
     }
 }
 
-/** Première [SceauException] de la chaîne des causes. */
+/** First [SceauException] in the cause chain. */
 internal fun Throwable.findTransportFailure(): SceauException? = causeChain().filterIsInstance<SceauException>().firstOrNull()
 
-/** Premier mot d'état (SW1 SW2) porté par une [CardServiceException] de la chaîne, ou null. */
+/** First status word (SW1 SW2) carried by a [CardServiceException] in the chain, or null. */
 internal fun Throwable.statusWord(): Int? =
     causeChain()
         .filterIsInstance<CardServiceException>()
@@ -182,7 +182,7 @@ internal fun Throwable.statusWord(): Int? =
         .firstOrNull { it != CardServiceException.SW_NONE }
         ?.and(0xFFFF)
 
-/** Chaîne des causes, bornée pour résister aux cycles. */
+/** Cause chain, bounded to withstand cycles. */
 internal fun Throwable.causeChain(): Sequence<Throwable> = generateSequence(this, Throwable::nextCause).take(MAX_CAUSES)
 
 private fun Throwable.nextCause(): Throwable? = cause?.takeIf { it !== this }

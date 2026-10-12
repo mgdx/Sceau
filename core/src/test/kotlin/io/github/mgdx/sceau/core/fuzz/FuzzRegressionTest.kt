@@ -12,12 +12,11 @@ import org.junit.Test
 import java.time.LocalDate
 
 /**
- * Entrées minimales tirées des campagnes de fuzzing : longueurs internes démesurées dans des
- * fichiers de la puce de quelques octets (sous leur plafond, que FileSizeLimits ne contrôle que
- * sur l'en-tête externe).
+ * Minimal inputs taken from the fuzzing campaigns: oversized inner lengths in chip files of a
+ * few bytes (under their cap, which FileSizeLimits only checks on the outer header).
  */
 class FuzzRegressionTest {
-    /** Longueur BER sur quatre octets : 2 Go. */
+    /** Four-byte BER length: 2 GB. */
     private val huge = byteArrayOf(0x84.toByte(), 0x7F, 0xFF.toByte(), 0xFF.toByte(), 0xFF.toByte())
 
     private fun tlv(
@@ -25,11 +24,11 @@ class FuzzRegressionTest {
         value: ByteArray,
     ) = byteArrayOf(tag.toByte(), value.size.toByte()) + value
 
-    /** 5F01 = "0107", 5F36 = "040000" : en-tête valide d'EF.COM. */
+    /** 5F01 = "0107", 5F36 = "040000": valid EF.COM header. */
     private val comVersions =
         byteArrayOf(0x5F, 0x01, 0x04, 0x30, 0x31, 0x30, 0x37, 0x5F, 0x36, 0x06, 0x30, 0x34, 0x30, 0x30, 0x30, 0x30)
 
-    /** Entrée d'origine de la campagne COM : la version LDS (5F01) annonce 2 Go. */
+    /** Original input from the COM campaign: the LDS version (5F01) announces 2 GB. */
     @Test
     fun comWithHugeInnerLengthIsUnreadable() {
         val com = byteArrayOf(0x60, 0x07, 0x5F, 0x01, 0x84.toByte(), 0x7F, 0xFF.toByte(), 0xFF.toByte(), 0xFF.toByte())
@@ -38,8 +37,8 @@ class FuzzRegressionTest {
     }
 
     /**
-     * Même bogue, par la liste de tags (5C), que JMRTD lit sans contrôler sa longueur :
-     * `OutOfMemoryError` avant le contrôle des longueurs de `BerStructure`.
+     * Same bug, through the tag list (5C), which JMRTD reads without checking its length:
+     * `OutOfMemoryError` before the `BerStructure` length checks.
      */
     @Test
     fun comWithHugeTagListIsUnreadable() {
@@ -49,9 +48,10 @@ class FuzzRegressionTest {
     }
 
     /**
-     * Campagne COM, seed=0x5cea2026 index=39536 (length-inflate, length-deflate, set-byte) : la
-     * longueur de 60 est raccourcie, et JMRTD, qui lit en flux, lit quand même la liste de tags
-     * de 2 Go qui la suit. Le contrôle suit donc le flux, pas les bornes des éléments construits.
+     * COM campaign, seed=0x5cea2026 index=39536 (length-inflate, length-deflate, set-byte): the
+     * length of 60 is shortened, and JMRTD, which reads as a stream, still reads the 2 GB tag
+     * list that follows it. The check therefore follows the stream, not the bounds of constructed
+     * elements.
      */
     @Test
     fun comWithShortenedOuterLengthAndHugeTagListIsUnreadable() {
@@ -61,9 +61,9 @@ class FuzzRegressionTest {
     }
 
     /**
-     * DG11 et DG12 : JMRTD lit chaque champ (et les images de DG12) à la longueur annoncée ; un
-     * champ de 2 Go dans un DG de quelques octets donnait `OutOfMemoryError`, rattrapée
-     * seulement par le filet de `DataGroupParsers.orNull`. Refusé désormais avant JMRTD.
+     * DG11 and DG12: JMRTD reads each field (and the DG12 images) at the announced length; a
+     * 2 GB field in a DG of a few bytes gave an `OutOfMemoryError`, caught only by the
+     * `DataGroupParsers.orNull` safety net. Now rejected before JMRTD.
      */
     @Test
     fun dg11AndDg12WithHugeFieldAreUnreadable() {
@@ -78,9 +78,9 @@ class FuzzRegressionTest {
     }
 
     /**
-     * Campagne DG11, seed=0x5cea2026 index=35761 (unexpected-tag, set-byte) : dans la liste des
-     * autres noms (A0), SCUBA ignore l'octet FF, lit l'étiquette D3 puis une longueur codée sur
-     * 0x44 octets, qui déborde en une valeur démesurée. Le contrôle lit les en-têtes comme SCUBA.
+     * DG11 campaign, seed=0x5cea2026 index=35761 (unexpected-tag, set-byte): in the other names
+     * list (A0), SCUBA skips the FF byte, reads tag D3 then a length encoded on 0x44 bytes, which
+     * overflows into an oversized value. The check reads headers the same way as SCUBA.
      */
     @Test
     fun dg11WithPaddedTagIsUnreadable() {
@@ -97,9 +97,9 @@ class FuzzRegressionTest {
     }
 
     /**
-     * DG2 : bloc d'image de visage ISO 19794-5 dont la longueur (4 octets après l'en-tête
-     * « FAC\0 ») annonce 2 Go dans un DG2 réel : `OutOfMemoryError` dans JMRTD, rattrapée
-     * seulement par `orNull`. Refusé désormais avant JMRTD.
+     * DG2: ISO 19794-5 face image block whose length (4 bytes after the "FAC\0" header)
+     * announces 2 GB in a real DG2: `OutOfMemoryError` in JMRTD, caught only by `orNull`. Now
+     * rejected before JMRTD.
      */
     @Test
     fun dg2WithHugeFaceImageBlockIsUnreadable() {
@@ -116,7 +116,7 @@ class FuzzRegressionTest {
         assertNull(DataGroupParsers.document(mapOf(1 to FuzzSeeds.dataGroup(1).first(), 2 to dg2), TODAY).portrait)
     }
 
-    /** DG1 et les autres longueurs BER de DG2 : JMRTD lève déjà une exception, sans allocation. */
+    /** DG1 and the other DG2 BER lengths: JMRTD already throws an exception, without allocating. */
     @Test
     fun dg1AndDg2WithHugeBerLengthRaiseNoError() {
         exceptionAtMost { DataGroupParsers.parseDg1(hex("610A5F1F") + huge + hex("0000"), TODAY) }
@@ -129,15 +129,15 @@ class FuzzRegressionTest {
         } catch (e: IllegalArgumentException) {
             return
         }
-        throw AssertionError("IllegalArgumentException attendue")
+        throw AssertionError("IllegalArgumentException expected")
     }
 
     private fun hex(value: String): ByteArray = ByteArray(value.length / 2) { value.substring(2 * it, 2 * it + 2).toInt(16).toByte() }
 
     /**
-     * Les autres fichiers de la puce parsés par JMRTD dans reading/ passent par l'ASN1InputStream
-     * de BouncyCastle, qui refuse une longueur au-delà du tampon : exception, jamais
-     * `OutOfMemoryError` (EF.CardSecurity est lu par `CMSSignedData`, de même).
+     * The other chip files parsed by JMRTD in reading/ go through BouncyCastle's
+     * ASN1InputStream, which rejects a length beyond the buffer: exception, never
+     * `OutOfMemoryError` (likewise, EF.CardSecurity is read by `CMSSignedData`).
      */
     @Test
     fun otherChipFilesWithHugeInnerLengthRaiseNoError() {
@@ -149,12 +149,12 @@ class FuzzRegressionTest {
         assertEquals(emptySet<Int>(), DocumentReader.parseSodDataGroups(tlv(0x77, octetString)))
         exceptionAtMost { DG14File(tlv(0x6E, set).inputStream()) }
         exceptionAtMost { CardAccessFile(set.inputStream()) }
-        // DG15 : JMRTD alloue la longueur externe, bornée par la lecture (16 Ko) ; l'interne est
-        // décodée par BouncyCastle.
+        // DG15: JMRTD allocates the outer length, bounded by the read (16 KB); the inner one is
+        // decoded by BouncyCastle.
         exceptionAtMost { DG15File(tlv(0x6F, sequence).inputStream()).publicKey }
     }
 
-    /** Exécute [block] : une exception est admise, une `Error` (OutOfMemoryError) fait échouer le test. */
+    /** Runs [block]: an exception is allowed, an `Error` (OutOfMemoryError) fails the test. */
     private fun exceptionAtMost(block: () -> Unit) {
         try {
             block()
@@ -166,7 +166,7 @@ class FuzzRegressionTest {
     private companion object {
         val TODAY: LocalDate = LocalDate.of(2026, 9, 29)
 
-        /** En-tête ISO 19794-5 jusqu'à la longueur du premier bloc d'image. */
+        /** ISO 19794-5 header up to the length of the first image block. */
         const val FACE_HEADER = 14
     }
 }

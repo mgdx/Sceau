@@ -14,18 +14,18 @@ import java.math.BigInteger
 import java.security.SecureRandom
 
 /**
- * Configuration PACE d'une puce simulée : ce qu'annonce son EF.CardAccess et le CAN imprimé
- * sur le document.
+ * PACE configuration of a simulated chip: what its EF.CardAccess announces and the CAN printed
+ * on the document.
  *
- * Mappings pris en charge, en ECDH avec chiffrement AES : générique
- * (id-PACE-ECDH-GM-AES-CBC-CMAC-128/192/256) et Chip Authentication Mapping
- * (id-PACE-ECDH-CAM-AES-CBC-CMAC-128/192/256, voir [isChipAuthenticationMapping]), avec des
- * paramètres de domaine standardisés (ICAO 9303-11 §9.5.1, identifiants 8 à 18). Par défaut :
- * mapping générique AES-128 sur brainpoolP256r1 (identifiant 13), comme la CNIe française.
+ * Supported mappings, ECDH with AES encryption: generic
+ * (id-PACE-ECDH-GM-AES-CBC-CMAC-128/192/256) and Chip Authentication Mapping
+ * (id-PACE-ECDH-CAM-AES-CBC-CMAC-128/192/256, see [isChipAuthenticationMapping]), with
+ * standardized domain parameters (ICAO 9303-11 §9.5.1, identifiers 8 to 18). Default:
+ * generic mapping, AES-128 on brainpoolP256r1 (identifier 13), like the French CNIe.
  *
- * @property can numéro d'accès à la carte (6 chiffres sur une CNIe)
- * @property protocolOid OID du protocole PACE annoncé dans le `PACEInfo`
- * @property parameterId identifiant des paramètres de domaine standardisés
+ * @property can card access number (6 digits on a CNIe)
+ * @property protocolOid OID of the PACE protocol announced in the `PACEInfo`
+ * @property parameterId identifier of the standardized domain parameters
  */
 class PaceSettings(
     val can: String,
@@ -33,19 +33,19 @@ class PaceSettings(
     val parameterId: Int = PARAM_ID_BRAINPOOL_P256_R1,
 ) {
     init {
-        require(protocolOid in AES_KEY_BITS) { "protocole PACE non simulé : $protocolOid" }
-        require(parameterId in CURVES) { "paramètres de domaine non simulés : $parameterId" }
+        require(protocolOid in AES_KEY_BITS) { "PACE protocol not simulated: $protocolOid" }
+        require(parameterId in CURVES) { "domain parameters not simulated: $parameterId" }
     }
 
     /**
-     * Mapping PACE-CAM (ICAO 9303-11 §4.4.3.3.3) : la puce renvoie en plus, à la dernière étape,
-     * ses données de Chip Authentication chiffrées, et sert EF.CardSecurity au MF.
+     * PACE-CAM mapping (ICAO 9303-11 §4.4.3.3.3): at the last step, the chip also returns its
+     * encrypted Chip Authentication data, and serves EF.CardSecurity at the MF.
      */
     val isChipAuthenticationMapping: Boolean get() = protocolOid in CAM_PROTOCOLS
 
     /**
-     * Contenu d'EF.CardAccess (ICAO 9303-11 §9.2) : `SET OF SecurityInfo` réduit à un
-     * `PACEInfo { protocol, version 2, parameterId }`, encodé en DER avec BouncyCastle.
+     * Content of EF.CardAccess (ICAO 9303-11 §9.2): `SET OF SecurityInfo` reduced to a single
+     * `PACEInfo { protocol, version 2, parameterId }`, DER-encoded with BouncyCastle.
      */
     val cardAccess: ByteArray
         get() {
@@ -81,7 +81,7 @@ class PaceSettings(
                 ID_PACE_ECDH_CAM_AES_CBC_CMAC_256 to 256,
             )
 
-        /** Paramètres de domaine ECDH standardisés (ICAO 9303-11 §9.5.1, tableau 6). */
+        /** Standardized ECDH domain parameters (ICAO 9303-11 §9.5.1, table 6). */
         internal val CURVES =
             mapOf(
                 8 to "secp192r1",
@@ -99,7 +99,7 @@ class PaceSettings(
     }
 }
 
-/** Mot de passe PACE choisi par le lecteur dans MSE:Set AT (ICAO 9303-11 §4.4.4.1, tag 83). */
+/** PACE password chosen by the reader in MSE:Set AT (ICAO 9303-11 §4.4.4.1, tag 83). */
 enum class PacePassword(
     internal val reference: Int,
 ) {
@@ -108,41 +108,41 @@ enum class PacePassword(
 }
 
 /**
- * PACE côté puce (ICAO 9303-11 §4.4, BSI TR-03110 partie 2 §3.2 et partie 3 §A.3, §B.1),
- * mapping générique ECDH, écrit avec l'arithmétique de courbes de BouncyCastle et sans le code
- * PACE de JMRTD :
+ * Chip-side PACE (ICAO 9303-11 §4.4, BSI TR-03110 part 2 §3.2 and part 3 §A.3, §B.1),
+ * ECDH generic mapping, written with BouncyCastle's curve arithmetic and without JMRTD's PACE
+ * code:
  *
- * 1. MSE:Set AT (00 22 C1 A4) : OID du protocole (80), mot de passe (83 : 01 MRZ, 02 CAN),
- *    paramètres (84, facultatif).
- * 2. GENERAL AUTHENTICATE en quatre étapes chaînées (CLA 10, sauf la dernière) :
- *    - 7C{} → 7C{80 z}, z = E(Kπ, s) en AES-CBC à IV nul, Kπ = KDF(f(π), 3), s aléatoire ;
- *    - 7C{81 PK.PCD.map} → 7C{82 PK.PICC.map}, puis G' = s·G + SK.PICC.map·PK.PCD.map ;
- *    - 7C{83 PK.PCD} → 7C{84 PK.PICC}, clés éphémères sur G', K = x(SK.PICC·PK.PCD) ;
- *    - 7C{85 T.PCD} → 7C{86 T.PICC}, jetons AES-CMAC (8 octets) sur l'objet clé publique
- *      7F49{06 OID, 86 point} de l'autre partie, sous KSmac = KDF(K, 2).
- * 3. Messagerie sécurisée AES avec KSenc = KDF(K, 1), KSmac, SSC = 0.
+ * 1. MSE:Set AT (00 22 C1 A4): protocol OID (80), password (83: 01 MRZ, 02 CAN),
+ *    parameters (84, optional).
+ * 2. GENERAL AUTHENTICATE in four chained steps (CLA 10, except the last one):
+ *    - 7C{} → 7C{80 z}, z = E(Kπ, s) in AES-CBC with a zero IV, Kπ = KDF(f(π), 3), s random;
+ *    - 7C{81 PK.PCD.map} → 7C{82 PK.PICC.map}, then G' = s·G + SK.PICC.map·PK.PCD.map;
+ *    - 7C{83 PK.PCD} → 7C{84 PK.PICC}, ephemeral keys on G', K = x(SK.PICC·PK.PCD);
+ *    - 7C{85 T.PCD} → 7C{86 T.PICC}, AES-CMAC tokens (8 bytes) over the other party's
+ *      public key object 7F49{06 OID, 86 point}, under KSmac = KDF(K, 2).
+ * 3. AES secure messaging with KSenc = KDF(K, 1), KSmac, SSC = 0.
  *
- * f(π) : les caractères du CAN (ISO 8859-1) ; pour la MRZ, SHA-1 des champs de la clé MRZ et de
- * leurs chiffres de contrôle (20 octets, non tronqué). Un jeton T.PCD faux (mauvais mot de passe)
- * donne 63Cx, x = essais restants, et remet PACE à zéro.
+ * f(π): the CAN characters (ISO 8859-1); for the MRZ, SHA-1 of the MRZ key fields and their
+ * check digits (20 bytes, not truncated). A wrong T.PCD token (wrong password) gives 63Cx,
+ * x = remaining tries, and resets PACE.
  *
- * PACE-CAM (ICAO 9303-11 §4.4.3.3.3) : la dernière réponse contient en plus
- * 8A A.IC, A.IC = E(KSenc, CA.IC) en AES-CBC avec IV = E(KSenc, −1) (bloc de bits à 1) et
- * remplissage ISO/IEC 9797-1 méthode 2, CA.IC = SK.IC⁻¹ · SK.PICC.map mod n, où SK.IC est
- * la clé privée statique de la puce ([camKey]) et SK.PICC.map sa clé de mapping : le lecteur
- * vérifie PK.PICC.map = CA.IC · PK.IC.
+ * PACE-CAM (ICAO 9303-11 §4.4.3.3.3): the last response also contains
+ * 8A A.IC, A.IC = E(KSenc, CA.IC) in AES-CBC with IV = E(KSenc, −1) (all-ones block) and
+ * ISO/IEC 9797-1 padding method 2, CA.IC = SK.IC⁻¹ · SK.PICC.map mod n, where SK.IC is
+ * the chip's static private key ([camKey]) and SK.PICC.map its mapping key: the reader
+ * checks PK.PICC.map = CA.IC · PK.IC.
  */
 internal class ChipPace(
     private val settings: PaceSettings,
-    /** f(π) pour la clé MRZ : SHA-1 de l'information MRZ de la puce. */
+    /** f(π) for the MRZ key: SHA-1 of the chip's MRZ information. */
     private val mrzSecret: ByteArray,
     private val random: SecureRandom,
-    /** Clé privée statique de Chip Authentication, pour PACE-CAM (même courbe que PACE). */
+    /** Static Chip Authentication private key, for PACE-CAM (same curve as PACE). */
     private val camKey: ECPrivateKey? = null,
-    /** PACE-CAM : la puce envoie CA.IC + 1 au lieu de CA.IC (puce qui ne détient pas SK.IC). */
+    /** PACE-CAM: the chip sends CA.IC + 1 instead of CA.IC (a chip that does not hold SK.IC). */
     private val tamperCam: Boolean = false,
 ) {
-    /** Résultat d'une commande PACE : données de réponse, SW, et session ouverte en cas de succès. */
+    /** Outcome of a PACE command: response data, SW, and the session opened on success. */
     class Outcome(
         val data: ByteArray,
         val sw: Int,
@@ -154,13 +154,13 @@ internal class ChipPace(
     private val oid = ASN1ObjectIdentifier(settings.protocolOid)
 
     /**
-     * Compteur d'essais renvoyé dans le SW 63Cx après un jeton faux. La puce simulée ne se
-     * bloque jamais (un CAN n'est pas suspendu) ; le compteur revient à [MAX_RETRIES] après succès.
+     * Retry counter returned in SW 63Cx after a wrong token. The simulated chip never blocks
+     * (a CAN is not suspended); the counter goes back to [MAX_RETRIES] after a success.
      */
     var retries: Int = MAX_RETRIES
         private set
 
-    /** Mot de passe de la dernière PACE réussie. */
+    /** Password of the last successful PACE. */
     var completedWith: PacePassword? = null
         private set
 
@@ -176,7 +176,7 @@ internal class ChipPace(
 
     val inProgress: Boolean get() = password != null
 
-    /** MSE:Set AT de PACE. [objects] : objets TLV de la commande, par étiquette. */
+    /** PACE MSE:Set AT. [objects]: TLV objects of the command, by tag. */
     fun setAuthenticationTemplate(objects: Map<Int, Tlv>): Int {
         reset()
         val protocol = objects[TAG_OID]?.value ?: return SW_WRONG_DATA
@@ -190,7 +190,7 @@ internal class ChipPace(
         return SW_OK
     }
 
-    /** GENERAL AUTHENTICATE de PACE ; [last] : CLA sans chaînage (dernière étape attendue). */
+    /** PACE GENERAL AUTHENTICATE; [last]: CLA without chaining (last step expected). */
     fun generalAuthenticate(
         data: ByteArray,
         last: Boolean,
@@ -256,7 +256,7 @@ internal class ChipPace(
         val pcd = point(content, TAG_PCD_KEY) ?: return abort(SW_WRONG_DATA)
         val secret = randomScalar()
         val picc = checkNotNull(generator).multiply(secret).normalize()
-        // La puce refuse une clé éphémère du lecteur identique à la sienne (TR-03110 partie 3 §A.3.2).
+        // The chip rejects a reader ephemeral key identical to its own (TR-03110 part 3 §A.3.2).
         if (picc == pcd) return abort(SW_WRONG_DATA)
         val shared = pcd.multiply(secret).normalize()
         if (shared.isInfinity) return abort(SW_WRONG_DATA)
@@ -295,8 +295,8 @@ internal class ChipPace(
 
     /** A.IC = E(KSenc, CA.IC), IV = E(KSenc, −1), CA.IC = SK.IC⁻¹ · SK.PICC.map mod n. */
     private fun encryptedChipAuthenticationData(encKey: ByteArray): ByteArray {
-        val staticKey = checkNotNull(camKey) { "PACE-CAM sans clé de Chip Authentication" }
-        require(staticKey.parameters.curve.equals(domain.curve)) { "clé CA et PACE sur des courbes différentes" }
+        val staticKey = checkNotNull(camKey) { "PACE-CAM without a Chip Authentication key" }
+        require(staticKey.parameters.curve.equals(domain.curve)) { "CA key and PACE on different curves" }
         val order = domain.n
         var caIc =
             staticKey.d
@@ -318,7 +318,7 @@ internal class ChipPace(
         return SimCrypto.cbc(true, SimCrypto.Algorithm.AES, encKey, iv, SimCrypto.pad(encoded, NONCE_LENGTH))
     }
 
-    /** Objet clé publique ECDH de TR-03110 partie 3 §D.3.3, réduit à l'OID et au point (contexte connu). */
+    /** ECDH public key object of TR-03110 part 3 §D.3.3, reduced to the OID and the point (known context). */
     private fun publicKeyDataObject(point: ECPoint): ByteArray {
         val value = oid.getEncoded(ASN1Encoding.DER) + Tlv(TAG_EC_POINT, point.getEncoded(false)).encoded
         return byteArrayOf(0x7F, 0x49) + Tlv.encodeLength(value.size) + value
@@ -356,7 +356,7 @@ internal class ChipPace(
         return status(sw)
     }
 
-    /** Abandonne un PACE en cours (erreur, ou liaison réinitialisée). */
+    /** Aborts a PACE in progress (error, or link reset). */
     fun reset() {
         password = null
         step = 0

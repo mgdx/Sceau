@@ -24,7 +24,7 @@
     <string name="result_image_unavailable">Unreadable image</string>
     <string name="result_section_signature">Holder’s signature</string>
 
-    <!-- Identité -->
+    <!-- Identity -->
     <string name="result_section_identity">Identity</string>
     <string name="result_expired">Document expired</string>
     <string name="result_no_identity_data">This card’s chip holds no identity data: only its authenticity can be checked. This is the case for the German eID card for EU citizens.</string>
@@ -47,7 +47,7 @@
     <string name="result_value_with_code">%1$s (%2$s)</string>
     <string name="result_unknown_value">Unknown</string>
 
-    <!-- Pays spéciaux ICAO -->
+    <!-- ICAO special countries -->
     <string name="result_country_united_nations">United Nations</string>
     <string name="result_country_un_agency">United Nations specialized agency</string>
     <string name="result_country_un_kosovo">Kosovo (UNMIK)</string>
@@ -56,7 +56,7 @@
     <string name="result_country_refugee_other">Refugee</string>
     <string name="result_country_unspecified">Unspecified nationality</string>
 
-    <!-- Données complémentaires -->
+    <!-- Additional data -->
     <string name="result_section_additional">Additional data</string>
     <string name="result_field_full_name">Full name</string>
     <string name="result_field_other_names">Other names</string>
@@ -78,7 +78,7 @@
     <string name="result_field_personalization_time">Personalization date</string>
     <string name="result_field_personalization_device">Personalization system serial number</string>
 
-    <!-- Vérifications -->
+    <!-- Checks -->
     <string name="result_section_checks">Checks</string>
     <string name="result_check_secure_channel">Secure channel established</string>
     <string name="result_check_sod_signature">SOD signature valid</string>
@@ -94,7 +94,7 @@
     <string name="result_check_expand">Show details</string>
     <string name="result_check_collapse">Hide details</string>
 
-    <!-- Détail des vérifications -->
+    <!-- Check details -->
     <string name="result_detail_protocol">Protocol: %1$s</string>
     <string name="result_detail_ca_method">Method: %1$s</string>
     <string name="result_detail_ca_method_dg14">Chip Authentication with the DG14 key</string>

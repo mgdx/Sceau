@@ -1,6 +1,6 @@
 /*
- * Tracés d'icônes issus de Material Icons (Google), https://github.com/google/material-design-icons,
- * distribués sous licence Apache 2.0 : https://www.apache.org/licenses/LICENSE-2.0
+ * Icon paths taken from Material Icons (Google), https://github.com/google/material-design-icons,
+ * distributed under the Apache 2.0 license: https://www.apache.org/licenses/LICENSE-2.0
  */
 
 package io.github.mgdx.sceau.ui.common
@@ -12,9 +12,9 @@ import androidx.compose.ui.graphics.vector.addPathNodes
 import androidx.compose.ui.unit.dp
 
 /**
- * Icônes Material redessinées ici en [ImageVector] à partir de leur tracé : Material 3
- * n'embarque plus `material-icons-core`, et une dépendance de plus ne se justifie pas pour
- * une quinzaine de tracés. Partagées par tous les écrans.
+ * Material icons redrawn here as [ImageVector] from their paths: Material 3 no longer ships
+ * `material-icons-core`, and an extra dependency is not justified for some fifteen paths.
+ * Shared by all screens.
  */
 object SceauIcons {
     val ArrowBack: ImageVector by lazy { icon("ArrowBack", "M20,11H7.83l5.59,-5.59L12,4l-8,8 8,8 1.41,-1.41L7.83,13H20v-2z") }

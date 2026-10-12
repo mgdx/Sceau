@@ -25,8 +25,8 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
- * Audit V22 : la liste des éléments importés et leur suppression ne dépendent pas du chargement
- * du magasin fusionné, qu'il échoue ou qu'il soit encore en cours.
+ * Audit V22: listing and removing imported items do not depend on loading the merged store,
+ * whether that load fails or is still in progress.
  */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [37])
@@ -34,7 +34,7 @@ class TrustStoreRepositoryLoadTest {
     private val context: Context = ApplicationProvider.getApplicationContext()
     private val directory = File(context.filesDir, "trust")
 
-    /** Fichier importé quelconque, illisible comme Master List : son nom suffit. */
+    /** Arbitrary imported file, unreadable as a Master List: its name is enough. */
     private val importedId = "ab".repeat(32) + ".ml"
 
     @Before
@@ -45,14 +45,14 @@ class TrustStoreRepositoryLoadTest {
     }
 
     @Test
-    fun `suppression possible quand le chargement du magasin echoue`() {
+    fun `removal works when loading the store fails`() {
         val repository = TrustStoreRepository(context) { _, _ -> throw IllegalStateException("TEST_LOAD") }
         runBlocking {
             try {
                 repository.get()
-                fail("chargement censé échouer")
+                fail("load expected to fail")
             } catch (_: IllegalStateException) {
-                // attendu
+                // expected
             }
             val items = repository.importedItems()
             assertEquals(listOf(importedId), items.map { it.id })
@@ -66,7 +66,7 @@ class TrustStoreRepositoryLoadTest {
     }
 
     @Test
-    fun `suppression possible pendant un chargement en cours, magasin perime non garde`() {
+    fun `removal works during an ongoing load, stale store is not kept`() {
         val started = CountDownLatch(1)
         val release = CountDownLatch(1)
         val loads = AtomicInteger()
@@ -84,7 +84,7 @@ class TrustStoreRepositoryLoadTest {
             val slow = async(Dispatchers.IO) { repository.get() }
             assertTrue(started.await(10, TimeUnit.SECONDS))
 
-            // Le chargement bloqué ne retient ni la liste ni la suppression.
+            // The blocked load holds up neither the listing nor the removal.
             withTimeout(5_000) {
                 assertEquals(listOf(importedId), repository.importedItems().map { it.id })
                 repository.removeImported(importedId)
@@ -93,7 +93,7 @@ class TrustStoreRepositoryLoadTest {
             release.countDown()
             val stale = slow.await()
 
-            // Le magasin fusionné avant la suppression n'est pas mis en cache : rechargé.
+            // The store merged before the removal is not cached: it is reloaded.
             val fresh = repository.get()
             assertEquals(2, loads.get())
             assertSame(stores.last(), fresh)

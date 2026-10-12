@@ -40,17 +40,17 @@ import java.util.Date
 import java.util.Random
 
 /**
- * Signatures reproductibles d'une exécution à l'autre : RSA PKCS#1 v1.5 (déterministe par
- * nature) et ECDSA déterministe (RFC 6979, « ECDDSA » de BouncyCastle), heure de signature
- * fixe. Sans elles, les graines EC changeraient à chaque exécution (nonce ECDSA aléatoire) et
- * la graine et l'index d'un échec ne suffiraient plus à le rejouer.
+ * Signatures reproducible from one run to the next: RSA PKCS#1 v1.5 (deterministic by nature)
+ * and deterministic ECDSA (RFC 6979, BouncyCastle's "ECDDSA"), fixed signing time. Without
+ * them, EC seeds would change on every run (random ECDSA nonce) and the seed and index of a
+ * failure would no longer be enough to replay it.
  */
 internal object DeterministicSigning {
-    private val SIGNING_TIME = Date(1_704_067_200_000L) // 2024-01-01, dans la validité des signataires de test
+    private val SIGNING_TIME = Date(1_704_067_200_000L) // 2024-01-01, within the validity of the test signers
 
     fun algorithm(key: PrivateKey): String = if (key.algorithm == "RSA") "SHA256withRSA" else "SHA256withECDDSA"
 
-    /** Même certificat (même TBS, même algorithme annoncé), signé de façon déterministe par [issuerKey]. */
+    /** Same certificate (same TBS, same declared algorithm), signed deterministically by [issuerKey]. */
     fun reissue(
         certificate: X509CertificateHolder,
         issuerKey: PrivateKey,
@@ -66,7 +66,7 @@ internal object DeterministicSigning {
         return X509CertificateHolder(Certificate.getInstance(DERSequence(encodables)))
     }
 
-    /** CMS SignedData de [content], signataire [signer] embarqué, attributs signés fixes. */
+    /** CMS SignedData of [content], with embedded signer [signer] and fixed signed attributes. */
     fun signedData(
         contentType: ASN1ObjectIdentifier,
         content: ByteArray,
@@ -86,7 +86,7 @@ internal object DeterministicSigning {
         return generator.generate(CMSProcessableByteArray(contentType, content), true).encoded
     }
 
-    /** JcaContentSignerBuilder ne connaît pas « ECDDSA » : signataire ecdsa-with-SHA256 écrit ici. */
+    /** JcaContentSignerBuilder does not know "ECDDSA": ecdsa-with-SHA256 signer written here. */
     private fun contentSigner(key: PrivateKey): ContentSigner {
         if (key.algorithm == "RSA") return JcaContentSignerBuilder(algorithm(key)).setProvider(TestCrypto.provider).build(key)
         val signature = Signature.getInstance(algorithm(key), TestCrypto.provider).apply { initSign(key) }
@@ -104,8 +104,8 @@ internal object DeterministicSigning {
     }
 
     /**
-     * Réponse d'Active Authentication reproductible : RSA ISO/IEC 9796-2 schéma 1 (M1 tiré
-     * d'un générateur fixe, SHA-1 à trailer implicite ou SHA-256 explicite), ECDSA r‖s.
+     * Reproducible Active Authentication response: RSA ISO/IEC 9796-2 scheme 1 (M1 drawn from
+     * a fixed generator, SHA-1 with implicit trailer or explicit SHA-256), ECDSA r‖s.
      */
     fun aaResponse(
         key: PrivateKey,
@@ -138,7 +138,7 @@ internal object DeterministicSigning {
             }
 
             else -> {
-                error("clé AA")
+                error("AA key")
             }
         }
 

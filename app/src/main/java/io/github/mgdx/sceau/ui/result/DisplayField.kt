@@ -6,7 +6,7 @@ import io.github.mgdx.sceau.core.model.Dg11Data
 import io.github.mgdx.sceau.core.model.Dg12Data
 import java.time.LocalDate
 
-/** Un champ affiché : libellé et valeur déjà mise en forme. Pas de toString révélateur. */
+/** A displayed field: label and already formatted value. No revealing toString. */
 class DisplayField(
     @param:StringRes val label: Int,
     val value: String,
@@ -15,8 +15,8 @@ class DisplayField(
 }
 
 /**
- * Champs renseignés de DG11 puis de DG12, dans l'ordre de SPEC §5.3. Les champs nuls,
- * vides ou blancs sont omis ; les listes sont jointes par des virgules.
+ * Filled-in fields of DG11, then of DG12, in the order of SPEC §5.3. Null, empty or blank
+ * fields are omitted; lists are joined with commas.
  */
 fun additionalFields(
     dg11: Dg11Data?,

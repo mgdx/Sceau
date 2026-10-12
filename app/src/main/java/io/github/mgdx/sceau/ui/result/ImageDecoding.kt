@@ -8,12 +8,12 @@ import io.github.mgdx.sceau.jp2.IsolatedJpeg2000Decoder
 import kotlin.coroutines.cancellation.CancellationException
 
 /**
- * Décode une image de la puce en un [Bitmap] mutable, uniquement en mémoire (aucun cache).
- * À appeler hors du thread principal. Renvoie null si l'image est illisible ou démesurée :
- * l'écran affiche alors un emplacement vide, jamais de plantage. Seuls le JPEG et le JPEG 2000,
- * reconnus à leurs octets ([detectImageFormat]), sont acceptés, et les deux sont décodés dans le
- * processus isolé (D23, audit V18) : aucun octet d'image venu de la puce n'atteint un décodeur
- * natif dans le processus de l'app.
+ * Decodes an image from the chip into a mutable [Bitmap], in memory only (no cache).
+ * To be called off the main thread. Returns null if the image is unreadable or oversized:
+ * the screen then displays an empty slot, never a crash. Only JPEG and JPEG 2000, recognized
+ * by their bytes ([detectImageFormat]), are accepted, and both are decoded in the isolated
+ * process (D23, audit V18): no image byte coming from the chip reaches a native decoder in
+ * the app process.
  */
 suspend fun decodeToBitmap(
     context: Context,
@@ -34,23 +34,23 @@ suspend fun decodeToBitmap(
     }
 
 /**
- * Bornes du décodage (audit V2) : une puce forgée peut déclarer une image immense dans
- * quelques centaines d'octets. Au-delà de [MAX_DECLARED_PIXELS], l'image est refusée ;
- * en deçà, elle est sous-échantillonnée pour qu'aucun côté ne dépasse [MAX_SIDE], soit au
- * plus 16 Mo en ARGB_8888, bien en dessous de la limite de dessin du canevas. Appliquées au
- * JPEG par le service de décodage isolé (`Jpeg2000Service`, D23).
+ * Decoding bounds (audit V2): a forged chip can declare a huge image in a few hundred
+ * bytes. Beyond [MAX_DECLARED_PIXELS], the image is rejected; below that, it is subsampled
+ * so that no side exceeds [MAX_SIDE], i.e. at most 16 MB in ARGB_8888, well below the
+ * canvas drawing limit. Applied to JPEG by the isolated decoding service
+ * (`Jpeg2000Service`, D23).
  */
 object DecodeLimits {
-    /** Pixels déclarés au-delà desquels l'image n'est pas décodée (40 mégapixels). */
+    /** Declared pixels beyond which the image is not decoded (40 megapixels). */
     const val MAX_DECLARED_PIXELS = 40_000_000L
 
-    /** Côté maximal du bitmap final, en pixels. */
+    /** Maximum side of the final bitmap, in pixels. */
     const val MAX_SIDE = 2048
 
     /**
-     * Facteur `inSampleSize` (puissance de 2) pour une image de [width]×[height] déclarés,
-     * ou null si elle doit être refusée (dimensions invalides ou trop de pixels). Le côté
-     * obtenu, arrondi au supérieur, ne dépasse jamais [maxSide].
+     * `inSampleSize` factor (power of 2) for an image of declared [width]×[height],
+     * or null if it must be rejected (invalid dimensions or too many pixels). The resulting
+     * side, rounded up, never exceeds [maxSide].
      */
     fun sampleSize(
         width: Int,
@@ -67,7 +67,7 @@ object DecodeLimits {
     }
 }
 
-/** Réduit [bitmap] si l'un de ses côtés dépasse [DecodeLimits.MAX_SIDE] ; l'original est effacé. */
+/** Shrinks [bitmap] if one of its sides exceeds [DecodeLimits.MAX_SIDE]; the original is wiped. */
 internal fun limitSide(bitmap: Bitmap): Bitmap {
     val longest = maxOf(bitmap.width, bitmap.height)
     if (longest <= DecodeLimits.MAX_SIDE) return bitmap
@@ -84,7 +84,7 @@ internal fun limitSide(bitmap: Bitmap): Bitmap {
     }
 }
 
-/** Efface les pixels (si possible) puis libère le bitmap. */
+/** Wipes the pixels (if possible), then releases the bitmap. */
 fun Bitmap.wipeAndRecycle() {
     if (isRecycled) return
     if (isMutable) eraseColor(0)

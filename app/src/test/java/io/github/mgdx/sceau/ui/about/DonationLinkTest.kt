@@ -19,8 +19,8 @@ import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 
 /**
- * D52 : « À propos » propose un don sur Liberapay, ouvert dans le navigateur par un Intent
- * ACTION_VIEW (aucune permission réseau), en français comme en anglais.
+ * D52: "About" offers a donation on Liberapay, opened in the browser through an ACTION_VIEW
+ * Intent (no network permission), in French as well as in English.
  */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [37], qualifiers = "w360dp-h640dp-xxhdpi")
@@ -33,7 +33,7 @@ class DonationLinkTest {
         text: String,
         button: String,
     ) {
-        // Magasin qui ne se charge pas : la section du don n'en dépend pas.
+        // Trust store that fails to load: the donation section does not depend on it.
         val repository = TrustStoreRepository(compose.activity) { _, _ -> throw IllegalStateException("TEST_LOAD") }
         compose.setContent {
             SceauTheme { AboutScreen(repository, onBack = {}, onReplayIntro = {}, onOpenChipContents = {}) }
@@ -43,14 +43,14 @@ class DonationLinkTest {
         compose.onNodeWithText(button).performScrollTo().performClick()
 
         val intent = shadowOf(compose.activity).nextStartedActivity
-        assertNotNull("aucune activité lancée", intent)
+        assertNotNull("no activity started", intent)
         assertEquals(Intent.ACTION_VIEW, intent.action)
         assertEquals("https://liberapay.com/mgdx", intent.dataString)
     }
 
     @Test
     @Config(qualifiers = "fr")
-    fun `lien de don en francais`() {
+    fun `donation link in French`() {
         assertDonationOpensLiberapay(
             title = "Soutenir Sceau",
             text = "Vous pouvez soutenir son développement par un don sur Liberapay.",
@@ -60,7 +60,7 @@ class DonationLinkTest {
 
     @Test
     @Config(qualifiers = "en")
-    fun `lien de don en anglais`() {
+    fun `donation link in English`() {
         assertDonationOpensLiberapay(
             title = "Support Sceau",
             text = "You can support its development with a donation on Liberapay.",

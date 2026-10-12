@@ -24,8 +24,8 @@ import org.junit.Test
 import java.time.LocalDate
 
 /**
- * Anomalie connue de l'émetteur (décision D34) de bout en bout : CIE 3.0 italienne factice dont
- * le DG12 ne correspond pas au SOD. L'écart est toléré, DG12 est retiré des données du rapport.
+ * Known issuer deviation (decision D34) end to end: a fake Italian CIE 3.0 whose DG12 does not
+ * match the SOD. The mismatch is tolerated, and DG12 is removed from the report data.
  */
 class KnownDeviationEndToEndTest {
     private val pki = TestPki(TestKeyType.RSA, name = "Italia Test", country = "IT", seed = SEED)
@@ -50,7 +50,7 @@ class KnownDeviationEndToEndTest {
     private fun key(document: TestDocument) = AccessKey.Mrz(DOCUMENT_NUMBER, LocalDate.of(1974, 8, 12), document.dateOfExpiry)
 
     @Test
-    fun `DG12 faux sur document couvert - ecart tolere, DG12 retire du rapport, Authentique`() =
+    fun `wrong DG12 on a covered document - mismatch tolerated, DG12 removed from report, Authentic`() =
         runTest {
             val document = cie().let { it.withDataGroups(it.dataGroups + (12 to dg12("COMUNE ERRATO"))) }
             val report = readAndVerify(SimulatedChip(document), key(document), pki.trustStore(pki.oldCsca)) {}
@@ -66,9 +66,9 @@ class KnownDeviationEndToEndTest {
         }
 
     @Test
-    fun `DG12 correct - DG12 affiche, aucune deviation`() =
+    fun `correct DG12 - DG12 shown, no deviation`() =
         runTest {
-            // DG12 conforme : date de délivrance réelle, dans la période du DS.
+            // Compliant DG12: real date of issue, within the DS period.
             val document = cie(dg12("COMUNE DI UTOPIA", dateOfIssue = "20171215"))
             val report = readAndVerify(SimulatedChip(document), key(document), pki.trustStore(pki.oldCsca)) {}
 

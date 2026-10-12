@@ -4,13 +4,13 @@ import io.github.mgdx.sceau.core.Step
 import io.github.mgdx.sceau.session.ReadState
 
 /**
- * Message « la puce fait patienter » de l'écran de lecture : affiché quand l'ouverture du canal
- * sécurisé dure plus de [DELAY_MILLIS]. Après des essais ratés, une puce peut imposer un délai
- * croissant avant de répondre (`:core` l'attend jusqu'à 60 s).
+ * "The document's chip is making you wait" message of the reading screen: displayed when opening
+ * the secure channel takes longer than [DELAY_MILLIS]. After failed attempts, a chip may impose
+ * an increasing delay before answering (`:core` waits for it up to 60 s).
  */
 internal object SlowChipHint {
     const val DELAY_MILLIS = 5_000L
 
-    /** Vrai pendant l'étape où la puce peut faire patienter : le minuteur tourne. */
+    /** True during the step in which the chip may make the user wait: the timer is running. */
     fun isTimed(state: ReadState): Boolean = state is ReadState.Reading && state.current == Step.SECURE_CHANNEL
 }

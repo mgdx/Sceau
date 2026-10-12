@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
-# Sceau - vérification du build reproductible des APK release (docs/reproducible-builds.md, D25).
+# Sceau - reproducible build check for the release APKs (docs/reproducible-builds.md, D25).
 #
-# Clone deux fois le dépôt, au commit demandé, dans deux répertoires de chemins différents,
-# construit les APK release non signés dans chacun (./gradlew :app:assembleRelease), puis compare
-# les APK octet pour octet. En cas d'écart, liste les entrées de l'APK qui diffèrent.
+# Clones the repository twice, at the requested commit, into two directories with different paths,
+# builds the unsigned release APKs in each (./gradlew :app:assembleRelease), then compares the APKs
+# byte for byte. If they differ, lists the APK entries that differ.
 #
-# Usage : scripts/check-reproducible.sh [RÉVISION]      (HEAD par défaut)
-# Variables : KEEP=1 conserve les deux arbres de build ; TMPDIR choisit où ils sont créés.
-# Prérequis : git, JDK et SDK Android comme pour une build normale (ANDROID_HOME, ou le sdk.dir du
-# local.properties du dépôt), NDK et CMake aux versions du build ;
-# accès réseau pour le sous-module OpenJPEG et les dépendances Gradle absentes du cache.
+# Usage: scripts/check-reproducible.sh [REVISION]      (HEAD by default)
+# Variables: KEEP=1 keeps both build trees; TMPDIR chooses where they are created.
+# Requirements: git, JDK and Android SDK as for a normal build (ANDROID_HOME, or the sdk.dir of the
+# repository's local.properties), NDK and CMake at the build's versions;
+# network access for the OpenJPEG submodule and the Gradle dependencies missing from the cache.
 set -euo pipefail
 
 repo=$(git rev-parse --show-toplevel)
@@ -24,22 +24,22 @@ if [[ -z "$sdk" && -f "$repo/local.properties" ]]; then
     sdk=$(sed -n 's/^sdk\.dir=//p' "$repo/local.properties")
 fi
 if [[ -z "$sdk" || ! -d "$sdk" ]]; then
-    echo "SDK Android introuvable : définissez ANDROID_HOME." >&2
+    echo "Android SDK not found: set ANDROID_HOME." >&2
     exit 1
 fi
-# Le second arbre voit le SDK (donc le NDK) sous un autre chemin, par un lien symbolique, comme
-# F-Droid dont le SDK n'est pas installé au même endroit que celui du développeur.
+# The second tree sees the SDK (hence the NDK) under another path, through a symbolic link, like
+# F-Droid, whose SDK is not installed in the same place as the developer's.
 mkdir -p "$work/sdk"
 ln -s "$sdk" "$work/sdk/android-sdk-bis"
 
-# Deux chemins de longueurs et de profondeurs différentes : un chemin absolu qui fuirait dans
-# un fichier de l'APK s'y verrait.
-trees=("$work/a/Sceau" "$work/second-build/un/chemin/plus/long/sceau-bis")
+# Two paths of different lengths and depths: an absolute path leaking into a file of the APK
+# would show up.
+trees=("$work/a/Sceau" "$work/second-build/a/much/longer/path/sceau-bis")
 sdks=("$sdk" "$work/sdk/android-sdk-bis")
 
 for i in 0 1; do
     tree="${trees[$i]}"
-    echo "== Construction dans $tree (SDK ${sdks[$i]})"
+    echo "== Building in $tree (SDK ${sdks[$i]})"
     git clone --quiet --no-checkout "$repo" "$tree"
     git -C "$tree" checkout --quiet --detach "$commit"
     git -C "$tree" submodule update --init --quiet
@@ -53,23 +53,23 @@ status=0
 shopt -s nullglob
 apks=("$out_a"/*.apk)
 if [[ ${#apks[@]} -eq 0 ]]; then
-    echo "Aucun APK produit dans $out_a" >&2
+    echo "No APK produced in $out_a" >&2
     exit 1
 fi
-echo "== Comparaison (commit $commit)"
+echo "== Comparison (commit $commit)"
 for apk_a in "${apks[@]}"; do
     name=$(basename "$apk_a")
     apk_b="$out_b/$name"
     if [[ ! -f "$apk_b" ]]; then
-        echo "ABSENT    $name (second arbre)"
+        echo "MISSING   $name (second tree)"
         status=1
         continue
     fi
     sum=$(sha256sum "$apk_a" | cut -d' ' -f1)
     if cmp -s "$apk_a" "$apk_b"; then
-        echo "IDENTIQUE $sum  $name"
+        echo "IDENTICAL $sum  $name"
     else
-        echo "DIFFÉRENT $name"
+        echo "DIFFERENT $name"
         mkdir -p "$work/diff/$name/a" "$work/diff/$name/b"
         unzip -q "$apk_a" -d "$work/diff/$name/a"
         unzip -q "$apk_b" -d "$work/diff/$name/b"
@@ -79,8 +79,8 @@ for apk_a in "${apks[@]}"; do
 done
 
 if [[ $status -eq 0 ]]; then
-    echo "Build reproductible : APK identiques octet pour octet."
+    echo "Reproducible build: APKs identical byte for byte."
 else
-    echo "Build NON reproductible (arbres dans $work avec KEEP=1)." >&2
+    echo "Build NOT reproducible (trees in $work with KEEP=1)." >&2
 fi
 exit $status

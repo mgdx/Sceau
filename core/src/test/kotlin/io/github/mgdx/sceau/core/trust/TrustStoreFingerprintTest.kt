@@ -7,10 +7,10 @@ import org.junit.Test
 import java.io.File
 
 /**
- * Détecte toute substitution d'un fichier du magasin embarqué : les empreintes SHA-256 des
- * ressources `trust/` doivent être celles du tableau de `docs/trust-store.md`.
+ * Detects any substitution of a file in the embedded store: the SHA-256 fingerprints of the
+ * `trust/` resources must match the table in `docs/trust-store.md`.
  *
- * Le répertoire de travail des tests Gradle est celui du module (`core/`).
+ * The working directory of Gradle tests is the module directory (`core/`).
  */
 class TrustStoreFingerprintTest {
     private val row = Regex("""^\|\s*`([^`]+)`\s*\|.*\|\s*`([0-9a-f]{64})`\s*\|\s*$""")
@@ -32,17 +32,17 @@ class TrustStoreFingerprintTest {
 
     private fun resource(name: String): ByteArray {
         val stream = javaClass.getResourceAsStream("/trust/$name")
-        assertNotNull("ressource absente : trust/$name", stream)
+        assertNotNull("missing resource: trust/$name", stream)
         return stream!!.use { it.readBytes() }
     }
 
     @Test
     fun embeddedFingerprintsMatchDocumentation() {
         val documented = documented()
-        assertTrue("aucune ligne d'empreinte lue dans docs/trust-store.md", documented.isNotEmpty())
+        assertTrue("no fingerprint row read from docs/trust-store.md", documented.isNotEmpty())
 
         for ((name, sha256) in documented) {
-            assertEquals("empreinte de $name", sha256, TrustCrypto.sha256Hex(resource(name)))
+            assertEquals("fingerprint of $name", sha256, TrustCrypto.sha256Hex(resource(name)))
         }
     }
 

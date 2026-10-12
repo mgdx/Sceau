@@ -38,17 +38,16 @@ import java.util.Random
 import org.bouncycastle.asn1.pkcs.RSAPublicKey as Asn1RsaPublicKey
 
 /**
- * Ancre RSA dont le module est premier (D47). Le chargement du magasin ne décode plus les clés
- * RSA des ancres, donc ne fait plus le test de Miller-Rabin de BouncyCastle : une telle ancre
- * entre dans le magasin. Ce contrôle doit alors jouer quand la clé sert, à la recherche de
- * chaîne. Un module premier rend la clé privée triviale (d = e⁻¹ mod p − 1) : ce CSCA signe
- * ici un DS dont la signature est mathématiquement valide, et la chaîne doit pourtant être
- * refusée, jamais `OK`.
+ * RSA anchor whose modulus is prime (D47). Loading the store no longer decodes the anchors' RSA
+ * keys, so BouncyCastle's Miller-Rabin test no longer runs: such an anchor gets into the store.
+ * The check must then apply when the key is used, during chain building. A prime modulus makes
+ * the private key trivial (d = e⁻¹ mod p − 1): here this CSCA signs a DS whose signature is
+ * mathematically valid, and the chain must still be rejected, never `OK`.
  */
 class PrimeModulusAnchorTest {
     private val pki = TestPki(TestKeyType.RSA, seed = 47_047L)
 
-    /** Clés RSA de module premier ; SunRsaSign, contrairement à BouncyCastle, accepte d'en signer. */
+    /** RSA keys with a prime modulus; SunRsaSign, unlike BouncyCastle, agrees to sign with them. */
     private val prime: BigInteger = primeModulus()
     private val sunKeys = KeyFactory.getInstance("RSA", "SunRsaSign")
     private val primePublic: PublicKey = sunKeys.generatePublic(RSAPublicKeySpec(prime, EXPONENT))
@@ -66,7 +65,7 @@ class PrimeModulusAnchorTest {
     private fun signWithPrimeKey(builder: X509v3CertificateBuilder): X509CertificateHolder =
         builder.build(JcaContentSignerBuilder("SHA256withRSA").setProvider("SunRsaSign").build(primePrivate))
 
-    /** CSCA auto-signé au sujet et au SKI du CSCA de test, mais à clé de module premier. */
+    /** Self-signed CSCA with the subject and SKI of the test CSCA, but a prime-modulus key. */
     private fun primeCsca(): X509CertificateHolder {
         val subject = X500Name.getInstance(pki.oldCsca.certificate.subjectX500Principal.encoded)
         val keyInfo =
@@ -93,7 +92,7 @@ class PrimeModulusAnchorTest {
         return signWithPrimeKey(builder)
     }
 
-    /** DS de test (même sujet, AKI et clé) signé par la clé de module premier. */
+    /** Test DS (same subject, AKI and key) signed by the prime-modulus key. */
     private fun dsSignedByPrimeKey(): TestCredential {
         val holder = signWithPrimeKey(X509v3CertificateBuilder(pki.ds.holder))
         val certificate = JcaX509CertificateConverter().setProvider(TestCrypto.provider).getCertificate(holder)
@@ -101,7 +100,7 @@ class PrimeModulusAnchorTest {
     }
 
     @Test
-    fun `ancre a module premier - acceptee au chargement d'une Master List`() {
+    fun `prime-modulus anchor - accepted when loading a Master List`() {
         val csca = primeCsca()
         val signerKeys = TestMasterLists.rsaKeyPair()
         val signer = TestMasterLists.selfSigned("C=ZZ,O=Test,CN=Signataire", signerKeys)
@@ -119,10 +118,10 @@ class PrimeModulusAnchorTest {
     }
 
     @Test
-    fun `ancre a module premier - chaine refusee bien que les signatures soient valides`() {
+    fun `prime-modulus anchor - chain rejected even though the signatures are valid`() {
         val csca = primeCsca()
         val ds = dsSignedByPrimeKey()
-        // Témoin : hors du contrôle de BouncyCastle, CSCA et DS vérifient sous la clé de module premier.
+        // Control: outside BouncyCastle's check, the CSCA and DS verify under the prime-modulus key.
         val sunVerifier = JcaContentVerifierProviderBuilder().setProvider("SunRsaSign").build(primePublic)
         assertTrue(csca.isSignatureValid(sunVerifier))
         assertTrue(ds.holder.isSignatureValid(sunVerifier))

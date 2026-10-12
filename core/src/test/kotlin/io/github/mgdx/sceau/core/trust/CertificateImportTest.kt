@@ -13,7 +13,7 @@ import org.junit.Assert.fail
 import org.junit.Test
 import java.util.Base64
 
-/** Import d'un certificat seul (D33) : lecture DER et PEM, contrôles, fusion dans le magasin. */
+/** Import of a standalone certificate (D33): DER and PEM parsing, checks, merge into the store. */
 class CertificateImportTest {
     private val rsa = TestPki(TestKeyType.RSA, name = "Import RSA")
     private val ec = TestPki(TestKeyType.EC, name = "Import EC")
@@ -26,14 +26,14 @@ class CertificateImportTest {
     private fun rejected(bytes: ByteArray): String =
         try {
             TrustStores.parseCertificate(bytes)
-            fail("certificat accepté à tort")
+            fail("certificate wrongly accepted")
             ""
         } catch (e: InvalidCertificateException) {
             e.code
         }
 
     @Test
-    fun `CSCA auto-signe en DER accepte, RSA et EC`() {
+    fun `self-signed CSCA in DER accepted, RSA and EC`() {
         for (pki in listOf(rsa, ec)) {
             val der = pki.oldCsca.certificate.encoded
             assertArrayEquals(der, TrustStores.parseCertificate(der).encoded)
@@ -41,7 +41,7 @@ class CertificateImportTest {
     }
 
     @Test
-    fun `CSCA en PEM accepte, texte autour toléré`() {
+    fun `CSCA in PEM accepted, surrounding text tolerated`() {
         val der = rsa.oldCsca.certificate.encoded
         val withText = "Subject: CSCA\n".toByteArray() + pem(der)
         assertArrayEquals(der, TrustStores.parseCertificate(pem(der)).encoded)
@@ -49,13 +49,13 @@ class CertificateImportTest {
     }
 
     @Test
-    fun `certificat de lien accepte`() {
+    fun `link certificate accepted`() {
         val der = ec.link.certificate.encoded
         assertArrayEquals(der, TrustStores.parseCertificate(der).encoded)
     }
 
     @Test
-    fun `plusieurs certificats rejetes`() {
+    fun `several certificates rejected`() {
         val a = rsa.oldCsca.certificate.encoded
         val b = rsa.newCsca.certificate.encoded
         assertEquals("UNREADABLE", rejected(a + b))
@@ -63,50 +63,50 @@ class CertificateImportTest {
     }
 
     @Test
-    fun `fichier illisible rejete`() {
+    fun `unreadable file rejected`() {
         assertEquals("UNREADABLE", rejected(ByteArray(0)))
         assertEquals("UNREADABLE", rejected("pas un certificat".toByteArray()))
         assertEquals("UNREADABLE", rejected("-----BEGIN CERTIFICATE-----\n@@@\n-----END CERTIFICATE-----".toByteArray()))
         assertEquals("UNREADABLE", rejected("-----BEGIN PRIVATE KEY-----\nAAAA\n-----END PRIVATE KEY-----".toByteArray()))
-        // Octets superflus après le certificat.
+        // Extra bytes after the certificate.
         assertEquals("UNREADABLE", rejected(rsa.oldCsca.certificate.encoded + byteArrayOf(0)))
     }
 
     @Test
-    fun `Master List rejetee comme certificat`() {
+    fun `Master List rejected as a certificate`() {
         val fixture = TestMasterLists.Fixture()
         val list = TestMasterLists.signedMasterList(TestMasterLists.content(listOf(fixture.rsaCsca)), fixture.signer, fixture.signerKey)
         assertEquals("UNREADABLE", rejected(list))
     }
 
     @Test
-    fun `certificat non CA rejete`() {
-        // DS : keyUsage digitalSignature, pas de basicConstraints.
+    fun `non-CA certificate rejected`() {
+        // DS: keyUsage digitalSignature, no basicConstraints.
         assertEquals("NOT_CA", rejected(rsa.ds.certificate.encoded))
         // basicConstraints cA=FALSE.
         assertEquals("NOT_CA", rejected(rsa.issueCustom(rsa.oldCsca, "CA false", false, null).certificate.encoded))
-        // basicConstraints absent, keyUsage keyCertSign.
+        // basicConstraints missing, keyUsage keyCertSign.
         assertEquals("NOT_CA", rejected(rsa.issueCustom(rsa.oldCsca, "sans BC", null, KeyUsage.keyCertSign).certificate.encoded))
-        // cA=TRUE mais keyUsage sans keyCertSign.
+        // cA=TRUE but keyUsage without keyCertSign.
         val noCertSign = rsa.issueCustom(rsa.oldCsca, "sans keyCertSign", true, KeyUsage.digitalSignature)
         assertEquals("NOT_CA", rejected(noCertSign.certificate.encoded))
     }
 
     @Test
-    fun `CA sans keyUsage accepte`() {
+    fun `CA without keyUsage accepted`() {
         val der = rsa.issueCustom(rsa.oldCsca, "CA sans KU", true, null).certificate.encoded
         assertArrayEquals(der, TrustStores.parseCertificate(der).encoded)
     }
 
     @Test
-    fun `auto-signature cassee rejetee`() {
+    fun `broken self-signature rejected`() {
         for (pki in listOf(rsa, ec)) {
             assertEquals("BAD_SIGNATURE", rejected(pki.withTamperedSignature(pki.oldCsca).certificate.encoded))
         }
     }
 
     @Test
-    fun `certificats importes fusionnes avec leur source`() {
+    fun `imported certificates merged with their source`() {
         val store =
             TrustStores.load(
                 importedCertificates = listOf(rsa.oldCsca.certificate.encoded, pem(ec.link.certificate.encoded)),
@@ -121,7 +121,7 @@ class CertificateImportTest {
     }
 
     @Test
-    fun `certificat importe invalide ignore`() {
+    fun `invalid imported certificate ignored`() {
         val reference = TrustStores.load()
         val store =
             TrustStores.load(
@@ -138,7 +138,7 @@ class CertificateImportTest {
     }
 
     @Test
-    fun `priorite et doublons - un certificat deja present garde sa source`() {
+    fun `priority and duplicates - an already present certificate keeps its source`() {
         val ants = TrustStores.load().anchors.first { it.source == TrustSource.ANTS }
         val fixture = TestMasterLists.Fixture()
         val list = TestMasterLists.signedMasterList(TestMasterLists.content(listOf(fixture.rsaCsca)), fixture.signer, fixture.signerKey)
@@ -163,7 +163,7 @@ class CertificateImportTest {
     }
 
     @Test
-    fun `chaine DS vers CSCA importe aboutie`() {
+    fun `chain from DS to imported CSCA completes`() {
         for (pki in listOf(rsa, ec)) {
             val document = pki.document()
             val store = TrustStores.load(importedCertificates = listOf(pem(pki.oldCsca.certificate.encoded)))
@@ -176,7 +176,7 @@ class CertificateImportTest {
     }
 
     @Test
-    fun `chaine DS vers lien importe vers CSCA importe aboutie`() {
+    fun `chain from DS through imported link to imported CSCA completes`() {
         val ds = rsa.issueDs(signedBy = CscaGeneration.NEW)
         val document = rsa.document { this.ds = ds }
         val store =

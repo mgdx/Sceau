@@ -81,12 +81,12 @@ private val LightColorScheme =
     )
 
 /**
- * Thème Material 3 de Sceau : mode sombre suivant le système et palette de marque
- * (marine, ivoire, vert du logo).
+ * Sceau's Material 3 theme: dark mode following the system and brand palette
+ * (navy, ivory, logo green).
  *
- * Les couleurs dynamiques d'Android 12+ sont désactivées par défaut : une application
- * de vérification d'identité doit garder une apparence stable et reconnaissable, et une
- * primaire tirée du fond d'écran (rouge, vert…) brouillerait la lecture des verdicts.
+ * Android 12+ dynamic colors are disabled by default: an identity verification app must
+ * keep a stable, recognizable appearance, and a primary color taken from the wallpaper
+ * (red, green...) would blur the reading of the verdicts.
  */
 @Composable
 fun SceauTheme(

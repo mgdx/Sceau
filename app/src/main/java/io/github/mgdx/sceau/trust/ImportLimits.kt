@@ -2,51 +2,51 @@ package io.github.mgdx.sceau.trust
 
 import io.github.mgdx.sceau.ui.trust.MAX_MASTER_LIST_BYTES
 
-/** Master List ou certificat déjà importé : nom de fichier (empreinte du contenu) et taille en octets. */
+/** Master List or certificate already imported: file name (fingerprint of the content) and size in bytes. */
 class ImportedFile(
     val name: String,
     val size: Long,
 )
 
-/** Issue d'une demande d'import au regard des limites (décision D22). */
+/** Outcome of an import request with respect to the limits (decision D22). */
 enum class ImportDecision {
-    /** Même contenu déjà importé : rien à écrire, ne compte pas dans les limites. */
+    /** Same content already imported: nothing to write, does not count toward the limits. */
     ALREADY_PRESENT,
 
-    /** Import permis. */
+    /** Import allowed. */
     ALLOWED,
 
-    /** Refusé : [ImportLimits.MAX_IMPORTED_LISTS] Master Lists déjà importées. */
+    /** Refused: [ImportLimits.MAX_IMPORTED_LISTS] Master Lists already imported. */
     TOO_MANY,
 
-    /** Refusé : la taille cumulée dépasserait [ImportLimits.MAX_IMPORTED_TOTAL_BYTES]. */
+    /** Refused: the cumulative size would exceed [ImportLimits.MAX_IMPORTED_TOTAL_BYTES]. */
     TOO_LARGE_TOTAL,
 
-    /** Refusé : [ImportLimits.MAX_IMPORTED_CERTIFICATES] certificats déjà importés (D33). */
+    /** Refused: [ImportLimits.MAX_IMPORTED_CERTIFICATES] certificates already imported (D33). */
     TOO_MANY_CERTIFICATES,
 
-    /** Refusé : certificat plus gros que [ImportLimits.MAX_CERTIFICATE_BYTES] (D33). */
+    /** Refused: certificate larger than [ImportLimits.MAX_CERTIFICATE_BYTES] (D33). */
     CERTIFICATE_TOO_LARGE,
 }
 
-/** Import refusé par les limites ; le message ne contient qu'un code stable. */
+/** Import refused by the limits; the message contains only a stable code. */
 class ImportLimitException(
     val decision: ImportDecision,
 ) : Exception("IMPORT_LIMIT_${decision.name}")
 
 /**
- * Limites des Master Lists (décision D22) et des certificats importés (D33) : tous sont relus
- * et fusionnés au démarrage (D16), leur nombre et leur taille bornent donc la mémoire et le
- * temps de préchargement.
+ * Limits on imported Master Lists (decision D22) and certificates (D33): all of them are reread
+ * and merged at startup (D16), so their number and size bound the memory and the preloading
+ * time.
  */
 object ImportLimits {
-    /** Nombre maximal de Master Lists importées. */
+    /** Maximum number of imported Master Lists. */
     const val MAX_IMPORTED_LISTS = 10
 
-    /** Taille cumulée maximale des Master Lists importées : deux fichiers de taille maximale. */
+    /** Maximum cumulative size of the imported Master Lists: two files of maximum size. */
     const val MAX_IMPORTED_TOTAL_BYTES: Long = 2L * MAX_MASTER_LIST_BYTES
 
-    /** Décide si une Master List nommée [name], de [size] octets, peut s'ajouter à [existing]. */
+    /** Decides whether a Master List named [name], of [size] bytes, can be added to [existing]. */
     fun decide(
         existing: List<ImportedFile>,
         name: String,
@@ -59,15 +59,15 @@ object ImportLimits {
             else -> ImportDecision.ALLOWED
         }
 
-    /** Nombre maximal de certificats importés seuls (D33). */
+    /** Maximum number of standalone imported certificates (D33). */
     const val MAX_IMPORTED_CERTIFICATES = 100
 
-    /** Taille maximale d'un certificat importé seul, en DER ou en PEM : 64 Kio (D33). */
+    /** Maximum size of a standalone imported certificate, in DER or PEM: 64 KiB (D33). */
     const val MAX_CERTIFICATE_BYTES = 64 * 1024
 
     /**
-     * Décide si un certificat nommé [name], de [size] octets (fichier tel que choisi par
-     * l'utilisateur), peut s'ajouter aux certificats [existing].
+     * Decides whether a certificate named [name], of [size] bytes (file as chosen by the user),
+     * can be added to the [existing] certificates.
      */
     fun decideCertificate(
         existing: List<ImportedFile>,

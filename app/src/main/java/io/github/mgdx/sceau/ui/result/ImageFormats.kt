@@ -4,20 +4,20 @@ import io.github.mgdx.sceau.core.model.ImageFormat
 
 private val JPEG_MAGIC = byteArrayOf(0xFF.toByte(), 0xD8.toByte(), 0xFF.toByte())
 
-/** Boîte de signature JP2 (ISO 15444-1, annexe I). */
+/** JP2 signature box (ISO 15444-1, annex I). */
 private val JP2_MAGIC =
     byteArrayOf(0x00, 0x00, 0x00, 0x0C, 0x6A, 0x50, 0x20, 0x20, 0x0D, 0x0A, 0x87.toByte(), 0x0A)
 
-/** Début d'un flux de code JPEG 2000 brut : marqueurs SOC puis SIZ. */
+/** Start of a raw JPEG 2000 codestream: SOC then SIZ markers. */
 private val J2K_MAGIC = byteArrayOf(0xFF.toByte(), 0x4F, 0xFF.toByte(), 0x51)
 
 /**
- * Format d'une image de la puce, déduit de ses seuls premiers octets : [ImageFormat.JPEG]
- * (`FF D8 FF`), [ImageFormat.JPEG2000] (boîte de signature JP2 ou flux J2K brut), sinon null,
- * et l'image n'est pas décodée. Le format déclaré par la puce n'est jamais pris en compte
- * (audit V18) : les décodeurs d'image détectent le format au contenu, et une puce forgée
- * pourrait sinon leur soumettre du PNG, du WebP, du GIF ou tout autre format sous l'étiquette
- * JPEG. Appliqué par l'écran de résultat et, de nouveau, par le service de décodage isolé.
+ * Format of an image from the chip, inferred from its first bytes only: [ImageFormat.JPEG]
+ * (`FF D8 FF`), [ImageFormat.JPEG2000] (JP2 signature box or raw J2K codestream), otherwise null,
+ * and the image is not decoded. The format declared by the chip is never taken into account
+ * (audit V18): image decoders detect the format from the content, and a forged chip could
+ * otherwise feed them PNG, WebP, GIF or any other format under the JPEG label. Applied by the
+ * result screen and, once again, by the isolated decoding service.
  */
 fun detectImageFormat(bytes: ByteArray): ImageFormat? =
     when {

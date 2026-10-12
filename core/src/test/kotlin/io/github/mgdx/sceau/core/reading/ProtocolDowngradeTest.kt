@@ -29,14 +29,14 @@ import java.math.BigInteger
 import java.time.LocalDate
 
 /**
- * Audit V20 (décision D40) : le protocole mené est comparé à ce qu'annonce DG14, signé. Un clone
- * qui retire PACE-CAM, ou PACE, de son EF.CardAccess (non signé) ne doit pas obtenir « Signature
- * valide, puce non vérifiée » quand rien d'autre n'authentifie la puce.
+ * Audit V20 (decision D40): the protocol actually run is compared with what the signed DG14
+ * announces. A clone that removes PACE-CAM, or PACE, from its (unsigned) EF.CardAccess must not
+ * get "Valid signature, chip not verified" when nothing else authenticates the chip.
  */
 class ProtocolDowngradeTest {
     private val pki by lazy { TestPki(TestKeyType.RSA, seed = SEED) }
 
-    /** Document dont DG14, signé, ne contient que le `PACEInfo` [announcedPace] : ni clé de CA, ni DG15 par défaut. */
+    /** Document whose signed DG14 only contains the `PACEInfo` [announcedPace]: no CA key, no DG15 by default. */
     private fun document(
         announcedPace: String,
         activeAuthentication: AaKeyType? = null,
@@ -61,7 +61,7 @@ class ProtocolDowngradeTest {
     private fun mrzOf(document: TestDocument) = AccessKey.Mrz(DOCUMENT_NUMBER, DATE_OF_BIRTH, document.dateOfExpiry)
 
     @Test
-    fun dg14AnnoncePaceCamEtCardAccessPaceGm_Echec() =
+    fun dg14AnnouncesPaceCamAndCardAccessPaceGm_Failure() =
         runTest {
             val document = document(PaceSettings.ID_PACE_ECDH_CAM_AES_CBC_CMAC_128)
             val chip = SimulatedChip(document, PaceSettings(CAN, PaceSettings.ID_PACE_ECDH_GM_AES_CBC_CMAC_128))
@@ -77,7 +77,7 @@ class ProtocolDowngradeTest {
         }
 
     @Test
-    fun dg14AnnoncePaceEtLectureEnBac_Echec() =
+    fun dg14AnnouncesPaceAndReadUnderBac_Failure() =
         runTest {
             val document = document(PaceSettings.ID_PACE_ECDH_GM_AES_CBC_CMAC_128)
             val chip = SimulatedChip(document, pace = null)
@@ -91,7 +91,7 @@ class ProtocolDowngradeTest {
         }
 
     @Test
-    fun dg14AnnoncePaceGmEtCanalPaceGm_SignatureValidePuceNonVerifiee() =
+    fun dg14AnnouncesPaceGmAndPaceGmChannel_ValidSignatureChipNotVerified() =
         runTest {
             val document = document(PaceSettings.ID_PACE_ECDH_GM_AES_CBC_CMAC_128)
             val chip = SimulatedChip(document, PaceSettings(CAN, PaceSettings.ID_PACE_ECDH_GM_AES_CBC_CMAC_128))
@@ -102,10 +102,10 @@ class ProtocolDowngradeTest {
         }
 
     @Test
-    fun dg14AnnoncePaceEtLectureEnBacMaisAaReussie_Authentique() =
+    fun dg14AnnouncesPaceAndReadUnderBacButAaSucceeded_Authentic() =
         runTest {
-            // Repli PACE → BAC (D13) sur une puce qui répond à l'AA : la puce est authentifiée,
-            // le protocole mené ne change rien à la preuve.
+            // PACE to BAC fallback (D13) on a chip that answers AA: the chip is authenticated,
+            // the protocol run does not change the proof.
             val document = document(PaceSettings.ID_PACE_ECDH_GM_AES_CBC_CMAC_128, activeAuthentication = AaKeyType.RSA)
             val chip = SimulatedChip(document, pace = null)
 
@@ -115,9 +115,9 @@ class ProtocolDowngradeTest {
             assertEquals(CheckStatus.OK, report.check(CheckId.SECURE_CHANNEL).status)
         }
 
-    // --- Audit V32 (décision D43) : document sans DG14, clé de CA dans EF.CardSecurity seulement ---
+    // --- Audit V32 (decision D43): document without DG14, CA key in EF.CardSecurity only ---
 
-    /** Document sans DG14 ni DG15 : rien ne permet d'authentifier la puce, sauf EF.CardSecurity. */
+    /** Document without DG14 or DG15: nothing can authenticate the chip, except EF.CardSecurity. */
     private val bareDocument by lazy {
         pki.document {
             issuingState = "FRA"
@@ -131,7 +131,7 @@ class ProtocolDowngradeTest {
     private val gmSettings = PaceSettings(CAN, PaceSettings.ID_PACE_ECDH_GM_AES_CBC_CMAC_128)
     private val camSettings = PaceSettings(CAN, PaceSettings.ID_PACE_ECDH_CAM_AES_CBC_CMAC_128)
 
-    /** EF.CardSecurity signé par le DS du document : `PACEInfo` [paceOid] et, si [withKey], la clé de CA. */
+    /** EF.CardSecurity signed by the document's DS: `PACEInfo` [paceOid] and, if [withKey], the CA key. */
     private fun cardSecurity(
         paceOid: String,
         withKey: Boolean = true,
@@ -159,18 +159,18 @@ class ProtocolDowngradeTest {
     }
 
     @Test
-    fun sansDg14_CardSecurityAnnonceCamEtCanalPaceGm_Echec() =
+    fun withoutDg14_CardSecurityAnnouncesCamAndPaceGmChannel_Failure() =
         runTest {
             val chip = SimulatedChip(bareDocument, gmSettings, cardSecurity = cardSecurity(PaceSettings.ID_PACE_ECDH_CAM_AES_CBC_CMAC_128))
 
             val report = read(chip, AccessKey.Can(CAN))
 
             assertDowngraded(report, "VERIFY_CHIP-DOWNGRADE-CAM")
-            assertTrue("EF.CardSecurity lu", chip.fileReads.any { it.fid == SimulatedChip.FID_CARD_SECURITY })
+            assertTrue("EF.CardSecurity read", chip.fileReads.any { it.fid == SimulatedChip.FID_CARD_SECURITY })
         }
 
     @Test
-    fun sansDg14_CardSecurityAnnonceUneCleCaEtCanalPaceGm_Echec() =
+    fun withoutDg14_CardSecurityAnnouncesCaKeyAndPaceGmChannel_Failure() =
         runTest {
             val chip = SimulatedChip(bareDocument, gmSettings, cardSecurity = cardSecurity(PaceSettings.ID_PACE_ECDH_GM_AES_CBC_CMAC_128))
 
@@ -178,7 +178,7 @@ class ProtocolDowngradeTest {
         }
 
     @Test
-    fun sansDg14_CardSecurityASignatureInvalide_Echec() =
+    fun withoutDg14_CardSecurityWithInvalidSignature_Failure() =
         runTest {
             val tampered =
                 cardSecurity(PaceSettings.ID_PACE_ECDH_GM_AES_CBC_CMAC_128, withKey = false, options = SodOptions(tamperSignature = true))
@@ -188,7 +188,7 @@ class ProtocolDowngradeTest {
         }
 
     @Test
-    fun sansDg14_CardSecuritySansCleNiCam_SignatureValidePuceNonVerifiee() =
+    fun withoutDg14_CardSecurityWithoutKeyOrCam_ValidSignatureChipNotVerified() =
         runTest {
             val plain = cardSecurity(PaceSettings.ID_PACE_ECDH_GM_AES_CBC_CMAC_128, withKey = false)
             val chip = SimulatedChip(bareDocument, gmSettings, cardSecurity = plain)
@@ -197,7 +197,7 @@ class ProtocolDowngradeTest {
         }
 
     @Test
-    fun sansDg14NiCardSecurity_PaceGm_SignatureValidePuceNonVerifiee() =
+    fun withoutDg14OrCardSecurity_PaceGm_ValidSignatureChipNotVerified() =
         runTest {
             val chip = SimulatedChip(bareDocument, gmSettings)
 
@@ -208,7 +208,7 @@ class ProtocolDowngradeTest {
         }
 
     @Test
-    fun sansDg14_CardSecurityAnnonceCamEtCanalPaceCam_Authentique() =
+    fun withoutDg14_CardSecurityAnnouncesCamAndPaceCamChannel_Authentic() =
         runTest {
             val chip =
                 SimulatedChip(
@@ -228,15 +228,15 @@ class ProtocolDowngradeTest {
         }
 
     @Test
-    fun sousBac_CardSecurityJamaisLu() =
+    fun underBac_CardSecurityNeverRead() =
         runTest {
             val announcing = cardSecurity(PaceSettings.ID_PACE_ECDH_CAM_AES_CBC_CMAC_128)
             val chip = SimulatedChip(bareDocument, pace = null, cardSecurity = announcing)
 
             val report = read(chip, mrzOf(bareDocument))
 
-            // Lu, il annoncerait PACE-CAM et mettrait la CA en échec : sous BAC, il ne l'est pas
-            // (au MF, la puce simulée ne le sert qu'avant la sélection de l'applet, qui ouvre BAC).
+            // If read, it would announce PACE-CAM and make CA fail: under BAC it is not read
+            // (at MF, the simulated chip serves it only before the applet selection, which opens BAC).
             assertEquals(Verdict.SIGNATURE_VALID_CHIP_UNVERIFIED, report.verdict)
             assertEquals(CheckStatus.NOT_AVAILABLE, report.check(CheckId.CHIP_AUTHENTICATION).status)
         }

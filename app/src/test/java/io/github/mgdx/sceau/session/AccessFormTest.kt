@@ -44,7 +44,7 @@ class AccessFormTest {
         assertFalse(mrz.usesCan)
         assertEquals("X1", (mrz.toAccessKey(dmy, today) as AccessKey.Mrz).documentNumber)
         assertNull(mrz.copy(dateOfExpiryDigits = "0201203").toAccessKey(dmy, today))
-        // Dans l'onglet Passeport, le choix de la carte d'identité est sans effet.
+        // On the Passport tab, the ID card key choice has no effect.
         assertTrue(form.copy(tab = DocumentTab.PASSPORT).toAccessKey(dmy, today) is AccessKey.Mrz)
     }
 

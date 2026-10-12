@@ -12,26 +12,26 @@ import androidx.compose.ui.platform.LocalTextToolbar
 import androidx.compose.ui.platform.TextToolbar
 
 /*
- * Clé d'accès sans Copier ni Couper (audit V37, D45). Les champs de l'accueil utilisent un
- * clavier de type mot de passe sans `PasswordVisualTransformation` (la MRZ doit rester
- * lisible) : Compose y proposerait donc Copier et Couper, qui enverraient le CAN ou le numéro
- * de document au presse-papier. Deux barrières, une par chemin de Compose :
- *  - le menu contextuel actuel (`ComposeFoundationFlags.isNewContextMenuEnabled`, vrai par
- *    défaut) ne garde que Coller et Tout sélectionner ([keepPasteAndSelectAll]) : ni Copier,
- *    ni Couper, ni les actions d'autres applications (Traduire, Partager…) ou de
- *    classification (Appeler) qui leur transmettraient le texte ;
- *  - l'ancienne barre d'outils (`LocalTextToolbar`, si l'option est désactivée) reçoit
- *    des rappels de copie et de coupe nuls ([NoCopyTextToolbar]).
+ * Access key without Copy or Cut (audit V37, D45). The home screen fields use a
+ * password-type keyboard without `PasswordVisualTransformation` (the MRZ must stay
+ * readable): Compose would therefore offer Copy and Cut there, which would send the CAN or the
+ * document number to the clipboard. Two barriers, one per Compose path:
+ *  - the current context menu (`ComposeFoundationFlags.isNewContextMenuEnabled`, true by
+ *    default) keeps only Paste and Select all ([keepPasteAndSelectAll]): neither Copy,
+ *    nor Cut, nor actions from other apps (Translate, Share…) or from text
+ *    classification (Call) that would pass the text on to them;
+ *  - the legacy toolbar (`LocalTextToolbar`, if the option is turned off) receives
+ *    null copy and cut callbacks ([NoCopyTextToolbar]).
  */
 
-/** Filtre du menu contextuel : seuls Coller et Tout sélectionner restent. */
+/** Context menu filter: only Paste and Select all remain. */
 internal fun keepPasteAndSelectAll(component: TextContextMenuComponent): Boolean =
     component.key == TextContextMenuKeys.PasteKey || component.key == TextContextMenuKeys.SelectAllKey
 
-/** Menu contextuel du champ réduit à Coller et Tout sélectionner. */
+/** Field context menu reduced to Paste and Select all. */
 internal fun Modifier.noCopyContextMenu(): Modifier = filterTextContextMenuComponents(::keepPasteAndSelectAll)
 
-/** Barre d'outils de sélection qui délègue au système, sans Copier ni Couper. */
+/** Selection toolbar that delegates to the system, without Copy or Cut. */
 internal class NoCopyTextToolbar(
     private val delegate: TextToolbar,
 ) : TextToolbar by delegate {
@@ -53,7 +53,7 @@ internal class NoCopyTextToolbar(
     ) = delegate.showMenu(rect, null, onPasteRequested, null, onSelectAllRequested, onAutofillRequested)
 }
 
-/** Fournit [NoCopyTextToolbar] aux champs de [content]. */
+/** Provides [NoCopyTextToolbar] to the fields of [content]. */
 @Composable
 internal fun NoCopyTextToolbarProvider(content: @Composable () -> Unit) {
     val system = LocalTextToolbar.current

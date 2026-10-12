@@ -4,19 +4,19 @@ import android.graphics.Bitmap
 import androidx.core.graphics.createBitmap
 
 /**
- * Décodeur JPEG 2000 (portrait DG2, signature DG7, images DG12) au-dessus d'OpenJPEG, compilé depuis les
- * sources dans `libsceau_jp2.so` (décision D3). Accepte un fichier JP2 ou un flux J2K brut.
+ * JPEG 2000 decoder (DG2 portrait, DG7 signature, DG12 images) on top of OpenJPEG, compiled from
+ * source into `libsceau_jp2.so` (decision D3). Accepts a JP2 file or a raw J2K stream.
  *
- * Le flux vient d'une puce potentiellement hostile : une donnée invalide, tronquée ou aux
- * dimensions excessives (plus de 4096 pixels de côté annoncés) donne null, jamais une
- * exception. Contre les bombes de décompression, le natif estime la mémoire nécessaire avant
- * de décoder et plafonne les allocations d'OpenJPEG (64 Mo) ; une image de plus de 2048 pixels
- * de côté est décodée à résolution réduite. Les décodages sont sérialisés : un seul à la fois
- * dans le processus, quel que soit le nombre d'appelants. Le décodage se fait entièrement en
- * mémoire et sans aucune trace. À appeler hors du thread principal.
+ * The stream comes from a potentially hostile chip: invalid or truncated data, or data with
+ * excessive dimensions (more than 4096 pixels per side announced) gives null, never an
+ * exception. Against decompression bombs, the native code estimates the required memory before
+ * decoding and caps OpenJPEG's allocations (64 MB); an image with sides of more than 2048 pixels
+ * is decoded at reduced resolution. Decodings are serialized: only one at a time in the
+ * process, regardless of the number of callers. Decoding happens entirely in memory and
+ * without any trace. To be called off the main thread.
  */
 object Jpeg2000Decoder {
-    /** Un seul décodage à la fois : le budget mémoire natif vaut pour le processus entier. */
+    /** Only one decoding at a time: the native memory budget applies to the whole process. */
     private val decodeLock = Any()
 
     private val libraryLoaded: Boolean by lazy {
@@ -30,7 +30,7 @@ object Jpeg2000Decoder {
         }
     }
 
-    /** Renvoie un [Bitmap] ARGB_8888 mutable, ou null si le flux n'est pas décodable. */
+    /** Returns a mutable ARGB_8888 [Bitmap], or null if the stream cannot be decoded. */
     fun decode(bytes: ByteArray): Bitmap? {
         if (bytes.isEmpty() || !libraryLoaded) return null
         return synchronized(decodeLock) { decodeLocked(bytes) }
@@ -52,7 +52,7 @@ object Jpeg2000Decoder {
             bitmap.setPixels(pixels, 0, width, 0, 0, width, height)
             return bitmap
         } finally {
-            // Les pixels de la photo ne restent que dans le bitmap, effacé par l'écran de résultat.
+            // The photo's pixels remain only in the bitmap, wiped by the result screen.
             pixels.fill(0)
         }
     }

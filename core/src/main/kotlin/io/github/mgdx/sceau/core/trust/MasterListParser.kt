@@ -23,40 +23,40 @@ import java.security.cert.X509Certificate
 import java.time.Instant
 import java.util.concurrent.CancellationException
 
-/** Master List dont la signature CMS est vérifiée, avec le certificat signataire. */
+/** Master List whose CMS signature has been verified, together with the signer certificate. */
 internal class ParsedMasterList(
     val masterList: MasterList,
     val signerCertificate: X509Certificate,
-    /** Certificats du bloc `certificates` du CMS (signataire compris). */
+    /** Certificates from the CMS `certificates` block (signer included). */
     val cmsCertificates: List<X509Certificate>,
 )
 
 /**
- * Lecture d'une Master List CSCA (ICAO 9303 partie 12) :
- * CMS SignedData dont le contenu, de type `id-icao-cscaMasterList`, est
+ * Reading of a CSCA Master List (ICAO 9303 part 12):
+ * CMS SignedData whose content, of type `id-icao-cscaMasterList`, is
  * `CscaMasterList ::= SEQUENCE { version INTEGER, certList SET OF Certificate }`.
  */
 internal object MasterListParser {
     /** id-icao-cscaMasterList. */
     val CSCA_MASTER_LIST_OID = ASN1ObjectIdentifier("2.23.136.1.1.2")
 
-    /** id-icao-cscaMasterListSigningKey : usage étendu du certificat signataire d'une Master List. */
+    /** id-icao-cscaMasterListSigningKey: extended key usage of a Master List signer certificate. */
     val MASTER_LIST_SIGNING_KEY_OID = ASN1ObjectIdentifier("2.23.136.1.1.3")
 
-    /** Nombre maximal de certificats d'une Master List, et du bloc `certificates` de son CMS (V22). */
+    /** Maximum number of certificates in a Master List, and in the `certificates` block of its CMS (V22). */
     const val MAX_CERTIFICATES = TrustStores.MAX_MASTER_LIST_CERTIFICATES
 
     /**
-     * Lève [InvalidMasterListException], et elle seule, si la liste est invalide : c'est la seule
-     * exception que `TrustStoreLoader.load` rattrape pour un import. BouncyCastle ne décode
-     * `signerInfos` et `certificates` qu'à la demande : une structure malformée y lève
-     * `IllegalArgumentException` ou `NoSuchElementException`, rendues ici en `NOT_CMS`.
+     * Throws [InvalidMasterListException], and only that, if the list is invalid: it is the only
+     * exception that `TrustStoreLoader.load` catches for an import. BouncyCastle decodes
+     * `signerInfos` and `certificates` only on demand: a malformed structure there throws
+     * `IllegalArgumentException` or `NoSuchElementException`, turned here into `NOT_CMS`.
      *
-     * Le coût est borné quel que soit le contenu (audit V22) : exactement un SignerInfo
-     * (`NO_SIGNER`, `MULTIPLE_SIGNERS`), et au plus [MAX_CERTIFICATES] certificats dans la liste
-     * comme dans le bloc `certificates` du CMS (`TOO_MANY_CERTIFICATES`), comptés avant d'être
-     * lus. [checkpoint] est appelé entre les étapes coûteuses : il peut lever
-     * `CancellationException` pour abandonner l'analyse, exception alors propagée telle quelle.
+     * The cost is bounded whatever the content (audit V22): exactly one SignerInfo
+     * (`NO_SIGNER`, `MULTIPLE_SIGNERS`), and at most [MAX_CERTIFICATES] certificates in the list
+     * as well as in the CMS `certificates` block (`TOO_MANY_CERTIFICATES`), counted before being
+     * read. [checkpoint] is called between costly steps: it may throw
+     * `CancellationException` to abort the parsing, an exception then propagated as is.
      */
     fun parse(
         bytes: ByteArray,
@@ -89,7 +89,7 @@ internal object MasterListParser {
         requireBoundedStructure(signed)
         checkpoint()
 
-        // Un seul signataire, comme pour le SOD : chaque SignerInfo parcourrait tout le bloc `certificates`.
+        // A single signer, as for the SOD: each SignerInfo would scan the whole `certificates` block.
         val signer = signed.signerInfos.signers.singleOrNull() ?: throw InvalidMasterListException("NO_SIGNER")
         val signerHolder = verifySigner(signed, signer)
         requireMasterListSigningUsage(signerHolder)
@@ -117,10 +117,10 @@ internal object MasterListParser {
     }
 
     /**
-     * Exige que le signataire de [parsed] soit signé par un certificat dont l'empreinte SHA-256
-     * figure dans [pinnedSha256]. Le certificat épinglé est cherché dans la liste elle-même et
-     * dans le bloc `certificates` du CMS. Sans cet ancrage, vérifier une Master List avec le seul
-     * signataire qu'elle transporte ne prouve rien sur son origine.
+     * Requires the signer of [parsed] to be signed by a certificate whose SHA-256 fingerprint
+     * is in [pinnedSha256]. The pinned certificate is looked up in the list itself and
+     * in the CMS `certificates` block. Without this anchoring, verifying a Master List with only
+     * the signer it carries proves nothing about its origin.
      */
     fun requireAnchoredSigner(
         parsed: ParsedMasterList,
@@ -133,9 +133,9 @@ internal object MasterListParser {
     }
 
     /**
-     * Vrai si [signer] est émis par l'un des [anchors] : même nom que l'émetteur et signature
-     * vérifiée avec sa clé (audit V34). Un CSCA transporté par la liste elle-même ne doit jamais
-     * figurer dans [anchors] : la liste s'ancrerait sur elle-même.
+     * True if [signer] is issued by one of the [anchors]: same name as the issuer and signature
+     * verified with its key (audit V34). A CSCA carried by the list itself must never
+     * be in [anchors]: the list would anchor itself.
      */
     fun isSignerAnchored(
         signer: X509Certificate,
@@ -146,9 +146,9 @@ internal object MasterListParser {
         }
 
     /**
-     * Usage étendu du signataire (audit V34) : contrôlé seulement s'il est présent, car certaines
-     * Master Lists réelles ne le portent pas ; présent, il doit contenir
-     * `id-icao-cscaMasterListSigningKey` (ou `anyExtendedKeyUsage`), sinon `BAD_SIGNER_USAGE`.
+     * Extended key usage of the signer (audit V34): checked only if present, because some
+     * real Master Lists do not carry it; when present, it must contain
+     * `id-icao-cscaMasterListSigningKey` (or `anyExtendedKeyUsage`), otherwise `BAD_SIGNER_USAGE`.
      */
     private fun requireMasterListSigningUsage(signer: X509CertificateHolder) {
         val extensions = signer.extensions ?: return
@@ -165,8 +165,8 @@ internal object MasterListParser {
     }
 
     /**
-     * Compte, sur la structure ASN.1 déjà décodée et avant tout calcul, les SignerInfo et les
-     * certificats du bloc `certificates` du CMS.
+     * Counts, on the already decoded ASN.1 structure and before any computation, the SignerInfos and the
+     * certificates of the CMS `certificates` block.
      */
     private fun requireBoundedStructure(signed: CMSSignedData) {
         val signedData = SignedData.getInstance(signed.toASN1Structure().content)
@@ -202,7 +202,7 @@ internal object MasterListParser {
         return holder
     }
 
-    /** Un certificat individuellement illisible est ignoré ; seule une structure invalide rejette la liste. */
+    /** An individually unreadable certificate is skipped; only an invalid structure rejects the list. */
     private fun parseContent(
         content: ByteArray,
         checkpoint: () -> Unit,
@@ -227,10 +227,10 @@ internal object MasterListParser {
     }
 
     /**
-     * Certificat utilisable, ou null. BouncyCastle ne décode la clé publique qu'au premier
-     * `publicKey`, qui lève `IllegalStateException` pour une clé illisible et renvoie null pour
-     * un algorithme inconnu : la clé est donc lue ici, pour ne jamais faire entrer dans le
-     * magasin un certificat sans clé utilisable.
+     * Usable certificate, or null. BouncyCastle decodes the public key only on the first
+     * `publicKey` call, which throws `IllegalStateException` for an unreadable key and returns null for
+     * an unknown algorithm: the key is therefore read here, so that a certificate without a usable
+     * key never enters the store.
      */
     private fun toX509OrNull(holder: X509CertificateHolder): X509Certificate? =
         try {
@@ -240,12 +240,12 @@ internal object MasterListParser {
         }
 
     /**
-     * Clé RSA : seule sa structure est lue ici (module impair, exposant positif). La décoder
-     * fait faire à BouncyCastle un test de Miller-Rabin sur le module (il ne doit pas être
-     * premier) qui coûtait, pour les quelque 430 clés RSA du magasin, plus de 40 s de calcul
-     * sur un Fairphone 3 à chaque démarrage (D47). Ce contrôle n'est pas retiré mais reporté :
-     * la clé d'une ancre n'est décodée, donc contrôlée, que lorsqu'elle sert à vérifier une
-     * signature, et son échec y vaut refus. Autres clés : décodées ici, comme avant.
+     * RSA key: only its structure is read here (odd modulus, positive exponent). Decoding it
+     * makes BouncyCastle run a Miller-Rabin test on the modulus (it must not be
+     * prime) which cost, for the store's roughly 430 RSA keys, more than 40 s of computation
+     * on a Fairphone 3 at every startup (D47). This check is not removed but deferred:
+     * an anchor's key is decoded, and therefore checked, only when it is used to verify a
+     * signature, and a failure there counts as a rejection. Other keys: decoded here, as before.
      */
     private fun hasReadableKey(
         holder: X509CertificateHolder,

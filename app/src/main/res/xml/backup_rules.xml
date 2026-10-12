@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Sauvegarde désactivée (allowBackup="false") ; ceinture et bretelles pour Android 8 à 11. -->
+<!-- Backup disabled (allowBackup="false"); belt and braces for Android 8 to 11. -->
 <full-backup-content>
     <exclude domain="root" path="." />
     <exclude domain="file" path="." />

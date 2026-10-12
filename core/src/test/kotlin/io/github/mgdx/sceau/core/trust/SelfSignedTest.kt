@@ -13,7 +13,7 @@ import java.math.BigInteger
 import java.security.KeyPair
 import java.util.Date
 
-/** [TrustAnchor.isSelfSigned] : CSCA racine contre certificat de lien de même DN. */
+/** [TrustAnchor.isSelfSigned]: root CSCA versus link certificate with the same DN. */
 class SelfSignedTest {
     private val name = "C=ZZ,O=Test,CN=CSCA"
     private val oldKey = TestMasterLists.ecKeyPair()
@@ -45,27 +45,27 @@ class SelfSignedTest {
     }
 
     @Test
-    fun `CSCA auto-signe avec AKI egal au SKI`() {
+    fun `self-signed CSCA with AKI equal to SKI`() {
         assertTrue(anchor(newKey, newKey, withKeyIds = true).isSelfSigned)
     }
 
     @Test
-    fun `lien de meme DN signe par l'ancienne cle`() {
+    fun `link with the same DN signed by the old key`() {
         assertFalse(anchor(newKey, oldKey, withKeyIds = true).isSelfSigned)
     }
 
     @Test
-    fun `sujet different de l'emetteur`() {
+    fun `subject different from the issuer`() {
         assertFalse(anchor(newKey, newKey, withKeyIds = true, subject = "C=ZZ,O=Test,CN=Autre").isSelfSigned)
     }
 
     @Test
-    fun `sans AKI ni SKI, CSCA auto-signe reconnu par sa signature`() {
+    fun `without AKI or SKI, self-signed CSCA recognized by its signature`() {
         assertTrue(anchor(newKey, newKey, withKeyIds = false).isSelfSigned)
     }
 
     @Test
-    fun `sans AKI ni SKI, lien de meme DN reconnu par sa signature`() {
+    fun `without AKI or SKI, link with the same DN recognized by its signature`() {
         assertFalse(anchor(newKey, oldKey, withKeyIds = false).isSelfSigned)
     }
 }

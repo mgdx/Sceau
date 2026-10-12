@@ -40,16 +40,16 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
-/** Audit V37 (D45) : ni Copier ni Couper sur les champs de la clé d'accès de l'accueil. */
+/** Audit V37 (D45): neither Copy nor Cut on the access key fields of the home screen. */
 @RunWith(RobolectricTestRunner::class)
-// Rendu natif : la loupe de sélection (Magnifier) échoue sans surface en mode simulé.
+// Native rendering: the selection Magnifier fails without a surface in legacy mode.
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [37], qualifiers = "w360dp-h640dp-xxhdpi")
 class NoCopyTextInputTest {
     @get:Rule
     val compose = createAndroidComposeRule<ComponentActivity>()
 
-    /** Menu contextuel (barre flottante) : retient les entrées proposées au lieu de les afficher. */
+    /** Context menu (floating toolbar): records the offered items instead of showing them. */
     private class RecordingMenu : TextContextMenuProvider {
         val shown = mutableListOf<List<Any>>()
 
@@ -59,7 +59,7 @@ class NoCopyTextInputTest {
         }
     }
 
-    /** Appui long sur le champ de saisie n° [index] ; rend les entrées du menu proposé. */
+    /** Long press on input field number [index], returns the items of the offered menu. */
     private fun longPressMenu(
         menu: RecordingMenu,
         index: Int,
@@ -69,12 +69,12 @@ class NoCopyTextInputTest {
         if (text != null) field.performTextInput(text)
         compose.waitForIdle()
         menu.shown.clear()
-        // Sur le texte (début du champ) : un appui long y sélectionne un mot, comme sur appareil.
+        // On the text (start of the field): a long press selects a word there, as on a device.
         field.performTouchInput { longClick(percentOffset(0.12f, 0.5f)) }
         compose.waitForIdle()
         val selection = field.fetchSemanticsNode().config[SemanticsProperties.TextSelectionRange]
-        assertFalse("appui long sans sélection", selection.collapsed)
-        assertTrue("aucun menu contextuel affiché", menu.shown.isNotEmpty())
+        assertFalse("long press without selection", selection.collapsed)
+        assertTrue("no context menu shown", menu.shown.isNotEmpty())
         return menu.shown.last()
     }
 
@@ -99,7 +99,7 @@ class NoCopyTextInputTest {
             )
         }
         val keys = longPressMenu(menu, index = 0, text = "123456")
-        assertTrue("témoin : Copier attendu, menu $keys", TextContextMenuKeys.CopyKey in keys)
+        assertTrue("control: Copy expected, menu $keys", TextContextMenuKeys.CopyKey in keys)
     }
 
     @Test
@@ -115,19 +115,19 @@ class NoCopyTextInputTest {
 
         compose.runOnIdle { session.selectTab(DocumentTab.PASSPORT) }
         compose.waitForIdle()
-        assertNoCopyNorCut(longPressMenu(menu, index = 0, text = "AB1234567"), "numéro de document")
-        assertNoCopyNorCut(longPressMenu(menu, index = 1, text = "17051990"), "date de naissance")
-        assertNoCopyNorCut(longPressMenu(menu, index = 2, text = "1705203"), "date d'expiration")
+        assertNoCopyNorCut(longPressMenu(menu, index = 0, text = "AB1234567"), "document number")
+        assertNoCopyNorCut(longPressMenu(menu, index = 1, text = "17051990"), "date of birth")
+        assertNoCopyNorCut(longPressMenu(menu, index = 2, text = "1705203"), "date of expiry")
     }
 
     private fun assertNoCopyNorCut(
         keys: List<Any>,
         field: String,
     ) {
-        assertFalse("$field : Copier proposé, menu $keys", TextContextMenuKeys.CopyKey in keys)
-        assertFalse("$field : Couper proposé, menu $keys", TextContextMenuKeys.CutKey in keys)
+        assertFalse("$field: Copy offered, menu $keys", TextContextMenuKeys.CopyKey in keys)
+        assertFalse("$field: Cut offered, menu $keys", TextContextMenuKeys.CutKey in keys)
         assertTrue(
-            "$field : entrée inattendue, menu $keys",
+            "$field: unexpected item, menu $keys",
             keys.all {
                 it == TextContextMenuKeys.PasteKey ||
                     it == TextContextMenuKeys.SelectAllKey

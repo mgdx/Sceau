@@ -14,13 +14,13 @@ kotlin {
 lint {
     warningsAsErrors = true
     abortOnError = true
-    // Voir app/build.gradle.kts : contrôles de fraîcheur des versions, dépendants du réseau.
+    // See app/build.gradle.kts: version freshness checks, which depend on the network.
     disable += setOf("AndroidGradlePluginVersion", "GradleDependency", "NewerVersionAvailable")
 }
 
 configurations.configureEach {
-    // BouncyCastle n'est fourni que par les artefacts jdk18on : les anciennes variantes
-    // jdk15on / jdk15to18 dupliqueraient les classes.
+    // BouncyCastle is provided only by the jdk18on artifacts: the older jdk15on / jdk15to18
+    // variants would duplicate the classes.
     exclude(group = "org.bouncycastle", module = "bcprov-jdk15on")
     exclude(group = "org.bouncycastle", module = "bcpkix-jdk15on")
     exclude(group = "org.bouncycastle", module = "bcutil-jdk15on")

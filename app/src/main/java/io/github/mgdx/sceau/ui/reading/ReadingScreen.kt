@@ -61,7 +61,7 @@ import io.github.mgdx.sceau.ui.common.SceauIcons
 import io.github.mgdx.sceau.ui.common.SecureWindow
 import kotlinx.coroutines.delay
 
-/** Écran de lecture (SPEC §5.2). */
+/** Reading screen (SPEC §5.2). */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReadingScreen(
@@ -84,7 +84,7 @@ fun ReadingScreen(
         when (state) {
             is ReadState.Done -> currentOnDone()
 
-            // Rien à lire (effacement en arrière-plan, mort du processus) : retour à l'accueil.
+            // Nothing to read (cleared in the background, process death): back to the home screen.
             ReadState.Idle -> currentOnCancel()
 
             else -> Unit
@@ -142,7 +142,7 @@ private fun ProgressContent(
     }
 }
 
-/** Message affiché si l'ouverture du canal sécurisé dure (voir [SlowChipHint]). */
+/** Message displayed if opening the secure channel takes a while (see [SlowChipHint]). */
 @Composable
 private fun SlowChipMessage(state: ReadState) {
     val timed = SlowChipHint.isTimed(state)
@@ -244,7 +244,7 @@ private fun StepRow(
     }
 }
 
-/** Pulsation lente de l'icône NFC ; immobile si les animations sont désactivées dans le système. */
+/** Slow pulsing of the NFC icon; still if animations are disabled in the system. */
 @Composable
 private fun PulsingNfcIcon() {
     val context = LocalContext.current
@@ -302,8 +302,8 @@ private fun ErrorContent(
         textAlign = TextAlign.Center,
         modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
     )
-    // Code technique complet, pour toutes les erreurs : seul moyen de diagnostic, aucun journal
-    // n'étant tenu (SPEC §8). Sélectionnable pour être recopié.
+    // Full technical code, for every error: the only means of diagnosis, since no log is
+    // kept (SPEC §8). Selectable so that it can be copied.
     Spacer(Modifier.height(8.dp))
     SelectionContainer {
         Text(
@@ -314,7 +314,7 @@ private fun ErrorContent(
         )
     }
     Spacer(Modifier.height(32.dp))
-    // Décision D36 : pas de « Réessayer » quand un nouvel essai ne peut rien changer.
+    // Decision D36: no "Try again" when a new attempt cannot change anything.
     if (ReadingErrors.canRetry(code)) {
         Button(
             onClick = onRetry,

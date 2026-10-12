@@ -14,7 +14,7 @@ import org.junit.Test
 import java.security.KeyPair
 import java.security.KeyPairGenerator
 
-/** Active Authentication : RSA ISO/IEC 9796-2 schéma 1 et ECDSA brut (SPEC §6.1 étape 7). */
+/** Active Authentication: RSA ISO/IEC 9796-2 scheme 1 and plain ECDSA (SPEC §6.1 step 7). */
 class ActiveAuthenticationTest {
     private val pki = TestPki(name = "AA", seed = 97_962L)
     private val challenge = ByteArray(8).also { TestCrypto.seededRandom(1).nextBytes(it) }
@@ -31,7 +31,7 @@ class ActiveAuthenticationTest {
     ) = TestActiveAuthentication.respond(keys.private, message, digest, pki)
 
     @Test
-    fun `RSA SHA-1 trailer implicite - OK`() {
+    fun `RSA SHA-1 implicit trailer - OK`() {
         val check = ActiveAuthentication.verifyResponse(rsaKeys.public, null, challenge, respond(rsaKeys, "SHA-1"))
 
         assertEquals(CheckId.ACTIVE_AUTHENTICATION, check.id)
@@ -40,7 +40,7 @@ class ActiveAuthenticationTest {
     }
 
     @Test
-    fun `RSA SHA-256 trailer explicite - OK`() {
+    fun `RSA SHA-256 explicit trailer - OK`() {
         val check = ActiveAuthentication.verifyResponse(rsaKeys.public, null, challenge, respond(rsaKeys, "SHA-256"))
 
         assertEquals(CheckStatus.OK, check.status)
@@ -48,14 +48,14 @@ class ActiveAuthenticationTest {
     }
 
     @Test
-    fun `RSA reponse signee avec une mauvaise cle - echec`() {
+    fun `RSA response signed with the wrong key - failure`() {
         val check = ActiveAuthentication.verifyResponse(rsaKeys.public, null, challenge, respond(otherRsaKeys, "SHA-1"))
 
         assertEquals(CheckStatus.FAILED, check.status)
     }
 
     @Test
-    fun `RSA reponse a un autre challenge - echec`() {
+    fun `RSA response to another challenge - failure`() {
         val other = challenge.copyOf().also { it[0] = (it[0].toInt() xor 1).toByte() }
         val check = ActiveAuthentication.verifyResponse(rsaKeys.public, null, challenge, respond(rsaKeys, "SHA-1", other))
 
@@ -63,14 +63,14 @@ class ActiveAuthenticationTest {
     }
 
     @Test
-    fun `RSA reponse mal formee - echec sans exception`() {
+    fun `RSA malformed response - failure without exception`() {
         for (response in listOf(ByteArray(0), ByteArray(3), ByteArray(128) { -1 }, ByteArray(200) { 1 })) {
             assertEquals(CheckStatus.FAILED, ActiveAuthentication.verifyResponse(rsaKeys.public, null, challenge, response).status)
         }
     }
 
     @Test
-    fun `ECDSA avec l algorithme annonce dans DG14 - OK`() {
+    fun `ECDSA with the algorithm declared in DG14 - OK`() {
         for (digest in listOf("SHA-1", "SHA-256", "SHA-384")) {
             val check = ActiveAuthentication.verifyResponse(ecKeys.public, digest, challenge, respond(ecKeys, digest))
             assertEquals(digest, CheckStatus.OK, check.status)
@@ -78,7 +78,7 @@ class ActiveAuthenticationTest {
     }
 
     @Test
-    fun `ECDSA sans algorithme annonce - essai des hachages usuels`() {
+    fun `ECDSA without a declared algorithm - common hashes are tried`() {
         val check = ActiveAuthentication.verifyResponse(ecKeys.public, null, challenge, respond(ecKeys, "SHA-384"))
 
         assertEquals(CheckStatus.OK, check.status)
@@ -86,7 +86,7 @@ class ActiveAuthenticationTest {
     }
 
     @Test
-    fun `ECDSA mauvaise cle - echec`() {
+    fun `ECDSA wrong key - failure`() {
         val response = respond(otherEcKeys, "SHA-256")
 
         assertEquals(CheckStatus.FAILED, ActiveAuthentication.verifyResponse(ecKeys.public, "SHA-256", challenge, response).status)
@@ -94,28 +94,28 @@ class ActiveAuthenticationTest {
     }
 
     @Test
-    fun `ECDSA mauvais hachage annonce - echec`() {
+    fun `ECDSA wrong declared hash - failure`() {
         val check = ActiveAuthentication.verifyResponse(ecKeys.public, "SHA-512", challenge, respond(ecKeys, "SHA-256"))
 
         assertEquals(CheckStatus.FAILED, check.status)
     }
 
     @Test
-    fun `ECDSA reponse mal formee - echec sans exception`() {
+    fun `ECDSA malformed response - failure without exception`() {
         for (response in listOf(ByteArray(0), ByteArray(63), ByteArray(64))) {
             assertEquals(CheckStatus.FAILED, ActiveAuthentication.verifyResponse(ecKeys.public, "SHA-256", challenge, response).status)
         }
     }
 
     @Test
-    fun `ECDSA hachage inconnu - UnsupportedAlgorithm`() {
+    fun `ECDSA unknown hash - UnsupportedAlgorithm`() {
         val check = ActiveAuthentication.verifyResponse(ecKeys.public, "NOPE-999", challenge, respond(ecKeys, "SHA-256"))
 
         assertEquals(CheckStatus.UNSUPPORTED_ALGORITHM, check.status)
     }
 
     @Test
-    fun `type de cle inconnu - UnsupportedAlgorithm`() {
+    fun `unknown key type - UnsupportedAlgorithm`() {
         val dsa = KeyPairGenerator.getInstance("DSA", TestCrypto.provider).apply { initialize(1024, pki.random) }.generateKeyPair()
         val check = ActiveAuthentication.verifyResponse(dsa.public, null, challenge, ByteArray(40))
 
@@ -124,7 +124,7 @@ class ActiveAuthenticationTest {
     }
 
     @Test
-    fun `cle AA relue depuis DG15 par JMRTD - OK`() {
+    fun `AA key read back from DG15 by JMRTD - OK`() {
         val document = pki.document { activeAuthentication = AaKeyType.EC }
         val dg15 = DG15File(document.dataGroups.getValue(15).inputStream())
         val check =

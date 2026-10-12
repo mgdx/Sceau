@@ -9,28 +9,28 @@ import io.github.mgdx.sceau.core.trust.TrustStore
 import io.github.mgdx.sceau.core.verify.PassiveAuthenticator
 
 /**
- * Déclassement du protocole d'accès (audit V20, décision D40 ; audit V32, décision D43). Le choix
- * entre PACE et BAC, et le mapping de PACE, se décident d'après EF.CardAccess, qui n'est pas
- * signé : un clone peut y retirer PACE-CAM, ou PACE tout entier. Le protocole mené est donc
- * comparé, après la Passive Authentication, à ce qu'annoncent les éléments signés : DG14, dont
- * l'empreinte est vérifiée, et EF.CardSecurity, lu après tout PACE et vérifié comme le SOD :
+ * Downgrade of the access protocol (audit V20, decision D40; audit V32, decision D43). The choice
+ * between PACE and BAC, and the PACE mapping, are decided from EF.CardAccess, which is not
+ * signed: a clone can remove PACE-CAM from it, or PACE altogether. The protocol performed is therefore
+ * compared, after Passive Authentication, with what the signed elements announce: DG14, whose
+ * hash is verified, and EF.CardSecurity, read after any PACE and verified like the SOD:
  *
- * - DG14 ou EF.CardSecurity annonce PACE-CAM, le canal a été établi sans CAM :
- *   `CHIP_AUTHENTICATION` `FAILED` (`VERIFY_CHIP-DOWNGRADE-CAM`) ;
- * - EF.CardSecurity est présent mais invalide (signature, chaîne, structure) : ce qu'il annonce
- *   n'est pas vérifiable, `CHIP_AUTHENTICATION` `FAILED` (`VERIFY_CHIP-DOWNGRADE-CARD_SECURITY`) ;
- * - EF.CardSecurity annonce une clé ou le protocole de Chip Authentication, que ni CAM ni la CA
- *   via DG14 n'ont mis en œuvre : `CHIP_AUTHENTICATION` `FAILED` (`VERIFY_CHIP-DOWNGRADE-CA`) ;
- * - DG14 annonce PACE, le canal a été établi par BAC : `SECURE_CHANNEL` `FAILED`
- *   (`VERIFY_CHIP-DOWNGRADE-BAC`). EF.CardSecurity n'est jamais lu sous BAC.
+ * - DG14 or EF.CardSecurity announces PACE-CAM, the channel was established without CAM:
+ *   `CHIP_AUTHENTICATION` `FAILED` (`VERIFY_CHIP-DOWNGRADE-CAM`);
+ * - EF.CardSecurity is present but invalid (signature, chain, structure): what it announces
+ *   cannot be verified, `CHIP_AUTHENTICATION` `FAILED` (`VERIFY_CHIP-DOWNGRADE-CARD_SECURITY`);
+ * - EF.CardSecurity announces a Chip Authentication key or protocol, which neither CAM nor CA
+ *   via DG14 carried out: `CHIP_AUTHENTICATION` `FAILED` (`VERIFY_CHIP-DOWNGRADE-CA`);
+ * - DG14 announces PACE, the channel was established with BAC: `SECURE_CHANNEL` `FAILED`
+ *   (`VERIFY_CHIP-DOWNGRADE-BAC`). EF.CardSecurity is never read under BAC.
  *
- * Ces règles ne s'appliquent que si la puce n'a pas été authentifiée autrement : une Chip
- * Authentication via DG14 ou une Active Authentication réussie prouve déjà qu'elle est
- * l'originale, et le protocole mené ne change rien à cette preuve. Le repli PACE → BAC (D13) et un
- * `PACEInfo` CAM écarté par JMRTD restent ainsi sans effet sur un document authentique dont la
- * puce répond à la CA ou à l'AA ; ils ne coûtent le verdict qu'à une puce que rien d'autre ne
- * vérifie, précisément le cas du clone. Avec PACE-CAM, EF.CardSecurity est vérifié par
- * [ChipAuthenticationMapping] (D21) et n'est pas examiné ici.
+ * These rules apply only if the chip has not been authenticated otherwise: a successful Chip
+ * Authentication via DG14 or Active Authentication already proves that it is
+ * the original, and the protocol performed changes nothing to that proof. The PACE → BAC fallback (D13) and a
+ * CAM `PACEInfo` discarded by JMRTD thus have no effect on a genuine document whose
+ * chip answers CA or AA; they cost the verdict only for a chip that nothing else
+ * verifies, precisely the clone case. With PACE-CAM, EF.CardSecurity is verified by
+ * [ChipAuthenticationMapping] (D21) and is not examined here.
  */
 internal object ProtocolDowngrade {
     class Result(
@@ -38,26 +38,26 @@ internal object ProtocolDowngrade {
         val chipAuthentication: Check,
     )
 
-    /** Ce qu'EF.CardSecurity, lu après PACE sans CAM, permet d'établir. */
+    /** What EF.CardSecurity, read after PACE without CAM, makes it possible to establish. */
     sealed interface CardSecurity {
-        /** Absent (BAC, fichier introuvable), ou PACE-CAM mené : rien à comparer. */
+        /** Absent (BAC, file not found), or PACE-CAM performed: nothing to compare. */
         data object Absent : CardSecurity
 
-        /** Présent, mais sa signature, sa chaîne ou sa structure ne sont pas vérifiables. */
+        /** Present, but its signature, its chain or its structure cannot be verified. */
         data object Unverifiable : CardSecurity
 
-        /** OID de protocole de ses `SecurityInfo`. */
+        /** Protocol OIDs of its `SecurityInfo`s. */
         class Announced(
             val oids: List<String>,
         ) : CardSecurity
     }
 
     /**
-     * Vérifie [cardSecurity] comme le SOD ([PassiveAuthenticator.verifyCardSecurity] : signature,
-     * chaîne DS → CSCA, pays de [issuingState]). Son contenu ne sert qu'à mettre la CA en échec,
-     * jamais à la faire réussir : un contenu dont le DS ou le CSCA est introuvable
-     * (`NOT_AVAILABLE`) est donc pris tel quel, et son CSCA n'a pas à être celui du SOD (V17) ;
-     * un clone n'a rien à gagner à présenter un tel fichier plutôt qu'aucun.
+     * Verifies [cardSecurity] like the SOD ([PassiveAuthenticator.verifyCardSecurity]: signature,
+     * DS → CSCA chain, country of [issuingState]). Its content only serves to make CA fail,
+     * never to make it succeed: content whose DS or CSCA cannot be found
+     * (`NOT_AVAILABLE`) is therefore taken as is, and its CSCA need not be the SOD's (V17);
+     * a clone has nothing to gain from presenting such a file rather than none.
      */
     fun cardSecurity(
         cardSecurity: ByteArray?,
@@ -74,10 +74,10 @@ internal object ProtocolDowngrade {
     }
 
     /**
-     * [dg14] : DG14 lu, ou null ; [dg14Verified] : son empreinte est dans le SOD et conforme ;
-     * [cardSecurity] : EF.CardSecurity lu après PACE sans CAM (voir [cardSecurity]) ;
-     * [established] : canal mené ; [secureChannel], [chipAuthentication], [activeAuthentication] :
-     * lignes calculées jusque-là.
+     * [dg14]: DG14 read, or null; [dg14Verified]: its hash is in the SOD and matches;
+     * [cardSecurity]: EF.CardSecurity read after PACE without CAM (see [cardSecurity]);
+     * [established]: channel performed; [secureChannel], [chipAuthentication], [activeAuthentication]:
+     * rows computed so far.
      */
     fun apply(
         dg14: ByteArray?,
@@ -92,7 +92,7 @@ internal object ProtocolDowngrade {
         if (chipAuthentication.status == CheckStatus.OK || activeAuthentication.status == CheckStatus.OK) return unchanged
         val fromDg14 = dg14?.takeIf { dg14Verified }?.let(SecurityInfoProtocols::of).orEmpty()
         val fromCardSecurity = (cardSecurity as? CardSecurity.Announced)?.oids.orEmpty()
-        // Seul un « non disponible » peut cacher un déclassement : un échec reste un échec.
+        // Only a "not available" can hide a downgrade: a failure remains a failure.
         val caOpen = established.cam == null && chipAuthentication.status == CheckStatus.NOT_AVAILABLE
         val ca =
             when {

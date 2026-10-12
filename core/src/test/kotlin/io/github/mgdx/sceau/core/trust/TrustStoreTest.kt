@@ -20,7 +20,7 @@ class TrustStoreTest {
             "b33ea63b9be01082d98071a29111757c72257eba80d7205d21fa35436c29fe7c",
         )
 
-    /** Certificats publiés par leur propre État (D26), empreinte vers pays et caractère auto-signé. */
+    /** Certificates published by their own State (D26): fingerprint to country and self-signed flag. */
     private val nationalSha256 =
         mapOf(
             "737ce248b62d8b6dc1c9e3aaa8b937334406bac17bb37235c1c50281e6ad7edb" to ("GB" to true),
@@ -55,19 +55,19 @@ class TrustStoreTest {
         assertEquals(609, info.certificateCount)
         assertTrue(info.signerSubject.contains("CN=CSCA Master List Signer"))
         val embedded = store.anchors.filter { it.source == TrustSource.EMBEDDED_MASTER_LIST }
-        // 609 certificats, dont 3 déjà fournis par l'ANTS et 2 par la publication nationale
-        // britannique (GB 2026 et son lien), qui gardent la priorité.
+        // 609 certificates, of which 3 are already provided by ANTS and 2 by the UK national
+        // publication (GB 2026 and its link), which keep priority.
         assertEquals(604, embedded.size)
         assertEquals(614, store.anchors.size)
-        // Titres de séjour grecs (CSCAeRP-HELLAS 003 et son lien) : fournis par la Master List
-        // depuis le retrait des fichiers nationaux (D48).
+        // Greek residence permits (CSCAeRP-HELLAS 003 and its link): provided by the Master List
+        // since the national files were removed (D48).
         val embeddedSha256 = embedded.map { it.sha256 }.toSet()
         listOf(
             "8f01ced4c95d9ee5cc6915e1151432e18fa1615ad6d8e61bb6ea1af025368e3e",
             "5bbdb09b12bc25f9373142409d9b52da806b764294baf4f028a2c13da15bdfc5",
-        ).forEach { assertTrue("certificat grec $it attendu dans la Master List", it in embeddedSha256) }
+        ).forEach { assertTrue("Greek certificate $it expected in the Master List", it in embeddedSha256) }
         val countries = embedded.map { it.country }.toSet()
-        listOf("DE", "IT", "ES", "BE", "NL", "AT", "PL", "LU").forEach { assertTrue("CSCA $it attendu", it in countries) }
+        listOf("DE", "IT", "ES", "BE", "NL", "AT", "PL", "LU").forEach { assertTrue("CSCA $it expected", it in countries) }
         assertTrue(store.findBySubject(X500Principal("CN=csca-germany, OU=bsi, O=bund, C=DE")).isNotEmpty())
     }
 
@@ -87,14 +87,14 @@ class TrustStoreTest {
     @Test
     fun nationalLinksAreSignedByAnEmbeddedAnchor() {
         val store = TrustStores.load()
-        // Chaque certificat de lien ajouté se vérifie avec la clé d'un CSCA déjà dans le magasin
-        // (GBR_2021, CSCA ePassport du Luxembourg).
+        // Each added link certificate verifies with the key of a CSCA already in the store
+        // (GBR_2021, Luxembourg ePassport CSCA).
         store.anchors
             .filter { it.source == TrustSource.NATIONAL && !it.isSelfSigned }
             .forEach { link ->
                 val issuers = store.findBySubject(link.certificate.issuerX500Principal).filter { it.sha256 != link.sha256 }
                 assertTrue(
-                    "émetteur du lien ${link.sha256} absent ou signature invalide",
+                    "issuer of link ${link.sha256} missing or invalid signature",
                     issuers.any { issuer ->
                         runCatching { link.certificate.verify(issuer.certificate.publicKey, Crypto.provider) }.isSuccess
                     },
@@ -108,7 +108,7 @@ class TrustStoreTest {
 
         val passport = store.findBySubject(X500Principal("CN=CSCA-FRANCE, O=Gouv, C=FR")).filter { it.source == TrustSource.ANTS }
         assertEquals(4, passport.size)
-        // Comparaison sous forme canonique : casse et espaces indifférents.
+        // Canonical comparison: case and whitespace do not matter.
         val eid = store.findBySubject(X500Principal("cn=eid-france,o=gouv,c=fr")).filter { it.source == TrustSource.ANTS }
         assertEquals(1, eid.size)
         assertEquals("b33ea63b9be01082d98071a29111757c72257eba80d7205d21fa35436c29fe7c", eid[0].sha256)
@@ -118,7 +118,7 @@ class TrustStoreTest {
     @Test
     fun findsBySubjectKeyId() {
         val store = TrustStores.load()
-        // SKI du CSCA-FRANCE 2020 et du CSCA eID-FRANCE (lus avec openssl).
+        // SKI of CSCA-FRANCE 2020 and of the eID-FRANCE CSCA (read with openssl).
         val csca2020 = store.findBySubjectKeyId(hex("be8a2ed6c9f9204e3a270308974decfdd97dc5e6"))
         val eid = store.findBySubjectKeyId(hex("9e973664572b5e12b712a936f861e097c913e8d3"))
 
@@ -153,11 +153,11 @@ class TrustStoreTest {
 
         val store = TrustStores.load(listOf(imported, imported))
 
-        // Signataire émis par un CSCA que la liste transporte elle-même : liste non ancrée (audit V34).
+        // Signer issued by a CSCA carried by the list itself: list not anchored (audit V34).
         val importedAnchors = store.anchors.filter { it.source == TrustSource.IMPORTED_MASTER_LIST_UNANCHORED }
         assertEquals(setOf("ZZ", "YY"), importedAnchors.map { it.country }.toSet())
         assertEquals(2, importedAnchors.size)
-        // Le certificat ANTS également présent dans l'import reste marqué ANTS.
+        // The ANTS certificate also present in the import stays marked ANTS.
         assertEquals(TrustSource.ANTS, store.anchors.single { it.sha256 == antsCertificate.sha256 }.source)
         assertEquals(
             store.anchors.size,

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
     <!--
-        bcpkix embarque dans le paquet org.bouncycastle.est un gestionnaire TLS « tout accepter »
-        destiné au protocole EST (RFC 7030). Sceau n'a aucune permission réseau, n'utilise pas EST
-        et R8 retire ces classes en release. L'exclusion vise uniquement ce jar.
+        bcpkix ships, in the org.bouncycastle.est package, an "accept everything" TLS trust manager
+        meant for the EST protocol (RFC 7030). Sceau has no network permission, does not use EST
+        and R8 removes these classes in release. The exclusion targets this jar only.
     -->
     <issue id="TrustAllX509TrustManager">
         <ignore path="**/bcpkix-jdk18on-*.jar" />

@@ -1,26 +1,26 @@
 package io.github.mgdx.sceau.core.reading
 
 /**
- * Contrôle des longueurs BER d'un fichier de la puce avant de le confier à un parseur de JMRTD.
+ * Check of the BER lengths of a chip file before handing it to a JMRTD parser.
  *
- * Le `TLVInputStream` de SCUBA, qu'utilise JMRTD, alloue d'emblée un tableau de la longueur
- * annoncée par un TLV interne (`readValue`) : un fichier de quelques octets dont un élément
- * annonce 2 Go provoque une `OutOfMemoryError`, bien que le fichier entier respecte son plafond
- * (FileSizeLimits ne contrôle que l'en-tête externe). Ce contrôle refuse un tel fichier sans
- * rien allouer.
+ * SCUBA's `TLVInputStream`, used by JMRTD, immediately allocates an array of the length
+ * announced by an inner TLV (`readValue`): a file of a few bytes with one element that
+ * announces 2 GB causes an `OutOfMemoryError`, even though the whole file respects its cap
+ * (FileSizeLimits only checks the outer header). This check rejects such a file without
+ * allocating anything.
  *
- * Il lit les en-têtes comme SCUBA (octets `00` et `FF` ignorés avant une étiquette, étiquette
- * multi-octet, longueur longue) et impose :
- * - toute longueur codée sur quatre octets au plus ;
- * - au premier niveau, chaque TLV tient dans le tampon (les octets qui suivent le premier TLV
- *   sont examinés aussi : un parseur en flux peut les lire) ;
- * - dans un élément construit, chaque élément tient exactement dans son parent, en-tête
- *   compris. Qu'un parseur entre dans cet élément ou saute sa valeur, il reprend donc à la même
- *   position que ce contrôle : aucun en-tête qu'il lira n'échappe au contrôle.
+ * It reads headers like SCUBA (`00` and `FF` bytes skipped before a tag, multi-byte
+ * tag, long-form length) and requires:
+ * - every length to be encoded on four bytes at most;
+ * - at the top level, each TLV to fit in the buffer (the bytes following the first TLV
+ *   are examined too: a streaming parser may read them);
+ * - in a constructed element, each element to fit exactly in its parent, header
+ *   included. Whether a parser enters that element or skips its value, it therefore resumes at the same
+ *   position as this check: no header it will read escapes the check.
  *
- * Un en-tête tronqué en fin de tampon arrête le parcours sans refus (le parseur échouera en fin
- * de flux, sans allocation) ; une longueur indéfinie est refusée (ICAO 9303 impose DER). Au-delà
- * de [MAX_DEPTH] niveaux d'imbrication, le fichier est refusé.
+ * A header truncated at the end of the buffer stops the walk without rejection (the parser will fail at the end
+ * of the stream, without allocation); an indefinite length is rejected (ICAO 9303 mandates DER). Beyond
+ * [MAX_DEPTH] nesting levels, the file is rejected.
  */
 internal object BerStructure {
     private const val MAX_DEPTH = 64
@@ -34,16 +34,16 @@ internal object BerStructure {
     private const val PADDING_FF = 0xFF
 
     /**
-     * Vrai si toutes les longueurs de [bytes] sont cohérentes (voir la classe) et si [primitive]
-     * accepte la valeur de chaque élément primitif parcouru : il reçoit l'étiquette (octets
-     * big-endian, sur quatre octets au plus) et les bornes de la valeur dans [bytes].
+     * True if all lengths in [bytes] are consistent (see the class) and if [primitive]
+     * accepts the value of each primitive element walked: it receives the tag (big-endian
+     * bytes, on four bytes at most) and the bounds of the value in [bytes].
      */
     fun lengthsFit(
         bytes: ByteArray,
         primitive: (tag: Int, valueStart: Int, valueEnd: Int) -> Boolean = { _, _, _ -> true },
     ): Boolean = walk(bytes, 0, bytes.size, 0, primitive)
 
-    /** Parcourt les TLV de [start] à [end] ; au premier niveau ([depth] = 0), [end] est la fin du tampon. */
+    /** Walks the TLVs from [start] to [end]; at the top level ([depth] = 0), [end] is the end of the buffer. */
     private fun walk(
         bytes: ByteArray,
         start: Int,
@@ -55,7 +55,7 @@ internal object BerStructure {
         val nested = depth > 0
         var index = start
         while (index < end) {
-            // SCUBA ignore les octets 00 et FF avant une étiquette.
+            // SCUBA skips 00 and FF bytes before a tag.
             val first = bytes[index].toInt() and BYTE_MASK
             if (first == PADDING_ZERO || first == PADDING_FF) {
                 index++
@@ -81,11 +81,11 @@ internal object BerStructure {
     private class Header(
         val tag: Int,
         val valueStart: Int,
-        /** Longueur annoncée ; null si elle est indéfinie ou ne tient pas sur quatre octets. */
+        /** Announced length; null if it is indefinite or does not fit on four bytes. */
         val length: Long?,
     )
 
-    /** En-tête du TLV en [start], ou null s'il est tronqué avant [end]. */
+    /** Header of the TLV at [start], or null if it is truncated before [end]. */
     private fun header(
         bytes: ByteArray,
         start: Int,

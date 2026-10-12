@@ -24,9 +24,9 @@ import org.junit.Test
 import java.security.cert.X509Certificate
 
 /**
- * Recherche de chaîne face à un magasin hostile (audit V15) : certificats croisés partageant
- * leurs AKI, sans CSCA auto-signé. Sans ensemble global ni budget, la recherche coûtait
- * jusqu'à k^8 vérifications de signature.
+ * Chain building against a hostile store (audit V15): cross-signed certificates sharing their
+ * AKIs, with no self-signed CSCA. Without a global visited set or a budget, the search cost up to
+ * k^8 signature verifications.
  */
 class ChainSearchBudgetTest {
     private val pki = TestPki(TestKeyType.RSA, seed = 70_707L)
@@ -53,9 +53,9 @@ class ChainSearchBudgetTest {
     }
 
     /**
-     * [count] certificats « A » (clé KA) signés par la clé KB et [count] certificats « B » (clé
-     * KB) signés par KA : chaque certificat A a pour émetteurs possibles tous les B, et
-     * inversement. Le DS est signé par KA.
+     * [count] "A" certificates (key KA) signed by key KB and [count] "B" certificates (key KB)
+     * signed by KA: every A certificate has all the B ones as possible issuers, and vice versa.
+     * The DS is signed by KA.
      */
     private fun crossSigned(count: Int): Pair<TestCredential, List<TestCredential>> {
         val a = ca(pki.oldCsca, "A")
@@ -67,7 +67,7 @@ class ChainSearchBudgetTest {
     }
 
     @Test(timeout = 20_000)
-    fun `certificats croises - budget epuise, chaine en echec`() {
+    fun `cross-signed certificates - budget exhausted, chain fails`() {
         val (ds, store) = crossSigned(count = 12)
 
         val result = verify(ds, store)
@@ -77,25 +77,25 @@ class ChainSearchBudgetTest {
     }
 
     @Test(timeout = 20_000)
-    fun `quelques certificats croises - emetteur inconnu, sans exploration repetee`() {
+    fun `a few cross-signed certificates - unknown issuer, without repeated exploration`() {
         val (ds, store) = crossSigned(count = 3)
 
         assertEquals(CheckStatus.NOT_AVAILABLE, verify(ds, store).certificateChain.status)
     }
 
     @Test
-    fun `chaine par lien avec le CSCA - toujours trouvee`() {
+    fun `chain through a link with the CSCA - still found`() {
         val link = ca(pki.oldCsca, "NOUVEAU CSCA")
         val ds = pki.issueCustom(link, "DS", basicConstraintsCa = null, keyUsage = KeyUsage.digitalSignature)
 
         assertEquals(CheckStatus.OK, verify(ds, listOf(pki.oldCsca, link)).certificateChain.status)
     }
 
-    // --- Audit V31 : leurres importés au SKI d'un CSCA embarqué -------------------------
+    // --- Audit V31: imported decoys with the SKI of an embedded CSCA ---------------------
 
     /**
-     * Leurre d'une Master List importée hostile : CSCA auto-signé (cA=TRUE, keyCertSign) au sujet
-     * et au SKI de [target], mais avec sa propre clé.
+     * Decoy from a hostile imported Master List: self-signed CSCA (cA=TRUE, keyCertSign) with the
+     * subject and SKI of [target], but with its own key.
      */
     private fun decoy(target: TestCredential): X509Certificate {
         val keys = pki.generateRsa(Crypto.MIN_RSA_BITS)
@@ -136,7 +136,7 @@ class ChainSearchBudgetTest {
     }
 
     @Test(timeout = 60_000)
-    fun `64 leurres importes avant le CSCA embarque - chaine OK vers le vrai CSCA`() {
+    fun `64 imported decoys before the embedded CSCA - chain OK to the real CSCA`() {
         val store = TestTrustStore(decoys(pki.oldCsca) + TrustAnchor(pki.oldCsca.certificate, TrustSource.ANTS))
 
         val result = verify(pki.ds, store)
@@ -147,7 +147,7 @@ class ChainSearchBudgetTest {
     }
 
     @Test(timeout = 60_000)
-    fun `64 leurres importes et chaine par lien embarque - chaine OK`() {
+    fun `64 imported decoys and chain through an embedded link - chain OK`() {
         val ds = pki.issueDs(signedBy = CscaGeneration.NEW)
         val embedded = listOf(pki.oldCsca, pki.link).map { TrustAnchor(it.certificate, TrustSource.ANTS) }
         val store = TestTrustStore(decoys(pki.newCsca) + embedded)
@@ -159,14 +159,14 @@ class ChainSearchBudgetTest {
     }
 
     @Test(timeout = 60_000)
-    fun `vrai CSCA importe avant les leurres de la meme source - chaine OK`() {
+    fun `real CSCA imported before decoys from the same source - chain OK`() {
         val store = TestTrustStore(listOf(TrustAnchor(pki.oldCsca.certificate, TrustSource.IMPORTED_MASTER_LIST)) + decoys(pki.oldCsca))
 
         assertEquals(CheckStatus.OK, verify(pki.ds, store).certificateChain.status)
     }
 
     @Test(timeout = 60_000)
-    fun `vrai CSCA importe apres les leurres sans source embarquee - budget epuise`() {
+    fun `real CSCA imported after the decoys with no embedded source - budget exhausted`() {
         val store = TestTrustStore(decoys(pki.oldCsca) + TrustAnchor(pki.oldCsca.certificate, TrustSource.IMPORTED_MASTER_LIST))
 
         val result = verify(pki.ds, store)

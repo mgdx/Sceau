@@ -8,7 +8,7 @@ import org.junit.Test
 
 class Jpeg2000ProtocolTest {
     @Test
-    fun `les morceaux couvrent exactement le tableau`() {
+    fun `chunks cover the array exactly`() {
         for (total in listOf(0, 1, 255, 256, 257, 1000, 4096 * 4096)) {
             val chunks = Jpeg2000Protocol.chunks(total, 256)
             var expected = 0
@@ -22,14 +22,14 @@ class Jpeg2000ProtocolTest {
     }
 
     @Test
-    fun `un morceau binder reste loin de la limite de transaction`() {
-        // Tampon de transaction : 1 Mo partagé par tout le processus.
+    fun `a binder chunk stays well below the transaction limit`() {
+        // Transaction buffer: 1 MB shared by the whole process.
         assertTrue(Jpeg2000Protocol.BYTE_CHUNK <= 256 * 1024)
         assertTrue(Jpeg2000Protocol.INT_CHUNK * Int.SIZE_BYTES <= 256 * 1024)
     }
 
     @Test
-    fun `un portrait est reassemble au pixel pres`() {
+    fun `a portrait is reassembled pixel for pixel`() {
         val width = 480
         val height = 640
         val source = IntArray(width * height) { it * 31 + 7 }
@@ -45,7 +45,7 @@ class Jpeg2000ProtocolTest {
     }
 
     @Test
-    fun `un flux est reassemble a l'octet pres puis efface`() {
+    fun `a stream is reassembled byte for byte then wiped`() {
         val source = ByteArray(600_000) { (it % 251).toByte() }
         val bytes = SequentialBytes(source.size)
         for ((start, length) in Jpeg2000Protocol.chunks(source.size, Jpeg2000Protocol.BYTE_CHUNK)) {
@@ -58,7 +58,7 @@ class Jpeg2000ProtocolTest {
     }
 
     @Test
-    fun `morceau hors sequence, vide ou debordant refuse`() {
+    fun `out of sequence, empty or overflowing chunk is refused`() {
         val bytes = SequentialBytes(10)
         assertFalse(bytes.put(1, ByteArray(2)))
         assertFalse(bytes.put(0, ByteArray(0)))
@@ -77,7 +77,7 @@ class Jpeg2000ProtocolTest {
     }
 
     @Test
-    fun `bornes du flux et de l'image`() {
+    fun `stream and image bounds`() {
         assertFalse(Jpeg2000Protocol.isValidInputLength(0))
         assertTrue(Jpeg2000Protocol.isValidInputLength(1))
         assertTrue(Jpeg2000Protocol.isValidInputLength(16 * 1024 * 1024))
@@ -92,7 +92,7 @@ class Jpeg2000ProtocolTest {
     }
 
     @Test
-    fun `lecture de pixels bornee`() {
+    fun `pixel reads are bounded`() {
         val max = Jpeg2000Protocol.INT_CHUNK
         assertTrue(Jpeg2000Protocol.isValidSlice(100, 0, 100, max))
         assertTrue(Jpeg2000Protocol.isValidSlice(100, 99, 1, max))
@@ -104,7 +104,7 @@ class Jpeg2000ProtocolTest {
     }
 
     @Test
-    fun `reconnaissance des UID isoles`() {
+    fun `isolated UIDs are recognized`() {
         assertFalse(isIsolatedUid(10_123))
         assertFalse(isIsolatedUid(1_000))
         assertTrue(isIsolatedUid(99_000))

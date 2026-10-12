@@ -4,7 +4,7 @@ import java.security.MessageDigest
 
 private const val HEX_DIGITS = "0123456789abcdef"
 
-/** Empreinte SHA-256 en hexadécimal minuscule, sans séparateur. */
+/** SHA-256 fingerprint in lowercase hexadecimal, without separators. */
 fun sha256Hex(bytes: ByteArray): String {
     val digest = MessageDigest.getInstance("SHA-256").digest(bytes)
     return buildString(digest.size * 2) {

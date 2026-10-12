@@ -23,22 +23,22 @@ import java.security.SecureRandom
 import kotlin.coroutines.cancellation.CancellationException
 
 /**
- * Orchestration de `readAndVerify` (SPEC §6.1). Une instance par lecture.
+ * Orchestration of `readAndVerify` (SPEC §6.1). One instance per read.
  *
- * Erreurs : les [SceauException] traversent telles quelles (celle du transport en priorité,
- * même si JMRTD l'a enveloppée ou avalée, avec l'étape en tête du code si c'est une erreur
- * technique), [CancellationException] aussi ; toute autre exception devient
- * [SceauException.Unexpected] avec un identifiant technique (étape, classe, SW), sans cause
- * attachée, car les messages de JMRTD contiennent des APDU en clair.
- * Les données déjà lues sont remises à zéro si la lecture échoue, y compris sur une `Error`
- * (relancée telle quelle).
+ * Errors: [SceauException]s pass through unchanged (the transport's one first, even if JMRTD
+ * wrapped or swallowed it, with the step prepended to the code if it is a technical error),
+ * and so does [CancellationException]; any other exception becomes
+ * [SceauException.Unexpected] with a technical identifier (step, class, SW), with no cause
+ * attached, because JMRTD's messages contain APDUs in clear.
+ * Data already read is zeroed if the read fails, including on an `Error` (rethrown
+ * unchanged).
  *
- * Le nonce d'Active Authentication est tiré de [random], un `SecureRandom` (SPEC §8).
+ * The Active Authentication nonce is drawn from [random], a `SecureRandom` (SPEC §8).
  *
- * Délai global (audit V29) : hors authentification (étape SECURE_CHANNEL, qui a ses propres
- * délais), la lecture dispose de [globalTimeoutMillis] au total. À l'échéance, le transport est
- * fermé et la lecture se termine par [SceauException.Timeout] (`TIMEOUT-<ÉTAPE>-GLOBAL`), même
- * si un rapport a pu être produit entre-temps : il est alors effacé.
+ * Global timeout (audit V29): outside authentication (the SECURE_CHANNEL step, which has its
+ * own timeouts), the read has [globalTimeoutMillis] in total. When it expires, the transport is
+ * closed and the read ends with [SceauException.Timeout] (`TIMEOUT-<STEP>-GLOBAL`), even if a
+ * report was produced in the meantime: that report is then wiped.
  */
 internal class ReadingSession(
     private val transport: CardTransport,
@@ -52,12 +52,12 @@ internal class ReadingSession(
     private var currentStep = Step.CONNECT
     private var deadline: ReadDeadline? = null
 
-    /** Étape en cours à l'échéance du délai global, null s'il n'a pas expiré. */
+    /** Step in progress when the global timeout expired, null if it has not expired. */
     @Volatile
     private var expiredDuring: Step? = null
     private var document: DocumentData? = null
 
-    /** DG bruts lus, effacés en cas d'échec même si leur analyse n'a pas abouti. */
+    /** Raw DGs read, wiped on failure even if their parsing did not complete. */
     private var rawDataGroups: Map<Int, ByteArray>? = null
 
     private fun wipeRead() {
@@ -78,11 +78,11 @@ internal class ReadingSession(
             try {
                 execute(chip).also { checkDeadline() }
             } catch (e: Throwable) {
-                // Effacement sur toute erreur, `Error` comprises (OutOfMemoryError…) ;
-                // CancellationException est relancée telle quelle, après effacement.
+                // Wipe on any error, `Error`s included (OutOfMemoryError…);
+                // CancellationException is rethrown unchanged, after wiping.
                 wipeRead()
                 if (e !is Exception || e is CancellationException) throw e
-                // Délai global dépassé : l'erreur ressortie (transport fermé…) n'en est qu'une suite.
+                // Global timeout exceeded: the error raised (closed transport…) is only a consequence of it.
                 expiredDuring?.let { throw globalTimeout(it) }
                 val failure =
                     chip.cardService.transportFailure
@@ -94,12 +94,12 @@ internal class ReadingSession(
                 try {
                     chip.close()
                 } catch (e: Exception) {
-                    // La fermeture ne doit pas masquer le résultat ou l'erreur de la lecture.
+                    // Closing must not mask the result or the error of the read.
                 }
             }
         }
 
-    /** Lève le délai global s'il a expiré pendant la lecture (le rapport produit est alors effacé). */
+    /** Throws the global timeout if it expired during the read (the report produced is then wiped). */
     private fun checkDeadline() {
         expiredDuring?.let { throw globalTimeout(it) }
     }
@@ -110,17 +110,16 @@ internal class ReadingSession(
         try {
             transport.close()
         } catch (e: Exception) {
-            // Déjà fermé : la lecture échouera de toute façon sur le délai global.
+            // Already closed: the read will fail on the global timeout anyway.
         }
     }
 
     /**
-     * Une erreur technique du transport (`UNEXPECTED-IO-…`) ne dit pas à quelle étape elle
-     * s'est produite : l'étape est ajoutée en tête de son identifiant. De même pour un délai ou
-     * une perte de liaison porteurs d'un diagnostic (`TIMEOUT-INS86-L10` devient
-     * `TIMEOUT-SECURE_CHANNEL-INS86-L10`), et pour un accès réservé (`ACCESS_RESTRICTED-SOD`
-     * devient `ACCESS_RESTRICTED-READ_DATA-SOD`, D36). Les autres codes (`ACCESS_DENIED`…) sont
-     * renvoyés tels quels.
+     * A technical transport error (`UNEXPECTED-IO-…`) does not say at which step it occurred:
+     * the step is prepended to its identifier. The same goes for a timeout or a lost connection
+     * carrying a diagnostic (`TIMEOUT-INS86-L10` becomes `TIMEOUT-SECURE_CHANNEL-INS86-L10`), and
+     * for restricted access (`ACCESS_RESTRICTED-SOD` becomes `ACCESS_RESTRICTED-READ_DATA-SOD`,
+     * D36). Other codes (`ACCESS_DENIED`…) are returned unchanged.
      */
     private fun SceauException.withStep(step: Step): SceauException =
         when {
@@ -135,7 +134,7 @@ internal class ReadingSession(
     private fun CoroutineScope.step(step: Step) {
         ensureActive()
         currentStep = step
-        // Délai global (V29) : suspendu pendant l'authentification, qui a ses propres délais.
+        // Global timeout (V29): suspended during authentication, which has its own timeouts.
         if (step == Step.SECURE_CHANNEL) deadline?.pause() else deadline?.resume()
         progress(step)
     }
@@ -149,12 +148,12 @@ internal class ReadingSession(
         step(Step.SECURE_CHANNEL)
         val established = channel.establish(paceInfos)
         val secureChannel = Check(CheckId.SECURE_CHANNEL, CheckStatus.OK, CheckDetail.SecureChannel(established.protocol))
-        // PACE-CAM (D21) : la puce s'est authentifiée pendant PACE, et tout ce qui suit est déjà
-        // lu sous les clés de ce canal ; la CA via DG14 n'est pas refaite.
+        // PACE-CAM (D21): the chip authenticated itself during PACE, and everything that follows is
+        // already read under this channel's keys; CA via DG14 is not repeated.
         val cam = established.cam
 
-        // Décision D20 : EF.COM, EF.SOD et DG14, puis Chip Authentication, puis les autres DG
-        // sous la messagerie sécurisée de la CA, qui lie ainsi les données lues à la puce.
+        // Decision D20: EF.COM, EF.SOD and DG14, then Chip Authentication, then the other DGs
+        // under CA secure messaging, which thereby binds the data read to the chip.
         step(Step.READ_DATA)
         val reader = DocumentReader(chip)
         val objects = reader.readSecurityObjects()
@@ -165,11 +164,11 @@ internal class ReadingSession(
         val verifier = ChipVerifier(chip, random)
         val dg14Signed = DocumentReader.SECURITY_DATA_GROUP in objects.signedDataGroups
         val caOutcome = if (cam == null) verifier.chipAuthentication(objects.dg14, signedInSod = dg14Signed) else null
-        // CA ratée et puce muette sous la messagerie courante : canal rétabli avec la même clé,
-        // pour lire quand même les données (la ligne CA reste en échec, donc le verdict aussi).
-        // Audit V24 : la CA a déjà échoué ; une erreur au rétablissement (y compris l'accès
-        // réservé de D36, qu'une puce hostile peut répondre à dessein) donne un rapport « Échec »
-        // sans données, et non une erreur de lecture.
+        // CA failed and the chip is silent under the current secure messaging: channel re-established
+        // with the same key, to read the data anyway (the CA line stays failed, and so does the verdict).
+        // Audit V24: CA has already failed; an error while re-establishing (including D36's
+        // restricted access, which a hostile chip can return on purpose) yields a "Failure" report
+        // without data, not a read error.
         if (caOutcome?.channelUsable == false) {
             try {
                 channel.reestablish()
@@ -196,13 +195,13 @@ internal class ReadingSession(
                 issuingState = data.dg1.issuingState,
                 documentNumber = data.dg1.documentNumber,
             )
-        // Décision D34 : un DG dont l'écart d'empreinte est toléré (anomalie connue de l'émetteur)
-        // n'est pas digne de foi ; il est retiré du rapport et remis à zéro.
+        // Decision D34: a DG whose hash mismatch is tolerated (known issuer deviation) is not
+        // trustworthy; it is removed from the report and zeroed.
         val shown = if (pa.discardedDataGroups.isEmpty()) data else data.discarding(pa.discardedDataGroups)
         document = shown
 
-        // La CA est déjà faite (READ_DATA) : l'étape VERIFY_CHIP ne couvre plus que l'AA, et la
-        // vérification hors ligne de PACE-CAM, qui a besoin de l'État émetteur de DG1.
+        // CA is already done (READ_DATA): the VERIFY_CHIP step now only covers AA, and the offline
+        // verification of PACE-CAM, which needs the issuing State from DG1.
         step(Step.VERIFY_CHIP)
         val mapping =
             cam?.let {
@@ -215,8 +214,8 @@ internal class ReadingSession(
                 )
             }
         val aa = verifier.activeAuthentication(content.dataGroups[15], content.dataGroups[14], signedInSod = 15 in content.signedDataGroups)
-        // Audits V20 et V32 : protocole mené comparé à ce qu'annoncent DG14 et EF.CardSecurity,
-        // signés (EF.CardAccess ne l'est pas). Avec PACE-CAM, EF.CardSecurity est vérifié plus haut.
+        // Audits V20 and V32: protocol performed compared with what DG14 and EF.CardSecurity announce,
+        // both signed (EF.CardAccess is not). With PACE-CAM, EF.CardSecurity is verified above.
         val protocol =
             ProtocolDowngrade.apply(
                 dg14 = content.dataGroups[DocumentReader.SECURITY_DATA_GROUP],
@@ -245,11 +244,11 @@ internal class ReadingSession(
     }
 
     /**
-     * Rapport d'une lecture interrompue au rétablissement du canal après une CA ratée (audit V24) :
-     * ligne CA en échec ([chipAuthentication]), donc verdict « Échec » ; les autres vérifications
-     * n'ont pas eu lieu et portent le code du rétablissement raté, sans donnée personnelle. Aucune
-     * donnée d'identité n'a été lue : DG1 est vide, et seul DG14 (déjà lu) figure dans
-     * [dataGroups], remis à zéro avec le rapport.
+     * Report of a read interrupted while re-establishing the channel after a failed CA (audit V24):
+     * CA line failed ([chipAuthentication]), hence a "Failure" verdict; the other checks did not
+     * take place and carry the code of the failed re-establishment, without personal data. No
+     * identity data was read: DG1 is empty, and only DG14 (already read) is in [dataGroups],
+     * zeroed along with the report.
      */
     private fun failedChipAuthenticationReport(
         chip: Chip,
@@ -289,11 +288,11 @@ internal class ReadingSession(
         )
     }
 
-    /** Vrai si l'empreinte du DG [number] figure dans le SOD et y est conforme. */
+    /** True if the hash of DG [number] is in the SOD and matches. */
     private fun Check.verifies(number: Int): Boolean =
         (detail as? CheckDetail.DataGroupHashes)?.let { number in it.checked && number !in it.mismatched } ?: false
 
-    /** Copie sans les DG [numbers] (11 ou 12), dont les octets et les images sont remis à zéro. */
+    /** Copy without DGs [numbers] (11 or 12), whose bytes and images are zeroed. */
     private fun DocumentData.discarding(numbers: Set<Int>): DocumentData {
         numbers.forEach { rawDataGroups[it]?.fill(0) }
         if (DG12 in numbers) {
@@ -315,8 +314,8 @@ internal class ReadingSession(
         private const val DG12 = 12
 
         /**
-         * Délai global d'une lecture hors authentification (audit V29) : une lecture réelle
-         * complète (DG2 de 40 Ko compris) prend quelques secondes à une vingtaine de secondes.
+         * Global timeout of a read outside authentication (audit V29): a complete real read
+         * (including a 40 KB DG2) takes from a few seconds to about twenty seconds.
          */
         const val GLOBAL_TIMEOUT_MILLIS = 120_000L
         private const val GLOBAL_TIMEOUT_DETAIL = "GLOBAL"

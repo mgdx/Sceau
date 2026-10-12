@@ -24,9 +24,9 @@ import androidx.compose.ui.unit.dp
 import io.github.mgdx.sceau.R
 
 /**
- * Bandeau affiché quand le NFC est absent ou désactivé, sur l'accueil et sur l'écran de lecture
- * (le NFC peut être coupé depuis le volet rapide pendant l'attente du document). Les chaînes
- * restent dans `strings_home.xml`, où elles sont nées.
+ * Banner shown when NFC is absent or turned off, on the home screen and on the reading screen
+ * (NFC can be turned off from the quick settings panel while waiting for the document). The
+ * strings stay in `strings_home.xml`, where they originated.
  */
 @Composable
 fun NfcBanner(
@@ -64,7 +64,7 @@ private fun openNfcSettings(context: Context) {
     try {
         context.startActivity(Intent(Settings.ACTION_NFC_SETTINGS))
     } catch (e: ActivityNotFoundException) {
-        // Certains constructeurs n'exposent pas l'écran NFC dédié.
+        // Some manufacturers do not expose the dedicated NFC screen.
         context.startActivity(Intent(Settings.ACTION_WIRELESS_SETTINGS))
     }
 }

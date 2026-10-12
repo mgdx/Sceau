@@ -47,7 +47,7 @@ class DateDigitsTransformationTest {
         val transformed = format("17051990")
         assertEquals(10, transformed.offsetMapping.originalToTransformed(8))
         assertEquals(8, transformed.offsetMapping.transformedToOriginal(10))
-        // Juste après le premier séparateur : on reste après le 2e chiffre.
+        // Right after the first separator: the cursor stays after the 2nd digit.
         assertEquals(2, transformed.offsetMapping.transformedToOriginal(3))
     }
 }

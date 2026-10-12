@@ -1,11 +1,11 @@
 /*
- * Sceau - allocateur d'OpenJPEG plafonné (remplace opj_malloc.c, voir jp2_alloc.h).
+ * Sceau - capped OpenJPEG allocator (replaces opj_malloc.c, see jp2_alloc.h).
  * SPDX-License-Identifier: GPL-3.0-only
  *
- * Mêmes contrats que les fonctions d'opj_malloc.c : taille nulle -> NULL, opj_calloc remet à
- * zéro, opj_aligned_* alignés sur 16 ou 32 octets, opj_realloc(p, 0) -> NULL sans libérer p.
- * Chaque bloc est précédé d'un en-tête de BLOCK_HEADER octets qui mémorise sa taille, ce qui
- * garde l'alignement sur 32 octets pour tous les blocs.
+ * Same contracts as the functions of opj_malloc.c: zero size -> NULL, opj_calloc zeroes the
+ * memory, opj_aligned_* aligned on 16 or 32 bytes, opj_realloc(p, 0) -> NULL without freeing p.
+ * Each block is preceded by a header of BLOCK_HEADER bytes that records its size, which keeps
+ * every block aligned on 32 bytes.
  */
 #define _POSIX_C_SOURCE 200112L
 
@@ -16,15 +16,15 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* Taille de l'en-tête, et alignement de tous les blocs (opj_aligned_32_malloc le demande). */
+/* Size of the header, and alignment of every block (opj_aligned_32_malloc requires it). */
 #define BLOCK_HEADER ((size_t) 32u)
 
-/* Surcoût de l'allocateur système par bloc, compté pour que le budget suive la mémoire réelle
- * (sur un flux hostile, OpenJPEG alloue des millions de petits blocs). */
+/* Per-block overhead of the system allocator, counted so that the budget tracks real memory
+ * (on a hostile stream, OpenJPEG allocates millions of small blocks). */
 #define BLOCK_OVERHEAD ((size_t) 16u)
 
-/* Prototypes des fonctions attendues par OpenJPEG (opj_malloc.h, non inclus : il empoisonne
- * malloc et free). */
+/* Prototypes of the functions expected by OpenJPEG (opj_malloc.h, not included: it poisons
+ * malloc and free). */
 void *opj_malloc(size_t size);
 void *opj_calloc(size_t num, size_t size);
 void *opj_realloc(void *ptr, size_t size);
@@ -42,7 +42,7 @@ typedef struct {
     int exhausted;
 } alloc_budget;
 
-/* Un budget par fil : deux décodages concurrents ne se partagent pas le compteur. */
+/* One budget per thread: two concurrent decodings do not share the counter. */
 static _Thread_local alloc_budget budget;
 
 void sceau_jp2_alloc_begin(size_t limit) {
@@ -102,9 +102,9 @@ static void budget_free(void *ptr) {
         return;
     }
     size = block_size(ptr);
-    /* Les blocs d'OpenJPEG contiennent des morceaux de la photo (flux compressé, coefficients,
-     * échantillons) : effacés avant libération, par une écriture que l'optimiseur ne peut pas
-     * supprimer. Vaut aussi pour l'ancien bloc d'une réallocation (budget_realloc). */
+    /* OpenJPEG blocks contain pieces of the photo (compressed stream, coefficients, samples):
+     * wiped before being freed, with a write the optimizer cannot remove. This also applies to
+     * the old block of a reallocation (budget_realloc). */
     sceau_jp2_secure_zero(ptr, size);
     cost = size + BLOCK_HEADER + BLOCK_OVERHEAD;
     budget.used = cost <= budget.used ? budget.used - cost : 0u;
@@ -120,7 +120,7 @@ static void *budget_realloc(void *ptr, size_t size) {
     if (size == 0u) {
         return NULL;
     }
-    /* Pas de realloc() en place : l'ancien et le nouveau bloc coexistent, et sont comptés. */
+    /* No in-place realloc(): the old and new blocks coexist, and both are counted. */
     old_size = block_size(ptr);
     resized = budget_alloc(size, 0);
     if (resized == NULL) {

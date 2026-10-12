@@ -25,11 +25,11 @@ import java.security.Signature
 import java.security.interfaces.ECPublicKey
 import java.security.interfaces.RSAPublicKey
 
-/** Vérification de la réponse de la puce au challenge d'Active Authentication. */
+/** Verification of the chip's response to the Active Authentication challenge. */
 internal object ActiveAuthenticator {
     /**
-     * Algorithmes de hachage essayés, dans l'ordre, pour une clé EC dont DG14 n'annonce
-     * pas d'`ActiveAuthenticationInfo` (cas non prévu par ICAO 9303, rencontré en pratique).
+     * Hash algorithms tried, in order, for an EC key for which DG14 declares no
+     * `ActiveAuthenticationInfo` (case not covered by ICAO 9303, encountered in practice).
      */
     private val EC_FALLBACK_DIGESTS = listOf("SHA-1", "SHA-224", "SHA-256", "SHA-384", "SHA-512")
 
@@ -40,8 +40,8 @@ internal object ActiveAuthenticator {
     private const val BYTE_BITS = 8
 
     /**
-     * Trailer explicite ISO/IEC 10118-3 → fonction de hachage (ISO/IEC 9796-2). RIPEMD-128 n'y
-     * figure pas : fonction cassée, refusée comme algorithme non pris en charge (audit V9).
+     * Explicit ISO/IEC 10118-3 trailer → hash function (ISO/IEC 9796-2). RIPEMD-128 is not
+     * listed: broken function, rejected as an unsupported algorithm (audit V9).
      */
     private val TRAILER_DIGESTS: Map<Int, () -> Digest> =
         mapOf(
@@ -63,8 +63,8 @@ internal object ActiveAuthenticator {
         response: ByteArray,
     ): Check =
         try {
-            // Audits V9 et V30 : clé hors bornes (RSA de moins de 1024 bits, clé géante) refusée
-            // avant tout calcul.
+            // Audits V9 and V30: out-of-bounds key (RSA under 1024 bits, huge key) rejected
+            // before any computation.
             val unsupportedKey = Crypto.unsupportedKey(publicKey)
             when {
                 unsupportedKey != null -> {
@@ -91,7 +91,7 @@ internal object ActiveAuthenticator {
             if (Crypto.isUnsupportedAlgorithm(e)) unsupported(digestAlgorithm ?: publicKey.algorithm ?: "?") else failed()
         }
 
-    // --- RSA : ISO/IEC 9796-2 schéma 1, récupération partielle du message ---------------
+    // --- RSA: ISO/IEC 9796-2 scheme 1, partial message recovery ----------------------
 
     private fun verifyRsa(
         key: RSAPublicKey,
@@ -101,7 +101,7 @@ internal object ActiveAuthenticator {
         val keyParameters = RSAKeyParameters(false, key.modulus, key.publicExponent)
         if (BigInteger(1, response) >= key.modulus) return failed()
 
-        // Déchiffrement brut pour lire l'en-tête et le trailer, qui désigne le hachage.
+        // Raw decryption to read the header and the trailer, which designates the hash.
         val engine = RSAEngine().apply { init(false, keyParameters) }
         val raw = BigInteger(1, engine.processBlock(response, 0, response.size))
         val block = raw.toByteArray().let { if (it.size > 1 && it[0].toInt() == 0) it.copyOfRange(1, it.size) else it }
@@ -134,7 +134,7 @@ internal object ActiveAuthenticator {
         return if (signer.verifySignature(response)) ok(algorithm) else failed()
     }
 
-    // --- ECDSA : réponse brute r‖s ------------------------------------------------------
+    // --- ECDSA: raw r‖s response -------------------------------------------------------
 
     private fun verifyEc(
         key: PublicKey,

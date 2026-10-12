@@ -23,7 +23,7 @@ class ImportDuplicatesTest {
         )
 
     @Test
-    fun `certificat embarque refuse avec sa source`() {
+    fun `embedded certificate is refused with its source`() {
         assertEquals(Duplicate.KnownCertificate(TrustSource.ANTS), ImportDuplicates.certificate(ants, emptySet(), store))
         assertEquals(Duplicate.KnownCertificate(TrustSource.NATIONAL), ImportDuplicates.certificate(national, emptySet(), store))
         assertEquals(
@@ -33,7 +33,7 @@ class ImportDuplicatesTest {
     }
 
     @Test
-    fun `certificat d une Master List importee refuse avec cette source`() {
+    fun `certificate from an imported Master List is refused with that source`() {
         assertEquals(
             Duplicate.KnownCertificate(TrustSource.IMPORTED_MASTER_LIST),
             ImportDuplicates.certificate(importedList, emptySet(), store),
@@ -41,43 +41,43 @@ class ImportDuplicatesTest {
     }
 
     @Test
-    fun `certificat deja importe seul refuse comme deja importe`() {
+    fun `certificate already imported alone is refused as already imported`() {
         assertEquals(Duplicate.ImportedCertificate, ImportDuplicates.certificate(importedCertificate, emptySet(), store))
     }
 
     @Test
-    fun `fichier importe prime sur la source du magasin`() {
-        // Certificat importé seul puis retrouvé dans une Master List importée : la fusion lui
-        // donne la source de la Master List, mais il est bien déjà importé.
+    fun `imported file takes precedence over the store source`() {
+        // Certificate imported alone, then found again in an imported Master List: merging gives
+        // it the Master List source, but it is indeed already imported.
         assertEquals(Duplicate.ImportedCertificate, ImportDuplicates.certificate(importedList, setOf(importedList), store))
-        // Fichier importé que le magasin n'a pas encore rechargé.
+        // Imported file that the store has not reloaded yet.
         assertEquals(Duplicate.ImportedCertificate, ImportDuplicates.certificate(unknown, setOf(unknown), store))
     }
 
     @Test
-    fun `certificat nouveau accepte`() {
+    fun `new certificate is accepted`() {
         assertNull(ImportDuplicates.certificate(unknown, setOf(importedCertificate), store))
         assertNull(ImportDuplicates.certificate(unknown, emptySet(), emptyMap()))
     }
 
     @Test
-    fun `Master List deja importee refusee`() {
+    fun `already imported Master List is refused`() {
         assertEquals(Duplicate.ImportedMasterList, ImportDuplicates.masterList(importedList, setOf(importedList), setOf(embeddedList)))
     }
 
     @Test
-    fun `Master List identique a la Master List embarquee refusee`() {
+    fun `Master List identical to the embedded Master List is refused`() {
         assertEquals(Duplicate.EmbeddedMasterList, ImportDuplicates.masterList(embeddedList, setOf(importedList), setOf(embeddedList)))
     }
 
     @Test
-    fun `Master List nouvelle acceptee`() {
+    fun `new Master List is accepted`() {
         assertNull(ImportDuplicates.masterList(unknown, setOf(importedList), setOf(embeddedList)))
         assertNull(ImportDuplicates.masterList(unknown, emptySet(), emptySet()))
     }
 
     @Test
-    fun `nouveaux certificats comptes sans doublon`() {
+    fun `new certificates are counted without duplicates`() {
         val known = setOf(ants, national)
         assertEquals(2, ImportDuplicates.newCertificateCount(listOf(ants, unknown, importedList, unknown), known))
         assertEquals(0, ImportDuplicates.newCertificateCount(listOf(ants, national), known))

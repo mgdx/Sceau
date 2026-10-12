@@ -10,10 +10,10 @@ import java.security.Security
 
 class CryptoTest {
     @Test
-    fun remplaceUnFournisseurBcTronque_EtResteIdempotent() {
-        // Simule le "BC" tronqué d'Android : un fournisseur de ce nom, en fin de liste.
+    fun replacesTruncatedBcProvider_AndStaysIdempotent() {
+        // Simulates Android's truncated "BC": a provider with that name, at the end of the list.
         Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME)
-        Security.addProvider(object : Provider("BC", "0", "tronqué") {})
+        Security.addProvider(object : Provider("BC", "0", "truncated") {})
 
         Crypto.ensureInstalled()
         val installed = Security.getProviders()[0]

@@ -11,7 +11,7 @@ indent_size = 4
 [*.{kt,kts}]
 ktlint_code_style = ktlint_official
 max_line_length = 140
-# Les fonctions @Composable sont nommées en PascalCase (convention Compose).
+# @Composable functions are named in PascalCase (Compose convention).
 ktlint_function_naming_ignore_when_annotated_with = Composable
 
 [*.md]

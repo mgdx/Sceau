@@ -7,7 +7,7 @@ import java.util.Locale
 
 class CountriesTest {
     @Test
-    fun `codes ISO alpha-3 usuels`() {
+    fun `common ISO alpha-3 codes`() {
         assertEquals("FR", Countries.fromIcao("FRA").alpha2)
         assertEquals("DE", Countries.fromIcao("DEU").alpha2)
         assertEquals("US", Countries.fromIcao("usa").alpha2)
@@ -15,7 +15,7 @@ class CountriesTest {
     }
 
     @Test
-    fun `Allemagne en code a une lettre, remplissage MRZ ignore`() {
+    fun `Germany as a one-letter code, MRZ filler ignored`() {
         val ref = Countries.fromIcao("D<<")
         assertEquals("D", ref.code)
         assertEquals("DE", ref.alpha2)
@@ -23,14 +23,14 @@ class CountriesTest {
     }
 
     @Test
-    fun `variantes britanniques rattachees au Royaume-Uni`() {
+    fun `British variants mapped to the United Kingdom`() {
         listOf("GBD", "GBN", "GBO", "GBP", "GBS").forEach {
             assertEquals(it, "GB", Countries.fromIcao(it).alpha2)
         }
     }
 
     @Test
-    fun `codes speciaux Nations unies, UE et apatrides`() {
+    fun `special codes for the United Nations, EU and stateless persons`() {
         assertEquals("EU", Countries.fromIcao("EUE").alpha2)
         assertEquals(SpecialCountry.UNITED_NATIONS, Countries.fromIcao("UNO").special)
         assertEquals(SpecialCountry.UN_SPECIALIZED_AGENCY, Countries.fromIcao("UNA").special)
@@ -45,7 +45,7 @@ class CountriesTest {
     }
 
     @Test
-    fun `code inconnu conserve tel quel`() {
+    fun `unknown code kept as is`() {
         val ref = Countries.fromIcao("ZZZ")
         assertEquals("ZZZ", ref.code)
         assertNull(ref.alpha2)
@@ -53,7 +53,7 @@ class CountriesTest {
     }
 
     @Test
-    fun `table alpha-3 coherente avec les codes ISO de la plateforme`() {
+    fun `alpha-3 table consistent with the platform ISO codes`() {
         Locale.getISOCountries().forEach { alpha2 ->
             val alpha3 =
                 Locale
@@ -66,7 +66,7 @@ class CountriesTest {
     }
 
     @Test
-    fun `drapeau emoji depuis le code alpha-2`() {
+    fun `flag emoji from the alpha-2 code`() {
         assertEquals("🇫🇷", Countries.flagEmoji("FR"))
         assertEquals("🇩🇪", Countries.flagEmoji("de"))
         assertEquals("🇪🇺", Countries.flagEmoji("EU"))
@@ -76,7 +76,7 @@ class CountriesTest {
     }
 
     @Test
-    fun `nom localise du pays`() {
+    fun `localized country name`() {
         assertEquals("France", Countries.displayName("FR", Locale.FRENCH))
         assertEquals("Germany", Countries.displayName("DE", Locale.ENGLISH))
         assertEquals("Allemagne", Countries.displayName("DE", Locale.FRENCH))
@@ -85,7 +85,7 @@ class CountriesTest {
     }
 
     @Test
-    fun `pays d'un certificat par code alpha-2`() {
+    fun `certificate country by alpha-2 code`() {
         assertEquals("FR", Countries.fromAlpha2("fr").alpha2)
         assertNull(Countries.fromAlpha2("").alpha2)
     }

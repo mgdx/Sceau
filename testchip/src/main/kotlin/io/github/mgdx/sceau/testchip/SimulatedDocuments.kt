@@ -19,10 +19,10 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 /**
- * Document simulé prêt à l'emploi : le document signé, sa PKI, et de quoi le lire.
+ * Ready-to-use simulated document: the signed document, its PKI, and what is needed to read it.
  *
- * @property document DG, EF.SOD et clés privées de la puce
- * @property pace configuration PACE de la puce (null : BAC seul)
+ * @property document DGs, EF.SOD and the chip's private keys
+ * @property pace PACE configuration of the chip (null: BAC only)
  */
 class SimulatedIdentityDocument(
     val document: TestDocument,
@@ -32,25 +32,25 @@ class SimulatedIdentityDocument(
 ) {
     val pki: TestPki get() = document.pki
 
-    /** Magasin de confiance ne contenant que le CSCA de test de ce document. */
+    /** Trust store holding only this document's test CSCA. */
     val trustStore: TestTrustStore get() = pki.trustStore(pki.oldCsca)
 
-    /** Clé CAN imprimée sur le document ; null sans PACE. */
+    /** CAN key printed on the document; null without PACE. */
     val canKey: AccessKey.Can? get() = pace?.let { AccessKey.Can(it.can) }
 
-    /** Clé MRZ du document (numéro, date de naissance, date d'expiration). */
+    /** MRZ key of the document (number, date of birth, date of expiry). */
     val mrzKey: AccessKey.Mrz get() = AccessKey.Mrz(documentNumber, dateOfBirth, document.dateOfExpiry)
 
-    /** Nouvelle puce simulée pour une lecture (une puce a un état : une par lecture). */
+    /** New simulated chip for one read (a chip is stateful: one per read). */
     fun chip(): SimulatedChip = SimulatedChip(document, pace)
 }
 
 /**
- * Profils de documents simulés. Toutes les identités sont factices et le signalent (nom
- * « SPECIMEN »), la PKI est générée à la volée, et le portrait est une silhouette synthétique.
+ * Simulated document profiles. All identities are fictitious and say so (name
+ * "SPECIMEN"), the PKI is generated on the fly, and the portrait is a synthetic silhouette.
  */
 object SimulatedDocuments {
-    /** CAN de la CNIe simulée. */
+    /** CAN of the simulated CNIe. */
     const val SPECIMEN_CAN = "123456"
 
     const val SPECIMEN_DOCUMENT_NUMBER = "SPEC12345"
@@ -58,32 +58,32 @@ object SimulatedDocuments {
     val SPECIMEN_DATE_OF_ISSUE: LocalDate = LocalDate.of(2024, 3, 15)
     val SPECIMEN_DATE_OF_EXPIRY: LocalDate = LocalDate.of(2034, 3, 14)
 
-    /** Nom de ressource du portrait synthétique (JPEG 2000, voir testchip/README.md). */
+    /** Resource name of the synthetic portrait (JPEG 2000, see testchip/README.md). */
     const val PORTRAIT_RESOURCE = "/specimen-portrait.jp2"
     const val PORTRAIT_WIDTH = 240
     const val PORTRAIT_HEIGHT = 320
 
-    /** Nom de ressource de la signature synthétique (JPEG, voir testchip/README.md). */
+    /** Resource name of the synthetic signature (JPEG, see testchip/README.md). */
     const val SIGNATURE_RESOURCE = "/specimen-signature.jpg"
 
     private const val FRENCH_PKI_SEED = 20_210_314L
 
-    /** PKI de test « française » : CSCA-TEST-FRANCE (EC brainpoolP256r1), clés reproductibles. */
+    /** "French" test PKI: CSCA-TEST-FRANCE (EC brainpoolP256r1), reproducible keys. */
     fun frenchTestPki(seed: Long = FRENCH_PKI_SEED): TestPki =
         TestPki(TestKeyType.EC, name = "SCEAU TEST", country = "FR", seed = seed, cscaCommonName = "CSCA-TEST-FRANCE")
 
     /**
-     * Carte nationale d'identité électronique française simulée (CNIe, format TD1) :
+     * Simulated French electronic national identity card (CNIe, TD1 format):
      *
-     * - EF.CardAccess : `PACEInfo` id-PACE-ECDH-GM-AES-CBC-CMAC-128, brainpoolP256r1 ;
-     * - DG1 : MRZ TD1 « ID », FRA, SPECIMEN / MARIANNE ;
-     * - DG2 : portrait JPEG 2000 synthétique (ISO 19794-5) ;
-     * - DG7 : signature manuscrite synthétique (JPEG, D37) ;
-     * - DG11 : nom complet, lieu de naissance et adresse fictifs ; DG12 : autorité et date de
-     *   délivrance ;
-     * - DG14 : clé de Chip Authentication ECDH brainpoolP256r1 (CA AES-128) et
-     *   `ActiveAuthenticationInfo` ECDSA SHA-256 ; DG15 : clé d'Active Authentication EC ;
-     * - EF.SOD : SHA-256, signé par un DS EC « DS-TEST-FRANCE » émis par CSCA-TEST-FRANCE.
+     * - EF.CardAccess: `PACEInfo` id-PACE-ECDH-GM-AES-CBC-CMAC-128, brainpoolP256r1;
+     * - DG1: TD1 MRZ "ID", FRA, SPECIMEN / MARIANNE;
+     * - DG2: synthetic JPEG 2000 portrait (ISO 19794-5);
+     * - DG7: synthetic handwritten signature (JPEG, D37);
+     * - DG11: fictitious full name, place of birth and address; DG12: issuing authority and date
+     *   of issue;
+     * - DG14: ECDH brainpoolP256r1 Chip Authentication key (CA AES-128) and ECDSA SHA-256
+     *   `ActiveAuthenticationInfo`; DG15: EC Active Authentication key;
+     * - EF.SOD: SHA-256, signed by an EC DS "DS-TEST-FRANCE" issued by CSCA-TEST-FRANCE.
      */
     fun frenchIdCard(
         can: String = SPECIMEN_CAN,
@@ -127,29 +127,29 @@ object SimulatedDocuments {
 
     private const val GERMAN_PKI_SEED = 20_201_101L
 
-    /** CAN de la carte eID-UB simulée. */
+    /** CAN of the simulated eID-UB card. */
     const val EID_UB_CAN = "654321"
 
-    /** PKI de test « allemande » : CSCA-TEST-GERMANY (EC brainpoolP256r1, pays DE), clés reproductibles. */
+    /** "German" test PKI: CSCA-TEST-GERMANY (EC brainpoolP256r1, country DE), reproducible keys. */
     fun germanTestPki(seed: Long = GERMAN_PKI_SEED): TestPki =
         TestPki(TestKeyType.EC, name = "SCEAU TEST", country = "DE", seed = seed, cscaCommonName = "CSCA-TEST-GERMANY")
 
     /**
-     * Carte eID allemande pour citoyens de l'Union simulée (eID-UB, BSI TR-03127 v1.40, décision
-     * D36) : l'application ICAO ne porte **aucune donnée d'identité**.
+     * Simulated German eID card for Union citizens (eID-UB, BSI TR-03127 v1.40, decision
+     * D36): the ICAO application holds **no identity data**.
      *
-     * - EF.CardAccess : même `PACEInfo` que la CNIe ; lecture avec le CAN [EID_UB_CAN] ;
-     * - DG1 : MRZ TD1 de remplacement, écrite octet par octet ([eidUbDg1]) : code « UB », État
-     *   « D », « < » partout ailleurs (ni nom, ni numéro, ni dates, ni chiffres de contrôle) ;
-     * - DG2 : image statique, la même pour toutes les cartes (logo eID sur une vraie carte ; ici
-     *   l'image synthétique des spécimens) ;
-     * - DG14 : clé de Chip Authentication ECDH (CA AES-128). Ni DG15 (pas d'Active
-     *   Authentication, TR-03127 §3.3), ni DG11, ni DG12 ;
-     * - EF.SOD : SHA-256, sans `signingTime`, signé par « DS-TEST-GERMANY ». Sans aucune date
-     *   (ni DG12, ni signingTime, ni date d'expiration), la validité du DS n'est pas évaluable.
+     * - EF.CardAccess: same `PACEInfo` as the CNIe; read with the CAN [EID_UB_CAN];
+     * - DG1: placeholder TD1 MRZ, written byte by byte ([eidUbDg1]): code "UB", state
+     *   "D", "<" everywhere else (no name, number, dates or check digits);
+     * - DG2: static image, the same for every card (eID logo on a real card; here the
+     *   synthetic specimen image);
+     * - DG14: ECDH Chip Authentication key (CA AES-128). No DG15 (no Active
+     *   Authentication, TR-03127 §3.3), no DG11, no DG12;
+     * - EF.SOD: SHA-256, without `signingTime`, signed by "DS-TEST-GERMANY". With no date at all
+     *   (no DG12, no signingTime, no date of expiry), the DS validity cannot be assessed.
      *
-     * Seule la clé CAN permet la lecture : la clé MRZ de [SimulatedIdentityDocument] n'a pas de
-     * sens pour ce document (numéro vide).
+     * Only the CAN key allows reading: the MRZ key of [SimulatedIdentityDocument] is
+     * meaningless for this document (empty number).
      */
     fun germanEidUb(
         can: String = EID_UB_CAN,
@@ -185,9 +185,9 @@ object SimulatedDocuments {
     }
 
     /**
-     * DG1 d'une eID-UB : tag 61, puis 5F1F et les 90 caractères de la MRZ TD1 « UBD<<<… ».
-     * Écrit à la main : les constructeurs de MRZ de JMRTD calculent des chiffres de contrôle là
-     * où la carte ne porte que des « < ».
+     * DG1 of an eID-UB: tag 61, then 5F1F and the 90 characters of the TD1 MRZ "UBD<<<…".
+     * Written by hand: the JMRTD MRZ builders compute check digits where the card only
+     * holds "<".
      */
     fun eidUbDg1(): ByteArray {
         val mrz = "UBD".padEnd(TD1_MRZ_LENGTH, '<').toByteArray(Charsets.US_ASCII)
@@ -195,12 +195,12 @@ object SimulatedDocuments {
         return byteArrayOf(TAG_DG1, inner.size.toByte()) + inner
     }
 
-    /** Octets du portrait synthétique JPEG 2000 embarqué. */
+    /** Bytes of the embedded synthetic JPEG 2000 portrait. */
     fun specimenPortrait(): ByteArray =
         checkNotNull(SimulatedDocuments::class.java.getResourceAsStream(PORTRAIT_RESOURCE)) { PORTRAIT_RESOURCE }
             .use { it.readBytes() }
 
-    /** Octets de la signature synthétique JPEG embarquée (DG7). */
+    /** Bytes of the embedded synthetic JPEG signature (DG7). */
     fun specimenSignature(): ByteArray =
         checkNotNull(SimulatedDocuments::class.java.getResourceAsStream(SIGNATURE_RESOURCE)) { SIGNATURE_RESOURCE }
             .use { it.readBytes() }

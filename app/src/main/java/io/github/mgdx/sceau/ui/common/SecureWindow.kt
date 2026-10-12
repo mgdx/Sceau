@@ -8,13 +8,13 @@ import androidx.compose.runtime.DisposableEffect
 import java.util.WeakHashMap
 
 /**
- * Pose `FLAG_SECURE` sur la fenêtre de l'activité tant que ce composable est dans la
- * composition (pas de capture d'écran, pas d'aperçu dans le multitâche, SPEC §8), puis le
- * retire à la sortie, sauf si la fenêtre est protégée en permanence ([secureForLifetime]).
+ * Sets `FLAG_SECURE` on the activity window while this composable is in the composition
+ * (no screenshots, no preview in the recent apps screen, SPEC §8), then clears it on exit,
+ * unless the window is protected permanently ([secureForLifetime]).
  *
- * Les demandes sont comptées par fenêtre : pendant une transition Lecture → Résultat, les
- * deux écrans sont brièvement composés ensemble et la sortie du premier ne doit pas lever
- * la protection posée par le second.
+ * Requests are counted per window: during a Reading → Result transition, both screens are
+ * briefly composed together and the exit of the first must not lift the protection set by
+ * the second.
  */
 @Composable
 fun SecureWindow() {
@@ -26,16 +26,16 @@ fun SecureWindow() {
 }
 
 /**
- * Pose `FLAG_SECURE` sur [window] pour toute sa durée de vie : une demande jamais rendue, que
- * la sortie d'un écran [SecureWindow] ne peut donc pas lever. À appeler dans `onCreate`, avant
- * le premier dessin, pour que l'aperçu du multitâche ne capture jamais la saisie de l'accueil
- * (audit V7). Thread principal uniquement.
+ * Sets `FLAG_SECURE` on [window] for its whole lifetime: a request that is never released,
+ * which the exit of a [SecureWindow] screen therefore cannot lift. To be called in `onCreate`,
+ * before the first draw, so that the recent apps preview never captures the home screen input
+ * (audit V7). Main thread only.
  */
 fun secureForLifetime(window: Window) {
     SecureWindowCounter.acquire(window)
 }
 
-/** Compteur de demandes par fenêtre. Accédé uniquement depuis le thread principal. */
+/** Per-window request counter. Accessed only from the main thread. */
 private object SecureWindowCounter {
     private val counts = WeakHashMap<Window, Int>()
 

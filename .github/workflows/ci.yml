@@ -17,13 +17,13 @@ jobs:
         with:
           submodules: true
 
-      - name: Validation du Gradle wrapper
+      - name: Gradle wrapper validation
         uses: gradle/actions/wrapper-validation@v6
 
-      # JDK 17 : toolchain de compilation des modules.
-      # JDK 25 : JVM du démon Gradle (gradle/gradle-daemon-jvm.properties). Le dernier de la
-      # liste devient JAVA_HOME.
-      - name: JDK 17 et 25
+      # JDK 17: compilation toolchain for the modules.
+      # JDK 25: JVM of the Gradle daemon (gradle/gradle-daemon-jvm.properties). The last one in
+      # the list becomes JAVA_HOME.
+      - name: JDK 17 and 25
         uses: actions/setup-java@v6
         with:
           distribution: temurin
@@ -33,5 +33,5 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v6
 
-      - name: Vérifications (tests, lint, ktlint) et APK de debug
+      - name: Checks (tests, lint, ktlint) and debug APK
         run: ./gradlew check :app:assembleDebug

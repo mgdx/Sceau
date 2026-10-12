@@ -5,12 +5,12 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-/** Identifiants acceptés par `TrustStoreRepository.removeImported` (D33) : protection contre la traversée de chemin. */
+/** IDs accepted by `TrustStoreRepository.removeImported` (D33): protection against path traversal. */
 class ImportIdTest {
     private val hash = "0123456789abcdef".repeat(4)
 
     @Test
-    fun `noms produits par le depot acceptes`() {
+    fun `names produced by the repository are accepted`() {
         val der = byteArrayOf(1, 2, 3)
         assertTrue(TrustStoreRepository.isValidImportId(TrustStoreRepository.importFileName(der)))
         assertTrue(TrustStoreRepository.isValidImportId(TrustStoreRepository.certificateFileName(der)))
@@ -19,13 +19,13 @@ class ImportIdTest {
     }
 
     @Test
-    fun `nom de certificat egal a l'empreinte SHA-256 du DER`() {
+    fun `certificate name equals the SHA-256 fingerprint of the DER`() {
         val der = byteArrayOf(1, 2, 3)
         assertEquals(sha256Hex(der) + ".der", TrustStoreRepository.certificateFileName(der))
     }
 
     @Test
-    fun `traversee de chemin et noms inattendus refuses`() {
+    fun `path traversal and unexpected names are refused`() {
         listOf(
             "",
             "..",

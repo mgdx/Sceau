@@ -35,11 +35,11 @@ import java.time.ZoneOffset
 import java.util.Date
 import java.util.concurrent.atomic.AtomicLong
 
-/** BouncyCastle partagé par la fabrique de test (instance explicite, jamais le nom "BC"). */
+/** BouncyCastle shared by the test factory (explicit instance, never the name "BC"). */
 object TestCrypto {
     val provider: Provider by lazy { BouncyCastleProvider() }
 
-    /** Aléa déterministe : les tests sont reproductibles d'une exécution à l'autre. */
+    /** Deterministic randomness: tests are reproducible from one run to the next. */
     fun seededRandom(seed: Long): SecureRandom = SecureRandom.getInstance("SHA1PRNG").apply { setSeed(seed) }
 
     fun instant(date: LocalDate): Instant = date.atStartOfDay().toInstant(ZoneOffset.UTC)
@@ -48,10 +48,10 @@ object TestCrypto {
 }
 
 /**
- * Type de clé et algorithme de signature de la hiérarchie factice.
+ * Key type and signature algorithm of the fake hierarchy.
  *
- * @property keyAlgorithm algorithme JCA de la paire de clés
- * @property signatureAlgorithm algorithme de signature des certificats et du SOD
+ * @property keyAlgorithm JCA algorithm of the key pair
+ * @property signatureAlgorithm signature algorithm of the certificates and the SOD
  */
 enum class TestKeyType(
     val keyAlgorithm: String,
@@ -63,14 +63,14 @@ enum class TestKeyType(
     /** RSA 2048, RSASSA-PSS (MGF1, SHA-256). */
     RSA_PSS("RSA", "SHA256withRSAandMGF1"),
 
-    /** ECDSA brainpoolP256r1, courbe désignée par son OID. */
+    /** ECDSA brainpoolP256r1, curve named by its OID. */
     EC("EC", "SHA256withECDSA"),
 
-    /** ECDSA brainpoolP256r1, paramètres de courbe explicites dans le certificat (comme les CSCA français). */
+    /** ECDSA brainpoolP256r1, explicit curve parameters in the certificate (like the French CSCAs). */
     EC_EXPLICIT("EC", "SHA256withECDSA"),
 }
 
-/** Certificat de test et sa paire de clés. */
+/** Test certificate and its key pair. */
 class TestCredential(
     val certificate: X509Certificate,
     val keyPair: KeyPair,
@@ -80,27 +80,27 @@ class TestCredential(
     val privateKey: PrivateKey get() = keyPair.private
 }
 
-/** Émetteur du certificat DS : l'ancien CSCA, ou le nouveau (atteignable seulement via le lien). */
+/** Issuer of the DS certificate: the old CSCA, or the new one (reachable only through the link). */
 enum class CscaGeneration { OLD, NEW }
 
 /**
- * Hiérarchie ICAO factice générée à la volée :
+ * Fake ICAO hierarchy generated on the fly:
  *
- * - [oldCsca] : CSCA auto-signé, première génération de clé ;
- * - [newCsca] : CSCA auto-signé, nouvelle clé, **même sujet** que l'ancien ;
- * - [link] : certificat de lien, sujet et clé du nouveau CSCA, signé par l'ancienne clé ;
- * - [issueDs] : certificats DS signés par l'un ou l'autre ;
- * - [document] : DG factices et SOD signé (voir [TestDocument]).
+ * - [oldCsca]: self-signed CSCA, first key generation;
+ * - [newCsca]: self-signed CSCA, new key, **same subject** as the old one;
+ * - [link]: link certificate, subject and key of the new CSCA, signed by the old key;
+ * - [issueDs]: DS certificates signed by either one;
+ * - [document]: fake DGs and signed SOD (see [TestDocument]).
  *
- * Deux instances de même [name] et de même [seed] produisent les mêmes clés : donner un
- * [name] différent pour simuler un pays ou un émetteur inconnu.
+ * Two instances with the same [name] and the same [seed] produce the same keys: give a
+ * different [name] to simulate an unknown country or issuer.
  */
 class TestPki(
     val keyType: TestKeyType = TestKeyType.RSA,
     val name: String = "Sceau Test",
     val country: String = "FR",
     seed: Long = SEEDS.incrementAndGet(),
-    /** Nom commun (CN) des CSCA, ancien et nouveau. */
+    /** Common name (CN) of the CSCAs, old and new. */
     cscaCommonName: String = "CSCA $name",
 ) {
     val random: SecureRandom = TestCrypto.seededRandom(seed)
@@ -124,7 +124,7 @@ class TestPki(
         )
     }
 
-    /** Lien inverse : sujet et clé de l'ancien CSCA, signé par la nouvelle clé (pour les cycles). */
+    /** Reverse link: subject and key of the old CSCA, signed by the new key (for cycles). */
     val reverseLink: TestCredential by lazy {
         issue(
             subject = cscaSubject,
@@ -137,7 +137,7 @@ class TestPki(
         )
     }
 
-    /** DS par défaut, signé par l'ancien CSCA, valide de 2020 à 2031. */
+    /** Default DS, signed by the old CSCA, valid from 2020 to 2031. */
     val ds: TestCredential by lazy { issueDs() }
 
     fun csca(generation: CscaGeneration): TestCredential = if (generation == CscaGeneration.OLD) oldCsca else newCsca
@@ -151,11 +151,11 @@ class TestPki(
         serial: BigInteger = nextSerial(),
         dsKeyType: TestKeyType = keyType,
         commonName: String = "DS $name",
-        /** Pays (attribut C) du DS ; par défaut celui de la PKI. */
+        /** Country (C attribute) of the DS; defaults to the PKI's. */
         dsCountry: String = country,
-        /** Paire de clés du DS ; par défaut une nouvelle paire de type [dsKeyType]. */
+        /** Key pair of the DS; defaults to a new pair of type [dsKeyType]. */
         dsKeyPair: KeyPair? = null,
-        /** Algorithme de signature du certificat par le CSCA ; par défaut celui de son type de clé. */
+        /** Algorithm the CSCA signs the certificate with; defaults to the one of its key type. */
         signatureAlgorithm: String? = null,
     ): TestCredential =
         issue(
@@ -171,8 +171,8 @@ class TestPki(
         )
 
     /**
-     * Certificat émis par [issuer] (CA ou non), avec des extensions choisies, pour les contrôles
-     * de profil : [basicConstraintsCa] et [keyUsage] null omettent l'extension correspondante.
+     * Certificate issued by [issuer] (CA or not), with chosen extensions, for the profile
+     * checks: a null [basicConstraintsCa] or [keyUsage] omits the matching extension.
      */
     fun issueCustom(
         issuer: TestCredential,
@@ -180,7 +180,7 @@ class TestPki(
         basicConstraintsCa: Boolean?,
         keyUsage: Int?,
         subjectKeyType: TestKeyType = keyType,
-        /** Paire de clés du sujet ; par défaut une nouvelle paire (certificats croisés : la réutiliser). */
+        /** Subject key pair; defaults to a new pair (cross certificates: reuse it). */
         keyPair: KeyPair? = null,
     ): TestCredential {
         val keys = keyPair ?: generateKeyPair(subjectKeyType)
@@ -206,16 +206,16 @@ class TestPki(
         return TestCredential(sign(builder, issuer.privateKey, issuer.keyType), keys, subjectKeyType)
     }
 
-    /** Magasin de test contenant [credentials], tous de la provenance [source]. */
+    /** Test store holding [credentials], all from provenance [source]. */
     fun trustStore(
         vararg credentials: TestCredential,
         source: TrustSource = TrustSource.ANTS,
     ): TestTrustStore = TestTrustStore.of(credentials.map { it.certificate }, source)
 
-    /** Document factice signé par [ds]. Voir [TestDocument.Builder] pour les options. */
+    /** Fake document signed by [ds]. See [TestDocument.Builder] for the options. */
     fun document(configure: TestDocument.Builder.() -> Unit = {}): TestDocument = TestDocument.Builder(this).apply(configure).build()
 
-    /** Copie de [credential] dont un octet de la signature du certificat est altéré. */
+    /** Copy of [credential] with one byte of the certificate signature altered. */
     fun withTamperedSignature(credential: TestCredential): TestCredential {
         val original = Certificate.getInstance(credential.certificate.encoded)
         val signature = original.signature.bytes
@@ -329,8 +329,8 @@ class TestPki(
         val DS_NOT_AFTER: LocalDate = LocalDate.of(2031, 1, 1)
 
         /**
-         * Encodage de la clé publique ; en [TestKeyType.EC_EXPLICIT], la courbe est décrite
-         * par ses paramètres (X9ECParameters) au lieu de son OID.
+         * Public key encoding; with [TestKeyType.EC_EXPLICIT], the curve is described
+         * by its parameters (X9ECParameters) instead of its OID.
          */
         fun subjectPublicKeyInfo(
             keys: KeyPair,

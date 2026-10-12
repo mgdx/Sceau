@@ -6,9 +6,9 @@ import org.junit.Test
 import java.util.Random
 
 /**
- * Fuzzing de la vérification de la réponse d'Active Authentication (RSA ISO/IEC 9796-2 et
- * ECDSA brut). Contrat : jamais d'exception (OK, FAILED ou UNSUPPORTED_ALGORITHM), et jamais
- * OK pour une réponse mutée.
+ * Fuzzing of the Active Authentication response check (RSA ISO/IEC 9796-2 and raw ECDSA).
+ * Contract: never an exception (OK, FAILED or UNSUPPORTED_ALGORITHM), and never OK for a
+ * mutated response.
  */
 class ActiveAuthenticationFuzzTest {
     @Test
@@ -21,9 +21,9 @@ class ActiveAuthenticationFuzzTest {
             val key = checkNotNull(document.aaKeyPair).public
             val check = ActiveAuthentication.verifyResponse(key, document.aaDigestAlgorithm, challenge, input.bytes)
             if (input.pristine) {
-                property(check.status == CheckStatus.OK) { "graine AA : ${check.status}" }
+                property(check.status == CheckStatus.OK) { "AA seed: ${check.status}" }
             } else if (!input.bytes.contentEquals(responses[input.seedIndex])) {
-                property(check.status != CheckStatus.OK) { "réponse AA mutée acceptée" }
+                property(check.status != CheckStatus.OK) { "mutated AA response accepted" }
             }
         }
     }
@@ -32,7 +32,7 @@ class ActiveAuthenticationFuzzTest {
         const val CHALLENGE = 8
         const val ITERATIONS = 3_000
 
-        /** Une réponse tient dans une APDU courte. */
+        /** A response fits in a short APDU. */
         const val MAX_RESPONSE = 256
     }
 }

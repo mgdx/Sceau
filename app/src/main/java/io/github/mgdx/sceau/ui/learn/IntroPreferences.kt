@@ -4,16 +4,16 @@ import android.content.Context
 import androidx.core.content.edit
 
 /**
- * Indicateur « introduction vue » (D35), seule préférence de l'application. Ce n'est ni une
- * donnée lue ni une clé (SPEC §8) : un booléen, écrit quand l'utilisateur quitte
- * l'introduction du premier lancement.
+ * "Introduction seen" flag (D35), the app's only preference. It is neither data read from
+ * the chip nor a key (SPEC §8): a boolean, written when the user leaves the first-launch
+ * introduction.
  */
 class IntroPreferences(
     context: Context,
 ) {
     private val preferences = context.applicationContext.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE)
 
-    /** Vrai une fois l'introduction passée ou terminée. */
+    /** True once the introduction has been skipped or completed. */
     val isIntroSeen: Boolean
         get() = preferences.getBoolean(KEY_INTRO_SEEN, false)
 

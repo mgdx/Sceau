@@ -18,7 +18,7 @@ import java.time.LocalDate
 import java.util.Date
 import javax.security.auth.x500.X500Principal
 
-/** Données factices (personne fictive) pour les tests de lecture. */
+/** Fake data (fictitious person) for reading tests. */
 object TestFixtures {
     val TODAY: LocalDate = LocalDate.of(2026, 9, 25)
 
@@ -31,24 +31,24 @@ object TestFixtures {
 
     fun fid(dataGroup: Int): String = String.format(java.util.Locale.ROOT, "%04X", 0x0100 + dataGroup)
 
-    /** Tag LDS de chaque DG (ICAO 9303-10). */
+    /** LDS tag of each DG (ICAO 9303-10). */
     private val TAGS = mapOf(1 to 0x61, 2 to 0x75, 3 to 0x63, 4 to 0x76, 11 to 0x6B, 12 to 0x6C, 14 to 0x6E, 15 to 0x6F)
 
     fun com(vararg dataGroups: Int): ByteArray = COMFile("1.7", "4.0.0", dataGroups.map { TAGS.getValue(it) }.toIntArray()).encoded
 
-    /** Passeport TD3 fictif. */
+    /** Fictitious TD3 passport. */
     fun td3Mrz(): MRZInfo = MRZInfo.createTD3MRZInfo("P", "FRA", "MARTIN", "CLAIRE ANNE", "12AB34567", "FRA", "650212", "F", "301231", "")
 
-    /** Carte d'identité TD1 fictive, née en 2010. */
+    /** Fictitious TD1 identity card, holder born in 2010. */
     fun td1Mrz(dateOfBirth: String = "100212"): MRZInfo =
         MRZInfo.createTD1MRZInfo("ID", "FRA", "X4RTBPFW4", "", dateOfBirth, "M", "301231", "FRA", "", "DUPONT", "JEAN PIERRE")
 
     fun dg1(mrz: MRZInfo = td3Mrz()): ByteArray = DG1File(mrz).encoded
 
-    /** Octets TLV quelconques avec le tag du DG (contenu non analysable). */
+    /** Arbitrary TLV bytes with the DG tag (content not parseable). */
     fun opaqueDataGroup(dataGroup: Int): ByteArray = byteArrayOf(TAGS.getValue(dataGroup).toByte(), 0x03, 0x01, 0x02, 0x03)
 
-    /** SOD signé par un DS jetable, annonçant les DG donnés (empreintes sur des octets factices). */
+    /** SOD signed by a throwaway DS, listing the given DGs (hashes over fake bytes). */
     fun sod(vararg dataGroups: Int): ByteArray {
         val keyPair = KeyPairGenerator.getInstance("RSA").apply { initialize(2048) }.generateKeyPair()
         val name = X500Name("CN=Test DS, C=UT")
@@ -69,7 +69,7 @@ object TestFixtures {
         return SODFile("SHA-256", "SHA256withRSA", hashes, keyPair.private, certificate).encoded
     }
 
-    /** Magasin vide : la lecture n'y accède pas avant la Passive Authentication. */
+    /** Empty store: reading does not access it before Passive Authentication. */
     val EMPTY_TRUST_STORE =
         object : TrustStore {
             override val anchors: List<TrustAnchor> = emptyList()

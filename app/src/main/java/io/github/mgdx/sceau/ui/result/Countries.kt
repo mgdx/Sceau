@@ -3,34 +3,34 @@ package io.github.mgdx.sceau.ui.result
 import java.util.IllformedLocaleException
 import java.util.Locale
 
-/** Codes ICAO 9303 qui ne désignent pas un État ISO 3166 et reçoivent un libellé propre. */
+/** ICAO 9303 codes that do not designate an ISO 3166 state and get a label of their own. */
 enum class SpecialCountry {
-    /** UNO : Organisation des Nations unies. */
+    /** UNO: United Nations Organization. */
     UNITED_NATIONS,
 
-    /** UNA : institution spécialisée des Nations unies. */
+    /** UNA: specialized agency of the United Nations. */
     UN_SPECIALIZED_AGENCY,
 
-    /** UNK : résident du Kosovo, document délivré par la MINUK. */
+    /** UNK: resident of Kosovo, document issued by UNMIK. */
     UN_KOSOVO,
 
-    /** XXA : apatride (convention de 1954). */
+    /** XXA: stateless person (1954 convention). */
     STATELESS,
 
-    /** XXB : réfugié (convention de 1951). */
+    /** XXB: refugee (1951 convention). */
     REFUGEE,
 
-    /** XXC : réfugié, autre texte que la convention de 1951. */
+    /** XXC: refugee, under a text other than the 1951 convention. */
     REFUGEE_OTHER,
 
-    /** XXX : nationalité non précisée. */
+    /** XXX: unspecified nationality. */
     UNSPECIFIED,
 }
 
 /**
- * Pays résolu depuis un code ICAO à trois lettres. [alpha2] sert au drapeau et au nom
- * localisé ; [special] prime sur le nom localisé quand il est présent ; [code] est le
- * code brut nettoyé, affiché si rien d'autre n'est connu.
+ * Country resolved from a three-letter ICAO code. [alpha2] is used for the flag and the
+ * localized name; [special] takes precedence over the localized name when present; [code] is
+ * the cleaned-up raw code, displayed if nothing else is known.
  */
 class CountryRef(
     val code: String,
@@ -38,13 +38,13 @@ class CountryRef(
     val special: SpecialCountry?,
 )
 
-/** Correspondance entre codes pays ICAO 9303 (alpha-3 et codes spéciaux) et ISO 3166-1 alpha-2. */
+/** Mapping between ICAO 9303 country codes (alpha-3 and special codes) and ISO 3166-1 alpha-2. */
 object Countries {
     private val special: Map<String, Pair<String?, SpecialCountry?>> =
         mapOf(
-            // Allemagne : code historique à une lettre, complété par des « < » dans la MRZ.
+            // Germany: historical one-letter code, padded with "<" in the MRZ.
             "D" to ("DE" to null),
-            // Royaume-Uni : citoyens des territoires d'outre-mer, ressortissants, sujets, protégés.
+            // United Kingdom: overseas territories citizens, nationals, subjects, protected persons.
             "GBD" to ("GB" to null),
             "GBN" to ("GB" to null),
             "GBO" to ("GB" to null),
@@ -58,11 +58,11 @@ object Countries {
             "XXB" to (null to SpecialCountry.REFUGEE),
             "XXC" to (null to SpecialCountry.REFUGEE_OTHER),
             "XXX" to (null to SpecialCountry.UNSPECIFIED),
-            // Kosovo : code utilisé par ICAO, absent d'ISO 3166-1.
+            // Kosovo: code used by ICAO, absent from ISO 3166-1.
             "RKS" to ("XK" to null),
         )
 
-    /** ISO 3166-1 alpha-3 vers alpha-2, sous forme de paires « ABC=AB » séparées par des blancs. */
+    /** ISO 3166-1 alpha-3 to alpha-2, as "ABC=AB" pairs separated by whitespace. */
     private val iso: Map<String, String> =
         """
             ABW=AW AFG=AF AGO=AO AIA=AI ALA=AX ALB=AL AND=AD ARE=AE ARG=AR ARM=AM ASM=AS ATA=AQ ATF=TF ATG=AG AUS=AU AUT=AT
@@ -87,23 +87,23 @@ object Countries {
 
     private val alpha3ByAlpha2: Map<String, String> by lazy { iso.entries.associate { (a3, a2) -> a2 to a3 } }
 
-    /** Code ISO 3166-1 alpha-3 d'un pays désigné par son code alpha-2, ou null s'il est inconnu. */
+    /** ISO 3166-1 alpha-3 code of a country designated by its alpha-2 code, or null if unknown. */
     fun alpha3(alpha2: String): String? = alpha3ByAlpha2[alpha2.trim().uppercase(Locale.ROOT)]
 
-    /** Résout un code ICAO (ex. "FRA", "D<<", "GBD") ; les « < » de remplissage sont ignorés. */
+    /** Resolves an ICAO code (e.g. "FRA", "D<<", "GBD"); "<" filler characters are ignored. */
     fun fromIcao(icaoCode: String): CountryRef {
         val code = icaoCode.replace("<", "").trim().uppercase(Locale.ROOT)
         special[code]?.let { (alpha2, kind) -> return CountryRef(code, alpha2, kind) }
         return CountryRef(code, iso[code], null)
     }
 
-    /** Pays désigné directement par son code ISO 3166-1 alpha-2 (attribut C d'un certificat). */
+    /** Country designated directly by its ISO 3166-1 alpha-2 code (C attribute of a certificate). */
     fun fromAlpha2(alpha2: String): CountryRef {
         val code = alpha2.trim().uppercase(Locale.ROOT)
         return CountryRef(code, code.takeIf { isAlpha2(it) }, null)
     }
 
-    /** Drapeau emoji composé de deux indicateurs régionaux, ou null si [alpha2] n'est pas deux lettres. */
+    /** Flag emoji made of two regional indicators, or null if [alpha2] is not two letters. */
     fun flagEmoji(alpha2: String?): String? {
         if (alpha2 == null || !isAlpha2(alpha2)) return null
         val builder = StringBuilder()
@@ -112,8 +112,8 @@ object Countries {
     }
 
     /**
-     * Nom du pays dans la langue [inLocale], ou null si le système ne le connaît pas
-     * (le nom renvoyé est alors le code lui-même).
+     * Name of the country in the [inLocale] language, or null if the system does not know it
+     * (the returned name is then the code itself).
      */
     fun displayName(
         alpha2: String?,

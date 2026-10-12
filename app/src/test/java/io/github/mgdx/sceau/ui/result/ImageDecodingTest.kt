@@ -28,8 +28,8 @@ import java.util.concurrent.atomic.AtomicReference
 import kotlin.concurrent.thread
 
 /**
- * Audit V18 : aucune image de la puce n'est décodée dans le processus de l'app. Le service de
- * décodage isolé est remplacé ici par une instance locale du vrai service.
+ * Audit V18: no chip image is decoded in the app process. The isolated decoding service is
+ * replaced here by a local instance of the real service.
  */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
@@ -47,19 +47,19 @@ class ImageDecodingTest {
     }
 
     @Test
-    fun `JPEG decode par le service isole, quel que soit le format declare`() {
+    fun `JPEG decoded by the isolated service, whatever the declared format`() {
         val jpeg = TestImages.encode(Bitmap.CompressFormat.JPEG)
         for (declared in ImageFormat.entries) {
             val bitmap = checkNotNull(decode(EncodedImage(declared, jpeg.copyOf())))
             assertEquals(40 to 30, bitmap.width to bitmap.height)
             bitmap.wipeAndRecycle()
         }
-        // Chaque décodage a lié puis détaché le service : rien dans le processus de l'app.
+        // Each decode bound then unbound the service: nothing in the app process.
         assertEquals(ImageFormat.entries.size, shadowOf(app).unboundServiceConnections.size)
     }
 
     @Test
-    fun `autres formats declares JPEG jamais decodes ni transmis`() {
+    fun `other formats declared as JPEG never decoded or forwarded`() {
         val others =
             listOf(
                 TestImages.encode(Bitmap.CompressFormat.PNG),
@@ -75,8 +75,8 @@ class ImageDecodingTest {
     }
 
     /**
-     * Appelle [decodeToBitmap] hors du thread principal, en faisant tourner la boucle principale
-     * qui délivre la connexion au service.
+     * Calls [decodeToBitmap] off the main thread while running the main looper, which delivers
+     * the service connection.
      */
     private fun decode(image: EncodedImage): Bitmap? {
         val result = AtomicReference<Bitmap?>()
@@ -94,7 +94,7 @@ class ImageDecodingTest {
         val deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(20)
         while (!done.await(10, TimeUnit.MILLISECONDS)) {
             shadowOf(Looper.getMainLooper()).idle()
-            check(System.nanoTime() < deadline) { "décodage bloqué" }
+            check(System.nanoTime() < deadline) { "decoding stalled" }
         }
         failure.get()?.let { throw it }
         return result.get()

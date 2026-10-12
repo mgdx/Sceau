@@ -29,9 +29,9 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
- * PACE-CAM (ICAO 9303-11 §4.4, décision D21) de bout en bout : la CNIe simulée annonce
- * id-PACE-ECDH-CAM-AES-CBC-CMAC-128, prouve détenir la clé de Chip Authentication pendant PACE
- * et sert EF.CardSecurity, signé par le DS factice, au MF sous messagerie sécurisée.
+ * PACE-CAM (ICAO 9303-11 §4.4, decision D21) end to end: the simulated CNIe announces
+ * id-PACE-ECDH-CAM-AES-CBC-CMAC-128, proves it holds the Chip Authentication key during PACE
+ * and serves EF.CardSecurity, signed by the fake DS, at the MF under secure messaging.
  */
 class PaceCamEndToEndTest {
     private val card: SimulatedIdentityDocument by lazy { SimulatedDocuments.frenchIdCard() }
@@ -52,14 +52,14 @@ class PaceCamEndToEndTest {
         steps: MutableList<Step> = mutableListOf(),
     ): VerificationReport {
         val report = readAndVerify(chip, key, trustStore) { steps += it }
-        assertTrue("transport fermé", chip.closed)
+        assertTrue("transport closed", chip.closed)
         return report
     }
 
     private fun VerificationReport.ca() = check(CheckId.CHIP_AUTHENTICATION)
 
     @Test
-    fun camReussi_AuthentiqueSansCaViaDg14() =
+    fun camSucceeded_AuthenticWithoutCaViaDg14() =
         runTest {
             val chip = chip()
             val steps = mutableListOf<Step>()
@@ -70,11 +70,11 @@ class PaceCamEndToEndTest {
             for (check in report.checks) assertEquals("${check.id} : ${check.detail}", CheckStatus.OK, check.status)
             assertEquals(CheckDetail.ChipAuthentication(ChipAuthenticationMethod.PACE_CAM), report.ca().detail)
             assertEquals(Step.entries.toList(), steps)
-            // Pas de CA via DG14 : la puce n'a reçu aucun MSE de CA, tout est lu sous PACE.
+            // No CA via DG14: the chip received no CA MSE, everything is read under PACE.
             assertNull(chip.caAlgorithm)
             assertEquals(0, chip.reconnections)
-            assertTrue("EF.CardSecurity lu", chip.fileReads.any { it.fid == SimulatedChip.FID_CARD_SECURITY })
-            // Audit V17 : EF.CardSecurity remonte au même CSCA que le SOD, et sa chaîne est dans le rapport.
+            assertTrue("EF.CardSecurity read", chip.fileReads.any { it.fid == SimulatedChip.FID_CARD_SECURITY })
+            // Audit V17: EF.CardSecurity chains to the same CSCA as the SOD, and its chain is in the report.
             assertEquals(report.chain?.cscaSha256, checkNotNull(report.cardSecurityChain).cscaSha256)
             for (fid in listOf(0x0101, 0x0102, 0x010B, 0x010C, 0x010E, 0x010F)) {
                 assertEquals("FID $fid", setOf(SessionKind.PACE), chip.sessionsServing(fid))
@@ -82,7 +82,7 @@ class PaceCamEndToEndTest {
         }
 
     @Test
-    fun camReussiAvecLaCleMrz_Authentique() =
+    fun camSucceededWithMrzKey_Authentic() =
         runTest {
             val report = read(chip(), key = card.mrzKey)
 
@@ -91,7 +91,7 @@ class PaceCamEndToEndTest {
         }
 
     @Test
-    fun cardSecurityASignatureInvalide_Echec() =
+    fun cardSecurityWithInvalidSignature_Failure() =
         runTest {
             val tampered = TestCardSecurity.of(card.document, camSettings, SodOptions(tamperSignature = true))
 
@@ -100,13 +100,13 @@ class PaceCamEndToEndTest {
             assertEquals(Verdict.FAILED, report.verdict)
             assertEquals(CheckStatus.FAILED, report.ca().status)
             assertEquals(CheckDetail.Error("VERIFY_CHIP-CAM-CARD_SECURITY_SIGNATURE"), report.ca().detail)
-            // Le reste de la vérification est intact : seule la CA échoue.
+            // The rest of the verification is intact: only CA fails.
             assertEquals(CheckStatus.OK, report.check(CheckId.SOD_SIGNATURE).status)
             assertEquals(CheckStatus.OK, report.check(CheckId.DG_HASHES).status)
         }
 
     @Test
-    fun donneesDeChipAuthenticationFausses_Echec() =
+    fun wrongChipAuthenticationData_Failure() =
         runTest {
             val report = read(chip(tamperCam = true))
 
@@ -116,7 +116,7 @@ class PaceCamEndToEndTest {
         }
 
     @Test
-    fun cardSecurityAbsent_Echec() =
+    fun cardSecurityMissing_Failure() =
         runTest {
             val report = read(chip(cardSecurity = null))
 
@@ -125,10 +125,10 @@ class PaceCamEndToEndTest {
         }
 
     @Test
-    fun cardSecuritySigneParUnDsInconnuAlorsQueLeSodEstReconnu_Echec() =
+    fun cardSecuritySignedByUnknownDsWhileSodIsRecognized_Failure() =
         runTest {
-            // Clé CA de la puce et CA.IC cohérents, mais EF.CardSecurity signé hors du magasin :
-            // rien ne rattache la clé de la puce au pays émetteur.
+            // Chip CA key and CA.IC consistent, but EF.CardSecurity signed outside the store:
+            // nothing ties the chip key to the issuing country.
             val stranger = TestPki(TestKeyType.EC, name = "Inconnu", country = "FR", seed = STRANGER_SEED)
             val forged = TestCardSecurity.of(card.document, camSettings, signer = stranger.ds)
 
@@ -140,10 +140,10 @@ class PaceCamEndToEndTest {
         }
 
     @Test
-    fun cardSecurityAncreSurUnAutreCscaImporteDuMemePays_Echec() =
+    fun cardSecurityAnchoredOnAnotherImportedCscaFromSameCountry_Failure() =
         runTest {
-            // Audit V17 : SOD et DG authentiques (CSCA embarqué), EF.CardSecurity forgé avec la clé
-            // de la puce, signé par un DS émis sous un CSCA français que l'utilisateur a importé.
+            // Audit V17: authentic SOD and DGs (embedded CSCA), EF.CardSecurity forged with the chip
+            // key, signed by a DS issued under a French CSCA that the user imported.
             val attacker = TestPki(TestKeyType.EC, name = "Piege", country = "FR", seed = STRANGER_SEED)
             val forged = TestCardSecurity.of(card.document, camSettings, signer = attacker.ds)
             val store =
@@ -161,7 +161,7 @@ class PaceCamEndToEndTest {
         }
 
     @Test
-    fun cardSecuritySigneParUnAutreDsDuMemeCsca_Authentique() =
+    fun cardSecuritySignedByAnotherDsFromSameCsca_Authentic() =
         runTest {
             val otherDs = card.pki.issueDs(dsKeyType = TestKeyType.EC, commonName = "DS-TEST-FRANCE-CARD-SECURITY")
             val cardSecurity = TestCardSecurity.of(card.document, camSettings, signer = otherDs)
@@ -173,7 +173,7 @@ class PaceCamEndToEndTest {
         }
 
     @Test
-    fun emetteurInconnuDuMagasin_EmetteurInconnu() =
+    fun issuerUnknownToStore_UnknownIssuer() =
         runTest {
             val otherStore =
                 TestPki(

@@ -12,9 +12,9 @@ import org.junit.Test
 import java.security.MessageDigest
 
 /**
- * Fuzzing de la Passive Authentication. Propriétés : `verify` ne lève jamais d'exception (son
- * contrat : tout échec est une ligne FAILED), une mutation du contenu signé ne donne jamais
- * SOD_SIGNATURE OK, et un DG muté ne donne jamais DG_HASHES OK.
+ * Fuzzing of Passive Authentication. Properties: `verify` never throws (its contract: every
+ * failure is a FAILED line), a mutation of the signed content never yields SOD_SIGNATURE OK,
+ * and a mutated DG never yields DG_HASHES OK.
  */
 class PassiveAuthenticationFuzzTest {
     private val seeds = FuzzSeeds.documents
@@ -39,7 +39,7 @@ class PassiveAuthenticationFuzzTest {
     private fun PassiveAuthResult.allOk() =
         listOf(sodSignature, certificateChain, dsValidity, dataGroupHashes).all { it.status == CheckStatus.OK }
 
-    /** EF.SOD muté tel quel : la signature ne couvre que l'eContent et les attributs signés. */
+    /** EF.SOD mutated as is: the signature only covers the eContent and the signed attributes. */
     @Test
     fun mutatedSod() =
         FuzzCampaign(
@@ -51,18 +51,18 @@ class PassiveAuthenticationFuzzTest {
         ).run { input ->
             val result = verify(input.seedIndex, input.bytes)
             if (input.pristine) {
-                property(result.allOk()) { "graine ${seeds[input.seedIndex].name} : PA non valide" }
+                property(result.allOk()) { "seed ${seeds[input.seedIndex].name}: PA not valid" }
             } else if (result.sodSignature.status == CheckStatus.OK) {
                 property(signedPartsUnchanged(seeds[input.seedIndex].sod, input.bytes)) {
-                    "SOD_SIGNATURE OK alors que le contenu signé ou les attributs signés ont changé"
+                    "SOD_SIGNATURE OK although the signed content or the signed attributes changed"
                 }
             }
         }
 
     /**
-     * LDSSecurityObject muté puis signé par le DS : le parseur du contenu signé face à un
-     * émetteur hostile (ou à une clé DS compromise). DG_HASHES OK exige que l'empreinte de
-     * chaque DG figure dans le contenu signé.
+     * LDSSecurityObject mutated then signed by the DS: the signed content parser facing a
+     * hostile issuer (or a compromised DS key). DG_HASHES OK requires the hash of every DG to
+     * appear in the signed content.
      */
     @Test
     fun resignedSecurityObject() =
@@ -75,17 +75,17 @@ class PassiveAuthenticationFuzzTest {
             val seed = seeds[input.seedIndex]
             val sod = seed.sod(input.bytes)
             val result = verify(input.seedIndex, sod)
-            if (input.pristine) property(result.allOk()) { "graine ${seed.name} resignée : PA non valide" }
+            if (input.pristine) property(result.allOk()) { "re-signed seed ${seed.name}: PA not valid" }
             if (result.dataGroupHashes.status == CheckStatus.OK) {
                 val digests = DIGESTS.map { MessageDigest.getInstance(it) }
                 property(
                     seed.document.dataGroups.values
                         .all { dg -> digests.any { input.bytes.contains(it.digest(dg)) } },
-                ) { "DG_HASHES OK sans l'empreinte d'un DG dans le contenu signé" }
+                ) { "DG_HASHES OK without the hash of a DG in the signed content" }
             }
         }
 
-    /** SOD intact, un DG muté : DG_HASHES jamais OK. */
+    /** Intact SOD, one mutated DG: DG_HASHES never OK. */
     @Test
     fun mutatedDataGroup() {
         val entries =
@@ -103,21 +103,21 @@ class PassiveAuthenticationFuzzTest {
             val groups = seeds[index].document.dataGroups + (number to input.bytes)
             val result = verify(index, seeds[index].sod, groups)
             if (input.pristine) {
-                property(result.allOk()) { "graine ${seeds[index].name} : PA non valide" }
+                property(result.allOk()) { "seed ${seeds[index].name}: PA not valid" }
             } else if (!input.bytes.contentEquals(original)) {
-                property(result.dataGroupHashes.status != CheckStatus.OK) { "DG_HASHES OK avec DG$number muté" }
+                property(result.dataGroupHashes.status != CheckStatus.OK) { "DG_HASHES OK with mutated DG$number" }
             }
         }
     }
 
-    /** Vrai si l'eContent et les attributs signés de [mutated] sont ceux de [original]. */
+    /** True if the eContent and signed attributes of [mutated] are those of [original]. */
     private fun signedPartsUnchanged(
         original: ByteArray,
         mutated: ByteArray,
     ): Boolean {
         fun parts(sod: ByteArray): Pair<ByteArray, ByteArray?>? =
             try {
-                // Même extraction que ParsedSod : la longueur du tag 0x77 fait foi, la suite est ignorée.
+                // Same extraction as ParsedSod: the length of tag 0x77 is authoritative, the rest is ignored.
                 val signed = CMSSignedData(if (sod[0].toInt() == 0x30) sod else Tlv.value(sod, TestSod.SOD_TAG))
                 val signer = signed.signerInfos.signers.single()
                 (signed.signedContent.content as ByteArray) to signer.encodedSignedAttributes

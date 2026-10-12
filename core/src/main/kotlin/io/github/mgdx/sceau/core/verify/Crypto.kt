@@ -33,33 +33,33 @@ import org.bouncycastle.asn1.pkcs.RSAPublicKey as Asn1RsaPublicKey
 import org.bouncycastle.jce.interfaces.ECPublicKey as BcECPublicKey
 
 /**
- * Outils cryptographiques communs à la vérification.
+ * Cryptographic helpers shared by the verification.
  *
- * Le fournisseur BouncyCastle est une instance explicite passée à chaque API : sur Android,
- * le fournisseur système nommé "BC" est une version tronquée qui ne connaît ni les courbes
- * Brainpool ni les paramètres EC explicites.
+ * The BouncyCastle provider is an explicit instance passed to each API: on Android, the
+ * system provider named "BC" is a stripped-down version that knows neither the Brainpool
+ * curves nor explicit EC parameters.
  */
 internal object Crypto {
     val provider: Provider by lazy { BouncyCastleProvider() }
 
     private val nameFinder = DefaultAlgorithmNameFinder()
 
-    /** Nom lisible d'un algorithme (ex. "SHA256WITHECDSA"), ou l'OID s'il est inconnu. */
+    /** Readable name of an algorithm (e.g. "SHA256WITHECDSA"), or the OID if unknown. */
     fun algorithmName(oid: ASN1ObjectIdentifier): String = nameFinder.getAlgorithmName(oid)
 
-    /** Vrai si BouncyCastle connaît un nom pour cet OID. */
+    /** True if BouncyCastle knows a name for this OID. */
     fun isKnownAlgorithm(oid: ASN1ObjectIdentifier): Boolean = nameFinder.hasAlgorithmName(oid)
 
-    /** Empreinte SHA-256 d'un encodage DER, en hexadécimal minuscule sans séparateur. */
+    /** SHA-256 fingerprint of a DER encoding, in lowercase hexadecimal without separators. */
     fun sha256Hex(encoded: ByteArray): String = Hex.toHexString(MessageDigest.getInstance("SHA-256").digest(encoded))
 
     fun fingerprint(certificate: X509Certificate): String = sha256Hex(certificate.encoded)
 
-    /** Code pays (attribut C du sujet) en majuscules, ou null s'il est absent. */
+    /** Country code (subject C attribute) in uppercase, or null if absent. */
     fun country(certificate: X509Certificate): String? =
         runCatching { country(X500Name.getInstance(certificate.subjectX500Principal.encoded)) }.getOrNull()
 
-    /** Code pays (attribut C) d'un nom X.500 en majuscules, ou null s'il est absent. */
+    /** Country code (C attribute) of an X.500 name in uppercase, or null if absent. */
     fun country(name: X500Name): String? =
         runCatching {
             name
@@ -73,9 +73,9 @@ internal object Crypto {
         }.getOrNull()
 
     /**
-     * Fonctions de hachage cassées, refusées pour les empreintes des DG, la signature du SOD, les
-     * certificats et l'AA (audit V9) : MD2, MD4, MD5, RIPEMD-128, seules ou dans un OID de
-     * signature. SHA-1 reste accepté : des documents encore valides l'emploient.
+     * Broken hash functions, rejected for DG hashes, the SOD signature, certificates and AA
+     * (audit V9): MD2, MD4, MD5, RIPEMD-128, alone or within a signature OID. SHA-1 remains
+     * accepted: documents that are still valid use it.
      */
     private val WEAK_ALGORITHMS: Set<ASN1ObjectIdentifier> =
         setOf(
@@ -89,22 +89,22 @@ internal object Crypto {
             TeleTrusTObjectIdentifiers.rsaSignatureWithripemd128,
         )
 
-    /** Noms JCA des mêmes fonctions de hachage (AA, où l'algorithme est désigné par son nom). */
+    /** JCA names of the same hash functions (AA, where the algorithm is designated by name). */
     private val WEAK_DIGEST_NAMES = setOf("MD2", "MD4", "MD5", "RIPEMD128")
 
-    /** Taille minimale d'une clé RSA de signature (DS, émetteurs de la chaîne, AA). */
+    /** Minimum size of an RSA signing key (DS, chain issuers, AA). */
     const val MIN_RSA_BITS = 1024
 
     /**
-     * Bornes hautes des clés publiques (audit V30), le double au moins des plus grandes clés
-     * réelles : modulus RSA, exposant public RSA, nombre premier p de DH, corps de base EC.
+     * Upper bounds for public keys (audit V30), at least twice the largest real keys: RSA
+     * modulus, RSA public exponent, DH prime p, EC base field.
      */
     const val MAX_RSA_BITS = 8192
     const val MAX_RSA_EXPONENT_BITS = 64
     const val MAX_DH_BITS = 8192
     const val MAX_EC_FIELD_BITS = 1024
 
-    /** Vrai si [algorithm] (hachage ou signature, y compris le hachage d'un RSASSA-PSS) est cassé. */
+    /** True if [algorithm] (hash or signature, including the hash of an RSASSA-PSS) is broken. */
     fun isWeakAlgorithm(algorithm: AlgorithmIdentifier): Boolean {
         if (algorithm.algorithm in WEAK_ALGORITHMS) return true
         if (algorithm.algorithm != PKCSObjectIdentifiers.id_RSASSA_PSS) return false
@@ -112,16 +112,16 @@ internal object Crypto {
         return parameters.hashAlgorithm.algorithm in WEAK_ALGORITHMS
     }
 
-    /** Vrai si [digestName] ("MD5", "RIPEMD-128"…) désigne une fonction de hachage cassée. */
+    /** True if [digestName] ("MD5", "RIPEMD-128"…) designates a broken hash function. */
     fun isWeakDigestName(digestName: String): Boolean = digestName.uppercase().replace("-", "") in WEAK_DIGEST_NAMES
 
     /**
-     * Description (algorithme et taille, jamais la clé) de [key] si sa taille sort des bornes
-     * admises, sinon null (audits V9 et V30). Borne basse : RSA de moins de [MIN_RSA_BITS] bits.
-     * Bornes hautes, contrôlées avant tout calcul : une clé géante fournie par la puce ou par un
-     * certificat coûterait des minutes de calcul non interruptible (`modPow`), alors qu'aucune
-     * clé réelle n'en approche (RSA de 2 048 à 4 096 bits, courbes de 256 à 521 bits). Un type de
-     * clé inconnu donne null : la vérification qui suit le traite, comme avant.
+     * Description (algorithm and size, never the key) of [key] if its size falls outside the
+     * accepted bounds, otherwise null (audits V9 and V30). Lower bound: RSA under [MIN_RSA_BITS]
+     * bits. Upper bounds, checked before any computation: a huge key supplied by the chip or by a
+     * certificate would cost minutes of non-interruptible computation (`modPow`), whereas no real
+     * key comes close (RSA from 2,048 to 4,096 bits, curves from 256 to 521 bits). An unknown key
+     * type gives null: the subsequent verification handles it, as before.
      */
     fun unsupportedKey(key: PublicKey): String? =
         when (key) {
@@ -154,10 +154,10 @@ internal object Crypto {
         }
 
     /**
-     * Même contrôle que [unsupportedKey] sur une clé encore encodée (certificat, `SecurityInfo`),
-     * sans la reconstruire : le fournisseur valide la clé en la reconstruisant (tests de primalité,
-     * puissance modulaire), à un coût qui croît avec sa taille. Une structure illisible donne null :
-     * la vérification qui suit la refuse.
+     * Same check as [unsupportedKey] on a still-encoded key (certificate, `SecurityInfo`),
+     * without reconstructing it: the provider validates the key while reconstructing it
+     * (primality tests, modular exponentiation), at a cost that grows with its size. An
+     * unreadable structure gives null: the subsequent verification rejects it.
      */
     fun unsupportedKey(info: SubjectPublicKeyInfo): String? =
         runCatching {
@@ -172,7 +172,7 @@ internal object Crypto {
                 }
 
                 PKCSObjectIdentifiers.dhKeyAgreement, X9ObjectIdentifiers.dhpublicnumber -> {
-                    // DHParameter (PKCS #3) comme DomainParameters (X9.42) commencent par p.
+                    // Both DHParameter (PKCS #3) and DomainParameters (X9.42) start with p.
                     val p = ASN1Integer.getInstance(ASN1Sequence.getInstance(info.algorithm.parameters).getObjectAt(0))
                     dhBounds(p.positiveValue.bitLength())
                 }
@@ -184,8 +184,8 @@ internal object Crypto {
         }.getOrNull()
 
     /**
-     * Taille du corps de base de paramètres EC explicites (`ECParameters` de X9.62), lue dans
-     * `fieldID` sans construire la courbe ; null pour une courbe nommée (taille connue et bornée).
+     * Base field size of explicit EC parameters (X9.62 `ECParameters`), read from `fieldID`
+     * without building the curve; null for a named curve (known and bounded size).
      */
     private fun explicitFieldBits(parameters: ASN1Encodable?): Int? {
         val sequence = parameters as? ASN1Sequence ?: return null
@@ -195,7 +195,7 @@ internal object Crypto {
                 ASN1Integer.getInstance(field.parameters).positiveValue.bitLength()
             }
 
-            // Caractéristique 2 : la taille du corps est le degré m, premier élément.
+            // Characteristic 2: the field size is the degree m, the first element.
             X9ObjectIdentifiers.characteristic_two_field -> {
                 val m = ASN1Integer.getInstance(ASN1Sequence.getInstance(field.parameters).getObjectAt(0)).positiveValue
                 if (m.bitLength() < Int.SIZE_BITS) m.toInt() else Int.MAX_VALUE
@@ -229,8 +229,8 @@ internal object Crypto {
     fun subject(holder: X509CertificateHolder): String = principal(holder.subject).name
 
     /**
-     * Vrai si l'exception traduit un algorithme inconnu du fournisseur (et non une
-     * signature invalide ou une donnée mal formée).
+     * True if the exception reflects an algorithm unknown to the provider (and not an
+     * invalid signature or malformed data).
      */
     fun isUnsupportedAlgorithm(error: Throwable): Boolean =
         generateSequence(error) { it.cause }.take(MAX_CAUSES).any {

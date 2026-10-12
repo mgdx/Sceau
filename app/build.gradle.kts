@@ -18,8 +18,8 @@ android {
         versionName = "1.0.0"
     }
 
-    // Décodeur JPEG 2000 natif : OpenJPEG compilé depuis les sources du sous-module
-    // app/src/main/cpp/openjpeg (décision D3). Drapeaux de compilation dans CMakeLists.txt.
+    // Native JPEG 2000 decoder: OpenJPEG compiled from the sources of the submodule
+    // app/src/main/cpp/openjpeg (decision D3). Compilation flags in CMakeLists.txt.
     ndkVersion = "28.2.13676358"
     externalNativeBuild {
         cmake {
@@ -28,7 +28,7 @@ android {
         }
     }
 
-    // Un APK par architecture, plus un APK universel (SPEC §2, décision D2).
+    // One APK per architecture, plus a universal APK (SPEC §2, decision D2).
     splits {
         abi {
             isEnable = true
@@ -38,8 +38,8 @@ android {
         }
     }
 
-    // Pas de bloc de métadonnées de dépendances (chiffré pour Google Play) dans le bloc de
-    // signature de l'APK ou dans l'AAB : illisible par F-Droid, qui le refuse (D25).
+    // No dependency metadata block (encrypted for Google Play) in the APK signing block or
+    // in the AAB: unreadable by F-Droid, which rejects it (D25).
     dependenciesInfo {
         includeInApk = false
         includeInBundle = false
@@ -61,23 +61,23 @@ android {
     }
     packaging {
         resources {
-            // bcprov, bcpkix et bcutil embarquent chacun le même texte de licence (MIT).
+            // bcprov, bcpkix and bcutil each ship the same license text (MIT).
             pickFirsts += "META-INF/LICENSE.md"
-            // Manifestes OSGi multi-version de BouncyCastle, sans usage sur Android.
+            // BouncyCastle's multi-release OSGi manifests, of no use on Android.
             excludes += "META-INF/versions/*/OSGI-INF/MANIFEST.MF"
         }
     }
     testOptions {
-        // Ressources Android (chaînes des 45 langues) visibles des tests Robolectric (D28).
+        // Android resources (strings in 45 languages) visible to Robolectric tests (D28).
         unitTests.isIncludeAndroidResources = true
     }
     lint {
         warningsAsErrors = true
         abortOnError = true
         checkDependencies = true
-        // Contrôles « une version plus récente existe » : ils interrogent le réseau et font
-        // échouer la CI à chaque publication en amont, sans lien avec le code. Les montées de
-        // version sont faites délibérément, pas imposées par lint.
+        // "A newer version exists" checks: they query the network and make CI fail on every
+        // upstream release, unrelated to the code. Version upgrades are made deliberately,
+        // not imposed by lint.
         disable += setOf("AndroidGradlePluginVersion", "GradleDependency", "NewerVersionAvailable")
     }
 }
@@ -89,17 +89,17 @@ kotlin {
     }
 }
 
-// Robolectric exige Java 21 ou plus pour simuler Android 37 (compileSdk) : les tests JVM de
-// l'app tournent sur le JDK 25 déjà utilisé par le démon Gradle et la CI ; le code reste compilé
-// pour Java 17. --add-exports : Robolectric manipule les descripteurs de fichiers internes du
-// JDK ; --enable-native-access : son rendu natif, sans avertissement (D28).
+// Robolectric requires Java 21 or later to simulate Android 37 (compileSdk): the app's JVM tests
+// run on JDK 25, already used by the Gradle daemon and CI; the code is still compiled for
+// Java 17. --add-exports: Robolectric manipulates the JDK's internal file descriptors;
+// --enable-native-access: its native rendering, without warnings (D28).
 tasks.withType<Test>().configureEach {
     javaLauncher.set(javaToolchains.launcherFor { languageVersion.set(JavaLanguageVersion.of(25)) })
     jvmArgs("--add-exports=java.base/jdk.internal.access=ALL-UNNAMED", "--enable-native-access=ALL-UNNAMED")
 }
 
-// Captures d'écran F-Droid (D39) : StoreScreenshots n'est lancé que si SCEAU_SCREENSHOTS=1,
-// jamais par ./gradlew check ; il écrit alors dans fastlane/metadata/android.
+// F-Droid screenshots (D39): StoreScreenshots only runs if SCEAU_SCREENSHOTS=1, never through
+// ./gradlew check; it then writes into fastlane/metadata/android.
 val storeScreenshots = providers.environmentVariable("SCEAU_SCREENSHOTS").orNull == "1"
 val fastlaneMetadata = rootProject.file("fastlane/metadata/android").absolutePath
 tasks.withType<Test>().configureEach {
@@ -111,7 +111,7 @@ tasks.withType<Test>().configureEach {
 }
 
 configurations.configureEach {
-    // Voir core/build.gradle.kts : BouncyCastle uniquement en jdk18on.
+    // See core/build.gradle.kts: BouncyCastle in jdk18on only.
     exclude(group = "org.bouncycastle", module = "bcprov-jdk15on")
     exclude(group = "org.bouncycastle", module = "bcpkix-jdk15on")
     exclude(group = "org.bouncycastle", module = "bcutil-jdk15on")
@@ -135,18 +135,18 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
 
     testImplementation(libs.junit)
-    // Contrôle des débordements de texte dans toutes les langues (D28) : Robolectric et
-    // Compose UI test, en tests JVM uniquement. ui-test-manifest déclare l'activité hôte des
-    // tests Compose : debugImplementation, jamais dans l'APK release.
+    // Text overflow check in every language (D28): Robolectric and Compose UI test, in JVM
+    // tests only. ui-test-manifest declares the host activity of the Compose tests:
+    // debugImplementation, never in the release APK.
     testImplementation(libs.robolectric)
     testImplementation(platform(libs.androidx.compose.bom))
     testImplementation(libs.androidx.compose.ui.test.junit4)
-    // Espresso 3.5 tiré par ui-test-junit4 appelle InputManager.getInstance(), absent
-    // d'Android 37 : version récente imposée (tests uniquement).
+    // Espresso 3.5, pulled in by ui-test-junit4, calls InputManager.getInstance(), absent
+    // from Android 37: a recent version is forced (tests only).
     testImplementation(libs.androidx.test.espresso.core)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
-    // Mode démo (CNIe simulée) : APK de debug uniquement, jamais en release.
+    // Demo mode (simulated CNIe): debug APK only, never in release.
     debugImplementation(project(":testchip"))
 }
 

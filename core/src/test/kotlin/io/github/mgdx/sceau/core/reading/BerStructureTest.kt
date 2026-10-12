@@ -10,50 +10,50 @@ class BerStructureTest {
     private fun hex(value: String) = value.chunked(2).map { it.toInt(16).toByte() }.toByteArray()
 
     @Test
-    fun fichiersReels_Acceptes() {
+    fun realFiles_Accepted() {
         val card = SimulatedDocuments.frenchIdCard()
         val files = card.document.dataGroups.values + card.document.sod + COMFile("1.7", "4.0.0", intArrayOf(0x61, 0x75, 0x6E)).encoded
         for (file in files) assertTrue(BerStructure.lengthsFit(file))
     }
 
     @Test
-    fun longueurAuDelaDuTampon_Refusee() {
-        // 60 07 { 5F01 : 2 Go }
+    fun lengthBeyondBuffer_Rejected() {
+        // 60 07 { 5F01 : 2 GB }
         assertFalse(BerStructure.lengthsFit(hex("6007" + "5F01847FFFFFFF")))
-        // Élément qui dépasse la fin du tampon.
+        // Element that runs past the end of the buffer.
         assertFalse(BerStructure.lengthsFit(hex("3003" + "0405AABB")))
-        // Longueur externe au-delà du fichier.
+        // Outer length beyond the file.
         assertFalse(BerStructure.lengthsFit(hex("0405AABB")))
-        // Longueur codée sur plus de quatre octets.
+        // Length encoded on more than four bytes.
         assertFalse(BerStructure.lengthsFit(hex("048500000000010000")))
     }
 
     @Test
-    fun enfantAuDelaDeSonParentRaccourci_Refuse() {
-        // Un lecteur en flux ignore la longueur du parent : 60 raccourci à 3 octets, puis une
-        // liste de tags (5C) de 2 Go lue quand même (fuzzing, campagne COM).
+    fun childBeyondItsShortenedParent_Rejected() {
+        // A streaming reader ignores the parent's length: 60 shortened to 3 bytes, then a
+        // 2 GB tag list (5C) read anyway (fuzzing, COM campaign).
         assertFalse(BerStructure.lengthsFit(hex("6003" + "5F010430313037" + "5C847FFFFFFF")))
-        // Imbrication profonde bien formée : acceptée, sans récursion.
+        // Deep well-formed nesting: accepted, without recursion.
         var nested = hex("0500")
         repeat(60) { nested = byteArrayOf(0x30, nested.size.toByte()) + nested }
         assertTrue(BerStructure.lengthsFit(nested))
     }
 
     @Test
-    fun casLaissesAuParseur_Acceptes() {
+    fun casesLeftToTheParser_Accepted() {
         assertTrue(BerStructure.lengthsFit(ByteArray(0)))
-        // En-tête tronqué en fin de tampon, octets 00 et FF ignorés avant une étiquette (SCUBA).
+        // Header truncated at the end of the buffer, 00 and FF bytes skipped before a tag (SCUBA).
         assertTrue(BerStructure.lengthsFit(hex("30")))
         assertTrue(BerStructure.lengthsFit(hex("0401AA" + "FFFF00")))
         assertTrue(BerStructure.lengthsFit(hex("3005" + "00" + "0402AABB")))
     }
 
     @Test
-    fun enteteQuiDiffereDeSaLectureParScuba_Refuse() {
-        // Fuzzing (DG11, seed=0x5cea2026 index=35761) : SCUBA ignore FF, lit l'étiquette D3 puis
-        // une longueur sur 0x44 octets ; le contrôle lit comme SCUBA.
+    fun headerThatDiffersFromScubaReading_Rejected() {
+        // Fuzzing (DG11, seed=0x5cea2026 index=35761): SCUBA skips FF, reads tag D3 then
+        // a length on 0x44 bytes; the check reads like SCUBA.
         assertFalse(BerStructure.lengthsFit(hex("A00B" + "FFD3C4A1E9990A0E" + "535045")))
-        // En-tête d'un élément tronqué par la fin de son parent, longueur indéfinie.
+        // Header of an element truncated by the end of its parent, indefinite length.
         assertFalse(BerStructure.lengthsFit(hex("3002" + "5F01" + "04303130")))
         assertFalse(BerStructure.lengthsFit(hex("3080" + "0400" + "0000")))
     }
