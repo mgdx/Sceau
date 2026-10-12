@@ -22,7 +22,7 @@ Avant de commencer, lisez [`SPEC.md`](SPEC.md) (source de vérité), [`docs/arch
 
 ### Interface
 
-- **Aucune chaîne codée en dur.** Toutes les chaînes sont dans `app/src/main/res/values/strings_<écran>.xml` (français) avec leur traduction dans `values-en/` (décision D5). Une chaîne ajoutée sans traduction anglaise est incomplète.
+- **Aucune chaîne codée en dur.** Toutes les chaînes sont dans `app/src/main/res/values/strings_<écran>.xml` (anglais, langue par défaut, D55) avec leur traduction dans `values-fr/` et les autres `values-<langue>/` (décisions D5, D27). Une chaîne ajoutée sans traduction française est incomplète.
 - Compose et Material 3 ; le thème suit le mode sombre du système.
 
 ### Vie privée et sécurité

@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="home_menu_more">Plus d’options</string>
-    <string name="home_menu_trust_store">Magasin de confiance</string>
-    <string name="home_menu_about">À propos</string>
-    <string name="home_tab_id_card">Carte d’identité</string>
-    <string name="home_tab_passport">Passeport</string>
+    <string name="home_menu_more">More options</string>
+    <string name="home_menu_trust_store">Trust store</string>
+    <string name="home_menu_about">About</string>
+    <string name="home_tab_id_card">ID card</string>
+    <string name="home_tab_passport">Passport</string>
     <string name="home_can_label">CAN</string>
-    <string name="home_can_supporting">Numéro à 6 chiffres imprimé au recto de la carte</string>
-    <string name="home_document_number_label">Numéro du document</string>
-    <string name="home_document_number_supporting">Tel qu’imprimé sur la page d’identité, 9 caractères au plus</string>
+    <string name="home_can_supporting">6-digit number printed on the front of the card</string>
+    <string name="home_document_number_label">Document number</string>
+    <string name="home_document_number_supporting">As printed on the data page, up to 9 characters</string>
     <string name="home_mrz_label" translatable="false">MRZ</string>
-    <string name="home_document_number_supporting_id_card">Tel qu’imprimé sur la carte, 9 caractères au plus</string>
-    <string name="home_date_of_birth_label">Date de naissance</string>
-    <string name="home_date_of_expiry_label">Date d’expiration</string>
-    <string name="home_date_day">JJ</string>
+    <string name="home_document_number_supporting_id_card">As printed on the card, up to 9 characters</string>
+    <string name="home_date_of_birth_label">Date of birth</string>
+    <string name="home_date_of_expiry_label">Expiry date</string>
+    <string name="home_date_day">DD</string>
     <string name="home_date_month">MM</string>
-    <string name="home_date_year">AAAA</string>
-    <string name="home_date_format">Format\u00A0: %1$s</string>
-    <string name="home_date_error_invalid">Cette date n’existe pas</string>
-    <string name="home_date_error_future">La date de naissance ne peut pas être dans le futur</string>
-    <string name="home_date_error_too_old">Date d’expiration trop ancienne (avant %1$d)</string>
-    <string name="home_holder_notice">Le document doit être présenté par son titulaire.</string>
-    <string name="home_read">Lire</string>
-    <string name="home_nfc_disabled">Le NFC est désactivé. Activez-le pour lire la puce du document.</string>
-    <string name="home_nfc_settings">Ouvrir les réglages NFC</string>
-    <string name="home_nfc_absent">Ce téléphone n’a pas de NFC\u00A0: il ne peut pas lire la puce des documents d’identité.</string>
-    <string name="home_menu_demo">Simuler une CNIe (démo)</string>
+    <string name="home_date_year">YYYY</string>
+    <string name="home_date_format">Format: %1$s</string>
+    <string name="home_date_error_invalid">This date doesn’t exist</string>
+    <string name="home_date_error_future">The date of birth can’t be in the future</string>
+    <string name="home_date_error_too_old">Expiry date too old (before %1$d)</string>
+    <string name="home_holder_notice">The document must be presented by its holder.</string>
+    <string name="home_read">Read</string>
+    <string name="home_nfc_disabled">NFC is turned off. Turn it on to read the document’s chip.</string>
+    <string name="home_nfc_settings">Open NFC settings</string>
+    <string name="home_nfc_absent">This phone has no NFC, so it can’t read the chip of identity documents.</string>
+    <string name="home_menu_demo">Simulate a French ID card (demo)</string>
 </resources>
