@@ -2,9 +2,9 @@ Sceau prek NFC prebere čip osebnih dokumentov po standardu ICAO 9303 in preveri
 
 <b>Podprti dokumenti</b>
 <ul>
+<li>Biometrični potni listi iz katere koli države s številko dokumenta, datumom rojstva in datumom veljavnosti</li>
 <li>Francoska osebna izkaznica (v obliki bančne kartice, od leta 2021) s 6-mestno številko CAN, natisnjeno na izkaznici</li>
 <li>Evropske osebne izkaznice s številko CAN ali z zapisom MRZ</li>
-<li>Biometrični potni listi iz katere koli države s številko dokumenta, datumom rojstva in datumom veljavnosti</li>
 </ul>
 
 <b>Kaj prikaže Sceau</b>

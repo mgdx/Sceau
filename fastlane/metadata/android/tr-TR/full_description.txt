@@ -2,9 +2,9 @@ Sceau, ICAO 9303 uyumlu kimlik belgelerinin çipini NFC ile okur ve belgenin ori
 
 <b>Desteklenen belgeler</b>
 <ul>
+<li>Tüm ülkelerin biyometrik pasaportları, belge numarası, doğum tarihi ve son geçerlilik tarihi ile</li>
 <li>Fransız kimlik kartı (kredi kartı boyutunda, 2021’den beri), kartın üzerinde basılı 6 haneli CAN ile</li>
 <li>Avrupa kimlik kartları, CAN veya MRZ ile</li>
-<li>Tüm ülkelerin biyometrik pasaportları, belge numarası, doğum tarihi ve son geçerlilik tarihi ile</li>
 </ul>
 
 <b>Sceau neleri gösterir</b>

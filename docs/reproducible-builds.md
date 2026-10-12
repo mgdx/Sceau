@@ -1,63 +1,63 @@
-# Builds reproductibles
+# Reproducible builds
 
-Objectif : que F-Droid reconstruise depuis les sources des APK release **identiques octet pour octet** à ceux construits par le développeur, afin de publier les APK signés par le développeur ([Reproducible Builds](https://f-droid.org/docs/Reproducible_Builds/)). Décision D25.
+Goal: have F-Droid rebuild from source release APKs that are **byte-for-byte identical** to those built by the developer, so that it publishes the developer-signed APKs ([Reproducible Builds](https://f-droid.org/docs/Reproducible_Builds/)). Decision D25.
 
-## Ce qui est garanti
+## What is guaranteed
 
-À commit identique et avec les versions d'outils ci-dessous, `./gradlew :app:assembleRelease` produit les mêmes cinq APK non signés (`arm64-v8a`, `armeabi-v7a`, `x86`, `x86_64`, universel), quel que soit :
+For the same commit and with the tool versions below, `./gradlew :app:assembleRelease` produces the same five unsigned APKs (`arm64-v8a`, `armeabi-v7a`, `x86`, `x86_64`, universal), regardless of:
 
-- le chemin du clone et la profondeur de ce chemin ;
-- le chemin d'installation du SDK Android et du NDK.
+- the path of the clone and the depth of that path;
+- the installation path of the Android SDK and of the NDK.
 
-Vérifié le 2026-09-29 sur Linux x86_64 (voir D25 pour les empreintes). La signature n'est pas couverte : F-Droid compare son APK non signé à l'APK signé du développeur privé de sa signature (voir plus bas).
+Verified on 2026-09-29 on Linux x86_64 (see D25 for the fingerprints). The signature is not covered: F-Droid compares its unsigned APK with the developer's signed APK stripped of its signature (see below).
 
-Deux causes d'écart ont été corrigées :
+Two causes of discrepancy were fixed:
 
-| Écart | Cause | Correctif |
+| Discrepancy | Cause | Fix |
 |---|---|---|
-| `lib/<abi>/libsceau_jp2.so` : 20 octets (note `.note.gnu.build-id`) | le build-id est l'empreinte du `.so` avant le strip, dont les informations de débogage contiennent les chemins absolus du clone, du répertoire `.cxx` et des en-têtes du NDK | `-ffile-prefix-map` pour ces trois racines dans `app/src/main/cpp/CMakeLists.txt`, appliqué à OpenJPEG comme au code de Sceau |
-| bloc « dependency metadata » dans le bloc de signature (APK signés seulement) | ajouté par AGP, chiffré avec une clé de Google, refusé par F-Droid | `dependenciesInfo { includeInApk = false; includeInBundle = false }` dans `app/build.gradle.kts` |
+| `lib/<abi>/libsceau_jp2.so`: 20 bytes (`.note.gnu.build-id` note) | the build-id is the hash of the `.so` before stripping, whose debug information contains the absolute paths of the clone, of the `.cxx` directory and of the NDK headers | `-ffile-prefix-map` for these three roots in `app/src/main/cpp/CMakeLists.txt`, applied to OpenJPEG as well as to Sceau's code |
+| “dependency metadata” block in the signing block (signed APKs only) | added by AGP, encrypted with a Google key, rejected by F-Droid | `dependenciesInfo { includeInApk = false; includeInBundle = false }` in `app/build.gradle.kts` |
 
-La bibliothèque livrée reste strippée (ni `.symtab` ni `.debug_*`) ; le build-id est conservé, désormais stable.
+The shipped library remains stripped (neither `.symtab` nor `.debug_*`); the build-id is kept, and is now stable.
 
-Contenus vérifiés et déjà stables : `classes.dex` (R8), `resources.arsc`, `assets/dexopt/baseline.prof{,m}`, ordre et horodatages des entrées ZIP (AGP les fixe), `META-INF/version-control-info.textproto`. Ce dernier contient le hash du commit construit : deux commits différents donnent donc des APK différents, ce qui est voulu.
+Contents verified and already stable: `classes.dex` (R8), `resources.arsc`, `assets/dexopt/baseline.prof{,m}`, order and timestamps of the ZIP entries (AGP fixes them), `META-INF/version-control-info.textproto`. The latter contains the hash of the commit being built: two different commits therefore give different APKs, which is intended.
 
-## Versions à figer
+## Versions to pin
 
-Une montée de l'une de ces versions change les APK : le développeur et F-Droid doivent construire avec les mêmes.
+Upgrading any of these versions changes the APKs: the developer and F-Droid must build with the same ones.
 
-| Outil | Version | Où elle est fixée |
+| Tool | Version | Where it is pinned |
 |---|---|---|
 | Gradle | 9.5.0 | `gradle/wrapper/gradle-wrapper.properties` |
-| AGP (R8, D8, aapt2, zipalign internes) | 9.3.3 | `gradle/libs.versions.toml` |
-| Plugins Kotlin (compilateur intégré à AGP 9 pour `:app`) | `kotlin` | `gradle/libs.versions.toml` |
-| JDK de compilation (toolchain) | 17 | `kotlin { jvmToolchain(17) }` |
-| JDK du démon Gradle (exécute R8) | 25 | `gradle/gradle-daemon-jvm.properties` |
-| NDK | 28.2.13676358 | `ndkVersion` dans `app/build.gradle.kts` |
+| AGP (internal R8, D8, aapt2, zipalign) | 9.3.3 | `gradle/libs.versions.toml` |
+| Kotlin plugins (compiler built into AGP 9 for `:app`) | `kotlin` | `gradle/libs.versions.toml` |
+| Compilation JDK (toolchain) | 17 | `kotlin { jvmToolchain(17) }` |
+| Gradle daemon JDK (runs R8) | 25 | `gradle/gradle-daemon-jvm.properties` |
+| NDK | 28.2.13676358 | `ndkVersion` in `app/build.gradle.kts` |
 | CMake | 4.1.2 | `externalNativeBuild.cmake.version` |
-| OpenJPEG | commit `8314119b` | sous-module `app/src/main/cpp/openjpeg` |
-| Dépendances Maven | versions exactes | `gradle/libs.versions.toml` |
+| OpenJPEG | commit `8314119b` | submodule `app/src/main/cpp/openjpeg` |
+| Maven dependencies | exact versions | `gradle/libs.versions.toml` |
 
-Les build-tools du SDK ne sont pas utilisés pour produire l'APK (aapt2 vient de Maven avec AGP) : leur version n'a pas d'effet.
+The SDK build-tools are not used to produce the APK (aapt2 comes from Maven with AGP): their version has no effect.
 
-## Vérifier
+## Verify
 
 ```bash
-scripts/check-reproducible.sh            # commit HEAD
-scripts/check-reproducible.sh v1.0.0     # une révision donnée
-KEEP=1 scripts/check-reproducible.sh     # garde les deux arbres pour enquêter
+scripts/check-reproducible.sh            # HEAD commit
+scripts/check-reproducible.sh v1.0.0     # a given revision
+KEEP=1 scripts/check-reproducible.sh     # keeps both trees for investigation
 ```
 
-Le script clone deux fois le dépôt au commit demandé (sous-module compris), dans deux répertoires de chemins différents, le second voyant le SDK par un lien symbolique (autre chemin de NDK). Il construit `:app:assembleRelease` dans chacun, compare les APK par `cmp` et affiche leur SHA-256 ; en cas d'écart, il liste les entrées de l'APK qui diffèrent. Il ne dépend que de `git`, `bash`, `cmp`, `sha256sum`, `unzip` et `diff`. Sur un `.so` qui diffère, `readelf -n` (build-id) et `strings -a` sur la version non strippée de `app/build/intermediates/cxx/` montrent les chemins en cause ; `diffoscope` fait l'analyse complète s'il est installé.
+The script clones the repository twice at the requested commit (submodule included), into two directories with different paths, the second one seeing the SDK through a symbolic link (different NDK path). It builds `:app:assembleRelease` in each, compares the APKs with `cmp` and prints their SHA-256; in case of a discrepancy, it lists the APK entries that differ. It depends only on `git`, `bash`, `cmp`, `sha256sum`, `unzip` and `diff`. For a `.so` that differs, `readelf -n` (build-id) and `strings -a` on the unstripped version in `app/build/intermediates/cxx/` show the paths involved; `diffoscope` does the full analysis if it is installed.
 
-Le script ne vérifie que ce qui est commité : les changements locaux non commités sont ignorés.
+The script only checks what is committed: uncommitted local changes are ignored.
 
-## Côté F-Droid
+## On the F-Droid side
 
-F-Droid ne publie qu'un APK, l'**universel** (D38) : une seule recette, un seul bloc `Builds` par version, sans `VercodeOperation`, au même `versionCode` que `app/build.gradle.kts`. Les APK par architecture restent publiés sur les releases GitHub seulement. Brouillon de recette et mode d'emploi : [`docs/fdroid/`](fdroid/).
+F-Droid publishes only one APK, the **universal** one (D38): a single recipe, a single `Builds` block per version, without `VercodeOperation`, with the same `versionCode` as `app/build.gradle.kts`. The per-architecture APKs remain published on GitHub releases only. Draft recipe and instructions: [`docs/fdroid/`](fdroid/).
 
-- `output:` désigne `build/outputs/apk/release/app-universal-release-unsigned.apk` (chemin relatif à `subdir: app`), produit par `assembleRelease` avec les quatre APK par ABI, qui sont ignorés ;
-- `binary:` pointe vers l'APK universel signé par l'auteur sur la release GitHub, `https://github.com/mgdx/Sceau/releases/download/v%v/sceau-%v-universal.apk` (nommage fixé par [`docs/release.md`](release.md)) ;
-- `AllowedAPKSigningKeys:` donne l'empreinte SHA-256 du certificat de signature de l'auteur.
+- `output:` designates `build/outputs/apk/release/app-universal-release-unsigned.apk` (path relative to `subdir: app`), produced by `assembleRelease` together with the four per-ABI APKs, which are ignored;
+- `binary:` points to the author-signed universal APK on the GitHub release, `https://github.com/mgdx/Sceau/releases/download/v%v/sceau-%v-universal.apk` (naming fixed by [`docs/release.md`](release.md));
+- `AllowedAPKSigningKeys:` gives the SHA-256 fingerprint of the author's signing certificate.
 
-F-Droid construit l'APK universel depuis le commit du tag, recopie la signature de l'APK de l'auteur sur son propre APK, vérifie la signature obtenue, et ne publie l'APK de l'auteur que si elle est valide, c'est-à-dire si le contenu est identique. La signature doit donc être faite par `apksigner` (schémas v2 et v3 seulement, jamais v1 : D54) sur l'APK non signé tel que Gradle l'a produit, sans en modifier le contenu (procédure dans `docs/release.md`). Avant de soumettre, `scripts/check-reproducible.sh v<version>` doit donner des APK identiques, l'universel compris.
+F-Droid builds the universal APK from the tag commit, copies the signature of the author's APK onto its own APK, verifies the resulting signature, and publishes the author's APK only if it is valid, that is, if the contents are identical. The signing must therefore be done by `apksigner` (v2 and v3 schemes only, never v1: D54) on the unsigned APK exactly as Gradle produced it, without modifying its contents (procedure in `docs/release.md`). Before submitting, `scripts/check-reproducible.sh v<version>` must give identical APKs, the universal one included.

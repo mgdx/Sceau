@@ -1,1 +1,1 @@
-Lit et vérifie la puce des cartes d'identité et des passeports, hors ligne
+Lit et vérifie la puce des passeports et des cartes d'identité, hors ligne

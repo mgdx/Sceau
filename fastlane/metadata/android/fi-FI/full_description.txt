@@ -2,9 +2,9 @@ Sceau lukee ICAO 9303 -henkilöasiakirjojen sirun NFC:n kautta ja tarkistaa, ett
 
 <b>Tuetut asiakirjat</b>
 <ul>
+<li>Minkä tahansa maan biometriset passit asiakirjan numeron, syntymäajan ja voimassaolon päättymispäivän avulla</li>
 <li>Ranskan henkilökortti (luottokortin kokoinen, vuodesta 2021) kortille painetun 6-numeroisen CAN-tunnuksen avulla</li>
 <li>Eurooppalaiset henkilökortit CAN-tunnuksen tai MRZ:n avulla</li>
-<li>Minkä tahansa maan biometriset passit asiakirjan numeron, syntymäajan ja voimassaolon päättymispäivän avulla</li>
 </ul>
 
 <b>Mitä Sceau näyttää</b>

@@ -2,9 +2,9 @@ Sceau per NFC nuskaito ICAO 9303 standartą atitinkančių asmens dokumentų lus
 
 <b>Palaikomi dokumentai</b>
 <ul>
+<li>Bet kurios šalies biometriniai pasai, naudojant dokumento numerį, gimimo datą ir galiojimo pabaigos datą</li>
 <li>Prancūzijos asmens tapatybės kortelė (banko kortelės formato, nuo 2021 m.), naudojant ant kortelės išspausdintą 6 skaitmenų CAN</li>
 <li>Europos šalių asmens tapatybės kortelės, naudojant CAN arba MRZ</li>
-<li>Bet kurios šalies biometriniai pasai, naudojant dokumento numerį, gimimo datą ir galiojimo pabaigos datą</li>
 </ul>
 
 <b>Ką rodo Sceau</b>

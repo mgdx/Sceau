@@ -1,12 +1,12 @@
-# Glossaire ko (coréen)
+# Glossary ko (Korean)
 
-Registre 합니다/하세요 des réglages système. Ponctuation latine (: , ( )) comme dans Android en coréen, sans espace avant la parenthèse ouvrante ; guillemets ‘ ’. Acronymes ICAO et « Master List » non traduits.
+합니다/하세요 register of the system settings. Latin punctuation (: , ( )) as in Android in Korean, without a space before the opening parenthesis; ‘ ’ quotation marks. ICAO acronyms and “Master List” not translated.
 
-| Source FR | Cible | Note |
+| French source | Target | Note |
 |---|---|---|
 | puce | 칩 | |
-| document (d’identité) | 신분증 | dans les consignes et messages |
-| document (champ, type) | 문서 | 문서 번호, 문서 종류 (terminologie ICAO) |
+| document (d’identité) | 신분증 | in instructions and messages |
+| document (champ, type) | 문서 | 문서 번호, 문서 종류 (ICAO terminology) |
 | titulaire | 소지자 | |
 | carte d’identité | 신분증 | |
 | passeport | 여권 | |
@@ -14,14 +14,14 @@ Registre 합니다/하세요 des réglages système. Ponctuation latine (: , ( )
 | certificat | 인증서 | |
 | certificat de lien | 링크 인증서 | |
 | chaîne de certification | 인증서 체인 | |
-| empreinte (certificat) | 지문 | « SHA-256 지문 » comme dans Android |
+| empreinte (certificat) | 지문 | “SHA-256 지문” as in Android |
 | empreinte (groupe de données) | 해시 | |
 | groupe de données | 데이터 그룹 | |
 | émetteur | 발급기관 | |
 | pays émetteur / État émetteur | 발급 국가 | |
-| autorité de délivrance | 발행관청 | libellé du passeport coréen |
+| autorité de délivrance | 발행관청 | label on the Korean passport |
 | date de délivrance | 발급일 | |
-| date d’expiration | 기간 만료일 | libellé du passeport coréen (기간만료일) |
+| date d’expiration | 기간 만료일 | label on the Korean passport (기간만료일) |
 | nom / prénoms | 성 / 이름 | |
 | date de naissance | 생년월일 | |
 | signature / signataire | 서명 / 서명자 | |
@@ -38,7 +38,7 @@ Registre 합니다/하세요 des réglages système. Ponctuation latine (: , ( )
 | Authentique | 진본 | verdict |
 | Signature valide, puce non vérifiée | 서명 유효, 칩 미검증 | verdict |
 | Émetteur inconnu | 알 수 없는 발급기관 | verdict |
-| Échec | 실패 | verdict et statut |
+| Échec | 실패 | verdict and status |
 | RGPD | EU 일반개인정보보호법(GDPR) | |
-| CAN | CAN(카드 액세스 번호) | glose seulement dans l’aide du champ |
-| JJ / MM / AAAA | DD / MM / YYYY | gabarit usuel des formulaires numériques |
+| CAN | CAN(카드 액세스 번호) | gloss only in the field's helper text |
+| JJ / MM / AAAA | DD / MM / YYYY | usual template on digital forms |

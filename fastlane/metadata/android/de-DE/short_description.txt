@@ -1,1 +1,1 @@
-Liest und prüft den Chip von Personalausweisen und Reisepässen, komplett offline
+Liest und prüft den Chip von Reisepässen und Personalausweisen, komplett offline

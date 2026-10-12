@@ -1,360 +1,360 @@
-# Magasin de confiance embarqué
+# Embedded trust store
 
-Ce document recense les fichiers de `core/src/main/resources/trust/`, leur provenance et leurs
-empreintes. Il fait foi : le test `TrustStoreFingerprintTest` recalcule la SHA-256 de chaque
-fichier embarqué et la compare au tableau ci-dessous. Il vérifie aussi que le tableau,
-`trust/index.txt` et le contenu du répertoire listent exactement les mêmes fichiers. Une
-substitution, un ajout ou un retrait non documenté fait échouer la build.
+This document lists the files in `core/src/main/resources/trust/`, their provenance and their
+fingerprints. It is authoritative: the `TrustStoreFingerprintTest` test recomputes the SHA-256 of each
+embedded file and compares it with the table below. It also checks that the table,
+`trust/index.txt` and the contents of the directory list exactly the same files. An
+undocumented substitution, addition or removal fails the build.
 
-## Fichiers embarqués
+## Embedded files
 
-Format stable, lu par le test : une ligne par fichier, nom du fichier entre accents graves en
-première colonne, SHA-256 constatée (hexadécimal minuscule) entre accents graves en dernière
-colonne. Ne change ni l'ordre ni le nombre de colonnes sans adapter le test.
+Stable format, read by the test: one row per file, file name between backticks in the
+first column, observed SHA-256 (lowercase hexadecimal) between backticks in the last
+column. Do not change the order or the number of columns without adapting the test.
 
-| Fichier | Rôle | Sujet | Validité (UTC) | Empreinte publiée par la source | SHA-256 constatée |
+| File | Role | Subject | Validity (UTC) | Fingerprint published by the source | Observed SHA-256 |
 |---|---|---|---|---|---|
-| `ants-csca-2010.der` | Passeport (CSCA) | `C=FR, O=Gouv, CN=CSCA-FRANCE` | 2010-12-09 → 2026-03-09 | SHA-1 `07dfdbe60862e9ef79b470b8e9f2be1541059c34` | `8d4d8939b9b31c0b45907bf0622f791fe90cf20e85cbbc2d368ee143b4a453ab` |
-| `ants-csca-2015.der` | Passeport (CSCA) | `C=FR, O=Gouv, CN=CSCA-FRANCE` | 2015-09-04 → 2030-12-04 | SHA-1 `3720e6f7c248922568bba78661cde2a51c6e22df` | `5ba9a2069f34cd93fab9dcb39c6a7a7be62141f8bcb608aff815167c813ecf92` |
-| `ants-csca-2020.der` | Passeport (CSCA) | `C=FR, O=Gouv, CN=CSCA-FRANCE` | 2020-05-26 → 2035-08-26 | SHA-1 `32b98cdbd85255c07503bfd96049038b241bfffe` | `28df42a7a0ed1b20f994cc96999060619e095b09764159703438ec60b88ee856` |
-| `ants-csca-2025.der` | Passeport (CSCA) | `C=FR, O=Gouv, CN=CSCA-FRANCE` | 2025-02-19 → 2040-05-19 | SHA-1 `59c8be053778295654ed32672a8045ef41405b44` | `d628b5100ddcbed8f3e5fa05e53b6b80bebb1e6264a12583319ef955c91d9349` |
+| `ants-csca-2010.der` | Passport (CSCA) | `C=FR, O=Gouv, CN=CSCA-FRANCE` | 2010-12-09 → 2026-03-09 | SHA-1 `07dfdbe60862e9ef79b470b8e9f2be1541059c34` | `8d4d8939b9b31c0b45907bf0622f791fe90cf20e85cbbc2d368ee143b4a453ab` |
+| `ants-csca-2015.der` | Passport (CSCA) | `C=FR, O=Gouv, CN=CSCA-FRANCE` | 2015-09-04 → 2030-12-04 | SHA-1 `3720e6f7c248922568bba78661cde2a51c6e22df` | `5ba9a2069f34cd93fab9dcb39c6a7a7be62141f8bcb608aff815167c813ecf92` |
+| `ants-csca-2020.der` | Passport (CSCA) | `C=FR, O=Gouv, CN=CSCA-FRANCE` | 2020-05-26 → 2035-08-26 | SHA-1 `32b98cdbd85255c07503bfd96049038b241bfffe` | `28df42a7a0ed1b20f994cc96999060619e095b09764159703438ec60b88ee856` |
+| `ants-csca-2025.der` | Passport (CSCA) | `C=FR, O=Gouv, CN=CSCA-FRANCE` | 2025-02-19 → 2040-05-19 | SHA-1 `59c8be053778295654ed32672a8045ef41405b44` | `d628b5100ddcbed8f3e5fa05e53b6b80bebb1e6264a12583319ef955c91d9349` |
 | `ants-csca-eid-2021.der` | e-ID, CNIe (CSCA) | `C=FR, O=Gouv, CN=eID-FRANCE` | 2021-02-15 → 2036-05-15 | SHA-256 `b33ea63b9be01082d98071a29111757c72257eba80d7205d21fa35436c29fe7c` | `b33ea63b9be01082d98071a29111757c72257eba80d7205d21fa35436c29fe7c` |
-| `de-bsi-master-list.ml` | Master List CSCA (BSI, Allemagne) | signataire `C=DE, O=bund, OU=bsi, serialNumber=0039, CN=CSCA Master List Signer` | signée le 2026-10-01 ; signataire valide 2024-10-17 → 2028-10-17 | aucune pour le fichier (voir « Master List embarquée ») | `2bc0f28b35d83f2fc2d1495b1c715add358dfb9ba343e9788bc27a19ced13a9f` |
-| `gb-csca-2026.der` | Passeport GB (CSCA GBR_2026_Root) | `C=GB, O=UKKPA, CN=Country Signing Authority` | 2026-08-24 → 2042-12-24 | aucune | `737ce248b62d8b6dc1c9e3aaa8b937334406bac17bb37235c1c50281e6ad7edb` |
-| `gb-csca-link-2021-2026.der` | Passeport GB (lien GBR_2021-2026, signé par GBR_2021) | `C=GB, O=UKKPA, CN=Country Signing Authority` | 2026-08-24 → 2038-01-17 | aucune | `81d9f6bf3026a04e6e3847808cf094e34f9473a92ff66eb86a975f4c42055b5d` |
-| `ge-csca-5.der` | Documents de voyage GE (CSCA n° 5) | `C=GE, O=Ministry of Justice of Georgia, OU=Public Service Development Agency, CN=GEO Country Signing CA` | 2025-09-09 → 2040-12-04 | SHA-256 `2ef9e14c6155c315b8d7681168774a063e6fd2639f51f7d5c904ef862933c844` | `2ef9e14c6155c315b8d7681168774a063e6fd2639f51f7d5c904ef862933c844` |
-| `ge-csca-6.der` | Documents de voyage GE (CSCA n° 6, « G2 », actif) | `C=GE, O=Ministry of Justice of Georgia, OU=Public Service Development Agency, CN=GEO Country Signing CA G2` | 2025-09-10 → 2040-12-05 | SHA-256 `277fcd17b53b3e2f20cfee967db499189bf23e0ef0a9e1040c5a24c8b09cde3c` | `277fcd17b53b3e2f20cfee967db499189bf23e0ef0a9e1040c5a24c8b09cde3c` |
-| `lu-csca-etravel-link.der` | Documents de voyage LU (lien CSCA ePassport → CSCA eTravel Documents) | `C=LU, O=Grand-Duchy of Luxembourg Ministry of Foreign Affairs, CN=Grand-Duchy of Luxembourg CSCA eTravel Documents` | 2018-11-02 → 2029-01-12 | aucune | `5acb0c0264ad18912ad80139b318ab507d00dc77a86ac4eb832d3510ff6ef95c` |
+| `de-bsi-master-list.ml` | CSCA Master List (BSI, Germany) | signer `C=DE, O=bund, OU=bsi, serialNumber=0039, CN=CSCA Master List Signer` | signed on 2026-10-01; signer valid 2024-10-17 → 2028-10-17 | none for the file (see “Embedded Master List”) | `2bc0f28b35d83f2fc2d1495b1c715add358dfb9ba343e9788bc27a19ced13a9f` |
+| `gb-csca-2026.der` | GB passport (CSCA GBR_2026_Root) | `C=GB, O=UKKPA, CN=Country Signing Authority` | 2026-08-24 → 2042-12-24 | none | `737ce248b62d8b6dc1c9e3aaa8b937334406bac17bb37235c1c50281e6ad7edb` |
+| `gb-csca-link-2021-2026.der` | GB passport (link GBR_2021-2026, signed by GBR_2021) | `C=GB, O=UKKPA, CN=Country Signing Authority` | 2026-08-24 → 2038-01-17 | none | `81d9f6bf3026a04e6e3847808cf094e34f9473a92ff66eb86a975f4c42055b5d` |
+| `ge-csca-5.der` | GE travel documents (CSCA no. 5) | `C=GE, O=Ministry of Justice of Georgia, OU=Public Service Development Agency, CN=GEO Country Signing CA` | 2025-09-09 → 2040-12-04 | SHA-256 `2ef9e14c6155c315b8d7681168774a063e6fd2639f51f7d5c904ef862933c844` | `2ef9e14c6155c315b8d7681168774a063e6fd2639f51f7d5c904ef862933c844` |
+| `ge-csca-6.der` | GE travel documents (CSCA no. 6, “G2”, active) | `C=GE, O=Ministry of Justice of Georgia, OU=Public Service Development Agency, CN=GEO Country Signing CA G2` | 2025-09-10 → 2040-12-05 | SHA-256 `277fcd17b53b3e2f20cfee967db499189bf23e0ef0a9e1040c5a24c8b09cde3c` | `277fcd17b53b3e2f20cfee967db499189bf23e0ef0a9e1040c5a24c8b09cde3c` |
+| `lu-csca-etravel-link.der` | LU travel documents (link CSCA ePassport → CSCA eTravel Documents) | `C=LU, O=Grand-Duchy of Luxembourg Ministry of Foreign Affairs, CN=Grand-Duchy of Luxembourg CSCA eTravel Documents` | 2018-11-02 → 2029-01-12 | none | `5acb0c0264ad18912ad80139b318ab507d00dc77a86ac4eb832d3510ff6ef95c` |
 
-Les cinq certificats de l'ANTS sont des CSCA racines auto-signés (RSA 4096, `sha256WithRSAEncryption`).
-Les archives de l'ANTS ne contiennent aucun certificat de lien. Le CSCA passeport 2010 est
-expiré (mars 2026) mais reste nécessaire : il a signé des DS dont les passeports, valables
-dix ans, sont encore en circulation. La période de validité est vérifiée à la date de
-délivrance du document, pas à la date de lecture.
+The five ANTS certificates are self-signed root CSCAs (RSA 4096, `sha256WithRSAEncryption`).
+The ANTS archives contain no link certificate. The 2010 passport CSCA has
+expired (March 2026) but is still required: it signed DSs whose passports, valid for
+ten years, are still in circulation. The validity period is checked at the date of
+issue of the document, not at the date of reading.
 
-Toutes les empreintes constatées sont égales aux empreintes publiées, recalculées sur les
-fichiers extraits des archives. Les fichiers `.crt` des archives étaient déjà encodés en DER ;
-ils sont copiés sans conversion et seulement renommés.
+All observed fingerprints are equal to the published fingerprints, recomputed on the
+files extracted from the archives. The `.crt` files in the archives were already DER-encoded;
+they are copied without conversion and only renamed.
 
 ## Provenance
 
-| Fichier | Archive d'origine | Fichier dans l'archive | Page d'origine | Téléchargé le |
+| File | Source archive | File in the archive | Source page | Downloaded on |
 |---|---|---|---|---|
-| `ants-csca-2010.der` | `CSCA-FRANCE_2010.zip` | `CSCA-FRANCE_2010.crt`, empreinte dans `CSCSA-FRANCE_2010_fingerprint.txt` | page CSCA de l'ANTS | 2026-09-25 |
-| `ants-csca-2015.der` | `CSCA-FRANCE_2015.zip` | `CSCA-FRANCE_2015.crt`, empreinte dans `CSCA-FRANCE_2015_fingerprint.txt` | page CSCA de l'ANTS | 2026-09-25 |
-| `ants-csca-2020.der` | `CSCA-FRANCE_2020.zip` | `CSCA-FRANCE_2020.crt`, empreinte dans `CSCA-FRANCE_2020_fingerprint.txt` | page CSCA de l'ANTS | 2026-09-25 |
-| `ants-csca-2025.der` | `csca-france_2025.zip` | `CSCA-FRANCE_2025.crt`, empreinte dans `CSCA-FRANCE_2025_fingerprint.txt` | page CSCA de l'ANTS | 2026-09-25 |
-| `ants-csca-eid-2021.der` | `Certificat_CSCA_PROD_EID.zip` | `eID-FRANCE.crt` (un `eID-FRANCE.pem` identique l'accompagne), empreinte dans `Fingerprint_SHA256.txt` | page CSCA e-ID de l'ANTS | 2026-09-25 |
-| `de-bsi-master-list.ml` | `GermanMasterList.zip` | `DE_ML_2026-10-01-11-50-52.ml`, redistribué inchangé | <https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/ElekAusweise/CSCA/GermanMasterList.html> | 2026-10-12 |
-| `gb-csca-2026.der` | aucune (fichier DER direct) | <https://hmpo.gov.uk/csca/certificate/12fd5015-cf50-47b0-a1fb-ca1c3cc0f0ee> | <https://hmpo.gov.uk/csca> | 2026-09-29 |
-| `gb-csca-link-2021-2026.der` | aucune (fichier DER direct) | <https://hmpo.gov.uk/csca/certificate/3a083ccd-5e5d-4e7c-be90-bd4218e335af> | <https://hmpo.gov.uk/csca> | 2026-09-29 |
-| `ge-csca-5.der` | aucune (fichier DER direct) | <https://id.ge/en/pki/GEO-CSCA-5.crt> | <https://id.ge/en/tsp/csca/> | 2026-09-29 |
-| `ge-csca-6.der` | aucune (fichier DER direct) | <https://id.ge/en/pki/GEO-CSCA-6.crt> | <https://id.ge/en/tsp/csca/> | 2026-09-29 |
-| `lu-csca-etravel-link.der` | aucune (fichier DER direct) | <https://repository.incert.lu/CSCAeTravel_link_from_CSCAePass.crt> | <https://repository.incert.lu/> | 2026-09-29 |
+| `ants-csca-2010.der` | `CSCA-FRANCE_2010.zip` | `CSCA-FRANCE_2010.crt`, fingerprint in `CSCSA-FRANCE_2010_fingerprint.txt` | ANTS CSCA page | 2026-09-25 |
+| `ants-csca-2015.der` | `CSCA-FRANCE_2015.zip` | `CSCA-FRANCE_2015.crt`, fingerprint in `CSCA-FRANCE_2015_fingerprint.txt` | ANTS CSCA page | 2026-09-25 |
+| `ants-csca-2020.der` | `CSCA-FRANCE_2020.zip` | `CSCA-FRANCE_2020.crt`, fingerprint in `CSCA-FRANCE_2020_fingerprint.txt` | ANTS CSCA page | 2026-09-25 |
+| `ants-csca-2025.der` | `csca-france_2025.zip` | `CSCA-FRANCE_2025.crt`, fingerprint in `CSCA-FRANCE_2025_fingerprint.txt` | ANTS CSCA page | 2026-09-25 |
+| `ants-csca-eid-2021.der` | `Certificat_CSCA_PROD_EID.zip` | `eID-FRANCE.crt` (accompanied by an identical `eID-FRANCE.pem`), fingerprint in `Fingerprint_SHA256.txt` | ANTS CSCA e-ID page | 2026-09-25 |
+| `de-bsi-master-list.ml` | `GermanMasterList.zip` | `DE_ML_2026-10-01-11-50-52.ml`, redistributed unchanged | <https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/ElekAusweise/CSCA/GermanMasterList.html> | 2026-10-12 |
+| `gb-csca-2026.der` | none (direct DER file) | <https://hmpo.gov.uk/csca/certificate/12fd5015-cf50-47b0-a1fb-ca1c3cc0f0ee> | <https://hmpo.gov.uk/csca> | 2026-09-29 |
+| `gb-csca-link-2021-2026.der` | none (direct DER file) | <https://hmpo.gov.uk/csca/certificate/3a083ccd-5e5d-4e7c-be90-bd4218e335af> | <https://hmpo.gov.uk/csca> | 2026-09-29 |
+| `ge-csca-5.der` | none (direct DER file) | <https://id.ge/en/pki/GEO-CSCA-5.crt> | <https://id.ge/en/tsp/csca/> | 2026-09-29 |
+| `ge-csca-6.der` | none (direct DER file) | <https://id.ge/en/pki/GEO-CSCA-6.crt> | <https://id.ge/en/tsp/csca/> | 2026-09-29 |
+| `lu-csca-etravel-link.der` | none (direct DER file) | <https://repository.incert.lu/CSCAeTravel_link_from_CSCAePass.crt> | <https://repository.incert.lu/> | 2026-09-29 |
 
-Les archives ont été téléchargées par le mainteneur depuis les pages officielles de l'ANTS
-(URL confirmées par le mainteneur le 2026-09-25) :
+The archives were downloaded by the maintainer from the official ANTS pages
+(URLs confirmed by the maintainer on 2026-09-25):
 
-- page CSCA (passeports) : <https://ants.gouv.fr/csca> ;
-- page CSCA e-ID (cartes d'identité) : <https://ants.gouv.fr/home/csca-e-id>.
+- CSCA page (passports): <https://ants.gouv.fr/csca>;
+- CSCA e-ID page (identity cards): <https://ants.gouv.fr/home/csca-e-id>.
 
-Le site de l'ANTS filtre les robots : les archives se téléchargent à la main depuis ces pages,
-puis `scripts/update-trust-store.sh --ants-dir` compare les empreintes publiées dans chaque
-archive à celles recalculées (voir « Procédure de mise à jour »).
+The ANTS website filters bots: the archives are downloaded by hand from these pages,
+then `scripts/update-trust-store.sh --ants-dir` compares the fingerprints published in each
+archive with the recomputed ones (see “Update procedure”).
 
-## Publications nationales
+## National publications
 
-Cinq certificats publiés par un État pour ses **propres** documents complètent la Master List
-embarquée (décision D26). Ils étaient absents de la liste du BSI quand ils ont été ajoutés, ils
-sont encore valides, et leur source a
-le statut A de `docs/trust-sources.md` : licence ouverte (A1) ou publication officielle sans
-restriction de réutilisation (A2). Le chargeur les reconnaît à leur nom : un fichier `.der` qui
-ne commence pas par `ants-` porte la source `NATIONAL`, affichée « Publication nationale ».
+Five certificates published by a State for its **own** documents supplement the embedded
+Master List (decision D26). They were missing from the BSI list when they were added, they
+are still valid, and their source has
+status A in `docs/trust-sources.md`: open license (A1) or official publication with no
+restriction on reuse (A2). The loader recognizes them by their name: a `.der` file that
+does not start with `ants-` gets the `NATIONAL` source, displayed as “National publication”.
 
-| Pays | Autorité | Statut | Conditions et attribution |
+| Country | Authority | Status | Terms and attribution |
 |---|---|---|---|
-| GB | HM Passport Office (UKKPA) | A1 | Open Government Licence v3.0. Attribution affichée dans « À propos » : « Contains public sector information licensed under the Open Government Licence v3.0 ». |
-| GE | Public Service Development Agency, ministère de la Justice | A2 | Aucune mention de réutilisation sur le site. |
-| LU | INCERT | A2 | Aucune mention de réutilisation sur le site. |
+| GB | HM Passport Office (UKKPA) | A1 | Open Government Licence v3.0. Attribution displayed in “About”: “Contains public sector information licensed under the Open Government Licence v3.0”. |
+| GE | Public Service Development Agency, Ministry of Justice | A2 | No mention of reuse on the website. |
+| LU | INCERT | A2 | No mention of reuse on the website. |
 
-Contrôles faits le 2026-09-29 sur chaque fichier, avant de l'embarquer :
+Checks carried out on 2026-09-29 on each file, before embedding it:
 
-- téléchargement depuis la page officielle de l'État, par HTTPS ;
-- empreinte publiée, quand elle existe, égale à l'empreinte recalculée (GE : SHA-256). Le Royaume-Uni et le Luxembourg n'en publient pas. Leur intégrité repose sur TLS et
-  sur la signature des liens ;
-- signature vérifiée : auto-signature des trois CSCA racines ; lien GB signé par GBR_2021 et lien
-  LU par « Grand-Duchy of Luxembourg CSCA ePassport »
-  (`CSCA_ePassport_card_1.crt` du même dépôt). La clé GB est une clé EC P-384 à paramètres de
-  courbe explicites, qu'OpenSSL 3 refuse de vérifier en mode `verify` : la vérification est
-  faite avec la bibliothèque Python `cryptography`, et refaite par `TrustStoreTest`
-  (`nationalLinksAreSignedByAnEmbeddedAnchor`), qui vérifie chaque lien avec la clé d'un CSCA
-  du magasin ;
-- extensions : `basicConstraints` cA=TRUE et `keyUsage` keyCertSign présents sur les cinq.
+- download from the State's official page, over HTTPS;
+- published fingerprint, where one exists, equal to the recomputed fingerprint (GE: SHA-256). The United Kingdom and Luxembourg do not publish any. Their integrity relies on TLS and
+  on the signature of the links;
+- signature verified: self-signature of the three root CSCAs; GB link signed by GBR_2021 and LU link
+  by “Grand-Duchy of Luxembourg CSCA ePassport”
+  (`CSCA_ePassport_card_1.crt` from the same repository). The GB key is an EC P-384 key with explicit
+  curve parameters, which OpenSSL 3 refuses to verify in `verify` mode: the verification is
+  done with the Python `cryptography` library, and redone by `TrustStoreTest`
+  (`nationalLinksAreSignedByAnEmbeddedAnchor`), which verifies each link with the key of a CSCA
+  in the store;
+- extensions: `basicConstraints` cA=TRUE and `keyUsage` keyCertSign present on all five.
 
-Revérification le 2026-10-06 (release 0.9) : les pages ont été retéléchargées, aucun nouveau
-certificat ni lien n'y est publié, et les fichiers embarqués y sont toujours servis à
-l'identique (SHA-256 égales).
+Re-verification on 2026-10-06 (release 0.9): the pages were downloaded again, no new
+certificate or link is published there, and the embedded files are still served there
+identically (equal SHA-256).
 
-Retrait le 2026-10-11 (décision D48) : les deux certificats grecs des titres de séjour
-(CSCAeRP-HELLAS 003 et son lien 002 → 003, `gr-csca-erp-003.der` et
-`gr-csca-erp-link-002-003.der`) ne sont plus embarqués comme publications nationales. Le pied de
-page de leur site affiche depuis le 2026-10-06 « © 2026 All rights reserved » (statut B), et ils
-figurent dans la Master List du BSI embarquée, qui les fournit désormais : la couverture des
-titres de séjour grecs est inchangée.
+Removal on 2026-10-11 (decision D48): the two Greek residence permit certificates
+(CSCAeRP-HELLAS 003 and its link 002 → 003, `gr-csca-erp-003.der` and
+`gr-csca-erp-link-002-003.der`) are no longer embedded as national publications. Since
+2026-10-06, the footer of their website reads “© 2026 All rights reserved” (status B), and they
+are in the embedded BSI Master List, which now provides them: coverage of Greek
+residence permits is unchanged.
 
-Les deux CSCA géorgiens n° 5 et n° 6 partagent la même clé (même SKI) sous deux noms. Le n° 6 est
-aussi dans les Master Lists italienne, suédoise et néerlandaise, qui ne sont pas embarquées.
+The two Georgian CSCAs no. 5 and no. 6 share the same key (same SKI) under two names. No. 6 is
+also in the Italian, Swedish and Dutch Master Lists, which are not embedded.
 
 ## Master List
 
-La SPEC (§7.1) prévoit une Master List embarquée. Le code la prend en charge : un fichier `.ml`
-listé dans `trust/index.txt` est parsé au chargement. Sa signature CMS est vérifiée, et son
-signataire doit être émis par un certificat dont l'empreinte est épinglée dans le code (voir
-« Ancrage du signataire »). Sinon le chargement échoue (`InvalidMasterListException`). Ses
-certificats portent la source `EMBEDDED_MASTER_LIST`. En cas de doublon, l'ordre de priorité
-est ANTS, puis publications nationales, puis Master List embarquée, puis Master List importée
-ancrée, puis certificat importé seul, puis Master List importée non ancrée (D44).
+The SPEC (§7.1) provides for an embedded Master List. The code supports it: a `.ml` file
+listed in `trust/index.txt` is parsed at load time. Its CMS signature is verified, and its
+signer must be issued by a certificate whose fingerprint is pinned in the code (see
+“Signer anchoring”). Otherwise loading fails (`InvalidMasterListException`). Its
+certificates get the `EMBEDDED_MASTER_LIST` source. In case of duplicates, the priority order
+is ANTS, then national publications, then embedded Master List, then anchored imported
+Master List, then single imported certificate, then unanchored imported Master List (D44).
 
-### Master List embarquée : German Master List du BSI
+### Embedded Master List: the BSI German Master List
 
-`de-bsi-master-list.ml` est la German Master List publiée par le BSI (Bundesamt für Sicherheit
-in der Informationstechnik). Ce n'est pas la Master List de l'ICAO que cite la SPEC (§7.1),
-d'où le nom du fichier.
+`de-bsi-master-list.ml` is the German Master List published by the BSI (Bundesamt für Sicherheit
+in der Informationstechnik). It is not the ICAO Master List cited by the SPEC (§7.1),
+hence the file name.
 
-- Page : <https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/ElekAusweise/CSCA/GermanMasterList.html>
-- Archive : <https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/ElekAusweise/CSCA/GermanMasterList.zip?__blob=publicationFile&v=112>,
-  SHA-256 constatée de l'archive `a0d2b448d8a2ef383c66991897c970ab2f0494173d33ef0d55195127dae08a6a`.
-- Fichier : `DE_ML_2026-10-01-11-50-52.ml` extrait de l'archive, 934 771 octets, signé le
-  2026-10-01, redistribué **inchangé** et seulement renommé. Le BSI ne publie pas d'empreinte
-  pour le fichier : l'intégrité repose sur la signature CMS et sur l'ancrage du signataire
-  décrit ci-dessous.
-- Contenu : 609 certificats CSCA et certificats de lien de 117 émetteurs, tous lisibles par
-  BouncyCastle, dont 172 clés EC à paramètres de courbe explicites et deux numéros de série
-  négatifs. Les 3 certificats français déjà fournis par l'ANTS gardent la source `ANTS`.
-- Téléchargé le 2026-10-12.
+- Page: <https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/ElekAusweise/CSCA/GermanMasterList.html>
+- Archive: <https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/ElekAusweise/CSCA/GermanMasterList.zip?__blob=publicationFile&v=112>,
+  observed SHA-256 of the archive `a0d2b448d8a2ef383c66991897c970ab2f0494173d33ef0d55195127dae08a6a`.
+- File: `DE_ML_2026-10-01-11-50-52.ml` extracted from the archive, 934,771 bytes, signed on
+  2026-10-01, redistributed **unchanged** and only renamed. The BSI does not publish a fingerprint
+  for the file: integrity relies on the CMS signature and on the signer anchoring
+  described below.
+- Contents: 609 CSCA certificates and link certificates from 117 issuers, all readable by
+  BouncyCastle, including 172 EC keys with explicit curve parameters and two negative
+  serial numbers. The 3 French certificates already provided by ANTS keep the `ANTS` source.
+- Downloaded on 2026-10-12.
 
-#### Historique
+#### History
 
-| Date | Version | Changement |
+| Date | Version | Change |
 |---|---|---|
-| 2026-09-25 | `DE_ML_2026-05-28-08-28-45.ml` (archive `v=108`), SHA-256 `e036f8c989193b38cf19493bb2c957bfa2385b35a680bf03300515cad7526dd0` | Première Master List embarquée : 588 certificats, 112 émetteurs. |
-| 2026-10-06 | `DE_ML_2026-08-19-10-28-54.ml` (archive `v=109`), SHA-256 `b0dfa486ef25ab2d23f62af7214ace207444c384eb5b7f8edbaf9ab42f7831ea` | Revérification de la release 0.9. Même signataire (serialNumber=0039), toujours émis par csca-germany 10-2024 dont l'empreinte épinglée est encore celle publiée par le BSI. 608 certificats (+30, −10), 117 émetteurs (+5 : AO, ID, KN, MZ, TG ; aucun retiré). Ajouts : AO, BY ×2, CL ×2, CO, GR ×2 (titres de séjour 003 et lien, déjà embarqués en publication nationale), ID, IQ ×2, KN ×7, ME, MX ×2, MZ, RU ×2, SA ×2, TG, TJ, UZ ×2 ; tous ont `basicConstraints` cA=TRUE et `keyUsage` keyCertSign. Retraits : dix CSCA expirés entre juin et août 2026 (AT ×3, CZ ×2, GB 2010, QA, SG, TR ×2). Aucun nouveau certificat pour DK ni NO. |
-| 2026-10-12 | `DE_ML_2026-10-01-11-50-52.ml` (archive `v=112`), SHA-256 `2bc0f28b35d83f2fc2d1495b1c715add358dfb9ba343e9788bc27a19ced13a9f` | Contrôles avant release 1.0.0. Même signataire (serialNumber=0039), même ancrage épinglé. 609 certificats (+4, −3), 117 émetteurs (aucun ajouté ni retiré). Ajouts : GB 2026 et son lien GBR_2021-2026 (octet pour octet les fichiers nationaux `gb-csca-2026.der` et `gb-csca-link-2021-2026.der`, qui gardent la priorité), HU ×2 (certificats croisés `BMHCA-HUNGARY 1` et `OIFCA-HUNGARY 2`) ; tous ont `basicConstraints` cA=TRUE et `keyUsage` keyCertSign. Retraits : trois certificats expirés entre août et septembre 2026 (BE `CSCAEC_BE_2`, lien IT `Italian Country Signer CA`, LI `CSCA-LIECHTENSTEIN`). |
+| 2026-09-25 | `DE_ML_2026-05-28-08-28-45.ml` (archive `v=108`), SHA-256 `e036f8c989193b38cf19493bb2c957bfa2385b35a680bf03300515cad7526dd0` | First embedded Master List: 588 certificates, 112 issuers. |
+| 2026-10-06 | `DE_ML_2026-08-19-10-28-54.ml` (archive `v=109`), SHA-256 `b0dfa486ef25ab2d23f62af7214ace207444c384eb5b7f8edbaf9ab42f7831ea` | Re-verification for release 0.9. Same signer (serialNumber=0039), still issued by csca-germany 10-2024, whose pinned fingerprint is still the one published by the BSI. 608 certificates (+30, −10), 117 issuers (+5: AO, ID, KN, MZ, TG; none removed). Additions: AO, BY ×2, CL ×2, CO, GR ×2 (residence permits 003 and link, already embedded as a national publication), ID, IQ ×2, KN ×7, ME, MX ×2, MZ, RU ×2, SA ×2, TG, TJ, UZ ×2; all have `basicConstraints` cA=TRUE and `keyUsage` keyCertSign. Removals: ten CSCAs that expired between June and August 2026 (AT ×3, CZ ×2, GB 2010, QA, SG, TR ×2). No new certificate for DK or NO. |
+| 2026-10-12 | `DE_ML_2026-10-01-11-50-52.ml` (archive `v=112`), SHA-256 `2bc0f28b35d83f2fc2d1495b1c715add358dfb9ba343e9788bc27a19ced13a9f` | Checks before release 1.0.0. Same signer (serialNumber=0039), same pinned anchor. 609 certificates (+4, −3), 117 issuers (none added or removed). Additions: GB 2026 and its link GBR_2021-2026 (byte for byte the national files `gb-csca-2026.der` and `gb-csca-link-2021-2026.der`, which keep priority), HU ×2 (cross certificates `BMHCA-HUNGARY 1` and `OIFCA-HUNGARY 2`); all have `basicConstraints` cA=TRUE and `keyUsage` keyCertSign. Removals: three certificates that expired between August and September 2026 (BE `CSCAEC_BE_2`, IT link `Italian Country Signer CA`, LI `CSCA-LIECHTENSTEIN`). |
 
-Conditions de réutilisation fixées par le BSI : usage, y compris commercial, autorisé ; pas
-d'usage publicitaire ; ne rien laisser croire d'une coopération avec le BSI ou d'une
-approbation de sa part. Sceau redistribue le fichier sans modification, le cite comme source
-et ne revendique aucun lien avec le BSI.
+Reuse terms set by the BSI: use, including commercial use, is permitted; no
+advertising use; nothing may suggest cooperation with the BSI or
+its endorsement. Sceau redistributes the file without modification, cites it as the source
+and claims no connection with the BSI.
 
-### Ancrage du signataire
+### Signer anchoring
 
-Vérifier une Master List avec le seul certificat signataire qu'elle transporte prouve son
-intégrité, pas son origine. Pour une liste **embarquée**, `:core` exige en plus que le
-signataire soit signé par l'un des certificats épinglés
-(`TrustStoreLoader.EMBEDDED_MASTER_LIST_ANCHORS`). Ce certificat épinglé est recherché parmi les
-certificats de la liste et dans le bloc `certificates` du CMS :
+Verifying a Master List with only the signer certificate it carries proves its
+integrity, not its origin. For an **embedded** list, `:core` additionally requires the
+signer to be signed by one of the pinned certificates
+(`TrustStoreLoader.EMBEDDED_MASTER_LIST_ANCHORS`). This pinned certificate is looked up among the
+certificates of the list and in the `certificates` block of the CMS:
 
-- CSCA Allemagne (`C=DE, O=bund, OU=bsi, CN=csca-germany`), empreinte SHA-256 publiée par le
-  BSI : `2084aed7a991b3158e63ad750d3dc38bc6c9dcf5958f28d1162f49884e91ada8` ;
-- son certificat de lien, empreinte SHA-256 publiée par le BSI :
+- Germany CSCA (`C=DE, O=bund, OU=bsi, CN=csca-germany`), SHA-256 fingerprint published by the
+  BSI: `2084aed7a991b3158e63ad750d3dc38bc6c9dcf5958f28d1162f49884e91ada8`;
+- its link certificate, SHA-256 fingerprint published by the BSI:
   `5f28cb692fb346ba2d23674c8778f2810c24a35869e5b517de3abd67d5db20bd`.
 
-Échec de l'ancrage : `InvalidMasterListException("UNTRUSTED_SIGNER")`.
+Anchoring failure: `InvalidMasterListException("UNTRUSTED_SIGNER")`.
 
-### Import par l'utilisateur
+### User import
 
-Entre deux releases, l'utilisateur peut importer une Master List plus récente depuis l'écran
-« Magasin de confiance » (bouton « Importer une Master List », SPEC §5.4). Sont acceptés les
-fichiers CMS `.ml`, `.der` et `.p7b`, par exemple la German Master List publiée par le BSI ou
-une Master List obtenue auprès d'une autorité nationale. La signature CMS est vérifiée avec le
-certificat signataire contenu dans le fichier, dont l'empreinte SHA-256 est présentée à
-l'utilisateur avant l'import. Une liste invalide est rejetée.
+Between two releases, the user can import a more recent Master List from the
+“Trust store” screen (“Import a Master List” button, SPEC §5.4). Accepted are
+CMS files `.ml`, `.der` and `.p7b`, for example the German Master List published by the BSI or
+a Master List obtained from a national authority. The CMS signature is verified with the
+signer certificate contained in the file, whose SHA-256 fingerprint is shown to the
+user before the import. An invalid list is rejected.
 
-Cette signature ne prouve rien sur l'origine de la liste : n'importe qui peut fabriquer un
-signataire nommé « CSCA XY ». Le signataire est donc rattaché, si possible, à un CSCA déjà connu
-(audit V34, D44) : il doit être émis par un certificat embarqué (ANTS, publication nationale,
-Master List embarquée) ou importé seul par l'utilisateur, même nom d'émetteur et signature
-vérifiée avec sa clé (`TrustStores.isMasterListAnchored`, même règle au chargement). Les CSCA
-d'une autre Master List importée, et ceux de la liste elle-même, ne comptent pas.
+This signature proves nothing about the origin of the list: anyone can create a
+signer named “CSCA XY”. The signer is therefore linked, where possible, to an already known CSCA
+(audit V34, D44): it must be issued by an embedded certificate (ANTS, national publication,
+embedded Master List) or by a certificate imported on its own by the user, with the same issuer name and a signature
+verified with its key (`TrustStores.isMasterListAnchored`, same rule at load time). The CSCAs
+of another imported Master List, and those of the list itself, do not count.
 
-- **Signataire ancré** : les certificats portent la source `IMPORTED_MASTER_LIST` et s'affichent
-  « Importé ». C'est le cas des listes nationales signées sous un CSCA déjà présent dans la liste
-  du BSI.
-- **Signataire non ancré** : l'aperçu d'import affiche un avertissement (« Le signataire de
-  cette liste n'est rattaché à aucun CSCA connu […] ») et le bouton « Importer » reste inactif
-  tant que l'utilisateur n'a pas coché « J'ai obtenu ce fichier directement de l'autorité qui l'a
-  publié ». Les certificats portent la source `IMPORTED_MASTER_LIST_UNANCHORED`, dernière en
-  priorité, et s'affichent « Liste importée, origine non vérifiée », dans le magasin comme dans le
-  détail du résultat ; le verdict porte la mention « Vérifié grâce à un certificat que vous avez
-  importé ». Importer d'abord seul le CSCA émetteur du signataire, après en avoir comparé
-  l'empreinte, rend la liste ancrée.
+- **Anchored signer**: the certificates get the `IMPORTED_MASTER_LIST` source and are displayed as
+  “Imported”. This is the case for national lists signed under a CSCA already present in the BSI
+  list.
+- **Unanchored signer**: the import preview shows a warning (“This list’s signer isn’t
+  linked to any known CSCA […]”) and the “Import” button stays disabled
+  until the user has ticked “I got this file directly from the authority that published
+  it”. The certificates get the `IMPORTED_MASTER_LIST_UNANCHORED` source, last in
+  priority, and are displayed as “Imported list, unverified origin”, in the store as in the
+  result details; the verdict carries the note “Verified using a certificate you
+  imported”. Importing the signer's issuing CSCA on its own first, after comparing its
+  fingerprint, makes the list anchored.
 
-L'usage étendu (EKU) du signataire n'est contrôlé que s'il est présent : il doit alors contenir
-`id-icao-cscaMasterListSigningKey` (2.23.136.1.1.3) ou `anyExtendedKeyUsage`. Il n'est pas
-exigé, certaines Master Lists réelles ne le portant pas ; le signataire de la liste du BSI le
-porte (extension critique).
+The signer's extended key usage (EKU) is checked only if present: it must then contain
+`id-icao-cscaMasterListSigningKey` (2.23.136.1.1.3) or `anyExtendedKeyUsage`. It is not
+required, since some real Master Lists do not carry it; the signer of the BSI list does
+carry it (critical extension).
 
-Codes de rejet (`InvalidMasterListException.code`, sans donnée personnelle) :
+Rejection codes (`InvalidMasterListException.code`, without personal data):
 
 | Code | Cause |
 |---|---|
-| `NOT_CMS` | Le fichier n'est pas un CMS SignedData lisible. |
-| `BAD_CONTENT_TYPE` | Le contenu signé n'est pas de type `id-icao-cscaMasterList` (2.23.136.1.1.2). |
-| `BAD_CONTENT` | Contenu absent (signature détachée) ou structure `CscaMasterList` invalide. |
-| `NO_SIGNER` | Aucun signataire, ou certificat signataire absent du CMS. |
-| `MULTIPLE_SIGNERS` | Plus d'un SignerInfo : une Master List n'a qu'un signataire (audit V22). |
-| `TOO_MANY_CERTIFICATES` | Plus de 2 000 certificats dans la liste ou dans le bloc `certificates` du CMS (audit V22, D22). |
-| `BAD_SIGNATURE` | La signature CMS ne se vérifie pas. |
-| `SIGNER_NOT_VALID` | Le certificat signataire n'était pas valide à la date de signature déclarée. |
-| `UNSUPPORTED_ALGORITHM` | Algorithme de signature inconnu de BouncyCastle. |
-| `UNTRUSTED_SIGNER` | Liste embarquée seulement : signataire non émis par un certificat épinglé. |
-| `BAD_SIGNER_USAGE` | Le signataire porte un usage étendu sans `id-icao-cscaMasterListSigningKey` ni `anyExtendedKeyUsage`, ou illisible (audit V34). |
+| `NOT_CMS` | The file is not a readable CMS SignedData. |
+| `BAD_CONTENT_TYPE` | The signed content is not of type `id-icao-cscaMasterList` (2.23.136.1.1.2). |
+| `BAD_CONTENT` | Missing content (detached signature) or invalid `CscaMasterList` structure. |
+| `NO_SIGNER` | No signer, or signer certificate missing from the CMS. |
+| `MULTIPLE_SIGNERS` | More than one SignerInfo: a Master List has only one signer (audit V22). |
+| `TOO_MANY_CERTIFICATES` | More than 2,000 certificates in the list or in the `certificates` block of the CMS (audit V22, D22). |
+| `BAD_SIGNATURE` | The CMS signature does not verify. |
+| `SIGNER_NOT_VALID` | The signer certificate was not valid at the declared signing date. |
+| `UNSUPPORTED_ALGORITHM` | Signature algorithm unknown to BouncyCastle. |
+| `UNTRUSTED_SIGNER` | Embedded list only: signer not issued by a pinned certificate. |
+| `BAD_SIGNER_USAGE` | The signer carries an extended key usage without `id-icao-cscaMasterListSigningKey` or `anyExtendedKeyUsage`, or an unreadable one (audit V34). |
 
-Le coût d'analyse est borné quel que soit le fichier (D22, audit V22) : un seul signataire, et
-au plus 2 000 certificats (`TrustStores.MAX_MASTER_LIST_CERTIFICATES`), comptés avant d'être
-lus. La plus grosse Master List réelle relevée (Suède) en compte 646, celle du BSI embarquée 609 ;
-la liste embarquée passe par le même contrôle. L'analyse de l'aperçu s'interrompt si
-l'utilisateur quitte l'écran.
+The parsing cost is bounded whatever the file (D22, audit V22): a single signer, and
+at most 2,000 certificates (`TrustStores.MAX_MASTER_LIST_CERTIFICATES`), counted before being
+read. The largest real Master List found (Sweden) has 646, the embedded BSI one 609;
+the embedded list goes through the same check. Parsing for the preview stops if
+the user leaves the screen.
 
-Un certificat illisible à l'intérieur d'une liste valide est ignoré et ne fait pas rejeter la
-liste. Les certificats sont lus par BouncyCastle, qui accepte les clés EC à paramètres de
-courbe explicites et les numéros de série négatifs, présents dans les listes réelles.
+An unreadable certificate inside a valid list is ignored and does not cause the list
+to be rejected. The certificates are read by BouncyCastle, which accepts EC keys with explicit
+curve parameters and negative serial numbers, which occur in real lists.
 
-### Import d'un certificat seul (D33)
+### Importing a single certificate (D33)
 
-Le même bouton, « Importer une Master List ou un certificat », accepte aussi un certificat CSCA
-auto-signé ou un certificat de lien isolé, tel que certains États le publient sur leur site
-(`.der`, `.cer`, `.crt` ou `.pem`, un seul certificat par fichier, 64 Kio au plus). Le type du
-fichier est reconnu automatiquement : un fichier de 64 Kio au plus est d'abord lu comme
-certificat ; s'il n'en est pas un, il est traité comme une Master List.
+The same button, “Import a Master List or a certificate”, also accepts a self-signed CSCA
+certificate or a standalone link certificate, as some States publish them on their website
+(`.der`, `.cer`, `.crt` or `.pem`, a single certificate per file, 64 KiB at most). The file
+type is detected automatically: a file of 64 KiB at most is first read as a
+certificate; if it is not one, it is treated as a Master List.
 
-Contrairement à une Master List, **aucune signature d'État ne garantit un certificat isolé** :
-c'est l'utilisateur qui lui accorde sa confiance. Le dialogue de confirmation le dit, et montre le
-sujet, le pays, la validité et l'empreinte SHA-256 du certificat, à comparer avec celle publiée
-par l'État. `TrustStores.parseCertificate` (`:core`) contrôle :
+Unlike a Master List, **no State's signature vouches for a standalone certificate**:
+the user is the one who decides to trust it. The confirmation dialog says so, and shows the
+subject, the country, the validity and the SHA-256 fingerprint of the certificate, to be compared with the one published
+by the State. `TrustStores.parseCertificate` (`:core`) checks:
 
 | Code (`InvalidCertificateException.code`) | Cause |
 |---|---|
-| `UNREADABLE` | Pas exactement un certificat X.509 (DER sans octet superflu, ou PEM avec un seul bloc `CERTIFICATE` et aucun autre bloc), ou clé publique illisible. |
-| `NOT_CA` | `basicConstraints` absent ou sans cA=TRUE, ou `keyUsage` présent sans keyCertSign. |
-| `BAD_SIGNATURE` | Certificat qui se présente comme auto-signé (sujet égal à l'émetteur, Authority Key Identifier absent ou égal au Subject Key Identifier) dont l'auto-signature ne se vérifie pas. |
+| `UNREADABLE` | Not exactly one X.509 certificate (DER without trailing bytes, or PEM with a single `CERTIFICATE` block and no other block), or unreadable public key. |
+| `NOT_CA` | `basicConstraints` missing or without cA=TRUE, or `keyUsage` present without keyCertSign. |
+| `BAD_SIGNATURE` | Certificate that presents itself as self-signed (subject equal to the issuer, Authority Key Identifier missing or equal to the Subject Key Identifier) whose self-signature does not verify. |
 
-La signature d'un certificat de lien n'est pas vérifiable à l'import (elle est faite par
-l'ancienne clé du CSCA) : elle l'est à la construction de la chaîne, comme pour tout certificat du
-magasin, qui n'ancre une chaîne que sur un CSCA auto-signé. Importer un lien seul n'apporte donc
-rien tant que le CSCA qui l'a signé n'est pas connu.
+The signature of a link certificate cannot be verified at import time (it is made by the
+old key of the CSCA): it is verified when the chain is built, as for any certificate in the
+store, which only anchors a chain on a self-signed CSCA. Importing a link on its own therefore adds
+nothing as long as the CSCA that signed it is not known.
 
-Stockage : `filesDir/trust/<SHA-256 du DER>.der`, en DER (un PEM est converti avant écriture),
-à côté des `<SHA-256>.ml` des Master Lists ; écriture atomique, certificat revérifié juste avant
-l'écriture. Au chargement, un certificat importé devenu invalide est ignoré. Les certificats
-importés portent la source `IMPORTED_CERTIFICATE`, distincte de `IMPORTED_MASTER_LIST`, et
-passent après toutes les autres sources : un certificat déjà présent (ANTS, publication
-nationale, Master List embarquée ou importée) garde sa source d'origine. Ils s'affichent
-« Certificat importé ».
+Storage: `filesDir/trust/<SHA-256 of the DER>.der`, in DER (a PEM is converted before writing),
+next to the `<SHA-256>.ml` files of the Master Lists; atomic write, certificate re-verified just before
+writing. At load time, an imported certificate that has become invalid is ignored. Imported certificates
+get the `IMPORTED_CERTIFICATE` source, distinct from `IMPORTED_MASTER_LIST`, and
+come after all other sources: a certificate already present (ANTS, national
+publication, embedded or imported Master List) keeps its original source. They are displayed as
+“Imported certificate”.
 
-Limites (`ImportLimits`, D22 et D33) : 100 certificats importés au plus, 64 Kio par fichier ; ils
-ne comptent pas dans les limites des Master Lists (10 listes, 40 Mo cumulés).
+Limits (`ImportLimits`, D22 and D33): 100 imported certificates at most, 64 KiB per file; they
+do not count toward the Master List limits (10 lists, 40 MB in total).
 
-### Doublons à l'import (D33)
+### Duplicates on import (D33)
 
-Un fichier qui n'apporterait rien est refusé dès l'aperçu, sans dialogue de confirmation et sans
-rien écrire (`DuplicateImportException`, logique dans `trust/ImportDuplicates`) :
+A file that would add nothing is rejected as soon as it is previewed, without a confirmation dialog and without
+writing anything (`DuplicateImportException`, logic in `trust/ImportDuplicates`):
 
-| Fichier choisi | Détection | Message |
+| File chosen | Detection | Message |
 |---|---|---|
-| Certificat déjà importé seul, en DER ou en PEM | SHA-256 du DER = nom d'un `<empreinte>.der` importé | « Ce certificat est déjà importé. » |
-| Certificat déjà dans le magasin | SHA-256 du DER parmi `TrustStore.anchors` | « Ce certificat figure déjà dans le magasin de confiance (source : …) : il n'y a rien à importer. », avec la source ANTS, publication nationale, Master List embarquée ou Master List importée |
-| Master List déjà importée | SHA-256 du fichier = nom d'un `<empreinte>.ml` importé | « Cette Master List est déjà importée. » |
-| Master List identique à la Master List embarquée | SHA-256 du fichier = celui de la ressource `.ml` de `:core` | « Cette Master List est identique à celle embarquée dans l'application : il n'y a rien à importer. » |
+| Certificate already imported on its own, in DER or in PEM | SHA-256 of the DER = name of an imported `<fingerprint>.der` | “This certificate has already been imported.” |
+| Certificate already in the store | SHA-256 of the DER among `TrustStore.anchors` | “This certificate is already in the trust store (source: …). There is nothing to import.”, with the source ANTS, national publication, built-in Master List or imported Master List |
+| Master List already imported | SHA-256 of the file = name of an imported `<fingerprint>.ml` | “This Master List has already been imported.” |
+| Master List identical to the embedded Master List | SHA-256 of the file = that of the `.ml` resource of `:core` | “This Master List is identical to the one built into the app. There is nothing to import.” |
 
-Une Master List différente reste importable même si tous ses certificats sont déjà connus (elle
-peut être plus récente) ; le dialogue de confirmation indique combien de ses certificats sont
-absents du magasin actuel, par exemple « 12 nouveaux certificats sur 590 ».
+A different Master List can still be imported even if all its certificates are already known (it
+may be more recent); the confirmation dialog shows how many of its certificates are
+missing from the current store, for example “12 new certificates out of 590”.
 
-### Éléments importés et suppression
+### Imported items and deletion
 
-L'écran « Magasin de confiance » liste chaque élément importé : Master List (signataire, date de
-signature, nombre de certificats) ou certificat (sujet, pays, validité, empreinte). Chacun se
-supprime à l'unité, après confirmation ; le bouton « Supprimer les certificats importés » efface
-toujours tout, Master Lists et certificats. Un fichier importé devenu illisible reste listé pour
-pouvoir être supprimé. L'identifiant d'un élément est son nom de fichier ; la suppression refuse
-tout identifiant qui n'est pas `<64 chiffres hexadécimaux minuscules>.ml` ou `.der`.
+The “Trust store” screen lists each imported item: Master List (signer, signing
+date, number of certificates) or certificate (subject, country, validity, fingerprint). Each one can be
+deleted individually, after confirmation; the “Delete imported certificates” button still deletes
+everything, Master Lists and certificates. An imported file that has become unreadable stays listed so that it
+can be deleted. The identifier of an item is its file name; deletion rejects
+any identifier that is not `<64 lowercase hexadecimal digits>.ml` or `.der`.
 
-La liste des éléments importés est lue indépendamment du magasin fusionné (audit V22) : elle
-s'affiche, et chaque élément se supprime, pendant le chargement du magasin comme après un échec.
-Les sujets X.500 venus des fichiers importés (signataire d'une Master List, sujet d'un
-certificat), dans les dialogues de confirmation comme dans les listes, sont assainis avant
-affichage (audit V23) : une ligne, sans caractère de contrôle ni de formatage bidirectionnel,
-longueur bornée avec ellipse.
+The list of imported items is read independently of the merged store (audit V22): it
+is displayed, and each item can be deleted, while the store is loading as well as after a failure.
+X.500 subjects coming from imported files (signer of a Master List, subject of a
+certificate), in the confirmation dialogs as in the lists, are sanitized before
+display (audit V23): a single line, without control or bidirectional formatting characters,
+bounded length with an ellipsis.
 
-## Procédure de mise à jour (à chaque release)
+## Update procedure (at each release)
 
 ### Script
 
-`scripts/update-trust-store.sh` automatise les vérifications de la procédure ci-dessous. C'est
-un outil du développeur : l'application ne télécharge jamais rien. Il demande `bash`, `curl`,
-`openssl` 3, `sha256sum`, `sha1sum`, `unzip` et les coreutils GNU. Les URL des sources sont
-regroupées en tête du script.
+`scripts/update-trust-store.sh` automates the checks of the procedure below. It is
+a developer tool: the app never downloads anything. It requires `bash`, `curl`,
+`openssl` 3, `sha256sum`, `sha1sum`, `unzip` and the GNU coreutils. The source URLs are
+grouped at the top of the script.
 
 ```bash
-# 1. Télécharger à la main les archives .zip des deux pages de l'ANTS dans un dossier
-#    (le site bloque curl), par exemple ~/ants/.
-# 2. Rapport, sans rien écrire (mode par défaut) :
+# 1. Download by hand the .zip archives from the two ANTS pages into a folder
+#    (the site blocks curl), for example ~/ants/.
+# 2. Report, without writing anything (default mode):
 scripts/update-trust-store.sh --ants-dir ~/ants
-# 3. S'il signale des différences et que toutes les vérifications passent :
+# 3. If it reports differences and all checks pass:
 scripts/update-trust-store.sh --ants-dir ~/ants --apply
 ```
 
-- **ANTS** : pour chaque certificat de chaque archive, empreinte recalculée et comparée à
-  celle du fichier d'empreinte de l'archive (SHA-1 pour les passeports, SHA-256 pour l'e-ID),
-  conversion PEM vers DER si besoin, affichage du sujet, de l'émetteur et des dates. Le sujet
-  doit être `CN=CSCA-FRANCE` ou `CN=eID-FRANCE`, qui fixe le nom `ants-csca-<année>.der` ou
-  `ants-csca-eid-<année>.der`. Sans `--ants-dir`, cette partie est sautée et le script le
-  signale.
-- **BSI** : téléchargement de la German Master List (ou `--bsi-zip` pour une archive locale),
-  signature CMS vérifiée avec le signataire inclus, contenu de type `id-icao-cscaMasterList`,
-  signataire valide à la date de signature et signé par un certificat dont la SHA-256 figure
-  dans `EMBEDDED_MASTER_LIST_ANCHORS` (empreintes lues dans `TrustStoreLoader.kt` ; le script
-  échoue si le format de cette constante change). Affiche la date de signature et le nombre
-  de certificats.
-- **Comparaison** : rien n'est écrit si les fichiers sont identiques aux fichiers embarqués.
-  Avec `--apply` seulement, les fichiers nouveaux ou modifiés sont copiés dans
-  `core/src/main/resources/trust/` et les nouveaux noms ajoutés à `trust/index.txt`. Aucun
-  fichier n'est jamais retiré, en particulier aucun CSCA expiré.
-- Le script affiche les lignes à reporter dans les tableaux « Fichiers embarqués » et
-  « Provenance » ; ce document reste à mettre à jour à la main (étapes 6 et 7), puis
-  `./gradlew :core:test` (étape 8) confirme la cohérence.
-- Toute vérification ratée donne une sortie non nulle, et aucun fichier n'est écrit.
+- **ANTS**: for each certificate in each archive, fingerprint recomputed and compared with
+  the one in the archive's fingerprint file (SHA-1 for passports, SHA-256 for e-ID),
+  PEM to DER conversion if needed, display of the subject, the issuer and the dates. The subject
+  must be `CN=CSCA-FRANCE` or `CN=eID-FRANCE`, which sets the name `ants-csca-<year>.der` or
+  `ants-csca-eid-<year>.der`. Without `--ants-dir`, this part is skipped and the script
+  says so.
+- **BSI**: download of the German Master List (or `--bsi-zip` for a local archive),
+  CMS signature verified with the included signer, content of type `id-icao-cscaMasterList`,
+  signer valid at the signing date and signed by a certificate whose SHA-256 appears
+  in `EMBEDDED_MASTER_LIST_ANCHORS` (fingerprints read from `TrustStoreLoader.kt`; the script
+  fails if the format of this constant changes). Shows the signing date and the number
+  of certificates.
+- **Comparison**: nothing is written if the files are identical to the embedded files.
+  Only with `--apply` are new or modified files copied into
+  `core/src/main/resources/trust/` and the new names added to `trust/index.txt`. No
+  file is ever removed, in particular no expired CSCA.
+- The script prints the rows to copy into the “Embedded files” and
+  “Provenance” tables; this document still has to be updated by hand (steps 6 and 7), then
+  `./gradlew :core:test` (step 8) confirms consistency.
+- Any failed check gives a non-zero exit status, and no file is written.
 
-### Étapes
+### Steps
 
-La procédure manuelle reste la référence de ce que fait le script.
+The manual procedure remains the reference for what the script does.
 
-1. Télécharger les archives CSCA et CSCA e-ID depuis les pages de l'ANTS citées plus haut.
-2. Pour chaque archive, extraire le certificat et le fichier d'empreinte, puis vérifier que
-   l'empreinte recalculée correspond à l'empreinte publiée :
-   `sha1sum fichier.crt` (passeports, SHA-1 publiée) ou `sha256sum eID-FRANCE.crt` (e-ID).
-3. Vérifier le format et le contenu :
-   `openssl x509 -inform DER -in fichier.crt -noout -subject -issuer -dates`. Un fichier PEM
-   est converti avec `openssl x509 -in fichier.pem -outform DER -out fichier.der`.
-4. Copier le certificat dans `core/src/main/resources/trust/` sous le nom
-   `ants-csca-<année>.der` (passeport) ou `ants-csca-eid-<année>.der` (e-ID), l'année étant
-   celle du début de validité. Ne jamais retirer un CSCA expiré tant que des documents qu'il
-   a signés sont en circulation.
-5. Ajouter le nom du fichier à `trust/index.txt`.
-6. Ajouter la ligne du fichier dans les deux tableaux ci-dessus : sujet, validité, empreinte
-   publiée avec son algorithme, SHA-256 constatée (`sha256sum`), date de téléchargement.
-7. Pour une Master List embarquée : retélécharger le fichier, vérifier la signature CMS et
-   l'ancrage du signataire (le test de chargement échoue sinon), vérifier les empreintes
-   publiées des certificats épinglés, puis mettre à jour les empreintes de ce document. Si le
-   pays émetteur change de CSCA, mettre à jour `EMBEDDED_MASTER_LIST_ANCHORS` à partir des
-   empreintes publiées par cette autorité, jamais à partir du fichier lui-même.
-8. Publications nationales (section du même nom) : le script ne les couvre pas. Pour chaque
-   source, suivre la procédure de `docs/trust-sources.md` §5 : retélécharger la page, relever
-   les nouveaux certificats, contrôler pays, auto-signature ou lien signé par un CSCA déjà
-   présent, validité et empreinte publiée. Nommer le fichier `<pays>-csca-<désignation>.der`,
-   jamais avec le préfixe `ants-`. Ne l'ajouter que si la source garde un statut A, et mettre à
-   jour la liste attendue de `TrustStoreTest.nationalSha256`. Surveiller les bascules
-   annoncées (DK prévue en septembre 2026 mais non publiée au 2026-10-06, NO en janvier 2027).
-9. Lancer `./gradlew :core:test` : `TrustStoreFingerprintTest` et `TrustStoreTest` doivent
-   passer.
+1. Download the CSCA and CSCA e-ID archives from the ANTS pages cited above.
+2. For each archive, extract the certificate and the fingerprint file, then check that
+   the recomputed fingerprint matches the published fingerprint:
+   `sha1sum file.crt` (passports, SHA-1 published) or `sha256sum eID-FRANCE.crt` (e-ID).
+3. Check the format and the contents:
+   `openssl x509 -inform DER -in file.crt -noout -subject -issuer -dates`. A PEM file
+   is converted with `openssl x509 -in file.pem -outform DER -out file.der`.
+4. Copy the certificate into `core/src/main/resources/trust/` under the name
+   `ants-csca-<year>.der` (passport) or `ants-csca-eid-<year>.der` (e-ID), the year being
+   that of the start of validity. Never remove an expired CSCA while documents it
+   signed are in circulation.
+5. Add the file name to `trust/index.txt`.
+6. Add the file's row to both tables above: subject, validity, published fingerprint
+   with its algorithm, observed SHA-256 (`sha256sum`), download date.
+7. For an embedded Master List: download the file again, check the CMS signature and
+   the signer anchoring (the loading test fails otherwise), check the published fingerprints
+   of the pinned certificates, then update the fingerprints in this document. If the
+   issuing country changes CSCA, update `EMBEDDED_MASTER_LIST_ANCHORS` from the
+   fingerprints published by that authority, never from the file itself.
+8. National publications (section of the same name): the script does not cover them. For each
+   source, follow the procedure in `docs/trust-sources.md` §5: download the page again, note
+   the new certificates, check country, self-signature or link signed by a CSCA already
+   present, validity and published fingerprint. Name the file `<country>-csca-<designation>.der`,
+   never with the `ants-` prefix. Add it only if the source keeps status A, and update
+   the expected list in `TrustStoreTest.nationalSha256`. Watch for announced
+   rollovers (DK planned for September 2026 but not published as of 2026-10-06, NO in January 2027).
+9. Run `./gradlew :core:test`: `TrustStoreFingerprintTest` and `TrustStoreTest` must
+   pass.

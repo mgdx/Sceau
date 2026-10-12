@@ -2,9 +2,9 @@ Sceau lit par NFC la puce des documents d'identité conformes à la norme ICAO 9
 
 <b>Documents pris en charge</b>
 <ul>
+<li>Passeports biométriques de tous pays, avec le numéro de document et les dates de naissance et d'expiration</li>
 <li>Carte nationale d'identité française (format carte bancaire, depuis 2021), avec le CAN à 6 chiffres imprimé sur la carte</li>
 <li>Cartes d'identité européennes, avec le CAN ou la MRZ</li>
-<li>Passeports biométriques de tous pays, avec le numéro de document et les dates de naissance et d'expiration</li>
 </ul>
 
 <b>Ce que Sceau affiche</b>

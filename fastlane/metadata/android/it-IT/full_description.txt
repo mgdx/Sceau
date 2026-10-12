@@ -2,9 +2,9 @@ Sceau legge via NFC il chip dei documenti d’identità ICAO 9303 e verifica che
 
 <b>Documenti supportati</b>
 <ul>
+<li>Passaporti biometrici di qualsiasi paese, con il numero del documento, la data di nascita e la data di scadenza</li>
 <li>Carta d’identità francese (formato carta di credito, dal 2021), con il CAN di 6 cifre stampato sulla carta</li>
 <li>Carte d’identità europee, con il CAN o la MRZ</li>
-<li>Passaporti biometrici di qualsiasi paese, con il numero del documento, la data di nascita e la data di scadenza</li>
 </ul>
 
 <b>Cosa mostra Sceau</b>

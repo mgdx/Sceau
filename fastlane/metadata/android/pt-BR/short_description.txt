@@ -1,1 +1,1 @@
-Lê e verifica o chip de carteiras de identidade e passaportes, sem internet
+Lê e verifica o chip de passaportes e carteiras de identidade, sem internet

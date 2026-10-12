@@ -2,9 +2,9 @@ Sceau cez NFC číta čip dokladov totožnosti podľa normy ICAO 9303 a overuje,
 
 <b>Podporované doklady</b>
 <ul>
+<li>Biometrické cestovné pasy z ľubovoľnej krajiny pomocou čísla dokladu, dátumu narodenia a dátumu platnosti</li>
 <li>Francúzsky občiansky preukaz (formát platobnej karty, od roku 2021) pomocou 6-miestneho čísla CAN vytlačeného na preukaze</li>
 <li>Európske občianske preukazy pomocou čísla CAN alebo zóny MRZ</li>
-<li>Biometrické cestovné pasy z ľubovoľnej krajiny pomocou čísla dokladu, dátumu narodenia a dátumu platnosti</li>
 </ul>
 
 <b>Čo Sceau zobrazí</b>

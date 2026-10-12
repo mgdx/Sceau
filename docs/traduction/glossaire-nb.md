@@ -1,44 +1,44 @@
-# Glossaire norvégien bokmål (nb)
+# Norwegian Bokmål glossary (nb)
 
-| Source FR | Cible | Note |
+| French source | Target | Note |
 |---|---|---|
-| puce | brikke | « brikken i dokumentet » |
+| puce | brikke | “brikken i dokumentet” |
 | document | dokument | |
 | document d'identité | identitetsdokument | |
-| carte d'identité | ID-kort | usage courant et officiel (nasjonalt ID-kort) |
+| carte d'identité | ID-kort | common and official usage (nasjonalt ID-kort) |
 | passeport | pass | |
-| titulaire | innehaver | terme des documents norvégiens |
+| titulaire | innehaver | term on Norwegian documents |
 | magasin de confiance | tillitslager | |
-| empreinte | fingeravtrykk | au sens empreinte de certificat / de hachage |
+| empreinte | fingeravtrykk | in the sense of certificate fingerprint / hash |
 | algorithme d'empreinte | hashalgoritme | |
-| certificat | sertifikat | pluriel « sertifikater » |
+| certificat | sertifikat | plural “sertifikater” |
 | certificat de lien | lenkesertifikat | |
 | chaîne de certification | sertifikatkjede | |
 | autorité de certification | sertifiseringsinstans | |
 | émetteur | utsteder | |
 | pays émetteur | utstedende land | |
-| État émetteur | utstedende stat | champ d'identité |
+| État émetteur | utstedende stat | identity field |
 | autorité de délivrance | utstedende myndighet | |
 | date de délivrance | utstedelsesdato | |
-| date d'expiration | utløpsdato | vocabulaire du passeport norvégien |
+| date d'expiration | utløpsdato | Norwegian passport vocabulary |
 | date de naissance | fødselsdato | |
 | nom / prénoms | etternavn / fornavn | |
 | nationalité | nasjonalitet | |
 | numéro du document | dokumentnummer | |
 | signataire | signatar | |
-| lire (bouton) | Les av | « avlesing » pour la lecture |
-| réessayer | Prøv igjen | vocabulaire Android |
-| annuler | Avbryt | vocabulaire Android |
-| effacer (résultat) | Tøm | vide l'écran de résultat |
+| lire (bouton) | Les av | “avlesing” for the noun (reading) |
+| réessayer | Prøv igjen | Android vocabulary |
+| annuler | Avbryt | Android vocabulary |
+| effacer (résultat) | Tøm | clears the result screen |
 | importer | Importer | |
 | supprimer | Slett | |
-| Plus d'options | Flere alternativer | vocabulaire Android |
+| Plus d'options | Flere alternativer | Android vocabulary |
 | réglages | innstillinger | |
 | canal sécurisé | sikker kanal | |
 | groupe de données | datagruppe | |
 | Authentique | Ekte | verdict |
 | Signature valide, puce non vérifiée | Gyldig signatur, brikken er ikke verifisert | verdict |
 | Émetteur inconnu | Ukjent utsteder | verdict |
-| Échec | Mislyktes | verdict et statut de contrôle |
+| Échec | Mislyktes | verdict and check status |
 | RGPD | GDPR (personvernforordningen) | |
-| Master List | Master List | jamais traduit ; pluriel « Master Lists » |
+| Master List | Master List | never translated; plural “Master Lists” |

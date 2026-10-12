@@ -1,8 +1,8 @@
-# Glossaire — géorgien (ka)
+# Glossary — Georgian (ka)
 
-Référence de vocabulaire pour `app/src/main/res/values-ka/`.
+Vocabulary reference for `app/src/main/res/values-ka/`.
 
-| Source FR | Cible | Note |
+| French source | Target | Note |
 |---|---|---|
 | puce | ჩიპი |  |
 | document | დოკუმენტი |  |
@@ -26,17 +26,17 @@ Référence de vocabulaire pour `app/src/main/res/values-ka/`.
 | supprimer | წაშლა |  |
 | Plus d’options | მეტი ვარიანტი |  |
 | À propos | აპის შესახებ |  |
-| Authentique | ავთენტურია | forme prédicative (« est authentique ») |
+| Authentique | ავთენტურია | predicative form (“is authentic”) |
 | Signature valide, puce non vérifiée | ხელმოწერა ვალიდურია, ჩიპი შემოწმებული არ არის |  |
 | Émetteur inconnu | უცნობი გამცემი |  |
 | Échec (verdict) | წარუმატებელი |  |
 | carte d’identité | პირადობის მოწმობა |  |
 | passeport | პასპორტი |  |
 | numéro du document | დოკუმენტის ნომერი |  |
-| nom / prénoms | გვარი / სახელი | forme des documents géorgiens (სახელი au singulier) |
-| date d’expiration | მოქმედების ვადა | libellé de la carte d’identité géorgienne |
+| nom / prénoms | გვარი / სახელი | form used on Georgian documents (სახელი in the singular) |
+| date d’expiration | მოქმედების ვადა | label on the Georgian identity card |
 | nationalité | მოქალაქეობა |  |
 | date de délivrance | გაცემის თარიღი |  |
 | JJ / MM / AAAA | დდ / თთ / წწწწ | დღე / თვე / წელი |
 | RGPD | მონაცემთა დაცვის ზოგადი რეგულაცია (GDPR) |  |
-| Master List, CAN, MRZ, DS, CSCA, SOD, DGn | inchangés (latin) | suffixes casuels après trait d’union (Master List-ის, SOD-ის) |
+| Master List, CAN, MRZ, DS, CSCA, SOD, DGn | unchanged (Latin script) | case suffixes after a hyphen (Master List-ის, SOD-ის) |

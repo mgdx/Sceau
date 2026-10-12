@@ -1,98 +1,98 @@
-# `:testchip` — puce ICAO 9303 simulée et PKI factice
+# `:testchip` — simulated ICAO 9303 chip and fake PKI
 
-Module Kotlin JVM pur, **jamais embarqué en production**. Il sert :
+Pure Kotlin JVM module, **never shipped in production**. It is used:
 
-- aux tests de `:core` (`testImplementation(project(":testchip"))`) ;
-- au mode démo de l'APK **debug uniquement** (`debugImplementation(project(":testchip"))` dans
-  `app/build.gradle.kts`) : menu de l'accueil → « Simuler une CNIe (démo) », branché par
-  `app/src/debug/java/…/demo/DemoMode.kt` ; la version `app/src/release/` de `DemoMode` est vide.
+- by the `:core` tests (`testImplementation(project(":testchip"))`);
+- by the demo mode of the **debug-only** APK (`debugImplementation(project(":testchip"))` in
+  `app/build.gradle.kts`): home menu → “Simulate a French ID card (demo)”, wired in by
+  `app/src/debug/java/…/demo/DemoMode.kt`; the `app/src/release/` version of `DemoMode` is empty.
 
-`:core` (main) ne dépend pas de ce module, et `./gradlew :app:dependencies --configuration
-releaseRuntimeClasspath` ne le mentionne pas (décision D17).
+`:core` (main) does not depend on this module, and `./gradlew :app:dependencies --configuration
+releaseRuntimeClasspath` does not mention it (decision D17).
 
-## Contenu
+## Contents
 
-| Élément | Rôle |
+| Element | Role |
 |---|---|
-| `TestPki`, `TestCredential`, `TestKeyType` | Hiérarchie factice CSCA (ancien, nouveau, lien) → DS, RSA ou EC, clés reproductibles (graine). |
-| `TestDocument`, `TestSod`, `SodOptions` | DG factices et EF.SOD signé, y compris les altérations des cas d'échec. |
-| `TestCardSecurity` | EF.CardSecurity signé par le DS (PACE-CAM), mêmes altérations que le SOD. |
-| `TestTrustStore` | `TrustStore` de test contenant les CSCA choisis. |
-| `SimulatedChip` | `CardTransport` qui se comporte comme une puce : EF.CardAccess, PACE, BAC, messagerie sécurisée 3DES/AES, lecture des fichiers, Chip Authentication, Active Authentication, liaison réinitialisable (`reconnect`). Note sous quelle session chaque fichier est servi (`fileReads`, `sessionsServing`). Peut réserver l'applet ou des fichiers aux autorités (`restrictedApplet`, `restrictedFiles` : SW 6982, D36). |
-| `PaceSettings`, `PacePassword` | PACE de la puce simulée (EF.CardAccess, CAN). |
-| `SimulatedDocuments.frenchIdCard()` | CNIe française simulée prête à lire (voir ci-dessous). |
-| `SimulatedDocuments.germanEidUb()` | Carte eID allemande pour citoyens de l'Union (eID-UB) : DG1 sans donnée d'identité (MRZ « UBD<<<… »), CA sans AA (décision D36). |
+| `TestPki`, `TestCredential`, `TestKeyType` | Fake CSCA hierarchy (old, new, link) → DS, RSA or EC, reproducible keys (seed). |
+| `TestDocument`, `TestSod`, `SodOptions` | Fake DGs and signed EF.SOD, including the alterations for failure cases. |
+| `TestCardSecurity` | EF.CardSecurity signed by the DS (PACE-CAM), same alterations as the SOD. |
+| `TestTrustStore` | Test `TrustStore` containing the chosen CSCAs. |
+| `SimulatedChip` | `CardTransport` that behaves like a chip: EF.CardAccess, PACE, BAC, 3DES/AES secure messaging, file reading, Chip Authentication, Active Authentication, resettable link (`reconnect`). Records under which session each file is served (`fileReads`, `sessionsServing`). Can reserve the applet or files for authorities (`restrictedApplet`, `restrictedFiles`: SW 6982, D36). |
+| `PaceSettings`, `PacePassword` | PACE of the simulated chip (EF.CardAccess, CAN). |
+| `SimulatedDocuments.frenchIdCard()` | Simulated French CNIe ready to read (see below). |
+| `SimulatedDocuments.germanEidUb()` | German eID card for Union citizens (eID-UB): DG1 without identity data (MRZ “UBD<<<…”), CA without AA (decision D36). |
 
-Tous les échanges cryptographiques côté puce (BAC, PACE, messagerie sécurisée, CA) sont écrits
-d'après ICAO 9303-11 et BSI TR-03110 avec les primitives de BouncyCastle, **sans** le code
-protocolaire de JMRTD : un test de bout en bout confronte donc réellement JMRTD (utilisé par
-Sceau) à une implémentation indépendante.
+All the chip-side cryptographic exchanges (BAC, PACE, secure messaging, CA) are written
+from ICAO 9303-11 and BSI TR-03110 with BouncyCastle primitives, **without** JMRTD's protocol
+code: an end-to-end test therefore genuinely pits JMRTD (used by Sceau) against an
+independent implementation.
 
-## CNIe simulée
+## Simulated CNIe
 
 ```kotlin
-val card = SimulatedDocuments.frenchIdCard()          // CAN 123456 par défaut
+val card = SimulatedDocuments.frenchIdCard()          // CAN 123456 by default
 val report = readAndVerify(card.chip(), card.canKey!!, card.trustStore) { }
-// ou card.mrzKey pour PACE avec la clé MRZ
+// or card.mrzKey for PACE with the MRZ key
 ```
 
-- EF.CardAccess : `PACEInfo` id-PACE-ECDH-GM-AES-CBC-CMAC-128, paramètres standardisés 13
-  (brainpoolP256r1). BAC reste accepté (transition ICAO).
-- DG1 : MRZ TD1, code « ID », FRA, `SPECIMEN` / `MARIANNE`, document `SPEC12345`.
-- DG2 : portrait JPEG 2000 synthétique (`specimen-portrait.jp2`), ISO 19794-5.
-- DG7 : signature manuscrite synthétique (`specimen-signature.jpg`, JPEG en niveaux de gris,
-  300 × 100), lue et affichée depuis la décision D37.
-- DG11 : nom complet, lieu de naissance et adresse fictifs. DG12 : « PREFECTURE DE TEST »,
-  délivrance le 15/03/2024.
-- DG14 : clé CA ECDH brainpoolP256r1, `ChipAuthenticationInfo` AES-128,
-  `ActiveAuthenticationInfo` ECDSA SHA-256. DG15 : clé AA EC.
-- EF.SOD : SHA-256, signé par `DS-TEST-FRANCE`, émis par `CSCA-TEST-FRANCE` (EC brainpoolP256r1).
-  Ces certificats sont générés à la volée et ne figurent dans aucun magasin réel.
+- EF.CardAccess: `PACEInfo` id-PACE-ECDH-GM-AES-CBC-CMAC-128, standardized parameters 13
+  (brainpoolP256r1). BAC remains accepted (ICAO transition).
+- DG1: TD1 MRZ, code “ID”, FRA, `SPECIMEN` / `MARIANNE`, document `SPEC12345`.
+- DG2: synthetic JPEG 2000 portrait (`specimen-portrait.jp2`), ISO 19794-5.
+- DG7: synthetic handwritten signature (`specimen-signature.jpg`, grayscale JPEG,
+  300 × 100), read and displayed since decision D37.
+- DG11: fictitious full name, place of birth and address. DG12: “PREFECTURE DE TEST”,
+  issued on 15/03/2024.
+- DG14: ECDH brainpoolP256r1 CA key, AES-128 `ChipAuthenticationInfo`,
+  ECDSA SHA-256 `ActiveAuthenticationInfo`. DG15: EC AA key.
+- EF.SOD: SHA-256, signed by `DS-TEST-FRANCE`, issued by `CSCA-TEST-FRANCE` (EC brainpoolP256r1).
+  These certificates are generated on the fly and appear in no real store.
 
-Chaque appel à `chip()` renvoie une puce neuve : une puce simulée a un état, une par lecture.
+Each call to `chip()` returns a fresh chip: a simulated chip has state, one per read.
 
-### PACE simulé (fidélité)
+### Simulated PACE (fidelity)
 
-MSE:Set AT (`00 22 C1 A4`, objets 80/83/84), puis GENERAL AUTHENTICATE en quatre étapes
-chaînées : nonce chiffré `z = E(Kπ, s)` avec `Kπ = KDF(f(π), 3)` (f(π) = CAN en ISO 8859-1, ou
-SHA-1 de l'information MRZ sur 20 octets), mapping générique ECDH `G' = s·G + H`, accord de clés
-éphémère sur `G'`, jetons AES-CMAC sur `7F49{06 OID, 86 point}`, clés de session `KDF(K, 1)` et
-`KDF(K, 2)`, SSC = 0. Un jeton du lecteur faux (mauvais CAN) donne `63Cx` (x = essais restants,
-3 au départ) à la dernière étape. Non simulés : mapping intégré (IM), DH en corps fini, 3DES,
-paramètres de domaine propriétaires, blocage du mot de passe.
+MSE:Set AT (`00 22 C1 A4`, objects 80/83/84), then GENERAL AUTHENTICATE in four chained
+steps: encrypted nonce `z = E(Kπ, s)` with `Kπ = KDF(f(π), 3)` (f(π) = CAN in ISO 8859-1, or
+SHA-1 of the MRZ information over 20 bytes), generic ECDH mapping `G' = s·G + H`, ephemeral
+key agreement on `G'`, AES-CMAC tokens over `7F49{06 OID, 86 point}`, session keys `KDF(K, 1)` and
+`KDF(K, 2)`, SSC = 0. A wrong reader token (wrong CAN) gives `63Cx` (x = remaining attempts,
+3 at the start) at the last step. Not simulated: integrated mapping (IM), finite-field DH, 3DES,
+proprietary domain parameters, password blocking.
 
-PACE-CAM (`PaceSettings(can, protocolOid = ID_PACE_ECDH_CAM_AES_CBC_CMAC_128)`) : même échange,
-mais la dernière réponse contient aussi `8A A.IC`, `A.IC = E(KSenc, CA.IC)` (AES-CBC, IV
-`E(KSenc, −1)`), `CA.IC = SK.IC⁻¹ · SK.PICC.map mod n` avec la clé CA de la puce. EF.CardSecurity
-(`TestCardSecurity.of(document, pace)` : `PACEInfo`, `ChipAuthenticationInfo`,
-`ChipAuthenticationPublicKeyInfo`, signé par le DS) est passé à `SimulatedChip(cardSecurity = …)`
-et servi au MF sous messagerie sécurisée seulement. `tamperChipAuthenticationMapping` fait
-envoyer `CA.IC + 1`.
+PACE-CAM (`PaceSettings(can, protocolOid = ID_PACE_ECDH_CAM_AES_CBC_CMAC_128)`): same exchange,
+but the last response also contains `8A A.IC`, `A.IC = E(KSenc, CA.IC)` (AES-CBC, IV
+`E(KSenc, −1)`), `CA.IC = SK.IC⁻¹ · SK.PICC.map mod n` with the chip's CA key. EF.CardSecurity
+(`TestCardSecurity.of(document, pace)`: `PACEInfo`, `ChipAuthenticationInfo`,
+`ChipAuthenticationPublicKeyInfo`, signed by the DS) is passed to `SimulatedChip(cardSecurity = …)`
+and served at the MF under secure messaging only. `tamperChipAuthenticationMapping` makes the chip
+send `CA.IC + 1`.
 
-## Portrait synthétique
+## Synthetic portrait
 
-`src/main/resources/specimen-portrait.jp2` (240 × 320, environ 9 Ko) : fond en dégradé et
-silhouette anonyme dessinés par script, **aucune photo de personne**. Pour le régénérer :
+`src/main/resources/specimen-portrait.jp2` (240 × 320, about 9 KB): gradient background and
+anonymous silhouette drawn by a script, **no photo of a person**. To regenerate it:
 
 ```bash
-git submodule update --init                       # sous-module OpenJPEG
-testchip/tools/generate-specimen-portrait.sh      # construit opj_compress hors du dépôt
+git submodule update --init                       # OpenJPEG submodule
+testchip/tools/generate-specimen-portrait.sh      # builds opj_compress outside the repository
 ```
 
-Le script construit `opj_compress` depuis `app/src/main/cpp/openjpeg` dans un dossier
-temporaire, dessine l'image en PPM avec `python3`, puis l'encode :
-`opj_compress -i specimen.ppm -o specimen-portrait.jp2 -r 25 -I` (JP2, compression 9/7 avec
-pertes, taux 25). Il échoue si le fichier dépasse 20 Ko.
+The script builds `opj_compress` from `app/src/main/cpp/openjpeg` in a temporary
+directory, draws the image as PPM with `python3`, then encodes it:
+`opj_compress -i specimen.ppm -o specimen-portrait.jp2 -r 25 -I` (JP2, lossy 9/7
+compression, rate 25). It fails if the file exceeds 20 KB.
 
-## Signature synthétique
+## Synthetic signature
 
-`src/main/resources/specimen-signature.jpg` (300 × 100, niveaux de gris, environ 3,5 Ko) :
-paraphe fait de courbes de Bézier tracées par programme en noir sur blanc, **aucune signature
-réelle**. Pour la régénérer, depuis la racine du dépôt (JDK 17 ou ultérieur) :
+`src/main/resources/specimen-signature.jpg` (300 × 100, grayscale, about 3.5 KB):
+a scribble made of Bézier curves drawn programmatically in black on white, **no real
+signature**. To regenerate it, from the repository root (JDK 17 or later):
 
 ```bash
 java -Djava.awt.headless=true testchip/tools/GenerateSpecimenSignature.java
 ```
 
-Le programme échoue si le fichier dépasse 8 Ko. `TestDataGroups.dg7()` l'emballe dans un DG7
-(ICAO 9303-10) construit avec JMRTD ; la CNIe simulée le porte (décision D37).
+The program fails if the file exceeds 8 KB. `TestDataGroups.dg7()` wraps it in a DG7
+(ICAO 9303-10) built with JMRTD; the simulated CNIe carries it (decision D37).

@@ -1,224 +1,224 @@
 # Architecture
 
-Ce document décrit l'organisation du code de Sceau, l'API publique du module `:core`, le flux des données de la lecture à l'affichage et le cycle de vie des données sensibles. La séquence ICAO elle-même est détaillée dans `docs/protocol.md`.
+This document describes how Sceau's code is organized, the public API of the `:core` module, the flow of data from reading to display, and the lifecycle of sensitive data. The ICAO sequence itself is detailed in `docs/protocol.md`.
 
 ## 1. Modules
 
 ```
-:app   Android : NFC (IsoDep), UI Compose / Material 3, navigation, cycle de vie
+:app   Android: NFC (IsoDep), Compose / Material 3 UI, navigation, lifecycle
   │  │
-  │  │ debugImplementation (APK de debug seulement : mode démo)
+  │  │ debugImplementation (debug APK only: demo mode)
   │  ▼
-  │ :testchip  Kotlin JVM : PKI factice, puce ICAO simulée, CNIe spécimen
-  │  │          (aussi testImplementation de :core)
+  │ :testchip  Kotlin JVM: fake PKI, simulated ICAO chip, specimen French ID card
+  │  │          (also testImplementation of :core)
   │  │ implementation
   ▼  ▼
-:core  Kotlin pur (JVM 17) : lecture, vérification, magasin de confiance, modèles
+:core  Pure Kotlin (JVM 17): reading, verification, trust store, models
 ```
 
-| Module | Paquet | Rôle | Dépendances principales |
+| Module | Package | Role | Main dependencies |
 |---|---|---|---|
-| `:core` | `io.github.mgdx.sceau.core` | Séquence ICAO 9303, Passive / Chip / Active Authentication, magasin de confiance, modèles de données, verdict | JMRTD, SCUBA (smartcards), BouncyCastle, kotlinx-coroutines |
-| `:app` | `io.github.mgdx.sceau` | Transport `IsoDep`, écrans, navigation, session de lecture, stockage des Master Lists importées | `:core`, scuba-sc-android, Compose, Material 3, Navigation Compose, Lifecycle ; `:testchip` en debug seulement |
-| `:testchip` | `io.github.mgdx.sceau.testchip` | PKI factice, puce simulée (BAC, PACE, messagerie sécurisée, CA, AA), CNIe spécimen (`testchip/README.md`) | `:core`, JMRTD, SCUBA, BouncyCastle |
+| `:core` | `io.github.mgdx.sceau.core` | ICAO 9303 sequence, Passive / Chip / Active Authentication, trust store, data models, verdict | JMRTD, SCUBA (smartcards), BouncyCastle, kotlinx-coroutines |
+| `:app` | `io.github.mgdx.sceau` | `IsoDep` transport, screens, navigation, reading session, storage of imported Master Lists | `:core`, scuba-sc-android, Compose, Material 3, Navigation Compose, Lifecycle; `:testchip` in debug only |
+| `:testchip` | `io.github.mgdx.sceau.testchip` | Fake PKI, simulated chip (BAC, PACE, secure messaging, CA, AA), specimen French ID card (`testchip/README.md`) | `:core`, JMRTD, SCUBA, BouncyCastle |
 
-Règles :
+Rules:
 
-- `:core` n'importe **aucune** classe `android.*` : il est compilé et testé sur la JVM (`./gradlew :core:test`). Ses tests remplacent la puce soit par un transport qui rejoue des APDU enregistrés (`ScriptedTransport`), soit par la puce simulée de `:testchip`, et génèrent à la volée une PKI factice (CSCA, lien, DS, SOD, clés CA et AA, en RSA et ECDSA).
-- `:testchip` n'entre jamais dans l'APK release : `testImplementation` de `:core`, `debugImplementation` de `:app` (décision D17). Le code principal de `:core` n'en dépend pas.
-- Les dépendances de `:core` sont en `implementation` (décision D9) : son API publique n'expose que des types Kotlin, `java.security` et `java.time`, jamais JMRTD ni BouncyCastle.
-- Les ressources du magasin de confiance embarqué sont dans `core/src/main/resources/trust/` : 5 certificats CSCA de l'ANTS, 5 certificats CSCA et de lien publiés par leur propre État (GB, GE, LU ; source `NATIONAL`, décision D26) et la Master List allemande du BSI (décision D1), provenance dans `docs/trust-store.md`, énumérés par `trust/index.txt` (décision D16).
+- `:core` imports **no** `android.*` class: it is compiled and tested on the JVM (`./gradlew :core:test`). Its tests replace the chip either with a transport that replays recorded APDUs (`ScriptedTransport`) or with the simulated chip from `:testchip`, and generate a fake PKI on the fly (CSCA, link, DS, SOD, CA and AA keys, in RSA and ECDSA).
+- `:testchip` never goes into the release APK: `testImplementation` of `:core`, `debugImplementation` of `:app` (decision D17). The main code of `:core` does not depend on it.
+- The dependencies of `:core` are declared as `implementation` (decision D9): its public API exposes only Kotlin, `java.security` and `java.time` types, never JMRTD or BouncyCastle.
+- The resources of the built-in trust store are in `core/src/main/resources/trust/`: 5 ANTS CSCA certificates, 5 CSCA and link certificates published by their own state (GB, GE, LU; source `NATIONAL`, decision D26) and the German Master List from the BSI (decision D1), with provenance in `docs/trust-store.md`, enumerated by `trust/index.txt` (decision D16).
 
-### Organisation des sources
+### Source layout
 
 ```
 core/src/main/kotlin/io/github/mgdx/sceau/core/
   Api.kt                   readAndVerify, CardTransport, AccessKey, Step, SceauException
   model/                   DocumentData, Dg1Data, Dg11Data, Dg12Data, EncodedImage, ArgbImage
-  reading/                 ReadingSession (orchestration), SecureChannel (PACE, BAC, repli),
+  reading/                 ReadingSession (orchestration), SecureChannel (PACE, BAC, fallback),
                            DocumentReader (EF.COM, SOD, DG), ChipVerifier (CA, AA),
-                           Chip et TransportCardService (pont vers JMRTD), DataGroupParsers
+                           Chip and TransportCardService (bridge to JMRTD), DataGroupParsers
   report/                  VerificationReport, Verdict, Check, CheckId, CheckStatus, CheckDetail, ChainInfo
   trust/                   TrustStore, TrustAnchor, TrustSource, TrustStores, MasterList, MasterListInfo,
                            TrustStoreLoader, MasterListParser
   verify/                  PassiveAuthentication, ActiveAuthentication, Verdicts, CertificateChains
 
 app/src/main/java/io/github/mgdx/sceau/
-  SceauApplication.kt      singleton TrustStoreRepository, préchargement du magasin au démarrage
-  MainActivity.kt          activité unique, mode lecteur NFC, SessionViewModel à portée d'activité
-  nfc/                     IsoDepTransport (CardTransport, classement des erreurs), NfcStatus
-  session/                 SessionViewModel, ReadState, AccessForm (saisie de l'accueil, dates)
+  SceauApplication.kt      TrustStoreRepository singleton, trust store preloaded at startup
+  MainActivity.kt          single activity, NFC reader mode, activity-scoped SessionViewModel
+  nfc/                     IsoDepTransport (CardTransport, error classification), NfcStatus
+  session/                 SessionViewModel, ReadState, AccessForm (home screen input, dates)
   trust/                   TrustStoreRepository
-  demo/DemoCard            document simulé du mode démo (voir DemoMode ci-dessous)
-  ui/                      SceauNavHost, Routes, écrans home/, reading/, result/, trust/, about/, learn/ (introduction, « Ce que contient la puce », D35)
-  ui/common/SecureWindow   FLAG_SECURE compté par fenêtre
-  ui/theme/                thème Material 3, palette du logo, mode sombre suivant le système
-  jp2/Jpeg2000Decoder      décodage JPEG 2000 (JNI vers libsceau_jp2.so), appelé dans le seul processus isolé
-  jp2/Jpeg2000Service      service isolatedProcess qui décode JPEG 2000 et JPEG (D23, audit V18)
-  jp2/IsolatedJpeg2000Decoder  client du service, appelé par l'écran de résultat
-  jp2/Jpeg2000Protocol     protocole binder par morceaux, testé sur JVM
+  demo/DemoCard            simulated document for demo mode (see DemoMode below)
+  ui/                      SceauNavHost, Routes, screens home/, reading/, result/, trust/, about/, learn/ (introduction, “What the chip contains”, D35)
+  ui/common/SecureWindow   FLAG_SECURE counted per window
+  ui/theme/                Material 3 theme, logo palette, dark mode following the system
+  jp2/Jpeg2000Decoder      JPEG 2000 decoding (JNI to libsceau_jp2.so), called only in the isolated process
+  jp2/Jpeg2000Service      isolatedProcess service that decodes JPEG 2000 and JPEG (D23, audit V18)
+  jp2/IsolatedJpeg2000Decoder  service client, called by the result screen
+  jp2/Jpeg2000Protocol     chunked binder protocol, tested on the JVM
 
-app/src/debug/java/…/demo/DemoMode.kt     mode démo : CNIe simulée de :testchip
-app/src/release/java/…/demo/DemoMode.kt   version vide (isAvailable = false)
+app/src/debug/java/…/demo/DemoMode.kt     demo mode: simulated French ID card from :testchip
+app/src/release/java/…/demo/DemoMode.kt   empty version (isAvailable = false)
 
 app/src/main/cpp/
-  CMakeLists.txt           construit libsceau_jp2.so (OpenJPEG statique + code de Sceau)
-  jp2_decode.c/.h          cœur de décodage en mémoire, sans JNI, testé sur l'hôte
-  jp2_jni.c                pont JNI
-  openjpeg/                sous-module git, OpenJPEG master 8314119b, v2.5.4-29 (BSD-2-Clause, D3)
-  test/                    harnais de test hôte (ASan/UBSan), hors APK : run-host-tests.sh
+  CMakeLists.txt           builds libsceau_jp2.so (static OpenJPEG + Sceau code)
+  jp2_decode.c/.h          in-memory decoding core, without JNI, tested on the host
+  jp2_jni.c                JNI bridge
+  openjpeg/                git submodule, OpenJPEG master 8314119b, v2.5.4-29 (BSD-2-Clause, D3)
+  test/                    host test harness (ASan/UBSan), outside the APK: run-host-tests.sh
 ```
 
-Les chaînes sont réparties par écran dans `res/values*/strings_<écran>.xml` (décision D5).
+Strings are split per screen into `res/values*/strings_<screen>.xml` (decision D5).
 
-### Décodage des images
+### Image decoding
 
-Le décodage vit dans `:app`, jamais dans `:core` (qui reste sans JNI), et jamais dans le processus de l'app : aucun octet d'image venu de la puce n'y atteint un décodeur natif (décision D23, audit V18). Le format déclaré par la puce est ignoré ; `ui/result/ImageFormats.kt` (`detectImageFormat`) ne reconnaît, à leurs premiers octets, que le JPEG (`FF D8 FF`) et le JPEG 2000 (fichier JP2 ou flux J2K brut). Toute autre image n'est pas décodée.
+Decoding lives in `:app`, never in `:core` (which stays free of JNI), and never in the app's process: no image byte coming from the chip ever reaches a native decoder there (decision D23, audit V18). The format declared by the chip is ignored; `ui/result/ImageFormats.kt` (`detectImageFormat`) recognizes, from their first bytes, only JPEG (`FF D8 FF`) and JPEG 2000 (JP2 file or raw J2K codestream). Any other image is not decoded.
 
-`ui/result/ImageDecoding.kt` confie les deux formats à `IsolatedJpeg2000Decoder.decode(context, bytes): Bitmap?` (fonction `suspend`), qui transmet le flux au service `Jpeg2000Service`, déclaré `android:isolatedProcess="true"` et non exporté, dans le processus `:jp2`. Ce processus, sous un UID isolé, n'a aucune permission ni accès aux fichiers de l'app. Le service refait la reconnaissance sur les octets reçus :
+`ui/result/ImageDecoding.kt` hands both formats to `IsolatedJpeg2000Decoder.decode(context, bytes): Bitmap?` (a `suspend` function), which passes the stream to the `Jpeg2000Service` service, declared `android:isolatedProcess="true"` and not exported, in the `:jp2` process. This process, running under an isolated UID, has no permission and no access to the app's files. The service redoes the format detection on the bytes it receives:
 
-- JPEG : `BitmapFactory` d'Android, dimensions lues d'abord, refus au-delà de 40 mégapixels annoncés, sous-échantillonnage et réduction à 2048 pixels de côté (`DecodeLimits`, audit V2) ;
-- JPEG 2000 : `Jpeg2000Decoder.decode(bytes)` ; le processus isolé est le seul où `libsceau_jp2.so` est chargée. La bibliothèque lie statiquement OpenJPEG, compilé depuis le sous-module `app/src/main/cpp/openjpeg` (décision D3), et décode depuis la mémoire ; elle renvoie null, sans exception ni trace, pour tout flux invalide, tronqué ou annonçant plus de 4096 pixels de côté.
+- JPEG: Android's `BitmapFactory`, dimensions read first, rejection above 40 announced megapixels, subsampling and downscaling to 2048 pixels per side (`DecodeLimits`, audit V2);
+- JPEG 2000: `Jpeg2000Decoder.decode(bytes)`; the isolated process is the only one where `libsceau_jp2.so` is loaded. The library statically links OpenJPEG, compiled from the `app/src/main/cpp/openjpeg` submodule (decision D3), and decodes from memory; it returns null, without exception or trace, for any stream that is invalid, truncated or announces more than 4096 pixels per side.
 
-  Chaque décodage lie le service (donc démarre un processus isolé neuf), envoie le flux par transactions binder de 256 Kio, reçoit largeur et hauteur puis les pixels ARGB par morceaux de 64 Ki pixels, et se détache ; dans `onDestroy`, le service efface ses tampons s'ils sont libres et termine son processus, sans attendre la fin d'un décodage en cours (audit V26). Rien ne passe par un fichier. Les décodages sont sérialisés. Processus isolé mort (bombe, bug natif), délai de 10 s dépassé (démarrage et transferts compris), service indisponible ou réponse hors protocole (dimensions au-delà de 2048 × 2048, morceau hors séquence) : null, l'image n'est pas affichée. `SceauApplication`, créée aussi dans le processus isolé, n'y précharge rien (`isIsolatedProcess()`).
+  Each decoding binds the service (thus starts a fresh isolated process), sends the stream in 256 KiB binder transactions, receives width and height and then the ARGB pixels in chunks of 64 Ki pixels, and unbinds; in `onDestroy`, the service wipes its buffers if they are free and terminates its process, without waiting for a decoding in progress to finish (audit V26). Nothing goes through a file. Decodings are serialized. Isolated process dead (decompression bomb, native bug), 10 s timeout exceeded (startup and transfers included), service unavailable or out-of-protocol response (dimensions beyond 2048 × 2048, chunk out of sequence): null, the image is not displayed. `SceauApplication`, which is also created in the isolated process, preloads nothing there (`isIsolatedProcess()`).
 
-Le code natif est compilé pour `armeabi-v7a`, `arm64-v8a`, `x86` et `x86_64`, d'où un APK par architecture plus un APK universel (décision D2). Le cœur `jp2_decode.c` se teste sur l'hôte : `app/src/main/cpp/test/run-host-tests.sh` (images synthétiques encodées par `opj_compress`, flux tronqués, altérés et démesurés, sous ASan et UBSan).
+The native code is compiled for `armeabi-v7a`, `arm64-v8a`, `x86` and `x86_64`, hence one APK per architecture plus a universal APK (decision D2). The `jp2_decode.c` core is tested on the host: `app/src/main/cpp/test/run-host-tests.sh` (synthetic images encoded by `opj_compress`, truncated, corrupted and oversized streams, under ASan and UBSan).
 
-## 2. API publique de `:core`
+## 2. Public API of `:core`
 
-### Lecture
+### Reading
 
 ```kotlin
 suspend fun readAndVerify(transport: CardTransport, key: AccessKey, trustStore: TrustStore, progress: (Step) -> Unit): VerificationReport
 ```
 
-| Type | Rôle |
+| Type | Role |
 |---|---|
-| `CardTransport` | Canal APDU brut : `transceive(apdu)`, `maxTransceiveLength`, `timeoutMillis` (modifié par `:core` pendant l'authentification), `reconnect()` (réinitialisation de la liaison pour le repli PACE → BAC, vide par défaut), `close()`. Lève `SceauException.ConnectionLost` si le document est retiré, `SceauException.Timeout` si la puce ne répond pas à temps. |
-| `AccessKey.Can` / `AccessKey.Mrz` | Clé d'accès. `toString()` masqué (`***`). |
+| `CardTransport` | Raw APDU channel: `transceive(apdu)`, `maxTransceiveLength`, `timeoutMillis` (changed by `:core` during authentication), `reconnect()` (resets the link for the PACE → BAC fallback, empty by default), `close()`. Throws `SceauException.ConnectionLost` if the document is removed, `SceauException.Timeout` if the chip does not respond in time. |
+| `AccessKey.Can` / `AccessKey.Mrz` | Access key. `toString()` masked (`***`). |
 | `Step` | `CONNECT`, `SECURE_CHANNEL`, `READ_DATA`, `VERIFY_SIGNATURE`, `VERIFY_CHIP`. |
-| `SceauException` | Erreurs qui interrompent la lecture, chacune avec un `code` stable sans donnée personnelle, éventuellement suivi d'un diagnostic (`TIMEOUT-SECURE_CHANNEL-INS86-L10` ; liste dans `docs/protocol.md` §5). |
+| `SceauException` | Errors that interrupt reading, each with a stable `code` containing no personal data, possibly followed by a diagnostic (`TIMEOUT-SECURE_CHANNEL-INS86-L10`; list in `docs/protocol.md` §5). |
 
-### Rapport
+### Report
 
-| Type | Rôle |
+| Type | Role |
 |---|---|
-| `VerificationReport` | Verdict, sept `Check` (un par `CheckId`), `ChainInfo?`, `DocumentData`. `wipe()` remet à zéro les octets lus. |
+| `VerificationReport` | Verdict, seven `Check`s (one per `CheckId`), `ChainInfo?`, `DocumentData`. `wipe()` zeroes the bytes read. |
 | `Verdict` | `AUTHENTIC`, `SIGNATURE_VALID_CHIP_UNVERIFIED`, `UNKNOWN_ISSUER`, `FAILED`. |
-| `Check`, `CheckId`, `CheckStatus` | Ligne de la liste de contrôle ; statut `OK`, `FAILED`, `NOT_AVAILABLE`, `UNSUPPORTED_ALGORITHM`. |
-| `CheckDetail` | Détail structuré (protocole du canal, algorithme, chaîne, validité du DS, DG contrôlés, erreur technique). L'app le met en forme avec ses propres chaînes : `:core` ne produit aucun texte destiné à l'utilisateur. |
-| `ChainInfo` | Sujet et numéro de série du DS, période, algorithme, CSCA trouvé (sujet, pays, empreinte, source), certificats de lien. Aucune donnée personnelle. |
-| `DocumentData` | DG1, portrait, DG11, DG12, signature de DG7 (D37) et octets bruts des DG lus. Aucune `data class`, `toString()` masqué. |
+| `Check`, `CheckId`, `CheckStatus` | Line of the checklist; status `OK`, `FAILED`, `NOT_AVAILABLE`, `UNSUPPORTED_ALGORITHM`. |
+| `CheckDetail` | Structured detail (channel protocol, algorithm, chain, DS validity, data groups checked, technical error). The app formats it with its own strings: `:core` produces no user-facing text. |
+| `ChainInfo` | Subject and serial number of the DS, period, algorithm, CSCA found (subject, country, fingerprint, source), link certificates. No personal data. |
+| `DocumentData` | DG1, portrait, DG11, DG12, DG7 signature (D37) and raw bytes of the data groups read. Not a `data class`, `toString()` masked. |
 
-### Vérification (utilisée par `readAndVerify`, testable séparément)
+### Verification (used by `readAndVerify`, testable separately)
 
-| Objet | Rôle |
+| Object | Role |
 |---|---|
-| `PassiveAuthentication.verify(…)` | Chaîne DS → CSCA, signature du SOD, empreintes, validité du DS. N'accède pas à la puce. |
-| `ActiveAuthentication.verifyResponse(…)` | Vérifie la réponse au challenge AA avec la clé de DG15. |
-| `Verdicts.compute(checks)` | Verdict global (table de décision dans `docs/protocol.md` §6). |
+| `PassiveAuthentication.verify(…)` | DS → CSCA chain, SOD signature, hashes, DS validity. Does not access the chip. |
+| `ActiveAuthentication.verifyResponse(…)` | Verifies the response to the AA challenge with the DG15 key. |
+| `Verdicts.compute(checks)` | Overall verdict (decision table in `docs/protocol.md` §6). |
 
-`:core` ne décode aucune image : il transmet les octets du portrait, de la signature de DG7 et des images de DG12 (`EncodedImage`, avec leur format) à `:app`, qui les décode (section 1, « Décodage des images »).
+`:core` decodes no image: it passes the bytes of the portrait, of the DG7 signature and of the DG12 images (`EncodedImage`, with their format) to `:app`, which decodes them (section 1, “Image decoding”).
 
-### Magasin de confiance
+### Trust store
 
-| Élément | Rôle |
+| Element | Role |
 |---|---|
-| `TrustStores.load(importedMasterLists)` | Charge le magasin embarqué (fichiers énumérés par `trust/index.txt`) et le fusionne avec les Master Lists importées (octets bruts fournis par l'app), par ordre de priorité ANTS, publications nationales (D26), liste embarquée, Master Lists importées, certificats importés seuls (D33). Une liste embarquée invalide ou dont le signataire n'est pas ancré lève `InvalidMasterListException` ; un import invalide est ignoré. |
-| `TrustStores.parseMasterList(bytes)` | Parse une Master List CMS (`.ml`, `.der`, `.p7b`) et vérifie sa signature avec le certificat signataire qu'elle contient. |
-| `TrustStore` | `anchors`, `embeddedMasterList`, `findBySubject`, `findBySubjectKeyId`. Lecture seule. |
-| `TrustAnchor` | Certificat et source (`ANTS`, `NATIONAL`, `EMBEDDED_MASTER_LIST`, `IMPORTED_MASTER_LIST`, `IMPORTED_CERTIFICATE`), pays, empreinte SHA-256, validité, auto-signé ou lien (`isSelfSigned`, déduit des identifiants de clé AKI et SKI, signature vérifiée seulement en repli : décision D16). |
+| `TrustStores.load(importedMasterLists)` | Loads the built-in store (files enumerated by `trust/index.txt`) and merges it with the imported Master Lists (raw bytes supplied by the app), in order of priority: ANTS, national publications (D26), built-in list, imported Master Lists, individually imported certificates (D33). A built-in list that is invalid or whose signer is not anchored throws `InvalidMasterListException`; an invalid import is ignored. |
+| `TrustStores.parseMasterList(bytes)` | Parses a CMS Master List (`.ml`, `.der`, `.p7b`) and verifies its signature with the signer certificate it contains. |
+| `TrustStore` | `anchors`, `embeddedMasterList`, `findBySubject`, `findBySubjectKeyId`. Read-only. |
+| `TrustAnchor` | Certificate and source (`ANTS`, `NATIONAL`, `EMBEDDED_MASTER_LIST`, `IMPORTED_MASTER_LIST`, `IMPORTED_CERTIFICATE`), country, SHA-256 fingerprint, validity, self-signed or link (`isSelfSigned`, inferred from the AKI and SKI key identifiers, signature verified only as a fallback: decision D16). |
 
-## 3. Flux de données
+## 3. Data flow
 
 ```
-Accueil ──saisie CAN ou MRZ──► SessionViewModel.prepare(key)            état WaitingForCard
+Home     ──CAN or MRZ input──► SessionViewModel.prepare(key)              state WaitingForCard
                                    │
-Lecture   tag IsoDep détecté ─────► SessionViewModel.onCardDetected(transport)
-          (MainActivity)            │  coroutine sur Dispatchers.IO
+Reading  IsoDep tag detected ─────► SessionViewModel.onCardDetected(transport)
+         (MainActivity)            │  coroutine on Dispatchers.IO
                                    ▼
                      readAndVerify(transport, key, trustStore, progress)
-                       │  progress(step) ─────────────────────────► état Reading(step)
-                       │  SceauException ─────────────────────────► état Error(code)  → « Réessayer » : retry()
+                       │  progress(step) ─────────────────────────► state Reading(step)
+                       │  SceauException ─────────────────────────► state Error(code)  → “Try again”: retry()
                        ▼
-                     VerificationReport ──────────────────────────► état Done(report)
+                     VerificationReport ──────────────────────────► state Done(report)
                                    │
-Résultat  affiche verdict, photo, DG1, signature DG7, DG11/DG12, liste de contrôle
-          « Effacer » ou retour ───► SessionViewModel.clear()       report.wipe(), clé oubliée, état Idle
+Result   shows verdict, photo, DG1, DG7 signature, DG11/DG12, checklist
+         “Clear” or back ─────────► SessionViewModel.clear()       report.wipe(), key forgotten, state Idle
 ```
 
-1. **Accueil** (`HomeScreen`) : l'utilisateur saisit la MRZ (onglet Passeport, affiché en premier : numéro, puis dates tapées au clavier numérique dans l'ordre de la locale, décision D10 ; le clavier se retire au dernier chiffre de la date d'expiration, D29) ou le CAN (onglet Carte d'identité). La saisie vit dans `SessionViewModel.form` (`AccessForm`), qui la valide. La clé est construite en `AccessKey` et confiée à `SessionViewModel.prepare(key)`, qui passe en `WaitingForCard`. Le bouton « Lire » navigue vers l'écran de lecture.
-2. **Détection NFC** : `MainActivity` (lancement `singleTop`) active le mode lecteur NFC (`enableReaderMode`, NFC-A et NFC-B, tests de présence toutes les 2 s) tant qu'elle est au premier plan (`repeatOnLifecycle(RESUMED)`) et le coupe dans `onPause`. L'état du NFC est relu chaque seconde par sondage (`nfcAvailabilityFlow`, `nfc/NfcStatus.kt`), sans récepteur de diffusion : le retour à ON d'`ACTION_ADAPTER_STATE_CHANGED` n'atteignait pas toujours un récepteur non exporté (constaté sur appareil). À chaque passage à l'état activé, le mode lecteur est réarmé : un `enableReaderMode` appelé NFC éteint est perdu, et rallumer le NFC depuis le volet rapide ne fait pas repasser l'activité par `onResume`. Le même flux alimente le bandeau « NFC désactivé » (`nfc/NfcBanner`), affiché sur l'accueil et sur l'écran de lecture (commit `f6cd14b`). Elle reçoit le tag `IsoDep` pendant que la session est en `WaitingForCard` ou `Error`, l'enveloppe dans un `IsoDepTransport` et appelle `onCardDetected(transport)`.
-3. **Lecture** (`ReadingScreen`) : `readAndVerify` s'exécute dans une coroutine du `ViewModel`, sur `Dispatchers.IO`. Chaque appel de `progress` fait passer l'état en `Reading(step)` ; l'écran coche les étapes terminées et affiche un message d'attente si l'ouverture du canal sécurisé dure plus de 5 s (décision D12). Une `SceauException` donne `Error(code)`, affiché avec un message en français, le code technique en petit (décision D11) et « Réessayer » (`retry()`, même clé). Le transport est toujours fermé hors du thread principal (`IsoDep.close()` attend la fin de l'APDU en cours).
-4. **Magasin de confiance** : `TrustStoreRepository.get()` fournit le `TrustStore` fusionné, chargé une fois puis gardé en mémoire jusqu'au prochain import ou effacement des imports. `SceauApplication` le précharge en arrière-plan au démarrage du processus (décision D16).
-5. **Résultat** (`ResultScreen`) : sur `Done(report)`, la navigation remplace l'écran de lecture par l'écran de résultat (`popUpTo(READING) inclusive`). L'écran met en forme le rapport ; le portrait et la signature de DG7 (D37) sont décodés dans le processus isolé de `Jpeg2000Service` (décision D23, audit V18) : le JPEG 2000 par OpenJPEG, le JPEG par le décodeur Android. Aucune autre image n'est décodée. Aucune donnée n'est copiée hors du rapport au-delà de ce qu'exige l'affichage.
-6. **Magasin de confiance, écran dédié** (`TrustStoreScreen`) : liste des CSCA, import d'une Master List via `ACTION_OPEN_DOCUMENT` → `preview(bytes)` (signature vérifiée, empreinte du signataire montrée) → confirmation → `import(bytes)`. Les Master Lists importées sont stockées telles quelles dans `filesDir/trust/` : ce sont des certificats publics, pas des données personnelles. « Supprimer les certificats importés » appelle `clearImported()`.
-7. **Mode démo** (APK de debug seulement, décision D17) : l'entrée « Simuler une CNIe (démo) » du menu de l'accueil construit, hors du thread principal, une CNIe simulée de `:testchip` (`DemoMode.newSimulatedCnie()`), puis `SessionViewModel.startDemo(card)` la lit par le même chemin qu'un document réel (`launchRead`), avec sa clé CAN et son magasin de test, qui ne sert qu'à cette lecture. La clé saisie est oubliée. Le résultat porte le bandeau « Document simulé — démonstration » (`ReadState.Done.isDemo`). Dans l'APK release, `DemoMode.isAvailable` vaut `false` et l'entrée n'existe pas.
+1. **Home** (`HomeScreen`): the user enters the MRZ (Passport tab, shown first: number, then dates typed on the numeric keyboard in the locale's order, decision D10; the keyboard is dismissed at the last digit of the expiry date, D29) or the CAN (ID card tab). The input lives in `SessionViewModel.form` (`AccessForm`), which validates it. The key is built as an `AccessKey` and handed to `SessionViewModel.prepare(key)`, which moves to `WaitingForCard`. The “Read” button navigates to the reading screen.
+2. **NFC detection**: `MainActivity` (`singleTop` launch mode) enables NFC reader mode (`enableReaderMode`, NFC-A and NFC-B, presence checks every 2 s) while it is in the foreground (`repeatOnLifecycle(RESUMED)`) and disables it in `onPause`. The NFC state is polled every second (`nfcAvailabilityFlow`, `nfc/NfcStatus.kt`), without a broadcast receiver: the return to ON of `ACTION_ADAPTER_STATE_CHANGED` did not always reach a non-exported receiver (observed on a device). Each time the state switches to enabled, reader mode is re-armed: an `enableReaderMode` call made while NFC is off is lost, and turning NFC back on from Quick Settings does not take the activity through `onResume` again. The same flow drives the “NFC is turned off” banner (`nfc/NfcBanner`), shown on the home screen and on the reading screen (commit `f6cd14b`). The activity receives the `IsoDep` tag while the session is in `WaitingForCard` or `Error`, wraps it in an `IsoDepTransport` and calls `onCardDetected(transport)`.
+3. **Reading** (`ReadingScreen`): `readAndVerify` runs in a coroutine of the `ViewModel`, on `Dispatchers.IO`. Each call to `progress` moves the state to `Reading(step)`; the screen checks off the completed steps and shows a waiting message if opening the secure channel takes more than 5 s (decision D12). A `SceauException` gives `Error(code)`, displayed with a message in the interface language, the technical code in small print (decision D11) and “Try again” (`retry()`, same key). The transport is always closed off the main thread (`IsoDep.close()` waits for the current APDU to finish).
+4. **Trust store**: `TrustStoreRepository.get()` provides the merged `TrustStore`, loaded once and then kept in memory until the next import or clearing of imports. `SceauApplication` preloads it in the background when the process starts (decision D16).
+5. **Result** (`ResultScreen`): on `Done(report)`, navigation replaces the reading screen with the result screen (`popUpTo(READING) inclusive`). The screen formats the report; the portrait and the DG7 signature (D37) are decoded in the isolated process of `Jpeg2000Service` (decision D23, audit V18): JPEG 2000 by OpenJPEG, JPEG by the Android decoder. No other image is decoded. No data is copied out of the report beyond what display requires.
+6. **Trust store, dedicated screen** (`TrustStoreScreen`): list of CSCAs, import of a Master List via `ACTION_OPEN_DOCUMENT` → `preview(bytes)` (signature verified, signer fingerprint shown) → confirmation → `import(bytes)`. Imported Master Lists are stored as is in `filesDir/trust/`: they are public certificates, not personal data. “Delete imported certificates” calls `clearImported()`.
+7. **Demo mode** (debug APK only, decision D17): the “Simulate a French ID card (demo)” entry of the home menu builds, off the main thread, a simulated French ID card from `:testchip` (`DemoMode.newSimulatedCnie()`), then `SessionViewModel.startDemo(card)` reads it through the same path as a real document (`launchRead`), with its CAN key and its test trust store, which serves only for this reading. The key entered by the user is forgotten. The result carries the “Simulated document — demo” banner (`ReadState.Done.isDemo`). In the release APK, `DemoMode.isAvailable` is `false` and the entry does not exist.
 
-## 4. Cycle de vie des données sensibles
+## 4. Sensitive data lifecycle
 
-Données sensibles : la clé d'accès (CAN ou MRZ) et le contenu de `VerificationReport.document` (DG1, portrait DG2, signature DG7, DG11, DG12, octets bruts des DG). Règles de SPEC §8.
+Sensitive data: the access key (CAN or MRZ) and the content of `VerificationReport.document` (DG1, DG2 portrait, DG7 signature, DG11, DG12, raw bytes of the data groups). Rules from SPEC §8.
 
-### Où elles vivent
+### Where it lives
 
-| Donnée | Emplacement | Durée de vie |
+| Data | Location | Lifetime |
 |---|---|---|
-| Saisie CAN / MRZ | `SessionViewModel.form` (`AccessForm`, en mémoire, jamais dans un `Bundle` ni un `SavedStateHandle` ; `toString()` masqué) | de la frappe à la fin d'une lecture réussie (formulaire vidé, onglet gardé) ou à `clear()` |
-| `AccessKey` | `SessionViewModel` (portée d'activité) | de `prepare(key)` à la fin d'une lecture réussie ou à `clear()` ; conservée après une erreur pour « Réessayer » |
-| `VerificationReport` | `SessionViewModel`, état `ReadState.Done` | de la fin de la lecture à `clear()` |
-| Images décodées (bitmap) | écran de résultat | tant que l'écran est composé ; effacées par `wipeAndRecycle()`. Les tampons intermédiaires du décodage JPEG 2000 (copie native du flux, échantillons, tableau ARGB natif et Java, flux et pixels reçus ou envoyés par binder, des deux côtés) sont remis à zéro dès le bitmap construit ; le processus isolé est terminé après chaque image (D23) |
-| Master Lists importées | `filesDir/trust/` | jusqu'à « Supprimer les certificats importés » (données publiques) |
+| CAN / MRZ input | `SessionViewModel.form` (`AccessForm`, in memory, never in a `Bundle` or a `SavedStateHandle`; `toString()` masked) | from typing to the end of a successful reading (form cleared, tab kept) or to `clear()` |
+| `AccessKey` | `SessionViewModel` (activity scope) | from `prepare(key)` to the end of a successful reading or to `clear()`; kept after an error for “Try again” |
+| `VerificationReport` | `SessionViewModel`, state `ReadState.Done` | from the end of reading to `clear()` |
+| Decoded images (bitmap) | result screen | as long as the screen is composed; wiped by `wipeAndRecycle()`. The intermediate buffers of JPEG 2000 decoding (native copy of the stream, samples, native and Java ARGB arrays, stream and pixels received or sent over binder, on both sides) are zeroed as soon as the bitmap is built; the isolated process is terminated after each image (D23) |
+| Imported Master Lists | `filesDir/trust/` | until “Delete imported certificates” (public data) |
 
-Rien d'autre : aucune base, aucun fichier, aucun cache, aucun log, aucune préférence ne contient de donnée lue ni de clé. Le `SavedStateHandle` et le `Bundle` d'état de l'activité n'en contiennent pas non plus : après la mort du processus, l'application redémarre sur l'accueil, vide, ou sur l'introduction tant qu'elle n'a pas été vue. La seule préférence écrite est l'indicateur `intro_seen` (`SharedPreferences` `sceau_preferences`, D35), un booléen sans donnée personnelle. La sauvegarde Android est désactivée (`allowBackup="false"`, et règles de sauvegarde et de transfert qui excluent tous les domaines).
+Nothing else: no database, no file, no cache, no log and no preference contains data read from the chip or a key. Neither does the `SavedStateHandle` or the activity's state `Bundle`: after process death, the application restarts on the home screen, empty, or on the introduction as long as it has not been seen. The only preference written is the `intro_seen` flag (`SharedPreferences` `sceau_preferences`, D35), a boolean with no personal data. Android backup is disabled (`allowBackup="false"`, plus backup and data transfer rules that exclude all domains).
 
-### Quand elles sont effacées
+### When it is wiped
 
-`SessionViewModel.clear()` interrompt la lecture en cours (fermeture du transport hors du thread principal), appelle `report.wipe()` (remise à zéro des tableaux d'octets de `DocumentData` : DG bruts, portrait, signature DG7, images DG12), oublie la clé, la saisie et le rapport, et repasse en `Idle`. Il est appelé :
+`SessionViewModel.clear()` interrupts the reading in progress (closing the transport off the main thread), calls `report.wipe()` (zeroing the byte arrays of `DocumentData`: raw data groups, portrait, DG7 signature, DG12 images), forgets the key, the input and the report, and goes back to `Idle`. It is called on:
 
-| Événement | Déclencheur |
+| Event | Trigger |
 |---|---|
-| Bouton « Effacer » (bas de l'écran et barre d'action) | `ResultScreen` → `clear()` puis retour à l'accueil |
-| Retour arrière système sur le résultat | même effet que « Effacer » (SPEC §5.3) |
-| Mise en arrière-plan pendant une lecture ou sur le résultat | `MainActivity.onStop()` hors changement de configuration → `onBackground()` → `clear()` si l'état est `Reading` ou `Done` ; l'application revient à l'accueil au retour |
-| Annulation de la lecture | bouton « Annuler » ou retour arrière sur l'écran de lecture → `clear()` |
-| Fin du `ViewModel` | `onCleared()` (activité terminée) |
+| “Clear” button (bottom of the screen and action bar) | `ResultScreen` → `clear()` then back to the home screen |
+| System back on the result | same effect as “Clear” (SPEC §5.3) |
+| Moving to the background during a reading or on the result | `MainActivity.onStop()` outside a configuration change → `onBackground()` → `clear()` if the state is `Reading` or `Done`; the application returns to the home screen when brought back |
+| Reading cancelled | “Cancel” button or back on the reading screen → `clear()` |
+| End of the `ViewModel` | `onCleared()` (activity finished) |
 
-Une mise en arrière-plan depuis l'accueil (en `Idle`, `WaitingForCard` ou `Error`) ne vide pas la saisie ni la clé, qui ne vivent qu'en mémoire : l'utilisateur peut passer par les réglages NFC sans tout ressaisir (SPEC §5.1). Une rotation n'efface rien (`isChangingConfigurations`). Un rapport produit par une lecture abandonnée entre-temps est remis à zéro dès sa réception. Si la lecture échoue, `:core` remet à zéro les données déjà lues.
+Moving to the background from the home screen (in `Idle`, `WaitingForCard` or `Error`) clears neither the input nor the key, which live only in memory: the user can go through the NFC settings without typing everything again (SPEC §5.1). A rotation wipes nothing (`isChangingConfigurations`). A report produced by a reading that was abandoned in the meantime is zeroed as soon as it is received. If reading fails, `:core` zeroes the data already read.
 
-Limites assumées :
+Accepted limits:
 
-- Kotlin/JVM ne permet pas d'effacer les `String` (nom, numéro, CAN) ni de garantir qu'aucune copie n'a été faite par le ramasse-miettes. La remise à zéro porte sur les tableaux d'octets, qui contiennent la photo et les DG bruts ; les chaînes deviennent inaccessibles dès que la session est vidée.
-- JMRTD et OpenJPEG gardent des copies intermédiaires dans des tampons internes qu'ils libèrent sans remise à zéro (décisions D3 et D14). Elles restent en mémoire et ne sont ni écrites ni journalisées ; celles d'OpenJPEG disparaissent avec le processus isolé, terminé après chaque image (D23). Les tampons des `Parcel` binder qui transportent le flux et les pixels sont libérés sans remise à zéro (l'API publique ne le permet pas).
+- Kotlin/JVM does not allow `String`s (name, number, CAN) to be wiped, nor guarantee that no copy was made by the garbage collector. Zeroing applies to the byte arrays, which contain the photo and the raw data groups; the strings become unreachable as soon as the session is cleared.
+- JMRTD and OpenJPEG keep intermediate copies in internal buffers that they release without zeroing (decisions D3 and D14). They remain in memory and are neither written nor logged; those of OpenJPEG disappear with the isolated process, terminated after each image (D23). The buffers of the binder `Parcel`s that carry the stream and the pixels are released without zeroing (the public API does not allow it).
 
-### Journaux
+### Logs
 
-Aucun appel à `android.util.Log`, `println` ni `printStackTrace` dans le code de Sceau, même temporaire. Les journaux `java.util.logging` de JMRTD et SCUBA sont coupés avant chaque lecture, et aucune exception de JMRTD n'est attachée comme cause (leurs messages contiennent des APDU) : décision D14. Le diagnostic passe par le code d'erreur affiché (décision D11).
+No call to `android.util.Log`, `println` or `printStackTrace` in Sceau's code, not even temporarily. The `java.util.logging` loggers of JMRTD and SCUBA are turned off before each reading, and no JMRTD exception is attached as a cause (their messages contain APDUs): decision D14. Diagnostics go through the displayed error code (decision D11).
 
-### Protection de l'écran
+### Screen protection
 
-- `FLAG_SECURE` est posé sur la fenêtre de l'activité dès sa création, dans `MainActivity.onCreate` avant le premier dessin (`secureForLifetime(window)`), pour toute sa durée de vie : capture d'écran refusée, aperçu masqué dans le multitâche, affichage bloqué sur un écran externe non sécurisé, sur tous les écrans (accueil et saisie du CAN et de la MRZ, lecture, résultat, magasin de confiance, à propos) (SPEC §2 et §8, audit V7).
-- Les écrans de lecture et de résultat demandent en plus la protection tant qu'ils sont composés (`SecureWindow()`), ainsi que la fenêtre du dialogue de la photo en plein écran. Les demandes sont comptées par fenêtre ; celle de `secureForLifetime` n'est jamais rendue, si bien que la sortie d'un écran ne lève jamais la protection.
+- `FLAG_SECURE` is set on the activity's window as soon as it is created, in `MainActivity.onCreate` before the first frame is drawn (`secureForLifetime(window)`), for its whole lifetime: screenshots refused, preview hidden in the recent apps, display blocked on a non-secure external screen, on every screen (home and CAN and MRZ input, reading, result, trust store, about) (SPEC §2 and §8, audit V7).
+- The reading and result screens additionally request the protection while they are composed (`SecureWindow()`), as does the window of the full-screen photo dialog. Requests are counted per window; the one from `secureForLifetime` is never released, so leaving a screen never lifts the protection.
 
-### Surface exposée aux autres applications
+### Surface exposed to other applications
 
-- `MainActivity`, seul composant exporté (lanceur), remplace son intent par celui du lanceur, sans extras, avant `super.onCreate` et dans `onNewIntent` : une autre application ne peut pas choisir l'écran d'ouverture par les extras de deep link de Navigation (`deepLinkIds`…), indépendamment du contrôle de l'appelant que fait Navigation 2.10 (audit V27, `MainActivityIntentTest`).
-- `MainActivity` déclare `android:taskAffinity=""` : aucune application ne peut se glisser dans la tâche de Sceau en déclarant la même affinité pour y présenter une fausse saisie du CAN ou de la MRZ (détournement de tâche, surtout sous Android 8 à 10 ; audit V28). Sans effet fonctionnel, l'application n'ayant qu'une activité.
+- `MainActivity`, the only exported component (launcher), replaces its intent with the launcher intent, without extras, before `super.onCreate` and in `onNewIntent`: another application cannot choose the opening screen through Navigation's deep link extras (`deepLinkIds`…), independently of the caller check that Navigation 2.10 performs (audit V27, `MainActivityIntentTest`).
+- `MainActivity` declares `android:taskAffinity=""`: no application can slip into Sceau's task by declaring the same affinity to present a fake CAN or MRZ input there (task hijacking, especially on Android 8 to 10; audit V28). No functional effect, since the application has only one activity.
 
-### Réseau
+### Network
 
-Le manifeste ne déclare aucune permission réseau (`android.permission.NFC` seulement, décision D7 pour la permission interne ajoutée par androidx.core). Aucune donnée ne peut quitter l'appareil ; le magasin de confiance n'est jamais mis à jour par le réseau.
+The manifest declares no network permission (`android.permission.NFC` only, decision D7 for the internal permission added by androidx.core). No data can leave the device; the trust store is never updated over the network.
 
 ## 5. Tests
 
-### Fuzzing des parseurs
+### Parser fuzzing
 
-`core/src/test/kotlin/…/core/fuzz/` contient un fuzzer mutationnel déterministe, sans dépendance (pas de Jazzer), lancé par `./gradlew :core:test`. Les graines sont des entrées valides produites par `:testchip` (EF.COM, EF.SOD, DG1 TD1 et TD3, DG2, DG7, DG11, DG12, DG14, DG15, EF.CardAccess, Master List de test) et la Master List embarquée. Les mutations touchent les octets (bit, octet, troncature, insertion, duplication ou suppression de bloc) et l'arbre TLV/DER (longueur gonflée, réduite, en forme longue sur 4 octets ou plus, indéfinie, imbrication profonde, tag inattendu, enfants dupliqués ou permutés, valeur remplacée) ; le contenu signé est aussi muté puis re-signé (LDSSecurityObject, `CscaMasterList`). Chaque cible vérifie le contrat de son appelant réel : résultat ou exception attendue, jamais d'`Error` (mémoire, pile), de délai dépassé (2 s par entrée), ni de SOD_SIGNATURE, DG_HASHES ou AA « OK » pour une entrée mutée dans sa partie signée.
+`core/src/test/kotlin/…/core/fuzz/` contains a deterministic mutational fuzzer, without dependencies (no Jazzer), run by `./gradlew :core:test`. The seeds are valid inputs produced by `:testchip` (EF.COM, EF.SOD, DG1 TD1 and TD3, DG2, DG7, DG11, DG12, DG14, DG15, EF.CardAccess, test Master List) and the built-in Master List. Mutations act on the bytes (bit, byte, truncation, insertion, duplication or deletion of a block) and on the TLV/DER tree (inflated length, reduced length, long form on 4 bytes or more, indefinite length, deep nesting, unexpected tag, duplicated or swapped children, replaced value); the signed content is also mutated then re-signed (LDSSecurityObject, `CscaMasterList`). Each target checks the contract of its real caller: a result or an expected exception, never an `Error` (memory, stack), a timeout (2 s per input), or an “OK” SOD_SIGNATURE, DG_HASHES or AA for an input mutated in its signed part.
 
-Le nombre d'itérations par défaut tient l'ensemble sous 30 s. Mode long, reproduction et délai (`SCEAU_FUZZ_TIMEOUT_MILLIS`), par variables d'environnement (les `-D` de `./gradlew` n'atteignent pas la JVM des tests ; les propriétés système `sceau.fuzz.*` restent lues, pour un lancement depuis l'IDE) :
+The default number of iterations keeps the whole run under 30 s. Long mode, reproduction and timeout (`SCEAU_FUZZ_TIMEOUT_MILLIS`) are set through environment variables (the `-D` flags of `./gradlew` do not reach the test JVM; the `sceau.fuzz.*` system properties are still read, for runs from the IDE):
 
 ```bash
-SCEAU_FUZZ_ITERATIONS=200000 ./gradlew :core:test --tests "io.github.mgdx.sceau.core.fuzz.*" --rerun   # mode long
-SCEAU_FUZZ_SEED=0x5cea2026 SCEAU_FUZZ_INDEX=736 ./gradlew :core:test --tests "…FuzzTest.comDataGroups" --rerun  # une itération
+SCEAU_FUZZ_ITERATIONS=200000 ./gradlew :core:test --tests "io.github.mgdx.sceau.core.fuzz.*" --rerun   # long mode
+SCEAU_FUZZ_SEED=0x5cea2026 SCEAU_FUZZ_INDEX=736 ./gradlew :core:test --tests "…FuzzTest.comDataGroups" --rerun  # a single iteration
 ```
 
-Un échec donne la cible, la graine, l'index et la liste des mutations, jamais les octets ; les graines signées sont resignées de façon déterministe (ECDSA RFC 6979, heure de signature fixe) pour que graine et index suffisent à le rejouer. Les échecs sont regroupés par signature (exception et ligne du projet). Une entrée minimale devient un test de non-régression ; un bogue non encore corrigé reste dans `FuzzRegressionTest`, marqué `@Ignore`.
+A failure reports the target, the seed, the index and the list of mutations, never the bytes; signed seeds are re-signed deterministically (ECDSA RFC 6979, fixed signing time) so that seed and index are enough to replay it. Failures are grouped by signature (exception and project line). A minimal input becomes a regression test; a bug not yet fixed stays in `FuzzRegressionTest`, marked `@Ignore`.

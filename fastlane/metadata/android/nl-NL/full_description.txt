@@ -2,9 +2,9 @@ Sceau leest via NFC de chip van identiteitsdocumenten volgens ICAO 9303 en contr
 
 <b>Ondersteunde documenten</b>
 <ul>
+<li>Biometrische paspoorten uit alle landen, met het documentnummer, de geboortedatum en de vervaldatum</li>
 <li>Franse identiteitskaart (bankpasformaat, sinds 2021), met de CAN van 6 cijfers op de kaart</li>
 <li>Europese identiteitskaarten, met de CAN of de MRZ</li>
-<li>Biometrische paspoorten uit alle landen, met het documentnummer, de geboortedatum en de vervaldatum</li>
 </ul>
 
 <b>Wat Sceau toont</b>

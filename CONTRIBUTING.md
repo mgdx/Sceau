@@ -1,105 +1,105 @@
-# Contribuer à Sceau
+# Contributing to Sceau
 
-Merci de votre intérêt. Sceau manipule des données d'identité : les règles ci-dessous ne sont pas des préférences de style, elles conditionnent l'acceptation d'une contribution. Elles reprennent SPEC §2 (contraintes générales), §3 (dépendances) et §8 (vie privée).
+Thank you for your interest. Sceau handles identity data: the rules below are not style preferences, they determine whether a contribution is accepted. They restate SPEC §2 (general constraints), §3 (dependencies) and §8 (privacy).
 
-Avant de commencer, lisez [`SPEC.md`](SPEC.md) (source de vérité), [`docs/architecture.md`](docs/architecture.md) et [`docs/protocol.md`](docs/protocol.md). Toute modification qui s'écarte de la SPEC doit être consignée et justifiée dans [`docs/decisions.md`](docs/decisions.md).
+Before you start, read [`SPEC.md`](SPEC.md) (source of truth), [`docs/architecture.md`](docs/architecture.md) and [`docs/protocol.md`](docs/protocol.md). Any change that departs from the SPEC must be recorded and justified in [`docs/decisions.md`](docs/decisions.md).
 
-## Règles
+## Rules
 
-### Qualité
+### Quality
 
-- **Zéro avertissement** sur `test`, `lint` et `ktlintCheck`. Les avertissements Kotlin sont traités en erreurs (`allWarningsAsErrors`), lint en `warningsAsErrors`. Un seul avertissement fait échouer la CI.
-- Ne désactivez pas une règle lint ou ktlint pour faire passer une build. Une exception, si elle est inévitable, est ciblée au plus près (un fichier, un jar), commentée dans le fichier de configuration et consignée dans `docs/decisions.md`.
-- Tout changement de comportement de `:core` s'accompagne d'un test JVM. Les cas de SPEC §9.1 doivent rester couverts.
+- **Zero warnings** on `test`, `lint` and `ktlintCheck`. Kotlin warnings are treated as errors (`allWarningsAsErrors`), lint in `warningsAsErrors`. A single warning makes CI fail.
+- Do not disable a lint or ktlint rule to get a build through. An exception, if unavoidable, is targeted as narrowly as possible (one file, one jar), commented in the configuration file and recorded in `docs/decisions.md`.
+- Any change in the behavior of `:core` comes with a JVM test. The cases in SPEC §9.1 must remain covered.
 
 ### Architecture
 
-- **`:core` est du Kotlin pur** : aucun import `android.*`, aucune dépendance Android. Il doit se compiler et se tester sur la JVM.
-- L'API publique de `:core` n'expose aucun type de JMRTD ni de BouncyCastle.
-- **Aucun algorithme codé en dur** : on accepte ce que déclarent les certificats et le SOD ; un algorithme inconnu donne `UNSUPPORTED_ALGORITHM`, jamais un échec silencieux (SPEC §6.2).
-- Une étape non disponible (`NOT_AVAILABLE`) reste distincte d'une étape échouée (`FAILED`).
-- **`:testchip` n'entre jamais dans l'APK release** : il reste en `testImplementation` de `:core` et en `debugImplementation` de `:app`. Tout ce qui s'en sert dans `:app` passe par le jeu de sources `debug`, avec une version vide dans `release` (décision D17).
+- **`:core` is pure Kotlin**: no `android.*` import, no Android dependency. It must compile and be tested on the JVM.
+- The public API of `:core` exposes no JMRTD or BouncyCastle type.
+- **No hardcoded algorithm**: whatever the certificates and the SOD declare is accepted; an unknown algorithm gives `UNSUPPORTED_ALGORITHM`, never a silent failure (SPEC §6.2).
+- A step that is not available (`NOT_AVAILABLE`) remains distinct from a failed step (`FAILED`).
+- **`:testchip` never goes into the release APK**: it stays a `testImplementation` of `:core` and a `debugImplementation` of `:app`. Anything in `:app` that uses it goes through the `debug` source set, with an empty version in `release` (decision D17).
 
 ### Interface
 
-- **Aucune chaîne codée en dur.** Toutes les chaînes sont dans `app/src/main/res/values/strings_<écran>.xml` (anglais, langue par défaut, D55) avec leur traduction dans `values-fr/` et les autres `values-<langue>/` (décisions D5, D27). Une chaîne ajoutée sans traduction française est incomplète.
-- Compose et Material 3 ; le thème suit le mode sombre du système.
+- **No hardcoded string.** All strings are in `app/src/main/res/values/strings_<screen>.xml` (English, the default language, D55) with their translation in `values-fr/` and the other `values-<language>/` (decisions D5, D27). A string added without a French translation is incomplete.
+- Compose and Material 3; the theme follows the system dark mode.
 
-### Vie privée et sécurité
+### Privacy and security
 
-- **Aucune donnée lue** (DG1, photo, DG11, DG12) ni clé d'accès (CAN, MRZ) n'est écrite sur disque, en cache, en base, en préférences ou dans les journaux, en debug comme en release. Pas de `rememberSaveable` ni de `SavedStateHandle` pour ces données.
-- **Aucun journal, même temporaire pour déboguer** : ni `Log`, ni `println`, ni `printStackTrace`. Pour diagnostiquer sur appareil, enrichissez plutôt le code d'erreur affiché, avec des éléments sans donnée personnelle (étape, INS, longueur arrondie, sous-type d'une liste fermée : décision D11).
-- Aucune donnée personnelle dans les messages d'exception ni dans les codes d'erreur. N'attachez jamais une exception de JMRTD comme cause : ses messages contiennent des APDU en hexadécimal (décision D14). Les classes de modèle ne sont pas des `data class` et masquent leur `toString()`.
-- Les écrans qui affichent des données lues posent `FLAG_SECURE` (`SecureWindow()`).
-- Les tableaux d'octets lus sont remis à zéro (`wipe()`) à la sortie du résultat et en arrière-plan.
-- Tout aléa cryptographique vient de `SecureRandom`.
-- **Aucune permission réseau.** Le manifeste ne demande que `android.permission.NFC`.
-- Aucune télémétrie, aucun rapport de plantage, aucune bibliothèque d'analyse ou de publicité.
+- **No data read** (DG1, photo, DG11, DG12) and no access key (CAN, MRZ) is written to disk, cache, database, preferences or logs, in debug or in release. No `rememberSaveable` or `SavedStateHandle` for this data.
+- **No logging, not even temporarily for debugging**: no `Log`, no `println`, no `printStackTrace`. To diagnose on a device, enrich the displayed error code instead, with elements free of personal data (step, INS, rounded length, subtype from a closed list: decision D11).
+- No personal data in exception messages or error codes. Never attach a JMRTD exception as a cause: its messages contain APDUs in hexadecimal (decision D14). Model classes are not `data class`es and mask their `toString()`.
+- Screens that display data read set `FLAG_SECURE` (`SecureWindow()`).
+- Byte arrays read are zeroed (`wipe()`) on leaving the result screen and in the background.
+- All cryptographic randomness comes from `SecureRandom`.
+- **No network permission.** The manifest requests only `android.permission.NFC`.
+- No telemetry, no crash reporting, no analytics or advertising library.
 
-### Dépendances
+### Dependencies
 
-- Dépendances imposées : JMRTD, scuba-sc-android, BouncyCastle `jdk18on` (jamais SpongyCastle), OpenJPEG pour le JPEG 2000 (code natif compilé depuis les sources, décision D3), Compose, Material 3, Navigation Compose.
-- **Toute nouvelle dépendance**, y compris une transitive notable, est justifiée dans [`docs/dependencies.md`](docs/dependencies.md) : version, licence, rôle, compatibilité F-Droid, dans le même commit que son ajout.
-- **Aucun service Google** (Play Services, Firebase, ML Kit…), **aucun blob binaire** non reconstructible, aucune bibliothèque native sans justification. Le seul code natif, OpenJPEG, est compilé depuis les sources d'un sous-module git (décisions D2 et D3).
-- Dépôts autorisés : Maven Central et Google Maven.
-- Versions dans `gradle/libs.versions.toml`. Une montée de version est un commit à part.
+- Required dependencies: JMRTD, scuba-sc-android, BouncyCastle `jdk18on` (never SpongyCastle), OpenJPEG for JPEG 2000 (native code compiled from source, decision D3), Compose, Material 3, Navigation Compose.
+- **Any new dependency**, including a notable transitive one, is justified in [`docs/dependencies.md`](docs/dependencies.md): version, license, role, F-Droid compatibility, in the same commit that adds it.
+- **No Google service** (Play Services, Firebase, ML Kit…), **no non-rebuildable binary blob**, no native library without justification. The only native code, OpenJPEG, is compiled from the sources of a git submodule (decisions D2 and D3).
+- Allowed repositories: Maven Central and Google Maven.
+- Versions in `gradle/libs.versions.toml`. A version upgrade is a separate commit.
 
-### Magasin de confiance
+### Trust store
 
-Les fichiers de `core/src/main/resources/trust/` ne se modifient qu'en suivant la procédure de [`docs/trust-store.md`](docs/trust-store.md) : source officielle, empreinte publiée, mise à jour des empreintes attendues par le test. Un fichier embarqué est toujours redistribué sans modification.
+The files in `core/src/main/resources/trust/` may only be changed by following the procedure in [`docs/trust-store.md`](docs/trust-store.md): official source, published fingerprint, update of the fingerprints expected by the test. A built-in file is always redistributed without modification.
 
-## Commandes
+## Commands
 
-Les sources d'OpenJPEG sont un sous-module git : clonez avec `git clone --recurse-submodules`, ou, dans un clone existant, lancez une fois `git submodule update --init`. La compilation native demande le NDK `28.2.13676358` et CMake `4.1.2` (installables par le SDK Manager ou `sdkmanager "ndk;28.2.13676358" "cmake;4.1.2"`).
+The OpenJPEG sources are a git submodule: clone with `git clone --recurse-submodules`, or, in an existing clone, run `git submodule update --init` once. Native compilation requires NDK `28.2.13676358` and CMake `4.1.2` (installable through the SDK Manager or `sdkmanager "ndk;28.2.13676358" "cmake;4.1.2"`).
 
 ```bash
-./gradlew :core:test                                                   # tests JVM du cœur
-./gradlew :core:test --tests "io.github.mgdx.sceau.core.SomeTest"       # un seul test
-./gradlew :testchip:test                                               # tests de la puce simulée
-./gradlew :app:testDebugUnitTest                                        # tests JVM de l'app (dont le mode démo)
-./gradlew :app:assembleDebug                                            # APK de debug (mode démo inclus)
-./gradlew :app:assembleRelease                                          # APK release (R8), non signé
-./gradlew lint ktlintCheck                                              # lint et style
-./gradlew ktlintFormat                                                  # reformate selon .editorconfig
-./gradlew check                                                         # tout ce qui bloque la CI
-./gradlew :app:dependencies --configuration releaseRuntimeClasspath     # audit des dépendances
-app/src/main/cpp/test/run-host-tests.sh                                 # tests hôte du décodeur JPEG 2000 (ASan, UBSan)
-scripts/update-trust-store.sh --ants-dir DOSSIER [--apply]              # vérifie les sources du magasin de confiance (à chaque release)
-scripts/check-reproducible.sh                                           # double build release, APK identiques octet pour octet
+./gradlew :core:test                                                   # core JVM tests
+./gradlew :core:test --tests "io.github.mgdx.sceau.core.SomeTest"       # a single test
+./gradlew :testchip:test                                               # simulated chip tests
+./gradlew :app:testDebugUnitTest                                        # app JVM tests (including demo mode)
+./gradlew :app:assembleDebug                                            # debug APK (demo mode included)
+./gradlew :app:assembleRelease                                          # release APK (R8), unsigned
+./gradlew lint ktlintCheck                                              # lint and style
+./gradlew ktlintFormat                                                  # reformats according to .editorconfig
+./gradlew check                                                         # everything that blocks CI
+./gradlew :app:dependencies --configuration releaseRuntimeClasspath     # dependency audit
+app/src/main/cpp/test/run-host-tests.sh                                 # host tests of the JPEG 2000 decoder (ASan, UBSan)
+scripts/update-trust-store.sh --ants-dir DIR [--apply]              # checks the trust store sources (at each release)
+scripts/check-reproducible.sh                                           # double release build, byte-for-byte identical APKs
 ```
 
-`update-trust-store.sh` (bash, curl, openssl, unzip) n'écrit rien sans `--apply` ; voir la procédure de [`docs/trust-store.md`](docs/trust-store.md).
+`update-trust-store.sh` (bash, curl, openssl, unzip) writes nothing without `--apply`; see the procedure in [`docs/trust-store.md`](docs/trust-store.md).
 
-Les APK release doivent rester reproductibles (décision D25, [`docs/reproducible-builds.md`](docs/reproducible-builds.md)) : tout changement du build (Gradle, CMake, versions d'outils ou de dépendances) passe par `scripts/check-reproducible.sh` avant une release.
+Release APKs must remain reproducible (decision D25, [`docs/reproducible-builds.md`](docs/reproducible-builds.md)): any change to the build (Gradle, CMake, tool or dependency versions) goes through `scripts/check-reproducible.sh` before a release.
 
-Tout changement de `app/src/main/cpp/` (code C ou version d'OpenJPEG) passe par `run-host-tests.sh`, qui demande `cmake` et un compilateur C hôte avec AddressSanitizer. Le code C de Sceau est compilé avec `-Wall -Wextra -Wconversion -Werror`.
+Any change to `app/src/main/cpp/` (C code or OpenJPEG version) goes through `run-host-tests.sh`, which requires `cmake` and a host C compiler with AddressSanitizer. Sceau's C code is compiled with `-Wall -Wextra -Wconversion -Werror`.
 
-La CI (`.github/workflows/ci.yml`) récupère le sous-module OpenJPEG puis exécute `./gradlew check :app:assembleDebug`. Lancez `./gradlew check` avant de proposer une contribution.
+CI (`.github/workflows/ci.yml`) fetches the OpenJPEG submodule then runs `./gradlew check :app:assembleDebug`. Run `./gradlew check` before proposing a contribution.
 
-Toolchain : JDK 17 pour la compilation, JDK 25 pour le démon Gradle.
+Toolchain: JDK 17 for compilation, JDK 25 for the Gradle daemon.
 
 ## Commits
 
-Format : `type(portée): description`, en anglais, à l'impératif, sans point final. Un commit = un changement cohérent.
+Format: `type(scope): description`, in English, in the imperative mood, with no final period. One commit = one coherent change.
 
-| Type | Usage |
+| Type | Use |
 |---|---|
-| `feat` | nouvelle fonctionnalité |
-| `fix` | correction de bogue |
-| `docs` | documentation seule |
-| `test` | ajout ou correction de tests |
-| `refactor` | restructuration sans changement de comportement |
-| `chore` | build, dépendances, CI, outillage |
+| `feat` | new feature |
+| `fix` | bug fix |
+| `docs` | documentation only |
+| `test` | adding or fixing tests |
+| `refactor` | restructuring without behavior change |
+| `chore` | build, dependencies, CI, tooling |
 
-Portées usuelles : `core`, `app`, `trust`, `reading`, `result`, `home`, `about`, `nfc`, `jp2`, `sim` (`:testchip`), `debug` (mode démo), `socle`, `ci`. Exemple : `fix(core): distinguer DG15 absent d'un échec d'Active Authentication`.
+Usual scopes: `core`, `app`, `trust`, `reading`, `result`, `home`, `about`, `nfc`, `jp2`, `sim` (`:testchip`), `debug` (demo mode), `socle`, `ci`. Example: `fix(core): distinguish a missing DG15 from an Active Authentication failure`.
 
-Le corps du message explique le pourquoi, et cite le cas échéant la section de la SPEC ou la décision de `docs/decisions.md` concernée.
+The message body explains the why, and cites where relevant the SPEC section or the decision in `docs/decisions.md` concerned.
 
-## Proposer une contribution
+## Proposing a contribution
 
-1. Créez une branche depuis `main`.
-2. Faites vos changements en respectant les règles ci-dessus, avec les tests et la documentation correspondants (`docs/`, et `fastlane/metadata/` si une fonctionnalité visible change).
-3. Vérifiez `./gradlew check`.
-4. Ouvrez une demande de fusion décrivant le changement, sa justification et la façon dont il a été vérifié (tests, et cas de [`docs/test-plan.md`](docs/test-plan.md) exécutés sur appareil le cas échéant).
+1. Create a branch from `main`.
+2. Make your changes following the rules above, with the corresponding tests and documentation (`docs/`, and `fastlane/metadata/` if a visible feature changes).
+3. Check `./gradlew check`.
+4. Open a pull request describing the change, its justification and how it was verified (tests, and cases from [`docs/test-plan.md`](docs/test-plan.md) run on a device where relevant).
 
-En contribuant, vous acceptez que votre contribution soit distribuée sous la licence du projet, GNU GPL version 3 uniquement (GPL-3.0-only).
+By contributing, you agree that your contribution is distributed under the project's license, GNU GPL version 3 only (GPL-3.0-only).

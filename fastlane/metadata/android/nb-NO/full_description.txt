@@ -2,9 +2,9 @@ Sceau leser brikken i identitetsdokumenter etter ICAO 9303 via NFC og sjekker at
 
 <b>Støttede dokumenter</b>
 <ul>
+<li>Biometriske pass fra alle land, med dokumentnummer, fødselsdato og utløpsdato</li>
 <li>Fransk nasjonalt ID-kort (bankkortformat, siden 2021), med den sekssifrede CAN-en som er trykt på kortet</li>
 <li>Europeiske ID-kort, med CAN eller MRZ</li>
-<li>Biometriske pass fra alle land, med dokumentnummer, fødselsdato og utløpsdato</li>
 </ul>
 
 <b>Dette viser Sceau</b>

@@ -2,9 +2,9 @@ Sceau lexon me NFC çipin e dokumenteve të identitetit sipas standardit ICAO 93
 
 <b>Dokumentet e mbështetura</b>
 <ul>
+<li>Pasaportat biometrike të çdo vendi, me numrin e dokumentit, datën e lindjes dhe datën e skadimit</li>
 <li>Letërnjoftimi kombëtar francez (në formatin e kartës bankare, që nga viti 2021), me kodin CAN me 6 shifra të shtypur në kartë</li>
 <li>Letërnjoftimet evropiane, me kodin CAN ose zonën MRZ</li>
-<li>Pasaportat biometrike të çdo vendi, me numrin e dokumentit, datën e lindjes dhe datën e skadimit</li>
 </ul>
 
 <b>Çfarë shfaq Sceau</b>

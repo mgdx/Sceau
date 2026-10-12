@@ -2,9 +2,9 @@ Sceau putem NFC-a očitava čip identifikacijskih isprava prema ICAO 9303 i prov
 
 <b>Podržane isprave</b>
 <ul>
+<li>Biometrijske putovnice bilo koje države, pomoću broja isprave, datuma rođenja i datuma isteka</li>
 <li>Francuska osobna iskaznica (format kreditne kartice, od 2021.), pomoću šesteroznamenkastog CAN-a otisnutog na iskaznici</li>
 <li>Europske osobne iskaznice, pomoću CAN-a ili MRZ-a</li>
-<li>Biometrijske putovnice bilo koje države, pomoću broja isprave, datuma rođenja i datuma isteka</li>
 </ul>
 
 <b>Što Sceau prikazuje</b>

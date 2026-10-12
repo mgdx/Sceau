@@ -2,9 +2,9 @@ Sceau läser chippet i identitetshandlingar enligt ICAO 9303 via NFC och kontrol
 
 <b>Handlingar som stöds</b>
 <ul>
+<li>Biometriska pass från alla länder, med dokumentnummer, födelsedatum och giltighetsdatum</li>
 <li>Franskt nationellt id-kort (kreditkortsformat, sedan 2021), med den 6-siffriga CAN-koden som är tryckt på kortet</li>
 <li>Europeiska id-kort, med CAN eller MRZ</li>
-<li>Biometriska pass från alla länder, med dokumentnummer, födelsedatum och giltighetsdatum</li>
 </ul>
 
 <b>Det här visar Sceau</b>

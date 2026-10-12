@@ -2,9 +2,9 @@ Sceau reads the chip of ICAO 9303 identity documents over NFC and checks that th
 
 <b>Supported documents</b>
 <ul>
+<li>Biometric passports from any country, using the document number, date of birth and expiry date</li>
 <li>French national identity card (credit card format, since 2021), using the 6-digit CAN printed on the card</li>
 <li>European identity cards, using the CAN or the MRZ</li>
-<li>Biometric passports from any country, using the document number, date of birth and expiry date</li>
 </ul>
 
 <b>What Sceau shows</b>

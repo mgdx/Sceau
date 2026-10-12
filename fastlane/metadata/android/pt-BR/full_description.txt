@@ -2,9 +2,9 @@ O Sceau lê via NFC o chip de documentos de identidade compatíveis com o padrã
 
 <b>Documentos compatíveis</b>
 <ul>
+<li>Passaportes biométricos de qualquer país, com o número do documento, a data de nascimento e a data de validade</li>
 <li>Carteira de identidade nacional francesa (formato cartão de crédito, desde 2021), com o CAN de 6 dígitos impresso no cartão</li>
 <li>Carteiras de identidade europeias, com o CAN ou a MRZ</li>
-<li>Passaportes biométricos de qualquer país, com o número do documento, a data de nascimento e a data de validade</li>
 </ul>
 
 <b>O que o Sceau mostra</b>

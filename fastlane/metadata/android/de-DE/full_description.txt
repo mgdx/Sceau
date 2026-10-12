@@ -2,9 +2,9 @@ Sceau liest per NFC den Chip von Ausweisdokumenten nach ICAO 9303 aus und prüft
 
 <b>Unterstützte Dokumente</b>
 <ul>
+<li>Biometrische Reisepässe aller Länder, mit Dokumentennummer, Geburtsdatum und Ablaufdatum</li>
 <li>Französischer Personalausweis (Scheckkartenformat, seit 2021), mit der 6-stelligen Zugangsnummer (CAN), die auf die Karte gedruckt ist</li>
 <li>Europäische Personalausweise, mit der CAN oder der MRZ</li>
-<li>Biometrische Reisepässe aller Länder, mit Dokumentennummer, Geburtsdatum und Ablaufdatum</li>
 </ul>
 
 <b>Was Sceau anzeigt</b>

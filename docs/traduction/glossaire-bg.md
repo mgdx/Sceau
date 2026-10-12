@@ -1,6 +1,6 @@
-# Glossaire bulgare (values-bg)
+# Bulgarian glossary (values-bg)
 
-| Source FR | Cible | Note |
+| French source | Target | Note |
 |---|---|---|
 | puce | чип | |
 | document | документ | |
@@ -8,11 +8,11 @@
 | carte d’identité | лична карта | |
 | passeport | паспорт | |
 | titulaire | притежател | |
-| magasin de confiance | доверени сертификати | tournure des réglages Android |
-| certificat | сертификат | pluriel compté : сертификата |
-| certificat de lien | свързващ сертификат | link certificate ICAO |
-| empreinte (certificat) | отпечатък | « Отпечатък SHA-256 » |
-| empreinte (groupe de données) | хеш | hash des DG |
+| magasin de confiance | доверени сертификати | Android settings wording |
+| certificat | сертификат | counted plural: сертификата |
+| certificat de lien | свързващ сертификат | ICAO link certificate |
+| empreinte (certificat) | отпечатък | “Отпечатък SHA-256” |
+| empreinte (groupe de données) | хеш | hash of the DGs |
 | groupe de données | група данни | |
 | émetteur | издател | |
 | pays émetteur / État émetteur | издаваща държава | |
@@ -22,10 +22,10 @@
 | Signature valide, puce non vérifiée | Валиден подпис, непроверен чип | verdict |
 | Émetteur inconnu | Неизвестен издател | verdict |
 | Échec (verdict) | Неуспешна проверка | verdict |
-| Réussie / Échec (contrôle) | Успешна / Неуспешна | statut d’une vérification |
+| Réussie / Échec (contrôle) | Успешна / Неуспешна | status of a check |
 | lire | четене | |
 | réessayer | Нов опит | |
-| annuler | Отказ | bouton Android |
+| annuler | Отказ | Android button |
 | effacer | Изчистване | |
 | importer | Импортиране | |
 | supprimer | Изтриване | |
@@ -35,5 +35,5 @@
 | nationalité | гражданство | |
 | nom / prénoms | фамилия / име | |
 | RGPD | ОРЗД | Общ регламент относно защитата на данните |
-| Master List | Master List | invariable, traité au masculin (списък) |
+| Master List | Master List | invariable, treated as masculine (списък) |
 | JJ / MM / AAAA | ДД / ММ / ГГГГ | |

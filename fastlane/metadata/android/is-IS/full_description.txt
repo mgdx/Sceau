@@ -2,9 +2,9 @@ Sceau les kubb skilríkja samkvæmt ICAO 9303 með NFC og sannprófar að þau s
 
 <b>Studd skilríki</b>
 <ul>
+<li>Lífkennavegabréf frá hvaða landi sem er, með númeri skilríkis, fæðingardegi og gildistíma</li>
 <li>Franskt nafnskírteini (í greiðslukortastærð, frá 2021), með 6 stafa CAN-númerinu sem prentað er á kortið</li>
 <li>Evrópsk nafnskírteini, með CAN-númerinu eða MRZ</li>
-<li>Lífkennavegabréf frá hvaða landi sem er, með númeri skilríkis, fæðingardegi og gildistíma</li>
 </ul>
 
 <b>Það sem Sceau sýnir</b>

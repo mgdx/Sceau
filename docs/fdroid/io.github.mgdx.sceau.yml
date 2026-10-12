@@ -1,19 +1,19 @@
-# Recette fdroiddata de Sceau (metadata/io.github.mgdx.sceau.yml), copie de celle soumise par
-# merge request le 2026-10-12. Mode d'emploi : docs/fdroid/README.md. Décisions : D25 (builds
-# reproductibles), D38, D53, D54.
+# Sceau's fdroiddata recipe (metadata/io.github.mgdx.sceau.yml), a copy of the one submitted by
+# merge request on 2026-10-12. Instructions: docs/fdroid/README.md. Decisions: D25 (reproducible
+# builds), D38, D53, D54.
 #
-# Un seul APK, l'universel : pas de VercodeOperation, versionCode identique à celui de
-# app/build.gradle.kts. Les APK par architecture restent réservés aux releases GitHub ; les splits
-# ABI produisant cinq APK, `output` désigne l'universel.
+# A single APK, the universal one: no VercodeOperation, versionCode identical to the one in
+# app/build.gradle.kts. The per-architecture APKs remain reserved for GitHub releases; since the
+# ABI splits produce five APKs, `output` designates the universal one.
 #
-# Environnement de build (D49) : JDK 25 pour le démon Gradle et JDK 17 pour les toolchains,
-# installés par apt (le serveur de build est sous Debian trixie, d'où bookworm pour le 17) ;
-# plugin foojay retiré et téléchargement de JDK interdit, pour qu'aucun JDK binaire ne soit
-# récupéré pendant le build ; CMake 4.1.2 et NDK r28c par le SDK. Le sous-module OpenJPEG est
-# compilé depuis les sources. Ni scanignore ni scandelete : le scanner n'y trouve rien (D54).
+# Build environment (D49): JDK 25 for the Gradle daemon and JDK 17 for the toolchains,
+# installed with apt (the build server runs Debian trixie, hence bookworm for 17);
+# foojay plugin removed and JDK download disabled, so that no binary JDK is
+# fetched during the build; CMake 4.1.2 and NDK r28c through the SDK. The OpenJPEG submodule is
+# compiled from source. Neither scanignore nor scandelete: the scanner finds nothing there (D54).
 #
-# Ce fichier est un point fixe de `fdroid rewritemeta` (ruamel.yaml 0.18.6) : ne pas le
-# reformater à la main, commentaires mis à part.
+# This file is a fixed point of `fdroid rewritemeta` (ruamel.yaml 0.18.6): do not
+# reformat it by hand, comments excepted.
 
 Categories:
   - Security
