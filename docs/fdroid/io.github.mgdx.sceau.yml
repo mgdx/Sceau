@@ -1,15 +1,19 @@
-# Brouillon de recette fdroiddata pour Sceau (metadata/io.github.mgdx.sceau.yml).
-# Mode d'emploi : docs/fdroid/README.md. Décisions : D25 (builds reproductibles), D38, D53.
+# Recette fdroiddata de Sceau (metadata/io.github.mgdx.sceau.yml), copie de celle soumise par
+# merge request le 2026-10-12. Mode d'emploi : docs/fdroid/README.md. Décisions : D25 (builds
+# reproductibles), D38, D53, D54.
 #
 # Un seul APK, l'universel : pas de VercodeOperation, versionCode identique à celui de
-# app/build.gradle.kts. Les APK par architecture restent réservés aux releases GitHub.
+# app/build.gradle.kts. Les APK par architecture restent réservés aux releases GitHub ; les splits
+# ABI produisant cinq APK, `output` désigne l'universel.
 #
 # Environnement de build (D49) : JDK 25 pour le démon Gradle et JDK 17 pour les toolchains,
 # installés par apt (le serveur de build est sous Debian trixie, d'où bookworm pour le 17) ;
 # plugin foojay retiré et téléchargement de JDK interdit, pour qu'aucun JDK binaire ne soit
 # récupéré pendant le build ; CMake 4.1.2 et NDK r28c par le SDK. Le sous-module OpenJPEG est
-# compilé depuis les sources ; ses outils et l'interface wx, inutilisés, sont retirés par
-# scandelete.
+# compilé depuis les sources. Ni scanignore ni scandelete : le scanner n'y trouve rien (D54).
+#
+# Ce fichier est un point fixe de `fdroid rewritemeta` (ruamel.yaml 0.18.6) : ne pas le
+# reformater à la main, commentaires mis à part.
 
 Categories:
   - Security
@@ -18,6 +22,7 @@ AuthorName: mgdx
 WebSite: https://github.com/mgdx/Sceau
 SourceCode: https://github.com/mgdx/Sceau
 IssueTracker: https://github.com/mgdx/Sceau/issues
+Changelog: https://github.com/mgdx/Sceau/releases
 Liberapay: mgdx
 
 AutoName: Sceau
@@ -26,7 +31,7 @@ RepoType: git
 Repo: https://github.com/mgdx/Sceau.git
 
 Builds:
-  - versionName: '1.0.0'
+  - versionName: 1.0.0
     versionCode: 1
     commit: 74fa81630a7a550e30c7ec0e4df2b6d988c809ec
     subdir: app
@@ -45,17 +50,11 @@ Builds:
       - sed -i -e '/foojay/d' ../settings.gradle.kts
       - echo -e '\norg.gradle.java.installations.auto-download=false' >> ../gradle.properties
       - sdkmanager 'cmake;4.1.2'
-    scandelete:
-      - app/src/main/cpp/openjpeg/src/bin/wx
-      - app/src/main/cpp/openjpeg/tools
     ndk: r28c
 
-# SHA-256 du certificat de signature (clé créée le 2026-10-12, docs/release.md §3),
-# en minuscules sans « : ». À recontrôler sur l'APK signé :
-# apksigner verify --print-certs sceau-1.0.0-universal.apk, ligne « certificate SHA-256 digest ».
 AllowedAPKSigningKeys: dee8105b0b0f27b444b3303e0b34022835188d49d952ff2542fbbc057927434b
 
 AutoUpdateMode: Version
 UpdateCheckMode: Tags ^v[0-9.]+$
-CurrentVersion: '1.0.0'
+CurrentVersion: 1.0.0
 CurrentVersionCode: 1

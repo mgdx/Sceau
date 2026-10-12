@@ -54,6 +54,16 @@ fdroid lint io.github.mgdx.sceau
 fdroid build -v -l io.github.mgdx.sceau                       # construit et compare à l'APK de l'auteur
 ```
 
-Puis ouvrir une merge request sur fdroiddata (branche nommée d'après l'identifiant de l'application), en joignant le rapport du skill `android-fdroid`.
+Ce qu'il faut sur le poste pour que `fdroid build` aboutisse (constaté le 2026-10-12, D54) :
+
+- **fdroidserver de master** dans un virtualenv (`pip install git+https://gitlab.com/fdroid/fdroidserver.git apksigcopier platformdirs`) : c'est ce que tourne la CI de fdroiddata. Pour `rewritemeta`, un second virtualenv avec `fdroidserver` publié et `ruamel.yaml==0.18.6` (version de Debian trixie) : les versions récentes de ruamel replient les longues valeurs autrement que la CI (leçon de Roue Libre) ;
+- **`gradlew-fdroid`** (dépôt https://gitlab.com/fdroid/gradlew-fdroid, `gradlew.py`, qui vérifie l'empreinte de la distribution Gradle) derrière un script `gradle`, désigné par `gradle:` dans `config.yml` ;
+- dans `config.yml`, **`ndk_paths: {r28c: …/ndk/28.2.13676358}`** ;
+- un **`sdkmanager` lancé sous JDK 21** : celui des cmdline-tools plante sous JDK 25 (`NumberFormatException` dans `Properties.store`) ;
+- ces ajouts à `config.yml` restent locaux : le restaurer avant tout commit dans fdroiddata.
+
+Le scanner refuse un chemin `scandelete` ou `scanignore` qui ne sert à rien (« Chemin scandelete inutilisé ») : la recette n'en porte aucun. Le résultat attendu est « compared built binary to supplied reference binary successfully ».
+
+Puis ouvrir une merge request sur fdroiddata (branche `io.github.mgdx.sceau` du fork https://gitlab.com/mgdx/fdroiddata, titre « New app: Sceau », modèle « App inclusion »). Retours obtenus sur Roue Libre, déjà appliqués ici : hash de commit complet et jamais le tag, pas de `scanignore`, `subdir` renseigné.
 
 Pour une nouvelle version, F-Droid ajoute lui-même le bloc `Builds` (`AutoUpdateMode: Version`, tags `v1.0.0`, `v1.0.1`, `v1.1.0`…), à condition que l'asset `sceau-<version>-universal.apk` soit publié sous ce nom.
