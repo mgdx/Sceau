@@ -50,9 +50,10 @@ Builds:
       - app/src/main/cpp/openjpeg/tools
     ndk: r28c
 
-# À REMPLIR : SHA-256 du certificat de signature, en minuscules sans « : »
-# (apksigner verify --print-certs sceau-0.9-universal.apk, ligne « certificate SHA-256 digest »).
-AllowedAPKSigningKeys: 0000000000000000000000000000000000000000000000000000000000000000
+# SHA-256 du certificat de signature (clé créée le 2026-10-12, docs/release.md §3),
+# en minuscules sans « : ». À recontrôler sur l'APK signé :
+# apksigner verify --print-certs sceau-0.9-universal.apk, ligne « certificate SHA-256 digest ».
+AllowedAPKSigningKeys: dee8105b0b0f27b444b3303e0b34022835188d49d952ff2542fbbc057927434b
 
 AutoUpdateMode: Version
 UpdateCheckMode: Tags ^v[0-9.]+$
