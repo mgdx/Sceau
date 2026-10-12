@@ -1,0 +1,6 @@
+最初の公開リリースです。
+• IC 旅券、フランスの身分証明書、ヨーロッパの身分証明書を NFC で読み取り（PACE または BAC）
+• 顔写真、身分事項、署名、追加データ
+• Passive・Chip・Active Authentication、判定とチェックリスト
+• ANTS と 3 か国の CSCA、BSI の Master List、Master List と証明書のインポート
+• オフライン、データは保存しない、45 言語

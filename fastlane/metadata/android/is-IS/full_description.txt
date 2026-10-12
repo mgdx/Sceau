@@ -1,0 +1,54 @@
+Sceau les kubb skilríkja samkvæmt ICAO 9303 með NFC og sannprófar að þau séu ósvikin. Forritið virkar alveg án nettengingar: engin netheimild, ekkert er geymt, ekkert er sent.
+
+<b>Studd skilríki</b>
+<ul>
+<li>Franskt nafnskírteini (í greiðslukortastærð, frá 2021), með 6 stafa CAN-númerinu sem prentað er á kortið</li>
+<li>Evrópsk nafnskírteini, með CAN-númerinu eða MRZ</li>
+<li>Lífkennavegabréf frá hvaða landi sem er, með númeri skilríkis, fæðingardegi og gildistíma</li>
+</ul>
+
+<b>Það sem Sceau sýnir</b>
+<ul>
+<li>Myndina sem geymd er í kubbnum</li>
+<li>Auðkenni: kenninafn, eiginnöfn, kyn, fæðingardag, ríkisfang, númer skilríkis, útgáfuríki, gildistíma</li>
+<li>Eiginhandarundirskrift handhafa, ef útgáfuríkið hefur vistað hana í kubbnum</li>
+<li>Viðbótarupplýsingar þegar kubburinn geymir þær (fæðingarstað, heimilisfang, útgáfuyfirvald og útgáfudag…)</li>
+</ul>
+
+<b>Það sem Sceau sannprófar</b>
+<ul>
+<li>Undirskrift útgáfuríkisins á gögnunum, allt upp að þekktu rótarvottorði, og heilleika hvers gagnahóps (Passive Authentication)</li>
+<li>Að kubburinn sé ekki eftirlíking, þegar skilríkin styðja það (Chip Authentication, Active Authentication)</li>
+</ul>
+Niðurstaðan er „Ósvikið“, „Gild undirskrift, kubbur ekki sannprófaður“, „Óþekktur útgefandi“ eða „Mistókst“, ásamt ítarlegum gátlista.
+
+<b>Traustgeymsla</b>
+Sceau inniheldur frönsku CSCA-vottorðin sem ANTS gefur út, vottorð sem Bretland, Georgía og Lúxemborg gefa út fyrir eigin skilríki, og þýska Master List sem BSI gefur út og nær meðal annars yfir Evrópusambandið, EES, Sviss og Bretland. Hægt er að leita eftir landi á skjá traustgeymslunnar. Fyrir skilríki þar sem útgefandinn er ekki með er niðurstaðan „Óþekktur útgefandi“; þú getur flutt inn Master List sem annað ríki gefur út, eða stakt CSCA-vottorð eða tengivottorð eftir að hafa staðfest fingrafar þess, og eytt hverju innfluttu atriði fyrir sig. Afturköllunarlistar eru ekki skoðaðir. Sceau tengist hvorki ANTS né BSI og hvorug stofnunin hefur samþykkt forritið.
+
+<b>Þekktar takmarkanir</b>
+<ul>
+<li>Þýsk nafnskírteini gefin út fyrir 2. ágúst 2021: kubburinn er frátekinn fyrir stjórnvöld; Sceau getur ekki lesið hann og segir frá því. Á nýrri skírteinum er ekki hægt að lesa heimilisfang og fæðingarstað.</li>
+<li>Þýska eID-kortið fyrir borgara ESB: kubburinn geymir engar persónuupplýsingar; aðeins er sannprófað að kortið sé ósvikið.</li>
+<li>Ítölsk CIE 3.0 nafnskírteini frá lokum 2017 til byrjunar 2018: Ítalía hefur birt frávik í viðbótarupplýsingum þeirra; Sceau hafnar þeim gögnum og sannprófar restina af skilríkjunum.</li>
+</ul>
+
+<b>Persónuvernd</b>
+<ul>
+<li>Eina heimildin: NFC</li>
+<li>Engin gögn sem lesin eru úr kubbnum eru vistuð; minnið er hreinsað þegar farið er af niðurstöðuskjánum eða forritið fer í bakgrunn</li>
+<li>Skjámyndir eru útilokaðar í öllu forritinu</li>
+<li>Engar auglýsingar, engir rekjarar, engin Google-þjónusta</li>
+</ul>
+
+<b>Annað</b>
+<ul>
+<li>Fjögurra síðna kynning við fyrstu ræsingu og skjárinn „Hvað kubburinn geymir“</li>
+<li>Viðmót á 45 tungumálum</li>
+</ul>
+
+<b>Fyrirhuguð notkun</b>
+Sceau er ætlað til að athuga eigin skilríki eða skilríki sem handhafi þeirra framvísar. Samkvæmt almennu persónuverndarreglugerðinni (GDPR) er myndin lífkennaupplýsingar þegar hún er notuð til sjálfvirks samanburðar: Sceau framkvæmir engan slíkan samanburð. Niðurstaðan segir ekki til um hvort tilkynnt hafi verið að skilríkin séu glötuð eða stolin.
+
+Sceau les ekki fingraför eða lithimnugögn og skannar ekki MRZ með myndavélinni.
+
+Frjáls hugbúnaður með GNU GPL-leyfi, eingöngu útgáfu 3.

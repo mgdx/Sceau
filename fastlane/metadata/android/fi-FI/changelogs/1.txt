@@ -1,0 +1,6 @@
+Ensimmäinen julkinen versio.
+• Biometristen passien, Ranskan henkilökortin ja eurooppalaisten henkilökorttien lukeminen NFC:llä (PACE tai BAC)
+• Kuva, henkilötiedot, allekirjoitus ja lisätiedot
+• Passive, Chip ja Active Authentication, tulos ja tarkistuslista
+• ANTS:n ja 3 valtion CSCA-varmenteet, BSI:n Master List, Master Listien ja varmenteiden tuonti
+• Ilman verkkoyhteyttä, tietoja ei säilytetä, 45 kieltä

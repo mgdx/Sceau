@@ -1,0 +1,54 @@
+A Sceau NFC-n keresztül beolvassa az ICAO 9303 szabványú személyazonosító okmányok chipjét, és ellenőrzi, hogy azok hitelesek-e. Teljesen offline működik: nincs hálózati engedélye, semmit nem tárol és semmit nem küld el.
+
+<b>Támogatott okmányok</b>
+<ul>
+<li>Francia személyi igazolvány (bankkártya méretű, 2021 óta), a kártyára nyomtatott 6 jegyű CAN segítségével</li>
+<li>Európai személyi igazolványok, a CAN vagy az MRZ segítségével</li>
+<li>Bármely ország biometrikus útlevelei, az okmányazonosító, a születési idő és az érvényesség vége alapján</li>
+</ul>
+
+<b>Mit jelenít meg a Sceau?</b>
+<ul>
+<li>A chipen tárolt fényképet</li>
+<li>A személyazonossági adatokat: családi név, utónév, nem, születési idő, állampolgárság, okmányazonosító, kibocsátó állam, érvényesség vége</li>
+<li>A tulajdonos saját kezű aláírását, ha a kibocsátó állam eltárolta a chipen</li>
+<li>A további adatokat, ha a chip tartalmazza őket (születési hely, lakcím, kiállító hatóság és a kiállítás dátuma…)</li>
+</ul>
+
+<b>Mit ellenőriz a Sceau?</b>
+<ul>
+<li>A kibocsátó állam aláírását az adatokon egy ismert gyökértanúsítványig, valamint minden adatcsoport sértetlenségét (Passive Authentication)</li>
+<li>Azt, hogy a chip nem klón, ha az okmány ezt támogatja (Chip Authentication, Active Authentication)</li>
+</ul>
+Az eredmény „Hiteles”, „Érvényes aláírás, a chip nincs ellenőrizve”, „Ismeretlen kibocsátó” vagy „Sikertelen”, részletes ellenőrzőlistával.
+
+<b>Megbízható tanúsítványok</b>
+A Sceau tartalmazza az ANTS által közzétett francia CSCA-tanúsítványokat, az Egyesült Királyság, Grúzia és Luxemburg által saját okmányaikhoz közzétett tanúsítványokat, valamint a BSI által közzétett német Master Listet, amely többek között az Európai Uniót, az EGT-t, Svájcot és az Egyesült Királyságot fedi le. A megbízható tanúsítványok képernyőjén ország szerint lehet keresni. Ha egy okmány kibocsátója nem szerepel benne, az eredmény „Ismeretlen kibocsátó”; importálhat egy másik állam által közzétett Master Listet, vagy – az ujjlenyomatának ellenőrzése után – egyetlen CSCA- vagy összekötő tanúsítványt, és minden importált elemet egyenként törölhet. A visszavonási listák nincsenek ellenőrizve. A Sceau nem áll kapcsolatban az ANTS-szel vagy a BSI-vel, és azok nem hagyták jóvá.
+
+<b>Ismert korlátozások</b>
+<ul>
+<li>A 2021. augusztus 2. előtt kiállított német személyi igazolványok: a chip a hatóságok számára van fenntartva; a Sceau nem tudja beolvasni, és ezt jelzi. Az újabb kártyákon a lakcím és a születési hely nem olvasható.</li>
+<li>Uniós polgároknak kiállított német eID-kártya: a chip nem tartalmaz személyazonossági adatokat; csak a kártya eredetisége ellenőrizhető.</li>
+<li>2017 végétől 2018 elejéig kiállított olasz CIE 3.0 személyi igazolványok: Olaszország közzétett egy eltérést a további adataikban; a Sceau elveti ezeket az adatokat, és az okmány többi részét ellenőrzi.</li>
+</ul>
+
+<b>Adatvédelem</b>
+<ul>
+<li>Egyetlen engedély: NFC</li>
+<li>A chipről beolvasott adatokat nem menti; a memória törlődik az eredmény elhagyásakor, vagy amikor az alkalmazás a háttérbe kerül</li>
+<li>A képernyőképek az egész alkalmazásban le vannak tiltva</li>
+<li>Nincs reklám, nincs nyomkövető, nincsenek Google-szolgáltatások</li>
+</ul>
+
+<b>Egyéb</b>
+<ul>
+<li>Négyoldalas bemutató az első indításkor, valamint „Mit tartalmaz a chip?” képernyő</li>
+<li>45 nyelvű felület</li>
+</ul>
+
+<b>Rendeltetés</b>
+A Sceau a saját okmánya, vagy a tulajdonosa által bemutatott okmány ellenőrzésére szolgál. A GDPR értelmében a fénykép biometrikus adat, ha automatizált összehasonlításra használják: a Sceau nem végez ilyen összehasonlítást. Az eredmény nem mutatja meg, hogy az okmányt elveszettként vagy ellopottként jelentették-e be.
+
+A Sceau nem olvassa be az ujjlenyomatokat és az íriszadatokat, és nem olvassa be az MRZ-t a kamerával.
+
+Szabad szoftver, kizárólag a GNU GPL 3-as verziója alatt.

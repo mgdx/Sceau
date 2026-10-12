@@ -1,0 +1,54 @@
+Léann Sceau sliseog na gcáipéisí aitheantais ICAO 9303 trí NFC agus fíoraíonn sé go bhfuil siad barántúil. Oibríonn sé go hiomlán as líne: gan cead líonra, ní choinnítear aon rud, ní sheoltar aon rud.
+
+<b>Cáipéisí a dtacaítear leo</b>
+<ul>
+<li>Cárta aitheantais náisiúnta na Fraince (formáid chárta creidmheasa, ó 2021), leis an CAN 6 dhigit atá clóite ar an gcárta</li>
+<li>Cártaí aitheantais Eorpacha, leis an CAN nó leis an MRZ</li>
+<li>Pasanna bithmhéadracha ó aon tír, le huimhir na cáipéise, an dáta breithe agus an dáta éaga</li>
+</ul>
+
+<b>An méid a thaispeánann Sceau</b>
+<ul>
+<li>An grianghraf atá stóráilte ar an tsliseog</li>
+<li>Aitheantas: sloinne, réamhainmneacha, gnéas, dáta breithe, náisiúntacht, uimhir na cáipéise, Stát eisiúna, dáta éaga</li>
+<li>Síniú an tsealbhóra, má stóráil an Stát eisiúna ar an tsliseog é</li>
+<li>Sonraí breise nuair atá siad ar an tsliseog (áit bhreithe, seoladh, údarás eisiúna agus dáta eisiúna…)</li>
+</ul>
+
+<b>An méid a fhíoraíonn Sceau</b>
+<ul>
+<li>Síniú an Stáit eisiúna ar na sonraí, suas go fréamhdheimhniú aitheanta, agus sláine gach grúpa sonraí (Passive Authentication)</li>
+<li>Nach clón í an tsliseog, nuair a thacaíonn an cháipéis leis sin (Chip Authentication, Active Authentication)</li>
+</ul>
+Is é an toradh “Barántúil”, “Síniú bailí, sliseog gan fíorú”, “Eisitheoir anaithnid” nó “Teip”, mar aon le liosta seiceála mionsonraithe.
+
+<b>Stór iontaobhais</b>
+Tá i Sceau na deimhnithe CSCA Francacha a d’fhoilsigh ANTS, deimhnithe a d’fhoilsigh an Ríocht Aontaithe, an tSeoirsia agus Lucsamburg dá gcáipéisí féin, agus an Master List Ghearmánach a d’fhoilsigh an BSI, a chlúdaíonn an tAontas Eorpach, an LEE, an Eilvéis agus an Ríocht Aontaithe, i measc tíortha eile. Is féidir scáileán an stóir iontaobhais a chuardach de réir tíre. I gcás cáipéise nach bhfuil a heisitheoir san áireamh, is é “Eisitheoir anaithnid” an toradh; is féidir leat Master List a d’fhoilsigh stát eile a iompórtáil, nó deimhniú CSCA nó deimhniú naisc aonair tar éis duit a mhéarlorg a sheiceáil, agus gach mír iompórtáilte a scriosadh ceann ar cheann. Ní sheiceáiltear liostaí cúlghairme. Níl baint ag ANTS ná ag an BSI le Sceau agus níor fhormhuinigh siad é.
+
+<b>Teorainneacha aitheanta</b>
+<ul>
+<li>Cártaí aitheantais Gearmánacha a eisíodh roimh an 2 Lúnasa 2021: tá an tsliseog curtha in áirithe d’údaráis; ní féidir le Sceau í a léamh agus deir sé é sin. Ar chártaí níos nuaí, ní féidir an seoladh ná an áit bhreithe a léamh.</li>
+<li>Cárta eID na Gearmáine do shaoránaigh an Aontais: níl aon sonraí aitheantais ar an tsliseog; ní fhíoraítear ach barántúlacht an chárta.</li>
+<li>Cártaí aitheantais CIE 3.0 na hIodáile ó dheireadh 2017 go tús 2018: d’fhoilsigh an Iodáil aimhrialtacht ina gcuid sonraí breise; cuireann Sceau na sonraí sin i leataobh agus fíoraíonn sé an chuid eile den cháipéis.</li>
+</ul>
+
+<b>Príobháideachas</b>
+<ul>
+<li>An t-aon chead: NFC</li>
+<li>Ní shábháiltear aon sonraí a léitear ón tsliseog; glantar an chuimhne nuair a fhágann tú an toradh nó nuair a théann an aip sa chúlra</li>
+<li>Tá gabhálacha scáileáin bactha ar fud na haipe</li>
+<li>Gan fógraí, gan rianaitheoirí, gan seirbhísí Google</li>
+</ul>
+
+<b>Eile</b>
+<ul>
+<li>Réamhrá ceithre leathanach ag an gcéad tosú, agus scáileán “A bhfuil ar an tsliseog”</li>
+<li>Comhéadan i 45 teanga</li>
+</ul>
+
+<b>Úsáid bheartaithe</b>
+Tá Sceau ceaptha chun do cháipéis féin a sheiceáil, nó cáipéis a thaispeánann a sealbhóir. Faoin RGCS, is sonraí bithmhéadracha an grianghraf nuair a úsáidtear é le haghaidh comparáide uathoibríche: ní dhéanann Sceau a leithéid de chomparáid. Ní léiríonn an toradh ar tuairiscíodh go raibh an cháipéis caillte nó goidte.
+
+Ní léann Sceau méarloirg ná sonraí iris, agus ní scanann sé an MRZ leis an gceamara.
+
+Bogearraí saora faoi cheadúnas GNU GPL, leagan 3 amháin.

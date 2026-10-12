@@ -1,0 +1,6 @@
+Fyrsta opinbera útgáfa.
+• NFC-lestur lífkennavegabréfa, franska nafnskírteinisins og evrópskra nafnskírteina (PACE eða BAC)
+• Mynd, auðkenni, undirskrift og viðbótarupplýsingar
+• Passive, Chip og Active Authentication, niðurstaða og gátlisti
+• CSCA frá ANTS og 3 ríkjum, Master List frá BSI, innflutningur Master List og vottorða
+• Án nettengingar, engin gögn geymd, 45 tungumál
