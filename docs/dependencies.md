@@ -2,7 +2,7 @@
 
 Toute dépendance embarquée dans l'APK est listée ici avec sa version, sa licence, son rôle et sa compatibilité F-Droid (SPEC §3). Une nouvelle dépendance n'est acceptée qu'après ajout d'une ligne dans ce fichier.
 
-Critères F-Droid appliqués à chaque ligne : code source libre, publiée sur un dépôt Maven standard (Maven Central ou Google Maven), reconstructible, sans service Google, sans télémétrie ni publicité. Aucune dépendance choisie par Sceau n'apporte de binaire natif précompilé ; une seule transitive d'AndroidX en contient un, `libandroidx.graphics.path.so` (section 2), comme toute application Compose. Toutes les licences retenues sont compatibles avec la licence de Sceau, GPL version 3 ou ultérieure (GPL-3.0-or-later).
+Critères F-Droid appliqués à chaque ligne : code source libre, publiée sur un dépôt Maven standard (Maven Central ou Google Maven), reconstructible, sans service Google, sans télémétrie ni publicité. Aucune dépendance choisie par Sceau n'apporte de binaire natif précompilé ; une seule transitive d'AndroidX en contient un, `libandroidx.graphics.path.so` (section 2), comme toute application Compose. Toutes les licences retenues sont compatibles avec la licence de Sceau, GPL version 3 uniquement (GPL-3.0-only, D51).
 
 Liste établie le 2026-09-25 à partir de :
 
@@ -26,7 +26,7 @@ Les licences ont été vérifiées le 2026-09-25 **sur les artefacts eux-mêmes*
 | `org.bouncycastle:bcpkix-jdk18on` | 1.86 | Licence Bouncy Castle (MIT) | X.509, CMS (SOD, Master Lists), construction de chaînes | oui, pur Java |
 | `org.jetbrains.kotlinx:kotlinx-coroutines-core` | 1.11.0 | Apache 2.0 | `suspend fun readAndVerify`, exécution sur `Dispatchers.IO` | oui |
 
-SPEC §3 et `CLAUDE.md` donnaient JMRTD et SCUBA sous « LGPL 3 » : l'artefact indique LGPL 2.1 ou toute version ultérieure. La conclusion ne change pas : la clause « ou ultérieure » permet de les utiliser sous LGPL 3, compatible avec la licence de Sceau (GPL-3.0-or-later).
+SPEC §3 et `CLAUDE.md` donnaient JMRTD et SCUBA sous « LGPL 3 » : l'artefact indique LGPL 2.1 ou toute version ultérieure. La conclusion ne change pas : la clause « ou ultérieure » permet de les utiliser sous LGPL 3, compatible avec la licence de Sceau (GPL-3.0-only).
 
 Seuls les artefacts BouncyCastle `jdk18on` sont admis : les variantes `jdk15on` et `jdk15to18`, qui dupliqueraient les classes, sont exclues dans les `build.gradle.kts`. SpongyCastle n'est jamais utilisé (SPEC §3).
 
