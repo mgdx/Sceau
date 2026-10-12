@@ -1,48 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="about_title">À propos</string>
-    <string name="about_back">Retour</string>
-    <string name="about_tagline">Lecture et vérification hors ligne de la puce des documents d’identité ICAO 9303.</string>
+    <string name="about_title">About</string>
+    <string name="about_back">Back</string>
+    <string name="about_tagline">Offline reading and verification of the chip in ICAO 9303 identity documents.</string>
     <string name="about_version">Version %1$s</string>
-    <string name="about_version_unknown">Version inconnue</string>
+    <string name="about_version_unknown">Unknown version</string>
 
-    <string name="about_section_license">Licence et code source</string>
-    <string name="about_license">Logiciel libre distribué sous licence GNU GPL version 3 uniquement.</string>
+    <string name="about_section_license">License and source code</string>
+    <string name="about_license">Free software released under the GNU GPL version 3 only.</string>
     <string name="about_repository_url" translatable="false">https://github.com/mgdx/Sceau</string>
-    <string name="about_open_repository">Voir le code source</string>
-    <string name="about_no_browser">Aucune application ne peut ouvrir ce lien.</string>
+    <string name="about_open_repository">View source code</string>
+    <string name="about_no_browser">No app can open this link.</string>
 
-    <string name="about_section_donate">Soutenir Sceau</string>
-    <string name="about_donate">Sceau est gratuit et sans publicité. Vous pouvez soutenir son développement par un don sur Liberapay.</string>
+    <string name="about_section_donate">Support Sceau</string>
+    <string name="about_donate">Sceau is free and ad-free. You can support its development with a donation on Liberapay.</string>
     <string name="about_donate_url" translatable="false">https://liberapay.com/mgdx</string>
-    <string name="about_open_donate">Faire un don</string>
+    <string name="about_open_donate">Donate</string>
 
-    <string name="about_section_trust">Magasin de confiance embarqué</string>
-    <string name="about_trust_ants_only">CSCA français de l’ANTS (passeports et cartes d’identité).</string>
-    <string name="about_trust_ants_and_bsi">CSCA français de l’ANTS et Master List allemande du BSI.</string>
-    <string name="about_trust_master_list_date">Master List signée le %1$s.</string>
-    <string name="about_trust_master_list_date_unknown">Date de signature de la Master List non indiquée.</string>
-    <string name="about_trust_bsi_notice">La Master List du BSI (Office fédéral allemand de la sécurité des technologies de l’information) est redistribuée sans modification, sans coopération ni approbation du BSI.</string>
-    <string name="about_trust_national">Certificats publiés par les États suivants pour leurs propres documents : %1$s.</string>
-    <string name="about_trust_ogl_notice">Contient des informations du secteur public britannique publiées sous licence Open Government Licence v3.0.</string>
-    <string name="about_trust_loading">Chargement…</string>
-    <string name="about_trust_error">Impossible de charger le magasin de confiance.</string>
+    <string name="about_section_trust">Built-in trust store</string>
+    <string name="about_trust_ants_only">French CSCAs from ANTS (passports and identity cards).</string>
+    <string name="about_trust_ants_and_bsi">French CSCAs from ANTS and the German Master List from the BSI.</string>
+    <string name="about_trust_master_list_date">Master List signed on %1$s.</string>
+    <string name="about_trust_master_list_date_unknown">Master List signing date not specified.</string>
+    <string name="about_trust_bsi_notice">The BSI (German Federal Office for Information Security) Master List is redistributed unmodified, without the cooperation or endorsement of the BSI.</string>
+    <string name="about_trust_national">Certificates published by the following countries for their own documents: %1$s.</string>
+    <string name="about_trust_ogl_notice">Contains public sector information licensed under the Open Government Licence v3.0.</string>
+    <string name="about_trust_loading">Loading…</string>
+    <string name="about_trust_error">Couldn’t load the trust store.</string>
 
-    <string name="about_section_limits">Limites</string>
-    <string name="about_limit_unknown_issuer">Un document dont le pays émetteur ne figure pas dans le magasin de confiance donne le verdict « Émetteur inconnu », pas « Échec ». Importer une Master List plus récente peut y remédier.</string>
-    <string name="about_limit_revocation">Les listes de révocation ne sont pas consultées : elles nécessitent le réseau, que Sceau n’utilise jamais.</string>
-    <string name="about_limit_germany">Cartes d’identité allemandes : seules celles délivrées depuis le 2 août 2021 sont lisibles, les plus anciennes réservant leur puce aux autorités habilitées. L’adresse et le lieu de naissance ne le sont jamais : ils sont réservés à l’identification en ligne, qui exige le code PIN de la carte et un certificat délivré par l’État allemand.</string>
+    <string name="about_section_limits">Limitations</string>
+    <string name="about_limit_unknown_issuer">A document whose issuing country is not in the trust store gets the “Unknown issuer” verdict, not “Failed”. Importing a more recent Master List may fix this.</string>
+    <string name="about_limit_revocation">Revocation lists are not checked: they require network access, which Sceau never uses.</string>
+    <string name="about_limit_germany">German identity cards: only cards issued since 2 August 2021 can be read, as older cards reserve their chip to authorised authorities. The address and place of birth can never be read: they are reserved to online identification, which requires the card’s PIN and a certificate issued by the German state.</string>
 
-    <string name="about_section_usage">Cadre d’usage</string>
-    <string name="about_usage_holder">La lecture suppose que le titulaire présente lui-même son document et y consent.</string>
-    <string name="about_usage_biometrics">La photo devient une donnée biométrique au sens du RGPD si elle sert à une comparaison automatisée des visages. Sceau ne fait pas de telle comparaison et ne doit pas être utilisé pour cela sans base légale dédiée.</string>
-    <string name="about_usage_privacy">Aucune donnée lue n’est conservée ni envoyée : tout est effacé de la mémoire en quittant le résultat ou en passant l’application en arrière-plan.</string>
-    <string name="about_usage_no_warranty">Sceau est fourni sans aucune garantie. Son verdict porte sur l’authenticité de la puce et des données signées par l’État émetteur ; il n’a pas valeur de preuve et ne dit pas si le document a été déclaré perdu ou volé.</string>
-    <string name="about_usage_not_official">Sceau n’est ni un outil officiel, ni un service de vérification d’identité certifié : il ne remplace pas les contrôles d’identité qu’une réglementation impose à certaines professions.</string>
+    <string name="about_section_usage">Terms of use</string>
+    <string name="about_usage_holder">Reading assumes the holder presents their own document and consents.</string>
+    <string name="about_usage_biometrics">The photo becomes biometric data under the GDPR if it is used for automated face comparison. Sceau does no such comparison and must not be used for it without a specific legal basis.</string>
+    <string name="about_usage_privacy">No data read is stored or sent: everything is wiped from memory when you leave the result or send the app to the background.</string>
+    <string name="about_usage_no_warranty">Sceau comes with no warranty. Its verdict covers the authenticity of the chip and of the data signed by the issuing state; it is not proof, and it does not tell whether the document has been reported lost or stolen.</string>
+    <string name="about_usage_not_official">Sceau is neither an official tool nor a certified identity verification service: it does not replace the identity checks that regulations require of certain professions.</string>
 
-    <string name="about_section_libraries">Bibliothèques libres</string>
+    <string name="about_section_libraries">Open-source libraries</string>
     <string name="about_libraries_names" translatable="false">JMRTD, SCUBA, Bouncy Castle, OpenJPEG, AndroidX, Kotlin</string>
-    <string name="about_libraries_intro">Sceau intègre les bibliothèques libres suivantes : %1$s. Leurs mentions de copyright et de licence sont reproduites dans leur version originale, en anglais.</string>
-    <string name="about_libraries_show">Afficher les mentions de licence</string>
-    <string name="about_libraries_hide">Masquer les mentions de licence</string>
+    <string name="about_libraries_intro">Sceau includes the following open-source libraries: %1$s. Their copyright and license notices are reproduced in their original English version.</string>
+    <string name="about_libraries_show">Show license notices</string>
+    <string name="about_libraries_hide">Hide license notices</string>
 </resources>

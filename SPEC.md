@@ -24,7 +24,7 @@ L'application ne conserve rien, n'envoie rien et fonctionne entièrement hors li
 - Aucune permission réseau dans le manifeste. Permissions demandées : `android.permission.NFC` uniquement, plus la permission interne de niveau `signature` `<paquet>.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION` qu'ajoute androidx.core (D7). La feature `android.hardware.nfc` est déclarée non obligatoire pour que l'appli s'installe partout et affiche un message clair si le NFC est absent. Sauvegarde Android désactivée.
 - Android 8.0+ (minSdk 26), compileSdk courant, Kotlin, Jetpack Compose, Material 3, mode sombre suivant le système. Palette propre à l'application (celle du logo), couleurs dynamiques désactivées pour garder la lecture des verdicts stable (D18).
 - Identifiant d'application et paquet `io.github.mgdx.sceau`, `io.github.mgdx.sceau.core` pour `:core` (D4).
-- Interface en français. Aucune chaîne codée en dur ; chaînes dans `res/values/`, réparties en un fichier par écran (`strings_<écran>.xml`) plus `strings.xml` pour les chaînes communes (D5), fichiers prêts pour les traductions (`values-en` fourni dès la v1, 43 autres langues et choix de la langue par application depuis D27).
+- Interface en anglais par défaut (langue de repli quand celle du téléphone n'est pas traduite), en français et dans 43 autres langues (D27, D55). Aucune chaîne codée en dur ; chaînes anglaises dans `res/values/`, réparties en un fichier par écran (`strings_<écran>.xml`) plus `strings.xml` pour les chaînes communes (D5), traductions dans `values-fr/` et les autres `values-<langue>/`, avec choix de la langue par application (D27).
 - Architecture en modules :
   - `:core` : lecture, vérification, magasin de confiance, modèles. Kotlin pur, aucun import `android.*`, aucun code natif, testable sur JVM. Ses dépendances sont en `implementation` : son API publique n'expose que des types Kotlin, `java.security` et `java.time` (D9).
   - `:app` : NFC, UI Compose, navigation, cycle de vie, décodage des images (dont le décodeur JPEG 2000 natif).
@@ -93,7 +93,7 @@ Invite « Posez le document contre le dos du téléphone et ne le retirez pas »
 
 Si l'étape « Ouverture du canal sécurisé » dure plus de 5 s, un message d'attente explique que la puce peut faire patienter jusqu'à une minute après des essais ratés (contre-mesure anti-force brute, §6.1) et invite à ne pas retirer le document (D12).
 
-Erreurs gérées, chacune avec un message en français et un bouton « Réessayer », sauf l'accès réservé :
+Erreurs gérées, chacune avec un message dans la langue de l'interface et un bouton « Réessayer », sauf l'accès réservé :
 
 - CAN ou MRZ incorrects (échec de PACE ou BAC) ; le message prévient qu'un essai raté peut allonger le délai de réponse de la puce
 - CAN fourni pour un document qui n'annonce pas PACE ; le message invite à utiliser l'onglet Passeport et la MRZ

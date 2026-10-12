@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trust_title">Magasin de confiance</string>
+    <string name="trust_back">Retour</string>
+    <string name="trust_intro">Certificats racines (CSCA) des pays émetteurs, utilisés pour vérifier la signature des documents. Aucune donnée personnelle ne transite par cet écran.</string>
+    <plurals name="trust_summary">
+        <item quantity="one">%1$d certificat, %2$d pays</item>
+        <item quantity="many">%1$d certificats, %2$d pays</item>
+        <item quantity="other">%1$d certificats, %2$d pays</item>
+    </plurals>
+    <string name="trust_loading">Chargement du magasin de confiance…</string>
+    <string name="trust_load_error">Impossible de charger le magasin de confiance.</string>
+    <string name="trust_retry">Réessayer</string>
+    <string name="trust_empty">Aucun certificat dans le magasin de confiance.</string>
+
+    <!-- Liste -->
+    <string name="trust_country_unknown">Pays non indiqué</string>
+    <plurals name="trust_country_count">
+        <item quantity="one">%1$d certificat</item>
+        <item quantity="many">%1$d certificats</item>
+        <item quantity="other">%1$d certificats</item>
+    </plurals>
+    <string name="trust_country_expand">Afficher les certificats</string>
+    <string name="trust_country_collapse">Masquer les certificats</string>
+    <string name="trust_validity">Valide du %1$s au %2$s</string>
+    <string name="trust_fingerprint">Empreinte SHA-256</string>
+    <string name="trust_source_ants">ANTS</string>
+    <string name="trust_source_national">Publication nationale</string>
+    <string name="trust_source_master_list">Master List</string>
+    <string name="trust_source_imported">Importé</string>
+    <string name="trust_source_imported_certificate">Certificat importé</string>
+    <string name="trust_source_imported_unanchored">Liste importée, origine non vérifiée</string>
+    <string name="trust_link_certificate">Certificat de lien</string>
+
+    <!-- Recherche -->
+    <string name="trust_search_hint">Rechercher un pays</string>
+    <string name="trust_search_clear">Effacer la recherche</string>
+    <string name="trust_search_no_result">Aucun pays ne correspond à votre recherche.</string>
+
+    <!-- Import -->
+    <string name="trust_import">Importer une Master List ou un certificat</string>
+    <string name="trust_busy">Veuillez patienter…</string>
+    <string name="trust_import_confirm_title">Importer cette Master List ?</string>
+    <string name="trust_import_confirm_text">Sa signature est valide. Vérifiez que l’empreinte du signataire correspond à celle publiée par l’autorité émettrice avant de l’importer.</string>
+    <string name="trust_import_unanchored_warning">Le signataire de cette liste n’est rattaché à aucun CSCA connu : rien ne garantit son origine. N’importez ce fichier que si vous l’avez obtenu directement de l’autorité qui l’a publié.</string>
+    <string name="trust_import_unanchored_acknowledge">J’ai obtenu ce fichier directement de l’autorité qui l’a publié</string>
+    <string name="trust_import_signer">Signataire</string>
+    <string name="trust_import_signer_fingerprint">Empreinte SHA-256 du signataire</string>
+    <string name="trust_import_signing_date">Date de signature</string>
+    <string name="trust_import_signing_date_unknown">Non indiquée</string>
+    <string name="trust_import_certificate_count">Nombre de certificats</string>
+    <string name="trust_import_confirm">Importer</string>
+    <string name="trust_cancel">Annuler</string>
+    <plurals name="trust_import_done">
+        <item quantity="one">Master List importée : %1$d certificat.</item>
+        <item quantity="many">Master List importée : %1$d certificats.</item>
+        <item quantity="other">Master List importée : %1$d certificats.</item>
+    </plurals>
+    <string name="trust_import_invalid">Ce fichier n’est pas une Master List valide : format illisible ou signature incorrecte (%1$s).</string>
+    <plurals name="trust_import_master_list_too_many_certificates">
+        <item quantity="one">Master List refusée : elle contient trop de certificats (%1$d au plus).</item>
+        <item quantity="many">Master List refusée : elle contient trop de certificats (%1$d au plus).</item>
+        <item quantity="other">Master List refusée : elle contient trop de certificats (%1$d au plus).</item>
+    </plurals>
+    <string name="trust_import_too_large">Fichier refusé : il dépasse 20 Mo.</string>
+    <string name="trust_import_read_error">Impossible de lire ce fichier.</string>
+    <string name="trust_import_read_timeout">Lecture du fichier abandonnée : elle n’a pas abouti en 30 secondes.</string>
+    <string name="trust_import_write_error">Impossible d’enregistrer la Master List.</string>
+    <plurals name="trust_import_limit_count">
+        <item quantity="one">Import refusé : %1$d Master List importée au plus. Supprimez les certificats importés pour en ajouter une autre.</item>
+        <item quantity="many">Import refusé : %1$d Master Lists importées au plus. Supprimez les certificats importés pour en ajouter une autre.</item>
+        <item quantity="other">Import refusé : %1$d Master Lists importées au plus. Supprimez les certificats importés pour en ajouter une autre.</item>
+    </plurals>
+    <string name="trust_import_limit_size">Import refusé : les Master Lists importées dépasseraient %1$d Mo au total. Supprimez les certificats importés pour en ajouter une autre.</string>
+
+    <!-- Import d'un certificat seul (D33) -->
+    <string name="trust_import_certificate_confirm_title">Importer ce certificat ?</string>
+    <string name="trust_import_certificate_warning">Contrairement à une Master List, aucune signature d’un État ne garantit ce fichier : c’est vous qui lui accordez votre confiance. Un certificat importé peut rendre authentique n’importe quel document de son pays. Avant de l’importer, comparez son empreinte avec celle publiée par l’État émetteur.</string>
+    <string name="trust_import_certificate_type">Type</string>
+    <string name="trust_import_certificate_type_csca">CSCA auto-signé</string>
+    <string name="trust_import_certificate_subject">Sujet</string>
+    <string name="trust_import_certificate_country">Pays</string>
+    <string name="trust_import_certificate_validity">Validité</string>
+    <string name="trust_import_certificate_done">Certificat importé.</string>
+    <string name="trust_import_certificate_invalid">Ce certificat ne peut pas être importé : seuls un CSCA auto-signé ou un certificat de lien sont acceptés (%1$s).</string>
+    <string name="trust_import_unrecognized">Ce fichier n’est ni une Master List, ni un certificat DER ou PEM unique.</string>
+    <string name="trust_import_certificate_write_error">Impossible d’enregistrer le certificat.</string>
+    <string name="trust_import_certificate_too_large">Certificat refusé : il dépasse %1$d Ko.</string>
+    <plurals name="trust_import_certificate_limit_count">
+        <item quantity="one">Import refusé : %1$d certificat importé au plus. Supprimez-en un pour en ajouter un autre.</item>
+        <item quantity="many">Import refusé : %1$d certificats importés au plus. Supprimez-en un pour en ajouter un autre.</item>
+        <item quantity="other">Import refusé : %1$d certificats importés au plus. Supprimez-en un pour en ajouter un autre.</item>
+    </plurals>
+
+    <!-- Doublons à l'import (D33) -->
+    <string name="trust_import_duplicate_certificate">Ce certificat est déjà importé.</string>
+    <string name="trust_import_duplicate_known_ants">Ce certificat figure déjà dans le magasin de confiance (source : ANTS) : il n’y a rien à importer.</string>
+    <string name="trust_import_duplicate_known_national">Ce certificat figure déjà dans le magasin de confiance (source : publication nationale) : il n’y a rien à importer.</string>
+    <string name="trust_import_duplicate_known_embedded_master_list">Ce certificat figure déjà dans le magasin de confiance (source : Master List embarquée) : il n’y a rien à importer.</string>
+    <string name="trust_import_duplicate_known_imported_master_list">Ce certificat figure déjà dans le magasin de confiance (source : Master List importée) : il n’y a rien à importer.</string>
+    <string name="trust_import_duplicate_master_list">Cette Master List est déjà importée.</string>
+    <string name="trust_import_duplicate_embedded_master_list">Cette Master List est identique à celle embarquée dans l’application : il n’y a rien à importer.</string>
+    <plurals name="trust_import_new_certificates">
+        <item quantity="one">%1$d nouveau certificat sur %2$d</item>
+        <item quantity="many">%1$d nouveaux certificats sur %2$d</item>
+        <item quantity="other">%1$d nouveaux certificats sur %2$d</item>
+    </plurals>
+
+    <!-- Éléments importés (D33) -->
+    <string name="trust_imported_title">Éléments importés</string>
+    <string name="trust_imported_master_list">Master List importée</string>
+    <string name="trust_imported_signed_on">Signée le %1$s</string>
+    <string name="trust_imported_unreadable">Fichier illisible, ignoré par le magasin.</string>
+    <string name="trust_imported_delete">Supprimer cet élément</string>
+    <string name="trust_imported_delete_title">Supprimer cet élément importé ?</string>
+    <string name="trust_imported_delete_text">Ses certificats ne serviront plus à vérifier les documents. Les autres éléments importés et les certificats embarqués sont conservés.</string>
+    <string name="trust_imported_delete_done">Élément importé supprimé.</string>
+    <string name="trust_imported_delete_error">Impossible de supprimer cet élément.</string>
+
+    <!-- Suppression -->
+    <string name="trust_delete_imported">Supprimer les certificats importés</string>
+    <string name="trust_delete_confirm_title">Supprimer les certificats importés ?</string>
+    <string name="trust_delete_confirm_text">Les Master Lists et les certificats importés seront supprimés. Les certificats embarqués dans l’application sont conservés.</string>
+    <string name="trust_delete_confirm">Supprimer</string>
+    <string name="trust_delete_done">Certificats importés supprimés.</string>
+    <string name="trust_delete_error">Impossible de supprimer les certificats importés.</string>
+</resources>
