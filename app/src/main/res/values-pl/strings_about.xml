@@ -7,7 +7,7 @@
     <string name="about_version_unknown">Nieznana wersja</string>
 
     <string name="about_section_license">Licencja i kod źródłowy</string>
-    <string name="about_license">Wolne oprogramowanie rozpowszechniane na licencji GNU GPL w wersji 3 lub późniejszej.</string>
+    <string name="about_license">Wolne oprogramowanie rozpowszechniane wyłącznie na licencji GNU GPL w wersji 3.</string>
     <string name="about_open_repository">Zobacz kod źródłowy</string>
     <string name="about_no_browser">Żadna aplikacja nie może otworzyć tego linku.</string>
 

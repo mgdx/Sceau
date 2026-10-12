@@ -1,6 +1,6 @@
 /*
  * Sceau - pont JNI du décodeur JPEG 2000 (io.github.mgdx.sceau.jp2.Jpeg2000Decoder).
- * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-only
  *
  * Ne lève jamais d'exception Java : tout échec renvoie null. Aucune trace (SPEC §8).
  */

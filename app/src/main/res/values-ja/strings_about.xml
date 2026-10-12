@@ -7,7 +7,7 @@
     <string name="about_version_unknown">バージョン不明</string>
 
     <string name="about_section_license">ライセンスとソースコード</string>
-    <string name="about_license">GNU GPL バージョン 3 以降のライセンスで配布されている自由ソフトウェアです。</string>
+    <string name="about_license">GNU GPL バージョン 3 のみのライセンスで配布されている自由ソフトウェアです。</string>
     <string name="about_open_repository">ソースコードを表示</string>
     <string name="about_no_browser">このリンクを開けるアプリがありません。</string>
 

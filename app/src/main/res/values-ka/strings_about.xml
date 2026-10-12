@@ -7,7 +7,7 @@
     <string name="about_version_unknown">უცნობი ვერსია</string>
 
     <string name="about_section_license">ლიცენზია და საწყისი კოდი</string>
-    <string name="about_license">თავისუფალი პროგრამა, რომელიც ვრცელდება GNU GPL ლიცენზიით, ვერსია 3 ან ნებისმიერი უფრო ახალი ვერსია.</string>
+    <string name="about_license">თავისუფალი პროგრამა, რომელიც ვრცელდება მხოლოდ GNU GPL ლიცენზიის მე-3 ვერსიით.</string>
     <string name="about_open_repository">საწყისი კოდის ნახვა</string>
     <string name="about_no_browser">ამ ბმულის გახსნა ვერცერთ აპს არ შეუძლია.</string>
 

@@ -7,7 +7,7 @@
     <string name="about_version_unknown">Неизвестна версия</string>
 
     <string name="about_section_license">Лиценз и изходен код</string>
-    <string name="about_license">Свободен софтуер, разпространяван под лиценза GNU GPL, версия 3 или по-нова.</string>
+    <string name="about_license">Свободен софтуер, разпространяван под лиценза GNU GPL, само версия 3.</string>
     <string name="about_open_repository">Преглед на изходния код</string>
     <string name="about_no_browser">Няма приложение, което да отвори тази връзка.</string>
 

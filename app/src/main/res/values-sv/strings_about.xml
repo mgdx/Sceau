@@ -7,7 +7,7 @@
     <string name="about_version_unknown">Okänd version</string>
 
     <string name="about_section_license">Licens och källkod</string>
-    <string name="about_license">Fri programvara som distribueras under GNU GPL version 3 eller senare.</string>
+    <string name="about_license">Fri programvara som distribueras uteslutande under GNU GPL version 3.</string>
     <string name="about_open_repository">Visa källkoden</string>
     <string name="about_no_browser">Det finns ingen app som kan öppna länken.</string>
 

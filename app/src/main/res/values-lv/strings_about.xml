@@ -7,7 +7,7 @@
     <string name="about_version_unknown">Nezināma versija</string>
 
     <string name="about_section_license">Licence un pirmkods</string>
-    <string name="about_license">Brīvā programmatūra, ko izplata saskaņā ar GNU GPL licences 3. vai jaunāku versiju.</string>
+    <string name="about_license">Brīvā programmatūra, ko izplata tikai saskaņā ar GNU GPL licences 3. versiju.</string>
     <string name="about_open_repository">Skatīt pirmkodu</string>
     <string name="about_no_browser">Neviena lietotne nevar atvērt šo saiti.</string>
 

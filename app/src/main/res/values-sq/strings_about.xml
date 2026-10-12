@@ -7,7 +7,7 @@
     <string name="about_version_unknown">Version i panjohur</string>
 
     <string name="about_section_license">Licenca dhe kodi burimor</string>
-    <string name="about_license">Softuer i lirë, i shpërndarë me licencën GNU GPL, versioni 3 ose më i ri.</string>
+    <string name="about_license">Softuer i lirë, i shpërndarë me licencën GNU GPL, vetëm versioni 3.</string>
     <string name="about_open_repository">Shiko kodin burimor</string>
     <string name="about_no_browser">Asnjë aplikacion nuk mund ta hapë këtë lidhje.</string>
 

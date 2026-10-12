@@ -7,7 +7,7 @@
     <string name="about_version_unknown">版本不明</string>
 
     <string name="about_section_license">授權與原始碼</string>
-    <string name="about_license">自由軟體，依 GNU GPL 第 3 版或更新版本授權發布。</string>
+    <string name="about_license">自由軟體，僅依 GNU GPL 第 3 版授權發布。</string>
     <string name="about_open_repository">查看原始碼</string>
     <string name="about_no_browser">沒有可開啟這個連結的應用程式。</string>
 

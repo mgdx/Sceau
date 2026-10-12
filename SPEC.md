@@ -20,7 +20,7 @@ L'application ne conserve rien, n'envoie rien et fonctionne entièrement hors li
 
 ## 2. Contraintes générales
 
-- Licence GNU GPL version 3 ou ultérieure (GPL-3.0-or-later), comme l'indiquent l'écran « À propos » et les en-têtes des sources C ; logo et icône sous la même licence (D38). Publication visée sur F-Droid : aucune dépendance propriétaire, aucun service Google, aucun blob binaire non reconstruisible. Le code natif propre à Sceau (décodeur JPEG 2000, OpenJPEG) est compilé depuis les sources à chaque build ; seule exception, les bibliothèques natives libres livrées précompilées dans les artefacts AndroidX de Google Maven (`libandroidx.graphics.path.so` d'`androidx.graphics:graphics-path`, Apache-2.0, tirée par Compose), comme dans toute application Compose acceptée par F-Droid (voir `docs/dependencies.md`).
+- Licence GNU GPL version 3 uniquement (GPL-3.0-only), comme l'indiquent l'écran « À propos » et les en-têtes des sources C ; logo et icône sous la même licence (D38, D51). Publication visée sur F-Droid : aucune dépendance propriétaire, aucun service Google, aucun blob binaire non reconstruisible. Le code natif propre à Sceau (décodeur JPEG 2000, OpenJPEG) est compilé depuis les sources à chaque build ; seule exception, les bibliothèques natives libres livrées précompilées dans les artefacts AndroidX de Google Maven (`libandroidx.graphics.path.so` d'`androidx.graphics:graphics-path`, Apache-2.0, tirée par Compose), comme dans toute application Compose acceptée par F-Droid (voir `docs/dependencies.md`).
 - Aucune permission réseau dans le manifeste. Permissions demandées : `android.permission.NFC` uniquement, plus la permission interne de niveau `signature` `<paquet>.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION` qu'ajoute androidx.core (D7). La feature `android.hardware.nfc` est déclarée non obligatoire pour que l'appli s'installe partout et affiche un message clair si le NFC est absent. Sauvegarde Android désactivée.
 - Android 8.0+ (minSdk 26), compileSdk courant, Kotlin, Jetpack Compose, Material 3, mode sombre suivant le système. Palette propre à l'application (celle du logo), couleurs dynamiques désactivées pour garder la lecture des verdicts stable (D18).
 - Identifiant d'application et paquet `io.github.mgdx.sceau`, `io.github.mgdx.sceau.core` pour `:core` (D4).
@@ -44,7 +44,7 @@ L'application ne conserve rien, n'envoie rien et fonctionne entièrement hors li
 | Exécution asynchrone | kotlinx-coroutines | Apache 2 | |
 | UI | Compose, Material 3, Navigation Compose, Lifecycle | Apache 2 | |
 
-La clause « ou ultérieure » permet d'utiliser JMRTD et SCUBA sous LGPL 3, compatible avec la licence de Sceau (GPL-3.0-or-later).
+La clause « ou ultérieure » permet d'utiliser JMRTD et SCUBA sous LGPL 3, compatible avec la licence de Sceau (GPL-3.0-only).
 
 jj2000 (fork JMRTD) est écarté : sa licence d'origine restreint le champ d'usage (non libre, retiré de Debian pour cette raison), ce qui la rend incompatible avec la GPLv3 et avec la politique d'inclusion de F-Droid ; ce fork n'est pas non plus publié sur Maven Central (D3). OpenJPEG, implémentation de référence sous licence libre, le remplace. Le sous-module suit la veille de sécurité amont : il est avancé dès qu'un correctif de sécurité est publié, et le harnais de test natif est rejoué à chaque montée de version (audit V5).
 
@@ -328,7 +328,7 @@ Plan de test manuel dans `docs/test-plan.md`, exécuté via adb sur téléphone 
 ```
 README.md                    présentation, captures, cadre d'usage, installation
 SPEC.md                      ce document
-LICENSE                      GNU GPL version 3 (le projet est sous GPL-3.0-or-later)
+LICENSE                      GNU GPL version 3 (le projet est sous GPL-3.0-only)
 CONTRIBUTING.md              règles de contribution (sections 2 et 3)
 docs/architecture.md         modules, flux de données, cycle de vie des données sensibles
 docs/protocol.md             séquence ICAO détaillée, délais, codes d'erreur, table du verdict

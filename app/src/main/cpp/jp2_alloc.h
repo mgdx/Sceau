@@ -1,6 +1,6 @@
 /*
  * Sceau - allocateur d'OpenJPEG plafonné (remplace opj_malloc.c).
- * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-only
  *
  * Toutes les allocations d'OpenJPEG (opj_malloc, opj_calloc, opj_realloc, opj_aligned_*)
  * passent par ce fichier, qui les compte et refuse celles qui dépasseraient le budget du

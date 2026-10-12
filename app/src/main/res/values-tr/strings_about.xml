@@ -7,7 +7,7 @@
     <string name="about_version_unknown">Bilinmeyen sürüm</string>
 
     <string name="about_section_license">Lisans ve kaynak kodu</string>
-    <string name="about_license">GNU GPL sürüm 3 veya sonraki bir sürümü kapsamında dağıtılan özgür yazılım.</string>
+    <string name="about_license">Yalnızca GNU GPL sürüm 3 kapsamında dağıtılan özgür yazılım.</string>
     <string name="about_open_repository">Kaynak kodunu görüntüle</string>
     <string name="about_no_browser">Bu bağlantıyı açabilecek bir uygulama yok.</string>
 

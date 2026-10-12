@@ -7,7 +7,7 @@
     <string name="about_version_unknown">वर्शन की जानकारी नहीं है</string>
 
     <string name="about_section_license">लाइसेंस और सोर्स कोड</string>
-    <string name="about_license">मुक्त सॉफ़्टवेयर, जो GNU GPL वर्शन 3 या उसके बाद के किसी वर्शन के लाइसेंस के तहत उपलब्ध है।</string>
+    <string name="about_license">मुक्त सॉफ़्टवेयर, जो केवल GNU GPL वर्शन 3 के लाइसेंस के तहत उपलब्ध है।</string>
     <string name="about_open_repository">सोर्स कोड देखें</string>
     <string name="about_no_browser">कोई भी ऐप यह लिंक नहीं खोल सकता।</string>
 

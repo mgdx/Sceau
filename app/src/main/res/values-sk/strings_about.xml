@@ -7,7 +7,7 @@
     <string name="about_version_unknown">Neznáma verzia</string>
 
     <string name="about_section_license">Licencia a zdrojový kód</string>
-    <string name="about_license">Slobodný softvér šírený pod licenciou GNU GPL verzie 3 alebo novšej.</string>
+    <string name="about_license">Slobodný softvér šírený pod licenciou GNU GPL, výhradne vo verzii 3.</string>
     <string name="about_open_repository">Zobraziť zdrojový kód</string>
     <string name="about_no_browser">Tento odkaz nemožno otvoriť v žiadnej aplikácii.</string>
 

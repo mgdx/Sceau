@@ -7,7 +7,7 @@
     <string name="about_version_unknown">Neznana različica</string>
 
     <string name="about_section_license">Licenca in izvorna koda</string>
-    <string name="about_license">Prosto programje, ki se razširja pod licenco GNU GPL različice 3 ali novejše.</string>
+    <string name="about_license">Prosto programje, ki se razširja izključno pod licenco GNU GPL različice 3.</string>
     <string name="about_open_repository">Prikaži izvorno kodo</string>
     <string name="about_no_browser">Te povezave ne more odpreti nobena aplikacija.</string>
 

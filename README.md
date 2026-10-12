@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="LICENSE"><img alt="Licence: GPL-3.0-or-later" src="https://img.shields.io/badge/licence-GPL--3.0--or--later-1f7a4d?style=flat-square"></a>
+  <a href="LICENSE"><img alt="Licence: GPL-3.0-only" src="https://img.shields.io/badge/licence-GPL--3.0--only-1f7a4d?style=flat-square"></a>
   <img alt="Android 8.0 and later" src="https://img.shields.io/badge/Android-8.0%2B-1f7a4d?style=flat-square">
   <img alt="NFC" src="https://img.shields.io/badge/NFC-ICAO%209303-1f7a4d?style=flat-square">
   <img alt="No tracker" src="https://img.shields.io/badge/trackers-none-1f7a4d?style=flat-square">
@@ -27,7 +27,7 @@ photo it holds, and checks cryptographically that the document is genuine and
 that the chip is not a clone.
 
 It runs entirely offline: it asks for **no network permission**, keeps nothing
-and sends nothing. It is free software under the GPL (version 3 or later) and
+and sends nothing. It is free software under the GPL (version 3 only) and
 uses no Google service.
 
 ## Screenshots
@@ -258,9 +258,9 @@ this application does.
 
 ## Licence
 
-Sceau is free software under the GNU GPL, **version 3 or (at your option) any
-later version** (`GPL-3.0-or-later`): see [`LICENSE`](LICENSE). The logo and the
-application icon are under the same licence as the project.
+Sceau is free software under the GNU GPL, **version 3 only** (`GPL-3.0-only`):
+see [`LICENSE`](LICENSE). The logo and the application icon are under the same
+licence as the project.
 
 The libraries it uses keep their own licences (LGPL 2.1 or later, MIT,
 BSD-2-Clause, Apache 2.0), listed in [`docs/dependencies.md`](docs/dependencies.md).

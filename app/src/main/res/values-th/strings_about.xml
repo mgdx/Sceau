@@ -7,7 +7,7 @@
     <string name="about_version_unknown">ไม่ทราบเวอร์ชัน</string>
 
     <string name="about_section_license">สัญญาอนุญาตและซอร์สโค้ด</string>
-    <string name="about_license">ซอฟต์แวร์เสรี เผยแพร่ภายใต้สัญญาอนุญาต GNU GPL เวอร์ชัน 3 หรือใหม่กว่า</string>
+    <string name="about_license">ซอฟต์แวร์เสรี เผยแพร่ภายใต้สัญญาอนุญาต GNU GPL เวอร์ชัน 3 เท่านั้น</string>
     <string name="about_open_repository">ดูซอร์สโค้ด</string>
     <string name="about_no_browser">ไม่มีแอปที่เปิดลิงก์นี้ได้</string>
 

@@ -7,7 +7,7 @@
     <string name="about_version_unknown">Tundmatu versioon</string>
 
     <string name="about_section_license">Litsents ja lähtekood</string>
-    <string name="about_license">Vaba tarkvara, mida levitatakse GNU GPL versiooni 3 või hilisema litsentsi alusel.</string>
+    <string name="about_license">Vaba tarkvara, mida levitatakse ainult GNU GPL versiooni 3 litsentsi alusel.</string>
     <string name="about_open_repository">Vaata lähtekoodi</string>
     <string name="about_no_browser">Ükski rakendus ei saa seda linki avada.</string>
 

@@ -7,7 +7,7 @@
     <string name="about_version_unknown">Ukendt version</string>
 
     <string name="about_section_license">Licens og kildekode</string>
-    <string name="about_license">Fri software, der distribueres under GNU GPL version 3 eller nyere.</string>
+    <string name="about_license">Fri software, der distribueres udelukkende under GNU GPL version 3.</string>
     <string name="about_open_repository">Se kildekoden</string>
     <string name="about_no_browser">Ingen app kan åbne dette link.</string>
 

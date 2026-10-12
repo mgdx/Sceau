@@ -7,7 +7,7 @@
     <string name="about_version_unknown">Versiune necunoscută</string>
 
     <string name="about_section_license">Licență și cod sursă</string>
-    <string name="about_license">Software liber distribuit sub licența GNU GPL, versiunea 3 sau o versiune ulterioară.</string>
+    <string name="about_license">Software liber distribuit sub licența GNU GPL, exclusiv versiunea 3.</string>
     <string name="about_open_repository">Vedeți codul sursă</string>
     <string name="about_no_browser">Nicio aplicație nu poate deschide acest link.</string>
 

@@ -7,7 +7,7 @@
     <string name="about_version_unknown">Version inconnue</string>
 
     <string name="about_section_license">Licence et code source</string>
-    <string name="about_license">Logiciel libre distribué sous licence GNU GPL version 3 ou ultérieure.</string>
+    <string name="about_license">Logiciel libre distribué sous licence GNU GPL version 3 uniquement.</string>
     <string name="about_repository_url" translatable="false">https://github.com/mgdx/Sceau</string>
     <string name="about_open_repository">Voir le code source</string>
     <string name="about_no_browser">Aucune application ne peut ouvrir ce lien.</string>

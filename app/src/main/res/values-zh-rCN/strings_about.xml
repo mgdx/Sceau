@@ -7,7 +7,7 @@
     <string name="about_version_unknown">版本未知</string>
 
     <string name="about_section_license">许可和源代码</string>
-    <string name="about_license">自由软件，依据 GNU GPL 第 3 版或更高版本发布。</string>
+    <string name="about_license">自由软件，仅依据 GNU GPL 第 3 版发布。</string>
     <string name="about_open_repository">查看源代码</string>
     <string name="about_no_browser">没有可打开此链接的应用。</string>
 

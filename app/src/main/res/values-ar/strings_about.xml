@@ -7,7 +7,7 @@
     <string name="about_version_unknown">إصدار غير معروف</string>
 
     <string name="about_section_license">الترخيص والرمز المصدر</string>
-    <string name="about_license">برنامج حر موزَّع بموجب الترخيص GNU GPL، الإصدار 3 أو أي إصدار لاحق.</string>
+    <string name="about_license">برنامج حر موزَّع بموجب الترخيص GNU GPL، الإصدار 3 فقط.</string>
     <string name="about_open_repository">عرض الرمز المصدر</string>
     <string name="about_no_browser">لا يتوفر تطبيق يمكنه فتح هذا الرابط.</string>
 

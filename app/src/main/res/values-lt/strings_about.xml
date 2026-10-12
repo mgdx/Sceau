@@ -7,7 +7,7 @@
     <string name="about_version_unknown">Versija nežinoma</string>
 
     <string name="about_section_license">Licencija ir šaltinio kodas</string>
-    <string name="about_license">Laisvoji programinė įranga, platinama pagal GNU GPL 3 arba vėlesnės versijos licenciją.</string>
+    <string name="about_license">Laisvoji programinė įranga, platinama tik pagal GNU GPL 3 versijos licenciją.</string>
     <string name="about_open_repository">Žiūrėti šaltinio kodą</string>
     <string name="about_no_browser">Nėra programos, kuri galėtų atidaryti šią nuorodą.</string>
 
