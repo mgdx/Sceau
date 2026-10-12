@@ -196,7 +196,7 @@ git submodule update --init
 ./gradlew :app:assembleDebug     # debug APKs: app/build/outputs/apk/debug/
 ./gradlew :app:assembleRelease   # release APKs (R8), unsigned: one per architecture + universal
 ./gradlew :core:test             # core tests, on the JVM, no phone needed
-./gradlew check                  # tests, lint and ktlint, as the CI does; no warning tolerated
+./gradlew check                  # tests, lint and ktlint, as the CI does (no warning tolerated)
 adb install -r app/build/outputs/apk/debug/app-universal-debug.apk
 ```
 
