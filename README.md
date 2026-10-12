@@ -5,7 +5,7 @@
 <h1 align="center">Sceau</h1>
 
 <p align="center">
-  Reads the chip of ID cards and passports, and checks they are genuine — fully offline.
+  Reads the chip of ID cards and passports, and checks they are genuine, fully offline.
 </p>
 
 <p align="center">
@@ -21,8 +21,8 @@
 ## Description
 
 **Sceau** is an Android application that reads, over NFC, the chip of identity
-documents that follow the ICAO 9303 standard — the French electronic identity
-card, European identity cards, biometric passports — shows the data and the
+documents that follow the ICAO 9303 standard (the French electronic identity
+card, European identity cards, biometric passports), shows the data and the
 photo it holds, and checks cryptographically that the document is genuine and
 that the chip is not a clone.
 
@@ -47,30 +47,30 @@ uses no Google service.
   PACE or BAC depending on what the chip announces. A chip that makes you wait
   after failed attempts is waited for up to a minute.
 
-- 🪪 **Shows what the chip holds:** the photo; the identity (surname, given
+- 🪪 **Shows what the chip holds:** the photo, the identity (surname, given
   names, sex, date of birth, nationality, document type and number, issuing
-  state, expiry date); the holder's handwritten signature when the state stores
-  it (DG7); and the additional data (DG11, DG12) when present.
+  state, expiry date), the holder's handwritten signature when the state stores
+  it (DG7), and the additional data (DG11, DG12) when present.
 
 - ✅ **Checks that the document is genuine:**
   - *Passive Authentication*: the issuing state's signature over the data is
     verified up to a known root certificate (CSCA), and every data group is
-    compared with its signed hash;
+    compared with its signed hash.
   - *Chip Authentication* (including PACE-CAM) and *Active Authentication*: the
-    chip proves it holds a secret key, which a clone cannot do;
-  - a clear verdict — **Authentic**, **Valid signature, chip not verified**,
-    **Unknown issuer** or **Failed** — with a detailed checklist.
+    chip proves it holds a secret key, which a clone cannot do.
+  - a clear verdict (**Authentic**, **Valid signature, chip not verified**,
+    **Unknown issuer** or **Failed**) with a detailed checklist.
 
 - 🔐 **A trust store you can inspect and extend:**
   - shipped with the application: the 5 French CSCA certificates published by
     ANTS, 5 CSCA and link certificates published by their own state (United
     Kingdom, Georgia, Luxembourg), and the German Master List published
     by BSI, with 117 issuers: the European Union, the EEA, Switzerland, the
-    United Kingdom and other states;
-  - listed by country, with a search by country;
+    United Kingdom and other states.
+  - listed by country, with a search by country.
   - import a Master List published by another state (Italy, Sweden…), or a
     single CSCA or link certificate published by a state, after checking its
-    fingerprint; every imported item can be removed on its own.
+    fingerprint. Every imported item can be removed on its own.
 
 - 🧽 **Wipes as it goes.** A “Clear” button, the back button or sending the
   application to the background clears the data from memory at once.
@@ -94,7 +94,7 @@ read the MRZ with the camera and does no facial recognition.
 | Biometric passports from any country | MRZ | |
 
 A document whose issuer is not in the trust store gets the verdict “Unknown
-issuer”: its data is shown, but nothing is guaranteed; you can then import a
+issuer”: its data is shown, but nothing is guaranteed. You can then import a
 Master List or a certificate published by that state. Revocation lists are not
 checked, since they would need the network.
 
@@ -121,13 +121,13 @@ Open Government Licence v3.0.
   sets DG12 aside, and computes the verdict on the rest.
 
 Other limits are reported by third parties without having been checked on real
-documents; the details, with sources, are in
+documents. The details, with sources, are in
 [`docs/deviations.md`](docs/deviations.md) (in French).
 
 ## Intended use
 
 Sceau is meant for a person to check **their own document**, or a document its
-holder presents in person — for instance in a sale between individuals. Reading
+holder presents in person, for instance in a sale between individuals. Reading
 the chip needs the CAN or the MRZ printed on the document: it assumes the holder
 hands it over willingly.
 
@@ -137,7 +137,7 @@ must not be used to do it without a dedicated legal basis. Comparing the photo
 with the person present remains a human, visual check.
 
 The verdict covers the authenticity of the chip and of the data signed by the
-issuing state; it does not say whether the document has been reported lost or
+issuing state. It does not say whether the document has been reported lost or
 stolen. Sceau comes with no warranty (GPL, sections 15 and 16) and its verdict
 has no evidential value. It is not an official tool nor a certified identity
 verification service, and does not replace the checks that regulations impose
@@ -162,8 +162,8 @@ des données sensibles”.
 
 Sceau is not published yet. The first release, `v0.9`, is in preparation: it
 will come first on the [releases page](https://github.com/mgdx/Sceau/releases)
-of this repository — one APK per architecture (`arm64-v8a` for almost any
-recent phone) plus a universal one, and a `SHA256SUMS` file — then on F-Droid.
+of this repository (one APK per architecture, with `arm64-v8a` for almost any
+recent phone, plus a universal one and a `SHA256SUMS` file), then on F-Droid.
 Builds are reproducible, so F-Droid will serve the very APK signed by the
 author ([how](docs/reproducible-builds.md)).
 
@@ -181,7 +181,7 @@ key, no account and no third-party service is required.
 
 **1. Clone with the submodule.** The JPEG 2000 decoder is
 [OpenJPEG](https://github.com/uclouvain/openjpeg), compiled from its sources,
-which are a git submodule; cloning without it gives a build that fails.
+which are a git submodule. Cloning without it gives a build that fails.
 
 ```bash
 git clone --recurse-submodules https://github.com/mgdx/Sceau.git
@@ -200,11 +200,15 @@ git submodule update --init
 adb install -r app/build/outputs/apk/debug/app-universal-debug.apk
 ```
 
-The project has three modules: `:core`, in pure Kotlin, which reads and verifies
-the chip; `:app`, the Android interface; `:testchip`, a simulated ICAO chip and a
-fake PKI used by the tests and, in the debug APK only, by a demo mode (home menu
-→ “Simulate a French ID card (demo)”) that reads a specimen card without any
-real document. Nothing from `:testchip` goes into the release APK.
+The project has three modules:
+
+- `:core`, in pure Kotlin, which reads and verifies the chip.
+- `:app`, the Android interface.
+- `:testchip`, a simulated ICAO chip and a fake PKI used by the tests and, in
+  the debug APK only, by a demo mode (home menu → “Simulate a French ID card
+  (demo)”) that reads a specimen card without any real document.
+
+Nothing from `:testchip` goes into the release APK.
 
 The release APK weighs **5.5 MB universal** and about 4.7 MB per architecture,
 trust store included, against a ceiling of 8 MB. How a release is built, signed
@@ -220,14 +224,14 @@ library under any pretext.
 
 ## Contributing
 
-Contributions are welcome — see **[CONTRIBUTING.md](CONTRIBUTING.md)** (in
+Contributions are welcome. See **[CONTRIBUTING.md](CONTRIBUTING.md)** (in
 French), and open an issue before a large change.
 
 - 🌍 **Proofread a translation.** The 44 translations were made without review by
-  native speakers; each language has its glossary in
+  native speakers. Each language has its glossary in
   [`docs/traduction/`](docs/traduction/).
 - 🪪 **Report a document** that Sceau reads badly, with its country, type and
-  year of issue and the technical code shown on the reading screen — never a
+  year of issue and the technical code shown on the reading screen, but never a
   photo of the document nor any personal data. The application keeps no log.
 - 💻 **Write code.** `./gradlew check` must pass without a single warning,
   reading and verification logic goes into `:core` with no Android import, and
@@ -252,8 +256,8 @@ And to support the work itself, you can make a donation on
 ## What “Sceau” means
 
 *Sceau* is French for **seal**: the mark an authority presses onto a document
-to vouch for it. The chip of an identity document carries its electronic form —
-the issuing state's signature over the data — and checking that seal is what
+to vouch for it. The chip of an identity document carries its electronic form
+(the issuing state's signature over the data), and checking that seal is what
 this application does.
 
 ## Licence
@@ -265,4 +269,4 @@ licence as the project.
 The libraries it uses keep their own licences (LGPL 2.1 or later, MIT,
 BSD-2-Clause, Apache 2.0), listed in [`docs/dependencies.md`](docs/dependencies.md).
 The embedded certificates and Master List are public data redistributed
-unmodified; their sources are in [`docs/trust-store.md`](docs/trust-store.md).
+unmodified. Their sources are in [`docs/trust-store.md`](docs/trust-store.md).
