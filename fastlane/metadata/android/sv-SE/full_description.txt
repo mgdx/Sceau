@@ -1,0 +1,54 @@
+Sceau läser chippet i identitetshandlingar enligt ICAO 9303 via NFC och kontrollerar att de är äkta. Appen fungerar helt offline: ingen nätverksbehörighet, ingenting sparas, ingenting skickas.
+
+<b>Handlingar som stöds</b>
+<ul>
+<li>Franskt nationellt id-kort (kreditkortsformat, sedan 2021), med den 6-siffriga CAN-koden som är tryckt på kortet</li>
+<li>Europeiska id-kort, med CAN eller MRZ</li>
+<li>Biometriska pass från alla länder, med dokumentnummer, födelsedatum och giltighetsdatum</li>
+</ul>
+
+<b>Det här visar Sceau</b>
+<ul>
+<li>Fotot som är lagrat i chippet</li>
+<li>Identitet: efternamn, förnamn, kön, födelsedatum, medborgarskap, dokumentnummer, utfärdande stat, giltig till</li>
+<li>Innehavarens namnteckning, om den utfärdande staten har lagrat den i chippet</li>
+<li>Ytterligare uppgifter när chippet innehåller dem (födelseort, adress, utfärdande myndighet och utfärdandedatum…)</li>
+</ul>
+
+<b>Det här kontrollerar Sceau</b>
+<ul>
+<li>Den utfärdande statens signatur över uppgifterna, upp till ett känt rotcertifikat, och integriteten hos varje datagrupp (Passive Authentication)</li>
+<li>Att chippet inte är en klon, när handlingen stöder det (Chip Authentication, Active Authentication)</li>
+</ul>
+Resultatet är ett utlåtande (”Äkta”, ”Giltig signatur, chippet ej verifierat”, ”Okänd utfärdare” eller ”Misslyckades”) med en detaljerad lista över kontroller.
+
+<b>Tillitsarkiv</b>
+Sceau innehåller de franska CSCA-certifikat som publiceras av ANTS, certifikat som Storbritannien, Georgien och Luxemburg publicerar för sina egna handlingar, samt den tyska Master List som publiceras av BSI och som bland annat täcker Europeiska unionen, EES, Schweiz och Storbritannien. I tillitsarkivet kan du söka efter land. För en handling vars utfärdare inte ingår blir utlåtandet ”Okänd utfärdare”; du kan importera en Master List som publicerats av en annan stat, eller ett enskilt CSCA- eller länkcertifikat efter att ha kontrollerat dess fingeravtryck, och ta bort varje importerat objekt för sig. Spärrlistor kontrolleras inte. Sceau är inte knutet till eller godkänt av ANTS eller BSI.
+
+<b>Kända begränsningar</b>
+<ul>
+<li>Tyska id-kort utfärdade före den 2 augusti 2021: chippet är förbehållet myndigheter; Sceau kan inte läsa det och talar om det. På nyare kort går det inte att läsa adress och födelseort.</li>
+<li>Tyskt eID-kort för EU-medborgare: chippet innehåller inga identitetsuppgifter; endast dess äkthet kontrolleras.</li>
+<li>Italienska id-kort CIE 3.0 från slutet av 2017 till början av 2018: Italien har publicerat en avvikelse i deras ytterligare uppgifter; Sceau bortser från de uppgifterna och kontrollerar resten av handlingen.</li>
+</ul>
+
+<b>Integritet</b>
+<ul>
+<li>Enda behörighet: NFC</li>
+<li>Inga uppgifter som läses från chippet sparas; minnet rensas när du lämnar resultatet eller när appen hamnar i bakgrunden</li>
+<li>Skärmbilder blockeras i hela appen</li>
+<li>Inga annonser, inga spårare, inga Google-tjänster</li>
+</ul>
+
+<b>Övrigt</b>
+<ul>
+<li>Introduktion på fyra sidor vid första start och skärmen ”Det här finns i chippet”</li>
+<li>Gränssnitt på 45 språk</li>
+</ul>
+
+<b>Avsedd användning</b>
+Sceau är avsett för att kontrollera din egen handling, eller en handling som visas upp av innehavaren själv. Enligt GDPR (dataskyddsförordningen) är fotot biometriska uppgifter när det används för automatisk jämförelse: Sceau gör ingen sådan jämförelse. Utlåtandet säger inte om handlingen har anmälts förlorad eller stulen.
+
+Sceau läser inte fingeravtryck eller irisdata och skannar inte MRZ med kameran.
+
+Fri programvara under GPL, endast version 3.

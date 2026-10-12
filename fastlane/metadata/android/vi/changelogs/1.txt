@@ -1,0 +1,6 @@
+Phiên bản công khai đầu tiên.
+• Đọc NFC hộ chiếu sinh trắc học, thẻ căn cước Pháp và thẻ căn cước châu Âu (PACE hoặc BAC)
+• Ảnh, thông tin nhân thân, chữ ký và dữ liệu bổ sung
+• Passive, Chip và Active Authentication, kết luận và danh sách kiểm tra
+• CSCA của ANTS và 3 quốc gia, Master List của BSI, nhập Master List và chứng chỉ
+• Ngoại tuyến, không lưu dữ liệu, 45 ngôn ngữ

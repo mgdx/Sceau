@@ -1,0 +1,54 @@
+Sceau đọc chip của giấy tờ tùy thân theo chuẩn ICAO 9303 qua NFC và kiểm tra xem giấy tờ có phải là thật hay không. Ứng dụng hoạt động hoàn toàn ngoại tuyến: không có quyền truy cập mạng, không lưu giữ gì, không gửi đi gì.
+
+<b>Giấy tờ được hỗ trợ</b>
+<ul>
+<li>Thẻ căn cước quốc gia của Pháp (khổ thẻ ngân hàng, từ năm 2021), bằng mã CAN 6 chữ số in trên thẻ</li>
+<li>Thẻ căn cước của các nước châu Âu, bằng CAN hoặc MRZ</li>
+<li>Hộ chiếu sinh trắc học của mọi quốc gia, bằng số giấy tờ, ngày sinh và ngày hết hạn</li>
+</ul>
+
+<b>Sceau hiển thị gì</b>
+<ul>
+<li>Ảnh được lưu trong chip</li>
+<li>Thông tin nhân thân: họ, chữ đệm và tên, giới tính, ngày sinh, quốc tịch, số giấy tờ, quốc gia cấp, ngày hết hạn</li>
+<li>Chữ ký tay của người mang giấy tờ, nếu quốc gia cấp đã ghi vào chip</li>
+<li>Dữ liệu bổ sung khi chip có chứa (nơi sinh, địa chỉ, cơ quan cấp và ngày cấp…)</li>
+</ul>
+
+<b>Sceau xác minh gì</b>
+<ul>
+<li>Chữ ký của quốc gia cấp trên dữ liệu, truy ngược đến một chứng chỉ gốc đã biết, và tính toàn vẹn của từng nhóm dữ liệu (Passive Authentication)</li>
+<li>Chip không phải là bản sao, nếu giấy tờ hỗ trợ (Chip Authentication, Active Authentication)</li>
+</ul>
+Kết quả là một kết luận (“Xác thực”, “Chữ ký hợp lệ, chip chưa được xác minh”, “Không rõ bên cấp”, “Thất bại”) kèm danh sách kiểm tra chi tiết.
+
+<b>Kho chứng chỉ tin cậy</b>
+Sceau tích hợp sẵn các chứng chỉ CSCA của Pháp do ANTS công bố, các chứng chỉ do Vương quốc Anh, Gruzia và Luxembourg công bố cho giấy tờ của chính họ, và Master List của Đức do BSI công bố, bao gồm Liên minh châu Âu, Khu vực Kinh tế châu Âu, Thụy Sĩ và Vương quốc Anh cùng nhiều nước khác. Màn hình kho chứng chỉ tin cậy cho phép tìm theo quốc gia. Với giấy tờ có bên cấp không nằm trong kho, kết luận là “Không rõ bên cấp”; bạn có thể nhập một Master List do quốc gia khác công bố, hoặc một chứng chỉ CSCA hay chứng chỉ liên kết riêng lẻ sau khi kiểm tra vân tay của nó, và xóa từng mục đã nhập. Danh sách thu hồi không được kiểm tra. Sceau không liên kết với ANTS hay BSI và không được họ chứng thực.
+
+<b>Hạn chế đã biết</b>
+<ul>
+<li>Thẻ căn cước Đức cấp trước ngày 2 tháng 8 năm 2021: chip chỉ dành cho cơ quan chức năng; Sceau không đọc được và sẽ thông báo điều đó. Trên các thẻ mới hơn, không đọc được địa chỉ và nơi sinh.</li>
+<li>Thẻ eID của Đức dành cho công dân EU: chip không chứa dữ liệu nhân thân; chỉ xác minh được tính xác thực của thẻ.</li>
+<li>Thẻ căn cước CIE 3.0 của Ý từ cuối năm 2017 đến đầu năm 2018: Ý đã công bố một điểm bất thường trong dữ liệu bổ sung của các thẻ này; Sceau loại bỏ dữ liệu đó và xác minh phần còn lại của giấy tờ.</li>
+</ul>
+
+<b>Quyền riêng tư</b>
+<ul>
+<li>Quyền duy nhất: NFC</li>
+<li>Không lưu dữ liệu nào đọc từ chip; bộ nhớ được xóa khi rời khỏi kết quả hoặc khi ứng dụng chuyển sang chạy nền</li>
+<li>Chặn chụp ảnh màn hình trong toàn bộ ứng dụng</li>
+<li>Không quảng cáo, không trình theo dõi, không dịch vụ của Google</li>
+</ul>
+
+<b>Khác</b>
+<ul>
+<li>Phần giới thiệu bốn trang ở lần khởi chạy đầu tiên và màn hình “Chip chứa những gì”</li>
+<li>Giao diện bằng 45 ngôn ngữ</li>
+</ul>
+
+<b>Mục đích sử dụng</b>
+Sceau dùng để kiểm tra giấy tờ của chính bạn, hoặc giấy tờ do chính người mang xuất trình. Theo GDPR, ảnh là dữ liệu sinh trắc học khi được dùng để so sánh tự động: Sceau không thực hiện việc so sánh đó. Kết luận không cho biết giấy tờ đã bị báo mất hay bị đánh cắp hay chưa.
+
+Sceau không đọc dấu vân tay hay dữ liệu mống mắt, và không quét MRZ bằng camera.
+
+Phần mềm tự do theo giấy phép GPL, chỉ phiên bản 3.

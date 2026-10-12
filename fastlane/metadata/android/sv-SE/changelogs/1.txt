@@ -1,0 +1,6 @@
+Första offentliga versionen.
+• NFC-läsning av biometriska pass, det franska id-kortet och europeiska id-kort (PACE eller BAC)
+• Foto, identitet, namnteckning och ytterligare uppgifter
+• Passive, Chip och Active Authentication, utlåtande och kontrollista
+• CSCA från ANTS och 3 stater, BSI:s Master List, import av Master Lists och certifikat
+• Offline, inga uppgifter sparas, 45 språk

@@ -1,0 +1,6 @@
+İlk herkese açık sürüm.
+• Biyometrik pasaportların, Fransız kimlik kartının ve Avrupa kimlik kartlarının NFC ile okunması (PACE veya BAC)
+• Fotoğraf, kimlik, imza ve ek bilgiler
+• Passive, Chip ve Active Authentication, karar ve kontrol listesi
+• ANTS ve 3 devletin CSCA’ları, BSI Master List’i, Master List ve sertifika içe aktarma
+• Çevrimdışı, veri saklanmaz, 45 dil
