@@ -1,0 +1,6 @@
+首個公開版本。
+• 透過 NFC 讀取生物辨識護照、法國身分證和歐洲身分證（PACE 或 BAC）
+• 相片、身分資料、簽名和其他資料
+• Passive、Chip 和 Active Authentication，判定結果和驗證項目清單
+• ANTS 及 3 個國家的 CSCA，BSI 的 Master List，匯入 Master List 和憑證
+• 離線，不保留資料，支援 45 種語言

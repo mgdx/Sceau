@@ -1,0 +1,54 @@
+Sceau, ICAO 9303 uyumlu kimlik belgelerinin çipini NFC ile okur ve belgenin orijinal olup olmadığını doğrular. Tamamen çevrimdışı çalışır: ağ izni yoktur, hiçbir şey saklanmaz, hiçbir şey gönderilmez.
+
+<b>Desteklenen belgeler</b>
+<ul>
+<li>Fransız kimlik kartı (kredi kartı boyutunda, 2021’den beri), kartın üzerinde basılı 6 haneli CAN ile</li>
+<li>Avrupa kimlik kartları, CAN veya MRZ ile</li>
+<li>Tüm ülkelerin biyometrik pasaportları, belge numarası, doğum tarihi ve son geçerlilik tarihi ile</li>
+</ul>
+
+<b>Sceau neleri gösterir</b>
+<ul>
+<li>Çipte saklanan fotoğraf</li>
+<li>Kimlik: soyadı, adları, cinsiyet, doğum tarihi, uyruğu, belge numarası, düzenleyen devlet, son geçerlilik tarihi</li>
+<li>Düzenleyen devlet çipe kaydetmişse belge sahibinin el yazısı imzası</li>
+<li>Çipte bulunduğunda ek bilgiler (doğum yeri, adres, düzenleyen makam ve düzenlenme tarihi…)</li>
+</ul>
+
+<b>Sceau neleri doğrular</b>
+<ul>
+<li>Düzenleyen devletin veriler üzerindeki imzası (bilinen bir kök sertifikaya kadar) ve her veri grubunun bütünlüğü (Passive Authentication)</li>
+<li>Belge destekliyorsa çipin bir klon olmadığı (Chip Authentication, Active Authentication)</li>
+</ul>
+Sonuç, ayrıntılı bir kontrol listesiyle birlikte verilen bir karardır: “Orijinal”, “İmza geçerli, çip doğrulanmadı”, “Bilinmeyen düzenleyici” veya “Başarısız”.
+
+<b>Güven deposu</b>
+Sceau; ANTS’nin yayımladığı Fransız CSCA sertifikalarını, Birleşik Krallık, Gürcistan ve Lüksemburg’un kendi belgeleri için yayımladığı sertifikaları ve BSI’ın yayımladığı, diğerlerinin yanı sıra Avrupa Birliği’ni, AEA’yı, İsviçre’yi ve Birleşik Krallık’ı kapsayan Alman Master List’ini içerir. Güven deposu ekranında ülkeye göre arama yapılabilir. Düzenleyicisi dahil olmayan bir belge için karar “Bilinmeyen düzenleyici” olur; başka bir devletin yayımladığı bir Master List’i ya da parmak izini kontrol ettikten sonra tek bir CSCA veya bağlantı sertifikasını içe aktarabilir, içe aktarılan her öğeyi ayrı ayrı silebilirsiniz. İptal listeleri kontrol edilmez. Sceau’nun ANTS veya BSI ile bir bağlantısı yoktur ve bu kurumlarca onaylanmamıştır.
+
+<b>Bilinen sınırlamalar</b>
+<ul>
+<li>2 Ağustos 2021’den önce düzenlenen Alman kimlik kartları: çip yetkili makamlara ayrılmıştır; Sceau çipi okuyamaz ve bunu bildirir. Daha yeni kartlarda adres ve doğum yeri okunamaz.</li>
+<li>AB vatandaşları için Alman eID kartı: çipte kimlik bilgisi yoktur; yalnızca kartın orijinalliği doğrulanır.</li>
+<li>2017 sonundan 2018 başına kadar düzenlenen İtalyan CIE 3.0 kimlik kartları: İtalya bu kartların ek bilgilerinde bir anomali yayımlamıştır; Sceau bu bilgileri dikkate almaz ve belgenin geri kalanını doğrular.</li>
+</ul>
+
+<b>Gizlilik</b>
+<ul>
+<li>Tek izin: NFC</li>
+<li>Çipten okunan hiçbir veri kaydedilmez; sonuç ekranından çıkıldığında veya uygulama arka plana geçtiğinde bellek temizlenir</li>
+<li>Uygulamanın tamamında ekran görüntüsü alınması engellenir</li>
+<li>Reklam yok, izleyici yok, Google hizmetleri yok</li>
+</ul>
+
+<b>Diğer</b>
+<ul>
+<li>İlk açılışta dört sayfalık tanıtım ve “Çipte neler var” ekranı</li>
+<li>45 dilde arayüz</li>
+</ul>
+
+<b>Kullanım amacı</b>
+Sceau, kendi belgenizi veya sahibinin bizzat gösterdiği bir belgeyi doğrulamak için tasarlanmıştır. Genel Veri Koruma Tüzüğü’ne (GDPR) göre fotoğraf, otomatik karşılaştırma için kullanıldığında biyometrik veridir: Sceau böyle bir karşılaştırma yapmaz. Karar, belgenin kayıp veya çalıntı olarak bildirilip bildirilmediğini göstermez.
+
+Sceau parmak izi veya iris verilerini okumaz ve MRZ’yi kamerayla taramaz.
+
+Yalnızca GPL sürüm 3 lisansıyla sunulan özgür yazılım.
