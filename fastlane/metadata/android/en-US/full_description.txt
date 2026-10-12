@@ -51,4 +51,4 @@ Sceau is meant for checking your own document, or a document presented by its ho
 
 Sceau does not read fingerprints or iris data, and does not scan the MRZ with the camera.
 
-Free software under the GPL version 3 or later.
+Free software under the GPL version 3 only.

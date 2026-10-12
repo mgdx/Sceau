@@ -7,7 +7,7 @@
     <string name="about_version_unknown">Непозната верзија</string>
 
     <string name="about_section_license">Лиценца и изворен код</string>
-    <string name="about_license">Слободен софтвер, дистрибуиран под лиценцата GNU GPL, верзија 3 или понова.</string>
+    <string name="about_license">Слободен софтвер, дистрибуиран под лиценцата GNU GPL, исклучиво верзија 3.</string>
     <string name="about_open_repository">Прикажи го изворниот код</string>
     <string name="about_no_browser">Ниту една апликација не може да ја отвори врската.</string>
 

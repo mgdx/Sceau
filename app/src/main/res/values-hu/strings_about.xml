@@ -7,7 +7,7 @@
     <string name="about_version_unknown">Ismeretlen verzió</string>
 
     <string name="about_section_license">Licenc és forráskód</string>
-    <string name="about_license">Szabad szoftver, a GNU GPL 3-as vagy újabb verziója alatt terjesztve.</string>
+    <string name="about_license">Szabad szoftver, kizárólag a GNU GPL 3-as verziója alatt terjesztve.</string>
     <string name="about_open_repository">Forráskód megtekintése</string>
     <string name="about_no_browser">Egyik alkalmazás sem tudja megnyitni ezt a linket.</string>
 

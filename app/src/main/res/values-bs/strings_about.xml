@@ -7,7 +7,7 @@
     <string name="about_version_unknown">Nepoznata verzija</string>
 
     <string name="about_section_license">Licenca i izvorni kôd</string>
-    <string name="about_license">Slobodni softver koji se distribuira pod licencom GNU GPL, verzija 3 ili novija.</string>
+    <string name="about_license">Slobodni softver koji se distribuira pod licencom GNU GPL, isključivo verzija 3.</string>
     <string name="about_open_repository">Prikaži izvorni kôd</string>
     <string name="about_no_browser">Nijedna aplikacija ne može otvoriti ovaj link.</string>
 

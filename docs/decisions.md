@@ -514,7 +514,7 @@ Format : date, contexte, décision, justification, écart à la SPEC concerné.
 - **Limite** : aucun document réel portant DG7 n'a encore été lu (TP-37) ; la CNIe française n'en porte pas. Traductions faites sans relecture par des locuteurs natifs (comme D27).
 - **Écart à la SPEC** : §6.1 étape 4 (liste des DG lus élargie à DG7) ; §5.3 (section « Signature du titulaire ») ; §8 (DG7 dans les tableaux remis à zéro) ; §9.1 (DG7 parmi les DG signés non fournis). SPEC mise à jour avec renvoi à D37.
 
-## D38. Première release publique 0.9 : licence, hébergement, APK publiés
+## D38. Première release publique 0.9 : licence, hébergement, APK publiés (licence révisée par D51)
 
 - **Date** : 2026-10-06 (décisions de l'auteur).
 - **Contexte** : le jalon Publication (SPEC §11) demande une première release et la soumission à F-Droid. Restaient à fixer le numéro de version (`versionName = "1.0"` depuis le Socle, sans release), la licence exacte (le README, la SPEC et `docs/dependencies.md` disaient « GPLv3 », l'écran À propos et les en-têtes C `GPL-3.0-or-later`), l'hébergement, les APK publiés sur chaque canal et le format des tags (SPEC §10 disait `vX.Y.Z`).
@@ -662,3 +662,11 @@ Format : date, contexte, décision, justification, écart à la SPEC concerné.
 - **Décision** : section « Bibliothèques libres » en fin d'écran « À propos », dans le style des autres sections : une phrase qui nomme les bibliothèques embarquées, puis un bouton « Afficher les mentions de licence » qui déplie, dans l'écran même (ni sous-page, ni WebView), le contenu de `app/src/main/res/raw/third_party_notices.txt` : nom, licence et copyright de JMRTD, SCUBA, Bouncy Castle, OpenJPEG (texte complet de la BSD-2-Clause, repris de `app/src/main/cpp/openjpeg/LICENSE`), AndroidX/Compose, Kotlin et kotlinx. Ces textes juridiques restent en anglais, dans une ressource `raw` qui n'est pas traduite ; seuls le titre, la phrase d'introduction et les libellés du bouton passent par `strings_about.xml` dans les 45 langues. cert-cvc (LGPL 2.1, tiré par JMRTD) n'est pas cité : R8 le retire entièrement (D24), constaté sur l'APK release (aucune classe `org.ejbca` dans `mapping.txt` ni dans `dexdump`).
 - **Justification** : aucune dépendance ni plugin de génération de licences (pas de réseau, pas de code ajouté). La ressource `raw` est référencée par `R.raw`, donc conservée dans l'APK release. Test : `ThirdPartyNoticesTest` (fr et en, notice d'OpenJPEG affichée après l'appui).
 - **Écart à la SPEC** : §5.5 mis à jour (section « Bibliothèques libres » de l'écran « À propos »). À tenir à jour à chaque ajout ou retrait de bibliothèque embarquée, avec `docs/dependencies.md`.
+
+## D51. Licence GPL-3.0-only (révise D38)
+
+- **Date** : 2026-10-12 (décision de l'auteur).
+- **Contexte** : D38 avait retenu la GNU GPL version 3 ou ultérieure (`GPL-3.0-or-later`). Aucune release n'a encore été publiée (pas de tag) et l'auteur est le seul contributeur de l'historique git.
+- **Décision** : Sceau passe sous **GNU GPL version 3 uniquement** (`GPL-3.0-only`), sans la clause « ou ultérieure ». Le logo et l'icône suivent. Mis à jour : écran À propos (`about_license`, 45 langues), en-têtes SPDX des sources C (`app/src/main/cpp/`), README (badge et section Licence), CONTRIBUTING, SPEC §2 et §3, `docs/dependencies.md`, recette F-Droid (`License: GPL-3.0-only`), descriptions fastlane fr-FR et en-US. Le fichier `LICENSE` reste le texte de la GPLv3.
+- **Justification** : choix de l'auteur de ne pas soumettre d'avance le projet aux versions futures de la GPL, dont le contenu n'est pas connu. La compatibilité des dépendances est inchangée : JMRTD et SCUBA (LGPL 2.1 ou ultérieure) se combinent avec la GPLv3, comme BouncyCastle (MIT), OpenJPEG (BSD-2-Clause) et AndroidX (Apache 2.0). Les états du dépôt déjà publiés sous `GPL-3.0-or-later` restent disponibles sous cette licence ; le changement vaut pour les commits suivants.
+- **Écart à la SPEC** : §2 et §3 mis à jour.

@@ -7,7 +7,7 @@
     <string name="about_version_unknown">Άγνωστη έκδοση</string>
 
     <string name="about_section_license">Άδεια χρήσης και πηγαίος κώδικας</string>
-    <string name="about_license">Ελεύθερο λογισμικό που διανέμεται με άδεια GNU GPL έκδοση 3 ή νεότερη.</string>
+    <string name="about_license">Ελεύθερο λογισμικό που διανέμεται με άδεια GNU GPL, αποκλειστικά έκδοση 3.</string>
     <string name="about_open_repository">Προβολή πηγαίου κώδικα</string>
     <string name="about_no_browser">Καμία εφαρμογή δεν μπορεί να ανοίξει αυτόν τον σύνδεσμο.</string>
 

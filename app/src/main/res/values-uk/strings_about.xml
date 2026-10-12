@@ -7,7 +7,7 @@
     <string name="about_version_unknown">Версія невідома</string>
 
     <string name="about_section_license">Ліцензія та вихідний код</string>
-    <string name="about_license">Вільне програмне забезпечення, що поширюється за ліцензією GNU GPL версії 3 або пізнішої.</string>
+    <string name="about_license">Вільне програмне забезпечення, що поширюється виключно за ліцензією GNU GPL версії 3.</string>
     <string name="about_open_repository">Переглянути вихідний код</string>
     <string name="about_no_browser">Немає застосунку, який може відкрити це посилання.</string>
 

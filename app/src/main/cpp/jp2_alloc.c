@@ -1,6 +1,6 @@
 /*
  * Sceau - allocateur d'OpenJPEG plafonné (remplace opj_malloc.c, voir jp2_alloc.h).
- * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-only
  *
  * Mêmes contrats que les fonctions d'opj_malloc.c : taille nulle -> NULL, opj_calloc remet à
  * zéro, opj_aligned_* alignés sur 16 ou 32 octets, opj_realloc(p, 0) -> NULL sans libérer p.

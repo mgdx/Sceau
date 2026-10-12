@@ -7,7 +7,7 @@
     <string name="about_version_unknown">알 수 없는 버전</string>
 
     <string name="about_section_license">라이선스 및 소스 코드</string>
-    <string name="about_license">GNU GPL 버전 3 이상의 라이선스로 배포되는 자유 소프트웨어입니다.</string>
+    <string name="about_license">GNU GPL 버전 3 전용 라이선스로 배포되는 자유 소프트웨어입니다.</string>
     <string name="about_open_repository">소스 코드 보기</string>
     <string name="about_no_browser">이 링크를 열 수 있는 앱이 없습니다.</string>
 

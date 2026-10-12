@@ -1,6 +1,6 @@
 /*
  * Sceau - harnais de test hôte du cœur de décodage JPEG 2000 (jp2_decode.c).
- * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-only
  *
  * Non compilé dans l'APK : piloté par run-host-tests.sh, qui encode les images de référence
  * avec opj_compress (construit depuis le même sous-module OpenJPEG).

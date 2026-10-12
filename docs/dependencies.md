@@ -34,7 +34,7 @@ Seuls les artefacts BouncyCastle `jdk18on` sont admis : les variantes `jdk15on` 
 
 | Artefact | Version | Licence | Rôle | F-Droid |
 |---|---|---|---|---|
-| `project(":core")` | — | GPL 3 ou ultérieure (GPL-3.0-or-later) | Cœur de Sceau | oui |
+| `project(":core")` | — | GPL 3 uniquement (GPL-3.0-only) | Cœur de Sceau | oui |
 | `net.sf.scuba:scuba-sc-android` | 0.0.27 | LGPL 2.1 ou ultérieure (POM « LGPL », en-têtes des sources) | Pont entre `IsoDep` d'Android et SCUBA | oui, pur Java |
 | `androidx.compose:compose-bom` | 2026.02.01 | Apache 2.0 | Alignement des versions Compose | oui (Google Maven, AndroidX libre) |
 | `androidx.compose.ui:ui`, `ui-graphics`, `ui-tooling-preview` | 1.11.2 | Apache 2.0 | Jetpack Compose | oui |
@@ -55,7 +55,7 @@ Ces dépendances sont déclarées en `debugImplementation` : elles n'apparaissen
 | Artefact | Version | Licence | Rôle |
 |---|---|---|---|
 | `androidx.compose.ui:ui-tooling` | 1.11.2 | Apache 2.0 | Outils de prévisualisation Compose |
-| `project(":testchip")` | — | GPL 3 ou ultérieure (GPL-3.0-or-later, code de Sceau) | Mode démo : CNIe simulée, PKI de test (décision D17). Tire JMRTD, SCUBA et BouncyCastle, déjà présents. |
+| `project(":testchip")` | — | GPL 3 uniquement (GPL-3.0-only, code de Sceau) | Mode démo : CNIe simulée, PKI de test (décision D17). Tire JMRTD, SCUBA et BouncyCastle, déjà présents. |
 | `androidx.compose.ui:ui-test-manifest` | 1.11.2 (BOM Compose) | Apache 2.0 (POM) | Déclare l'activité vide `androidx.activity.ComponentActivity` (exportée, sans contenu) qui accueille les tests Compose sous Robolectric (`TextOverflowTest`, D28). Rien d'autre : ni code, ni permission. Présente dans l'APK de debug seulement. |
 
 Vérification : `./gradlew :app:dependencies --configuration releaseRuntimeClasspath` ne mentionne pas `project :testchip`, `debugRuntimeClasspath` le mentionne (constaté le 2026-09-25).

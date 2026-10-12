@@ -51,4 +51,4 @@ Sceau est fait pour vérifier son propre document, ou un document que son titula
 
 Sceau ne lit ni les empreintes digitales ni l'iris, et ne lit pas la MRZ par la caméra.
 
-Logiciel libre sous licence GPL version 3 ou ultérieure.
+Logiciel libre sous licence GPL version 3 uniquement.

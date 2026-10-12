@@ -1,6 +1,6 @@
 /*
  * Sceau - décodage JPEG 2000 en mémoire au-dessus d'OpenJPEG.
- * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-only
  *
  * Cœur de décodage indépendant de JNI, testé sur l'hôte (test/run-host-tests.sh).
  * Les données décodées viennent d'une puce potentiellement hostile : toute entrée

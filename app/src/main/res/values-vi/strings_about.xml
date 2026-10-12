@@ -7,7 +7,7 @@
     <string name="about_version_unknown">Không rõ phiên bản</string>
 
     <string name="about_section_license">Giấy phép và mã nguồn</string>
-    <string name="about_license">Phần mềm tự do, phát hành theo giấy phép GNU GPL phiên bản 3 hoặc mới hơn.</string>
+    <string name="about_license">Phần mềm tự do, phát hành theo giấy phép GNU GPL, chỉ phiên bản 3.</string>
     <string name="about_open_repository">Xem mã nguồn</string>
     <string name="about_no_browser">Không có ứng dụng nào mở được đường liên kết này.</string>
 

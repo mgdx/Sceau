@@ -1,6 +1,6 @@
 /*
  * Sceau - décodage JPEG 2000 en mémoire au-dessus d'OpenJPEG.
- * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 #include "jp2_decode.h"
 

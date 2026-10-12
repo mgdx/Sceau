@@ -7,7 +7,7 @@
     <string name="about_version_unknown">גרסה לא ידועה</string>
 
     <string name="about_section_license">רישיון וקוד מקור</string>
-    <string name="about_license">תוכנה חופשית המופצת בהתאם לרישיון GNU GPL, גרסה 3 או כל גרסה מאוחרת יותר.</string>
+    <string name="about_license">תוכנה חופשית המופצת בהתאם לרישיון GNU GPL, גרסה 3 בלבד.</string>
     <string name="about_open_repository">הצגת קוד המקור</string>
     <string name="about_no_browser">אין אפליקציה שיכולה לפתוח את הקישור הזה.</string>
 

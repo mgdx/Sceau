@@ -7,7 +7,7 @@
     <string name="about_version_unknown">Versie onbekend</string>
 
     <string name="about_section_license">Licentie en broncode</string>
-    <string name="about_license">Vrije software, verspreid onder de GNU GPL versie 3 of later.</string>
+    <string name="about_license">Vrije software, uitsluitend verspreid onder de GNU GPL versie 3.</string>
     <string name="about_open_repository">Broncode bekijken</string>
     <string name="about_no_browser">Er is geen app die deze link kan openen.</string>
 

@@ -7,7 +7,7 @@
     <string name="about_version_unknown">Óþekkt útgáfa</string>
 
     <string name="about_section_license">Leyfi og frumkóði</string>
-    <string name="about_license">Frjáls hugbúnaður sem dreift er með GNU GPL-leyfi, útgáfu 3 eða nýrri.</string>
+    <string name="about_license">Frjáls hugbúnaður sem dreift er með GNU GPL-leyfi, eingöngu útgáfu 3.</string>
     <string name="about_open_repository">Skoða frumkóðann</string>
     <string name="about_no_browser">Ekkert forrit getur opnað þennan tengil.</string>
 
