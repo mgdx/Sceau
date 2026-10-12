@@ -11,6 +11,10 @@
     <string name="about_open_repository">Lihat kod sumber</string>
     <string name="about_no_browser">Tiada apl yang boleh membuka pautan ini.</string>
 
+    <string name="about_section_donate">Sokong Sceau</string>
+    <string name="about_donate">Sceau percuma dan tanpa iklan. Anda boleh menyokong pembangunannya dengan menderma melalui Liberapay.</string>
+    <string name="about_open_donate">Derma</string>
+
     <string name="about_section_trust">Stor sijil dipercayai terbina dalam</string>
     <string name="about_trust_ants_only">CSCA Perancis daripada ANTS (pasport dan kad pengenalan).</string>
     <string name="about_trust_ants_and_bsi">CSCA Perancis daripada ANTS dan Master List Jerman daripada BSI.</string>

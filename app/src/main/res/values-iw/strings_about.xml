@@ -11,6 +11,10 @@
     <string name="about_open_repository">הצגת קוד המקור</string>
     <string name="about_no_browser">אין אפליקציה שיכולה לפתוח את הקישור הזה.</string>
 
+    <string name="about_section_donate">תמיכה ב-Sceau</string>
+    <string name="about_donate">השימוש ב-Sceau חינמי וללא פרסומות. אפשר לתמוך בפיתוח באמצעות תרומה ב-Liberapay.</string>
+    <string name="about_open_donate">תרומה</string>
+
     <string name="about_section_trust">מאגר האמון המובנה</string>
     <string name="about_trust_ants_only">תעודות CSCA צרפתיות של ANTS (דרכונים ותעודות זהות).</string>
     <string name="about_trust_ants_and_bsi">תעודות CSCA צרפתיות של ANTS ורשימת Master List הגרמנית של BSI.</string>

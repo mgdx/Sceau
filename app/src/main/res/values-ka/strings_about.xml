@@ -11,6 +11,10 @@
     <string name="about_open_repository">საწყისი კოდის ნახვა</string>
     <string name="about_no_browser">ამ ბმულის გახსნა ვერცერთ აპს არ შეუძლია.</string>
 
+    <string name="about_section_donate">Sceau-ს მხარდაჭერა</string>
+    <string name="about_donate">Sceau უფასოა და რეკლამის გარეშე. მისი განვითარების მხარდაჭერა შეგიძლიათ შემოწირულობით Liberapay-ზე.</string>
+    <string name="about_open_donate">შემოწირულობა</string>
+
     <string name="about_section_trust">ჩაშენებული სანდო საცავი</string>
     <string name="about_trust_ants_only">ANTS-ის მიერ გამოცემული საფრანგეთის CSCA სერტიფიკატები (პასპორტები და პირადობის მოწმობები).</string>
     <string name="about_trust_ants_and_bsi">ANTS-ის მიერ გამოცემული საფრანგეთის CSCA სერტიფიკატები და BSI-ის გერმანული Master List.</string>

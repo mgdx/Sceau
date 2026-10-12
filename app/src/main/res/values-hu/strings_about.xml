@@ -11,6 +11,10 @@
     <string name="about_open_repository">Forráskód megtekintése</string>
     <string name="about_no_browser">Egyik alkalmazás sem tudja megnyitni ezt a linket.</string>
 
+    <string name="about_section_donate">A Sceau támogatása</string>
+    <string name="about_donate">A Sceau ingyenes és reklámmentes. Fejlesztését adománnyal támogathatja a Liberapay oldalon.</string>
+    <string name="about_open_donate">Adományozás</string>
+
     <string name="about_section_trust">Beépített megbízható tanúsítványok</string>
     <string name="about_trust_ants_only">Az ANTS francia CSCA-tanúsítványai (útlevelek és személyi igazolványok).</string>
     <string name="about_trust_ants_and_bsi">Az ANTS francia CSCA-tanúsítványai és a BSI német Master Listje.</string>

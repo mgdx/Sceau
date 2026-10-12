@@ -11,6 +11,10 @@
     <string name="about_open_repository">Žiūrėti šaltinio kodą</string>
     <string name="about_no_browser">Nėra programos, kuri galėtų atidaryti šią nuorodą.</string>
 
+    <string name="about_section_donate">Paremkite Sceau</string>
+    <string name="about_donate">Sceau yra nemokama ir be reklamų. Jos kūrimą galite paremti auka per Liberapay.</string>
+    <string name="about_open_donate">Paaukoti</string>
+
     <string name="about_section_trust">Integruota patikimų sertifikatų saugykla</string>
     <string name="about_trust_ants_only">Prancūzijos ANTS CSCA sertifikatai (pasai ir asmens tapatybės kortelės).</string>
     <string name="about_trust_ants_and_bsi">Prancūzijos ANTS CSCA sertifikatai ir Vokietijos BSI Master List.</string>

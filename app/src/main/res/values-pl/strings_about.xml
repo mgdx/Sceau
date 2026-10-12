@@ -11,6 +11,10 @@
     <string name="about_open_repository">Zobacz kod źródłowy</string>
     <string name="about_no_browser">Żadna aplikacja nie może otworzyć tego linku.</string>
 
+    <string name="about_section_donate">Wesprzyj Sceau</string>
+    <string name="about_donate">Sceau jest bezpłatny i bez reklam. Możesz wesprzeć jego rozwój darowizną w serwisie Liberapay.</string>
+    <string name="about_open_donate">Przekaż darowiznę</string>
+
     <string name="about_section_trust">Wbudowane zaufane certyfikaty</string>
     <string name="about_trust_ants_only">Francuskie certyfikaty CSCA z ANTS (paszporty i dowody osobiste).</string>
     <string name="about_trust_ants_and_bsi">Francuskie certyfikaty CSCA z ANTS i niemiecka Master List urzędu BSI.</string>

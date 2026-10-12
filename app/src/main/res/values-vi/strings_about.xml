@@ -11,6 +11,10 @@
     <string name="about_open_repository">Xem mã nguồn</string>
     <string name="about_no_browser">Không có ứng dụng nào mở được đường liên kết này.</string>
 
+    <string name="about_section_donate">Ủng hộ Sceau</string>
+    <string name="about_donate">Sceau miễn phí và không có quảng cáo. Bạn có thể ủng hộ việc phát triển ứng dụng bằng cách quyên góp qua Liberapay.</string>
+    <string name="about_open_donate">Quyên góp</string>
+
     <string name="about_section_trust">Kho chứng chỉ tin cậy tích hợp</string>
     <string name="about_trust_ants_only">CSCA của Pháp do ANTS cấp (hộ chiếu và thẻ căn cước).</string>
     <string name="about_trust_ants_and_bsi">CSCA của Pháp do ANTS cấp và Master List của Đức do BSI cấp.</string>

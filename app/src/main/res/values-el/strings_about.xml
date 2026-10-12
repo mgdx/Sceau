@@ -11,6 +11,10 @@
     <string name="about_open_repository">Προβολή πηγαίου κώδικα</string>
     <string name="about_no_browser">Καμία εφαρμογή δεν μπορεί να ανοίξει αυτόν τον σύνδεσμο.</string>
 
+    <string name="about_section_donate">Υποστήριξη του Sceau</string>
+    <string name="about_donate">Το Sceau είναι δωρεάν και χωρίς διαφημίσεις. Μπορείτε να υποστηρίξετε την ανάπτυξή του με μια δωρεά μέσω Liberapay.</string>
+    <string name="about_open_donate">Δωρεά</string>
+
     <string name="about_section_trust">Ενσωματωμένα αξιόπιστα πιστοποιητικά</string>
     <string name="about_trust_ants_only">Γαλλικά CSCA της ANTS (διαβατήρια και δελτία ταυτότητας).</string>
     <string name="about_trust_ants_and_bsi">Γαλλικά CSCA της ANTS και γερμανική Master List του BSI.</string>

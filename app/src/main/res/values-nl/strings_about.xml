@@ -11,6 +11,10 @@
     <string name="about_open_repository">Broncode bekijken</string>
     <string name="about_no_browser">Er is geen app die deze link kan openen.</string>
 
+    <string name="about_section_donate">Sceau steunen</string>
+    <string name="about_donate">Sceau is gratis en zonder advertenties. Je kunt de ontwikkeling steunen met een donatie via Liberapay.</string>
+    <string name="about_open_donate">Doneren</string>
+
     <string name="about_section_trust">Ingebouwde vertrouwensopslag</string>
     <string name="about_trust_ants_only">Franse CSCA’s van het ANTS (paspoorten en identiteitskaarten).</string>
     <string name="about_trust_ants_and_bsi">Franse CSCA’s van het ANTS en de Duitse Master List van het BSI.</string>

@@ -11,6 +11,10 @@
     <string name="about_open_repository">Shiko kodin burimor</string>
     <string name="about_no_browser">Asnjë aplikacion nuk mund ta hapë këtë lidhje.</string>
 
+    <string name="about_section_donate">Mbështet Sceau</string>
+    <string name="about_donate">Sceau është falas dhe pa reklama. Mund ta mbështetësh zhvillimin e tij me një dhurim në Liberapay.</string>
+    <string name="about_open_donate">Dhuro</string>
+
     <string name="about_section_trust">Certifikatat e besuara të integruara</string>
     <string name="about_trust_ants_only">Certifikatat CSCA franceze të ANTS (pasaporta dhe letërnjoftime).</string>
     <string name="about_trust_ants_and_bsi">Certifikatat CSCA franceze të ANTS dhe Master List gjermane e BSI-së.</string>

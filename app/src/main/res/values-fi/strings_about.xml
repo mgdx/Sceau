@@ -11,6 +11,10 @@
     <string name="about_open_repository">Näytä lähdekoodi</string>
     <string name="about_no_browser">Mikään sovellus ei voi avata tätä linkkiä.</string>
 
+    <string name="about_section_donate">Tue kehitystä</string>
+    <string name="about_donate">Sceau on ilmainen ja mainokseton. Voit tukea sen kehitystä lahjoituksella Liberapay-palvelussa.</string>
+    <string name="about_open_donate">Lahjoita</string>
+
     <string name="about_section_trust">Sisäänrakennetut luotetut varmenteet</string>
     <string name="about_trust_ants_only">ANTS:n ranskalaiset CSCA-varmenteet (passit ja henkilökortit).</string>
     <string name="about_trust_ants_and_bsi">ANTS:n ranskalaiset CSCA-varmenteet ja BSI:n saksalainen Master List.</string>

@@ -11,6 +11,10 @@
     <string name="about_open_repository">Ver o código-fonte</string>
     <string name="about_no_browser">Nenhuma aplicação consegue abrir esta ligação.</string>
 
+    <string name="about_section_donate">Apoiar o Sceau</string>
+    <string name="about_donate">O Sceau é gratuito e sem publicidade. Pode apoiar o seu desenvolvimento com um donativo no Liberapay.</string>
+    <string name="about_open_donate">Fazer um donativo</string>
+
     <string name="about_section_trust">Repositório de confiança integrado</string>
     <string name="about_trust_ants_only">CSCA franceses da ANTS (passaportes e cartões de identidade).</string>
     <string name="about_trust_ants_and_bsi">CSCA franceses da ANTS e Master List alemã do BSI.</string>
