@@ -11,6 +11,10 @@
     <string name="about_open_repository">Ara l-kodiċi sors</string>
     <string name="about_no_browser">L-ebda app ma tista’ tiftaħ din il-link.</string>
 
+    <string name="about_section_donate">Appoġġa lil Sceau</string>
+    <string name="about_donate">Sceau huwa b’xejn u mingħajr reklami. Tista’ tappoġġa l-iżvilupp tiegħu b’donazzjoni fuq Liberapay.</string>
+    <string name="about_open_donate">Agħti donazzjoni</string>
+
     <string name="about_section_trust">Ħażna ta’ fiduċja integrata</string>
     <string name="about_trust_ants_only">Ċertifikati CSCA Franċiżi tal-ANTS (passaporti u karti tal-identità).</string>
     <string name="about_trust_ants_and_bsi">Ċertifikati CSCA Franċiżi tal-ANTS u l-Master List Ġermaniża tal-BSI.</string>

@@ -11,6 +11,10 @@
     <string name="about_open_repository">Zobrazit zdrojový kód</string>
     <string name="about_no_browser">Tento odkaz nelze otevřít v žádné aplikaci.</string>
 
+    <string name="about_section_donate">Podpora Sceau</string>
+    <string name="about_donate">Sceau je zdarma a bez reklam. Jeho vývoj můžete podpořit darem přes Liberapay.</string>
+    <string name="about_open_donate">Přispět</string>
+
     <string name="about_section_trust">Vestavěné důvěryhodné certifikáty</string>
     <string name="about_trust_ants_only">Francouzské certifikáty CSCA od ANTS (cestovní pasy a občanské průkazy).</string>
     <string name="about_trust_ants_and_bsi">Francouzské certifikáty CSCA od ANTS a německý seznam Master List úřadu BSI.</string>

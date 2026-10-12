@@ -11,6 +11,10 @@
     <string name="about_open_repository">Skoða frumkóðann</string>
     <string name="about_no_browser">Ekkert forrit getur opnað þennan tengil.</string>
 
+    <string name="about_section_donate">Styrktu Sceau</string>
+    <string name="about_donate">Sceau er ókeypis og án auglýsinga. Þú getur stutt þróun þess með framlagi á Liberapay.</string>
+    <string name="about_open_donate">Styrkja</string>
+
     <string name="about_section_trust">Innbyggð traustgeymsla</string>
     <string name="about_trust_ants_only">Frönsk CSCA-vottorð frá ANTS (vegabréf og nafnskírteini).</string>
     <string name="about_trust_ants_and_bsi">Frönsk CSCA-vottorð frá ANTS og Master List frá þýsku stofnuninni BSI.</string>

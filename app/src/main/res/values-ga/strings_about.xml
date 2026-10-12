@@ -11,6 +11,10 @@
     <string name="about_open_repository">Féach ar an gcód foinseach</string>
     <string name="about_no_browser">Níl aon aip in ann an nasc seo a oscailt.</string>
 
+    <string name="about_section_donate">Tacaíocht do Sceau</string>
+    <string name="about_donate">Tá Sceau saor in aisce agus gan fógraí. Is féidir leat tacú lena fhorbairt trí shíntiús a thabhairt ar Liberapay.</string>
+    <string name="about_open_donate">Tabhair síntiús</string>
+
     <string name="about_section_trust">Stór iontaobhais ionsuite</string>
     <string name="about_trust_ants_only">Deimhnithe CSCA Francacha ó ANTS (pasanna agus cártaí aitheantais).</string>
     <string name="about_trust_ants_and_bsi">Deimhnithe CSCA Francacha ó ANTS agus Master List Ghearmánach an BSI.</string>

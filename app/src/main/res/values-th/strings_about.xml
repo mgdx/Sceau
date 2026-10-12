@@ -11,6 +11,10 @@
     <string name="about_open_repository">ดูซอร์สโค้ด</string>
     <string name="about_no_browser">ไม่มีแอปที่เปิดลิงก์นี้ได้</string>
 
+    <string name="about_section_donate">สนับสนุน Sceau</string>
+    <string name="about_donate">Sceau ใช้งานได้ฟรีและไม่มีโฆษณา คุณสามารถสนับสนุนการพัฒนาได้ด้วยการบริจาคผ่าน Liberapay</string>
+    <string name="about_open_donate">บริจาค</string>
+
     <string name="about_section_trust">คลังใบรับรองที่มีในแอป</string>
     <string name="about_trust_ants_only">CSCA ของฝรั่งเศสจาก ANTS (หนังสือเดินทางและบัตรประจำตัว)</string>
     <string name="about_trust_ants_and_bsi">CSCA ของฝรั่งเศสจาก ANTS และ Master List ของเยอรมนีจาก BSI</string>

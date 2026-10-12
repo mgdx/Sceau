@@ -11,6 +11,10 @@
     <string name="about_open_repository">Vaata lähtekoodi</string>
     <string name="about_no_browser">Ükski rakendus ei saa seda linki avada.</string>
 
+    <string name="about_section_donate">Sceau toetamine</string>
+    <string name="about_donate">Sceau on tasuta ja reklaamivaba. Selle arendust saate toetada annetusega Liberapay kaudu.</string>
+    <string name="about_open_donate">Anneta</string>
+
     <string name="about_section_trust">Sisseehitatud usaldushoidla</string>
     <string name="about_trust_ants_only">ANTS-i Prantsuse CSCA-d (passid ja isikutunnistused).</string>
     <string name="about_trust_ants_and_bsi">ANTS-i Prantsuse CSCA-d ja BSI Saksa Master List.</string>

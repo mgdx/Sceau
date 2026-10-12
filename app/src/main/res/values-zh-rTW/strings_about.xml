@@ -11,6 +11,10 @@
     <string name="about_open_repository">查看原始碼</string>
     <string name="about_no_browser">沒有可開啟這個連結的應用程式。</string>
 
+    <string name="about_section_donate">支持 Sceau</string>
+    <string name="about_donate">Sceau 免費且無廣告。你可以透過 Liberapay 捐款，支持它的開發。</string>
+    <string name="about_open_donate">捐款</string>
+
     <string name="about_section_trust">內建信任存放區</string>
     <string name="about_trust_ants_only">法國 ANTS 的 CSCA（護照與身分證）。</string>
     <string name="about_trust_ants_and_bsi">法國 ANTS 的 CSCA，以及德國 BSI 的 Master List。</string>

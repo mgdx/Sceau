@@ -78,6 +78,7 @@ fun AboutScreen(
     val snackbar = remember { SnackbarHostState() }
     val version = remember(context) { versionName(context) }
     val repositoryUrl = stringResource(R.string.about_repository_url)
+    val donateUrl = stringResource(R.string.about_donate_url)
     val noBrowser = stringResource(R.string.about_no_browser)
 
     var embedded by remember { mutableStateOf<EmbeddedUi>(EmbeddedUi.Loading) }
@@ -149,6 +150,16 @@ fun AboutScreen(
                         if (!openUrl(context, repositoryUrl)) scope.launch { snackbar.showSnackbar(noBrowser) }
                     },
                 ) { Text(stringResource(R.string.about_open_repository)) }
+            }
+
+            // Lien de don, ouvert dans le navigateur comme le dépôt : aucune permission réseau (D52).
+            Section(stringResource(R.string.about_section_donate)) {
+                Paragraph(stringResource(R.string.about_donate))
+                OutlinedButton(
+                    onClick = {
+                        if (!openUrl(context, donateUrl)) scope.launch { snackbar.showSnackbar(noBrowser) }
+                    },
+                ) { Text(stringResource(R.string.about_open_donate)) }
             }
 
             Section(stringResource(R.string.about_section_trust)) {

@@ -11,6 +11,10 @@
     <string name="about_open_repository">Quellcode ansehen</string>
     <string name="about_no_browser">Keine App kann diesen Link öffnen.</string>
 
+    <string name="about_section_donate">Sceau unterstützen</string>
+    <string name="about_donate">Sceau ist kostenlos und werbefrei. Sie können die Entwicklung mit einer Spende über Liberapay unterstützen.</string>
+    <string name="about_open_donate">Spenden</string>
+
     <string name="about_section_trust">Integrierter Vertrauensspeicher</string>
     <string name="about_trust_ants_only">Französische CSCA der ANTS (Reisepässe und Personalausweise).</string>
     <string name="about_trust_ants_and_bsi">Französische CSCA der ANTS und deutsche Master List des BSI.</string>

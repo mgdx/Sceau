@@ -11,6 +11,10 @@
     <string name="about_open_repository">Vedeți codul sursă</string>
     <string name="about_no_browser">Nicio aplicație nu poate deschide acest link.</string>
 
+    <string name="about_section_donate">Susțineți Sceau</string>
+    <string name="about_donate">Sceau este gratuit și fără reclame. Puteți susține dezvoltarea sa printr-o donație pe Liberapay.</string>
+    <string name="about_open_donate">Donați</string>
+
     <string name="about_section_trust">Depozit de încredere integrat</string>
     <string name="about_trust_ants_only">CSCA francezi ai ANTS (pașapoarte și cărți de identitate).</string>
     <string name="about_trust_ants_and_bsi">CSCA francezi ai ANTS și Master List germană a BSI.</string>

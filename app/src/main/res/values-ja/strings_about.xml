@@ -11,6 +11,10 @@
     <string name="about_open_repository">ソースコードを表示</string>
     <string name="about_no_browser">このリンクを開けるアプリがありません。</string>
 
+    <string name="about_section_donate">Sceau を支援</string>
+    <string name="about_donate">Sceau は無料で、広告もありません。Liberapay での寄付により開発を支援できます。</string>
+    <string name="about_open_donate">寄付する</string>
+
     <string name="about_section_trust">内蔵の信頼ストア</string>
     <string name="about_trust_ants_only">フランス ANTS の CSCA（パスポートと身分証明書）。</string>
     <string name="about_trust_ants_and_bsi">フランス ANTS の CSCA と、ドイツ BSI の Master List。</string>

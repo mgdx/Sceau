@@ -11,6 +11,10 @@
     <string name="about_open_repository">عرض الرمز المصدر</string>
     <string name="about_no_browser">لا يتوفر تطبيق يمكنه فتح هذا الرابط.</string>
 
+    <string name="about_section_donate">دعم Sceau</string>
+    <string name="about_donate">Sceau مجاني وبلا إعلانات. يمكنك دعم تطويره بالتبرع عبر Liberapay.</string>
+    <string name="about_open_donate">تبرّع</string>
+
     <string name="about_section_trust">مخزن الثقة المدمج</string>
     <string name="about_trust_ants_only">شهادات CSCA الفرنسية الصادرة عن ANTS (جوازات السفر وبطاقات الهوية).</string>
     <string name="about_trust_ants_and_bsi">شهادات CSCA الفرنسية الصادرة عن ANTS، وقائمة Master List الألمانية الصادرة عن BSI.</string>

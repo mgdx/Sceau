@@ -11,6 +11,10 @@
     <string name="about_open_repository">सोर्स कोड देखें</string>
     <string name="about_no_browser">कोई भी ऐप यह लिंक नहीं खोल सकता।</string>
 
+    <string name="about_section_donate">Sceau का समर्थन करें</string>
+    <string name="about_donate">Sceau मुफ़्त है और इसमें कोई विज्ञापन नहीं है। आप Liberapay पर दान देकर इसके विकास में मदद कर सकते हैं।</string>
+    <string name="about_open_donate">दान करें</string>
+
     <string name="about_section_trust">ऐप में शामिल ट्रस्ट स्टोर</string>
     <string name="about_trust_ants_only">ANTS के फ़्रांसीसी CSCA (पासपोर्ट और पहचान पत्र)।</string>
     <string name="about_trust_ants_and_bsi">ANTS के फ़्रांसीसी CSCA और BSI की जर्मन Master List।</string>

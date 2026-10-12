@@ -11,6 +11,10 @@
     <string name="about_open_repository">Переглянути вихідний код</string>
     <string name="about_no_browser">Немає застосунку, який може відкрити це посилання.</string>
 
+    <string name="about_section_donate">Підтримати Sceau</string>
+    <string name="about_donate">Sceau безкоштовний і без реклами. Ви можете підтримати його розробку пожертвою через Liberapay.</string>
+    <string name="about_open_donate">Пожертвувати</string>
+
     <string name="about_section_trust">Вбудоване сховище сертифікатів</string>
     <string name="about_trust_ants_only">Французькі CSCA від ANTS (паспорти та ID-картки).</string>
     <string name="about_trust_ants_and_bsi">Французькі CSCA від ANTS і німецький Master List від BSI.</string>

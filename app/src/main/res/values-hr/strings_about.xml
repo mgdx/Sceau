@@ -11,6 +11,10 @@
     <string name="about_open_repository">Prikaži izvorni kod</string>
     <string name="about_no_browser">Nijedna aplikacija ne može otvoriti ovu poveznicu.</string>
 
+    <string name="about_section_donate">Podrška za Sceau</string>
+    <string name="about_donate">Sceau je besplatan i bez oglasa. Njegov razvoj možete podržati donacijom putem platforme Liberapay.</string>
+    <string name="about_open_donate">Doniraj</string>
+
     <string name="about_section_trust">Ugrađeni pouzdani certifikati</string>
     <string name="about_trust_ants_only">Francuski certifikati CSCA agencije ANTS (putovnice i osobne iskaznice).</string>
     <string name="about_trust_ants_and_bsi">Francuski certifikati CSCA agencije ANTS i njemački popis Master List ureda BSI.</string>

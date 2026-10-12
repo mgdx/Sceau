@@ -11,6 +11,10 @@
     <string name="about_open_repository">Se kildekoden</string>
     <string name="about_no_browser">Ingen app kan åpne denne lenken.</string>
 
+    <string name="about_section_donate">Støtt Sceau</string>
+    <string name="about_donate">Sceau er gratis og uten reklame. Du kan støtte utviklingen med en donasjon via Liberapay.</string>
+    <string name="about_open_donate">Doner</string>
+
     <string name="about_section_trust">Innebygd tillitslager</string>
     <string name="about_trust_ants_only">Franske CSCA-er fra ANTS (pass og ID-kort).</string>
     <string name="about_trust_ants_and_bsi">Franske CSCA-er fra ANTS og tysk Master List fra BSI.</string>

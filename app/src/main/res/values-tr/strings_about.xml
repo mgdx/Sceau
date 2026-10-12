@@ -11,6 +11,10 @@
     <string name="about_open_repository">Kaynak kodunu görüntüle</string>
     <string name="about_no_browser">Bu bağlantıyı açabilecek bir uygulama yok.</string>
 
+    <string name="about_section_donate">Destek olun</string>
+    <string name="about_donate">Sceau ücretsizdir ve reklam içermez. Liberapay üzerinden bağış yaparak geliştirilmesine destek olabilirsiniz.</string>
+    <string name="about_open_donate">Bağış yap</string>
+
     <string name="about_section_trust">Yerleşik güven deposu</string>
     <string name="about_trust_ants_only">ANTS tarafından yayımlanan Fransız CSCA sertifikaları (pasaportlar ve kimlik kartları).</string>
     <string name="about_trust_ants_and_bsi">ANTS tarafından yayımlanan Fransız CSCA sertifikaları ve BSI tarafından yayımlanan Alman Master List.</string>

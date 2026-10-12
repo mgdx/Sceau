@@ -11,6 +11,10 @@
     <string name="about_open_repository">Skatīt pirmkodu</string>
     <string name="about_no_browser">Neviena lietotne nevar atvērt šo saiti.</string>
 
+    <string name="about_section_donate">Atbalstiet Sceau</string>
+    <string name="about_donate">Sceau ir bezmaksas un bez reklāmām. Tās izstrādi varat atbalstīt ar ziedojumu platformā Liberapay.</string>
+    <string name="about_open_donate">Ziedot</string>
+
     <string name="about_section_trust">Iebūvētā uzticamības krātuve</string>
     <string name="about_trust_ants_only">ANTS izdotie Francijas CSCA (pases un personas apliecības).</string>
     <string name="about_trust_ants_and_bsi">ANTS izdotie Francijas CSCA un BSI publicētā Vācijas Master List.</string>
