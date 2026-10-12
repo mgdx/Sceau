@@ -1,0 +1,6 @@
+První veřejná verze.
+• Čtení biometrických cestovních pasů, francouzského občanského průkazu a evropských občanských průkazů přes NFC (PACE nebo BAC)
+• Fotografie, osobní údaje, podpis a doplňující údaje
+• Passive, Chip a Active Authentication, verdikt a seznam ověření
+• CSCA od ANTS a 3 států, Master List od BSI, import seznamů Master List a certifikátů
+• Offline, žádná data se neuchovávají, 45 jazyků

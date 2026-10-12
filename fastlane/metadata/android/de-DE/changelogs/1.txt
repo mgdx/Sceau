@@ -1,0 +1,6 @@
+Erste öffentliche Version.
+• NFC-Auslesen biometrischer Reisepässe, des französischen Personalausweises und europäischer Personalausweise (PACE oder BAC)
+• Foto, Identität, Unterschrift und zusätzliche Daten
+• Passive, Chip und Active Authentication, Bewertung und Liste der Prüfungen
+• CSCA der ANTS und von 3 Staaten, Master List des BSI, Import von Master Lists und Zertifikaten
+• Offline, keine Daten gespeichert, 45 Sprachen

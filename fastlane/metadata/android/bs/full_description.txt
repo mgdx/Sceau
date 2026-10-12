@@ -1,0 +1,54 @@
+Sceau putem NFC-a očitava čip identifikacijskih dokumenata prema standardu ICAO 9303 i provjerava jesu li autentični. Radi potpuno offline: bez dozvole za mrežu, ništa se ne čuva, ništa se ne šalje.
+
+<b>Podržani dokumenti</b>
+<ul>
+<li>Francuska lična karta (format bankovne kartice, od 2021.), pomoću šestocifrenog CAN-a odštampanog na kartici</li>
+<li>Evropske lične karte, pomoću CAN-a ili MRZ-a</li>
+<li>Biometrijski pasoši svih zemalja, pomoću broja dokumenta, datuma rođenja i datuma isteka važenja</li>
+</ul>
+
+<b>Šta Sceau prikazuje</b>
+<ul>
+<li>Fotografiju pohranjenu u čipu</li>
+<li>Identitet: prezime, ime, spol, datum rođenja, državljanstvo, broj dokumenta, država izdavanja, datum isteka važenja</li>
+<li>Svojeručni potpis nosioca, ako ga je država izdavanja upisala u čip</li>
+<li>Dodatne podatke kada ih čip sadrži (mjesto rođenja, adresa, organ izdavanja i datum izdavanja…)</li>
+</ul>
+
+<b>Šta Sceau provjerava</b>
+<ul>
+<li>Potpis podataka od strane države izdavanja, sve do poznatog korijenskog certifikata, i integritet svake grupe podataka (Passive Authentication)</li>
+<li>Da čip nije klon, kada dokument to omogućava (Chip Authentication, Active Authentication)</li>
+</ul>
+Rezultat je ocjena („Autentičan“, „Važeći potpis, ali čip nije provjeren“, „Nepoznat izdavalac“, „Provjera nije uspjela“) s detaljnom listom provjera.
+
+<b>Pouzdani certifikati</b>
+Sceau sadrži francuske CSCA certifikate koje objavljuje agencija ANTS, certifikate koje su Ujedinjeno Kraljevstvo, Gruzija i Luksemburg objavili za vlastite dokumente te njemačku Master List koju objavljuje BSI, a koja, između ostalog, obuhvata Evropsku uniju, EEP, Švicarsku i Ujedinjeno Kraljevstvo. Na ekranu pouzdanih certifikata moguće je pretraživati po državi. Za dokument čiji izdavalac nije uključen, rezultat je „Nepoznat izdavalac“; možete uvesti Master List koju je objavila druga država ili pojedinačni CSCA ili povezujući certifikat nakon provjere njegovog otiska, te izbrisati svaki uvezeni element pojedinačno. Liste opozvanih certifikata se ne provjeravaju. Sceau nije povezan s agencijama ANTS i BSI niti ga one podržavaju.
+
+<b>Poznata ograničenja</b>
+<ul>
+<li>Njemačke lične karte izdate prije 2. augusta 2021.: čip je rezervisan za organe vlasti; Sceau ga ne može očitati i to javlja. Na novijim karticama nije moguće očitati adresu i mjesto rođenja.</li>
+<li>Njemačka eID kartica za građane EU: čip ne sadrži nikakve lične podatke; provjerava se samo njegova autentičnost.</li>
+<li>Italijanske lične karte CIE 3.0 od kraja 2017. do početka 2018.: Italija je objavila anomaliju u njihovim dodatnim podacima; Sceau odbacuje te podatke i provjerava ostatak dokumenta.</li>
+</ul>
+
+<b>Privatnost</b>
+<ul>
+<li>Jedina dozvola: NFC</li>
+<li>Nijedan podatak očitan s čipa se ne sprema; memorija se briše pri napuštanju rezultata ili kada aplikacija pređe u pozadinu</li>
+<li>Snimci ekrana blokirani su u cijeloj aplikaciji</li>
+<li>Bez reklama, bez praćenja, bez Google usluga</li>
+</ul>
+
+<b>Ostalo</b>
+<ul>
+<li>Uvod od četiri stranice pri prvom pokretanju i ekran „Šta sadrži čip“</li>
+<li>Interfejs na 45 jezika</li>
+</ul>
+
+<b>Okvir korištenja</b>
+Sceau je namijenjen provjeri vlastitog dokumenta ili dokumenta koji predočava njegov nosilac. Prema GDPR-u, fotografija je biometrijski podatak kada se koristi za automatizirano poređenje: Sceau ne vrši takvo poređenje. Rezultat ne govori je li dokument prijavljen kao izgubljen ili ukraden.
+
+Sceau ne očitava otiske prstiju niti podatke o šarenici i ne skenira MRZ kamerom.
+
+Slobodni softver pod licencom GPL, isključivo verzija 3.

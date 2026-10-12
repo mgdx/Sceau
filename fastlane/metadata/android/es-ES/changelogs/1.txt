@@ -1,0 +1,6 @@
+Primera versión pública.
+• Lectura NFC de pasaportes biométricos, del documento de identidad francés y de documentos de identidad europeos (PACE o BAC)
+• Foto, identidad, firma y datos adicionales
+• Passive, Chip y Active Authentication, veredicto y lista de verificaciones
+• CSCA de la ANTS y de 3 Estados, Master List del BSI, importación de Master Lists y certificados
+• Sin conexión, sin datos guardados, 45 idiomas

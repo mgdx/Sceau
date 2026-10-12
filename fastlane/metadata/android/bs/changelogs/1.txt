@@ -1,0 +1,6 @@
+Prva javna verzija.
+• NFC očitavanje biometrijskih pasoša, francuske lične karte i evropskih ličnih karata (PACE ili BAC)
+• Fotografija, identitet, potpis i dodatni podaci
+• Passive, Chip i Active Authentication, ocjena i lista provjera
+• CSCA agencije ANTS i 3 države, Master List BSI-ja, uvoz Master Lista i certifikata
+• Offline, nikakvi podaci se ne čuvaju, 45 jezika

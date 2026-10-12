@@ -1,0 +1,54 @@
+Sceau liest per NFC den Chip von Ausweisdokumenten nach ICAO 9303 aus und prüft, ob sie echt sind. Sie arbeitet vollständig offline: keine Netzwerkberechtigung, nichts wird gespeichert, nichts wird gesendet.
+
+<b>Unterstützte Dokumente</b>
+<ul>
+<li>Französischer Personalausweis (Scheckkartenformat, seit 2021), mit der 6-stelligen Zugangsnummer (CAN), die auf die Karte gedruckt ist</li>
+<li>Europäische Personalausweise, mit der CAN oder der MRZ</li>
+<li>Biometrische Reisepässe aller Länder, mit Dokumentennummer, Geburtsdatum und Ablaufdatum</li>
+</ul>
+
+<b>Was Sceau anzeigt</b>
+<ul>
+<li>Das im Chip gespeicherte Foto</li>
+<li>Identität: Name, Vornamen, Geschlecht, Geburtsdatum, Staatsangehörigkeit, Dokumentennummer, Ausstellungsstaat, Ablaufdatum</li>
+<li>Die Unterschrift der Inhaberin oder des Inhabers, sofern der Staat sie im Chip gespeichert hat</li>
+<li>Zusätzliche Daten, sofern der Chip sie enthält (Geburtsort, Anschrift, ausstellende Behörde und Ausstellungsdatum …)</li>
+</ul>
+
+<b>Was Sceau prüft</b>
+<ul>
+<li>Die Signatur des Ausstellungsstaats über die Daten bis zu einem bekannten Stammzertifikat sowie die Integrität jeder Datengruppe (Passive Authentication)</li>
+<li>Dass der Chip kein Klon ist, sofern das Dokument dies unterstützt (Chip Authentication, Active Authentication)</li>
+</ul>
+Das Ergebnis ist eine Bewertung (Echt, Signatur gültig, aber Chip nicht geprüft, Unbekannter Aussteller, Fehlgeschlagen) mit einer ausführlichen Liste der Prüfungen.
+
+<b>Vertrauensspeicher</b>
+Sceau enthält die von der ANTS veröffentlichten französischen CSCA-Zertifikate, die vom Vereinigten Königreich, Georgien und Luxemburg für ihre eigenen Dokumente veröffentlichten Zertifikate sowie die deutsche Master List des BSI, die unter anderem die Europäische Union, den EWR, die Schweiz und das Vereinigte Königreich abdeckt. Im Vertrauensspeicher kann nach Ländern gesucht werden. Ist der Aussteller eines Dokuments nicht enthalten, lautet das Ergebnis „Unbekannter Aussteller“; Sie können eine von einem anderen Staat veröffentlichte Master List oder nach Prüfung seines Fingerabdrucks ein einzelnes CSCA- oder Link-Zertifikat importieren und jedes importierte Element einzeln wieder löschen. Sperrlisten werden nicht abgefragt. Sceau steht in keiner Verbindung zur ANTS oder zum BSI und wird von ihnen nicht unterstützt.
+
+<b>Bekannte Einschränkungen</b>
+<ul>
+<li>Vor dem 2. August 2021 ausgestellte deutsche Personalausweise: Der Chip ist Behörden vorbehalten; Sceau kann ihn nicht auslesen und weist darauf hin. Bei neueren Ausweisen sind Anschrift und Geburtsort nicht lesbar.</li>
+<li>Deutsche eID-Karte für Unionsbürger: Der Chip enthält keine Identitätsdaten; nur seine Echtheit wird geprüft.</li>
+<li>Italienische Personalausweise CIE 3.0 von Ende 2017 bis Anfang 2018: Italien hat eine Anomalie in ihren zusätzlichen Daten veröffentlicht; Sceau verwirft sie und prüft den Rest des Dokuments.</li>
+</ul>
+
+<b>Datenschutz</b>
+<ul>
+<li>Einzige Berechtigung: NFC</li>
+<li>Keine aus dem Chip ausgelesenen Daten werden gespeichert; der Speicher wird gelöscht, sobald Sie das Ergebnis verlassen oder die App in den Hintergrund wechselt</li>
+<li>Screenshots sind in der gesamten App blockiert</li>
+<li>Keine Werbung, keine Tracker, keine Google-Dienste</li>
+</ul>
+
+<b>Sonstiges</b>
+<ul>
+<li>Vierseitige Einführung beim ersten Start und ein Bildschirm „Was der Chip enthält“</li>
+<li>Oberfläche in 45 Sprachen</li>
+</ul>
+
+<b>Nutzungsrahmen</b>
+Sceau dient dazu, das eigene Dokument zu prüfen oder ein Dokument, das von seiner Inhaberin oder seinem Inhaber vorgelegt wird. Im Sinne der DSGVO ist das Foto ein biometrisches Datum, wenn es für einen automatisierten Abgleich verwendet wird: Sceau führt keinen solchen Abgleich durch. Das Ergebnis sagt nicht aus, ob das Dokument als verloren oder gestohlen gemeldet wurde.
+
+Sceau liest weder Fingerabdrücke noch Irisbilder und erfasst die MRZ nicht mit der Kamera.
+
+Freie Software, ausschließlich unter der GPL Version 3.
