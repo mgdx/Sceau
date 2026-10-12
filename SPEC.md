@@ -353,7 +353,7 @@ Releases : dépôt public https://github.com/mgdx/Sceau ; APK par architecture e
 
 ## 11. Jalons
 
-État au 2026-10-12 : Socle, Lecture, Vérification et Finitions atteints ; Publication en cours, première release publique en version 1.0.0 (tag `v1.0.0`, D53), soumission F-Droid à suivre.
+État au 2026-10-12 : Socle, Lecture, Vérification et Finitions atteints ; Publication en cours, première release publique en version 1.0.0 publiée le 2026-10-12 (tag `v1.0.0`, D53), soumission F-Droid à suivre.
 
 1. **Socle** (atteint) : modules, CI, ktlint, magasin de confiance chargé et testé, fabrique de test crypto.
 2. **Lecture** (atteint) : transport `IsoDep`, PACE et BAC, lecture des DG, affichage brut de DG1 et de la photo.
