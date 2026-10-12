@@ -76,19 +76,21 @@ BT=$ANDROID_HOME/build-tools/37.0.0
 $BT/zipalign -c -P 16 4 app/build/outputs/apk/release/app-universal-release-unsigned.apk
 ```
 
-Signature avec les schémas v1, v2 et v3 (v1 n'est pas exigé par minSdk 26 mais `apksigcopier`, l'outil de F-Droid, sait le recopier, et il ne coûte rien), en préservant l'alignement existant, avec le nommage des assets :
+Signature avec les schémas **v2 et v3 seulement**, en préservant l'alignement existant, avec le nommage des assets. **Jamais de v1** (D54) : minSdk 26 n'en a pas besoin, et `apksigcopier`, l'outil par lequel F-Droid recopie la signature de l'auteur sur son propre build, ne sait pas reproduire les entrées `META-INF/` d'une signature v1 écrite par apksigner 37 (vérification « CHUNKED_SHA512 digest mismatch »). Le mot de passe est lu une fois, sans écho :
 
 ```bash
 VERSION=1.0.0
 OUT=~/releases/sceau-$VERSION && mkdir -p "$OUT"
+read -rsp "Mot de passe du keystore : " SCEAU_KS_PASS; echo; export SCEAU_KS_PASS
 for abi in arm64-v8a armeabi-v7a x86 x86_64 universal; do
   $BT/apksigner sign \
-    --ks ~/.android-keys/sceau-release.jks --ks-key-alias sceau \
-    --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true \
+    --ks ~/.android-keys/sceau-release.jks --ks-key-alias sceau --ks-pass env:SCEAU_KS_PASS \
+    --v1-signing-enabled false --v2-signing-enabled true --v3-signing-enabled true \
     --alignment-preserved true \
     --out "$OUT/sceau-$VERSION-$abi.apk" \
     "app/build/outputs/apk/release/app-$abi-release-unsigned.apk"
 done
+unset SCEAU_KS_PASS
 rm -f "$OUT"/*.idsig
 ```
 
@@ -97,11 +99,11 @@ Vérifications :
 ```bash
 for f in "$OUT"/*.apk; do $BT/apksigner verify --print-certs "$f" | grep 'SHA-256 digest'; done   # même certificat partout
 $BT/zipalign -c -P 16 4 "$OUT/sceau-$VERSION-universal.apk"
-# Contenu inchangé hors META-INF/ (MANIFEST.MF, *.SF, *.RSA ajoutés par la signature v1) :
-diff <(unzip -Z1 app/build/outputs/apk/release/app-universal-release-unsigned.apk | sort) \
-     <(unzip -Z1 "$OUT/sceau-$VERSION-universal.apk" | grep -v '^META-INF/' | sort)
-# Si fdroidserver est installé, la vérification même de F-Droid :
-apksigcopier compare "$OUT/sceau-$VERSION-universal.apk" --unsigned app/build/outputs/apk/release/app-universal-release-unsigned.apk
+# Aucune entrée ajoutée (pas de signature v1) :
+diff <(unzip -Z1 app/build/outputs/apk/release/app-universal-release-unsigned.apk) \
+     <(unzip -Z1 "$OUT/sceau-$VERSION-universal.apk")
+# La vérification même de F-Droid, obligatoire (pip install apksigcopier) :
+for abi in arm64-v8a armeabi-v7a x86 x86_64 universal; do apksigcopier compare "$OUT/sceau-$VERSION-$abi.apk" --unsigned "app/build/outputs/apk/release/app-$abi-release-unsigned.apk" && echo "$abi OK"; done
 ```
 
 `dependenciesInfo` est déjà désactivé dans `app/build.gradle.kts` (D25) : aucun bloc de métadonnées de dépendances n'est ajouté au bloc de signature.
