@@ -1,0 +1,54 @@
+Sceau citește prin NFC cipul documentelor de identitate conforme cu standardul ICAO 9303 și verifică dacă sunt autentice. Funcționează complet offline: nicio permisiune de rețea, nimic nu este păstrat, nimic nu este trimis.
+
+<b>Documente acceptate</b>
+<ul>
+<li>Cartea de identitate națională franceză (format card bancar, din 2021), cu codul CAN de 6 cifre tipărit pe carte</li>
+<li>Cărți de identitate europene, cu codul CAN sau zona MRZ</li>
+<li>Pașapoarte biometrice din orice țară, cu numărul documentului, data nașterii și data expirării</li>
+</ul>
+
+<b>Ce afișează Sceau</b>
+<ul>
+<li>Fotografia stocată în cip</li>
+<li>Identitatea: nume, prenume, sex, data nașterii, cetățenie, numărul documentului, statul emitent, data expirării</li>
+<li>Semnătura olografă a titularului, dacă statul emitent a înscris-o în cip</li>
+<li>Datele suplimentare, când cipul le conține (locul nașterii, adresa, autoritatea emitentă și data eliberării…)</li>
+</ul>
+
+<b>Ce verifică Sceau</b>
+<ul>
+<li>Semnătura datelor de către statul emitent, până la un certificat rădăcină cunoscut, și integritatea fiecărui grup de date (Passive Authentication)</li>
+<li>Că cipul nu este o clonă, când documentul permite acest lucru (Chip Authentication, Active Authentication)</li>
+</ul>
+Rezultatul este un verdict (Autentic, Semnătură validă, dar cip neverificat, Emitent necunoscut, Eșec), însoțit de o listă de verificare detaliată.
+
+<b>Depozit de încredere</b>
+Sceau include certificatele CSCA franceze publicate de ANTS, certificate publicate de Regatul Unit, Georgia și Luxemburg pentru propriile documente și Master List germană publicată de BSI, care acoperă, printre altele, Uniunea Europeană, SEE, Elveția și Regatul Unit. Ecranul depozitului de încredere permite căutarea după țară. Pentru un document al cărui emitent nu este inclus, verdictul este „Emitent necunoscut”; puteți importa o Master List publicată de alt stat sau un singur certificat CSCA ori de legătură, după ce i-ați verificat amprenta, și puteți șterge separat fiecare element importat. Listele de revocare nu sunt consultate. Sceau nu este afiliat la ANTS sau BSI și nici aprobat de acestea.
+
+<b>Limitări cunoscute</b>
+<ul>
+<li>Cărțile de identitate germane eliberate înainte de 2 august 2021: cipul este rezervat autorităților; Sceau nu îl poate citi și semnalează acest lucru. Pe cărțile mai noi, adresa și locul nașterii nu pot fi citite.</li>
+<li>Cartea eID germană pentru cetățenii UE: cipul nu conține date de identitate; este verificată doar autenticitatea lui.</li>
+<li>Cărțile de identitate italiene CIE 3.0 de la sfârșitul lui 2017 până la începutul lui 2018: Italia a publicat o anomalie în datele lor suplimentare; Sceau elimină aceste date și verifică restul documentului.</li>
+</ul>
+
+<b>Confidențialitate</b>
+<ul>
+<li>Singura permisiune: NFC</li>
+<li>Nicio dată citită din cip nu este salvată; memoria este ștearsă la ieșirea din rezultat sau la trecerea aplicației în fundal</li>
+<li>Capturile de ecran sunt blocate în toată aplicația</li>
+<li>Fără reclame, fără trackere, fără servicii Google</li>
+</ul>
+
+<b>Altele</b>
+<ul>
+<li>Introducere de patru pagini la prima pornire și ecranul „Ce conține cipul”</li>
+<li>Interfață în 45 de limbi</li>
+</ul>
+
+<b>Utilizare prevăzută</b>
+Sceau este destinat verificării propriului document sau a unui document prezentat de titularul său. În sensul GDPR, fotografia este o dată biometrică atunci când este folosită pentru o comparare automată: Sceau nu face o astfel de comparare. Verdictul nu arată dacă documentul a fost declarat pierdut sau furat.
+
+Sceau nu citește amprentele digitale sau irisul și nu scanează zona MRZ cu camera.
+
+Software liber sub licența GPL, exclusiv versiunea 3.

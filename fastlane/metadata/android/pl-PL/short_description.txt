@@ -1,0 +1,1 @@
+Odczytuje i weryfikuje chip dowodów osobistych i paszportów, w pełni offline

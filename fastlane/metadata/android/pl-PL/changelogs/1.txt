@@ -1,0 +1,6 @@
+Pierwsze wydanie publiczne.
+• Odczyt NFC paszportów biometrycznych, francuskiego dowodu osobistego i europejskich dowodów osobistych (PACE lub BAC)
+• Zdjęcie, tożsamość, podpis i dane dodatkowe
+• Passive, Chip i Active Authentication, werdykt i lista kontrolna
+• CSCA z ANTS i 3 państw, Master List BSI, import Master List i certyfikatów
+• Offline, bez przechowywania danych, 45 języków

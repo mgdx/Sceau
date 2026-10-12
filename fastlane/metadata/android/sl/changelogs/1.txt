@@ -1,0 +1,6 @@
+Prva javna izdaja.
+• Branje biometričnih potnih listov, francoske osebne izkaznice in evropskih osebnih izkaznic prek NFC (PACE ali BAC)
+• Fotografija, osebni podatki, podpis in dodatni podatki
+• Passive, Chip in Active Authentication, ocena in seznam preverjanj
+• CSCA agencije ANTS in 3 držav, seznam Master List urada BSI, uvoz seznamov Master List in potrdil
+• Brez povezave, brez hranjenja podatkov, 45 jezikov

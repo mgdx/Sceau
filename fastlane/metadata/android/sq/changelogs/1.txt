@@ -1,0 +1,6 @@
+Versioni i parë publik.
+• Lexim me NFC i pasaportave biometrike, i letërnjoftimit francez dhe i letërnjoftimeve evropiane (PACE ose BAC)
+• Fotografia, identiteti, nënshkrimi dhe të dhënat shtesë
+• Passive, Chip dhe Active Authentication, vlerësim dhe listë kontrolli
+• CSCA nga ANTS dhe 3 shtete, Master List e BSI-së, importim i Master List dhe certifikatave
+• Offline, asnjë e dhënë e ruajtur, 45 gjuhë
