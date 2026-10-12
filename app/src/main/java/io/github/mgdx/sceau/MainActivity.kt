@@ -29,27 +29,27 @@ class MainActivity : ComponentActivity() {
     private var nfcAdapter: NfcAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Activité exportée (lanceur) : aucune autre application ne doit pouvoir choisir l'écran
-        // d'ouverture par les extras de deep link que Navigation lit dans l'intent au premier
-        // setGraph (audit V27). Sceau n'attend rien de son intent : il est remplacé, avant
-        // la composition, par celui du lanceur, sans extras.
+        // Exported activity (launcher): no other app must be able to choose the opening screen
+        // through the deep link extras that Navigation reads from the intent on the first
+        // setGraph (audit V27). Sceau expects nothing from its intent: it is replaced, before
+        // composition, by the launcher one, without extras.
         intent = launcherIntent()
         super.onCreate(savedInstanceState)
-        // FLAG_SECURE sur toute l'activité, avant le premier dessin : l'accueil affiche le CAN
-        // et la MRZ saisis, que ni l'aperçu du multitâche (écrit sur disque par le système) ni
-        // une capture ne doivent contenir (audit V7). Aucun écran n'a besoin d'être capturé.
+        // FLAG_SECURE on the whole activity, before the first draw: the home screen shows the
+        // entered CAN and MRZ, which neither the recents preview (written to disk by the system)
+        // nor a screenshot must contain (audit V7). No screen needs to be captured.
         secureForLifetime(window)
-        // Aucun champ de l'appli ne doit être proposé à un service d'autofill (gestionnaire de
-        // mots de passe synchronisé) : CAN, numéro de document et dates (audit V14). Compose
-        // force IMPORTANT_FOR_AUTOFILL_YES sur sa propre vue ; l'exclusion est donc posée sur
-        // la vue racine, dont View.isImportantForAutofill() tient compte pour tous ses
-        // descendants, nœuds virtuels de la composition compris.
+        // No field of the app must be offered to an autofill service (synced password
+        // manager): CAN, document number and dates (audit V14). Compose forces
+        // IMPORTANT_FOR_AUTOFILL_YES on its own view; the exclusion is therefore set on the
+        // root view, which View.isImportantForAutofill() takes into account for all its
+        // descendants, virtual nodes of the composition included.
         window.decorView.importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_NO_EXCLUDE_DESCENDANTS
         enableEdgeToEdge()
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
-        // Mode lecteur armé à chaque reprise et chaque fois que le NFC repasse à ON au premier
-        // plan : un enableReaderMode appelé NFC éteint est perdu, et le volet rapide ne fait pas
-        // repasser l'activité par onResume. Sans cela, plus aucune carte n'est détectée.
+        // Reader mode armed on every resume and every time NFC switches back to ON in the
+        // foreground: an enableReaderMode called while NFC is off is lost, and the quick settings
+        // panel does not take the activity through onResume again. Without this, no card is detected anymore.
         if (nfcAdapter != null) {
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.RESUMED) {
@@ -68,7 +68,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    /** `singleTop` : un nouvel intent extérieur est neutralisé de la même façon (audit V27). */
+    /** `singleTop`: a new external intent is neutralized the same way (audit V27). */
     override fun onNewIntent(intent: Intent) {
         val launcher = launcherIntent()
         setIntent(launcher)
@@ -90,11 +90,11 @@ class MainActivity : ComponentActivity() {
 
     override fun onStop() {
         super.onStop()
-        // Mise en arrière-plan : lecture interrompue et données lues effacées (SPEC §8).
+        // Going to the background: read interrupted and data read cleared (SPEC §8).
         if (!isChangingConfigurations) session.onBackground()
     }
 
-    /** Appelé sur le thread du lecteur NFC. */
+    /** Called on the NFC reader thread. */
     private fun onTagDiscovered(tag: Tag) {
         val isoDep = IsoDep.get(tag) ?: return
         when (session.state.value) {
@@ -108,11 +108,11 @@ class MainActivity : ComponentActivity() {
             NfcAdapter.FLAG_READER_NFC_A or NfcAdapter.FLAG_READER_NFC_B or NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK
 
         /**
-         * Espacement des tests de présence du service NFC pendant qu'un tag est connecté. Sur
-         * certaines puces NXP, un test de présence intercalé pendant les calculs PACE d'une puce
-         * lente peut faire échouer l'échange en cours : 2 s les espace davantage (1 s
-         * auparavant), sans retarder notablement la détection d'un document retiré entre deux
-         * lectures. À ajuster d'après les essais sur appareil réel.
+         * Interval between the NFC service's presence checks while a tag is connected. On
+         * some NXP chips, a presence check slipped in during the PACE computations of a slow chip
+         * can make the ongoing exchange fail: 2 s spaces them out more (1 s previously), without
+         * noticeably delaying the detection of a document removed between two reads. To be
+         * tuned based on tests on real devices.
          */
         const val PRESENCE_CHECK_DELAY_MILLIS = 2_000
     }

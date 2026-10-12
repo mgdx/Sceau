@@ -17,10 +17,10 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.time.LocalDate
 
-/** Conversion des DG construits avec JMRTD vers les modèles de `:core` (personnes fictives). */
+/** Conversion of DGs built with JMRTD into the `:core` models (fictitious people). */
 class DataGroupParsersTest {
     @Test
-    fun dg1Passeport() {
+    fun dg1Passport() {
         val dg1 = DataGroupParsers.parseDg1(TestFixtures.dg1(), TODAY)
         assertEquals("P", dg1.documentCode)
         assertEquals("FRA", dg1.issuingState)
@@ -36,7 +36,7 @@ class DataGroupParsersTest {
     }
 
     @Test
-    fun dg1CarteIdentite_SiecleDeNaissance() {
+    fun dg1IdentityCard_CenturyOfBirth() {
         val born2010 = DataGroupParsers.parseDg1(TestFixtures.dg1(TestFixtures.td1Mrz("100212")), TODAY)
         assertEquals("ID", born2010.documentCode)
         assertEquals("X4RTBPFW4", born2010.documentNumber)
@@ -46,13 +46,13 @@ class DataGroupParsersTest {
         assertEquals(LocalDate.of(2010, 2, 12), born2010.dateOfBirth)
         assertEquals(LocalDate.of(2030, 12, 31), born2010.dateOfExpiry)
 
-        // 2030 serait dans le futur : naissance en 1930.
+        // 2030 would be in the future: born in 1930.
         val born1930 = DataGroupParsers.parseDg1(TestFixtures.dg1(TestFixtures.td1Mrz("300101")), TODAY)
         assertEquals(LocalDate.of(1930, 1, 1), born1930.dateOfBirth)
     }
 
     @Test
-    fun datesMrz() {
+    fun mrzDates() {
         assertEquals(LocalDate.of(2026, 9, 25), Dates.parsePast("260925", TODAY))
         assertEquals(LocalDate.of(1926, 9, 26), Dates.parsePast("260926", TODAY))
         assertEquals(LocalDate.of(2015, 3, 21), Dates.parsePast("20150321", TODAY))
@@ -64,7 +64,7 @@ class DataGroupParsersTest {
     }
 
     @Test
-    fun dg2_PremiereImageDuVisage() {
+    fun dg2_FirstFaceImage() {
         val jpeg = byteArrayOf(0xFF.toByte(), 0xD8.toByte(), 0xFF.toByte(), 0xE0.toByte(), 1, 2, 3, 4)
         val face =
             FaceImageInfo(
@@ -97,7 +97,7 @@ class DataGroupParsersTest {
     }
 
     @Test
-    fun formatsImage() {
+    fun imageFormats() {
         assertEquals(ImageFormat.JPEG2000, DataGroupParsers.formatOfMime("image/jp2"))
         assertEquals(ImageFormat.JPEG2000, DataGroupParsers.formatOfMime("image/jpeg2000"))
         assertEquals(ImageFormat.JPEG, DataGroupParsers.formatOfMime("image/jpeg"))
@@ -107,7 +107,7 @@ class DataGroupParsersTest {
     }
 
     @Test
-    fun dg11_ChampsVidesAbsents() {
+    fun dg11_EmptyFieldsMissing() {
         val bytes =
             DG11File(
                 "DUPONT<<JEAN<PIERRE",
@@ -140,7 +140,7 @@ class DataGroupParsersTest {
     }
 
     @Test
-    fun dg12_DateDeDelivrance() {
+    fun dg12_DateOfIssue() {
         val front = byteArrayOf(0xFF.toByte(), 0xD8.toByte(), 0xFF.toByte(), 0x00)
         val full = DG12File("PREFECTURE DE TEST", "20210315", null, null, null, front, null, null, null).encoded
         val dg12 = DataGroupParsers.parseDg12(full, TODAY)
@@ -156,7 +156,7 @@ class DataGroupParsersTest {
     }
 
     @Test
-    fun document_Dg11IllisibleAbsent() {
+    fun document_UnreadableDg11Missing() {
         val raw = mapOf(1 to TestFixtures.dg1(), 2 to TestFixtures.opaqueDataGroup(2), 11 to TestFixtures.opaqueDataGroup(11))
         val document = DataGroupParsers.document(raw, TODAY)
         assertEquals("MARTIN", document.dg1.primaryIdentifier)
@@ -167,13 +167,13 @@ class DataGroupParsersTest {
     }
 
     /**
-     * Fuzzing (DG2) : enregistrement de visage ISO 19794-5 annonçant un point caractéristique
-     * mais qui s'arrête avant ses deux octets réservés. JMRTD les saute par
-     * `while (skipped < 2) skipped += in.skip(2)` : `skip` renvoie 0 en fin de flux et la
-     * lecture bouclait sans fin. Le DG2 doit être illisible, donc absent.
+     * Fuzzing (DG2): ISO 19794-5 face record declaring a feature point but stopping before
+     * its two reserved bytes. JMRTD skips them with
+     * `while (skipped < 2) skipped += in.skip(2)`: `skip` returns 0 at end of stream and the
+     * read looped forever. The DG2 must be unreadable, hence missing.
      */
     @Test(timeout = 10_000)
-    fun dg2_PointCaracteristiqueTronque_PasDeBoucleSansFin() {
+    fun dg2_TruncatedFeaturePoint_NoInfiniteLoop() {
         val faceImage =
             hex("0000001A" + "0001" + "00" + "00" + "00" + "000000" + "0000" + "000000" + "000000") +
                 hex("01" + "01" + "0000" + "0000")
@@ -187,7 +187,7 @@ class DataGroupParsersTest {
 
     private fun hex(value: String): ByteArray = ByteArray(value.length / 2) { value.substring(2 * it, 2 * it + 2).toInt(16).toByte() }
 
-    /** TLV à longueur courte (moins de 128 octets), tag sur un ou deux octets. */
+    /** Short-length TLV (under 128 bytes), tag on one or two bytes. */
     private fun tlv(
         tag: Int,
         value: ByteArray,

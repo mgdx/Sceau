@@ -14,10 +14,10 @@ import java.time.format.FormatStyle
 import java.util.Locale
 
 /*
- * Aides Compose partagées par les écrans Résultat, Magasin de confiance et À propos.
+ * Compose helpers shared by the "Result", "Trust store" and "About" screens.
  */
 
-/** Locale courante de l'interface. */
+/** Current locale of the interface. */
 @Composable
 @ReadOnlyComposable
 fun currentLocale(): Locale {
@@ -25,7 +25,7 @@ fun currentLocale(): Locale {
     return if (locales.isEmpty) Locale.ROOT else locales[0]
 }
 
-/** Formateur de dates selon la locale courante (ex. « 25 sept. 2026 » ou « Sep 25, 2026 »). */
+/** Date formatter for the current locale (e.g. "25 sept. 2026" or "Sep 25, 2026"). */
 @Composable
 fun rememberDateFormatter(): (LocalDate) -> String {
     val locale = currentLocale()
@@ -36,19 +36,19 @@ fun rememberDateFormatter(): (LocalDate) -> String {
     }
 }
 
-/** Vrai si la palette courante est sombre (y compris avec les couleurs dynamiques). */
+/** True if the current palette is dark (including with dynamic colors). */
 @Composable
 @ReadOnlyComposable
 fun isDarkPalette(): Boolean = MaterialTheme.colorScheme.background.luminance() < 0.5f
 
-/** Résout un [UiText], y compris ses arguments qui sont eux-mêmes des [UiText]. */
+/** Resolves a [UiText], including its arguments that are themselves [UiText]s. */
 @Composable
 fun UiText.resolve(): String {
     val resolved = args.map { if (it is UiText) it.resolve() else it }
     return stringResource(res, *resolved.toTypedArray())
 }
 
-/** Drapeau et nom localisé d'un pays, ou libellé propre des codes ICAO spéciaux, ou code brut. */
+/** Flag and localized name of a country, or the dedicated label of special ICAO codes, or the raw code. */
 @Composable
 fun countryLabel(country: CountryRef): String {
     val special = country.special

@@ -97,8 +97,8 @@ import kotlinx.coroutines.withContext
 import java.time.LocalDate
 
 /**
- * Types MIME proposés au sélecteur : Master Lists CMS (`.ml`, `.der`, `.p7b`), certificats
- * (`.der`, `.cer`, `.crt`, `.pem`, D33), et tout fichier en repli.
+ * MIME types offered to the picker: CMS Master Lists (`.ml`, `.der`, `.p7b`), certificates
+ * (`.der`, `.cer`, `.crt`, `.pem`, D33), and any file as a fallback.
  */
 private val IMPORT_TYPES =
     arrayOf(
@@ -123,7 +123,7 @@ private sealed interface StoreUi {
     ) : StoreUi
 }
 
-/** Écran « Magasin de confiance » (SPEC §5.4). */
+/** "Trust store" screen (SPEC §5.4). */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TrustStoreScreen(
@@ -139,8 +139,8 @@ fun TrustStoreScreen(
     var reloadKey by remember { mutableIntStateOf(0) }
     var store by remember { mutableStateOf<StoreUi>(StoreUi.Loading) }
 
-    // Chargés à part du magasin fusionné (audit V22) : un import qui bloque ou fait échouer le
-    // chargement reste supprimable.
+    // Loaded separately from the merged store (audit V22): an import that blocks or breaks the
+    // loading can still be removed.
     var imported by remember { mutableStateOf<List<ImportedItem>>(emptyList()) }
     var busy by remember { mutableStateOf(false) }
     var pending by remember { mutableStateOf<ImportPreview?>(null) }
@@ -191,11 +191,11 @@ fun TrustStoreScreen(
             scope.launch {
                 busy = true
                 try {
-                    // Bornée en taille et en durée (audit V38) : `busy` revient à faux même si le
-                    // fournisseur ne livre jamais le fichier.
+                    // Bounded in size and duration (audit V38): `busy` goes back to false even if the
+                    // provider never delivers the file.
                     val bytes = readImportedFile({ context.contentResolver.openInputStream(uri) }, MAX_MASTER_LIST_BYTES)
-                    // Master List ou certificat seul, reconnu automatiquement (D33) ; limites
-                    // vérifiées avant la confirmation (D22).
+                    // Master List or standalone certificate, recognized automatically (D33); limits
+                    // checked before confirmation (D22).
                     pending = repository.previewImport(bytes)
                 } catch (e: CancellationException) {
                     throw e
@@ -390,7 +390,7 @@ fun TrustStoreScreen(
     }
 }
 
-/** Message d'un import refusé par les limites de [ImportLimits] (D22, D33). */
+/** Message for an import refused by the limits of [ImportLimits] (D22, D33). */
 private fun importLimitMessage(
     resources: Resources,
     decision: ImportDecision,
@@ -421,7 +421,7 @@ private fun importLimitMessage(
         }
     }
 
-/** Message d'un fichier déjà présent dans le magasin, refusé dès l'aperçu (D33). */
+/** Message for a file already present in the store, refused as early as the preview (D33). */
 private fun duplicateMessage(
     resources: Resources,
     duplicate: Duplicate,
@@ -473,8 +473,8 @@ private fun CenteredMessage(
 }
 
 /**
- * Magasin en cours de chargement ou en échec : [message], puis les éléments importés, qui restent
- * supprimables à l'unité (audit V22). Sans élément importé, le message seul, centré.
+ * Store still loading or failed to load: [message], then the imported items, which can still be
+ * removed one by one (audit V22). Without imported items, the message alone, centered.
  */
 @Composable
 private fun PendingStore(
@@ -523,18 +523,18 @@ private fun StoreList(
     val formatDate = rememberDateFormatter()
     val groups = remember(store, query) { filterGroups(store.groups, query) }
     val searching = query.isNotBlank()
-    // Sans cela, la liste garde l'élément qui était en tête et masque l'en-tête rétabli.
+    // Without this, the list keeps the item that was at the top and hides the restored header.
     val listState = rememberLazyListState()
     LaunchedEffect(query) { listState.scrollToItem(0) }
     Column(modifier = Modifier.fillMaxSize().padding(top = contentPadding.calculateTopPadding())) {
-        // Hors de la liste pour rester visible quand on la fait défiler.
+        // Outside the list so that it stays visible while the list is scrolled.
         SearchField(query, onQueryChange)
         LazyColumn(
             modifier = Modifier.fillMaxWidth().weight(1f),
             state = listState,
             contentPadding = PaddingValues(bottom = contentPadding.calculateBottomPadding()),
         ) {
-            // Pendant une recherche, les résultats viennent juste sous le champ.
+            // During a search, the results come right below the field.
             if (!searching) {
                 item(key = "header") {
                     StoreHeader(store, imported.isNotEmpty(), busy, onImport, onDelete)
@@ -643,8 +643,8 @@ private fun CountryHeader(
     expanded: Boolean,
     onToggle: () -> Unit,
 ) {
-    // Nom localisé déjà résolu hors du thread principal par groupByCountry : pas de
-    // Locale.getDisplayCountry à chaque composition d'un en-tête.
+    // Localized name already resolved off the main thread by groupByCountry: no
+    // Locale.getDisplayCountry on every composition of a header.
     val name = group.displayName
     val flag = Countries.flagEmoji(group.alpha2)
     val label =
@@ -745,9 +745,9 @@ private fun Badge(text: String) {
 }
 
 /**
- * Aperçu d'une Master List avant import. Si son signataire n'est émis par aucun CSCA déjà connu
- * ([anchored] faux), un avertissement s'affiche et « Importer » reste inactif tant que
- * l'utilisateur n'a pas coché une confirmation distincte (audit V34, D44).
+ * Preview of a Master List before import. If its signer is not issued by any already known CSCA
+ * ([anchored] false), a warning is shown and "Import" stays disabled until the user has checked
+ * a separate confirmation (audit V34, D44).
  */
 @Composable
 internal fun ImportConfirmDialog(
@@ -840,7 +840,7 @@ private fun DialogField(
     }
 }
 
-/** Section « Éléments importés » (D33) : une ligne par Master List ou certificat, supprimable à l'unité. */
+/** "Imported items" section (D33): one row per Master List or certificate, each removable individually. */
 private fun LazyListScope.importedItems(
     items: List<ImportedItem>,
     busy: Boolean,
@@ -949,9 +949,9 @@ private fun UnreadableItem() {
 }
 
 /**
- * Sujet X.500 lu dans un fichier importé ou un certificat du magasin, assaini (audit V23) : une
- * seule ligne logique, sans caractère de contrôle ni de formatage bidirectionnel, longueur et
- * nombre de lignes affichées bornés.
+ * X.500 subject read from an imported file or a store certificate, sanitized (audit V23): a
+ * single logical line, without control or bidirectional formatting characters, with bounded
+ * length and number of displayed lines.
  */
 @Composable
 private fun SubjectText(
@@ -966,7 +966,7 @@ private fun SubjectText(
     )
 }
 
-/** Nom localisé du pays [alpha2], le code assaini s'il est inconnu, ou « Pays non indiqué ». */
+/** Localized name of the country [alpha2], the sanitized code if it is unknown, or "Country not specified". */
 @Composable
 private fun countryLabel(alpha2: String): String {
     if (alpha2.isEmpty()) return stringResource(R.string.trust_country_unknown)

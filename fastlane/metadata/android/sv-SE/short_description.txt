@@ -1,1 +1,1 @@
-Läser och kontrollerar chippet i id-kort och pass, helt offline
+Läser och kontrollerar chippet i pass och id-kort, helt offline

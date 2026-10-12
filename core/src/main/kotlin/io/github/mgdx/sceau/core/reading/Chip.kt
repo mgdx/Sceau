@@ -10,18 +10,18 @@ import org.jmrtd.protocol.ReadBinaryAPDUSender
 import java.util.Locale
 
 /**
- * Puce vue par JMRTD : un [PassportService] au-dessus du transport de l'app.
+ * Chip as seen by JMRTD: a [PassportService] on top of the app's transport.
  *
- * - Longueur maximale des APDU : celle du transport, plafonnée à 256 (APDU courtes) pour ne
- *   jamais émettre d'APDU étendue, que beaucoup de puces refusent.
- * - Lecture par blocs de [BLOCK_SIZE] octets (223, valeur éprouvée de JMRTD).
- * - SFI désactivé : SELECT puis READ BINARY, pris en charge par toutes les puces.
- * - MAC des réponses en messagerie sécurisée toujours vérifié.
- * - Taille de chaque fichier plafonnée avant lecture ([FileSizeLimits], audit V11) : les
- *   fichiers sont lus par des `DefaultFileSystem` propres, au-dessus du même émetteur de
- *   messagerie sécurisée que [service], dont l'émetteur de READ BINARY contrôle l'en-tête.
- * - [reconnect] repart d'un état JMRTD neuf (service, messagerie sécurisée, systèmes de
- *   fichiers et leur cache) : rien de la liaison précédente n'est réutilisé.
+ * - Maximum APDU length: the transport's, capped at 256 (short APDUs) so as never to send
+ *   an extended APDU, which many chips refuse.
+ * - Reads in blocks of [BLOCK_SIZE] bytes (223, JMRTD's proven value).
+ * - SFI disabled: SELECT then READ BINARY, supported by all chips.
+ * - Response MAC under secure messaging always verified.
+ * - Size of each file capped before reading ([FileSizeLimits], audit V11): files are read
+ *   through dedicated `DefaultFileSystem`s, on top of the same secure messaging sender as
+ *   [service], whose READ BINARY sender checks the header.
+ * - [reconnect] starts from a fresh JMRTD state (service, secure messaging, file systems
+ *   and their cache): nothing from the previous connection is reused.
  */
 internal class Chip(
     val transport: CardTransport,
@@ -33,7 +33,7 @@ internal class Chip(
             .coerceAtMost(PassportService.NORMAL_MAX_TRANCEIVE_LENGTH)
             .coerceAtLeast(MIN_TRANSCEIVE_LENGTH)
 
-    /** État JMRTD d'une liaison, remplacé à chaque [reconnect]. */
+    /** JMRTD state of a connection, replaced on each [reconnect]. */
     private inner class Link {
         val service =
             PassportService(
@@ -47,47 +47,47 @@ internal class Chip(
 
         private val boundedSender = BoundedReadBinarySender(ReadBinaryAPDUSender(service.secureMessagingAPDUSender))
 
-        /** EF.CardAccess, au niveau MF : toujours en clair, comme le système de fichiers racine de JMRTD. */
+        /** EF.CardAccess, at MF level: always in clear, like JMRTD's root file system. */
         val rootFileSystem = DefaultFileSystem(boundedSender, false)
 
-        /** Fichiers de l'applet ICAO, sous la messagerie sécurisée courante de [service]. */
+        /** ICAO applet files, under the current secure messaging of [service]. */
         val appletFileSystem = DefaultFileSystem(boundedSender, false)
 
         /**
-         * Fichiers du MF lus sous messagerie sécurisée (EF.CardSecurity, PACE-CAM). Cache distinct
-         * de celui de l'applet : EF.CardSecurity (MF) et EF.SOD (applet) partagent le FID 011D.
+         * MF files read under secure messaging (EF.CardSecurity, PACE-CAM). Cache separate from
+         * the applet's: EF.CardSecurity (MF) and EF.SOD (applet) share FID 011D.
          */
         val securedMasterFileSystem = DefaultFileSystem(boundedSender, false)
     }
 
     private var link = Link()
 
-    /** Service JMRTD de la liaison courante (remplacé par [reconnect]). */
+    /** JMRTD service of the current connection (replaced by [reconnect]). */
     val service: PassportService get() = link.service
 
-    /** Relance l'erreur du transport (document retiré, délai) si elle s'est produite. */
+    /** Rethrows the transport error (document removed, timeout) if one occurred. */
     fun rethrowTransportFailure() {
         cardService.transportFailure?.let { throw it }
     }
 
     /**
-     * Réinitialise la liaison ([CardTransport.reconnect]) et oublie l'erreur de transport qui l'a
-     * motivée : la puce repart de zéro, sans messagerie sécurisée ni applet sélectionnée, et
-     * Sceau aussi (nouvel état JMRTD, sans clé de session ni cache de fichiers de la liaison
-     * précédente).
+     * Resets the connection ([CardTransport.reconnect]) and forgets the transport error that
+     * prompted it: the chip starts over, without secure messaging or a selected applet, and
+     * so does Sceau (new JMRTD state, without the session keys or file cache of the previous
+     * connection).
      */
     fun reconnect() {
-        // D'abord oubliée : un échec de la reconnexion elle-même doit ressortir tel quel.
+        // Forgotten first: a failure of the reconnection itself must come out unchanged.
         cardService.clearTransportFailure()
         transport.reconnect()
         link = Link().also { it.service.open() }
     }
 
     /**
-     * Lit un fichier entier (EF.CardAccess au niveau MF, ou un fichier de l'applet ICAO). Un
-     * fichier dont l'en-tête annonce plus que son plafond lève [SceauException.Unexpected]
-     * (`<fichier>-TOO_LARGE`) sans être lu ; une lecture qui n'avance plus lève
-     * [SceauException.ReadStalled] (`<fichier>`, audit V29).
+     * Reads a whole file (EF.CardAccess at MF level, or a file of the ICAO applet). A file
+     * whose header announces more than its cap throws [SceauException.Unexpected]
+     * (`<file>-TOO_LARGE`) without being read; a read that stops progressing throws
+     * [SceauException.ReadStalled] (`<file>`, audit V29).
      */
     fun readFile(fid: Short): ByteArray {
         val current = link
@@ -101,9 +101,9 @@ internal class Chip(
     }
 
     /**
-     * Lit un fichier du MF sous la messagerie sécurisée courante : EF.CardSecurity, après PACE
-     * et avant la sélection de l'applet ICAO (ICAO 9303-11 §4.4, PACE-CAM). Null s'il est absent
-     * ou illisible ; une erreur de transport, ou une lecture qui n'avance plus (V29), est relancée.
+     * Reads an MF file under the current secure messaging: EF.CardSecurity, after PACE and
+     * before selecting the ICAO applet (ICAO 9303-11 §4.4, PACE-CAM). Null if absent or
+     * unreadable; a transport error, or a read that stops progressing (V29), is rethrown.
      */
     fun readOptionalSecuredMasterFile(fid: Short): ByteArray? =
         try {
@@ -115,8 +115,8 @@ internal class Chip(
         }
 
     /**
-     * Audit V29 : une puce qui cesse de livrer un fichier, même facultatif, interrompt la lecture
-     * ([SceauException.ReadStalled]) au lieu de le faire passer pour absent.
+     * Audit V29: a chip that stops delivering a file, even an optional one, interrupts the read
+     * ([SceauException.ReadStalled]) instead of making it look absent.
      */
     private fun rethrowReadStalled(e: Exception) {
         if (e is SceauException.ReadStalled) throw e
@@ -143,8 +143,8 @@ internal class Chip(
         }
 
     /**
-     * Lit un fichier ; null s'il est absent ou illisible. Une erreur de transport, ou une lecture
-     * qui n'avance plus (audit V29), est relancée.
+     * Reads a file; null if absent or unreadable. A transport error, or a read that stops
+     * progressing (audit V29), is rethrown.
      */
     fun readOptionalFile(fid: Short): ByteArray? =
         try {
@@ -167,15 +167,15 @@ internal class Chip(
     }
 }
 
-/** Échec technique d'une étape, avec une étiquette courte et sans donnée personnelle. */
+/** Technical failure of a step, with a short label and no personal data. */
 internal class StepFailure(
     val tag: String,
     cause: Throwable,
 ) : Exception(tag, cause)
 
 /**
- * Identifiant technique stable d'une erreur inattendue : étape, étiquette éventuelle,
- * classe d'exception et SW en hexadécimal. Jamais le message de l'exception.
+ * Stable technical identifier of an unexpected error: step, optional label, exception
+ * class and SW in hexadecimal. Never the exception message.
  */
 internal fun technicalCode(
     step: String,

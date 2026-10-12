@@ -1,12 +1,12 @@
-# Glossaire — arabe (ar)
+# Glossary — Arabic (ar)
 
-Référence de vocabulaire pour `app/src/main/res/values-ar/`.
+Vocabulary reference for `app/src/main/res/values-ar/`.
 
-| Source FR | Cible | Note |
+| French source | Target | Note |
 |---|---|---|
-| puce | الشريحة | terme courant des cartes à puce en arabe |
+| puce | الشريحة | common term for smart cards in Arabic |
 | document | وثيقة |  |
-| titulaire | حامل الوثيقة | « حامل » = porteur, usage des passeports |
+| titulaire | حامل الوثيقة | “حامل” = bearer, passport usage |
 | magasin de confiance | مخزن الثقة |  |
 | certificat | شهادة |  |
 | certificat de lien | شهادة ربط |  |
@@ -21,12 +21,12 @@ Référence de vocabulaire pour `app/src/main/res/values-ar/`.
 | lire / lecture | قراءة |  |
 | réessayer | إعادة المحاولة |  |
 | annuler | إلغاء |  |
-| effacer (résultat) | محو | distinct de « حذف » (supprimer) |
+| effacer (résultat) | محو | distinct from “حذف” (delete) |
 | importer | استيراد |  |
 | supprimer | حذف |  |
 | Plus d’options | خيارات إضافية |  |
 | À propos | حول التطبيق |  |
-| Authentique | أصلية | accordé au féminin (الوثيقة) |
+| Authentique | أصلية | feminine agreement (الوثيقة) |
 | Signature valide, puce non vérifiée | التوقيع صالح، والشريحة غير متحقَّق منها |  |
 | Émetteur inconnu | جهة إصدار غير معروفة |  |
 | Échec (verdict) | فشل التحقق |  |
@@ -37,6 +37,6 @@ Référence de vocabulaire pour `app/src/main/res/values-ar/`.
 | date d’expiration | تاريخ الانتهاء |  |
 | nationalité | الجنسية |  |
 | date de délivrance | تاريخ الإصدار |  |
-| JJ / MM / AAAA | يوم / شهر / سنة | mots entiers : pas d’abréviation usuelle en arabe |
-| RGPD | اللائحة العامة لحماية البيانات (GDPR) | pas d’acronyme arabe établi |
-| Master List, CAN, MRZ, DS, CSCA, SOD, DGn | inchangés (latin) | précédés d’un mot arabe (« قائمة Master List », « رقم CAN ») pour que la phrase commence en écriture arabe |
+| JJ / MM / AAAA | يوم / شهر / سنة | whole words: no usual abbreviation in Arabic |
+| RGPD | اللائحة العامة لحماية البيانات (GDPR) | no established Arabic acronym |
+| Master List, CAN, MRZ, DS, CSCA, SOD, DGn | unchanged (Latin script) | preceded by an Arabic word (“قائمة Master List”, “رقم CAN”) so that the sentence starts in Arabic script |

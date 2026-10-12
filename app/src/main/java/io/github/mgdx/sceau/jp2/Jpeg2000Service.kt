@@ -18,19 +18,19 @@ import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
 /**
- * Service de décodage des images de la puce (JPEG 2000 et JPEG), déclaré
- * `android:isolatedProcess="true"` dans le manifeste (décision D23) : il tourne dans un
- * processus dédié, sous un UID isolé, sans aucune permission ni accès aux fichiers de l'app.
- * C'est le seul endroit où `libsceau_jp2.so` (OpenJPEG) est chargée et où [Jpeg2000Decoder] est
- * appelé, et le seul où `BitmapFactory` reçoit des octets venus de la puce (audit V18).
+ * Decoding service for the chip's images (JPEG 2000 and JPEG), declared
+ * `android:isolatedProcess="true"` in the manifest (decision D23): it runs in a dedicated
+ * process, under an isolated UID, without any permission or access to the app's files.
+ * It is the only place where `libsceau_jp2.so` (OpenJPEG) is loaded and where [Jpeg2000Decoder] is
+ * called, and the only one where `BitmapFactory` receives bytes coming from the chip (audit V18).
  *
- * Le format est reconnu aux seuls octets du flux ([detectImageFormat]) : JPEG (`FF D8 FF`) vers
- * `BitmapFactory`, avec les bornes de [DecodeLimits] ; JP2 ou J2K vers OpenJPEG ; tout le
- * reste est refusé sans être décodé.
+ * The format is recognized from the stream's bytes alone ([detectImageFormat]): JPEG (`FF D8 FF`) to
+ * `BitmapFactory`, with the bounds of [DecodeLimits]; JP2 or J2K to OpenJPEG; everything else
+ * is refused without being decoded.
  *
- * Un processus neuf sert un seul décodage : [IsolatedJpeg2000Decoder] se lie, transfère le
- * flux, lit les pixels puis se détache ; [onDestroy] termine alors le processus, avec tout ce
- * que le décodeur a pu laisser dans son tas. Protocole : [Jpeg2000Protocol].
+ * A fresh process serves a single decoding: [IsolatedJpeg2000Decoder] binds, transfers the
+ * stream, reads the pixels then unbinds; [onDestroy] then terminates the process, along with
+ * everything the decoder may have left in its heap. Protocol: [Jpeg2000Protocol].
  */
 class Jpeg2000Service : Service() {
     private val binder = DecoderBinder()
@@ -38,24 +38,24 @@ class Jpeg2000Service : Service() {
     override fun onBind(intent: Intent?): IBinder = binder
 
     override fun onDestroy() {
-        // Jamais d'attente du verrou ici (audit V26) : après un délai dépassé, le thread binder
-        // le tient pendant tout le décodage, et le processus survivrait jusqu'à sa fin. Les
-        // tampons ne sont effacés que s'ils sont libres ; sinon ils disparaissent avec le
-        // processus, terminé dans tous les cas.
+        // Never wait for the lock here (audit V26): after a timeout, the binder thread holds
+        // it for the whole decoding, and the process would survive until it ends. The buffers
+        // are wiped only if they are free; otherwise they disappear with the process, which is
+        // terminated in every case.
         binder.wipeIfIdle()
         super.onDestroy()
         Process.killProcess(Process.myPid())
     }
 
     internal class DecoderBinder : Binder() {
-        /** Tenu pendant chaque transaction, décodage compris. */
+        /** Held during each transaction, decoding included. */
         internal val lock = ReentrantLock()
         private var input: SequentialBytes? = null
         private var pixels: IntArray? = null
 
         fun wipe() = lock.withLock { wipeLocked() }
 
-        /** Efface les tampons si aucune transaction n'est en cours, sans jamais attendre. */
+        /** Wipes the buffers if no transaction is in progress, without ever waiting. */
         fun wipeIfIdle() {
             if (!lock.tryLock()) return
             try {
@@ -172,7 +172,7 @@ class Jpeg2000Service : Service() {
                 chunk.fill(0)
             }
             if (offset + count == argb.size) {
-                // Dernier morceau : les pixels ne restent plus que chez l'appelant.
+                // Last chunk: the pixels now remain only with the caller.
                 argb.fill(0)
                 pixels = null
             }
@@ -182,10 +182,10 @@ class Jpeg2000Service : Service() {
 }
 
 /**
- * Décodage JPEG par `BitmapFactory`, dans le processus isolé seulement. Bornes de l'audit V2 :
- * dimensions lues d'abord (`inJustDecodeBounds`), refus au-delà de
- * [DecodeLimits.MAX_DECLARED_PIXELS], sous-échantillonnage puis réduction pour qu'aucun côté ne
- * dépasse [DecodeLimits.MAX_SIDE], donc [Jpeg2000Protocol.MAX_OUTPUT_SIDE].
+ * JPEG decoding by `BitmapFactory`, in the isolated process only. Bounds from audit V2:
+ * dimensions read first (`inJustDecodeBounds`), refusal beyond
+ * [DecodeLimits.MAX_DECLARED_PIXELS], subsampling then downscaling so that no side
+ * exceeds [DecodeLimits.MAX_SIDE], hence [Jpeg2000Protocol.MAX_OUTPUT_SIDE].
  */
 private fun decodeJpeg(bytes: ByteArray): Bitmap? {
     val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
@@ -197,6 +197,6 @@ private fun decodeJpeg(bytes: ByteArray): Bitmap? {
             inSampleSize = sample
         }
     val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size, options) ?: return null
-    // Filet de sécurité : le décodeur ne doit jamais rendre plus grand qu'annoncé.
+    // Safety net: the decoder must never return something larger than announced.
     return limitSide(bitmap)
 }

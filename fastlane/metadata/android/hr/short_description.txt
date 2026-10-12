@@ -1,1 +1,1 @@
-Očitava i provjerava čip osobnih iskaznica i putovnica, potpuno izvanmrežno
+Očitava i provjerava čip putovnica i osobnih iskaznica, potpuno izvanmrežno

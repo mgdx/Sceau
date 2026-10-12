@@ -1,1 +1,1 @@
-Kimlik kartı ve pasaport çipini okur ve doğrular, tamamen çevrimdışı
+Pasaport ve kimlik kartı çipini okur ve doğrular, tamamen çevrimdışı

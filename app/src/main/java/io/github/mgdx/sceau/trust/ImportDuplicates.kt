@@ -3,37 +3,37 @@ package io.github.mgdx.sceau.trust
 import io.github.mgdx.sceau.core.trust.TrustAnchor
 import io.github.mgdx.sceau.core.trust.TrustSource
 
-/** Fichier choisi qui n'apporterait rien au magasin, reconnu dès l'aperçu (D33). */
+/** Chosen file that would add nothing to the store, detected as early as the preview (D33). */
 sealed interface Duplicate {
-    /** Certificat déjà importé seul (même DER, quel que soit le format du fichier choisi). */
+    /** Certificate already imported standalone (same DER, whatever the format of the chosen file). */
     data object ImportedCertificate : Duplicate
 
-    /** Certificat déjà présent par une autre [source] : embarquée ou Master List importée. */
+    /** Certificate already present through another [source]: embedded or imported Master List. */
     data class KnownCertificate(
         val source: TrustSource,
     ) : Duplicate
 
-    /** Master List identique, octet pour octet, à une Master List déjà importée. */
+    /** Master List identical, byte for byte, to an already imported Master List. */
     data object ImportedMasterList : Duplicate
 
-    /** Master List identique, octet pour octet, à la Master List embarquée. */
+    /** Master List identical, byte for byte, to the embedded Master List. */
     data object EmbeddedMasterList : Duplicate
 }
 
-/** Import refusé car le fichier est déjà dans le magasin ; le message ne contient qu'un code stable. */
+/** Import refused because the file is already in the store; the message contains only a stable code. */
 class DuplicateImportException(
     val duplicate: Duplicate,
 ) : Exception("IMPORT_DUPLICATE")
 
 /**
- * Détection des doublons à l'import (D33), sur l'empreinte SHA-256 du DER d'un certificat ou du
- * fichier d'une Master List. Fonctions pures : les empreintes sont en hexadécimal minuscule.
+ * Duplicate detection at import (D33), on the SHA-256 fingerprint of a certificate's DER or of a
+ * Master List file. Pure functions: fingerprints are in lowercase hexadecimal.
  */
 object ImportDuplicates {
     /**
-     * Doublon éventuel du certificat d'empreinte [sha256], au regard des certificats importés
-     * seuls ([importedCertificates], empreintes des fichiers `.der`) et du magasin fusionné
-     * ([storeSources], source retenue par empreinte). Null si le certificat est nouveau.
+     * Possible duplicate of the certificate with fingerprint [sha256], with respect to the standalone
+     * imported certificates ([importedCertificates], fingerprints of the `.der` files) and the merged
+     * store ([storeSources], source retained per fingerprint). Null if the certificate is new.
      */
     fun certificate(
         sha256: String,
@@ -46,9 +46,9 @@ object ImportDuplicates {
     }
 
     /**
-     * Doublon éventuel de la Master List d'empreinte [sha256], au regard des Master Lists
-     * importées ([importedMasterLists]) et embarquées ([embeddedMasterLists]). Null si le fichier
-     * est nouveau, même si tous ses certificats sont déjà connus : il peut être plus récent.
+     * Possible duplicate of the Master List with fingerprint [sha256], with respect to the imported
+     * ([importedMasterLists]) and embedded ([embeddedMasterLists]) Master Lists. Null if the file
+     * is new, even if all its certificates are already known: it may be more recent.
      */
     fun masterList(
         sha256: String,
@@ -61,13 +61,13 @@ object ImportDuplicates {
             else -> null
         }
 
-    /** Nombre de certificats distincts parmi [certificates] (empreintes) absents de [store]. */
+    /** Number of distinct certificates among [certificates] (fingerprints) absent from [store]. */
     fun newCertificateCount(
         certificates: Collection<String>,
         store: Set<String>,
     ): Int = certificates.toSet().count { it !in store }
 
-    /** Source retenue pour chaque empreinte du magasin : la plus prioritaire en cas de doublon. */
+    /** Source retained for each fingerprint in the store: the highest-priority one in case of duplicates. */
     fun sourcesBySha256(anchors: List<TrustAnchor>): Map<String, TrustSource> =
         anchors.groupBy { it.sha256 }.mapValues { (_, list) -> list.minOf { it.source } }
 }

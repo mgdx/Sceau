@@ -11,8 +11,8 @@ import java.security.cert.X509Certificate
 import javax.security.auth.x500.X500Principal
 
 /**
- * Magasin de confiance de test, indépendant de `TrustStores` : n'utilise que les membres
- * de [TrustAnchor] qui ne dépendent pas d'une implémentation (certificat et source).
+ * Test trust store, independent of `TrustStores`: uses only the members of [TrustAnchor]
+ * that do not depend on an implementation (certificate and source).
  */
 class TestTrustStore(
     override val anchors: List<TrustAnchor>,

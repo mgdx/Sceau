@@ -64,23 +64,23 @@ import java.util.concurrent.CountDownLatch
 import kotlin.math.abs
 
 /**
- * Captures d'écran des métadonnées F-Droid (D39), écrites dans
- * `fastlane/metadata/android/<langue>/images/phoneScreenshots/`.
+ * Screenshots for the F-Droid metadata (D39), written to
+ * `fastlane/metadata/android/<language>/images/phoneScreenshots/`.
  *
- * `FLAG_SECURE` est posé sur toute l'activité (SPEC §8) : aucune capture n'est possible sur
- * appareil, et ce drapeau n'est levé dans aucune variante. Les vrais écrans sont donc rendus
- * hors appareil par Robolectric, avec le rendu natif d'Android (`GraphicsMode.NATIVE`), comme
- * `TextOverflowTest` (D28), sur un téléphone de 1080 × 2400 px (360 × 800 dp en xxhdpi), thème
- * clair. Seules les données du mode démo y figurent : CNIe spécimen de `:testchip`.
+ * `FLAG_SECURE` is set on the whole activity (SPEC §8): no screenshot is possible on a device,
+ * and this flag is not lifted in any variant. The real screens are therefore rendered off-device
+ * by Robolectric, with Android's native rendering (`GraphicsMode.NATIVE`), like
+ * `TextOverflowTest` (D28), on a 1080 × 2400 px phone (360 × 800 dp at xxhdpi), light theme.
+ * Only demo mode data appears: the specimen CNIe from `:testchip`.
  *
- * Les images de la puce sont décodées en production dans un processus isolé (D23, audit V18),
- * le portrait spécimen en JPEG 2000 par OpenJPEG, absent sous Robolectric. Le service est
- * remplacé ici, et ici seulement, par [SpecimenPortraitBinder], qui parle le même protocole
- * binder et rend les pixels de la silhouette synthétique d'origine
- * (`testchip/tools/generate-specimen-portrait.sh`) ou de la signature spécimen.
+ * In production, chip images are decoded in an isolated process (D23, audit V18), the specimen
+ * portrait in JPEG 2000 by OpenJPEG, which is absent under Robolectric. Here, and only here, the
+ * service is replaced by [SpecimenPortraitBinder], which speaks the same binder protocol and
+ * returns the pixels of the original synthetic silhouette
+ * (`testchip/tools/generate-specimen-portrait.sh`) or of the specimen signature.
  *
- * Exclu de `./gradlew check` : la tâche de test ne le lance que si `SCEAU_SCREENSHOTS=1`
- * (voir `app/build.gradle.kts`), qui fournit aussi le dossier de sortie.
+ * Excluded from `./gradlew check`: the test task only runs it when `SCEAU_SCREENSHOTS=1`
+ * (see `app/build.gradle.kts`), which also provides the output directory.
  */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
@@ -102,15 +102,15 @@ class StoreScreenshots {
 
     @Test
     @Config(qualifiers = "fr-rFR-w360dp-h800dp-notnight-xxhdpi")
-    fun francais() = generate("fr-FR")
+    fun french() = generate("fr-FR")
 
     @Test
     @Config(qualifiers = "en-rUS-w360dp-h800dp-notnight-xxhdpi")
-    fun anglais() = generate("en-US")
+    fun english() = generate("en-US")
 
     private fun generate(language: String) {
         val root = System.getProperty(OUTPUT_PROPERTY)
-        assumeTrue("$OUTPUT_PROPERTY absent : lancer avec SCEAU_SCREENSHOTS=1", !root.isNullOrBlank())
+        assumeTrue("$OUTPUT_PROPERTY missing: run with SCEAU_SCREENSHOTS=1", !root.isNullOrBlank())
         outputDir = File(root, "$language/images/phoneScreenshots").apply { mkdirs() }
 
         val activity = compose.activity
@@ -125,8 +125,8 @@ class StoreScreenshots {
                 scene?.let { current -> key(current.name) { current.content() } }
             }
         }
-        // Horloge manuelle, comme TextOverflowTest : les indicateurs de progression infinis
-        // empêcheraient Compose d'être jamais « au repos ».
+        // Manual clock, like TextOverflowTest: infinite progress indicators would keep Compose
+        // from ever being "idle".
         compose.mainClock.autoAdvance = false
         settle()
 
@@ -139,41 +139,41 @@ class StoreScreenshots {
         settle()
     }
 
-    // --- Scènes ------------------------------------------------------------------------------
+    // --- Scenes ------------------------------------------------------------------------------
 
     private fun home() {
         session.clear()
         session.selectTab(DocumentTab.PASSPORT)
-        show("1_accueil") { HomeScreen(session, onRead = {}, onOpenTrustStore = {}, onOpenAbout = {}) }
+        show("1_home") { HomeScreen(session, onRead = {}, onOpenTrustStore = {}, onOpenAbout = {}) }
     }
 
-    /** Lecture retenue au début de la lecture des données : deux étapes cochées, une en cours. */
+    /** Reading held at the start of data reading: two steps checked, one in progress. */
     private fun reading() {
         val card = SimulatedDocuments.frenchIdCard()
         val held = HoldingTransport(card.chip()) { (session.state.value as? ReadState.Reading)?.current == Step.READ_DATA }
         session.startDemo(DemoCard(held, checkNotNull(card.canKey), card.trustStore))
-        awaitUi("lecture des données") { (session.state.value as? ReadState.Reading)?.current == Step.READ_DATA }
-        show("2_lecture") { ReadingScreen(session, onDone = {}, onCancel = {}) }
+        awaitUi("data reading") { (session.state.value as? ReadState.Reading)?.current == Step.READ_DATA }
+        show("2_reading") { ReadingScreen(session, onDone = {}, onCancel = {}) }
         session.clear()
     }
 
     private fun result() {
         session.startDemo(checkNotNull(DemoMode.newSimulatedCnie()))
-        awaitUi("rapport de la démo") { session.state.value is ReadState.Done }
+        awaitUi("demo report") { session.state.value is ReadState.Done }
         assertEquals(Verdict.AUTHENTIC, (session.state.value as ReadState.Done).report.verdict)
-        show("3_resultat", ready = {
-            awaitUi("portrait affiché") { hasNode(contentDescription(R.string.result_photo_description)) }
-            assertTrue("portrait indisponible", !hasNode(hasText(string(R.string.result_photo_unavailable))))
+        show("3_result", ready = {
+            awaitUi("portrait shown") { hasNode(contentDescription(R.string.result_photo_description)) }
+            assertTrue("portrait unavailable", !hasNode(hasText(string(R.string.result_photo_unavailable))))
         }) { ResultScreen(session, onClear = {}) }
         session.clear()
     }
 
-    /** Magasin de confiance, premier pays de la liste déplié. */
+    /** Trust store, first country of the list expanded. */
     private fun trustStore() {
-        show("4_magasin", ready = {
-            awaitUi("magasin chargé") { hasNode(hasText(string(R.string.trust_import))) }
+        show("4_trust_store", ready = {
+            awaitUi("store loaded") { hasNode(hasText(string(R.string.trust_import))) }
             val expand =
-                SemanticsMatcher("déplier un pays") {
+                SemanticsMatcher("expand a country") {
                     it.config.getOrNull(SemanticsActions.OnClick)?.label == string(R.string.trust_country_expand)
                 }
             compose.onAllNodes(expand)[0].performSemanticsAction(SemanticsActions.OnClick)
@@ -183,11 +183,11 @@ class StoreScreenshots {
 
     private fun introduction() {
         show("5_introduction", ready = {
-            assertTrue("introduction absente", hasNode(hasText(string(R.string.learn_intro_skip))))
+            assertTrue("introduction missing", hasNode(hasText(string(R.string.learn_intro_skip))))
         }) { IntroScreen(onFinish = {}, onOpenChipContents = {}) }
     }
 
-    // --- Rendu et capture ----------------------------------------------------------------------
+    // --- Rendering and capture -----------------------------------------------------------------
 
     private fun show(
         name: String,
@@ -204,23 +204,23 @@ class StoreScreenshots {
     }
 
     private fun capture(name: String) {
-        // PixelCopy de la fenêtre, rendue par Robolectric. `captureToImage()` attend un nouveau
-        // dessin, qui ne vient jamais avec l'horloge manuelle.
+        // PixelCopy of the window, rendered by Robolectric. `captureToImage()` waits for a new
+        // draw, which never comes with the manual clock.
         val window = compose.activity.window
         val bitmap = createBitmap(window.decorView.width, window.decorView.height)
         var status = -1
         PixelCopy.request(window, bitmap, { status = it }, Handler(Looper.getMainLooper()))
         shadowOf(Looper.getMainLooper()).idle()
-        assertEquals("copie de $name", PixelCopy.SUCCESS, status)
-        assertEquals("largeur de $name", SCREEN_WIDTH_PX, bitmap.width)
-        assertEquals("hauteur de $name", SCREEN_HEIGHT_PX, bitmap.height)
+        assertEquals("copy of $name", PixelCopy.SUCCESS, status)
+        assertEquals("width of $name", SCREEN_WIDTH_PX, bitmap.width)
+        assertEquals("height of $name", SCREEN_HEIGHT_PX, bitmap.height)
         File(outputDir, "$name.png").outputStream().use { out ->
-            assertTrue("écriture de $name", bitmap.compress(Bitmap.CompressFormat.PNG, PNG_QUALITY, out))
+            assertTrue("writing $name", bitmap.compress(Bitmap.CompressFormat.PNG, PNG_QUALITY, out))
         }
         bitmap.recycle()
     }
 
-    // --- Synchronisation -------------------------------------------------------------------------
+    // --- Synchronization -------------------------------------------------------------------------
 
     private fun settle(frames: Int = 5) {
         repeat(frames) {
@@ -230,7 +230,7 @@ class StoreScreenshots {
         compose.waitForIdle()
     }
 
-    /** Attend en temps réel : lecture, chargements et décodage tournent hors du thread principal. */
+    /** Waits in real time: reading, loading and decoding run off the main thread. */
     private fun awaitUi(
         what: String,
         condition: () -> Boolean,
@@ -239,7 +239,7 @@ class StoreScreenshots {
         while (true) {
             settle(frames = 1)
             if (condition()) return
-            if (System.nanoTime() > deadline) fail("délai dépassé : $what")
+            if (System.nanoTime() > deadline) fail("timed out: $what")
             Thread.sleep(POLL_MILLIS)
         }
     }
@@ -261,7 +261,7 @@ class StoreScreenshots {
     }
 
     private companion object {
-        /** Dossier `fastlane/metadata/android`, fourni par Gradle quand `SCEAU_SCREENSHOTS=1`. */
+        /** The `fastlane/metadata/android` directory, provided by Gradle when `SCEAU_SCREENSHOTS=1`. */
         const val OUTPUT_PROPERTY = "sceau.screenshots.dir"
         const val SCREEN_WIDTH_PX = 1080
         const val SCREEN_HEIGHT_PX = 2400
@@ -273,7 +273,7 @@ class StoreScreenshots {
     }
 }
 
-/** Relaie [delegate], mais bloque toute APDU tant que [hold] est vrai, jusqu'à la fermeture. */
+/** Relays to [delegate], but blocks every APDU while [hold] is true, until closed. */
 private class HoldingTransport(
     private val delegate: CardTransport,
     private val hold: () -> Boolean,
@@ -302,11 +302,11 @@ private class HoldingTransport(
 }
 
 /**
- * Remplaçant de `Jpeg2000Service` pour les captures seulement : même protocole binder
- * ([Jpeg2000Protocol]), mais n'accepte que les deux images de la CNIe spécimen de `:testchip`.
- * Pour le portrait (JPEG 2000), il rend les pixels de la silhouette synthétique dont il est
- * l'encodage ; la signature (JPEG, décodée elle aussi par le service depuis l'audit V18) est
- * décodée par `BitmapFactory`, comme dans le vrai service.
+ * Stand-in for `Jpeg2000Service`, for screenshots only: same binder protocol
+ * ([Jpeg2000Protocol]), but only accepts the two images of the `:testchip` specimen CNIe. For
+ * the portrait (JPEG 2000), it returns the pixels of the synthetic silhouette it encodes; the
+ * signature (JPEG, also decoded by the service since audit V18) is decoded by `BitmapFactory`,
+ * as in the real service.
  */
 private class SpecimenPortraitBinder : Binder() {
     private val expected = SimulatedDocuments.specimenPortrait()
@@ -374,7 +374,7 @@ private class SpecimenPortraitBinder : Binder() {
         const val PORTRAIT_WIDTH = 240
         const val PORTRAIT_HEIGHT = 320
 
-        /** Même dessin que `testchip/tools/generate-specimen-portrait.sh`, en ARGB. */
+        /** Same drawing as `testchip/tools/generate-specimen-portrait.sh`, in ARGB. */
         fun specimenSilhouette(): IntArray {
             val w = PORTRAIT_WIDTH
             val h = PORTRAIT_HEIGHT

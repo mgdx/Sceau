@@ -1,18 +1,18 @@
-# Glossaire bosnien (values-bs, latin, ijekavien)
+# Bosnian glossary (values-bs, Latin script, Ijekavian)
 
-| Source FR | Cible | Note |
+| French source | Target | Note |
 |---|---|---|
 | puce | čip | |
 | document | dokument | |
 | document d’identité | identifikacijski dokument | |
-| carte d’identité | lična karta | usage de BiH |
-| passeport | pasoš | usage de BiH |
+| carte d’identité | lična karta | BiH usage |
+| passeport | pasoš | BiH usage |
 | titulaire | nosilac | |
-| magasin de confiance | pouzdani certifikati | tournure des réglages Android |
+| magasin de confiance | pouzdani certifikati | Android settings wording |
 | certificat | certifikat | |
-| certificat de lien | povezujući certifikat | link certificate ICAO |
-| empreinte (certificat) | otisak | « SHA-256 otisak » |
-| empreinte (groupe de données) | heš | hash des DG |
+| certificat de lien | povezujući certifikat | ICAO link certificate |
+| empreinte (certificat) | otisak | “SHA-256 otisak” |
+| empreinte (groupe de données) | heš | hash of the DGs |
 | groupe de données | grupa podataka | |
 | émetteur | izdavalac | |
 | pays émetteur / État émetteur | država izdavanja | |
@@ -22,20 +22,20 @@
 | Signature valide, puce non vérifiée | Važeći potpis, čip nije provjeren | verdict |
 | Émetteur inconnu | Nepoznat izdavalac | verdict |
 | Échec (verdict) | Provjera nije uspjela | verdict |
-| Réussie / Échec (contrôle) | Uspješna / Neuspješna | statut d’une vérification |
+| Réussie / Échec (contrôle) | Uspješna / Neuspješna | status of a check |
 | lire | očitaj / očitavanje | |
-| réessayer | Pokušaj ponovo | bouton Android |
-| annuler | Otkaži | bouton Android |
+| réessayer | Pokušaj ponovo | Android button |
+| annuler | Otkaži | Android button |
 | effacer | Obriši | |
 | importer | Uvezi | |
 | supprimer | Izbriši | |
 | Plus d’options | Više opcija | |
 | À propos | O aplikaciji | |
-| fichier | fajl | usage des interfaces bosniennes |
+| fichier | fajl | usage in Bosnian interfaces |
 | nom / prénoms | prezime / ime | |
 | date d’expiration | datum isteka važenja | |
 | nationalité | državljanstvo | |
 | sexe | spol | |
 | RGPD | GDPR (Opća uredba o zaštiti podataka) | |
-| Master List | Master List | invariable, traité au féminin (lista) |
+| Master List | Master List | invariable, treated as feminine (lista) |
 | JJ / MM / AAAA | DD / MM / GGGG | |

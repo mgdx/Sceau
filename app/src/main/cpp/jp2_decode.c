@@ -1,5 +1,5 @@
 /*
- * Sceau - décodage JPEG 2000 en mémoire au-dessus d'OpenJPEG.
+ * Sceau - in-memory JPEG 2000 decoding on top of OpenJPEG.
  * SPDX-License-Identifier: GPL-3.0-only
  */
 #include "jp2_decode.h"
@@ -10,14 +10,14 @@
 #include "jp2_alloc.h"
 #include "openjpeg.h"
 
-/* Signatures : boîte « jP  » d'un fichier JP2, marqueurs SOC + SIZ d'un flux J2K brut. */
+/* Signatures: "jP  " box of a JP2 file, SOC + SIZ markers of a raw J2K stream. */
 static const uint8_t JP2_SIGNATURE[] = {0x00, 0x00, 0x00, 0x0C, 0x6A, 0x50, 0x20, 0x20};
 static const uint8_t J2K_SIGNATURE[] = {0xFF, 0x4F, 0xFF, 0x51};
 
-/* Nombre maximal de composantes acceptées (niveaux de gris, + alpha, RGB, + alpha). */
+/* Maximum number of accepted components (grayscale, + alpha, RGB, + alpha). */
 #define MAX_COMPONENTS 4u
 
-/* Précision maximale d'une composante, en bits. */
+/* Maximum precision of a component, in bits. */
 #define MAX_PRECISION 16u
 
 void sceau_jp2_secure_zero(void *buffer, size_t length) {
@@ -25,7 +25,7 @@ void sceau_jp2_secure_zero(void *buffer, size_t length) {
         return;
     }
     memset(buffer, 0, length);
-    /* Barrière : le compilateur doit supposer que le tampon est encore lu. */
+    /* Barrier: the compiler must assume that the buffer is still read. */
     __asm__ __volatile__("" : : "r"(buffer) : "memory");
 }
 
@@ -42,7 +42,7 @@ void sceau_jp2_image_free(sceau_jp2_image *image) {
     image->height = 0;
 }
 
-/* ---- Flux OpenJPEG sur un tableau d'octets ---------------------------------------------- */
+/* ---- OpenJPEG stream over a byte array -------------------------------------------------- */
 
 typedef struct {
     const uint8_t *data;
@@ -92,23 +92,23 @@ static OPJ_BOOL memory_seek(OPJ_OFF_T offset, void *user_data) {
 }
 
 static void memory_free(void *user_data) {
-    /* Le flux ne possède pas les données : rien à libérer. */
+    /* The stream does not own the data: nothing to free. */
     (void) user_data;
 }
 
-/* Gestionnaire de messages OpenJPEG : silencieux, aucune trace (SPEC §8). */
+/* OpenJPEG message handler: silent, no logging (SPEC §8). */
 static void silent_handler(const char *message, void *client_data) {
     (void) message;
     (void) client_data;
 }
 
-/* ---- Conversion en ARGB ---------------------------------------------------------------- */
+/* ---- Conversion to ARGB ---------------------------------------------------------------- */
 
 static int starts_with(const uint8_t *data, size_t length, const uint8_t *prefix, size_t prefix_length) {
     return length >= prefix_length && memcmp(data, prefix, prefix_length) == 0;
 }
 
-/* Division par 2^shift arrondie au supérieur, comme opj_int_ceildivpow2 (shift <= 32). */
+/* Division by 2^shift rounded up, like opj_int_ceildivpow2 (shift <= 32). */
 static uint64_t ceil_shift(uint64_t value, uint32_t shift) {
     return (value + (((uint64_t) 1 << shift) - 1u)) >> shift;
 }
@@ -118,11 +118,11 @@ static uint64_t ceil_div(uint64_t value, uint64_t divisor) {
 }
 
 /*
- * Échantillon de la composante au point (x, y) de la grille de référence, ramené sur 8 bits.
- * Une composante sous-échantillonnée (dx, dy > 1, par exemple la chrominance en 4:2:0) est
- * agrandie au plus proche voisin : l'échantillon i couvre les points i*dx à i*dx + dx - 1.
- * Si la résolution est réduite de reduce niveaux, (x, y) est un point de la grille réduite
- * (divisée par 2^reduce) et l'origine de la composante est réduite de même.
+ * Sample of the component at point (x, y) of the reference grid, scaled to 8 bits.
+ * A subsampled component (dx, dy > 1, for example 4:2:0 chrominance) is upscaled with
+ * nearest neighbor: sample i covers points i*dx to i*dx + dx - 1.
+ * If the resolution is reduced by reduce levels, (x, y) is a point of the reduced grid
+ * (divided by 2^reduce) and the origin of the component is reduced likewise.
  */
 static int sample8(const opj_image_comp_t *comp, uint32_t reduce, uint32_t image_x, uint32_t image_y) {
     uint32_t cx = image_x / comp->dx;
@@ -132,7 +132,7 @@ static int sample8(const opj_image_comp_t *comp, uint32_t reduce, uint32_t image
     int64_t value;
     int64_t max;
 
-    /* Coordonnées relatives à l'origine de la composante, bornées (sous-échantillonnage). */
+    /* Coordinates relative to the origin of the component, clamped (subsampling). */
     cx = cx > origin_x ? cx - origin_x : 0u;
     cy = cy > origin_y ? cy - origin_y : 0u;
     if (cx >= comp->w) {
@@ -175,7 +175,7 @@ static int is_ycc(const opj_image_t *image) {
     if (image->color_space == OPJ_CLRSPC_SYCC) {
         return 1;
     }
-    /* Même heuristique qu'opj_decompress : espace non déclaré et chrominance sous-échantillonnée. */
+    /* Same heuristic as opj_decompress: undeclared color space and subsampled chrominance. */
     if (image->color_space == OPJ_CLRSPC_UNKNOWN || image->color_space == OPJ_CLRSPC_UNSPECIFIED) {
         return image->comps[0].dx == 1u && image->comps[0].dy == 1u &&
                (image->comps[1].dx != 1u || image->comps[1].dy != 1u ||
@@ -213,11 +213,11 @@ static int components_decoded(const opj_image_t *image) {
 }
 
 
-/* Image décodée, convertie en ARGB ligne par ligne (sceau_jp2_decoded_row). */
+/* Decoded image, converted to ARGB row by row (sceau_jp2_decoded_row). */
 struct sceau_jp2_decoded {
     opj_image_t *image;
-    uint32_t reduce; /* niveaux de résolution retirés : l'image est divisée par 2^reduce */
-    uint32_t x0;     /* origine de la grille de référence réduite */
+    uint32_t reduce; /* resolution levels removed: the image is divided by 2^reduce */
+    uint32_t x0;     /* origin of the reduced reference grid */
     uint32_t y0;
     uint32_t width;
     uint32_t height;
@@ -259,7 +259,7 @@ void sceau_jp2_decoded_row(const sceau_jp2_decoded *decoded, uint32_t y, uint32_
     }
 }
 
-/* Remet à zéro les échantillons décodés (la photo) avant de libérer l'image OpenJPEG. */
+/* Zeroes the decoded samples (the photo) before freeing the OpenJPEG image. */
 static void destroy_image(opj_image_t *image) {
     uint32_t i;
     if (image == NULL) {
@@ -290,43 +290,43 @@ static int dimensions_acceptable(const opj_image_t *image) {
            image->y1 - image->y0 <= SCEAU_JP2_MAX_DIMENSION;
 }
 
-/* Étendue [start, end) de la grille de référence une fois la résolution réduite. */
+/* Extent [start, end) of the reference grid once the resolution is reduced. */
 static uint64_t reduced_extent(uint32_t start, uint32_t end, uint32_t reduce) {
     return ceil_shift(end, reduce) - ceil_shift(start, reduce);
 }
 
-/* ---- Budget mémoire ------------------------------------------------------------------ */
+/* ---- Memory budget ------------------------------------------------------------------- */
 
 /*
- * Coûts unitaires, en octets, des structures qu'OpenJPEG alloue pour décoder, relevés sur la
- * version épinglée en 64 bits et majorés des en-têtes d'allocation (docs/decisions.md, D3).
+ * Unit costs, in bytes, of the structures OpenJPEG allocates for decoding, measured on the
+ * pinned version in 64-bit and increased by the allocation headers (docs/decisions.md, D3).
  */
-/* Paramètres d'une tuile (opj_tcp_t, index du flux), lus dès l'en-tête principal. */
+/* Parameters of a tile (opj_tcp_t, stream index), read as early as the main header. */
 #define COST_TILE 8192u
-/* Paramètres d'une composante dans une tuile (opj_tccp_t). */
+/* Parameters of a component within a tile (opj_tccp_t). */
 #define COST_TILE_COMPONENT 1152u
-/* Bloc de code : structure, nœuds des arbres d'inclusion et de bits nuls, segments. */
+/* Code block: structure, nodes of the inclusion and zero bit-plane trees, segments. */
 #define COST_CODE_BLOCK 448u
-/* Fragment de données d'un bloc de code, par couche de qualité. */
+/* Data chunk of a code block, per quality layer. */
 #define COST_CODE_BLOCK_LAYER 16u
-/* Sous-bande et précinct d'une résolution. */
+/* Sub-band and precinct of a resolution. */
 #define COST_BAND 512u
-/* Codec, tampon de lecture du flux (1 Mo), transformée en ondelettes, tampons de travail. */
+/* Codec, stream read buffer (1 MB), wavelet transform, work buffers. */
 #define COST_FIXED (4u * 1024u * 1024u)
 
 /*
- * Nombre de blocs de code d'une composante de tuile de width x height échantillons, toutes
- * résolutions comprises : OpenJPEG les alloue toutes, y compris celles qu'une réduction de
- * résolution ne décode pas. Les précincts déclarés (Scod) peuvent réduire encore la taille
- * effective des blocs : l'API n'en donne pas la taille de façon fiable, ce cas est laissé au
- * plafond d'allocation (jp2_alloc.c).
+ * Number of code blocks of a tile component of width x height samples, all resolutions
+ * included: OpenJPEG allocates all of them, including those a resolution reduction does not
+ * decode. Declared precincts (Scod) can further reduce the effective size of the blocks: the
+ * API does not report their size reliably, so this case is left to the allocation cap
+ * (jp2_alloc.c).
  */
 static uint64_t code_blocks(uint64_t width, uint64_t height, const opj_tccp_info_t *tccp) {
     uint64_t total = 0;
     uint32_t resno;
     for (resno = 0; resno < tccp->numresolutions; resno++) {
         const uint32_t level = tccp->numresolutions - 1u - resno;
-        /* Résolution 0 : une sous-bande LL ; au-delà : HL, LH et HH, de demi-taille. */
+        /* Resolution 0: one LL sub-band; beyond: HL, LH and HH, at half size. */
         const uint32_t band_level = resno == 0u ? level : level + 1u;
         const uint64_t bands = resno == 0u ? 1u : 3u;
         const uint64_t band_width = ceil_shift(width, band_level);
@@ -338,10 +338,10 @@ static uint64_t code_blocks(uint64_t width, uint64_t height, const opj_tccp_info
 }
 
 /*
- * Mémoire qu'OpenJPEG allouera pour décoder l'image à la résolution réduite de reduce
- * niveaux. Les échantillons décodés occupent 32 bits chacun quelle que soit leur précision.
- * Les tuiles sont décodées l'une après l'autre : leurs blocs de code et leurs échantillons ne
- * sont comptés qu'une fois, leurs paramètres autant de fois qu'il y a de tuiles.
+ * Memory OpenJPEG will allocate to decode the image at the resolution reduced by reduce
+ * levels. Decoded samples take 32 bits each whatever their precision.
+ * Tiles are decoded one after the other: their code blocks and samples are counted only
+ * once, their parameters as many times as there are tiles.
  */
 static uint64_t estimate_memory(const opj_image_t *image, const opj_codestream_info_v2_t *info,
                                 size_t length, uint32_t reduce) {
@@ -352,7 +352,7 @@ static uint64_t estimate_memory(const opj_image_t *image, const opj_codestream_i
     const uint64_t tile_height = info->tdy < height ? info->tdy : height;
     const uint64_t block_cost =
         COST_CODE_BLOCK + (uint64_t) info->m_default_tile_info.numlayers * COST_CODE_BLOCK_LAYER;
-    /* Données compressées des parties de tuile, recopiées par OpenJPEG avant décodage. */
+    /* Compressed data of the tile parts, copied by OpenJPEG before decoding. */
     uint64_t total = COST_FIXED + (uint64_t) length +
                      tiles * (COST_TILE + (uint64_t) image->numcomps * COST_TILE_COMPONENT);
     uint32_t i;
@@ -362,10 +362,10 @@ static uint64_t estimate_memory(const opj_image_t *image, const opj_codestream_i
         const opj_tccp_info_t *tccp = &info->m_default_tile_info.tccp_info[i];
         const uint64_t tile_comp_width = ceil_div(tile_width, comp->dx);
         const uint64_t tile_comp_height = ceil_div(tile_height, comp->dy);
-        /* Échantillons de l'image décodée. */
+        /* Samples of the decoded image. */
         total += ceil_shift(ceil_div(width, comp->dx), reduce) *
                  ceil_shift(ceil_div(height, comp->dy), reduce) * sizeof(OPJ_INT32);
-        /* Plusieurs tuiles : échantillons de la tuile en cours, avant recopie dans l'image. */
+        /* Several tiles: samples of the current tile, before being copied into the image. */
         if (tiles > 1u) {
             total += ceil_shift(tile_comp_width, reduce) * ceil_shift(tile_comp_height, reduce) *
                      sizeof(OPJ_INT32);
@@ -377,9 +377,9 @@ static uint64_t estimate_memory(const opj_image_t *image, const opj_codestream_i
 }
 
 /*
- * Choisit la plus petite réduction de résolution qui ramène l'image sous
- * SCEAU_JP2_MAX_OUTPUT_DIMENSION de côté et son décodage sous SCEAU_JP2_MEMORY_BUDGET.
- * Aucune réduction possible (trop peu de niveaux de résolution) : SCEAU_JP2_ERR_TOO_LARGE.
+ * Chooses the smallest resolution reduction that brings the image under
+ * SCEAU_JP2_MAX_OUTPUT_DIMENSION per side and its decoding under SCEAU_JP2_MEMORY_BUDGET.
+ * No possible reduction (too few resolution levels): SCEAU_JP2_ERR_TOO_LARGE.
  */
 static sceau_jp2_status choose_reduction(opj_codec_t *codec, const opj_image_t *image, size_t length,
                                          uint32_t *reduce) {
@@ -421,7 +421,7 @@ static sceau_jp2_status choose_reduction(opj_codec_t *codec, const opj_image_t *
     return status;
 }
 
-/* ---- Décodage -------------------------------------------------------------------------- */
+/* ---- Decoding -------------------------------------------------------------------------- */
 
 sceau_jp2_status sceau_jp2_decode_image(const uint8_t *data, size_t length, sceau_jp2_decoded **out,
                                         uint32_t *width, uint32_t *height) {
@@ -458,7 +458,7 @@ sceau_jp2_status sceau_jp2_decode_image(const uint8_t *data, size_t length, scea
         return SCEAU_JP2_ERR_FORMAT;
     }
 
-    /* Toute allocation d'OpenJPEG, dès la lecture de l'en-tête, est plafonnée au budget. */
+    /* Every OpenJPEG allocation, starting with the header read, is capped by the budget. */
     sceau_jp2_alloc_begin(SCEAU_JP2_MEMORY_BUDGET);
     codec = opj_create_decompress(format);
     if (codec == NULL) {
@@ -493,7 +493,7 @@ sceau_jp2_status sceau_jp2_decode_image(const uint8_t *data, size_t length, scea
         status = sceau_jp2_alloc_exhausted() ? SCEAU_JP2_ERR_TOO_LARGE : SCEAU_JP2_ERR_HEADER;
         goto cleanup;
     }
-    /* Refus avant tout décodage : l'en-tête d'un flux hostile peut annoncer 60000 x 60000. */
+    /* Refused before any decoding: the header of a hostile stream can declare 60000 x 60000. */
     if (!dimensions_acceptable(image)) {
         status = SCEAU_JP2_ERR_TOO_LARGE;
         goto cleanup;
@@ -502,7 +502,7 @@ sceau_jp2_status sceau_jp2_decode_image(const uint8_t *data, size_t length, scea
         status = SCEAU_JP2_ERR_UNSUPPORTED;
         goto cleanup;
     }
-    /* Bombe de décompression : coût estimé avant opj_decode, résolution réduite si besoin. */
+    /* Decompression bomb: cost estimated before opj_decode, resolution reduced if needed. */
     status = choose_reduction(codec, image, length, &reduce);
     if (status != SCEAU_JP2_OK) {
         goto cleanup;
@@ -516,7 +516,7 @@ sceau_jp2_status sceau_jp2_decode_image(const uint8_t *data, size_t length, scea
         status = sceau_jp2_alloc_exhausted() ? SCEAU_JP2_ERR_TOO_LARGE : SCEAU_JP2_ERR_DECODE;
         goto cleanup;
     }
-    /* Une palette JP2 peut changer le nombre de composantes : on revérifie tout. */
+    /* A JP2 palette can change the number of components: everything is checked again. */
     if (!dimensions_acceptable(image)) {
         status = SCEAU_JP2_ERR_TOO_LARGE;
         goto cleanup;
@@ -553,7 +553,7 @@ sceau_jp2_status sceau_jp2_decode_image(const uint8_t *data, size_t length, scea
     status = SCEAU_JP2_OK;
 
 cleanup:
-    /* Plus aucune allocation d'OpenJPEG ; les libérations restent possibles. */
+    /* No more OpenJPEG allocations; frees remain possible. */
     sceau_jp2_alloc_end();
     destroy_image(image);
     if (stream != NULL) {

@@ -1,1 +1,1 @@
-Prebere in preveri čip osebnih izkaznic in potnih listov, povsem brez povezave
+Prebere in preveri čip potnih listov in osebnih izkaznic, povsem brez povezave

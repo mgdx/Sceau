@@ -1,31 +1,31 @@
-# Règles R8 de Sceau. AGP combine tous les fichiers de src/main/keepRules.
-# Voir https://d.android.com/r/tools/r8/keep-rules
-# Justification et mesures : docs/decisions.md, D24.
+# Sceau's R8 rules. AGP combines all the files of src/main/keepRules.
+# See https://d.android.com/r/tools/r8/keep-rules
+# Rationale and measurements: docs/decisions.md, D24.
 
-# BouncyCastle : le fournisseur JCA charge ses classes « $Mappings » par leur nom
-# (ClassUtil.loadClass puis newInstance) ; celles-ci enregistrent chaque implémentation
-# (Cipher, Signature, KeyAgreement, KeyFactory, CertificateFactory, Mac…) sous forme de nom de
-# classe, que Provider.Service instancie par réflexion avec le constructeur public (sans
-# argument, ou avec un paramètre pour CertStore). Il suffit donc de garder le nom de ces classes
-# et leurs constructeurs : les méthodes appelées ensuite sont des redéfinitions de SPI Java
-# (CipherSpi, SignatureSpi…) ou d'AlgorithmProvider.configure, que R8 conserve de lui-même
-# pour une classe instanciée ; le reste est réduit et obfusqué. Les autres réflexions de BC
-# (GcmSpecUtil, SpecUtil, DRBG…) visent des classes du JDK, pas du code à garder.
+# BouncyCastle: the JCA provider loads its "$Mappings" classes by name
+# (ClassUtil.loadClass then newInstance); these register each implementation
+# (Cipher, Signature, KeyAgreement, KeyFactory, CertificateFactory, Mac...) as a class name,
+# which Provider.Service instantiates by reflection with the public constructor (no argument,
+# or with one parameter for CertStore). It is therefore enough to keep the names of these
+# classes and their constructors: the methods called afterwards are overrides of Java SPIs
+# (CipherSpi, SignatureSpi...) or of AlgorithmProvider.configure, which R8 keeps on its own
+# for an instantiated class; the rest is shrunk and obfuscated. BC's other reflective calls
+# (GcmSpecUtil, SpecUtil, DRBG...) target JDK classes, not code to keep.
 -keep class org.bouncycastle.jcajce.provider.** { <init>(...); }
 -keep class org.bouncycastle.jce.provider.** { <init>(...); }
 
-# JMRTD, SCUBA et cert-cvc : aucune règle. Leur seule réflexion est Country.values(), qui appelle
-# values() des énumérations de SCUBA (couvert par la règle enum de proguard-android-optimize),
-# et CardService.getInstance / CVCProvider, que Sceau n'utilise pas (TransportCardService
-# étend CardService directement). Les algorithmes qu'ils demandent par nom passent par
-# BouncyCastle, couvert ci-dessus.
+# JMRTD, SCUBA and cert-cvc: no rule. Their only reflection is Country.values(), which calls
+# values() on SCUBA's enums (covered by the enum rule of proguard-android-optimize),
+# and CardService.getInstance / CVCProvider, which Sceau does not use (TransportCardService
+# extends CardService directly). The algorithms they request by name go through
+# BouncyCastle, covered above.
 
-# BouncyCastle référence JNDI (javax.naming) pour les magasins LDAP et DANE, absents
-# d'Android et jamais utilisés par Sceau.
+# BouncyCastle references JNDI (javax.naming) for the LDAP and DANE stores, absent
+# from Android and never used by Sceau.
 -dontwarn javax.naming.**
 
-# Décodeur JPEG 2000 natif (libsceau_jp2.so) : la fonction JNI est liée par le nom de la classe
-# et de la méthode native, qui ne doivent pas être renommés.
+# Native JPEG 2000 decoder (libsceau_jp2.so): the JNI function is bound by the name of the class
+# and of the native method, which must not be renamed.
 -keepclasseswithmembernames,includedescriptorclasses class io.github.mgdx.sceau.jp2.Jpeg2000Decoder {
     native <methods>;
 }

@@ -18,28 +18,28 @@ import java.security.GeneralSecurityException
 import java.security.SecureRandom
 import io.github.mgdx.sceau.core.verify.Crypto as KeyBounds
 
-/** Résultat de la Chip Authentication : sa ligne de contrôle, et l'état du canal pour la suite. */
+/** Chip Authentication outcome: its check line, and the channel state for what follows. */
 internal class ChipAuthenticationOutcome(
     val check: Check,
     /**
-     * Faux si la puce ne répond plus sous la messagerie sécurisée courante (CA ratée après le
-     * changement de clés, ou puce qui a clos la session) : le canal est à rétablir avant de lire
-     * les DG.
+     * False if the chip no longer responds under the current secure messaging (CA failed after
+     * the key change, or the chip closed the session): the channel must be re-established before
+     * reading the DGs.
      */
     val channelUsable: Boolean,
 )
 
 /**
- * Chip Authentication (SPEC §6.1 étape 6, menée pendant READ_DATA selon la décision D20) si
- * DG14 annonce une clé, puis, à l'étape VERIFY_CHIP (étape 7), Active Authentication si DG15
- * est présent.
+ * Chip Authentication (SPEC §6.1 step 6, performed during READ_DATA per decision D20) if
+ * DG14 announces a key, then, at the VERIFY_CHIP step (step 7), Active Authentication if DG15
+ * is present.
  *
- * Une ligne n'est « non disponible » que si le DG correspondant est absent du SOD : un DG14
- * ou un DG15 que le SOD annonce mais que la puce n'a pas fourni est un échec (audit V1), sans
- * quoi un clone qui les retient passerait pour une puce sans CA ni AA.
+ * A line is "not available" only if the corresponding DG is absent from the SOD: a DG14
+ * or DG15 that the SOD announces but the chip did not provide is a failure (audit V1),
+ * otherwise a clone withholding them would pass for a chip without CA or AA.
  *
- * Une perte de connexion pendant l'une ou l'autre est relancée (la lecture échoue) ; toute
- * autre erreur de la puce est consignée dans la ligne de contrôle correspondante.
+ * A lost connection during either one is rethrown (the read fails); any other chip error is
+ * recorded in the corresponding check line.
  */
 internal class ChipVerifier(
     private val chip: Chip,
@@ -48,19 +48,18 @@ internal class ChipVerifier(
     private val service get() = chip.service
 
     /**
-     * Chip Authentication, avant la lecture de DG1, DG2, DG15, DG11, DG12 et DG7 (décisions D20, D37).
-     * Après succès, JMRTD remplace la messagerie sécurisée par celle dérivée de la clé de DG14 :
-     * toute commande ultérieure (lecture des DG, AA) passe par ce canal.
+     * Chip Authentication, before reading DG1, DG2, DG15, DG11, DG12 and DG7 (decisions D20, D37).
+     * On success, JMRTD replaces secure messaging with the one derived from the DG14 key:
+     * every subsequent command (DG reads, AA) goes through this channel.
      *
-     * L'échange ne prouve rien tant que la puce n'a pas répondu sous le nouveau canal : une
-     * lecture courte de DG1 le confirme (le MAC de la réponse est vérifié), avant toute lecture
-     * de données. Cette confirmation explicite, et non la lecture de DG1 qui suit, décide de la
-     * ligne CA : un échec y est un échec de la CA, et non une erreur de lecture qui
-     * interromprait la lecture ; il indique aussi que le canal est à rétablir
-     * ([ChipAuthenticationOutcome.channelUsable]).
+     * The exchange proves nothing until the chip has responded under the new channel: a
+     * short read of DG1 confirms it (the response MAC is verified), before any data is read.
+     * This explicit confirmation, not the DG1 read that follows, decides the CA line: a failure
+     * there is a CA failure, not a read error that would interrupt the read; it also indicates
+     * that the channel must be re-established ([ChipAuthenticationOutcome.channelUsable]).
      *
-     * Si la puce refuse l'échange lui-même, JMRTD garde l'ancienne messagerie ; la même
-     * confirmation vérifie alors que la puce y répond encore.
+     * If the chip rejects the exchange itself, JMRTD keeps the old secure messaging; the same
+     * confirmation then checks that the chip still responds under it.
      */
     fun chipAuthentication(
         dg14Bytes: ByteArray?,
@@ -79,19 +78,19 @@ internal class ChipVerifier(
                 .filterIsInstance<ChipAuthenticationPublicKeyInfo>()
                 .firstOrNull()
                 ?: return unchanged(withoutChipAuthenticationKey(dg14Bytes))
-        // JMRTD garde l'entrée mais sans clé quand il ne sait pas la reconstruire (courbe ou
-        // algorithme inconnus) : rien à envoyer à la puce (audit V19).
+        // JMRTD keeps the entry but without a key when it cannot rebuild it (unknown curve or
+        // algorithm): nothing to send to the chip (audit V19).
         val chipKey =
             publicKeyInfo.subjectPublicKey
                 ?: return unchanged(unsupported(CheckId.CHIP_AUTHENTICATION, publicKeyInfo.objectIdentifier ?: "CA"))
-        // Audit V30 : clé hors bornes refusée avant l'accord de clé, rien n'est envoyé à la puce.
+        // Audit V30: out-of-bounds key rejected before key agreement, nothing is sent to the chip.
         KeyBounds.unsupportedKey(chipKey)?.let { return unchanged(unsupported(CheckId.CHIP_AUTHENTICATION, it)) }
         val keyId = publicKeyInfo.keyId
         val caInfo =
             dg14.securityInfos.orEmpty().filterIsInstance<ChipAuthenticationInfo>().let { infos ->
                 infos.firstOrNull { keyId != null && it.keyId == keyId } ?: infos.firstOrNull()
             }
-        // Sans ChipAuthenticationInfo, JMRTD déduit l'OID du protocole de celui de la clé.
+        // Without ChipAuthenticationInfo, JMRTD infers the protocol OID from the key's OID.
         val protocolOid = caInfo?.objectIdentifier
         try {
             service.doEACCA(keyId, protocolOid, publicKeyInfo.objectIdentifier, chipKey)
@@ -116,13 +115,13 @@ internal class ChipVerifier(
     private fun unchanged(check: Check) = ChipAuthenticationOutcome(check, channelUsable = true)
 
     /**
-     * DG14 sans `ChipAuthenticationPublicKeyInfo` reconnue par JMRTD (audit V19) : « non
-     * disponible » seulement si ses octets n'annoncent ni clé (aucun OID id-PK-*) ni protocole de
-     * Chip Authentication (aucun OID id-CA-*). Une clé annoncée mais que JMRTD n'a pas su
-     * reconstruire (`SecurityInfo.getInstance` rend alors null) donne `UNSUPPORTED_ALGORITHM`,
-     * donc le verdict « Échec », et non un échec silencieux. De même pour une
-     * `ChipAuthenticationInfo` sans aucune clé (audit V33) : DG14, signé, annonce une CA que
-     * l'application ne peut pas mener, ce n'est pas un document sans CA.
+     * DG14 without a `ChipAuthenticationPublicKeyInfo` recognized by JMRTD (audit V19): "not
+     * available" only if its bytes announce neither a key (no id-PK-* OID) nor a Chip
+     * Authentication protocol (no id-CA-* OID). A key announced but that JMRTD could not
+     * rebuild (`SecurityInfo.getInstance` then returns null) gives `UNSUPPORTED_ALGORITHM`,
+     * hence the "Failure" verdict, not a silent failure. The same goes for a
+     * `ChipAuthenticationInfo` without any key (audit V33): the signed DG14 announces a CA that
+     * the application cannot perform; this is not a document without CA.
      */
     private fun withoutChipAuthenticationKey(dg14Bytes: ByteArray): Check {
         val oids = SecurityInfoProtocols.of(dg14Bytes) ?: return unsupported(CheckId.CHIP_AUTHENTICATION, "DG14")
@@ -133,7 +132,7 @@ internal class ChipVerifier(
         return unsupported(CheckId.CHIP_AUTHENTICATION, announced)
     }
 
-    /** Active Authentication : challenge de 8 octets tiré de [random], réponse vérifiée par le lot B. */
+    /** Active Authentication: 8-byte challenge drawn from [random], response verified by batch B. */
     fun activeAuthentication(
         dg15Bytes: ByteArray?,
         dg14Bytes: ByteArray?,
@@ -156,7 +155,7 @@ internal class ChipVerifier(
                 chip.rethrowTransportFailure()
                 return failed(CheckId.ACTIVE_AUTHENTICATION, Step.VERIFY_CHIP, "AA", e)
             }
-        // JMRTD renvoie les données reçues quel que soit le SW : une réponse vide est un refus.
+        // JMRTD returns the data received whatever the SW: an empty response is a refusal.
         if (response == null || response.isEmpty()) {
             return check(CheckId.ACTIVE_AUTHENTICATION, CheckStatus.FAILED, CheckDetail.Error("${Step.VERIFY_CHIP.name}-AA-EmptyResponse"))
         }
@@ -164,9 +163,9 @@ internal class ChipVerifier(
     }
 
     /**
-     * Vérifie que la puce répond sous la messagerie sécurisée courante : SELECT de DG1 puis
-     * READ BINARY d'un octet, réponses au MAC vérifié. Null si elle répond, sinon le détail de
-     * l'échec (étiquette [tag]). Une erreur du transport est relancée.
+     * Checks that the chip responds under the current secure messaging: SELECT of DG1 then
+     * READ BINARY of one byte, responses with verified MAC. Null if it responds, otherwise the
+     * failure detail (label [tag]). A transport error is rethrown.
      */
     private fun confirmChannel(tag: String): CheckDetail.Error? {
         val commands =
@@ -192,7 +191,7 @@ internal class ChipVerifier(
         val mnemonic: String?,
     )
 
-    /** Algorithme de signature ECDSA annoncé par l'ActiveAuthenticationInfo de DG14, s'il existe. */
+    /** ECDSA signature algorithm announced by the ActiveAuthenticationInfo of DG14, if any. */
     private fun aaSignatureAlgorithm(dg14Bytes: ByteArray?): AaAlgorithm? {
         if (dg14Bytes == null) return null
         val oid =
@@ -228,7 +227,7 @@ internal class ChipVerifier(
         detail: CheckDetail = CheckDetail.None,
     ) = Check(id, status, detail)
 
-    /** DG absent : non disponible s'il n'est pas dans le SOD, échec s'il y est (puce qui le retient). */
+    /** Missing DG: not available if it is not in the SOD, failure if it is (chip withholding it). */
     private fun missing(
         id: CheckId,
         step: Step,
@@ -263,7 +262,7 @@ internal class ChipVerifier(
     companion object {
         const val AA_CHALLENGE_LENGTH = 8
 
-        /** Étape pendant laquelle la CA est menée (D20) : préfixe de ses codes d'erreur. */
+        /** Step during which CA is performed (D20): prefix of its error codes. */
         private val CA_STEP = Step.READ_DATA
         private const val SW_OK = 0x9000
         private const val INS_SELECT = 0xA4

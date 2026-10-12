@@ -7,7 +7,7 @@ import org.jmrtd.lds.SecurityInfo
 import org.jmrtd.lds.icao.DG14File
 import java.security.KeyPair
 
-/** Copie dont les DG valent [groups], avec un EF.SOD **signé à nouveau** par le même DS. */
+/** Copy whose DGs are [groups], with an EF.SOD **signed again** by the same DS. */
 fun TestDocument.resigned(
     groups: Map<Int, ByteArray> = dataGroups,
     options: SodOptions = SodOptions(),
@@ -26,12 +26,12 @@ fun TestDocument.resigned(
     )
 
 /**
- * Copie dont DG14 annonce la Chip Authentication [protocol] (ChipAuthenticationInfo), en plus
- * de la clé CA et de l'éventuelle ActiveAuthenticationInfo d'origine ; SOD signé à nouveau.
- * Sans ChipAuthenticationInfo, JMRTD choisit la CA 3DES : ceci permet d'exercer la CA AES.
+ * Copy whose DG14 announces Chip Authentication [protocol] (ChipAuthenticationInfo), in addition
+ * to the original CA key and ActiveAuthenticationInfo, if any; SOD signed again.
+ * Without ChipAuthenticationInfo, JMRTD picks 3DES CA: this makes it possible to exercise AES CA.
  */
 fun TestDocument.withChipAuthenticationProtocol(protocol: String = SecurityInfo.ID_CA_ECDH_AES_CBC_CMAC_128): TestDocument {
-    val caKeys = checkNotNull(caKeyPair) { "document sans clé CA" }
+    val caKeys = checkNotNull(caKeyPair) { "document without CA key" }
     val aaInfos =
         dataGroups[DG14]
             ?.let { DG14File(it.inputStream()).securityInfos }
@@ -41,7 +41,7 @@ fun TestDocument.withChipAuthenticationProtocol(protocol: String = SecurityInfo.
     return resigned(dataGroups + (DG14 to DG14File(infos).encoded))
 }
 
-/** Copie dont la puce détient une autre clé AA que celle publiée dans DG15 (puce clonée ou falsifiée). */
+/** Copy whose chip holds an AA key other than the one published in DG15 (cloned or forged chip). */
 fun TestDocument.withChipAaKey(keys: KeyPair): TestDocument =
     TestDocument(pki, ds, sod, dataGroups, caKeyPair, keys, aaDigestAlgorithm, dateOfIssue, dateOfExpiry, documentCode)
 

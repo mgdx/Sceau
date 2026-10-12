@@ -4,22 +4,22 @@ import java.security.cert.X509Certificate
 import javax.security.auth.x500.X500Principal
 
 /**
- * Chargement du magasin embarqué. Lister un répertoire du classpath n'est pas fiable dans un
- * APK : les fichiers sont énumérés par `trust/index.txt` (un nom par ligne, `#` pour commenter).
- * `ants-*.der` : certificat ANTS ; autre `*.der` : certificat publié par son propre État (D26) ;
- * `*.ml` : Master List embarquée.
+ * Loading of the embedded store. Listing a classpath directory is not reliable in an
+ * APK: the files are enumerated by `trust/index.txt` (one name per line, `#` for comments).
+ * `ants-*.der`: ANTS certificate; other `*.der`: certificate published by its own State (D26);
+ * `*.ml`: embedded Master List.
  */
 internal object TrustStoreLoader {
     private const val DIRECTORY = "/trust/"
     private const val INDEX = DIRECTORY + "index.txt"
     private const val ANTS_PREFIX = "ants-"
 
-    /** Sources embarquées, qui peuvent ancrer le signataire d'une Master List importée (audit V34). */
+    /** Embedded sources, which can anchor the signer of an imported Master List (audit V34). */
     val EMBEDDED_SOURCES: Set<TrustSource> = setOf(TrustSource.ANTS, TrustSource.NATIONAL, TrustSource.EMBEDDED_MASTER_LIST)
 
     /**
-     * Empreintes SHA-256 des certificats autorisés à signer le signataire d'une Master List
-     * embarquée : CSCA Allemagne et son certificat de lien, publiés par le BSI.
+     * SHA-256 fingerprints of the certificates allowed to sign the signer of an embedded
+     * Master List: the German CSCA and its link certificate, published by the BSI.
      */
     val EMBEDDED_MASTER_LIST_ANCHORS: Set<String> =
         setOf(
@@ -66,17 +66,17 @@ internal object TrustStoreLoader {
                 }
             }
         val certificates = TrustStores.parseCertificates(importedCertificates)
-        // Ancrage du signataire de chaque liste importée (audit V34) : seuls comptent les
-        // certificats embarqués et ceux importés seuls, jamais ceux d'une liste importée.
+        // Anchoring of each imported list's signer (audit V34): only embedded certificates and
+        // those imported on their own count, never those of an imported list.
         val known = ants + national + embedded?.certificates.orEmpty() + certificates
         val (anchored, unanchored) = imported.partition { MasterListParser.isSignerAnchored(it.signerCertificate, known) }
         return merge(ants, national, embedded, anchored, certificates, unanchored)
     }
 
     /**
-     * Fusion par ordre de priorité : ANTS, publications nationales, Master List embarquée,
-     * Master Lists importées ancrées, certificats importés, Master Lists importées non ancrées.
-     * Un certificat déjà présent garde sa source.
+     * Merge in priority order: ANTS, national publications, embedded Master List,
+     * anchored imported Master Lists, imported certificates, unanchored imported Master Lists.
+     * A certificate already present keeps its source.
      */
     fun merge(
         ants: List<X509Certificate>,
@@ -118,7 +118,7 @@ internal object TrustStoreLoader {
     }
 }
 
-/** Magasin immuable, donc sûr entre threads, indexé par sujet canonique, SKI et empreinte. */
+/** Immutable store, hence thread-safe, indexed by canonical subject, SKI and fingerprint. */
 internal class IndexedTrustStore(
     override val anchors: List<TrustAnchor>,
     override val embeddedMasterList: MasterListInfo?,

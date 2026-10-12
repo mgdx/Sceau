@@ -2,9 +2,9 @@ Léann Sceau sliseog na gcáipéisí aitheantais ICAO 9303 trí NFC agus fíora�
 
 <b>Cáipéisí a dtacaítear leo</b>
 <ul>
+<li>Pasanna bithmhéadracha ó aon tír, le huimhir na cáipéise, an dáta breithe agus an dáta éaga</li>
 <li>Cárta aitheantais náisiúnta na Fraince (formáid chárta creidmheasa, ó 2021), leis an CAN 6 dhigit atá clóite ar an gcárta</li>
 <li>Cártaí aitheantais Eorpacha, leis an CAN nó leis an MRZ</li>
-<li>Pasanna bithmhéadracha ó aon tír, le huimhir na cáipéise, an dáta breithe agus an dáta éaga</li>
 </ul>
 
 <b>An méid a thaispeánann Sceau</b>

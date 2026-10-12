@@ -9,7 +9,7 @@ import io.github.mgdx.sceau.core.trust.TrustStore
 import java.security.PublicKey
 import java.time.LocalDate
 
-/** Résultat de la Passive Authentication : quatre lignes de la liste de contrôle. */
+/** Passive Authentication result: four lines of the checklist. */
 class PassiveAuthResult(
     /** [io.github.mgdx.sceau.core.report.CheckId.SOD_SIGNATURE] */
     val sodSignature: Check,
@@ -21,27 +21,27 @@ class PassiveAuthResult(
     val dataGroupHashes: Check,
     val chain: ChainInfo?,
     /**
-     * DG dont l'écart d'empreinte est toléré au titre d'une anomalie connue de l'émetteur
-     * (`CheckDetail.DataGroupHashes.deviations`, décision D34) : 11 ou 12 seulement. Leurs données
-     * ne sont pas dignes de foi : elles doivent être retirées du rapport et remises à zéro.
+     * DGs whose hash mismatch is tolerated as a known issuer anomaly
+     * (`CheckDetail.DataGroupHashes.deviations`, decision D34): 11 or 12 only. Their data is
+     * not trustworthy: it must be removed from the report and zeroed.
      */
     val discardedDataGroups: Set<Int> = emptySet(),
 )
 
 object PassiveAuthentication {
     /**
-     * SPEC §6.1 étape 5. N'accède jamais à la puce.
+     * SPEC §6.1 step 5. Never accesses the chip.
      *
-     * @param sod octets bruts de EF.SOD (tag 0x77 compris)
-     * @param dataGroups octets bruts de chaque DG lu, clé = numéro de DG
-     * @param dateOfIssue date de délivrance lue dans DG12, si disponible
-     * @param dateOfExpiry date d'expiration lue dans DG1, pour l'estimation
-     * @param documentCode code de document DG1 ("P", "ID"…), pour choisir la durée usuelle
-     * @param issuingState État émetteur lu dans DG1 (code ICAO à trois lettres, "FRA", "D<<"…) :
-     *   il doit correspondre au pays du CSCA et du DS (voir [IcaoCountries]), sinon la chaîne
-     *   est en échec avec `CheckDetail.CountryMismatch`. Null : seuls le CSCA et le DS sont comparés.
-     * @param documentNumber numéro du document lu dans DG1, pour reconnaître une anomalie connue
-     *   de l'émetteur (décision D34) ; n'est pris en compte que si l'empreinte de DG1 est vérifiée.
+     * @param sod raw bytes of EF.SOD (including tag 0x77)
+     * @param dataGroups raw bytes of each DG read, key = DG number
+     * @param dateOfIssue date of issue read from DG12, if available
+     * @param dateOfExpiry date of expiry read from DG1, for the estimate
+     * @param documentCode DG1 document code ("P", "ID"…), to choose the usual validity period
+     * @param issuingState issuing state read from DG1 (three-letter ICAO code, "FRA", "D<<"…):
+     *   it must match the country of the CSCA and of the DS (see [IcaoCountries]), otherwise the
+     *   chain fails with `CheckDetail.CountryMismatch`. Null: only the CSCA and the DS are compared.
+     * @param documentNumber document number read from DG1, to recognize a known issuer anomaly
+     *   (decision D34); only taken into account if the DG1 hash is verified.
      */
     fun verify(
         sod: ByteArray,
@@ -58,11 +58,11 @@ object PassiveAuthentication {
 
 object ActiveAuthentication {
     /**
-     * Vérifie la réponse de la puce au challenge AA avec la clé publique de DG15
-     * (RSA ISO/IEC 9796-2 schéma 1, ou ECDSA avec l'algorithme de hachage annoncé dans DG14).
+     * Verifies the chip's response to the AA challenge with the DG15 public key
+     * (RSA ISO/IEC 9796-2 scheme 1, or ECDSA with the hash algorithm declared in DG14).
      *
-     * @param digestAlgorithm nom BouncyCastle de l'algorithme de hachage ECDSA ("SHA-256"…) ; ignoré pour RSA
-     * @return Check ACTIVE_AUTHENTICATION : OK, FAILED ou UNSUPPORTED_ALGORITHM
+     * @param digestAlgorithm BouncyCastle name of the ECDSA hash algorithm ("SHA-256"…); ignored for RSA
+     * @return ACTIVE_AUTHENTICATION Check: OK, FAILED or UNSUPPORTED_ALGORITHM
      */
     fun verifyResponse(
         publicKey: PublicKey,
@@ -74,32 +74,32 @@ object ActiveAuthentication {
 
 object Verdicts {
     /**
-     * Calcule le verdict global à partir des sept lignes de la liste de contrôle (SPEC §5.3).
+     * Computes the overall verdict from the seven lines of the checklist (SPEC §5.3).
      *
-     * Table de décision, appliquée dans l'ordre (la première règle qui s'applique gagne) :
+     * Decision table, applied in order (the first rule that applies wins):
      *
-     * | # | Condition                                                                 | Verdict                           |
-     * |---|---------------------------------------------------------------------------|-----------------------------------|
-     * | 1 | une ligne quelconque FAILED ou UNSUPPORTED_ALGORITHM                      | [Verdict.FAILED]                  |
-     * | 2 | CERTIFICATE_CHAIN NOT_AVAILABLE                                           | [Verdict.UNKNOWN_ISSUER]          |
-     * | 3 | PA complète (a), et CHIP_AUTHENTICATION OK ou ACTIVE_AUTHENTICATION OK       | [Verdict.AUTHENTIC]               |
-     * | 4 | PA complète (a), CHIP_AUTHENTICATION et ACTIVE_AUTHENTICATION NOT_AVAILABLE  | [Verdict.SIGNATURE_VALID_CHIP_UNVERIFIED] |
-     * | 5 | tout autre cas (ligne manquante, SOD_SIGNATURE NOT_AVAILABLE…)            | [Verdict.FAILED], par prudence    |
+     * | # | Condition                                                                 | Verdict                                   |
+     * |---|---------------------------------------------------------------------------|-------------------------------------------|
+     * | 1 | any line FAILED or UNSUPPORTED_ALGORITHM                                  | [Verdict.FAILED]                          |
+     * | 2 | CERTIFICATE_CHAIN NOT_AVAILABLE                                           | [Verdict.UNKNOWN_ISSUER]                  |
+     * | 3 | complete PA (a), and CHIP_AUTHENTICATION OK or ACTIVE_AUTHENTICATION OK   | [Verdict.AUTHENTIC]                       |
+     * | 4 | complete PA (a), CHIP_AUTHENTICATION and ACTIVE_AUTHENTICATION NOT_AVAILABLE | [Verdict.SIGNATURE_VALID_CHIP_UNVERIFIED] |
+     * | 5 | any other case (missing line, SOD_SIGNATURE NOT_AVAILABLE…)               | [Verdict.FAILED], out of caution          |
      *
-     * (a) PA complète : SECURE_CHANNEL, SOD_SIGNATURE, CERTIFICATE_CHAIN et DG_HASHES OK,
-     * DS_VALIDITY OK ou NOT_AVAILABLE (date de délivrance inconnue ou seulement estimée).
+     * (a) Complete PA: SECURE_CHANNEL, SOD_SIGNATURE, CERTIFICATE_CHAIN and DG_HASHES OK,
+     * DS_VALIDITY OK or NOT_AVAILABLE (date of issue unknown or only estimated).
      *
-     * Une ligne CA ou AA NOT_AVAILABLE aux côtés de l'autre OK donne AUTHENTIC (règle 3) :
-     * un seul des deux challenges suffit.
+     * A CA or AA line NOT_AVAILABLE alongside the other one OK gives AUTHENTIC (rule 3):
+     * a single one of the two challenges is enough.
      *
-     * CA (resp. AA) ne vaut NOT_AVAILABLE que si DG14 (resp. DG15) est absent du SOD, ou si DG14
-     * n'annonce ni clé ni protocole de Chip Authentication. Un DG
-     * annoncé par le SOD mais non fourni par la puce met DG_HASHES (détail
-     * `DataGroupHashes.missing`) et la ligne CA ou AA à FAILED : la règle 4 ne s'applique
-     * donc qu'à un document dont le SOD, signé, ne contient ni DG14 ni DG15 (audit V1). Un DG14
-     * signé qui annonce une clé de CA (OID id-PK-*) que l'app ne sait pas exploiter met la ligne CA
-     * à UNSUPPORTED_ALGORITHM, jamais à NOT_AVAILABLE (audit V19) ; de même pour un DG14 qui
-     * annonce le protocole CA (OID id-CA-*) sans aucune clé (audit V33, décision D43).
+     * CA (resp. AA) is NOT_AVAILABLE only if DG14 (resp. DG15) is absent from the SOD, or if DG14
+     * declares neither a Chip Authentication key nor protocol. A DG
+     * declared by the SOD but not provided by the chip sets DG_HASHES (detail
+     * `DataGroupHashes.missing`) and the CA or AA line to FAILED: rule 4 therefore only applies
+     * to a document whose signed SOD contains neither DG14 nor DG15 (audit V1). A signed DG14
+     * that declares a CA key (OID id-PK-*) the app cannot use sets the CA line to
+     * UNSUPPORTED_ALGORITHM, never to NOT_AVAILABLE (audit V19); likewise for a DG14 that
+     * declares the CA protocol (OID id-CA-*) without any key (audit V33, decision D43).
      */
     fun compute(checks: List<Check>): Verdict {
         if (checks.any { it.status == CheckStatus.FAILED || it.status == CheckStatus.UNSUPPORTED_ALGORITHM }) {

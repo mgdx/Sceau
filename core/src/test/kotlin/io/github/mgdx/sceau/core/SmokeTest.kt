@@ -6,7 +6,7 @@ import org.jmrtd.PassportService
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-/** Vérifie que JMRTD, BouncyCastle et kotlinx-coroutines-test sont bien sur le classpath de test. */
+/** Checks that JMRTD, BouncyCastle and kotlinx-coroutines-test are on the test classpath. */
 class SmokeTest {
     @Test
     fun classpath() =

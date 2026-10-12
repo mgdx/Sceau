@@ -4,99 +4,99 @@ import java.security.cert.X509Certificate
 import java.time.Instant
 
 enum class TrustSource {
-    /** Certificats DER de l'ANTS embarqués (passeport et e-ID). */
+    /** Embedded ANTS DER certificates (passport and e-ID). */
     ANTS,
 
     /**
-     * Certificats DER embarqués, publiés par un autre État que la France pour ses propres
-     * documents (CSCA et certificats de lien absents de la Master List embarquée, D26).
+     * Embedded DER certificates, published by a State other than France for its own
+     * documents (CSCA and link certificates missing from the embedded Master List, D26).
      */
     NATIONAL,
 
-    /** Master List embarquée dans `core/src/main/resources/trust/`. */
+    /** Master List embedded in `core/src/main/resources/trust/`. */
     EMBEDDED_MASTER_LIST,
 
     /**
-     * Master List importée par l'utilisateur, dont le signataire est émis par un CSCA déjà connu
-     * (embarqué ou certificat importé seul, audit V34).
+     * Master List imported by the user, whose signer is issued by an already known CSCA
+     * (embedded or certificate imported on its own, audit V34).
      */
     IMPORTED_MASTER_LIST,
 
     /**
-     * Certificat (CSCA auto-signé ou certificat de lien) importé seul par l'utilisateur : aucune
-     * signature d'État ne le garantit, c'est l'utilisateur qui lui accorde sa confiance (D33).
+     * Certificate (self-signed CSCA or link certificate) imported on its own by the user: no
+     * State signature vouches for it, it is the user who grants it trust (D33).
      */
     IMPORTED_CERTIFICATE,
 
     /**
-     * Master List importée dont le signataire n'est émis par aucun CSCA déjà connu (embarqué ou
-     * certificat importé seul) : sa signature ne prouve rien sur son origine, c'est l'utilisateur
-     * qui lui accorde sa confiance, après un avertissement à l'import (audit V34, D44). Dernière
-     * en priorité : un certificat déjà présent par une autre source garde cette source.
+     * Imported Master List whose signer is issued by no already known CSCA (embedded or
+     * certificate imported on its own): its signature proves nothing about its origin, it is the user
+     * who grants it trust, after a warning at import (audit V34, D44). Lowest
+     * priority: a certificate already present from another source keeps that source.
      */
     IMPORTED_MASTER_LIST_UNANCHORED,
 }
 
-/** Un CSCA (ou certificat de lien) connu, avec sa provenance. */
+/** A known CSCA (or link certificate), with its origin. */
 class TrustAnchor(
     val certificate: X509Certificate,
     val source: TrustSource,
 ) {
-    /** Code pays ISO 3166-1 alpha-2 (attribut C du sujet), en majuscules. */
+    /** ISO 3166-1 alpha-2 country code (C attribute of the subject), in upper case. */
     val country: String by lazy { TrustCrypto.country(certificate) }
 
     val subject: String get() = certificate.subjectX500Principal.name
 
-    /** Empreinte SHA-256 de l'encodage DER, hexadécimal minuscule sans séparateur. */
+    /** SHA-256 fingerprint of the DER encoding, lowercase hexadecimal without separator. */
     val sha256: String by lazy { TrustCrypto.sha256Hex(certificate.encoded) }
 
     val notBefore: Instant get() = certificate.notBefore.toInstant()
     val notAfter: Instant get() = certificate.notAfter.toInstant()
 
-    /** Vrai pour un certificat auto-signé (CSCA racine), faux pour un certificat de lien. */
+    /** True for a self-signed certificate (root CSCA), false for a link certificate. */
     val isSelfSigned: Boolean by lazy { TrustCrypto.isSelfSigned(certificate) }
 }
 
-/** Magasin de confiance fusionné (ANTS, publications nationales, Master List embarquée, imports), en lecture seule. */
+/** Merged trust store (ANTS, national publications, embedded Master List, imports), read-only. */
 interface TrustStore {
     val anchors: List<TrustAnchor>
 
-    /** Métadonnées de la Master List embarquée, pour l'écran « À propos ». */
+    /** Metadata of the embedded Master List, for the "About" screen. */
     val embeddedMasterList: MasterListInfo?
 
-    /** Certificats dont le sujet est égal à [issuer] (nom X.500 comparé sous forme canonique). */
+    /** Certificates whose subject equals [issuer] (X.500 name compared in canonical form). */
     fun findBySubject(issuer: javax.security.auth.x500.X500Principal): List<TrustAnchor>
 
-    /** Certificats dont le Subject Key Identifier vaut [keyIdentifier]. */
+    /** Certificates whose Subject Key Identifier is [keyIdentifier]. */
     fun findBySubjectKeyId(keyIdentifier: ByteArray): List<TrustAnchor>
 }
 
 class MasterListInfo(
     val signingTime: Instant?,
     val signerSubject: String,
-    /** Empreinte SHA-256 du certificat signataire, hexadécimal minuscule. */
+    /** SHA-256 fingerprint of the signer certificate, lowercase hexadecimal. */
     val signerSha256: String,
     val certificateCount: Int,
 )
 
-/** Contenu d'une Master List dont la signature CMS a été vérifiée. */
+/** Content of a Master List whose CMS signature has been verified. */
 class MasterList(
     val info: MasterListInfo,
     val certificates: List<X509Certificate>,
-    /** Certificat signataire, pris dans le bloc `certificates` du CMS. */
+    /** Signer certificate, taken from the CMS `certificates` block. */
     val signerCertificate: X509Certificate,
 )
 
-/** Master List rejetée : CMS illisible ou signature invalide. [code] sans donnée personnelle. */
+/** Rejected Master List: unreadable CMS or invalid signature. [code] without personal data. */
 class InvalidMasterListException(
     val code: String,
     cause: Throwable? = null,
 ) : Exception(code, cause)
 
 /**
- * Certificat importé rejeté. [code] stable, sans donnée personnelle : `UNREADABLE` (pas un
- * certificat X.509 unique, DER ou PEM, ou clé publique illisible), `NOT_CA` (ne peut pas signer
- * de certificats), `BAD_SIGNATURE` (auto-signature invalide).
+ * Rejected imported certificate. Stable [code], without personal data: `UNREADABLE` (not a
+ * single X.509 certificate, DER or PEM, or unreadable public key), `NOT_CA` (cannot sign
+ * certificates), `BAD_SIGNATURE` (invalid self-signature).
  */
 class InvalidCertificateException(
     val code: String,
@@ -105,17 +105,17 @@ class InvalidCertificateException(
 
 object TrustStores {
     /**
-     * Nombre maximal de certificats d'une Master List (audit V22, décision D22) : plus de trois
-     * fois la plus grosse Master List réelle connue (Suède, 646 certificats ; BSI embarquée : 609).
-     * Au-delà, la liste est refusée par `TOO_MANY_CERTIFICATES`.
+     * Maximum number of certificates in a Master List (audit V22, decision D22): more than three
+     * times the largest known real Master List (Sweden, 646 certificates; embedded BSI: 609).
+     * Beyond that, the list is rejected with `TOO_MANY_CERTIFICATES`.
      */
     const val MAX_MASTER_LIST_CERTIFICATES = 2000
 
     /**
-     * Parse une Master List CMS (`.ml`, `.der`, `.p7b`) et vérifie sa signature avec le
-     * certificat signataire embarqué. Lève [InvalidMasterListException] si invalide.
-     * [checkpoint] est appelé entre les étapes coûteuses ; une `CancellationException` qu'il lève
-     * abandonne l'analyse et se propage telle quelle.
+     * Parses a CMS Master List (`.ml`, `.der`, `.p7b`) and verifies its signature with the
+     * embedded signer certificate. Throws [InvalidMasterListException] if invalid.
+     * [checkpoint] is called between costly steps; a `CancellationException` it throws
+     * aborts the parsing and propagates as is.
      */
     fun parseMasterList(
         bytes: ByteArray,
@@ -123,11 +123,11 @@ object TrustStores {
     ): MasterList = MasterListParser.parse(bytes, checkpoint).masterList
 
     /**
-     * Vrai si le signataire de [masterList] est émis par un CSCA déjà connu (audit V34) : un
-     * certificat embarqué de [store] (ANTS, publication nationale, Master List embarquée) ou l'un
-     * des certificats importés seuls [importedCertificates] (octets bruts, les illisibles sont
-     * ignorés). Les certificats d'une autre Master List importée ne comptent pas. Même règle que
-     * celle qui attribue au chargement la source [TrustSource.IMPORTED_MASTER_LIST] ou
+     * True if the signer of [masterList] is issued by an already known CSCA (audit V34): an
+     * embedded certificate of [store] (ANTS, national publication, embedded Master List) or one
+     * of the certificates imported on their own [importedCertificates] (raw bytes, unreadable ones are
+     * skipped). Certificates from another imported Master List do not count. Same rule as
+     * the one that assigns, at load time, the source [TrustSource.IMPORTED_MASTER_LIST] or
      * [TrustSource.IMPORTED_MASTER_LIST_UNANCHORED].
      */
     fun isMasterListAnchored(
@@ -139,7 +139,7 @@ object TrustStores {
         return MasterListParser.isSignerAnchored(masterList.signerCertificate, embedded + parseCertificates(importedCertificates))
     }
 
-    /** Certificats importés seuls, lus comme au chargement ; les illisibles sont ignorés. */
+    /** Certificates imported on their own, read as at load time; unreadable ones are skipped. */
     internal fun parseCertificates(certificates: List<ByteArray>): List<X509Certificate> =
         certificates.mapNotNull { bytes ->
             try {
@@ -150,16 +150,16 @@ object TrustStores {
         }
 
     /**
-     * Lit un certificat CSCA ou de lien importé seul, en DER ou en PEM (un seul certificat), et
-     * vérifie qu'il peut signer des certificats et, s'il se dit auto-signé, son auto-signature.
-     * Lève [InvalidCertificateException] sinon.
+     * Reads a CSCA or link certificate imported on its own, in DER or PEM (a single certificate), and
+     * checks that it can sign certificates and, if it claims to be self-signed, its self-signature.
+     * Throws [InvalidCertificateException] otherwise.
      */
     fun parseCertificate(bytes: ByteArray): X509Certificate = CertificateParser.parse(bytes)
 
     /**
-     * Charge le magasin embarqué (ressources `trust/` du classpath) et le fusionne avec
-     * les Master Lists et les certificats importés, fournis en octets bruts par l'app. Une Master
-     * List embarquée invalide lève [InvalidMasterListException] ; un import invalide est ignoré.
+     * Loads the embedded store (`trust/` classpath resources) and merges it with
+     * the imported Master Lists and certificates, supplied as raw bytes by the app. An invalid
+     * embedded Master List throws [InvalidMasterListException]; an invalid import is skipped.
      */
     fun load(
         importedMasterLists: List<ByteArray> = emptyList(),

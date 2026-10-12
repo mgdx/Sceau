@@ -12,88 +12,88 @@ import org.jmrtd.lds.icao.DG1File
 import java.security.PrivateKey
 
 /**
- * Puce ICAO 9303 simulée, à état, pour les tests de bout en bout de `readAndVerify`.
+ * Simulated stateful ICAO 9303 chip, for end-to-end tests of `readAndVerify`.
  *
- * Ce n'est pas un rejeu : la puce tire ses propres aléas, dérive ses clés de la MRZ de son DG1,
- * vérifie le MAC de chaque commande et chiffre ses réponses (voir [SimCrypto] et
- * [ChipSecureMessaging], écrits d'après ICAO 9303-11 sans le code de JMRTD).
+ * This is not a replay: the chip draws its own random values, derives its keys from the MRZ of
+ * its DG1, checks the MAC of each command and encrypts its responses (see [SimCrypto] and
+ * [ChipSecureMessaging], written from ICAO 9303-11 without JMRTD code).
  *
- * - Sans [pace], pas d'EF.CardAccess (6A82) : Sceau doit choisir BAC. Avec [pace], EF.CardAccess
- *   (011C) est lisible en clair au niveau MF et annonce un `PACEInfo` ; PACE (voir [ChipPace])
- *   ouvre une messagerie sécurisée AES, sous laquelle l'applet est ensuite sélectionnée.
- *   Applet ICAO `A0 00 00 02 47 10 01`.
- * - PACE-CAM (mapping CAM dans [pace]) : la puce prouve détenir [caPrivateKey] pendant PACE, et
- *   sert [cardSecurity] (011D au MF) sous messagerie sécurisée uniquement.
- * - BAC (ICAO 9303-11 §4.3) : GET CHALLENGE, EXTERNAL/MUTUAL AUTHENTICATE ; une clé MRZ fausse
- *   donne 6300. Puis messagerie sécurisée 3DES avec SSC = RND.ICC[4..8] ‖ RND.IFD[4..8]. BAC
- *   reste accepté quand PACE est annoncé, comme l'exige ICAO pendant la transition.
- * - Fichiers : EF.COM (construit à partir de [comDataGroups]), EF.SOD, et les DG de
- *   [document]. Toute sélection de DG3 ou DG4 lève une [AssertionError], qui traverse Sceau
- *   et JMRTD (ils n'attrapent que des `Exception`) et fait échouer le test.
- * - Chip Authentication (ICAO 9303-11 §6.2, BSI TR-03110 §3.4) : MSE:Set KAT (3DES), ou
- *   MSE:Set AT + GENERAL AUTHENTICATE (AES), ECDH avec [caPrivateKey], puis nouvelle session
- *   de messagerie sécurisée (SSC = 0).
- *   [refuseChipAuthentication] : la puce répond 6A80 au MSE de la CA, sans changer de session.
- * - Accès réservé aux terminaux étatiques (D36) : [restrictedApplet] (6982 à la sélection de
- *   l'applet) et [restrictedFiles] (6982 à la sélection de ces fichiers, même sous messagerie
- *   sécurisée).
- * - Active Authentication : INTERNAL AUTHENTICATE sous messagerie sécurisée → [aaResponder].
- * - Retrait du document : dès que [removeAfterApdus] APDU ont été reçues, chaque APDU
- *   suivante lève [SceauException.ConnectionLost].
- * - [reconnect] (liaison réinitialisée) : la puce repart de zéro, sans session ni applet
- *   sélectionnée ; [reconnections] les compte.
- * - [fileReads] note, pour chaque READ BINARY servi, le fichier et la session sous laquelle il
- *   l'a été : les tests vérifient ainsi quelles données sont lues sous les clés de la CA.
+ * - Without [pace], no EF.CardAccess (6A82): Sceau must choose BAC. With [pace], EF.CardAccess
+ *   (011C) is readable in plain at MF level and announces a `PACEInfo`; PACE (see [ChipPace])
+ *   opens AES secure messaging, under which the applet is then selected.
+ *   ICAO applet `A0 00 00 02 47 10 01`.
+ * - PACE-CAM (CAM mapping in [pace]): the chip proves it holds [caPrivateKey] during PACE, and
+ *   serves [cardSecurity] (011D at the MF) under secure messaging only.
+ * - BAC (ICAO 9303-11 §4.3): GET CHALLENGE, EXTERNAL/MUTUAL AUTHENTICATE; a wrong MRZ key
+ *   gives 6300. Then 3DES secure messaging with SSC = RND.ICC[4..8] ‖ RND.IFD[4..8]. BAC
+ *   is still accepted when PACE is announced, as ICAO requires during the transition.
+ * - Files: EF.COM (built from [comDataGroups]), EF.SOD, and the DGs of [document].
+ *   Any selection of DG3 or DG4 throws an [AssertionError], which goes through Sceau
+ *   and JMRTD (they only catch `Exception`) and fails the test.
+ * - Chip Authentication (ICAO 9303-11 §6.2, BSI TR-03110 §3.4): MSE:Set KAT (3DES), or
+ *   MSE:Set AT + GENERAL AUTHENTICATE (AES), ECDH with [caPrivateKey], then a new secure
+ *   messaging session (SSC = 0).
+ *   [refuseChipAuthentication]: the chip answers 6A80 to the CA MSE, without changing session.
+ * - Access restricted to government terminals (D36): [restrictedApplet] (6982 when the applet
+ *   is selected) and [restrictedFiles] (6982 when these files are selected, even under secure
+ *   messaging).
+ * - Active Authentication: INTERNAL AUTHENTICATE under secure messaging → [aaResponder].
+ * - Document removal: once [removeAfterApdus] APDUs have been received, each following APDU
+ *   throws [SceauException.ConnectionLost].
+ * - [reconnect] (link reset): the chip starts over, with no session and no applet
+ *   selected; [reconnections] counts them.
+ * - [fileReads] records, for each READ BINARY served, the file and the session under which it
+ *   was served: the tests thus check which data are read under the CA keys.
  *
- * Une commande sécurisée invalide (MAC faux) ou une commande en clair pendant la session
- * reçoit 6988 en clair et clôt la session, comme une vraie puce.
+ * An invalid secured command (wrong MAC) or a plain command during the session receives
+ * 6988 in plain and closes the session, like a real chip.
  */
 class SimulatedChip(
     private val document: TestDocument,
-    /** PACE annoncé dans EF.CardAccess ; null : pas d'EF.CardAccess, BAC seul. */
+    /** PACE announced in EF.CardAccess; null: no EF.CardAccess, BAC only. */
     pace: PaceSettings? = null,
-    /** DG annoncés dans EF.COM ; par défaut, ceux du document. */
+    /** DGs announced in EF.COM; by default, those of the document. */
     comDataGroups: Collection<Int> = document.dataGroups.keys,
-    /** Clé privée de Chip Authentication ; par défaut celle de DG14. */
+    /** Chip Authentication private key; by default the DG14 one. */
     private val caPrivateKey: PrivateKey? = document.caKeyPair?.private,
-    /** Réponse à INTERNAL AUTHENTICATE ; par défaut signée avec la clé de DG15. */
+    /** Response to INTERNAL AUTHENTICATE; by default signed with the DG15 key. */
     private val aaResponder: ((ByteArray) -> ByteArray)? = document.aaKeyPair?.let { { challenge -> document.aaResponse(challenge) } },
     seed: Long = DEFAULT_SEED,
     /**
-     * Fichiers de l'applet servis par une puce hostile, par FID : leur en-tête annonce une
-     * longueur démesurée (voir [OversizedFile]). Ils remplacent le fichier du même FID.
+     * Applet files served by a hostile chip, by FID: their header announces an oversized
+     * length (see [OversizedFile]). They replace the file with the same FID.
      */
     private val oversizedFiles: Map<Int, OversizedFile> = emptyMap(),
     /**
-     * DG que la puce refuse de fournir (6A82 à la sélection) bien qu'ils soient dans le SOD :
-     * clone qui retient DG14/DG15 pour échapper à la CA et à l'AA.
+     * DGs the chip refuses to provide (6A82 on selection) although they are in the SOD:
+     * a clone that withholds DG14/DG15 to evade CA and AA.
      */
     withheldDataGroups: Collection<Int> = emptySet(),
-    /** La puce refuse la Chip Authentication (6A80 au MSE:Set KAT ou MSE:Set AT). */
+    /** The chip refuses Chip Authentication (6A80 to MSE:Set KAT or MSE:Set AT). */
     private val refuseChipAuthentication: Boolean = false,
     /**
-     * EF.CardSecurity (FID 011D au MF), servi sous messagerie sécurisée après PACE (PACE-CAM ;
-     * voir [TestCardSecurity]). Null : absent.
+     * EF.CardSecurity (FID 011D at the MF), served under secure messaging after PACE (PACE-CAM;
+     * see [TestCardSecurity]). Null: absent.
      */
     private val cardSecurity: ByteArray? = null,
-    /** PACE-CAM : la puce envoie des données de Chip Authentication fausses (CA.IC + 1). */
+    /** PACE-CAM: the chip sends wrong Chip Authentication data (CA.IC + 1). */
     tamperChipAuthenticationMapping: Boolean = false,
     /**
-     * Application ICAO réservée aux terminaux étatiques (carte d'identité allemande délivrée
-     * avant le 2021-08-02, décision D36) : 6982 à sa sélection, en clair comme sous messagerie
-     * sécurisée.
+     * ICAO application restricted to government terminals (German identity card issued
+     * before 2021-08-02, decision D36): 6982 on its selection, in plain as well as under secure
+     * messaging.
      */
     private val restrictedApplet: Boolean = false,
-    /** FID de fichiers de l'applet réservés aux terminaux étatiques : 6982 à leur sélection, même sous messagerie sécurisée (D36). */
+    /** FIDs of applet files restricted to government terminals: 6982 on their selection, even under secure messaging (D36). */
     private val restrictedFiles: Collection<Int> = emptySet(),
     /**
-     * Puce hostile (audit V24) : 6982 à la sélection de l'applet après une réinitialisation de la
-     * liaison ([reconnect]), pour se faire passer pour une carte réservée aux autorités au
-     * rétablissement du canal qui suit une Chip Authentication ratée.
+     * Hostile chip (audit V24): 6982 on applet selection after a link reset ([reconnect]),
+     * to pass itself off as a card restricted to the authorities when the channel is
+     * re-established after a failed Chip Authentication.
      */
     private val restrictAppletAfterReconnect: Boolean = false,
 ) : CardTransport {
-    /** Lecture d'un fichier servie par la puce : FID, et session sous laquelle (null : en clair). */
+    /** File read served by the chip: FID, and the session it was served under (null: in plain). */
     data class FileRead(
         val fid: Int,
         val session: SessionKind?,
@@ -102,11 +102,11 @@ class SimulatedChip(
     override val maxTransceiveLength: Int = MAX_TRANSCEIVE
     override var timeoutMillis: Int = DEFAULT_TIMEOUT
 
-    /** Nombre d'APDU au-delà duquel le document est considéré comme retiré (null : jamais). */
+    /** Number of APDUs beyond which the document is considered removed (null: never). */
     @Volatile
     var removeAfterApdus: Int? = null
 
-    /** Nombre d'APDU reçues. */
+    /** Number of APDUs received. */
     @Volatile
     var apduCount: Int = 0
         private set
@@ -114,33 +114,33 @@ class SimulatedChip(
     var closed: Boolean = false
         private set
 
-    /** FID de chaque SELECT de fichier reçu (en clair ou sécurisé), dans l'ordre. */
+    /** FID of each file SELECT received (plain or secured), in order. */
     val selectedFids: List<Int> get() = selected.toList()
 
-    /** Vrai si BAC a abouti. */
+    /** True if BAC succeeded. */
     var bacCompleted: Boolean = false
         private set
 
-    /** Mot de passe (CAN ou MRZ) de la dernière PACE réussie, null si PACE n'a pas abouti. */
+    /** Password (CAN or MRZ) of the last successful PACE, null if PACE did not succeed. */
     val paceCompletedWith: PacePassword? get() = chipPace?.completedWith
 
-    /** Compteur d'essais PACE (63Cx) ; null sans PACE. */
+    /** PACE retry counter (63Cx); null without PACE. */
     val paceRetries: Int? get() = chipPace?.retries
 
-    /** Vrai si une Chip Authentication a abouti, et avec quel chiffrement. */
+    /** Set if a Chip Authentication succeeded, with the cipher used. */
     var caAlgorithm: Algorithm? = null
         private set
 
-    /** Challenges reçus en INTERNAL AUTHENTICATE. */
+    /** Challenges received in INTERNAL AUTHENTICATE. */
     val aaChallenges: List<ByteArray> get() = challenges.toList()
 
-    /** READ BINARY servis (données renvoyées), dans l'ordre. */
+    /** READ BINARY commands served (data returned), in order. */
     val fileReads: List<FileRead> get() = reads.toList()
 
-    /** Sessions sous lesquelles le fichier [fid] a été servi. */
+    /** Sessions under which the file [fid] was served. */
     fun sessionsServing(fid: Int): Set<SessionKind?> = reads.filter { it.fid == fid }.map { it.session }.toSet()
 
-    /** Nombre de réinitialisations de la liaison ([reconnect]). */
+    /** Number of link resets ([reconnect]). */
     var reconnections: Int = 0
         private set
 
@@ -160,7 +160,7 @@ class SimulatedChip(
     private var currentFile: ByteArray? = null
     private var currentOversized: OversizedFile? = null
 
-    /** Le fichier courant est EF.CardAccess, lisible sans messagerie sécurisée. */
+    /** The current file is EF.CardAccess, readable without secure messaging. */
     private var currentFileIsPublic = false
     private var pendingCaOid: String? = null
 
@@ -171,7 +171,7 @@ class SimulatedChip(
             .filterKeys { it !in withheldDataGroups }
             .forEach { (number, bytes) -> lds[LDSFileUtil.lookupFIDByDataGroupNumber(number).toInt()] = bytes }
         files = lds
-        // La puce dérive sa clé BAC de sa propre MRZ, pas de ce que saisit le lecteur.
+        // The chip derives its BAC key from its own MRZ, not from what the reader enters.
         val mrz = DG1File(document.dataGroups.getValue(1).inputStream()).mrzInfo
         bacSeed = SimCrypto.bacKeySeed(mrz.documentNumber, mrz.dateOfBirth, mrz.dateOfExpiry)
         chipPace =
@@ -215,7 +215,7 @@ class SimulatedChip(
         closed = true
     }
 
-    /** Liaison réinitialisée (champ coupé puis rétabli) : plus de session, d'applet ni de fichier courant. */
+    /** Link reset (field turned off then back on): no more session, applet or current file. */
     override fun reconnect() {
         reconnections++
         session = null
@@ -236,7 +236,7 @@ class SimulatedChip(
     private class Reply(
         val data: ByteArray,
         val sw: Int,
-        /** Session de messagerie sécurisée qui prend effet après l'envoi de cette réponse. */
+        /** Secure messaging session that takes effect after this response is sent. */
         val next: ChipSecureMessaging? = null,
     )
 
@@ -286,7 +286,7 @@ class SimulatedChip(
                 val fid = ((command.data[0].toInt() and 0xFF) shl Byte.SIZE_BITS) or (command.data[1].toInt() and 0xFF)
                 selected += fid
                 if (fid == FID_DG3 || fid == FID_DG4) {
-                    throw AssertionError("Sceau a demandé DG${fid - FID_DG_BASE} (FID ${Integer.toHexString(fid)}) : interdit")
+                    throw AssertionError("Sceau requested DG${fid - FID_DG_BASE} (FID ${Integer.toHexString(fid)}): forbidden")
                 }
                 selectEf(fid, command.secured)
             }
@@ -304,14 +304,14 @@ class SimulatedChip(
         clearCurrentFile()
         currentFid = fid
         if (!appletSelected) {
-            // EF.CardSecurity (PACE-CAM) : au MF, sous messagerie sécurisée seulement.
+            // EF.CardSecurity (PACE-CAM): at the MF, under secure messaging only.
             if (fid == FID_CARD_SECURITY && cardSecurity != null) {
                 if (!secured) return status(SW_SECURITY_STATUS)
                 currentFile = cardSecurity
                 return status(SW_OK)
             }
-            // Au niveau MF, sinon, seul EF.CardAccess existe, et seulement si PACE est annoncé ;
-            // absent, Sceau doit se rabattre sur BAC.
+            // Otherwise, at MF level, only EF.CardAccess exists, and only if PACE is announced;
+            // when it is absent, Sceau must fall back to BAC.
             val access = cardAccess?.takeIf { fid == FID_CARD_ACCESS } ?: return status(SW_FILE_NOT_FOUND)
             currentFile = access
             currentFileIsPublic = true
@@ -324,7 +324,7 @@ class SimulatedChip(
         }
         val content = files[fid] ?: return status(SW_FILE_NOT_FOUND)
         if (fid in restrictedFiles) return status(SW_SECURITY_STATUS)
-        // Les fichiers de l'applet ne sont accessibles qu'après BAC, sous messagerie sécurisée.
+        // The applet files are only accessible after BAC, under secure messaging.
         if (!secured) return status(SW_SECURITY_STATUS)
         currentFile = content
         return status(SW_OK)
@@ -354,7 +354,7 @@ class SimulatedChip(
         return Reply(challenge, SW_OK)
     }
 
-    /** EXTERNAL AUTHENTICATE de BAC (ICAO 9303-11 §9.7.2) : E.IFD ‖ M.IFD → E.ICC ‖ M.ICC. */
+    /** BAC EXTERNAL AUTHENTICATE (ICAO 9303-11 §9.7.2): E.IFD ‖ M.IFD → E.ICC ‖ M.ICC. */
     private fun externalAuthenticate(command: PlainCommand): Reply {
         val challenge = rndIcc
         if (command.secured || !appletSelected || challenge == null) return status(SW_CONDITIONS)
@@ -391,8 +391,8 @@ class SimulatedChip(
     }
 
     /**
-     * MSE:Set AT pour l'authentification mutuelle (PACE, en clair), MSE:Set KAT (CA 3DES) ou
-     * MSE:Set AT pour l'authentification interne (CA AES).
+     * MSE:Set AT for mutual authentication (PACE, in plain), MSE:Set KAT (3DES CA) or
+     * MSE:Set AT for internal authentication (AES CA).
      */
     private fun manageSecurityEnvironment(command: PlainCommand): Reply {
         val p1p2 = (command.p1 shl Byte.SIZE_BITS) or command.p2
@@ -436,7 +436,7 @@ class SimulatedChip(
         }
     }
 
-    /** GENERAL AUTHENTICATE : PACE en clair (voir [ChipPace]), ou CA AES sous messagerie sécurisée. */
+    /** GENERAL AUTHENTICATE: PACE in plain (see [ChipPace]), or AES CA under secure messaging. */
     private fun generalAuthenticate(command: PlainCommand): Reply {
         val pace = chipPace
         if (!command.secured && pace != null && pace.inProgress) {
@@ -446,7 +446,7 @@ class SimulatedChip(
         return caGeneralAuthenticate(command)
     }
 
-    /** GENERAL AUTHENTICATE de la CA AES : 7C { 80 clé éphémère } → 7C { }. */
+    /** AES CA GENERAL AUTHENTICATE: 7C { 80 ephemeral key } → 7C { }. */
     private fun caGeneralAuthenticate(command: PlainCommand): Reply {
         val oid = pendingCaOid
         if (!command.secured || oid == null) return status(SW_CONDITIONS)
@@ -466,7 +466,7 @@ class SimulatedChip(
         return Reply(Tlv(TAG_DYNAMIC_AUTH, ByteArray(0)).encoded, SW_OK, caSession(secret, Algorithm.AES, AES_KEY_LENGTHS.getValue(oid)))
     }
 
-    /** ECDH : abscisse de d.ICC × Q.IFD, sur toute la taille du corps (BSI TR-03111 §4.3.1). */
+    /** ECDH: x-coordinate of d.ICC × Q.IFD, over the full field size (BSI TR-03111 §4.3.1). */
     private fun sharedSecret(encodedPoint: ByteArray): ByteArray? {
         val key = caPrivateKey as? ECPrivateKey ?: return null
         val point =
@@ -542,7 +542,7 @@ class SimulatedChip(
         const val DEFAULT_SEED = 9303L
         const val FID_CARD_ACCESS = 0x011C
 
-        /** EF.CardSecurity, au MF : même FID que EF.SOD dans l'applet. */
+        /** EF.CardSecurity, at the MF: same FID as EF.SOD in the applet. */
         const val FID_CARD_SECURITY = 0x011D
         const val FID_COM = 0x011E
         const val FID_SOD = 0x011D

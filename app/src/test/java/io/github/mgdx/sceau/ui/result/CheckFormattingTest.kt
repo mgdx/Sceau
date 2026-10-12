@@ -24,7 +24,7 @@ class CheckFormattingTest {
     private fun lines(check: Check) = CheckFormatting.detailLines(check, formatDate, country)
 
     @Test
-    fun `sept lignes dans l'ordre, lignes manquantes non disponibles`() {
+    fun `seven rows in order, missing rows not available`() {
         val checks =
             listOf(
                 Check(CheckId.DG_HASHES, CheckStatus.OK),
@@ -37,13 +37,13 @@ class CheckFormattingTest {
     }
 
     @Test
-    fun `canal securise`() {
+    fun `secure channel`() {
         val result = lines(Check(CheckId.SECURE_CHANNEL, CheckStatus.OK, CheckDetail.SecureChannel(ChannelProtocol.PACE)))
         assertEquals(listOf(UiText(R.string.result_detail_protocol, listOf("PACE"))), result)
     }
 
     @Test
-    fun `chaine avec CSCA, pays, source et certificats de lien`() {
+    fun `chain with CSCA, country, source and link certificates`() {
         val chain =
             ChainInfo(
                 dsSubject = "CN=DS",
@@ -69,7 +69,7 @@ class CheckFormattingTest {
     }
 
     @Test
-    fun `chaine sans CSCA connu`() {
+    fun `chain without a known CSCA`() {
         val chain =
             ChainInfo("CN=DS", "01", Instant.EPOCH, Instant.EPOCH, "SHA256withRSA", null, null, null, null, emptyList())
         val result = lines(Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.FAILED, CheckDetail.Chain(chain)))
@@ -78,7 +78,7 @@ class CheckFormattingTest {
     }
 
     @Test
-    fun `validite du DS avec date estimee`() {
+    fun `DS validity with estimated date`() {
         val detail =
             CheckDetail.DsValidity(
                 notBefore = Instant.parse("2020-01-01T00:00:00Z"),
@@ -100,14 +100,14 @@ class CheckFormattingTest {
     }
 
     @Test
-    fun `validite du DS sans date de delivrance`() {
+    fun `DS validity without issuance date`() {
         val detail = CheckDetail.DsValidity(Instant.EPOCH, Instant.EPOCH, null, null)
         val result = lines(Check(CheckId.DS_VALIDITY, CheckStatus.FAILED, detail))
         assertEquals(UiText(R.string.result_detail_issuance_unknown), result.last())
     }
 
     @Test
-    fun `empreintes controlees et non conformes`() {
+    fun `checked and mismatched hashes`() {
         val detail = CheckDetail.DataGroupHashes("SHA-256", checked = listOf(2, 1, 14), mismatched = listOf(2))
         val result = lines(Check(CheckId.DG_HASHES, CheckStatus.FAILED, detail))
         assertEquals(
@@ -121,14 +121,14 @@ class CheckFormattingTest {
     }
 
     @Test
-    fun `empreintes toutes conformes`() {
+    fun `all hashes match`() {
         val detail = CheckDetail.DataGroupHashes("SHA-256", checked = listOf(1, 2), mismatched = emptyList())
         val result = lines(Check(CheckId.DG_HASHES, CheckStatus.OK, detail))
         assertEquals(UiText(R.string.result_detail_dg_all_match), result.last())
     }
 
     @Test
-    fun `empreintes - anomalie connue de l'emetteur, DG12 ecarte`() {
+    fun `hashes - known issuer deviation, DG12 excluded`() {
         val detail =
             CheckDetail.DataGroupHashes(
                 "SHA-256",
@@ -148,7 +148,7 @@ class CheckFormattingTest {
     }
 
     @Test
-    fun `CA et AA non disponibles, etape non atteinte`() {
+    fun `CA and AA not available, step not reached`() {
         assertEquals(
             listOf(UiText(R.string.result_detail_no_dg14)),
             lines(Check(CheckId.CHIP_AUTHENTICATION, CheckStatus.NOT_AVAILABLE)),
@@ -165,7 +165,7 @@ class CheckFormattingTest {
     }
 
     @Test
-    fun `DS manquant, algorithme non pris en charge et erreur`() {
+    fun `missing DS, unsupported algorithm and error`() {
         assertEquals(
             listOf(UiText(R.string.result_detail_ds_missing)),
             lines(Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.FAILED, CheckDetail.DsCertificateMissing)),
@@ -183,7 +183,7 @@ class CheckFormattingTest {
     }
 
     @Test
-    fun `genre de document depuis le code MRZ`() {
+    fun `document kind from the MRZ code`() {
         assertEquals(DocumentKind.PASSPORT, DocumentKind.fromMrzCode("P<"))
         assertEquals(DocumentKind.PASSPORT, DocumentKind.fromMrzCode("PO"))
         assertEquals(DocumentKind.IDENTITY_CARD, DocumentKind.fromMrzCode("ID"))
@@ -195,7 +195,7 @@ class CheckFormattingTest {
     }
 
     @Test
-    fun `groupes de donnees annonces mais non fournis par la puce`() {
+    fun `data groups announced but not provided by the chip`() {
         val detail =
             CheckDetail.DataGroupHashes("SHA-256", checked = listOf(1, 2), mismatched = emptyList(), missing = listOf(15, 14))
         val result = lines(Check(CheckId.DG_HASHES, CheckStatus.FAILED, detail))
@@ -210,8 +210,8 @@ class CheckFormattingTest {
     }
 
     @Test
-    fun `pays connu sans chaine - aucun CSCA, pays, puis DS tente ou absent`() {
-        // Audit V25 : chaînes existantes seulement, aucune nouvelle chaîne à traduire.
+    fun `known country without chain - no CSCA, country, then DS tried or absent`() {
+        // Audit V25: existing strings only, no new string to translate.
         val chain =
             ChainInfo("CN=DS", "01", Instant.EPOCH, Instant.EPOCH, "SHA256withECDSA", null, null, null, null, emptyList())
         val withDs = Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.FAILED, CheckDetail.NoChainForKnownCountry("FR", chain))
@@ -231,7 +231,7 @@ class CheckFormattingTest {
     }
 
     @Test
-    fun `pays incoherents`() {
+    fun `inconsistent countries`() {
         val check =
             Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.FAILED, CheckDetail.CountryMismatch("DE", "FR", "FRA"))
         assertEquals(
@@ -242,7 +242,7 @@ class CheckFormattingTest {
     }
 
     @Test
-    fun `pays incoherents avec attributs manquants`() {
+    fun `inconsistent countries with missing attributes`() {
         val unknown = UiText(R.string.result_unknown_value)
         val result = lines(Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.FAILED, CheckDetail.CountryMismatch(null, "FR", "D<<")))
         assertEquals(listOf(UiText(R.string.result_detail_country_mismatch, listOf(unknown, "pays:FR", "D"))), result)
@@ -251,7 +251,7 @@ class CheckFormattingTest {
     }
 
     @Test
-    fun `ancre importee signalee sur la carte du verdict`() {
+    fun `imported anchor flagged on the verdict card`() {
         fun chain(source: TrustSource?) =
             ChainInfo("CN=DS", "01", Instant.EPOCH, Instant.EPOCH, "SHA256withRSA", "CN=CSCA", "FR", "00", source, emptyList())
         assertTrue(CheckFormatting.isImportedAnchor(chain(TrustSource.IMPORTED_MASTER_LIST)))
@@ -261,7 +261,7 @@ class CheckFormattingTest {
         assertFalse(CheckFormatting.isImportedAnchor(chain(TrustSource.EMBEDDED_MASTER_LIST)))
         assertFalse(CheckFormatting.isImportedAnchor(chain(null)))
         assertFalse(CheckFormatting.isImportedAnchor(null))
-        // Audit V17 : chaîne du SOD embarquée, chaîne d'EF.CardSecurity (PACE-CAM) importée.
+        // Audit V17: SOD chain embedded, EF.CardSecurity (PACE-CAM) chain imported.
         assertTrue(CheckFormatting.isImportedAnchor(chain(TrustSource.ANTS), chain(TrustSource.IMPORTED_CERTIFICATE)))
         assertFalse(CheckFormatting.isImportedAnchor(chain(TrustSource.ANTS), null))
     }

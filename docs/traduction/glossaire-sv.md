@@ -1,43 +1,43 @@
-# Glossaire suédois (sv)
+# Swedish glossary (sv)
 
-| Source FR | Cible | Note |
+| French source | Target | Note |
 |---|---|---|
-| puce | chip (chippet) | Terme courant pour pass et id-kort |
-| document (d'identité) | handling (identitetshandling) | Terme officiel de Polisen ; « dokument » seulement dans « dokumentnummer » |
-| titulaire | innehavare | Vocabulaire officiel des passeports |
-| magasin de confiance | tillitsarkiv | Calque de « trust store » ; bref, compréhensible |
-| empreinte (certificat) | fingeravtryck | Empreinte SHA-256 d'un certificat |
-| empreinte (groupe de données) | hashvärde | Hachage des DG dans le SOD |
+| puce | chip (chippet) | Common term for pass and id-kort |
+| document (d'identité) | handling (identitetshandling) | Official Polisen term; “dokument” only in “dokumentnummer” |
+| titulaire | innehavare | Official passport vocabulary |
+| magasin de confiance | tillitsarkiv | Calque of “trust store”; short, understandable |
+| empreinte (certificat) | fingeravtryck | SHA-256 fingerprint of a certificate |
+| empreinte (groupe de données) | hashvärde | Hash of the DGs in the SOD |
 | algorithme d'empreinte | hashalgoritm | |
-| certificat de lien | länkcertifikat | Link certificate ICAO |
+| certificat de lien | länkcertifikat | ICAO link certificate |
 | certificat racine | rotcertifikat | |
 | émetteur | utfärdare | |
 | pays émetteur | utfärdande land | |
-| État émetteur | utfärdande stat | Champ du passeport |
-| autorité de délivrance | utfärdande myndighet | Mention du passeport suédois |
+| État émetteur | utfärdande stat | Passport field |
+| autorité de délivrance | utfärdande myndighet | Wording on the Swedish passport |
 | date de délivrance | utfärdandedatum | |
-| date d'expiration | giltig till | Mention usuelle des documents suédois |
+| date d'expiration | giltig till | Usual wording on Swedish documents |
 | numéro du document | dokumentnummer | |
 | nom / prénoms | efternamn / förnamn | |
 | signataire | signerare | |
-| lire | läsa | Bouton « Läs » |
-| réessayer | Försök igen | Vocabulaire Android |
-| annuler | Avbryt | Vocabulaire Android |
+| lire | läsa | “Läs” button |
+| réessayer | Försök igen | Android vocabulary |
+| annuler | Avbryt | Android vocabulary |
 | effacer (résultat) | Rensa | |
 | importer | Importera | |
-| supprimer | Ta bort | Vocabulaire Android |
-| Plus d'options | Fler alternativ | Vocabulaire Android |
+| supprimer | Ta bort | Android vocabulary |
+| Plus d'options | Fler alternativ | Android vocabulary |
 | réglages | inställningar | |
 | Authentique | Äkta | Verdict |
 | Signature valide, puce non vérifiée | Giltig signatur, chippet ej verifierat | Verdict |
 | Émetteur inconnu | Okänd utfärdare | Verdict |
-| Échec | Misslyckades | Verdict et statut de contrôle |
+| Échec | Misslyckades | Verdict and check status |
 | Réussie (statut) | Godkänd | |
 | canal sécurisé | säker kanal | |
 | vérification (contrôle) | kontroll | |
 | groupe de données | datagrupp | |
 | liste de révocation | spärrlista | |
 | RGPD | GDPR (dataskyddsförordningen) | |
-| CNIe | franskt id-kort | Menu démo |
-| Master List | Master List | Jamais traduit ; pluriel « Master Lists » |
-| JJ / MM / AAAA | DD / MM / ÅÅÅÅ | Gabarits de date |
+| CNIe | franskt id-kort | Demo menu |
+| Master List | Master List | Never translated; plural “Master Lists” |
+| JJ / MM / AAAA | DD / MM / ÅÅÅÅ | Date templates |

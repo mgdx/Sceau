@@ -16,15 +16,15 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 /**
- * Accès au magasin de confiance depuis l'app. Singleton applicatif (voir SceauApplication).
- * Les Master Lists importées sont stockées telles quelles dans `filesDir/trust/<sha256>.ml`, les
- * certificats importés seuls en DER dans `filesDir/trust/<sha256 du DER>.der` (D33) : ce ne sont
- * pas des données personnelles. Toutes les fonctions s'exécutent sur Dispatchers.IO.
+ * Access to the trust store from the app. Application-wide singleton (see SceauApplication).
+ * Imported Master Lists are stored as is in `filesDir/trust/<sha256>.ml`, standalone imported
+ * certificates in DER in `filesDir/trust/<sha256 of the DER>.der` (D33): these are not personal
+ * data. All functions run on Dispatchers.IO.
  *
- * Deux verrous (audit V22) : [mutex] protège les fichiers et les caches, et n'est jamais tenu
- * pendant la fusion du magasin ; [loadMutex] évite seulement de fusionner deux fois en parallèle.
- * La liste des éléments importés et leur suppression n'attendent donc jamais un chargement en
- * cours, et restent possibles si ce chargement échoue. [loadStore] n'est remplacé que par les tests.
+ * Two locks (audit V22): [mutex] protects the files and the caches, and is never held while the
+ * store is being merged; [loadMutex] only prevents merging twice in parallel. Listing and removing
+ * imported items therefore never wait for an ongoing load, and remain possible if that load
+ * fails. [loadStore] is replaced only by the tests.
  */
 class TrustStoreRepository internal constructor(
     private val context: Context,
@@ -34,29 +34,29 @@ class TrustStoreRepository internal constructor(
 
     private val mutex = Mutex()
 
-    /** Fusion du magasin en cours ; toujours pris avant [mutex], jamais l'inverse. */
+    /** Store merge in progress; always acquired before [mutex], never the other way around. */
     private val loadMutex = Mutex()
 
-    /** Incrémenté à chaque modification des fichiers : un magasin fusionné entre-temps n'est pas gardé. */
+    /** Incremented on every file modification: a store merged in the meantime is not kept. */
     private var generation = 0L
 
-    /** Magasin fusionné en mémoire ; null tant qu'il n'est pas chargé ou après un import. */
+    /** Merged store in memory; null until it is loaded or after an import. */
     private var cached: TrustStore? = null
 
-    /** Éléments importés, relus et revérifiés une fois puis gardés jusqu'à la prochaine modification. */
+    /** Imported items, reread and reverified once, then kept until the next modification. */
     private var cachedItems: List<ImportedItem>? = null
 
     private val directory: File get() = File(context.filesDir, IMPORT_DIRECTORY)
 
     /**
-     * Empreintes SHA-256 des Master Lists embarquées dans `:core`, énumérées comme par le
-     * chargeur du magasin (`trust/index.txt`), calculées une fois à la première demande.
+     * SHA-256 fingerprints of the Master Lists embedded in `:core`, enumerated as the store
+     * loader does (`trust/index.txt`), computed once on first request.
      */
     private val embeddedMasterListHashes: Set<String> by lazy { readEmbeddedMasterListHashes() }
 
     /**
-     * Magasin fusionné, chargé une fois puis mis en cache en mémoire jusqu'au prochain import.
-     * Les fichiers sont lus sous [mutex], la fusion se fait hors de ce verrou.
+     * Merged store, loaded once and then cached in memory until the next import.
+     * The files are read under [mutex]; the merge happens outside that lock.
      */
     suspend fun get(): TrustStore =
         withContext(Dispatchers.IO) {
@@ -80,9 +80,9 @@ class TrustStoreRepository internal constructor(
         }
 
     /**
-     * Parse et vérifie une Master List sans l'importer (pour afficher l'empreinte du signataire).
-     * Annulable : l'analyse s'interrompt quand l'appelant est annulé, par exemple quand
-     * l'utilisateur quitte l'écran (audit V22).
+     * Parses and verifies a Master List without importing it (to display the signer's fingerprint).
+     * Cancellable: parsing stops when the caller is cancelled, for example when the user leaves
+     * the screen (audit V22).
      */
     suspend fun preview(bytes: ByteArray): MasterList =
         withContext(Dispatchers.IO) {
@@ -91,13 +91,13 @@ class TrustStoreRepository internal constructor(
         }
 
     /**
-     * Reconnaît le fichier choisi par l'utilisateur et le vérifie sans l'importer (D33) : d'abord
-     * comme certificat seul s'il ne dépasse pas [ImportLimits.MAX_CERTIFICATE_BYTES], puis, s'il
-     * est plus gros ou n'est pas un certificat lisible, comme Master List. Lève
-     * [InvalidCertificateException] pour un certificat refusé, [ImportLimitException] au-delà des
-     * limites, [InvalidMasterListException] pour une Master List invalide,
-     * [UnrecognizedFileException] pour un fichier qui n'est ni l'un ni l'autre et
-     * [DuplicateImportException] pour un fichier déjà présent dans le magasin.
+     * Recognizes the file chosen by the user and verifies it without importing it (D33): first as
+     * a standalone certificate if it does not exceed [ImportLimits.MAX_CERTIFICATE_BYTES], then,
+     * if it is larger or is not a readable certificate, as a Master List. Throws
+     * [InvalidCertificateException] for a rejected certificate, [ImportLimitException] beyond the
+     * limits, [InvalidMasterListException] for an invalid Master List,
+     * [UnrecognizedFileException] for a file that is neither, and
+     * [DuplicateImportException] for a file already present in the store.
      */
     suspend fun previewImport(bytes: ByteArray): ImportPreview {
         if (bytes.size <= ImportLimits.MAX_CERTIFICATE_BYTES) {
@@ -107,7 +107,7 @@ class TrustStoreRepository internal constructor(
                 if (e.code != CODE_UNREADABLE) throw e
             }
         }
-        // Doublon puis limites, vérifiés avant l'analyse et la confirmation (D22, D33).
+        // Duplicate check, then limits, both verified before parsing and confirmation (D22, D33).
         checkImportAllowed(bytes)
         val masterList =
             try {
@@ -117,7 +117,7 @@ class TrustStoreRepository internal constructor(
                 throw e
             }
         val store = get()
-        // Mêmes certificats que ceux qui ancreront la liste au chargement (audit V34).
+        // Same certificates as those that will anchor the list at load time (audit V34).
         val importedCertificates = withContext(Dispatchers.IO) { mutex.withLock { read(certificateFiles()) } }
         return withContext(Dispatchers.Default) {
             val newCertificates =
@@ -131,8 +131,8 @@ class TrustStoreRepository internal constructor(
     }
 
     /**
-     * Lit et vérifie un certificat seul sans l'importer (D33), limites comprises : lève
-     * [InvalidCertificateException], [DuplicateImportException] ou [ImportLimitException].
+     * Reads and verifies a standalone certificate without importing it (D33), limits included: throws
+     * [InvalidCertificateException], [DuplicateImportException] or [ImportLimitException].
      */
     suspend fun previewCertificate(bytes: ByteArray): CertificateSummary =
         withContext(Dispatchers.IO) {
@@ -147,9 +147,9 @@ class TrustStoreRepository internal constructor(
         }
 
     /**
-     * Importe un certificat déjà prévisualisé et confirmé, converti en DER ; invalide le cache.
-     * Revérifié ici : l'appelant ne doit pas pouvoir écrire un certificat invalide. Un certificat
-     * déjà présent lève [DuplicateImportException] ; au-delà des limites, [ImportLimitException].
+     * Imports an already previewed and confirmed certificate, converted to DER; invalidates the cache.
+     * Reverified here: the caller must not be able to write an invalid certificate. A certificate
+     * already present throws [DuplicateImportException]; beyond the limits, [ImportLimitException].
      */
     suspend fun importCertificate(bytes: ByteArray): Unit =
         withContext(Dispatchers.IO) {
@@ -165,9 +165,9 @@ class TrustStoreRepository internal constructor(
         }
 
     /**
-     * Éléments importés, Master Lists puis certificats, chacun dans l'ordre d'import. Un fichier
-     * devenu illisible reste listé, sans détail, pour pouvoir être supprimé. Ne dépend pas du
-     * magasin fusionné : la liste s'obtient pendant son chargement ou après un échec (audit V22).
+     * Imported items, Master Lists then certificates, each in import order. A file that has become
+     * unreadable stays listed, without details, so that it can be removed. Does not depend on the
+     * merged store: the list can be obtained while it is loading or after a failure (audit V22).
      */
     suspend fun importedItems(): List<ImportedItem> =
         withContext(Dispatchers.IO) {
@@ -177,9 +177,9 @@ class TrustStoreRepository internal constructor(
         }
 
     /**
-     * Supprime l'élément importé [id] (nom de fichier rendu par [importedItems]) ; invalide le
-     * cache. Tout autre identifiant est refusé par [IllegalArgumentException] : il ne doit jamais
-     * désigner un fichier hors de `filesDir/trust/`.
+     * Removes the imported item [id] (file name returned by [importedItems]); invalidates the
+     * cache. Any other identifier is rejected with [IllegalArgumentException]: it must never
+     * designate a file outside `filesDir/trust/`.
      */
     suspend fun removeImported(id: String): Unit =
         withContext(Dispatchers.IO) {
@@ -192,9 +192,9 @@ class TrustStoreRepository internal constructor(
         }
 
     /**
-     * Vérifie, avant toute analyse, que [bytes] n'est pas déjà dans le magasin (D33) et pourrait
-     * être importée sans dépasser les limites de [ImportLimits] ; lève [DuplicateImportException]
-     * ou [ImportLimitException] sinon.
+     * Checks, before any parsing, that [bytes] is not already in the store (D33) and could be
+     * imported without exceeding the limits of [ImportLimits]; otherwise throws
+     * [DuplicateImportException] or [ImportLimitException].
      */
     suspend fun checkImportAllowed(bytes: ByteArray): Unit =
         withContext(Dispatchers.IO) {
@@ -205,13 +205,13 @@ class TrustStoreRepository internal constructor(
         }
 
     /**
-     * Importe une Master List déjà prévisualisée et confirmée ; invalide le cache. Une liste déjà
-     * importée ou embarquée lève [DuplicateImportException] ; au-delà des limites de
+     * Imports an already previewed and confirmed Master List; invalidates the cache. A list already
+     * imported or embedded throws [DuplicateImportException]; beyond the limits of
      * [ImportLimits], [ImportLimitException].
      */
     suspend fun import(bytes: ByteArray): Unit =
         withContext(Dispatchers.IO) {
-            // Revérifiée ici : l'appelant ne doit pas pouvoir écrire une liste invalide.
+            // Reverified here: the caller must not be able to write an invalid list.
             TrustStores.parseMasterList(bytes)
             mutex.withLock {
                 requireNewMasterList(bytes)
@@ -221,7 +221,7 @@ class TrustStoreRepository internal constructor(
             }
         }
 
-    /** Décision d'import de [bytes] ; lève [ImportLimitException] si l'import est refusé. */
+    /** Import decision for [bytes]; throws [ImportLimitException] if the import is refused. */
     private fun requireAllowed(bytes: ByteArray): ImportDecision {
         val existing = masterListFiles().map { ImportedFile(it.name, it.length()) }
         val decision = ImportLimits.decide(existing, importFileName(bytes), bytes.size.toLong())
@@ -231,7 +231,7 @@ class TrustStoreRepository internal constructor(
         return decision
     }
 
-    /** Lève [DuplicateImportException] si le certificat [der] est déjà importé ou dans [store] (D33). */
+    /** Throws [DuplicateImportException] if the certificate [der] is already imported or in [store] (D33). */
     private fun requireNewCertificate(
         der: ByteArray,
         store: TrustStore,
@@ -241,7 +241,7 @@ class TrustStoreRepository internal constructor(
         if (duplicate != null) throw DuplicateImportException(duplicate)
     }
 
-    /** Lève [DuplicateImportException] si la Master List [bytes] est déjà importée ou embarquée (D33). */
+    /** Throws [DuplicateImportException] if the Master List [bytes] is already imported or embedded (D33). */
     private fun requireNewMasterList(bytes: ByteArray) {
         val imported = masterListFiles().mapTo(HashSet()) { it.name.removeSuffix(IMPORT_EXTENSION) }
         val duplicate = ImportDuplicates.masterList(sha256Hex(bytes), imported, embeddedMasterListHashes)
@@ -252,7 +252,7 @@ class TrustStoreRepository internal constructor(
         if (bytes.size > ImportLimits.MAX_CERTIFICATE_BYTES) throw ImportLimitException(ImportDecision.CERTIFICATE_TOO_LARGE)
     }
 
-    /** Décision d'import du certificat [der] ; lève [ImportLimitException] si l'import est refusé. */
+    /** Import decision for the certificate [der]; throws [ImportLimitException] if the import is refused. */
     private fun requireCertificateAllowed(
         der: ByteArray,
         size: Long,
@@ -265,7 +265,7 @@ class TrustStoreRepository internal constructor(
         return decision
     }
 
-    /** Supprime toutes les Master Lists et tous les certificats importés ; invalide le cache. */
+    /** Removes all imported Master Lists and certificates; invalidates the cache. */
     suspend fun clearImported(): Unit =
         withContext(Dispatchers.IO) {
             mutex.withLock {
@@ -282,7 +282,7 @@ class TrustStoreRepository internal constructor(
         cachedItems = null
     }
 
-    /** Écrit [bytes] sous [name] dans le dossier des imports ; invalide le cache. */
+    /** Writes [bytes] as [name] in the imports directory; invalidates the cache. */
     private fun write(
         name: String,
         bytes: ByteArray,
@@ -329,7 +329,7 @@ class TrustStoreRepository internal constructor(
             .orEmpty()
             .toList()
 
-    /** Écrit dans un fichier temporaire du même dossier, synchronise, puis renomme. */
+    /** Writes to a temporary file in the same directory, syncs, then renames. */
     private fun writeAtomically(
         dir: File,
         target: File,
@@ -370,18 +370,18 @@ class TrustStoreRepository internal constructor(
         private const val CODE_UNREADABLE = "UNREADABLE"
         private const val CODE_NOT_CMS = "NOT_CMS"
 
-        /** Identifiant d'élément importé : SHA-256 en hexadécimal minuscule suivi de `.ml` ou `.der`. */
+        /** Imported item identifier: SHA-256 in lowercase hexadecimal followed by `.ml` or `.der`. */
         private val IMPORT_ID = Regex("[0-9a-f]{64}\\.(ml|der)")
 
-        /** Nom de fichier d'une Master List importée : SHA-256 du contenu en hexadécimal, suffixé `.ml`. */
+        /** File name of an imported Master List: SHA-256 of the content in hexadecimal, suffixed `.ml`. */
         fun importFileName(bytes: ByteArray): String = sha256Hex(bytes) + IMPORT_EXTENSION
 
-        /** Nom de fichier d'un certificat importé : SHA-256 de son DER en hexadécimal, suffixé `.der`. */
+        /** File name of an imported certificate: SHA-256 of its DER in hexadecimal, suffixed `.der`. */
         fun certificateFileName(der: ByteArray): String = sha256Hex(der) + CERTIFICATE_EXTENSION
 
         /**
-         * Vrai si [id] est un nom de fichier d'import attendu : ni séparateur, ni `..`, ni autre
-         * extension. Seul garde-fou de [removeImported] contre la traversée de chemin.
+         * True if [id] is an expected import file name: no separator, no `..`, no other
+         * extension. Sole safeguard of [removeImported] against path traversal.
          */
         fun isValidImportId(id: String): Boolean = IMPORT_ID.matches(id)
     }

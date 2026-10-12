@@ -64,8 +64,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
- * Écran d'accueil (SPEC §5.1). La saisie vit dans le [SessionViewModel] : aucun
- * `rememberSaveable`, qui l'écrirait dans l'état sauvegardé de l'activité.
+ * Home screen (SPEC §5.1). The input lives in the [SessionViewModel]: no
+ * `rememberSaveable`, which would write it into the activity's saved state.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -124,7 +124,7 @@ fun HomeScreen(
                 if (form.tab == DocumentTab.ID_CARD) {
                     IdCardKeySelector(selected = form.idCardKey, onSelect = session::selectIdCardKey)
                 }
-                // Ni Copier ni Couper sur la clé d'accès (V37, D45).
+                // Neither Copy nor Cut on the access key (V37, D45).
                 NoCopyTextToolbarProvider {
                     if (form.usesCan) {
                         CanFields(form = form, onCanChange = session::onCanChange)
@@ -155,8 +155,8 @@ fun HomeScreen(
 }
 
 /**
- * Mode démo (APK de debug uniquement) : la CNIe simulée est fabriquée hors du thread principal
- * (génération de clés), puis lue par le même chemin qu'un vrai document.
+ * Demo mode (debug APK only): the simulated CNIe is built off the main thread
+ * (key generation), then read through the same path as a real document.
  */
 private fun startDemo(
     session: SessionViewModel,
@@ -209,7 +209,7 @@ private fun OverflowMenu(
     }
 }
 
-/** Choix de la clé d'accès d'une carte d'identité : CAN (par défaut) ou MRZ (D31). */
+/** Choice of the access key of an identity card: CAN (default) or MRZ (D31). */
 @Composable
 private fun IdCardKeySelector(
     selected: IdCardKey,
@@ -247,7 +247,7 @@ private fun CanFields(
         label = { Text(stringResource(R.string.home_can_label)) },
         supportingText = { Text(stringResource(R.string.home_can_supporting)) },
         singleLine = true,
-        // NumberPassword : le clavier ne mémorise ni ne suggère la saisie.
+        // NumberPassword: the keyboard neither remembers nor suggests the input.
         keyboardOptions =
             KeyboardOptions(
                 keyboardType = KeyboardType.NumberPassword,
@@ -282,7 +282,7 @@ private fun MrzFields(
             )
         },
         singleLine = true,
-        // Password : le clavier ne mémorise ni ne suggère la saisie.
+        // Password: the keyboard neither remembers nor suggests the input.
         keyboardOptions =
             KeyboardOptions(
                 capitalization = KeyboardCapitalization.Characters,
@@ -309,7 +309,7 @@ private fun MrzFields(
         onValueChange = { input ->
             val wasComplete = form.dateOfExpiryDigits.length == AccessForm.DATE_DIGITS
             session.onDateOfExpiryChange(input)
-            // Dernier chiffre du dernier champ : le clavier se retire et dégage le bouton « Lire ».
+            // Last digit of the last field: the keyboard is dismissed and uncovers the "Read" button.
             if (!wasComplete && session.form.dateOfExpiryDigits.length == AccessForm.DATE_DIGITS) {
                 keyboard?.hide()
                 focusManager.clearFocus()
@@ -319,8 +319,8 @@ private fun MrzFields(
 }
 
 /**
- * Date saisie au clavier numérique, sans calendrier : les séparateurs sont ajoutés à
- * l'affichage ([DateDigitsTransformation]), seuls les chiffres sont gardés dans le ViewModel.
+ * Date typed on the numeric keyboard, without a calendar: separators are added on
+ * display ([DateDigitsTransformation]), only the digits are kept in the ViewModel.
  */
 @Composable
 private fun DateField(
@@ -355,7 +355,7 @@ private fun DateField(
         isError = error != null,
         singleLine = true,
         visualTransformation = transformation,
-        // NumberPassword : clavier numérique, qui ne mémorise ni ne suggère la saisie.
+        // NumberPassword: numeric keyboard, which neither remembers nor suggests the input.
         keyboardOptions =
             KeyboardOptions(
                 keyboardType = KeyboardType.NumberPassword,
@@ -367,9 +367,9 @@ private fun DateField(
 }
 
 /**
- * Clé d'accès en cours de saisie : sur Android 14+, seuls les services d'accessibilité déclarés
- * outils d'accessibilité (`isAccessibilityTool`, comme TalkBack) voient le champ et reçoivent
- * ses événements ; les autres services, qui pourraient lire le CAN ou la MRZ, ne les voient pas.
- * Sans effet avant Android 14. Le menu contextuel n'offre ni Copier ni Couper (V37, D45).
+ * Access key being entered: on Android 14+, only accessibility services declared as
+ * accessibility tools (`isAccessibilityTool`, like TalkBack) see the field and receive its
+ * events; the other services, which could read the CAN or the MRZ, do not see them.
+ * No effect before Android 14. The context menu offers neither Copy nor Cut (V37, D45).
  */
 private fun Modifier.sensitiveInput(): Modifier = semantics { isSensitiveData = true }.noCopyContextMenu()

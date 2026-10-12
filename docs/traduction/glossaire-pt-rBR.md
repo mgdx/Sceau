@@ -1,32 +1,32 @@
-# Glossaire pt-rBR — portugais du Brésil
+# Glossary pt-rBR — Brazilian Portuguese
 
-Termes clés de l’interface de Sceau. Les acronymes ICAO (CAN, MRZ, PACE, BAC, SOD, DS, CSCA, DG1 à DG15…),
-« Chip Authentication », « Active Authentication » et « Master List » ne sont jamais traduits.
+Key terms of the Sceau interface. The ICAO acronyms (CAN, MRZ, PACE, BAC, SOD, DS, CSCA, DG1 to DG15…),
+“Chip Authentication”, “Active Authentication” and “Master List” are never translated.
 
-| Source FR | Cible | Note |
+| French source | Target | Note |
 |---|---|---|
 | puce | chip |  |
 | document | documento |  |
-| carte d’identité | carteira de identidade | es : terme neutre (ni DNI ni cédula) ; pt-BR : nom usuel du RG/CIN |
+| carte d’identité | carteira de identidade | es: neutral term (neither DNI nor cédula); pt-BR: usual name of the RG/CIN |
 | passeport | passaporte |  |
-| titulaire | titular | vocabulaire officiel des documents |
-| magasin de confiance | repositório de confiança | calque de « trust store » |
-| empreinte (condensat) | impressão digital (certificat) / hash (groupes de données) | pt/pt-BR : « impressão digital » pour un certificat comme Android, « hash » pour les groupes de données |
-| certificat de lien | certificado de ligação | link certificate ICAO |
+| titulaire | titular | official document vocabulary |
+| magasin de confiance | repositório de confiança | calque of “trust store” |
+| empreinte (condensat) | impressão digital (certificat) / hash (groupes de données) | pt/pt-BR: “impressão digital” for a certificate as in Android, “hash” for data groups |
+| certificat de lien | certificado de ligação | ICAO link certificate |
 | certificat racine | certificado raiz |  |
 | émetteur | emissor |  |
 | pays émetteur | país emissor |  |
-| État émetteur | Estado emissor | champ DG1 |
+| État émetteur | Estado emissor | DG1 field |
 | signataire | signatário |  |
 | embarqué (magasin) | integrado |  |
 | importé | importado |  |
-| Master List | Master List (pl. Master Lists) | terme ICAO jamais traduit |
+| Master List | Master List (pl. Master Lists) | ICAO term, never translated |
 | lire / Lire (bouton) | ler / Ler |  |
-| Réessayer | Tentar novamente | libellé système Android |
+| Réessayer | Tentar novamente | Android system label |
 | Annuler | Cancelar |  |
 | Effacer (résultat) | Apagar |  |
 | Importer | Importar |  |
-| Supprimer | Excluir | pt-BR : « Excluir » comme Android |
+| Supprimer | Excluir | pt-BR: “Excluir” as in Android |
 | Réglages / paramètres | Configurações |  |
 | Plus d’options | Mais opções |  |
 | À propos | Sobre |  |
@@ -38,10 +38,10 @@ Termes clés de l’interface de Sceau. Les acronymes ICAO (CAN, MRZ, PACE, BAC,
 | Signature valide, puce non vérifiée | Assinatura válida, chip não verificado |  |
 | Émetteur inconnu | Emissor desconhecido |  |
 | Échec (verdict) | Falha |  |
-| Nom / Prénoms | Sobrenome / Nome | libellés des documents nationaux |
-| Nationalité | Nacionalidade | it/ro : libellé du passeport national |
+| Nom / Prénoms | Sobrenome / Nome | labels on national documents |
+| Nationalité | Nacionalidade | it/ro: label on the national passport |
 | Date d’expiration | Data de validade |  |
 | Date de délivrance | Data de emissão |  |
-| JJ / MM / AAAA | DD / MM / AAAA | gabarits de saisie |
-| RGPD | RGPD | it/ro : sigle d’usage courant |
+| JJ / MM / AAAA | DD / MM / AAAA | input templates |
+| RGPD | RGPD | it/ro: acronym in common use |
 | canal sécurisé | canal seguro |  |

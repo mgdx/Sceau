@@ -13,10 +13,10 @@ import java.util.Random
 import javax.crypto.spec.SecretKeySpec
 
 /**
- * Fuzzing des réponses de la puce sous messagerie sécurisée (audit V36) : contrôle de
- * `TransportCardService.transmit`, puis déballage par JMRTD (`SecureMessagingWrapper.unwrap`,
- * DESede et AES). Contrat : une réponse mutée produit une réponse ou une `Exception`, jamais une
- * `Error` (`OutOfMemoryError` d'une longueur de DO'87 démesurée allouée avant le MAC).
+ * Fuzzing of chip responses under secure messaging (audit V36): checks in
+ * `TransportCardService.transmit`, then unwrapping by JMRTD (`SecureMessagingWrapper.unwrap`,
+ * DESede and AES). Contract: a mutated response yields a response or an `Exception`, never an
+ * `Error` (`OutOfMemoryError` from an oversized DO'87 length allocated before the MAC check).
  */
 class SecureMessagingFuzzTest {
     @Test
@@ -27,7 +27,7 @@ class SecureMessagingFuzzTest {
         }
     }
 
-    /** READ BINARY emballé, réponse [response] ; toute `Exception` est un refus admis. */
+    /** Wrapped READ BINARY, response [response]; any `Exception` is an accepted rejection. */
     private fun exercise(
         wrapper: APDUWrapper,
         response: ByteArray,
@@ -36,7 +36,7 @@ class SecureMessagingFuzzTest {
         try {
             SecureMessagingAPDUSender(service).transmit(wrapper, CommandAPDU(0x00, 0xB0, 0x00, 0x00, BLOCK))
         } catch (e: Exception) {
-            // Réponse refusée par Sceau ou par JMRTD : attendu pour une entrée mutée.
+            // Response rejected by Sceau or by JMRTD: expected for a mutated input.
         }
     }
 
@@ -46,7 +46,7 @@ class SecureMessagingFuzzTest {
             AESSecureMessagingWrapper(SecretKeySpec(KEY, "AES"), SecretKeySpec(KEY, "AES"), 0L),
         )
 
-    /** Réponses de forme valide (DO'87 ou DO'85, DO'99, DO'8E), MAC quelconque. */
+    /** Well-formed responses (DO'87 or DO'85, DO'99, DO'8E), arbitrary MAC. */
     private fun seeds(): List<ByteArray> {
         val random = Random(SEED)
 

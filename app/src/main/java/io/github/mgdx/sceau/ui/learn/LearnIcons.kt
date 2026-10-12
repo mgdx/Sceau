@@ -1,6 +1,6 @@
 /*
- * Tracés d'icônes issus de Material Icons (Google), https://github.com/google/material-design-icons,
- * distribués sous licence Apache 2.0 : https://www.apache.org/licenses/LICENSE-2.0
+ * Icon paths taken from Material Icons (Google), https://github.com/google/material-design-icons,
+ * distributed under the Apache 2.0 license: https://www.apache.org/licenses/LICENSE-2.0
  */
 
 package io.github.mgdx.sceau.ui.learn
@@ -8,7 +8,7 @@ package io.github.mgdx.sceau.ui.learn
 import androidx.compose.ui.graphics.vector.ImageVector
 import io.github.mgdx.sceau.ui.common.SceauIcons
 
-/** Icônes propres aux écrans pédagogiques, construites comme celles de [SceauIcons]. */
+/** Icons specific to the learning screens, built like those of [SceauIcons]. */
 internal object LearnIcons {
     val Lock: ImageVector by lazy {
         SceauIcons.icon(

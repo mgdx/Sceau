@@ -2,18 +2,18 @@ package io.github.mgdx.sceau.core.fuzz
 
 import java.util.Random
 
-/** Entrée mutée et noms des mutations appliquées, pour le message d'échec. */
+/** Mutated input and names of the mutations applied, for the failure message. */
 internal class Mutant(
     val bytes: ByteArray,
     val operations: List<String>,
 )
 
 /**
- * Mutations déterministes (tout vient de [random]) d'une graine : opérations sur les octets
- * (inversion de bit, remplacement, troncature, insertion, duplication ou suppression de bloc)
- * et opérations sur l'arbre TLV/DER (longueurs gonflées ou réduites, forme longue sur 4 octets
- * ou plus, longueur indéfinie, imbrication profonde, tags inattendus, enfants dupliqués,
- * supprimés ou permutés, valeurs remplacées). Le résultat ne dépasse jamais [maxSize] octets.
+ * Deterministic mutations (everything comes from [random]) of a seed: byte operations (bit
+ * flip, replacement, truncation, insertion, block duplication or deletion) and operations on
+ * the TLV/DER tree (inflated or deflated lengths, long form on 4 bytes or more, indefinite
+ * length, deep nesting, unexpected tags, duplicated, removed or shuffled children, replaced
+ * values). The result never exceeds [maxSize] bytes.
  */
 internal class Mutator(
     private val random: Random,
@@ -30,7 +30,7 @@ internal class Mutator(
         return Mutant(bytes, operations)
     }
 
-    // --- Octets -------------------------------------------------------------------------
+    // --- Bytes --------------------------------------------------------------------------
 
     private fun byteMutation(input: ByteArray): Pair<ByteArray, String> {
         if (input.isEmpty()) return randomBytes(1 + random.nextInt(SMALL_BLOCK)) to "insert"
@@ -151,9 +151,9 @@ internal class Mutator(
     }
 
     /**
-     * Enveloppe [node] dans une pile de TLV construits, dans la limite de taille. La pile est
-     * encodée d'un bloc, sans récursion (elle peut compter des dizaines de milliers de niveaux),
-     * et devient un nœud opaque.
+     * Wraps [node] in a stack of constructed TLVs, within the size limit. The stack is encoded
+     * in one go, without recursion (it can have tens of thousands of levels), and becomes an
+     * opaque node.
      */
     private fun nest(
         document: BerDocument,
@@ -171,7 +171,7 @@ internal class Mutator(
             }
         val indefinite = random.nextInt(4) == 0
         val inner = node.encode()
-        // Longueurs de l'intérieur vers l'extérieur ; le niveau le plus externe reste un nœud.
+        // Lengths from the inside out; the outermost level stays a node.
         val headers = ArrayList<ByteArray>(depth - 1)
         var contentSize = inner.size.toLong()
         repeat(depth - 1) {
@@ -214,7 +214,7 @@ internal class Mutator(
             }
 
             2 -> {
-                // Tag multi-octets, éventuellement avec des octets de continuation 0x80 superflus.
+                // Multi-byte tag, possibly with superfluous 0x80 continuation bytes.
                 val continuation = random.nextInt(MAX_TAG_CONTINUATION)
                 ByteArray(continuation + 2) { i ->
                     when (i) {
@@ -238,7 +238,7 @@ internal class Mutator(
             else -> ByteArray(minOf(original.size * 2 + 1, maxSize / 2)) { interestingByte() }
         }
 
-    // --- Outils -------------------------------------------------------------------------
+    // --- Helpers ------------------------------------------------------------------------
 
     private fun interestingByte(): Byte =
         if (random.nextBoolean()) INTERESTING_BYTES[random.nextInt(INTERESTING_BYTES.size)].toByte() else random.nextInt(256).toByte()
@@ -265,7 +265,7 @@ internal class Mutator(
         const val MAX_TAG_CONTINUATION = 6
         const val MAX_UINT32 = 0xFFFFFFFFL
 
-        /** Coût maximal d'un niveau d'imbrication : tag, longueur sur 4 octets, fin 00 00. */
+        /** Maximum cost of one nesting level: tag, 4-byte length, 00 00 terminator. */
         const val NEST_LEVEL_COST = 8
         val NEST_DEPTHS = intArrayOf(2, 16, 100, 1_000, 10_000, 100_000)
         val LONG_FORM_BYTES = intArrayOf(2, 3, 4, 4, 4, 5, 8)

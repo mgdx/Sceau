@@ -32,12 +32,12 @@ class IdentityPresentationTest {
     private val dg1Checked = CheckDetail.DataGroupHashes("SHA-256", checked = listOf(1, 2), mismatched = emptyList())
 
     @Test
-    fun `eID-UB authentifiee jusqu'au CSCA - presentation sans identite`() {
+    fun `eID-UB authenticated up to the CSCA - identityless presentation`() {
         assertTrue(IdentityPresentation.isIdentitylessEidUb(eidUb, CheckStatus.OK, CheckStatus.OK, dg1Checked))
     }
 
     @Test
-    fun `chaine inconnue ou en echec - presentation normale (audit V21)`() {
+    fun `unknown or failed chain - normal presentation (audit V21)`() {
         listOf(CheckStatus.NOT_AVAILABLE, CheckStatus.FAILED, CheckStatus.UNSUPPORTED_ALGORITHM).forEach { chain ->
             assertFalse(
                 chain.name,
@@ -47,18 +47,18 @@ class IdentityPresentationTest {
     }
 
     @Test
-    fun `signature du SOD non valide - presentation normale`() {
+    fun `invalid SOD signature - normal presentation`() {
         assertFalse(IdentityPresentation.isIdentitylessEidUb(eidUb, CheckStatus.FAILED, CheckStatus.OK, dg1Checked))
     }
 
     @Test
-    fun `empreinte de DG1 non conforme - presentation normale`() {
+    fun `DG1 hash mismatch - normal presentation`() {
         val mismatched = CheckDetail.DataGroupHashes("SHA-256", checked = listOf(1, 2), mismatched = listOf(1))
         assertFalse(IdentityPresentation.isIdentitylessEidUb(eidUb, CheckStatus.OK, CheckStatus.OK, mismatched))
     }
 
     @Test
-    fun `aucune donnee lue - ni identite ni photo (audit V24)`() {
+    fun `no data read - neither identity nor photo (audit V24)`() {
         val checks =
             CheckId.entries.map {
                 Check(it, if (it == CheckId.CHIP_AUTHENTICATION) CheckStatus.FAILED else CheckStatus.NOT_AVAILABLE)
@@ -67,7 +67,7 @@ class IdentityPresentationTest {
     }
 
     @Test
-    fun `rapport complet - presentation normale, eID-UB inchangee`() {
+    fun `full report - normal presentation, eID-UB unchanged`() {
         val passport = Dg1Data("P<", "UTO", "X1", "DOE", emptyList(), "UTO", null, Sex.UNSPECIFIED, null, null)
         val verified =
             CheckId.entries.map {

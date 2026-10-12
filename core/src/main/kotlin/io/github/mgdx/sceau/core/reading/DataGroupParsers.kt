@@ -22,14 +22,13 @@ import java.time.DateTimeException
 import java.time.LocalDate
 
 /**
- * Conversion des DG bruts en modèles. Aucune de ces fonctions ne journalise ni n'expose de
- * donnée dans une exception : les erreurs de JMRTD remontent telles quelles à l'appelant,
- * qui n'en garde que la classe.
+ * Conversion of raw DGs into models. None of these functions logs or exposes data in an
+ * exception: JMRTD's errors propagate unchanged to the caller, which keeps only their class.
  */
 internal object DataGroupParsers {
     /**
-     * Assemble [DocumentData]. DG1 est indispensable (exception s'il est illisible) ; un DG2,
-     * DG7, DG11 ou DG12 illisible est simplement absent. [dataGroups] est conservé tel quel.
+     * Assembles [DocumentData]. DG1 is required (exception if unreadable); an unreadable DG2,
+     * DG7, DG11 or DG12 is simply absent. [dataGroups] is kept as is.
      */
     fun document(
         dataGroups: Map<Int, ByteArray>,
@@ -71,8 +70,8 @@ internal object DataGroupParsers {
     }
 
     /**
-     * Première image de visage de DG2 (ISO 19794-5 ou ISO 39794-5), ou null. Longueurs BER et
-     * longueurs des blocs d'image ISO 19794-5 contrôlées avant JMRTD ([lengthsFitDg2]).
+     * First face image of DG2 (ISO 19794-5 or ISO 39794-5), or null. BER lengths and ISO 19794-5
+     * image block lengths are checked before JMRTD ([lengthsFitDg2]).
      */
     fun parseDg2(bytes: ByteArray): EncodedImage? {
         require(lengthsFitDg2(bytes)) { "DG2_LENGTH" }
@@ -90,13 +89,13 @@ internal object DataGroupParsers {
     }
 
     /**
-     * Première image de DG7 (signature manuscrite ou marque usuelle du titulaire, ICAO 9303-10
-     * §4.7.7), ou null. ICAO permet plusieurs images, mais les documents n'en portent qu'une,
-     * comme DG2 n'a qu'un portrait : seule la première est affichée (D37). Le format est déduit
-     * des octets ([sniffFormat]) : JMRTD annonce toujours `image/jpeg` pour DG7.
+     * First image of DG7 (holder's handwritten signature or usual mark, ICAO 9303-10 §4.7.7), or
+     * null. ICAO allows several images, but documents carry only one, just as DG2 has only one
+     * portrait: only the first is displayed (D37). The format is inferred from the bytes
+     * ([sniffFormat]): JMRTD always announces `image/jpeg` for DG7.
      */
     fun parseDg7(bytes: ByteArray): EncodedImage? {
-        // JMRTD alloue la longueur annoncée par chaque image (5F43) : contrôlée d'abord.
+        // JMRTD allocates the length announced by each image (5F43): checked first.
         require(BerStructure.lengthsFit(bytes)) { "DG7_LENGTH" }
         val image = DG7File(StrictInputStream(bytes)).images.orEmpty().firstOrNull() ?: return null
         val encoded = image.imageInputStream.use { it.readBytes() }
@@ -107,7 +106,7 @@ internal object DataGroupParsers {
         bytes: ByteArray,
         today: LocalDate = LocalDate.now(),
     ): Dg11Data {
-        // JMRTD alloue la longueur annoncée par chaque champ : contrôlée d'abord (BerStructure).
+        // JMRTD allocates the length announced by each field: checked first (BerStructure).
         require(BerStructure.lengthsFit(bytes)) { "DG11_LENGTH" }
         val dg11 = DG11File(StrictInputStream(bytes))
         return Dg11Data(
@@ -130,7 +129,7 @@ internal object DataGroupParsers {
         bytes: ByteArray,
         today: LocalDate = LocalDate.now(),
     ): Dg12Data {
-        // Idem DG11 : champs et images (5F2F…) lus à la longueur annoncée.
+        // Same as DG11: fields and images (5F2F…) are read at the announced length.
         require(BerStructure.lengthsFit(bytes)) { "DG12_LENGTH" }
         val dg12 = DG12File(StrictInputStream(bytes))
         return Dg12Data(
@@ -153,13 +152,13 @@ internal object DataGroupParsers {
             else -> ImageFormat.UNKNOWN
         }
 
-    /** Format d'après la signature des premiers octets (DG7 et DG12 ne déclarent pas de type MIME fiable). */
+    /** Format from the signature of the first bytes (DG7 and DG12 do not declare a reliable MIME type). */
     fun sniffFormat(bytes: ByteArray): ImageFormat {
         fun startsWith(vararg prefix: Int) = bytes.size >= prefix.size && prefix.indices.all { bytes[it] == prefix[it].toByte() }
         return when {
             startsWith(0xFF, 0xD8, 0xFF) -> ImageFormat.JPEG
 
-            // Boîte de signature JP2, ou flux de code JPEG 2000 brut (marqueurs SOC puis SIZ).
+            // JP2 signature box, or raw JPEG 2000 codestream (SOC then SIZ markers).
             startsWith(0x00, 0x00, 0x00, 0x0C, 0x6A, 0x50, 0x20, 0x20) -> ImageFormat.JPEG2000
 
             startsWith(0xFF, 0x4F, 0xFF, 0x51) -> ImageFormat.JPEG2000
@@ -168,7 +167,7 @@ internal object DataGroupParsers {
         }
     }
 
-    /** Remplace les `<` de remplissage par des espaces, normalise les blancs ; null si vide. */
+    /** Replaces filler `<` with spaces, normalizes whitespace; null if empty. */
     fun clean(value: String?): String? =
         value
             ?.replace('<', ' ')
@@ -176,7 +175,7 @@ internal object DataGroupParsers {
             ?.replace(WHITESPACE, " ")
             ?.ifEmpty { null }
 
-    /** Nom au format ICAO `PRIMAIRE<<SECONDAIRE` → `PRIMAIRE, SECONDAIRE`. */
+    /** Name in ICAO format `PRIMARY<<SECONDARY` → `PRIMARY, SECONDARY`. */
     fun cleanName(value: String?): String? {
         if (value == null) return null
         val parts = value.split("<<", limit = 2).mapNotNull(::clean)
@@ -184,18 +183,18 @@ internal object DataGroupParsers {
     }
 
     /**
-     * DG2 : longueurs BER ([BerStructure]) et, dans chaque bloc biométrique (5F2E) au format
-     * ISO 19794-5 (« FAC\0 »), longueur de chaque bloc d'image de visage au plus égale aux octets
-     * restants du bloc biométrique. JMRTD alloue sinon cette longueur d'emblée (2 Go possibles,
-     * fuzzing). Un bloc d'un autre format (ISO 39794-5) est laissé au parseur, avec
-     * [orNull] pour filet.
+     * DG2: BER lengths ([BerStructure]) and, in each biometric data block (5F2E) in ISO 19794-5
+     * format ("FAC\0"), length of each face image block at most equal to the remaining bytes of
+     * the biometric data block. Otherwise JMRTD allocates that length upfront (up to 2 GB,
+     * fuzzing). A block in another format (ISO 39794-5) is left to the parser, with [orNull] as
+     * a safety net.
      */
     internal fun lengthsFitDg2(bytes: ByteArray): Boolean =
         BerStructure.lengthsFit(bytes) { tag, start, end ->
             tag != TAG_BIOMETRIC_DATA_BLOCK || faceBlocksFit(bytes, start, end)
         }
 
-    /** En-tête ISO 19794-5 : « FAC\0 », version (4), longueur d'enregistrement (4), nombre d'images (2). */
+    /** ISO 19794-5 header: "FAC\0", version (4), record length (4), number of images (2). */
     private fun faceBlocksFit(
         bytes: ByteArray,
         start: Int,
@@ -206,7 +205,7 @@ internal object DataGroupParsers {
         val count = uint(bytes, start + FACE_COUNT_OFFSET, 2)
         var offset = start + FACE_HEADER.toLong()
         repeat(count.toInt()) {
-            if (offset + FACE_BLOCK_LENGTH > end) return true // tronqué : JMRTD échouera en fin de flux
+            if (offset + FACE_BLOCK_LENGTH > end) return true // truncated: JMRTD will fail at end of stream
             val blockLength = uint(bytes, offset.toInt(), FACE_BLOCK_LENGTH)
             if (offset + blockLength > end) return false
             if (blockLength == 0L) return true
@@ -228,10 +227,10 @@ internal object DataGroupParsers {
     private const val FACE_BLOCK_LENGTH = 4
 
     /**
-     * Résultat de [block], ou null s'il échoue. Les longueurs démesurées connues sont refusées
-     * avant JMRTD ([BerStructure], [lengthsFitDg2]) ; `OutOfMemoryError` et
-     * `NegativeArraySizeException` restent rattrapées en dernier filet et rendent le DG absent
-     * (audit V11) ; les autres `Error` traversent.
+     * Result of [block], or null if it fails. Known oversized lengths are rejected before JMRTD
+     * ([BerStructure], [lengthsFitDg2]); `OutOfMemoryError` and `NegativeArraySizeException` are
+     * still caught as a last safety net and make the DG absent (audit V11); other `Error`s pass
+     * through.
      */
     private inline fun <T> orNull(block: () -> T): T? =
         try {
@@ -246,10 +245,10 @@ internal object DataGroupParsers {
 }
 
 /**
- * Flux d'un DG en mémoire dont `skip` lève [EOFException] en fin de flux au lieu de renvoyer 0.
- * JMRTD saute des octets par des boucles `while (skipped < n) skipped += in.skip(n)` (octets
- * réservés des points caractéristiques ISO 19794-5, notamment) : sur un DG tronqué, un `skip`
- * qui renvoie 0 les faisait tourner sans fin.
+ * In-memory DG stream whose `skip` throws [EOFException] at end of stream instead of returning 0.
+ * JMRTD skips bytes with `while (skipped < n) skipped += in.skip(n)` loops (reserved bytes of
+ * ISO 19794-5 feature points, in particular): on a truncated DG, a `skip` returning 0 made them
+ * loop forever.
  */
 internal class StrictInputStream(
     bytes: ByteArray,
@@ -260,11 +259,11 @@ internal class StrictInputStream(
     }
 }
 
-/** Dates MRZ (AAMMJJ) et dates complètes (AAAAMMJJ) des DG. */
+/** MRZ dates (YYMMDD) and full dates (YYYYMMDD) of the DGs. */
 internal object Dates {
     /**
-     * Date passée (naissance, délivrance) : AAAAMMJJ, ou AAMMJJ avec le siècle tel que la date
-     * ne soit pas dans le futur. Null si illisible (chiffres manquants, `<`, date invalide).
+     * Past date (birth, issue): YYYYMMDD, or YYMMDD with the century chosen so that the date is
+     * not in the future. Null if unreadable (missing digits, `<`, invalid date).
      */
     fun parsePast(
         value: String?,
@@ -290,7 +289,7 @@ internal object Dates {
         }
     }
 
-    /** Date d'expiration MRZ (AAMMJJ) : toujours 20AA. */
+    /** MRZ expiry date (YYMMDD): always 20YY. */
     fun parseExpiry(value: String?): LocalDate? {
         val digits = value?.trim() ?: return null
         if (digits.length != 6 || !digits.all { it in '0'..'9' }) return null

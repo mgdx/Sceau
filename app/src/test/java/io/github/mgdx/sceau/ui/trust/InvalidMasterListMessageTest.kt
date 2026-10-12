@@ -9,14 +9,14 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-/** Message d'une Master List refusée par `MasterListParser` (D22, audit V22). */
+/** Message for a Master List rejected by `MasterListParser` (D22, audit V22). */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [37], qualifiers = "fr")
 class InvalidMasterListMessageTest {
     private val resources = ApplicationProvider.getApplicationContext<Context>().resources
 
     @Test
-    fun `une Master List de trop de certificats donne le message dedie avec le plafond`() {
+    fun `a Master List with too many certificates gets the dedicated message with the cap`() {
         assertEquals(2000, TrustStores.MAX_MASTER_LIST_CERTIFICATES)
         assertEquals(
             "Master List refusée : elle contient trop de certificats (2000 au plus).",
@@ -25,7 +25,7 @@ class InvalidMasterListMessageTest {
     }
 
     @Test
-    fun `les autres codes gardent le message generique`() {
+    fun `other codes keep the generic message`() {
         for (code in listOf("MULTIPLE_SIGNERS", "NO_SIGNER", "BAD_SIGNATURE", "UNREADABLE")) {
             assertEquals(
                 "Ce fichier n’est pas une Master List valide : format illisible ou signature incorrecte ($code).",
@@ -36,7 +36,7 @@ class InvalidMasterListMessageTest {
 
     @Test
     @Config(qualifiers = "en")
-    fun `message dedie traduit`() {
+    fun `dedicated message translated`() {
         assertEquals(
             "Master List rejected: it contains too many certificates (2000 at most).",
             invalidMasterListMessage(resources, "TOO_MANY_CERTIFICATES"),

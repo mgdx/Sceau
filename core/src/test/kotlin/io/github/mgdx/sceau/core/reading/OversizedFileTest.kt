@@ -17,9 +17,9 @@ import org.junit.Assert.fail
 import org.junit.Test
 
 /**
- * Audit V11 : longueurs annoncées par une puce forgée. Un fichier dont l'en-tête dépasse son
- * plafond est refusé avant toute allocation et sans lecture massive ; un DG2 dont l'en-tête
- * d'image est corrompu donne un portrait absent sans faire échouer la lecture.
+ * Audit V11: lengths declared by a forged chip. A file whose header exceeds its cap is
+ * rejected before any allocation and without a massive read; a DG2 with a corrupted image
+ * header yields a missing portrait without failing the read.
  */
 class OversizedFileTest {
     private val card: SimulatedIdentityDocument by lazy { SimulatedDocuments.frenchIdCard() }
@@ -29,7 +29,7 @@ class OversizedFileTest {
         oversized: Map<Int, OversizedFile> = emptyMap(),
     ) = SimulatedChip(card.document, card.pace, oversizedFiles = oversized)
 
-    /** APDU d'une lecture normale de la CNIe simulée, pour borner les lectures forgées. */
+    /** APDUs of a normal read of the simulated CNIe, to bound the forged reads. */
     private suspend fun baselineApdus(): Int {
         val chip = chip()
         readAndVerify(chip, checkNotNull(card.canKey), card.trustStore) {}
@@ -37,23 +37,23 @@ class OversizedFileTest {
     }
 
     @Test
-    fun sodAnnoncant2Go_TooLargeSansLectureMassive() =
+    fun sodDeclaring2Gb_TooLargeWithoutMassiveRead() =
         runTest {
             val baseline = baselineApdus()
             val chip = chip(oversized = mapOf(FID_SOD to OversizedFile(SOD_TAG, 0x7FFF_FFFFL)))
             try {
                 readAndVerify(chip, checkNotNull(card.canKey), card.trustStore) {}
-                fail("Unexpected attendue")
+                fail("Unexpected expected")
             } catch (e: SceauException.Unexpected) {
                 assertEquals("UNEXPECTED-READ_DATA-SOD-TOO_LARGE", e.code)
             }
-            assertTrue("transport fermé", chip.closed)
-            // SELECT et lecture de l'en-tête seulement : bien moins qu'une lecture complète.
+            assertTrue("transport closed", chip.closed)
+            // SELECT and header read only: far less than a full read.
             assertTrue("${chip.apduCount} APDU", chip.apduCount < baseline)
         }
 
     @Test
-    fun dg11Annoncant50Mo_AbsentEtLectureContinue() =
+    fun dg11Declaring50Mb_MissingAndReadContinues() =
         runTest {
             val baseline = baselineApdus()
             val chip = chip(oversized = mapOf(FID_DG11 to OversizedFile(DG11_TAG, 50L * 1024 * 1024)))
@@ -63,12 +63,12 @@ class OversizedFileTest {
             assertNull(report.document.dg11)
             assertNotNull(report.document.dg12)
             assertNotNull(report.document.portrait)
-            // Le vrai DG11 (quelques lectures) est remplacé par SELECT et en-tête : pas de lecture massive.
-            assertTrue("${chip.apduCount} APDU pour $baseline", chip.apduCount <= baseline + 2)
+            // The real DG11 (a few reads) is replaced by SELECT and header: no massive read.
+            assertTrue("${chip.apduCount} APDUs for $baseline", chip.apduCount <= baseline + 2)
         }
 
     @Test
-    fun dg2AEnteteDImageCorrompu_PortraitAbsentVerdictInchange() =
+    fun dg2WithCorruptedImageHeader_PortraitMissingVerdictUnchanged() =
         runTest {
             val normal = readAndVerify(chip(), checkNotNull(card.canKey), card.trustStore) {}
             assertEquals(Verdict.AUTHENTIC, normal.verdict)
@@ -82,32 +82,32 @@ class OversizedFileTest {
         }
 
     @Test
-    fun parseurDg2_EnteteDImageCorrompu_Null() {
+    fun dg2Parser_CorruptedImageHeader_Null() {
         val dg2 = corruptImageLength(card.document.dataGroups.getValue(2))
         val data = DataGroupParsers.document(card.document.dataGroups + (2 to dg2))
         assertNull(data.portrait)
     }
 
     @Test
-    fun enTeteTlv_TailleAnnoncee() {
+    fun tlvHeader_DeclaredSize() {
         assertEquals(2L + 0x10, FileSizeLimits.announcedSize(byteArrayOf(0x61, 0x10)))
         assertEquals(4L + 0x0123, FileSizeLimits.announcedSize(byteArrayOf(0x77, 0x82.toByte(), 0x01, 0x23)))
         assertEquals(6L + 0x7FFF_FFFF, FileSizeLimits.announcedSize(byteArrayOf(0x77, 0x84.toByte(), 0x7F, -1, -1, -1)))
         assertEquals(Long.MAX_VALUE, FileSizeLimits.announcedSize(byteArrayOf(0x77, 0x85.toByte(), 1, 0, 0, 0, 0)))
-        // Tag sur deux octets (7F61…) et en-têtes inexploitables.
+        // Two-byte tag (7F61...) and unusable headers.
         assertEquals(3L + 5, FileSizeLimits.announcedSize(byteArrayOf(0x7F, 0x61, 0x05)))
         assertNull(FileSizeLimits.announcedSize(byteArrayOf(0x77, 0x82.toByte(), 0x01)))
         assertNull(FileSizeLimits.announcedSize(byteArrayOf(0x77, 0x80.toByte())))
         assertNull(FileSizeLimits.announcedSize(ByteArray(0)))
     }
 
-    /** Même CNIe, DG2 remplacé et SOD signé à nouveau : seul le contenu de DG2 diffère. */
+    /** Same CNIe, DG2 replaced and SOD signed again: only the DG2 content differs. */
     private fun SimulatedIdentityDocument.withDataGroup2(dg2: ByteArray): SimulatedIdentityDocument =
         SimulatedIdentityDocument(document.resigned(document.dataGroups + (2 to dg2)), pace, documentNumber, dateOfBirth)
 
     /**
-     * DG2 ISO 19794-5 dont la longueur du bloc de données faciales (4 octets suivant l'en-tête
-     * « FAC\0 », version, longueur d'enregistrement et nombre de visages) annonce près de 2 Go.
+     * ISO 19794-5 DG2 whose facial data block length (4 bytes following the "FAC\0" header,
+     * version, record length and number of faces) declares nearly 2 GB.
      */
     private fun corruptImageLength(dg2: ByteArray): ByteArray {
         val magic = byteArrayOf('F'.code.toByte(), 'A'.code.toByte(), 'C'.code.toByte(), 0)
@@ -124,7 +124,7 @@ class OversizedFileTest {
         const val SOD_TAG = 0x77
         const val DG11_TAG = 0x6B
 
-        /** « FAC\0 » (4), version (4), longueur d'enregistrement (4), nombre de visages (2). */
+        /** "FAC\0" (4), version (4), record length (4), number of faces (2). */
         const val FACE_HEADER_LENGTH = 14
     }
 }

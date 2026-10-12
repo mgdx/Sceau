@@ -79,13 +79,13 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
 
-/** Lignes au plus pour une valeur de champ ou une ligne de détail (audit V12). */
+/** Maximum number of lines for a field value or a detail line (audit V12). */
 private const val FIELD_MAX_LINES = 10
 private const val DETAIL_MAX_LINES = 8
 
 /**
- * Écran de résultat (SPEC §5.3). Les données affichées ne vivent que dans la session :
- * aucun état sauvegardable, aucun cache d'image, bitmaps effacés à la sortie.
+ * Result screen (SPEC §5.3). The displayed data lives only in the session:
+ * no saveable state, no image cache, bitmaps wiped on exit.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -98,7 +98,7 @@ fun ResultScreen(
     val done = state as? ReadState.Done
     val report = done?.report
 
-    // Évite de quitter l'écran deux fois (Effacer, puis passage de l'état à Idle).
+    // Avoids leaving the screen twice ("Clear", then the state switching to Idle).
     var left by remember { mutableStateOf(false) }
     val leave = {
         if (!left) {
@@ -113,7 +113,7 @@ fun ResultScreen(
     BackHandler { clearAndLeave() }
 
     if (report == null) {
-        // Données effacées (arrière-plan, mort du processus) : rien à afficher, retour à l'accueil.
+        // Data cleared (background, process death): nothing to display, back to the home screen.
         LaunchedEffect(Unit) { leave() }
         Surface(modifier = Modifier.fillMaxSize()) {}
         return
@@ -164,15 +164,15 @@ private fun ResultContent(
         if (isDemo) DemoBanner()
         VerdictCard(report.verdict, importedAnchor = CheckFormatting.isImportedAnchor(report.chain, report.cardSecurityChain))
         when (IdentityPresentation.mode(report)) {
-            // Décision D36 : carte eID-UB, sans donnée d'identité dans sa puce. Ni champs vides, ni
-            // logo eID présenté comme la photo du titulaire.
+            // Decision D36: eID-UB card, with no identity data in its chip. Neither empty fields nor
+            // an eID logo presented as the holder's photo.
             IdentityPresentation.Mode.IDENTITYLESS_EID_UB -> {
                 NoIdentitySection(document.dg1)
                 document.signature?.let { SignatureSection(it, bitmapOwner) }
                 AdditionalSection(document, formatDate, bitmapOwner)
             }
 
-            // Audit V24 : rien n'a été lu ; ni champs vides, ni emplacement de photo.
+            // Audit V24: nothing was read; neither empty fields nor a photo placeholder.
             IdentityPresentation.Mode.NOT_READ -> {
                 DataNotReadNotice()
             }
@@ -198,7 +198,7 @@ private fun ResultContent(
 
 // --- Verdict ---------------------------------------------------------------------------
 
-/** Rapport d'un document simulé (mode démo de l'APK de debug) : jamais confondu avec un vrai. */
+/** Report of a simulated document (demo mode of the debug APK): never mistaken for a real one. */
 @Composable
 private fun DemoBanner() {
     Surface(
@@ -266,7 +266,7 @@ private fun VerdictCard(
     }
 }
 
-/** Mention d'avertissement : la chaîne s'appuie sur un certificat importé (audit V6). */
+/** Warning notice: the chain relies on an imported certificate (audit V6). */
 @Composable
 private fun ImportedAnchorNotice() {
     Surface(
@@ -298,50 +298,50 @@ private sealed interface ImageLoad {
     ) : ImageLoad
 }
 
-/** Bitmap affiché, confié à la session : fermer l'efface puis le libère. */
+/** Displayed bitmap, handed to the session: closing it wipes it, then releases it. */
 private class DecodedBitmap(
     val bitmap: Bitmap,
 ) : AutoCloseable {
     override fun close() = bitmap.wipeAndRecycle()
 }
 
-/** Porte le bitmap décodé pour pouvoir l'effacer à la sortie de la composition. */
+/** Holds the decoded bitmap so that it can be wiped when it leaves the composition. */
 private class BitmapHolder {
     var decoded: DecodedBitmap? = null
 }
 
 /**
- * Session et rapport auxquels les bitmaps décodés sont confiés (audit V13) : l'effacement de
- * la session (bouton, retour, arrière-plan) les efface aussitôt, sans attendre une recomposition.
+ * Session and report to which decoded bitmaps are handed (audit V13): clearing the session
+ * (button, back, background) wipes them immediately, without waiting for a recomposition.
  */
 private class BitmapOwner(
     private val session: SessionViewModel,
     private val report: VerificationReport,
 ) {
-    /** Faux si le rapport n'est plus affiché : [bitmap] a alors déjà été effacé. */
+    /** False if the report is no longer displayed: [bitmap] has then already been wiped. */
     fun adopt(bitmap: DecodedBitmap): Boolean = session.registerDisposable(report, bitmap)
 
     fun release(bitmap: DecodedBitmap) = session.unregisterDisposable(bitmap)
 }
 
 /**
- * Un seul décodage d'image à la fois dans tout le processus (audit V4) : DG2, DG7 et les deux
- * images de DG12 ne cumulent jamais leur mémoire de décodage.
+ * A single image decode at a time across the whole process (audit V4): DG2, DG7 and the two
+ * DG12 images never add up their decoding memory.
  */
 private val decodeMutex = Mutex()
 
-/** État du décodage et modificateur à poser sur l'emplacement de l'image. */
+/** Decoding state and the modifier to apply to the image slot. */
 private class DecodedImage(
     val load: ImageLoad,
-    /** Déclenche le décodage dès que l'emplacement apparaît au moins en partie à l'écran. */
+    /** Triggers decoding as soon as the slot appears at least partly on screen. */
     val trigger: Modifier,
 )
 
 /**
- * Décode [image] hors du thread principal, en mémoire uniquement, une fois son emplacement
- * affiché et après les décodages déjà en cours. Le bitmap est effacé puis libéré quand
- * l'image quitte la composition, quand la session est effacée, ou aussitôt décodé si
- * l'écran est parti ou la session effacée entre-temps.
+ * Decodes [image] off the main thread, in memory only, once its slot is displayed and after
+ * the decodes already in progress. The bitmap is wiped, then released, when the image leaves
+ * the composition, when the session is cleared, or as soon as it is decoded if the screen
+ * has gone or the session has been cleared in the meantime.
  */
 @Composable
 private fun rememberDecodedImage(
@@ -354,12 +354,12 @@ private fun rememberDecodedImage(
     var shown by remember(image) { mutableStateOf(false) }
     val trigger =
         Modifier.onGloballyPositioned { coordinates ->
-            // Bornes rognées par le conteneur défilant : vides tant que l'image est hors écran.
+            // Bounds clipped by the scrolling container: empty as long as the image is off screen.
             if (!shown && !coordinates.boundsInWindow().isEmpty) shown = true
         }
     LaunchedEffect(image, shown) {
         if (image == null || !shown) return@LaunchedEffect
-        // Affecté dans le bloc même : un bitmap produit pendant l'annulation n'est pas perdu.
+        // Assigned inside the block itself: a bitmap produced during cancellation is not lost.
         var bitmap: Bitmap? = null
         var kept = false
         try {
@@ -373,7 +373,7 @@ private fun rememberDecodedImage(
                 load = ImageLoad.Failed
             }
         } finally {
-            // Coroutine annulée (écran quitté) ou session effacée pendant le décodage.
+            // Coroutine cancelled (screen left) or session cleared during decoding.
             if (!kept) bitmap?.wipeAndRecycle()
         }
     }
@@ -474,7 +474,7 @@ private fun ImageBox(
     }
 }
 
-/** Photo en plein écran. La fenêtre du dialogue reçoit elle aussi `FLAG_SECURE`. */
+/** Full-screen photo. The dialog window also gets `FLAG_SECURE`. */
 @Composable
 private fun FullScreenImage(
     image: ImageBitmap,
@@ -508,7 +508,7 @@ private fun FullScreenImage(
     }
 }
 
-// --- Identité --------------------------------------------------------------------------
+// --- Identity --------------------------------------------------------------------------
 
 @Composable
 private fun IdentitySection(
@@ -540,7 +540,7 @@ private fun IdentitySection(
     }
 }
 
-/** Carte eID-UB (D36) : seuls le genre de document et l'État émetteur sont des données réelles. */
+/** eID-UB card (D36): only the document kind and the issuing state are real data. */
 @Composable
 private fun NoIdentitySection(dg1: Dg1Data) {
     SectionCard(title = stringResource(R.string.result_section_identity)) {
@@ -568,7 +568,7 @@ private fun NoIdentitySection(dg1: Dg1Data) {
     }
 }
 
-/** Aucune donnée lue après l'échec de la Chip Authentication (audit V24, décision D40). */
+/** No data read after the Chip Authentication failed (audit V24, decision D40). */
 @Composable
 private fun DataNotReadNotice() {
     Surface(
@@ -625,9 +625,9 @@ private fun ExpiredBanner() {
 // --- Signature (DG7) ----------------------------------------------------------------------
 
 /**
- * Signature manuscrite du titulaire (DG7, décision D37), décodée comme la photo. Elle est en
- * général noire sur fond blanc : affichée sur fond blanc dans les deux thèmes, pour rester
- * lisible en mode sombre.
+ * Holder's handwritten signature (DG7, decision D37), decoded like the photo. It is usually
+ * black on a white background: displayed on a white background in both themes, so that it
+ * stays legible in dark mode.
  */
 @Composable
 private fun SignatureSection(
@@ -648,7 +648,7 @@ private fun SignatureSection(
     }
 }
 
-// --- Données complémentaires -------------------------------------------------------------
+// --- Additional data ---------------------------------------------------------------------
 
 @Composable
 private fun AdditionalSection(
@@ -692,7 +692,7 @@ private fun DocumentImage(
     }
 }
 
-// --- Vérifications -----------------------------------------------------------------------
+// --- Checks ------------------------------------------------------------------------------
 
 @Composable
 private fun ChecksSection(
@@ -767,7 +767,7 @@ private fun CheckRow(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 lines.forEach {
-                    // Sujets de certificats et codes venus de la puce : assainis (audit V12).
+                    // Certificate subjects and codes coming from the chip: sanitized (audit V12).
                     Text(
                         text = displaySafe(it),
                         style = MaterialTheme.typography.bodyMedium,
@@ -780,7 +780,7 @@ private fun CheckRow(
     }
 }
 
-// --- Composants communs --------------------------------------------------------------------
+// --- Common components ---------------------------------------------------------------------
 
 @Composable
 private fun SectionCard(
@@ -814,9 +814,9 @@ private fun FieldRow(
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        // Valeurs venues de la puce (DG1, DG11, DG12, code pays inconnu) : assainies (audit V12).
-        // Réservées aux outils d'accessibilité (TalkBack) sur Android 14+ : un autre service
-        // d'accessibilité ne voit ni la valeur ni ses événements.
+        // Values coming from the chip (DG1, DG11, DG12, unknown country code): sanitized (audit V12).
+        // Restricted to accessibility tools (TalkBack) on Android 14+: any other accessibility
+        // service sees neither the value nor its events.
         Text(
             text = displaySafe(value),
             style = MaterialTheme.typography.bodyLarge,

@@ -1,362 +1,362 @@
-# Sceau : lecteur et vérificateur de documents d'identité ICAO 9303
+# Sceau: reader and verifier for ICAO 9303 identity documents
 
-Version du 2026-09-25, intègre les décisions D1 à D19 et l'audit de sécurité du 2026-09-25 (constats V1 à V16) ; mise à jour au fil des décisions suivantes, renvoyées par leur numéro, en dernier le 2026-10-06 (D36, D38).
+Version of 2026-09-25, incorporating decisions D1 to D19 and the security audit of 2026-09-25 (findings V1 to V16); updated as later decisions are made, referenced by their number, most recently on 2026-10-06 (D36, D38).
 
-Ce document est la source de vérité du projet. Toute décision d'implémentation future qui s'en écarte doit être justifiée dans `docs/decisions.md` et validée. Les décisions D1 à D19, désormais intégrées ici, y restent pour l'historique.
+This document is the project's source of truth. Any future implementation decision that departs from it must be justified in `docs/decisions.md` and approved. Decisions D1 to D19, now incorporated here, remain there for the record.
 
-## 1. Objet
+## 1. Purpose
 
-Sceau est une application Android libre qui lit par NFC la puce des documents d'identité conformes à ICAO 9303 (carte nationale d'identité électronique française, cartes d'identité européennes, passeports biométriques de tous pays), affiche les données et la photo stockées dans la puce, et vérifie cryptographiquement que le document est authentique et que la puce n'est pas un clone, à partir d'un magasin de certificats CSCA embarqué.
+Sceau is a free Android application that reads, over NFC, the chip of identity documents compliant with ICAO 9303 (French electronic national identity card, European identity cards, biometric passports from all countries), displays the data and photo stored on the chip, and cryptographically verifies that the document is genuine and that the chip is not a clone, using a built-in store of CSCA certificates.
 
-L'application ne conserve rien, n'envoie rien et fonctionne entièrement hors ligne.
+The application keeps nothing, sends nothing and works entirely offline.
 
-### Hors périmètre v1
+### Out of scope for v1
 
-- Lecture des empreintes digitales (DG3) et de l'iris (DG4), qui exigent Terminal Authentication et des certificats délivrés par l'État.
-- Lecture optique de la MRZ ou du CAN par la caméra (aucun OCR).
-- Reconnaissance faciale automatique.
-- Tout stockage, historique, export ou envoi des données lues.
-- Mise à jour du magasin de confiance par le réseau.
+- Reading fingerprints (DG3) and iris (DG4), which require Terminal Authentication and certificates issued by the State.
+- Optical reading of the MRZ or the CAN with the camera (no OCR).
+- Automatic face recognition.
+- Any storage, history, export or transmission of the data read.
+- Updating the trust store over the network.
 
-## 2. Contraintes générales
+## 2. General constraints
 
-- Licence GNU GPL version 3 uniquement (GPL-3.0-only), comme l'indiquent l'écran « À propos » et les en-têtes des sources C ; logo et icône sous la même licence (D38, D51). Publication visée sur F-Droid : aucune dépendance propriétaire, aucun service Google, aucun blob binaire non reconstruisible. Le code natif propre à Sceau (décodeur JPEG 2000, OpenJPEG) est compilé depuis les sources à chaque build ; seule exception, les bibliothèques natives libres livrées précompilées dans les artefacts AndroidX de Google Maven (`libandroidx.graphics.path.so` d'`androidx.graphics:graphics-path`, Apache-2.0, tirée par Compose), comme dans toute application Compose acceptée par F-Droid (voir `docs/dependencies.md`).
-- Aucune permission réseau dans le manifeste. Permissions demandées : `android.permission.NFC` uniquement, plus la permission interne de niveau `signature` `<paquet>.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION` qu'ajoute androidx.core (D7). La feature `android.hardware.nfc` est déclarée non obligatoire pour que l'appli s'installe partout et affiche un message clair si le NFC est absent. Sauvegarde Android désactivée.
-- Android 8.0+ (minSdk 26), compileSdk courant, Kotlin, Jetpack Compose, Material 3, mode sombre suivant le système. Palette propre à l'application (celle du logo), couleurs dynamiques désactivées pour garder la lecture des verdicts stable (D18).
-- Identifiant d'application et paquet `io.github.mgdx.sceau`, `io.github.mgdx.sceau.core` pour `:core` (D4).
-- Interface en anglais par défaut (langue de repli quand celle du téléphone n'est pas traduite), en français et dans 43 autres langues (D27, D55). Aucune chaîne codée en dur ; chaînes anglaises dans `res/values/`, réparties en un fichier par écran (`strings_<écran>.xml`) plus `strings.xml` pour les chaînes communes (D5), traductions dans `values-fr/` et les autres `values-<langue>/`, avec choix de la langue par application (D27).
-- Architecture en modules :
-  - `:core` : lecture, vérification, magasin de confiance, modèles. Kotlin pur, aucun import `android.*`, aucun code natif, testable sur JVM. Ses dépendances sont en `implementation` : son API publique n'expose que des types Kotlin, `java.security` et `java.time` (D9).
-  - `:app` : NFC, UI Compose, navigation, cycle de vie, décodage des images (dont le décodeur JPEG 2000 natif).
-  - `:testchip` : PKI factice, puce ICAO simulée et CNIe spécimen, Kotlin JVM. Réservé aux tests (`testImplementation` de `:core`) et à l'APK de debug (`debugImplementation` de `:app`) ; il n'entre jamais dans l'APK release (D17).
-- Qualité : zéro avertissement sur `test`, `lint` et `ktlintCheck`. Un avertissement bloque la CI. Les règles lint désactivées sont justifiées dans `docs/decisions.md` (D8).
-- APK : splits ABI activés, un APK par architecture (`armeabi-v7a`, `arm64-v8a`, `x86`, `x86_64`), qui n'embarque que la bibliothèque native de son architecture, plus un APK universel. Objectif inférieur à 8 Mo par APK, Master List comprise (D2).
-- `FLAG_SECURE` sur toute l'activité, posé dès sa création : aucun écran, accueil compris (saisie du CAN et de la MRZ), n'apparaît dans une capture ni dans l'aperçu du multitâche (section 8, audit V7).
+- License: GNU GPL version 3 only (GPL-3.0-only), as stated on the “About” screen and in the headers of the C sources; logo and icon under the same license (D38, D51). Target distribution is F-Droid: no proprietary dependency, no Google service, no non-rebuildable binary blob. Sceau's own native code (JPEG 2000 decoder, OpenJPEG) is compiled from source on every build; the only exception is the free native libraries shipped prebuilt in the AndroidX artifacts on Google Maven (`libandroidx.graphics.path.so` from `androidx.graphics:graphics-path`, Apache-2.0, pulled in by Compose), as in any Compose application accepted by F-Droid (see `docs/dependencies.md`).
+- No network permission in the manifest. Permissions requested: `android.permission.NFC` only, plus the internal `signature`-level permission `<package>.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION` added by androidx.core (D7). The `android.hardware.nfc` feature is declared not required so that the app installs everywhere and shows a clear message if NFC is missing. Android backup disabled.
+- Android 8.0+ (minSdk 26), current compileSdk, Kotlin, Jetpack Compose, Material 3, dark mode following the system. Application-specific palette (the logo's), dynamic colors disabled to keep verdicts consistently readable (D18).
+- Application ID and package `io.github.mgdx.sceau`, `io.github.mgdx.sceau.core` for `:core` (D4).
+- Interface in English by default (fallback language when the phone's language is not translated), in French and in 43 other languages (D27, D55). No hardcoded string; English strings in `res/values/`, split into one file per screen (`strings_<screen>.xml`) plus `strings.xml` for shared strings (D5), translations in `values-fr/` and the other `values-<language>/`, with per-app language selection (D27).
+- Module architecture:
+  - `:core`: reading, verification, trust store, models. Pure Kotlin, no `android.*` import, no native code, testable on the JVM. Its dependencies are `implementation`: its public API exposes only Kotlin, `java.security` and `java.time` types (D9).
+  - `:app`: NFC, Compose UI, navigation, lifecycle, image decoding (including the native JPEG 2000 decoder).
+  - `:testchip`: fake PKI, simulated ICAO chip and specimen CNIe, Kotlin JVM. Reserved for tests (`testImplementation` of `:core`) and the debug APK (`debugImplementation` of `:app`); it never goes into the release APK (D17).
+- Quality: zero warnings on `test`, `lint` and `ktlintCheck`. A warning blocks CI. Disabled lint rules are justified in `docs/decisions.md` (D8).
+- APK: ABI splits enabled, one APK per architecture (`armeabi-v7a`, `arm64-v8a`, `x86`, `x86_64`), each embedding only the native library for its architecture, plus a universal APK. Target under 8 MB per APK, Master List included (D2).
+- `FLAG_SECURE` on the whole activity, set as soon as it is created: no screen, home included (CAN and MRZ entry), appears in a screenshot or in the recent apps preview (section 8, audit V7).
 
-## 3. Dépendances retenues
+## 3. Selected dependencies
 
-| Besoin | Bibliothèque | Licence | Remarque |
+| Need | Library | License | Note |
 |---|---|---|---|
-| PACE, BAC, lecture des DG, PA, CA, AA | JMRTD | LGPL 2.1 ou ultérieure | Version la plus récente publiée sur Maven Central |
-| Abstraction APDU, pont JMRTD vers `IsoDep` | SCUBA (scuba-smartcards, scuba-sc-android) | LGPL 2.1 ou ultérieure | |
-| Cryptographie, X.509, CMS | BouncyCastle (bcprov, bcpkix, variantes `jdk18on` seulement) | MIT | Ne pas utiliser SpongyCastle |
-| Décodage JPEG 2000 (photo DG2, signature DG7, images DG12) | OpenJPEG (bibliothèque `openjp2` seule) | BSD-2-Clause | Code natif en JNI dans `:app`, compilé depuis les sources (sous-module git `app/src/main/cpp/openjpeg`) par CMake et le NDK, lié statiquement ; aucun binaire précompilé |
-| Exécution asynchrone | kotlinx-coroutines | Apache 2 | |
+| PACE, BAC, DG reading, PA, CA, AA | JMRTD | LGPL 2.1 or later | Latest version published on Maven Central |
+| APDU abstraction, JMRTD bridge to `IsoDep` | SCUBA (scuba-smartcards, scuba-sc-android) | LGPL 2.1 or later | |
+| Cryptography, X.509, CMS | BouncyCastle (bcprov, bcpkix, `jdk18on` variants only) | MIT | Do not use SpongyCastle |
+| JPEG 2000 decoding (DG2 photo, DG7 signature, DG12 images) | OpenJPEG (`openjp2` library only) | BSD-2-Clause | Native JNI code in `:app`, compiled from source (git submodule `app/src/main/cpp/openjpeg`) by CMake and the NDK, statically linked; no prebuilt binary |
+| Asynchronous execution | kotlinx-coroutines | Apache 2 | |
 | UI | Compose, Material 3, Navigation Compose, Lifecycle | Apache 2 | |
 
-La clause « ou ultérieure » permet d'utiliser JMRTD et SCUBA sous LGPL 3, compatible avec la licence de Sceau (GPL-3.0-only).
+The “or later” clause allows JMRTD and SCUBA to be used under LGPL 3, which is compatible with Sceau's license (GPL-3.0-only).
 
-jj2000 (fork JMRTD) est écarté : sa licence d'origine restreint le champ d'usage (non libre, retiré de Debian pour cette raison), ce qui la rend incompatible avec la GPLv3 et avec la politique d'inclusion de F-Droid ; ce fork n'est pas non plus publié sur Maven Central (D3). OpenJPEG, implémentation de référence sous licence libre, le remplace. Le sous-module suit la veille de sécurité amont : il est avancé dès qu'un correctif de sécurité est publié, et le harnais de test natif est rejoué à chaque montée de version (audit V5).
+jj2000 (JMRTD fork) is ruled out: its original license restricts the field of use (non-free, removed from Debian for that reason), which makes it incompatible with GPLv3 and with F-Droid's inclusion policy; this fork is not published on Maven Central either (D3). OpenJPEG, the reference implementation under a free license, replaces it. The submodule follows upstream security advisories: it is advanced as soon as a security fix is released, and the native test harness is rerun on every version upgrade (audit V5).
 
-Toute nouvelle dépendance doit être justifiée dans `docs/dependencies.md`, qui liste chaque dépendance avec sa version résolue, sa licence vérifiée sur l'artefact et sa compatibilité F-Droid.
+Any new dependency must be justified in `docs/dependencies.md`, which lists each dependency with its resolved version, its license as verified on the artifact and its F-Droid compatibility.
 
-## 4. Documents pris en charge
+## 4. Supported documents
 
-| Document | Clé d'accès | Protocole | Remarque |
+| Document | Access key | Protocol | Note |
 |---|---|---|---|
-| CNIe française (format CB, depuis 2021) | CAN, 6 chiffres au recto | PACE | Cas principal |
-| Cartes d'identité UE (règlement 2019/1157) | CAN si imprimé, sinon MRZ | PACE | Certaines cartes plus anciennes n'ont pas d'application ICAO |
-| Passeports biométriques, tous pays | MRZ (numéro, naissance, expiration) | PACE si annoncé dans EF.CardAccess, sinon BAC ; repli sur BAC selon §6.1 | |
+| French CNIe (credit-card format, since 2021) | CAN, 6 digits on the front | PACE | Main case |
+| EU identity cards (Regulation 2019/1157) | CAN if printed, otherwise MRZ | PACE | Some older cards have no ICAO application |
+| Biometric passports, all countries | MRZ (number, birth, expiry) | PACE if announced in EF.CardAccess, otherwise BAC; fallback to BAC per §6.1 | |
 
-Un document sans application ICAO (AID `A0 00 00 02 47 10 01`) est signalé « document non conforme ICAO 9303 » sans autre tentative.
+A document without an ICAO application (AID `A0 00 00 02 47 10 01`) is reported as “document not compliant with ICAO 9303” with no further attempt.
 
-## 5. Parcours utilisateur
+## 5. User flow
 
-### 5.1 Écran d'accueil
+### 5.1 Home screen
 
-Deux onglets en haut, le Passeport en premier et sélectionné à l'ouverture (D29) :
+Two tabs at the top, Passport first and selected on opening (D29):
 
-- **Passeport** : trois champs, numéro de document (alphanumérique, majuscules forcées), date de naissance et date d'expiration. Le numéro de document est complété par des `<` à 9 caractères conformément à la MRZ. Dès que le huitième chiffre de la date d'expiration est tapé, le clavier se retire (D29).
-- **Carte d'identité** : un sélecteur CAN / MRZ, sur CAN par défaut (D31). CAN : champ unique, clavier numérique, 6 chiffres, validation quand le champ est complet. MRZ : les trois champs de l'onglet Passeport, pour les cartes dont la puce n'accepte pas le CAN ou dont le CAN n'a pas 6 chiffres.
+- **Passport**: three fields, document number (alphanumeric, forced uppercase), date of birth and expiry date. The document number is padded with `<` to 9 characters as in the MRZ. As soon as the eighth digit of the expiry date is typed, the keyboard is dismissed (D29).
+- **ID card**: a CAN / MRZ selector, on CAN by default (D31). CAN: single field, numeric keyboard, 6 digits, validation when the field is complete. MRZ: the three fields of the Passport tab, for cards whose chip does not accept the CAN or whose CAN does not have 6 digits.
 
-Les deux dates se saisissent au clavier numérique (clavier de type mot de passe numérique, pour que le clavier du système n'apprenne ni ne suggère ces dates), en huit chiffres, sans sélecteur de date. Les séparateurs `/` s'affichent au fil de la frappe sans être stockés. L'ordre des champs suit le format de date court de la locale : JJ/MM/AAAA en français, MM/JJ/AAAA en anglais américain, jour, mois, année par défaut. Une date doit exister, la naissance ne pas dépasser aujourd'hui, l'expiration être postérieure à 1990 ; l'erreur s'affiche sous le champ et « Lire » reste inactif tant qu'une date est invalide (D10).
+Both dates are typed on the numeric keyboard (numeric password keyboard, so that the system keyboard neither learns nor suggests these dates), as eight digits, without a date picker. The `/` separators are displayed as the user types without being stored. The field order follows the locale's short date format: DD/MM/YYYY in French, MM/DD/YYYY in American English, day, month, year by default. A date must exist, the date of birth must not be later than today, and the expiry date must be after 1990; the error is shown under the field and “Read” stays disabled as long as a date is invalid (D10).
 
-Les champs CAN, numéro de document et dates sont exclus de la saisie automatique (autofill) : aucun gestionnaire de mots de passe ne doit se les voir proposer (audit V14).
+The CAN, document number and date fields are excluded from autofill: no password manager must ever be offered them (audit V14).
 
-Sous les champs, une phrase rappelle que le document doit être présenté par son titulaire, et un bouton « Lire ».
+Below the fields, a sentence reminds the user that the document must be presented by its holder, followed by a “Read” button.
 
-Si le NFC est désactivé, un bandeau l'indique avec un bouton vers les réglages NFC du système. Si le téléphone n'a pas de NFC, l'écran l'explique et désactive le bouton.
+If NFC is turned off, a banner says so, with a button to the system NFC settings. If the phone has no NFC, the screen explains it and disables the button.
 
-Un menu donne accès aux écrans « Magasin de confiance » et « À propos ». Dans l'APK de debug seulement, il propose aussi « Simuler une CNIe (démo) », qui lit la CNIe spécimen de `:testchip` par le même chemin qu'un document réel (section 9.3). Cette entrée n'existe pas dans l'APK release.
+A menu gives access to the “Trust store” and “About” screens. In the debug APK only, it also offers “Simulate a French ID card (demo)”, which reads the specimen CNIe from `:testchip` through the same path as a real document (section 9.3). This entry does not exist in the release APK.
 
-Les valeurs saisies ne sont jamais persistées : elles vivent dans le `ViewModel`, jamais dans un `Bundle` ni un `SavedStateHandle`, et sont effacées à la fin d'une lecture réussie et à la fermeture de l'écran de résultat.
+The values entered are never persisted: they live in the `ViewModel`, never in a `Bundle` or a `SavedStateHandle`, and are cleared at the end of a successful read and when the result screen is closed.
 
-### 5.2 Écran de lecture
+### 5.2 Reading screen
 
-Invite « Posez le document contre le dos du téléphone et ne le retirez pas », avec une animation sobre et une liste d'étapes qui se cochent au fur et à mesure :
+Prompt “Hold the document against the back of the phone and don’t move it away”, with a subtle animation and a list of steps that are checked off as they progress:
 
-1. Connexion à la puce
-2. Ouverture du canal sécurisé (PACE ou BAC)
-3. Lecture des données
-4. Vérification de la signature
-5. Vérification de la puce
+1. Connecting to the chip
+2. Opening secure channel (PACE or BAC)
+3. Reading data
+4. Verifying signature
+5. Verifying chip
 
-Si l'étape « Ouverture du canal sécurisé » dure plus de 5 s, un message d'attente explique que la puce peut faire patienter jusqu'à une minute après des essais ratés (contre-mesure anti-force brute, §6.1) et invite à ne pas retirer le document (D12).
+If the “Opening secure channel” step lasts more than 5 s, a waiting message explains that the chip may make the reader wait up to a minute after failed attempts (anti-brute-force countermeasure, §6.1) and asks the user not to remove the document (D12).
 
-Erreurs gérées, chacune avec un message dans la langue de l'interface et un bouton « Réessayer », sauf l'accès réservé :
+Errors handled, each with a message in the interface language and a “Try again” button, except restricted access:
 
-- CAN ou MRZ incorrects (échec de PACE ou BAC) ; le message prévient qu'un essai raté peut allonger le délai de réponse de la puce
-- CAN fourni pour un document qui n'annonce pas PACE ; le message invite à utiliser l'onglet Passeport et la MRZ
-- Document retiré trop tôt (perte de la connexion)
-- Document sans application ICAO
-- Puce réservée aux autorités habilitées (`ACCESS_RESTRICTED`, cartes d'identité allemandes délivrées avant août 2021) : le message dit qu'un nouvel essai n'y changera rien, et seul « Annuler » est proposé, sans « Réessayer » (D36)
-- Délai dépassé
-- Erreur inattendue
+- Wrong CAN or MRZ (PACE or BAC failure); the message warns that a failed attempt may lengthen the chip's response delay
+- CAN provided for a document that does not announce PACE; the message suggests using the Passport tab and the MRZ
+- Document removed too early (connection lost)
+- Document without an ICAO application
+- Chip reserved for authorized authorities (`ACCESS_RESTRICTED`, German identity cards issued before August 2021): the message says that trying again will not change anything, and only “Cancel” is offered, without “Try again” (D36)
+- Timeout
+- Unexpected error
 
-Pour **toutes** les erreurs, le code technique complet est affiché en petit sous le message : aucun journal n'étant permis (section 8), c'est le seul moyen de diagnostic (D11). Le message est choisi sur le code de base (texte avant le premier `-`). Codes de base stables : `NOT_ICAO`, `ACCESS_DENIED`, `ACCESS_RESTRICTED`, `CAN_WITHOUT_PACE`, `CONNECTION_LOST`, `TIMEOUT`, `UNEXPECTED`. `ACCESS_RESTRICTED` porte en suffixe l'étape et l'élément refusé (`ACCESS_RESTRICTED-SECURE_CHANNEL-SELECT_APPLET`, `ACCESS_RESTRICTED-READ_DATA-SOD`, `ACCESS_RESTRICTED-READ_DATA-DG1`, D36). `CONNECTION_LOST`, `TIMEOUT` et `UNEXPECTED` portent un suffixe de diagnostic fait uniquement d'éléments sans donnée personnelle : étape (`SECURE_CHANNEL`…), octet INS de la commande en cours (`INS86`), longueur de l'APDU arrondie à la dizaine (`L10`), étiquette de l'opération (`SELECT_APPLET`, `SOD`, `DG1`, `RECONNECT`), sous-type d'erreur d'E/S pris dans une liste fermée (`IO-TRANSCEIVE_FAILED`, `IO-TOO_LONG`, `IO-SERVICE_DIED`, `IO-OTHER`, `IO-NO_MESSAGE`), nom simple de la classe d'exception et mot d'état SW. Exemple : `TIMEOUT-SECURE_CHANNEL-INS86-L10`. Un code ne contient jamais de donnée lue, de clé, d'octet d'APDU ni de message d'exception brut. La grammaire complète est dans `docs/protocol.md` §5.
+For **all** errors, the full technical code is shown in small print under the message: since no logging is allowed (section 8), it is the only means of diagnosis (D11). The message is chosen from the base code (text before the first `-`). Stable base codes: `NOT_ICAO`, `ACCESS_DENIED`, `ACCESS_RESTRICTED`, `CAN_WITHOUT_PACE`, `CONNECTION_LOST`, `TIMEOUT`, `UNEXPECTED`. `ACCESS_RESTRICTED` carries as a suffix the step and the refused element (`ACCESS_RESTRICTED-SECURE_CHANNEL-SELECT_APPLET`, `ACCESS_RESTRICTED-READ_DATA-SOD`, `ACCESS_RESTRICTED-READ_DATA-DG1`, D36). `CONNECTION_LOST`, `TIMEOUT` and `UNEXPECTED` carry a diagnostic suffix made only of elements without personal data: step (`SECURE_CHANNEL`…), INS byte of the current command (`INS86`), APDU length rounded to the nearest ten (`L10`), operation label (`SELECT_APPLET`, `SOD`, `DG1`, `RECONNECT`), I/O error subtype taken from a closed list (`IO-TRANSCEIVE_FAILED`, `IO-TOO_LONG`, `IO-SERVICE_DIED`, `IO-OTHER`, `IO-NO_MESSAGE`), simple name of the exception class and SW status word. Example: `TIMEOUT-SECURE_CHANNEL-INS86-L10`. A code never contains data read, a key, an APDU byte or a raw exception message. The full grammar is in `docs/protocol.md` §5.
 
-### 5.3 Écran de résultat
+### 5.3 Result screen
 
-De haut en bas :
+From top to bottom:
 
-**Verdict global**, en grand, sur fond coloré :
+**Overall verdict**, large, on a colored background:
 
-- **Authentique** (vert) : PA réussie et au moins un des deux challenges (CA ou AA) réussi.
-- **Signature valide, puce non vérifiée** (orange) : PA réussie mais ni DG14 ni DG15 annoncés dans le SOD. Le document est authentique mais la puce pourrait être un clone.
-- **Émetteur inconnu** (gris) : la chaîne du SOD ne remonte à aucun CSCA du magasin, ou le certificat DS est introuvable. Les données sont affichées mais rien n'est garanti.
-- **Échec** (rouge) : signature invalide, empreinte d'un DG non conforme, DG signé non fourni par la puce, chaîne invalide ou pays incohérents, challenge raté, ou algorithme non pris en charge.
+- **Authentic** (green): PA passed and at least one of the two challenges (CA or AA) passed.
+- **Valid signature, chip not verified** (orange): PA passed but neither DG14 nor DG15 announced in the SOD. The document is genuine but the chip could be a clone.
+- **Unknown issuer** (gray): the SOD chain leads to no CSCA in the store, or the DS certificate cannot be found. The data is displayed but nothing is guaranteed.
+- **Failed** (red): invalid signature, non-matching DG hash, signed DG not provided by the chip, invalid chain or inconsistent countries, failed challenge, or unsupported algorithm.
 
-Le verdict se calcule par la table de décision de `docs/protocol.md` §6 : une ligne en échec ou en algorithme non pris en charge donne « Échec » ; sinon une chaîne non disponible donne « Émetteur inconnu » ; sinon PA réussie et CA ou AA réussie donne « Authentique » ; CA et AA non disponibles donnent « Signature valide, puce non vérifiée » ; tout autre cas donne « Échec » (D6).
+The verdict is computed using the decision table in `docs/protocol.md` §6: a row that failed or has an unsupported algorithm gives “Failed”; otherwise an unavailable chain gives “Unknown issuer”; otherwise PA passed and CA or AA passed gives “Authentic”; CA and AA not available give “Valid signature, chip not verified”; any other case gives “Failed” (D6).
 
-Quand l'ancre de la chaîne est un CSCA issu d'une Master List **importée** par l'utilisateur, la carte du verdict le signale elle-même par une mention visible sans rien déplier (audit V6).
+When the chain anchor is a CSCA from a Master List **imported** by the user, the verdict card itself says so with a visible notice, without expanding anything (audit V6).
 
-Après une lecture en mode démo (APK de debug), un bandeau « Document simulé — démonstration » est affiché (D17).
+After a read in demo mode (debug APK), a “Simulated document — demo” banner is displayed (D17).
 
-**Photo** de DG2 en grand, avec un bouton pour l'afficher en plein écran.
+**Photo** from DG2, large, with a button to show it full screen.
 
-**Identité** (DG1) : nom, prénoms, sexe, date de naissance, nationalité, type et numéro de document, État émetteur (drapeau et nom du pays à partir du code à trois lettres), date d'expiration. Si le document est expiré, un bandeau « Document expiré » s'affiche sans changer le verdict d'authenticité.
+**Identity** (DG1): surname, given names, sex, date of birth, nationality, document type and number, issuing state (flag and country name from the three-letter code), expiry date. If the document has expired, a “Document expired” banner is shown without changing the authenticity verdict.
 
-**Carte eID allemande pour citoyens de l'Union (eID-UB)** : sa puce ne contient aucune donnée d'identité (DG1 au code de document « UB », État « D », « < » partout ailleurs ; DG2 porte le logo eID, identique pour toutes les cartes). Si la signature du SOD est valide et l'empreinte de DG1 conforme, la section Identité est remplacée par un bandeau qui l'explique, suivi du seul genre de document et de l'État émetteur, et la photo n'est pas affichée ; l'empreinte de DG2 reste contrôlée. Le verdict se calcule normalement (D36).
+**German eID card for Union citizens (eID-UB)**: its chip contains no identity data (DG1 with document code “UB”, state “D”, “<” everywhere else; DG2 holds the eID logo, identical for all cards). If the SOD signature is valid and the DG1 hash matches, the Identity section is replaced by a banner explaining this, followed only by the document type and the issuing state, and the photo is not displayed; the DG2 hash is still checked. The verdict is computed normally (D36).
 
-**Signature du titulaire** (DG7), section affichée uniquement si la puce l'annonce et la fournit : image de la signature manuscrite, décodée comme la photo, sur fond blanc dans les deux thèmes pour rester lisible (D37).
+**Holder's signature** (DG7), section shown only if the chip announces and provides it: image of the handwritten signature, decoded like the photo, on a white background in both themes to remain legible (D37).
 
-**Données complémentaires**, section affichée uniquement si DG11 ou DG12 est présent :
+**Additional data**, section shown only if DG11 or DG12 is present:
 
-- DG11 : nom complet, autres noms, numéro personnel, lieu de naissance, adresse, téléphone, profession, titre, résumé du profil, autres nationalités, données de garde.
-- DG12 : autorité de délivrance, date de délivrance, mentions et observations, image du recto et du verso si présentes.
+- DG11: full name, other names, personal number, place of birth, address, telephone, profession, title, personal summary, other nationalities, custody information.
+- DG12: issuing authority, date of issue, endorsements and observations, front and back images if present.
 
-Seuls les champs renseignés sont affichés. Tout texte venu de la puce (DG1, DG11, DG12, sujets de certificats) est assaini à l'affichage : caractères de contrôle, de mise en forme bidirectionnelle et séparateurs de ligne ou de paragraphe retirés, longueur bornée, nombre de lignes limité (audit V12).
+Only the fields that are filled in are displayed. Any text coming from the chip (DG1, DG11, DG12, certificate subjects) is sanitized for display: control characters, bidirectional formatting characters and line or paragraph separators removed, length bounded, number of lines limited (audit V12).
 
-**Vérifications**, liste de contrôle avec pour chaque ligne un état (ok, échec, non disponible, algorithme non pris en charge) et un détail dépliable :
+**Checks**, a checklist with, for each row, a state (ok, failed, not available, unsupported algorithm) and an expandable detail:
 
-1. Canal sécurisé établi (PACE ou BAC, et lequel)
-2. Signature du SOD valide
-3. Chaîne de certification : DS rattaché à un CSCA du magasin, avec le nom du CSCA, le pays, la source (ANTS, publication nationale, Master List embarquée, Master List importée) et l'algorithme de signature. Le pays du CSCA, celui du DS et l'État émetteur de DG1 doivent concorder ; sinon la ligne est en échec avec le détail des trois pays (audit V3)
-4. Certificat DS dans sa période de validité à la date de délivrance du document
-5. Empreintes des groupes de données conformes au SOD, avec la liste des DG contrôlés. Un DG que le SOD annonce, parmi ceux que Sceau lit (1, 2, 7, 11, 12, 14, 15), et que la puce ne fournit pas est un échec, listé comme manquant : une puce ne peut pas retenir un DG signé (audit V1)
-6. Chip Authentication (DG14) réussie
-7. Active Authentication (DG15) réussie
+1. Secure channel established (PACE or BAC, and which)
+2. SOD signature valid
+3. Certificate chain: DS linked to a CSCA in the store, with the CSCA name, the country, the source (ANTS, national publication, built-in Master List, imported Master List) and the signature algorithm. The CSCA's country, the DS's country and the DG1 issuing state must match; otherwise the row fails with the detail of the three countries (audit V3)
+4. DS certificate within its validity period at the document's date of issue
+5. Data group hashes matching the SOD, with the list of DGs checked. A DG that the SOD announces, among those Sceau reads (1, 2, 7, 11, 12, 14, 15), and that the chip does not provide is a failure, listed as missing: a chip cannot withhold a signed DG (audit V1)
+6. Chip Authentication (DG14) passed
+7. Active Authentication (DG15) passed
 
-**Bouton « Effacer »** en bas et dans la barre d'action : vide immédiatement toutes les données en mémoire, images décodées comprises, et revient à l'accueil. Le retour arrière du système a le même effet.
+**“Clear” button** at the bottom and in the action bar: immediately wipes all data in memory, decoded images included, and returns to the home screen. The system back action has the same effect.
 
-### 5.4 Écran « Magasin de confiance »
+### 5.4 “Trust store” screen
 
-Accessible depuis le menu de l'accueil :
+Accessible from the home screen menu:
 
-- Liste des CSCA connus, groupés par pays, avec nom du sujet, période de validité, empreinte SHA-256 et source.
-- Bouton « Importer une Master List » : ouvre le sélecteur de fichiers du système (`ACTION_OPEN_DOCUMENT`, sans permission persistante), accepte un fichier CMS (`.ml`, `.der`, `.p7b`) de 20 Mo au plus. La signature CMS est vérifiée avec le certificat signataire embarqué dans le fichier, dont l'empreinte est affichée à l'utilisateur pour confirmation avant import. Le dialogue de confirmation avertit qu'un certificat importé peut rendre authentique n'importe quel document de son pays, et qu'il ne faut importer qu'une liste de provenance sûre (audit V6). Les Master Lists importées sont stockées telles quelles dans le stockage interne de l'appli (`filesDir/trust/`, nom de fichier = SHA-256 du contenu, écriture atomique) et leurs CSCA marqués « importé ».
-- Le même bouton accepte un certificat CSCA auto-signé ou un certificat de lien isolé (DER ou PEM, un seul par fichier), reconnu automatiquement, avec un aperçu (sujet, pays, validité, empreinte SHA-256) et l'avertissement qu'aucune signature d'État ne le garantit ; stocké en DER dans `filesDir/trust/<sha256>.der`, marqué « Certificat importé » (D33).
-- Section « Éléments importés » : chaque Master List ou certificat importé, supprimable à l'unité après confirmation (D33).
-- Bouton « Supprimer les certificats importés ».
+- List of known CSCAs, grouped by country, with subject name, validity period, SHA-256 fingerprint and source.
+- “Import a Master List or a certificate” button: opens the system file picker (`ACTION_OPEN_DOCUMENT`, without persistent permission), accepts a CMS file (`.ml`, `.der`, `.p7b`) of at most 20 MB. The CMS signature is verified with the signer certificate embedded in the file, whose fingerprint is shown to the user for confirmation before import. The confirmation dialog warns that an imported certificate can make any document from its country authentic, and that only a list from a trusted source should be imported (audit V6). Imported Master Lists are stored as is in the app's internal storage (`filesDir/trust/`, file name = SHA-256 of the content, atomic write) and their CSCAs are marked “Imported”.
+- The same button accepts a self-signed CSCA certificate or a standalone link certificate (DER or PEM, only one per file), recognized automatically, with a preview (subject, country, validity, SHA-256 fingerprint) and the warning that no State signature vouches for it; stored as DER in `filesDir/trust/<sha256>.der`, marked “Imported certificate” (D33).
+- “Imported items” section: each imported Master List or certificate, deletable one by one after confirmation (D33).
+- “Delete imported certificates” button.
 
-Aucune donnée personnelle ne transite par cet écran.
+No personal data passes through this screen.
 
-### 5.5 Écran « À propos »
+### 5.5 “About” screen
 
-Version, licence, lien vers le dépôt, lien de don vers Liberapay ouvert dans le navigateur (D52), rappel du cadre d'usage (voir section 8), et description du magasin de confiance embarqué : CSCA français de l'ANTS et Master List allemande du BSI, avec la date de signature de cette Master List, puis les pays dont des certificats publiés par l'État lui-même sont embarqués. Une mention précise que la Master List du BSI est redistribuée sans modification, sans coopération ni approbation du BSI (conditions de réutilisation, D1). L'attribution de l'Open Government Licence v3.0 accompagne les certificats britanniques (D26). Les limites de la section 7.4 y sont rappelées. Une section « Bibliothèques libres » nomme les bibliothèques embarquées et déplie, sur demande, leurs mentions de copyright et de licence, en anglais et non traduites, dont le texte complet de la BSD-2-Clause d'OpenJPEG (D50).
+Version, license, link to the repository, donation link to Liberapay opened in the browser (D52), reminder of the terms of use (see section 8), and description of the built-in trust store: French CSCAs from ANTS and the German Master List from the BSI, with the signing date of that Master List, then the countries whose certificates published by the State itself are built in. A notice states that the BSI Master List is redistributed without modification, without cooperation with or endorsement by the BSI (reuse conditions, D1). The Open Government Licence v3.0 attribution accompanies the British certificates (D26). The limitations of section 7.4 are restated there. An “Open-source libraries” section names the embedded libraries and expands, on request, their copyright and license notices, in English and untranslated, including the full text of OpenJPEG's BSD-2-Clause license (D50).
 
-### 5.6 Introduction et écran « Ce que contient la puce »
+### 5.6 Introduction and “What the chip contains” screen
 
-Au premier lancement, une introduction de 4 pages balayables explique la puce ICAO 9303, la clé d'accès (CAN ou MRZ) et le canal chiffré, ce que vérifie Sceau et le sens des quatre verdicts, puis la confidentialité. « Passer l'introduction » (toutes les pages sauf la dernière), « Commencer » (dernière page) et le retour arrière mènent à l'accueil et la marquent comme vue ; elle est rejouable depuis « À propos ». L'écran « Ce que contient la puce », ouvert depuis « À propos » et depuis la dernière page de l'introduction, liste les fichiers lus et affichés, ceux lus pour la seule vérification, ceux jamais lus (DG3, DG4…) et ce que Sceau ne fait pas (D35).
+On first launch, a 4-page swipeable introduction explains the ICAO 9303 chip, the access key (CAN or MRZ) and the encrypted channel, what Sceau checks and the meaning of the four verdicts, then privacy. “Skip introduction” (all pages except the last), “Get started” (last page) and the back action lead to the home screen and mark the introduction as seen; it can be replayed from “About”. The “What the chip contains” screen, opened from “About” and from the last page of the introduction, lists the files read and displayed, those read for verification only, those never read (DG3, DG4…) and what Sceau does not do (D35).
 
-## 6. Protocole de lecture et de vérification (module `:core`)
+## 6. Reading and verification protocol (`:core` module)
 
-L'API publique de `:core` est une fonction suspendue `readAndVerify(transport: CardTransport, key: AccessKey, trustStore: TrustStore, progress: (Step) -> Unit): VerificationReport`, exécutée sur `Dispatchers.IO`. `CardTransport` est une interface abstraite (`transceive`, `maxTransceiveLength`, `timeoutMillis`, `reconnect`, `close`) implémentée dans `:app` au-dessus d'`IsoDep`, ce qui permet de tester `:core` avec un transport simulé. `reconnect()` réinitialise la liaison (vide par défaut ; `IsoDep.close()` puis `connect()` dans l'app, délai réappliqué) pour le repli PACE → BAC (D13).
+The public API of `:core` is a suspending function `readAndVerify(transport: CardTransport, key: AccessKey, trustStore: TrustStore, progress: (Step) -> Unit): VerificationReport`, run on `Dispatchers.IO`. `CardTransport` is an abstract interface (`transceive`, `maxTransceiveLength`, `timeoutMillis`, `reconnect`, `close`) implemented in `:app` on top of `IsoDep`, which makes it possible to test `:core` with a simulated transport. `reconnect()` resets the link (empty by default; `IsoDep.close()` then `connect()` in the app, timeout reapplied) for the PACE → BAC fallback (D13).
 
-Une erreur qui interrompt la lecture lève une `SceauException` au code stable (§5.2) ; tout échec de vérification est au contraire consigné dans le rapport, toujours produit dès que les données ont été lues. Si la lecture échoue, les données déjà lues sont remises à zéro.
+An error that interrupts the read throws a `SceauException` with a stable code (§5.2); any verification failure, on the contrary, is recorded in the report, which is always produced once the data has been read. If the read fails, the data already read is zeroed.
 
-La séquence détaillée, les délais et la grammaire des codes d'erreur sont dans `docs/protocol.md`.
+The detailed sequence, the timeouts and the error code grammar are in `docs/protocol.md`.
 
-### 6.1 Séquence
+### 6.1 Sequence
 
-L'ordre suit ICAO 9303 partie 11 : EF.CardAccess est un fichier du MF et PACE s'exécute au niveau du MF, avant la sélection de l'application.
+The order follows ICAO 9303 part 11: EF.CardAccess is a file of the MF and PACE runs at MF level, before the application is selected.
 
-1. **EF.CardAccess** : lu en clair au niveau du MF, avant toute sélection d'application. Présent et contenant des `PACEInfo` : PACE est annoncé. Absent ou illisible : pas de PACE.
-2. **Canal sécurisé et sélection de l'application ICAO** :
-   - PACE annoncé : PACE avec la clé fournie (CAN, ou clé dérivée de la MRZ), chaque `PACEInfo` essayé dans l'ordre, mapping et paramètres de domaine pris dans ce qu'annonce la puce ; puis sélection de l'application ICAO sous messagerie sécurisée.
-   - PACE non annoncé : sélection de l'application ICAO en clair, puis BAC avec la clé MRZ. Un CAN sans PACE annoncé est une erreur explicite (`CAN_WITHOUT_PACE`).
-   - Réponse `6A82` à la sélection de l'application : `NotIcaoDocument`, sans autre tentative.
-   - Clé refusée (SW `63xx` pendant PACE, échec de BAC) : `ACCESS_DENIED`, sans autre essai.
-   - **Repli PACE → BAC** (clé MRZ seulement) : si PACE échoue autrement que par un refus de la clé ou un délai dépassé (SW inattendu, erreur de la bibliothèque, perte de liaison), la liaison est réinitialisée par `CardTransport.reconnect()`, l'application ICAO est sélectionnée en clair, puis BAC est mené ; ICAO 9303 impose aux documents qui annoncent PACE d'accepter BAC pendant la transition. Avec un CAN, aucun repli. Une reconnexion impossible donne `CONNECTION_LOST-SECURE_CHANNEL-RECONNECT` (D13).
-   - **Délai d'authentification** : pendant PACE et BAC, le délai de réponse du transport est porté à 60 s, puis rétabli à sa valeur précédente (10 s) pour la lecture. Une puce peut imposer un délai croissant après des essais ratés ; couper plus tôt ne la laisse jamais répondre et aggrave la pénalité. Un délai dépassé pendant PACE arrête la lecture (`TIMEOUT-…`), sans repli sur BAC (D12).
-   - Toutes les commandes suivantes passent par la messagerie sécurisée ; le MAC des réponses est toujours vérifié. APDU courtes uniquement (256 octets au plus, aucune APDU étendue), lecture par `SELECT` puis `READ BINARY` par blocs de 223 octets, sans SFI (D14).
-3. **EF.COM puis EF.SOD**. EF.COM est facultatif : absent ou illisible, la liste des DG présents vient du SOD. EF.SOD est obligatoire.
-4. **Groupes de données** : DG1, DG2, puis DG14, DG15, DG11, DG12 et DG7 (signature manuscrite, D37) s'ils sont annoncés dans EF.COM ou dans le SOD. Les DG3 et DG4 ne sont jamais lus, pas plus que DG5, DG6, DG8 à DG10, DG13 et DG16.
-   - DG1 est obligatoire : son absence interrompt la lecture.
-   - DG2 est toujours demandé. Un DG, DG2 compris, que la puce ne fournit pas alors que le SOD l'annonce met la ligne « Empreintes » en échec (§5.3, audit V1) ; un DG qui n'est pas annoncé dans le SOD est simplement absent (pas de photo sans DG2).
-   - Taille bornée : la longueur annoncée par l'en-tête TLV de chaque fichier est contrôlée avant lecture, contre un plafond propre au fichier ; une longueur au-delà est refusée sans être lue. Un manque de mémoire est traité comme une erreur de lecture, sans empêcher l'effacement des données déjà lues. Un portrait dont l'en-tête d'image est corrompu donne « photo absente » plutôt que l'échec de toute la lecture (audit V11).
-   - Une erreur de transport (document retiré, délai) interrompt toujours la lecture.
-5. **Passive Authentication** :
-   - extraction du certificat DS embarqué dans le SOD. S'il est absent, recherche dans le magasin par (émetteur, numéro de série) ou par identifiant de clé ; introuvable : signature du SOD et chaîne « non disponibles » (`DsCertificateMissing`), d'où « Émetteur inconnu » (D15),
-   - construction et validation de la chaîne DS vers un CSCA auto-signé du magasin, à travers 8 certificats de lien au plus ; émetteurs candidats cherchés par Authority Key Identifier puis par nom. Seules les signatures des CSCA et des liens comptent, pas leur période de validité : un document reste valide jusqu'à dix ans après l'expiration de son CSCA (D15). Les certificats contenus dans le SOD ne servent jamais d'intermédiaires. Aucun CSCA du magasin ne correspond : chaîne « non disponible », verdict « Émetteur inconnu » (D6),
-   - contrôle de cohérence des pays : pays du CSCA = pays du DS = État émetteur de DG1 (code ICAO alpha-3 ramené en alpha-2, codes spéciaux compris : `D` = DE, `GBD`…`GBS` = GB) ; sinon la chaîne est en échec (audit V3). Toute exception (organisation internationale) est documentée dans `docs/decisions.md`,
-   - vérification de la signature du SOD avec la clé du DS, selon l'algorithme déclaré dans le SOD,
-   - recalcul de l'empreinte de chaque DG lu avec l'algorithme déclaré dans le SOD et comparaison ; un DG lu mais absent du SOD est non conforme ; un DG annoncé dans le SOD et non fourni est un échec (étape 4),
-   - vérification que la période de validité du DS couvre la date de délivrance du document : date de DG12 si disponible, sinon date de signature du SOD, sinon expiration moins 10 ans, avec mention « estimée ». Hors de la période : échec pour une date de DG12 ou du SOD ; « non disponible », jamais échec, pour une date estimée, la durée usuelle pouvant être fausse (passeport de mineur) (D6, D15).
-6. **Chip Authentication** si DG14 est présent et l'annonce : accord de clé avec la clé statique de DG14, puis renouvellement de la messagerie sécurisée ; toutes les lectures suivantes passent par ce canal. La CA n'est réussie que si la puce répond sous les nouvelles clés : un échange court (lecture de DG1) le confirme, MAC de la réponse vérifié. CA « non disponible » seulement si DG14 est absent du SOD.
-7. **Active Authentication** si DG15 est présent : nonce de 8 octets tiré d'un `SecureRandom`, envoi par `INTERNAL AUTHENTICATE`, vérification de la signature avec la clé de DG15 (RSA : ISO/IEC 9796-2 schéma 1, hachage désigné par le trailer ; EC : ECDSA avec le hachage annoncé dans DG14, ou, s'il n'en annonce pas, SHA-1 à SHA-512 essayés dans l'ordre, D15). AA « non disponible » seulement si DG15 est absent du SOD. Une perte de liaison pendant CA ou AA interrompt la lecture ; toute autre erreur de la puce est consignée dans la ligne correspondante.
-8. Construction d'un `VerificationReport` immuable contenant les données lues, le résultat de chaque étape (exactement une ligne par contrôle), le verdict global et les métadonnées de la chaîne de certification.
+1. **EF.CardAccess**: read in plain at MF level, before any application selection. Present and containing `PACEInfo`: PACE is announced. Absent or unreadable: no PACE.
+2. **Secure channel and selection of the ICAO application**:
+   - PACE announced: PACE with the key provided (CAN, or key derived from the MRZ), each `PACEInfo` tried in order, mapping and domain parameters taken from what the chip announces; then selection of the ICAO application under secure messaging.
+   - PACE not announced: selection of the ICAO application in plain, then BAC with the MRZ key. A CAN without PACE announced is an explicit error (`CAN_WITHOUT_PACE`).
+   - `6A82` response to the application selection: `NotIcaoDocument`, with no further attempt.
+   - Key refused (SW `63xx` during PACE, BAC failure): `ACCESS_DENIED`, with no further attempt.
+   - **PACE → BAC fallback** (MRZ key only): if PACE fails other than by a refusal of the key or a timeout (unexpected SW, library error, link lost), the link is reset by `CardTransport.reconnect()`, the ICAO application is selected in plain, then BAC is performed; ICAO 9303 requires documents that announce PACE to accept BAC during the transition period. With a CAN, no fallback. A reconnection that cannot be made gives `CONNECTION_LOST-SECURE_CHANNEL-RECONNECT` (D13).
+   - **Authentication timeout**: during PACE and BAC, the transport's response timeout is raised to 60 s, then restored to its previous value (10 s) for reading. A chip may impose an increasing delay after failed attempts; cutting off earlier never lets it respond and worsens the penalty. A timeout during PACE stops the read (`TIMEOUT-…`), with no fallback to BAC (D12).
+   - All subsequent commands go through secure messaging; the MAC of responses is always verified. Short APDUs only (256 bytes at most, no extended APDU), reading by `SELECT` then `READ BINARY` in blocks of 223 bytes, without SFI (D14).
+3. **EF.COM then EF.SOD**. EF.COM is optional: if absent or unreadable, the list of DGs present comes from the SOD. EF.SOD is mandatory.
+4. **Data groups**: DG1, DG2, then DG14, DG15, DG11, DG12 and DG7 (handwritten signature, D37) if they are announced in EF.COM or in the SOD. DG3 and DG4 are never read, nor are DG5, DG6, DG8 to DG10, DG13 and DG16.
+   - DG1 is mandatory: its absence interrupts the read.
+   - DG2 is always requested. A DG, DG2 included, that the chip does not provide although the SOD announces it makes the “Data group hashes” row fail (§5.3, audit V1); a DG that is not announced in the SOD is simply absent (no photo without DG2).
+   - Bounded size: the length announced by the TLV header of each file is checked before reading, against a ceiling specific to the file; a length beyond it is refused without being read. Running out of memory is treated as a read error, without preventing the wiping of the data already read. A portrait whose image header is corrupted gives “photo missing” rather than failing the whole read (audit V11).
+   - A transport error (document removed, timeout) always interrupts the read.
+5. **Passive Authentication**:
+   - extraction of the DS certificate embedded in the SOD. If it is absent, lookup in the store by (issuer, serial number) or by key identifier; not found: SOD signature and chain “not available” (`DsCertificateMissing`), hence “Unknown issuer” (D15),
+   - construction and validation of the chain from the DS to a self-signed CSCA in the store, through 8 link certificates at most; candidate issuers searched by Authority Key Identifier then by name. Only the signatures of the CSCAs and links count, not their validity period: a document remains valid up to ten years after its CSCA expires (D15). Certificates contained in the SOD are never used as intermediates. No CSCA in the store matches: chain “not available”, verdict “Unknown issuer” (D6),
+   - country consistency check: CSCA country = DS country = DG1 issuing state (ICAO alpha-3 code mapped to alpha-2, special codes included: `D` = DE, `GBD`…`GBS` = GB); otherwise the chain fails (audit V3). Any exception (international organization) is documented in `docs/decisions.md`,
+   - verification of the SOD signature with the DS key, according to the algorithm declared in the SOD,
+   - recomputation of the hash of each DG read with the algorithm declared in the SOD and comparison; a DG read but absent from the SOD does not match; a DG announced in the SOD and not provided is a failure (step 4),
+   - verification that the DS validity period covers the document's date of issue: DG12 date if available, otherwise SOD signing date, otherwise expiry minus 10 years, marked “estimated”. Outside the period: failure for a DG12 or SOD date; “not available”, never failure, for an estimated date, since the usual validity period may be wrong (minor's passport) (D6, D15).
+6. **Chip Authentication** if DG14 is present and announces it: key agreement with the static key from DG14, then renewal of secure messaging; all subsequent reads go through this channel. CA only passes if the chip responds under the new keys: a short exchange (reading DG1) confirms it, with the MAC of the response verified. CA is “not available” only if DG14 is absent from the SOD.
+7. **Active Authentication** if DG15 is present: 8-byte nonce drawn from a `SecureRandom`, sent by `INTERNAL AUTHENTICATE`, verification of the signature with the DG15 key (RSA: ISO/IEC 9796-2 scheme 1, hash designated by the trailer; EC: ECDSA with the hash announced in DG14, or, if it announces none, SHA-1 to SHA-512 tried in order, D15). AA is “not available” only if DG15 is absent from the SOD. Losing the link during CA or AA interrupts the read; any other chip error is recorded in the corresponding row.
+8. Construction of an immutable `VerificationReport` containing the data read, the result of each step (exactly one row per check), the overall verdict and the certificate chain metadata.
 
-### 6.2 Règles
+### 6.2 Rules
 
-- L'algorithme de signature et la courbe ne sont jamais codés en dur. La vérification accepte ce que les certificats et le SOD déclarent (RSA PKCS#1 v1.5, RSA-PSS, ECDSA sur toute courbe supportée par BouncyCastle, et tout futur algorithme ajouté à BouncyCastle). Un algorithme inconnu produit `UnsupportedAlgorithm`, pas un échec silencieux.
-- Algorithmes refusés, qui ne peuvent jamais donner une ligne « ok » : MD5 (empreintes des DG comme signatures), RIPEMD-128, et clé RSA de moins de 1024 bits pour l'Active Authentication. SHA-1 reste accepté, des documents qui l'emploient étant encore en circulation (audit V9).
-- Extensions de la chaîne : tout émetteur de la chaîne (CSCA, certificat de lien) doit porter `basicConstraints` avec CA=true et l'usage de clé `keyCertSign` ; le DS doit porter `digitalSignature`. Une tolérance n'est admise que pour des CSCA réels qui n'ont pas ces extensions, après vérification sur les ancres embarquées, et doit être documentée dans `docs/decisions.md` (audit V8).
-- Type de contenu du SOD : le contenu signé doit être de type `id-icao-ldsSecurityObject` (`2.23.136.1.1.1`) ; sinon la vérification du SOD échoue (audit V10).
-- La recherche de chaîne est bornée : chaque certificat n'est visité qu'une fois par recherche, et le nombre de vérifications de signature est plafonné, pour qu'un magasin hostile ne rende pas la recherche exponentielle (audit V15).
-- Une étape non disponible (DG14 ou DG15 absent du SOD, étape non atteinte) est distinguée d'une étape échouée.
-- Accès réservé : un SW `6982` reçu **après** l'établissement du canal sécurisé, à la sélection de l'application ICAO ou à la lecture d'un fichier indispensable (EF.SOD, DG1), lève `ACCESS_RESTRICTED` : la puce réserve ces fichiers aux terminaux étatiques (Terminal Authentication), qu'un logiciel libre ne peut pas mener. Un `6982` avant l'authentification reste `UNEXPECTED`, un refus de clé reste `ACCESS_DENIED`, et un `6982` sur un fichier facultatif (EF.COM, DG2, DG7, DG11, DG12, DG14, DG15) le rend absent (D36).
-- Aucune donnée personnelle n'apparaît dans les exceptions, les logs ou les identifiants d'erreur. Aucune exception de JMRTD n'est propagée ni attachée comme cause : leurs messages contiennent des APDU en hexadécimal (D14). Les modèles, la clé et le rapport ont un `toString()` masqué.
-- Le rapport ne contient aucune référence Android et n'est ni sérialisé ni persisté : les tests travaillent sur les objets en mémoire produits avec `:testchip` (D19). `:core` ne produit aucun texte destiné à l'utilisateur : l'app met en forme les détails structurés avec ses propres chaînes.
+- The signature algorithm and the curve are never hardcoded. Verification accepts what the certificates and the SOD declare (RSA PKCS#1 v1.5, RSA-PSS, ECDSA on any curve supported by BouncyCastle, and any future algorithm added to BouncyCastle). An unknown algorithm produces `UnsupportedAlgorithm`, not a silent failure.
+- Refused algorithms, which can never give an “ok” row: MD5 (for DG hashes as for signatures), RIPEMD-128, and RSA keys shorter than 1024 bits for Active Authentication. SHA-1 remains accepted, since documents that use it are still in circulation (audit V9).
+- Chain extensions: every issuer in the chain (CSCA, link certificate) must carry `basicConstraints` with CA=true and the `keyCertSign` key usage; the DS must carry `digitalSignature`. A tolerance is only allowed for real CSCAs that lack these extensions, after verification on the built-in anchors, and must be documented in `docs/decisions.md` (audit V8).
+- SOD content type: the signed content must be of type `id-icao-ldsSecurityObject` (`2.23.136.1.1.1`); otherwise SOD verification fails (audit V10).
+- The chain search is bounded: each certificate is visited only once per search, and the number of signature verifications is capped, so that a hostile store cannot make the search exponential (audit V15).
+- A step that is not available (DG14 or DG15 absent from the SOD, step not reached) is distinguished from a failed step.
+- Restricted access: an SW `6982` received **after** the secure channel is established, on selection of the ICAO application or on reading an essential file (EF.SOD, DG1), throws `ACCESS_RESTRICTED`: the chip reserves these files for State terminals (Terminal Authentication), which free software cannot perform. A `6982` before authentication remains `UNEXPECTED`, a key refusal remains `ACCESS_DENIED`, and a `6982` on an optional file (EF.COM, DG2, DG7, DG11, DG12, DG14, DG15) makes it absent (D36).
+- No personal data appears in exceptions, logs or error identifiers. No JMRTD exception is propagated or attached as a cause: their messages contain APDUs in hexadecimal (D14). The models, the key and the report have a masked `toString()`.
+- The report contains no Android reference and is neither serialized nor persisted: tests work on the in-memory objects produced with `:testchip` (D19). `:core` produces no user-facing text: the app formats the structured details with its own strings.
 
-## 7. Magasin de confiance
+## 7. Trust store
 
-### 7.1 Contenu embarqué
+### 7.1 Built-in content
 
-Dans `core/src/main/resources/trust/` :
+In `core/src/main/resources/trust/`:
 
-- `ants-csca-2010.der`, `ants-csca-2015.der`, `ants-csca-2020.der`, `ants-csca-2025.der` : certificats CSCA passeport de l'ANTS (`CN=CSCA-FRANCE`), depuis la page CSCA de ants.gouv.fr. Le CSCA 2010, expiré, est conservé : il a signé des DS de passeports encore valables (D16).
-- `ants-csca-eid-2021.der` : certificat CSCA e-ID de l'ANTS (`CN=eID-FRANCE`, cartes d'identité), depuis la page CSCA e-ID de ants.gouv.fr. Il ne figure dans aucune Master List nationale : sans lui, aucune CNIe ne pourrait être vérifiée.
-- `de-bsi-master-list.ml` : German Master List publiée par le BSI (fichier CMS signé), redistribuée octet pour octet, seulement renommée. Elle couvre les 27 pays de l'UE, l'EEE, la Suisse et le Royaume-Uni, parmi 117 émetteurs. La Master List de l'ICAO n'est pas embarquée : ses conditions d'utilisation interdisent la redistribution et son téléchargement impose un captcha. Celle du BSI est publiée avec des conditions de réutilisation explicites (pas d'usage publicitaire, aucune apparence de coopération ou de caution du BSI, fichier inchangé), que Sceau respecte (D1).
-- `<pays>-csca-*.der` (par exemple `gb-csca-2026.der`) : CSCA et certificats de lien publiés par un État pour ses propres documents, absents de la liste BSI, encore valides et issus d'une source de statut A de `docs/trust-sources.md` (licence ouverte, ou publication officielle sans restriction de réutilisation). Royaume-Uni, Géorgie et Luxembourg (D26 ; certificats grecs retirés le 2026-10-11, D48).
-- `index.txt` : liste des fichiers du répertoire, un nom par ligne, car lister un répertoire du classpath n'est pas fiable dans un APK (D16).
+- `ants-csca-2010.der`, `ants-csca-2015.der`, `ants-csca-2020.der`, `ants-csca-2025.der`: ANTS passport CSCA certificates (`CN=CSCA-FRANCE`), from the CSCA page of ants.gouv.fr. The 2010 CSCA, expired, is kept: it signed DSs of passports that are still valid (D16).
+- `ants-csca-eid-2021.der`: ANTS e-ID CSCA certificate (`CN=eID-FRANCE`, identity cards), from the e-ID CSCA page of ants.gouv.fr. It appears in no national Master List: without it, no CNIe could be verified.
+- `de-bsi-master-list.ml`: German Master List published by the BSI (signed CMS file), redistributed byte for byte, only renamed. It covers the 27 EU countries, the EEA, Switzerland and the United Kingdom, among 117 issuers. The ICAO Master List is not built in: its terms of use forbid redistribution and downloading it requires a captcha. The BSI one is published with explicit reuse conditions (no advertising use, no appearance of cooperation with or endorsement by the BSI, file unchanged), which Sceau complies with (D1).
+- `<country>-csca-*.der` (for example `gb-csca-2026.der`): CSCAs and link certificates published by a State for its own documents, absent from the BSI list, still valid and taken from a status A source in `docs/trust-sources.md` (open license, or official publication without reuse restrictions). United Kingdom, Georgia and Luxembourg (D26; Greek certificates removed on 2026-10-11, D48).
+- `index.txt`: list of the files in the directory, one name per line, because listing a classpath directory is not reliable in an APK (D16).
 
-`docs/trust-store.md` documente pour chaque fichier : l'URL d'origine, la date de téléchargement, l'empreinte publiée par la source et l'empreinte SHA-256 constatée. Un test unitaire vérifie que les empreintes des fichiers embarqués correspondent à celles listées dans `docs/trust-store.md`, et que ce document, `index.txt` et le répertoire listent exactement les mêmes fichiers, pour détecter toute substitution, tout ajout ou tout retrait.
+`docs/trust-store.md` documents for each file: the original URL, the download date, the fingerprint published by the source and the SHA-256 fingerprint observed. A unit test verifies that the fingerprints of the built-in files match those listed in `docs/trust-store.md`, and that this document, `index.txt` and the directory list exactly the same files, to detect any substitution, addition or removal.
 
-### 7.2 Chargement
+### 7.2 Loading
 
-`:core` charge les certificats DER (source `ANTS` pour les fichiers `ants-*.der`, `NATIONAL` pour les autres, D26), puis la Master List embarquée. Vérifier sa signature CMS avec le seul certificat signataire qu'elle contient serait circulaire : la signature est vérifiée **et** le signataire doit être émis par le CSCA allemand dont l'empreinte SHA-256 est épinglée dans le code (ou par son certificat de lien, également épinglé ; empreintes dans `docs/trust-store.md`). Sinon la liste embarquée est rejetée et le chargement échoue (D1). Le type de contenu de la Master List est vérifié.
+`:core` loads the DER certificates (source `ANTS` for the `ants-*.der` files, `NATIONAL` for the others, D26), then the built-in Master List. Verifying its CMS signature with only the signer certificate it contains would be circular: the signature is verified **and** the signer must be issued by the German CSCA whose SHA-256 fingerprint is pinned in the code (or by its link certificate, also pinned; fingerprints in `docs/trust-store.md`). Otherwise the built-in list is rejected and loading fails (D1). The content type of the Master List is verified.
 
-Les Master Lists importées par l'utilisateur sont vérifiées selon §5.4 (signature CMS avec le signataire contenu dans le fichier, empreinte confirmée par l'utilisateur) ; un import invalide est ignoré.
+Master Lists imported by the user are verified as per §5.4 (CMS signature with the signer contained in the file, fingerprint confirmed by the user); an invalid import is ignored.
 
-Les sources sont fusionnées. En cas de doublon, la priorité est ANTS, puis publications nationales, puis Master List embarquée, puis Master Lists importées. Chaque CSCA est indexé par pays, sujet, identifiant de clé et empreinte, avec sa source (`ANTS`, `NATIONAL`, `EMBEDDED_MASTER_LIST`, `IMPORTED_MASTER_LIST`). Le caractère auto-signé d'une ancre se déduit de ses identifiants de clé, la signature n'étant vérifiée qu'en repli ; la construction de la chaîne vérifie toujours chaque signature (D16).
+The sources are merged. In case of duplicates, the priority is ANTS, then national publications, then the built-in Master List, then imported Master Lists. Each CSCA is indexed by country, subject, key identifier and fingerprint, with its source (`ANTS`, `NATIONAL`, `EMBEDDED_MASTER_LIST`, `IMPORTED_MASTER_LIST`). Whether an anchor is self-signed is deduced from its key identifiers, the signature being verified only as a fallback; chain construction always verifies every signature (D16).
 
-Le magasin est préchargé en arrière-plan au démarrage du processus, pour que ni la première lecture ni l'écran « Magasin de confiance » n'attendent ; une erreur de préchargement est retentée et signalée à l'accès suivant (D16).
+The store is preloaded in the background when the process starts, so that neither the first read nor the “Trust store” screen has to wait; a preloading error is retried and reported on the next access (D16).
 
-### 7.3 Mise à jour
+### 7.3 Updates
 
-Les CSCA tournent tous les trois à cinq ans. Le magasin embarqué est mis à jour à chaque release selon la procédure de `docs/trust-store.md`. Entre deux releases, l'utilisateur peut importer une Master List plus récente (section 5.4). L'appli ne télécharge jamais rien.
+CSCAs rotate every three to five years. The built-in store is updated at each release following the procedure in `docs/trust-store.md`. Between two releases, the user can import a more recent Master List (section 5.4). The app never downloads anything.
 
-### 7.4 Limites documentées
+### 7.4 Documented limitations
 
-- Un pays absent du magasin (ANTS, publications nationales, liste BSI et imports) donne le verdict « Émetteur inconnu », pas « Échec ».
-- La liste BSI ne contient pas le CSCA des cartes d'identité slovaques ni 4 CSCA hongrois de 2024 ; ils figurent dans les Master Lists italienne et suédoise, que l'utilisateur peut importer (D1).
-- Les listes de révocation ne sont pas consultées en v1 (elles nécessitent le réseau).
+- A country absent from the store (ANTS, national publications, BSI list and imports) gives the verdict “Unknown issuer”, not “Failed”.
+- The BSI list does not contain the CSCA for Slovak identity cards nor 4 Hungarian CSCAs from 2024; they appear in the Italian and Swedish Master Lists, which the user can import (D1).
+- Revocation lists are not checked in v1 (they require the network).
 
-Ces limites sont affichées dans l'écran « À propos ».
+These limitations are displayed on the “About” screen.
 
-## 8. Vie privée et sécurité
+## 8. Privacy and security
 
-- Aucune donnée lue n'est écrite sur disque, en cache, en base ou en log, ni en debug ni en release. Aucun `Bundle`, `SavedStateHandle`, `rememberSaveable` ni préférence ne contient de donnée lue ni de clé (la seule préférence est l'indicateur « introduction vue », D35) ; après la mort du processus, l'application redémarre sur l'accueil, vide, ou sur l'introduction tant qu'elle n'a pas été vue.
-- Aucun journal, même temporaire pour déboguer : ni `Log`, ni `println`, ni `printStackTrace`. Le diagnostic passe par le code d'erreur affiché (§5.2). Les loggers `java.util.logging` de JMRTD et SCUBA (`org.jmrtd`, `net.sf.scuba`) sont coupés au début de chaque lecture, car ils écrivent des APDU en clair (D14).
-- `FLAG_SECURE` sur toute l'activité dès sa création : pas de capture d'écran, pas d'aperçu dans le multitâche, sur l'accueil (saisie du CAN et de la MRZ) comme sur la lecture, le résultat et la photo en plein écran (audit V7).
-- Effacement : les tableaux d'octets de DG1, DG2, DG7, DG11 et DG12 (DG bruts, portrait, signature, images de DG12) et les images décodées (bitmaps remis à zéro puis recyclés) sont effacés à la sortie de l'écran de résultat (« Effacer », retour arrière), lors de la mise en arrière-plan de l'appli pendant une lecture ou sur le résultat, à l'annulation d'une lecture et à la fin du `ViewModel`. Les bitmaps sont possédés par la session, de sorte que l'effacement les atteigne directement, y compris quand un décodage se termine après la sortie de l'écran (audit V13). Une rotation n'efface rien. Un rapport produit par une lecture abandonnée entre-temps est effacé dès sa réception, sans être publié.
-- Limites de l'effacement, assumées et documentées : les `String` et dates (nom, numéro, CAN, champs de DG11 et DG12) sont immuables et ne peuvent pas être remises à zéro, seul le ramasse-miettes les libère ; les tampons internes de JMRTD (flux de lecture, objets de la LDS, messagerie sécurisée), d'OpenJPEG et du décodeur d'images d'Android sont libérés sans remise à zéro. Ces copies restent dans la mémoire du processus, ne sont ni écrites ni journalisées. Sceau remet à zéro tous ses propres tableaux, y compris les tampons natifs intermédiaires du décodage JPEG 2000 (D3, D14).
-- La clé d'accès (CAN ou MRZ) n'est jamais mémorisée entre deux lectures : elle est oubliée après une lecture réussie (conservée après une erreur pour « Réessayer ») et à l'effacement.
-- Décodage des images sous contrainte : une image venue de la puce est une donnée potentiellement hostile.
-  - JPEG : dimensions lues avant décodage, plafond de pixels, sous-échantillonnage vers une taille d'affichage raisonnable (audit V2).
-  - JPEG 2000 (natif) : dimensions refusées au-delà de 4096 × 4096 dès l'en-tête, flux de 16 Mo au plus, 1 à 4 composantes de 16 bits au plus, mode strict (flux tronqué refusé), messages d'OpenJPEG silencieux. Budget mémoire estimé avant décodage (composantes, précision, pixels, tuiles, blocs de code) avec refus au-delà, réduction de résolution pour les grandes images (audit V4). Compilation durcie (`-fstack-protector-strong`, `_FORTIFY_SOURCE=2`, visibilité cachée sauf la fonction JNI, RELRO complet) (D3).
-  - Les décodages sont sérialisés, jamais en parallèle (audit V4). Un décodage refusé donne une image absente, jamais un plantage.
-- Aucune télémétrie, aucun rapport de plantage, aucune bibliothèque d'analyse.
-- Le nonce d'Active Authentication est tiré d'un `SecureRandom`.
-- Le README et l'écran « À propos » rappellent le cadre d'usage : la lecture suppose que le titulaire présente lui-même son document. La photo est une donnée biométrique au sens du RGPD si elle sert à une comparaison automatisée, ce que Sceau ne fait pas et ne doit pas faire sans base légale dédiée. Ils précisent aussi que Sceau est fourni sans garantie, que son verdict n'a pas valeur de preuve et ne dit pas si le document a été déclaré perdu ou volé, et que Sceau n'est ni un outil officiel ni un service de vérification d'identité certifié (D30).
-- La revue de sécurité du code (skill `android-securite`) est passée avant chaque release ; son rapport est versé dans `docs/audit-securite-<date>.md`.
+- No data read is written to disk, cache, database or log, in debug or in release. No `Bundle`, `SavedStateHandle`, `rememberSaveable` or preference contains data read or a key (the only preference is the “introduction seen” flag, D35); after process death, the application restarts on the home screen, empty, or on the introduction as long as it has not been seen.
+- No logging, not even temporarily for debugging: no `Log`, no `println`, no `printStackTrace`. Diagnosis goes through the displayed error code (§5.2). The `java.util.logging` loggers of JMRTD and SCUBA (`org.jmrtd`, `net.sf.scuba`) are turned off at the start of each read, because they write APDUs in plain (D14).
+- `FLAG_SECURE` on the whole activity from its creation: no screenshot, no recent apps preview, on the home screen (CAN and MRZ entry) as on the reading screen, the result screen and the full-screen photo (audit V7).
+- Wiping: the byte arrays of DG1, DG2, DG7, DG11 and DG12 (raw DGs, portrait, signature, DG12 images) and the decoded images (bitmaps zeroed then recycled) are wiped on leaving the result screen (“Clear”, back action), when the app goes to the background during a read or on the result screen, when a read is cancelled and when the `ViewModel` ends. The bitmaps are owned by the session, so that wiping reaches them directly, including when a decode finishes after the screen has been left (audit V13). A rotation wipes nothing. A report produced by a read abandoned in the meantime is wiped as soon as it is received, without being published.
+- Limitations of wiping, accepted and documented: `String`s and dates (name, number, CAN, DG11 and DG12 fields) are immutable and cannot be zeroed, only the garbage collector frees them; the internal buffers of JMRTD (read streams, LDS objects, secure messaging), of OpenJPEG and of the Android image decoder are freed without being zeroed. These copies remain in process memory and are neither written nor logged. Sceau zeroes all its own arrays, including the intermediate native buffers of JPEG 2000 decoding (D3, D14).
+- The access key (CAN or MRZ) is never remembered between two reads: it is forgotten after a successful read (kept after an error for “Try again”) and on wiping.
+- Constrained image decoding: an image coming from the chip is potentially hostile data.
+  - JPEG: dimensions read before decoding, pixel ceiling, subsampling to a reasonable display size (audit V2).
+  - JPEG 2000 (native): dimensions beyond 4096 × 4096 refused from the header, stream of 16 MB at most, 1 to 4 components of 16 bits at most, strict mode (truncated stream refused), OpenJPEG messages silenced. Memory budget estimated before decoding (components, precision, pixels, tiles, code blocks) with refusal beyond it, resolution reduction for large images (audit V4). Hardened compilation (`-fstack-protector-strong`, `_FORTIFY_SOURCE=2`, hidden visibility except for the JNI function, full RELRO) (D3).
+  - Decodes are serialized, never run in parallel (audit V4). A refused decode gives a missing image, never a crash.
+- No telemetry, no crash reporting, no analytics library.
+- The Active Authentication nonce is drawn from a `SecureRandom`.
+- The README and the “About” screen restate the terms of use: reading assumes that the holder presents their own document. The photo is biometric data within the meaning of the GDPR if it is used for automated comparison, which Sceau does not do and must not do without a dedicated legal basis. They also state that Sceau is provided without warranty, that its verdict has no evidentiary value and does not say whether the document has been reported lost or stolen, and that Sceau is neither an official tool nor a certified identity verification service (D30).
+- The code security review (`android-securite` skill) is carried out before each release; its report is filed in `docs/audit-securite-<date>.md`.
 
 ## 9. Tests
 
-### 9.1 Tests unitaires et de bout en bout (JVM)
+### 9.1 Unit and end-to-end tests (JVM)
 
-Le module `:testchip` fournit :
+The `:testchip` module provides:
 
-- une fabrique de PKI factice générée à la volée : CSCA ancien et nouveau, certificat de lien, DS, SOD signé sur des DG factices, DG14 avec une paire de clés CA et DG15 avec une paire de clés AA, en RSA et en ECDSA ;
-- une puce ICAO simulée à état, écrite sans le code protocolaire de JMRTD : EF.CardAccess, BAC, PACE (mapping générique ECDH), messagerie sécurisée 3DES et AES, Chip Authentication, Active Authentication ;
-- une CNIe spécimen (identité SPECIMEN, CAN 123456, portrait JPEG 2000 synthétique) et son magasin de test.
+- a fake PKI factory generated on the fly: old and new CSCA, link certificate, DS, SOD signed over fake DGs, DG14 with a CA key pair and DG15 with an AA key pair, in RSA and in ECDSA;
+- a stateful simulated ICAO chip, written without JMRTD's protocol code: EF.CardAccess, BAC, PACE (generic ECDH mapping), 3DES and AES secure messaging, Chip Authentication, Active Authentication;
+- a specimen CNIe (SPECIMEN identity, CAN 123456, synthetic JPEG 2000 portrait) and its test store.
 
-Les tests de `:core` utilisent cette puce simulée pour des lectures de bout en bout de `readAndVerify` (BAC et PACE), et un transport qui rejoue des échanges APDU enregistrés pour les cas de séquence et d'erreur. Ils échouent si DG3 ou DG4 est demandé. Cas couverts au minimum :
+The `:core` tests use this simulated chip for end-to-end reads with `readAndVerify` (BAC and PACE), and a transport that replays recorded APDU exchanges for sequence and error cases. They fail if DG3 or DG4 is requested. Cases covered at a minimum:
 
-- chaîne nominale : verdict Authentique
-- signature du SOD altérée : Échec
-- DG2 modifié après signature : Échec sur l'empreinte
-- DG annoncé dans le SOD mais non fourni (DG2, DG7, DG14 ou DG15) : Échec
-- DS expiré avant la date de délivrance : Échec sur la validité ; date estimée hors période : non disponible
-- DS non rattaché à un CSCA connu : Émetteur inconnu
-- pays du CSCA, du DS et de DG1 incohérents : Échec
-- DG14 et DG15 absents du SOD : Signature valide, puce non vérifiée
-- réponse AA signée avec une mauvaise clé : Échec
-- algorithme de signature inconnu : `UnsupportedAlgorithm` ; algorithme refusé (§6.2) : jamais « ok »
-- repli PACE → BAC, et absence de repli sur refus de clé ou délai dépassé
-- Master List avec signature CMS invalide, ou liste embarquée dont le signataire n'est pas ancré : rejetée au chargement
-- empreintes des fichiers embarqués conformes à `docs/trust-store.md`
-- codes d'erreur sans donnée personnelle
+- nominal chain: Authentic verdict
+- altered SOD signature: Failed
+- DG2 modified after signing: Failed on the hash
+- DG announced in the SOD but not provided (DG2, DG7, DG14 or DG15): Failed
+- DS expired before the date of issue: Failed on validity; estimated date outside the period: not available
+- DS not linked to a known CSCA: Unknown issuer
+- inconsistent CSCA, DS and DG1 countries: Failed
+- DG14 and DG15 absent from the SOD: Valid signature, chip not verified
+- AA response signed with the wrong key: Failed
+- unknown signature algorithm: `UnsupportedAlgorithm`; refused algorithm (§6.2): never “ok”
+- PACE → BAC fallback, and no fallback on key refusal or timeout
+- Master List with an invalid CMS signature, or built-in list whose signer is not anchored: rejected at loading
+- fingerprints of the built-in files matching `docs/trust-store.md`
+- error codes without personal data
 
-Les tests de `:app` (JVM) couvrent la saisie de l'accueil, la mise en forme des contrôles, la correspondance des erreurs et le mode démo de bout en bout.
+The `:app` tests (JVM) cover home screen input, formatting of the checks, error mapping and demo mode end to end.
 
-### 9.2 Code natif
+### 9.2 Native code
 
-Le cœur de décodage JPEG 2000 (`jp2_decode.c`), séparé du pont JNI, est testé sur l'hôte sous AddressSanitizer et UndefinedBehaviorSanitizer (`app/src/main/cpp/test/run-host-tests.sh`) : images synthétiques, flux tronqués, altérés et démesurés, bombes de décompression. Le harnais est rejoué à chaque modification du code natif ou montée de version d'OpenJPEG.
+The JPEG 2000 decoding core (`jp2_decode.c`), separate from the JNI bridge, is tested on the host under AddressSanitizer and UndefinedBehaviorSanitizer (`app/src/main/cpp/test/run-host-tests.sh`): synthetic images, truncated, altered and oversized streams, decompression bombs. The harness is rerun on every change to the native code or OpenJPEG version upgrade.
 
-### 9.3 Mode démo
+### 9.3 Demo mode
 
-L'APK de debug propose « Simuler une CNIe (démo) » (§5.1) : la CNIe spécimen de `:testchip` est lue par le même chemin qu'un document réel, avec les mêmes règles d'effacement, et vérifiée avec son propre magasin de test, qui ne remplace ni ne complète jamais le magasin réel. La clé saisie est oubliée au lancement de la démo. Dans l'APK release, l'entrée n'existe pas et aucune classe de `:testchip` n'est présente : `./gradlew :app:dependencies --configuration releaseRuntimeClasspath` ne doit pas contenir `project :testchip` (D17).
+The debug APK offers “Simulate a French ID card (demo)” (§5.1): the specimen CNIe from `:testchip` is read through the same path as a real document, with the same wiping rules, and verified with its own test store, which never replaces or supplements the real store. The key entered is forgotten when the demo starts. In the release APK, the entry does not exist and no `:testchip` class is present: `./gradlew :app:dependencies --configuration releaseRuntimeClasspath` must not contain `project :testchip` (D17).
 
-### 9.4 Tests sur appareil
+### 9.4 On-device tests
 
-Plan de test manuel dans `docs/test-plan.md`, exécuté via adb sur téléphone réel (skill `android-test`) avec une vraie CNIe et un vrai passeport :
+Manual test plan in `docs/test-plan.md`, run via adb on a real phone (`android-test` skill) with a real CNIe and a real passport:
 
-- cas nominal carte d'identité, cas nominal passeport
-- CAN faux, MRZ fausse, puis attente de la puce en pénalité
-- retrait du document pendant la lecture
-- document expiré
-- rotation de l'écran et mise en arrière-plan pendant la lecture et sur l'écran de résultat (vérification de l'effacement)
-- aperçu du multitâche et capture d'écran refusés sur tous les écrans
-- NFC désactivé, puis réactivé
-- import d'une Master List valide puis invalide
-- saisie des dates au clavier, mode démo (APK de debug)
+- nominal ID card case, nominal passport case
+- wrong CAN, wrong MRZ, then waiting for the chip under penalty
+- removing the document during the read
+- expired document
+- screen rotation and going to the background during the read and on the result screen (verification of wiping)
+- recent apps preview and screenshot refused on all screens
+- NFC turned off, then back on
+- import of a valid then an invalid Master List
+- date entry on the keyboard, demo mode (debug APK)
 
-## 10. Livrables et organisation du dépôt
+## 10. Deliverables and repository layout
 
 ```
-README.md                    présentation, captures, cadre d'usage, installation
-SPEC.md                      ce document
-LICENSE                      GNU GPL version 3 (le projet est sous GPL-3.0-only)
-CONTRIBUTING.md              règles de contribution (sections 2 et 3)
-docs/architecture.md         modules, flux de données, cycle de vie des données sensibles
-docs/protocol.md             séquence ICAO détaillée, délais, codes d'erreur, table du verdict
-docs/trust-store.md          provenance et empreintes des certificats, procédure de mise à jour
-docs/dependencies.md         dépendances, licences, compatibilité F-Droid
-docs/test-plan.md            plan de test manuel
-docs/decisions.md            décisions et écarts par rapport à SPEC.md, justifiés
-docs/release.md              procédure de release : contrôles, signature, assets, tag, F-Droid
-docs/reproducible-builds.md  builds reproductibles (D25)
-docs/fdroid/                 brouillon de recette fdroiddata (APK universel)
-docs/audit-securite-*.md     rapports de revue de sécurité
-fastlane/metadata/           fr-FR et en-US : description, captures, changelog
-core/                        module Kotlin pur
-app/                         module Android
-app/src/main/cpp/            décodeur JPEG 2000 natif (pont JNI, cœur de décodage, CMake)
-app/src/main/cpp/openjpeg/   sous-module git OpenJPEG
-app/src/main/cpp/test/       harnais de test hôte sous sanitizers (hors APK)
-testchip/                    PKI factice, puce simulée, CNIe spécimen (tests et debug)
+README.md                    presentation, screenshots, terms of use, installation
+SPEC.md                      this document
+LICENSE                      GNU GPL version 3 (the project is under GPL-3.0-only)
+CONTRIBUTING.md              contribution rules (sections 2 and 3)
+docs/architecture.md         modules, data flows, lifecycle of sensitive data
+docs/protocol.md             detailed ICAO sequence, timeouts, error codes, verdict table
+docs/trust-store.md          provenance and fingerprints of the certificates, update procedure
+docs/dependencies.md         dependencies, licenses, F-Droid compatibility
+docs/test-plan.md            manual test plan
+docs/decisions.md            decisions and departures from SPEC.md, justified
+docs/release.md              release procedure: checks, signing, assets, tag, F-Droid
+docs/reproducible-builds.md  reproducible builds (D25)
+docs/fdroid/                 draft fdroiddata recipe (universal APK)
+docs/audit-securite-*.md     security review reports
+fastlane/metadata/           fr-FR and en-US: description, screenshots, changelog
+core/                        pure Kotlin module
+app/                         Android module
+app/src/main/cpp/            native JPEG 2000 decoder (JNI bridge, decoding core, CMake)
+app/src/main/cpp/openjpeg/   OpenJPEG git submodule
+app/src/main/cpp/test/       host test harness under sanitizers (not in the APK)
+testchip/                    fake PKI, simulated chip, specimen CNIe (tests and debug)
 ```
 
-Releases : dépôt public https://github.com/mgdx/Sceau ; APK par architecture et APK universel, signés par l'auteur, publiés sur les releases GitHub (`sceau-<version>-<abi>.apk`, `sceau-<version>-universal.apk`, `SHA256SUMS`), tag annoté `vX.Y.Z` (D53), changelog Fastlane à jour. F-Droid reconstruit et publie le seul APK universel, signé par l'auteur grâce aux builds reproductibles (D25, D38). Procédure : `docs/release.md`. Préparation de la soumission à F-Droid avec le skill `android-fdroid`.
+Releases: public repository https://github.com/mgdx/Sceau; per-architecture APKs and universal APK, signed by the author, published on GitHub releases (`sceau-<version>-<abi>.apk`, `sceau-<version>-universal.apk`, `SHA256SUMS`), annotated tag `vX.Y.Z` (D53), Fastlane changelog up to date. F-Droid rebuilds and publishes only the universal APK, signed by the author thanks to reproducible builds (D25, D38). Procedure: `docs/release.md`. Preparation of the F-Droid submission with the `android-fdroid` skill.
 
-## 11. Jalons
+## 11. Milestones
 
-État au 2026-10-12 : Socle, Lecture, Vérification et Finitions atteints ; Publication en cours, première release publique en version 1.0.0 publiée le 2026-10-12 (tag `v1.0.0`, D53), soumission F-Droid à suivre.
+Status as of 2026-10-12: Foundation, Reading, Verification and Finishing reached; Publication in progress, first public release, version 1.0.0, published on 2026-10-12 (tag `v1.0.0`, D53), F-Droid submission to follow.
 
-1. **Socle** (atteint) : modules, CI, ktlint, magasin de confiance chargé et testé, fabrique de test crypto.
-2. **Lecture** (atteint) : transport `IsoDep`, PACE et BAC, lecture des DG, affichage brut de DG1 et de la photo.
-3. **Vérification** (atteint) : PA, CA, AA, `VerificationReport`, écran de résultat complet avec verdict et liste de contrôle.
-4. **Finitions** (atteint) : données complémentaires DG11 et DG12, écran magasin de confiance et import, écran À propos, effacement mémoire vérifié, `FLAG_SECURE`, traductions en-US, corrections de l'audit de sécurité.
-5. **Publication** (en cours) : revue sécurité, plan de test sur appareil (APK release signé compris), métadonnées Fastlane, première release 1.0.0, soumission F-Droid.
+1. **Foundation** (reached): modules, CI, ktlint, trust store loaded and tested, crypto test factory.
+2. **Reading** (reached): `IsoDep` transport, PACE and BAC, DG reading, raw display of DG1 and the photo.
+3. **Verification** (reached): PA, CA, AA, `VerificationReport`, complete result screen with verdict and checklist.
+4. **Finishing** (reached): additional DG11 and DG12 data, trust store screen and import, About screen, verified memory wiping, `FLAG_SECURE`, en-US translations, fixes from the security audit.
+5. **Publication** (in progress): security review, on-device test plan (signed release APK included), Fastlane metadata, first release 1.0.0, F-Droid submission.

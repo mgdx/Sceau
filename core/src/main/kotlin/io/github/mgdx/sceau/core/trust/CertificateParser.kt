@@ -10,24 +10,24 @@ import java.security.cert.X509Certificate
 import java.util.Base64
 
 /**
- * Lecture d'un certificat CSCA ou de lien importé seul (D33), en DER ou en PEM.
+ * Reading of a CSCA or link certificate imported on its own (D33), in DER or PEM.
  *
- * Contrôles, dans l'ordre :
- * 1. un et un seul certificat X.509, sans octet superflu, à clé publique lisible, sinon `UNREADABLE` ;
- * 2. certificat d'autorité : `basicConstraints` avec cA=TRUE, et `keyUsage`, s'il est présent,
- *    avec keyCertSign, sinon `NOT_CA` (ICAO 9303-12 impose ces deux extensions aux CSCA et aux
- *    certificats de lien) ;
- * 3. certificat qui se dit auto-signé (sujet égal à l'émetteur, sans Authority Key Identifier
- *    distinct de son Subject Key Identifier) : auto-signature vérifiée, sinon `BAD_SIGNATURE`.
- *    Un certificat de lien est signé par l'ancienne clé, inconnue ici : sa signature est
- *    vérifiée plus tard, à la construction de la chaîne, contre un CSCA du magasin.
+ * Checks, in order:
+ * 1. exactly one X.509 certificate, with no trailing byte, with a readable public key, otherwise `UNREADABLE`;
+ * 2. authority certificate: `basicConstraints` with cA=TRUE, and `keyUsage`, if present,
+ *    with keyCertSign, otherwise `NOT_CA` (ICAO 9303-12 mandates these two extensions for CSCAs and
+ *    link certificates);
+ * 3. certificate that claims to be self-signed (subject equal to the issuer, without an Authority Key Identifier
+ *    distinct from its Subject Key Identifier): self-signature verified, otherwise `BAD_SIGNATURE`.
+ *    A link certificate is signed by the old key, unknown here: its signature is
+ *    verified later, when the chain is built, against a CSCA from the store.
  */
 internal object CertificateParser {
     private const val PEM_BEGIN = "-----BEGIN "
     private const val PEM_CERTIFICATE_BEGIN = "-----BEGIN CERTIFICATE-----"
     private const val PEM_CERTIFICATE_END = "-----END CERTIFICATE-----"
 
-    /** Indice de keyCertSign dans `X509Certificate.getKeyUsage()`. */
+    /** Index of keyCertSign in `X509Certificate.getKeyUsage()`. */
     private const val KEY_CERT_SIGN = 5
 
     private val WHITESPACE = Regex("\\s+")
@@ -44,10 +44,10 @@ internal object CertificateParser {
     private fun read(bytes: ByteArray): X509Certificate {
         val der = pemToDer(bytes) ?: bytes
         return try {
-            // fromByteArray rejette tout octet après le premier objet : un seul certificat.
+            // fromByteArray rejects any byte after the first object: a single certificate.
             val holder = X509CertificateHolder(Certificate.getInstance(ASN1Primitive.fromByteArray(der)))
             TrustCrypto.toX509(holder).also {
-                // BouncyCastle ne décode la clé qu'à la demande : null pour un algorithme inconnu.
+                // BouncyCastle decodes the key only on demand: null for an unknown algorithm.
                 checkNotNull(it.publicKey)
             }
         } catch (e: Exception) {
@@ -56,8 +56,8 @@ internal object CertificateParser {
     }
 
     /**
-     * Contenu DER d'un fichier PEM, ou null si [bytes] n'est pas du PEM. Un fichier PEM doit
-     * contenir exactement un bloc `CERTIFICATE` et aucun autre bloc (clé, liste de révocation…).
+     * DER content of a PEM file, or null if [bytes] is not PEM. A PEM file must
+     * contain exactly one `CERTIFICATE` block and no other block (key, revocation list…).
      */
     private fun pemToDer(bytes: ByteArray): ByteArray? {
         val text = bytes.toString(Charsets.US_ASCII)
@@ -79,16 +79,16 @@ internal object CertificateParser {
     }
 
     private fun canSignCertificates(certificate: X509Certificate): Boolean {
-        // getBasicConstraints vaut -1 sans l'extension ou avec cA=FALSE.
+        // getBasicConstraints is -1 without the extension or with cA=FALSE.
         if (certificate.basicConstraints < 0) return false
         val keyUsage = certificate.keyUsage ?: return true
         return keyUsage.size > KEY_CERT_SIGN && keyUsage[KEY_CERT_SIGN]
     }
 
     /**
-     * Vrai si le certificat se présente comme auto-signé : sujet égal à l'émetteur et Authority
-     * Key Identifier absent, sans identifiant de clé, ou égal au Subject Key Identifier. Un
-     * certificat de lien garde souvent le sujet du CSCA mais son AKI désigne l'ancienne clé.
+     * True if the certificate presents itself as self-signed: subject equal to the issuer and Authority
+     * Key Identifier absent, without a key identifier, or equal to the Subject Key Identifier. A
+     * link certificate often keeps the CSCA subject but its AKI designates the old key.
      */
     private fun claimsSelfSigned(certificate: X509Certificate): Boolean {
         if (certificate.subjectX500Principal != certificate.issuerX500Principal) return false

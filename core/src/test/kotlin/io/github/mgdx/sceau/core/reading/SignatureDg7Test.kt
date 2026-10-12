@@ -26,9 +26,9 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
- * DG7, signature manuscrite du titulaire (décision D37) : lu seulement s'il est annoncé, après la
- * Chip Authentication, couvert par le contrôle des empreintes et par celui des DG signés mais
- * non fournis (audit V1), absent sans erreur s'il est illisible, remis à zéro par `wipe()`.
+ * DG7, the holder's handwritten signature (decision D37): read only if listed, after Chip
+ * Authentication, covered by the hash check and by the check on DGs signed but not provided
+ * (audit V1), missing without error if unreadable, zeroed by `wipe()`.
  */
 class SignatureDg7Test {
     private val card: SimulatedIdentityDocument by lazy { SimulatedDocuments.frenchIdCard() }
@@ -36,8 +36,8 @@ class SignatureDg7Test {
 
     private suspend fun read(chip: SimulatedChip): VerificationReport {
         val report = readAndVerify(chip, can, card.trustStore) { }
-        assertFalse("DG3 demandé", SimulatedChip.FID_DG3 in chip.selectedFids)
-        assertFalse("DG4 demandé", SimulatedChip.FID_DG4 in chip.selectedFids)
+        assertFalse("DG3 requested", SimulatedChip.FID_DG3 in chip.selectedFids)
+        assertFalse("DG4 requested", SimulatedChip.FID_DG4 in chip.selectedFids)
         return report
     }
 
@@ -50,7 +50,7 @@ class SignatureDg7Test {
     private fun hashes(report: VerificationReport) = report.check(CheckId.DG_HASHES).detail as CheckDetail.DataGroupHashes
 
     @Test
-    fun dg7AnnonceEtFourni_SignatureAfficheeEmpreinteVerifiee() =
+    fun dg7ListedAndProvided_SignatureShownHashVerified() =
         runTest {
             val chip = card.chip()
 
@@ -67,7 +67,7 @@ class SignatureDg7Test {
         }
 
     @Test
-    fun dg7SigneMaisRetenuParLaPuce_EmpreintesEnEchec() =
+    fun dg7SignedButWithheldByChip_HashesFail() =
         runTest {
             val chip = SimulatedChip(card.document, card.pace, withheldDataGroups = setOf(7))
 
@@ -81,7 +81,7 @@ class SignatureDg7Test {
         }
 
     @Test
-    fun dg7Modifie_EmpreintesEnEchec() =
+    fun dg7Modified_HashesFail() =
         runTest {
             val chip = SimulatedChip(card.document.withModifiedDataGroup(7), card.pace)
 
@@ -92,22 +92,22 @@ class SignatureDg7Test {
         }
 
     @Test
-    fun dg7NonAnnonce_JamaisDemande() =
+    fun dg7NotListed_NeverRequested() =
         runTest {
             val chip = SimulatedChip(resigned(card.document.dataGroups - 7), card.pace)
 
             val report = read(chip)
 
             assertEquals(Verdict.AUTHENTIC, report.verdict)
-            assertFalse("DG7 demandé", FID_DG7 in chip.selectedFids)
+            assertFalse("DG7 requested", FID_DG7 in chip.selectedFids)
             assertNull(report.document.signature)
             assertFalse(7 in hashes(report).checked)
         }
 
     @Test
-    fun dg7Illisible_AbsentSansErreur() =
+    fun dg7Unreadable_MissingWithoutError() =
         runTest {
-            // DG7 signé mais tronqué : deux images annoncées, la première coupée.
+            // DG7 signed but truncated: two images declared, the first one cut off.
             val corrupted = byteArrayOf(0x67, 0x07, 0x02, 0x01, 0x02, 0x5F, 0x43, 0x10, 0x01)
             val chip = SimulatedChip(resigned(card.document.dataGroups + (7 to corrupted)), card.pace)
 
@@ -119,7 +119,7 @@ class SignatureDg7Test {
         }
 
     @Test
-    fun parseDg7_PremiereImageEtFormatReconnu() {
+    fun parseDg7_FirstImageAndFormatRecognized() {
         val jpeg = byteArrayOf(0xFF.toByte(), 0xD8.toByte(), 0xFF.toByte(), 0xE0.toByte(), 1, 2)
         val jp2 = byteArrayOf(0xFF.toByte(), 0x4F, 0xFF.toByte(), 0x51, 3, 4)
 
@@ -131,9 +131,9 @@ class SignatureDg7Test {
     }
 
     @Test
-    fun dg7DemesureOuVide_Absent() {
+    fun dg7OversizedOrEmpty_Missing() {
         val dg1 = TestDataGroups.dg1()
-        // Image annonçant 2 Go dans un DG7 de quelques octets : refusée avant JMRTD.
+        // Image declaring 2 GB in a DG7 of a few bytes: rejected before JMRTD.
         val huge =
             byteArrayOf(0x67, 0x0B, 0x02, 0x01, 0x01, 0x5F, 0x43, 0x84.toByte(), 0x7F, 0xFF.toByte(), 0xFF.toByte(), 0xFF.toByte(), 0)
         for (bytes in listOf(huge, byteArrayOf(0x67, 0x00), ByteArray(0), byteArrayOf(0x75, 0x02, 0x01, 0x02))) {
@@ -142,19 +142,19 @@ class SignatureDg7Test {
     }
 
     @Test
-    fun wipe_RemetDg7AZero() {
+    fun wipe_ZeroesDg7() {
         val dg7 = TestDataGroups.dg7()
         val document = DataGroupParsers.document(mapOf(1 to TestDataGroups.dg1(), 7 to dg7), TestFixtures.TODAY)
         val signature = checkNotNull(document.signature)
 
         document.wipe()
 
-        assertTrue("image de la signature", signature.bytes.all { it == 0.toByte() })
-        assertTrue("octets bruts de DG7", dg7.all { it == 0.toByte() })
+        assertTrue("signature image", signature.bytes.all { it == 0.toByte() })
+        assertTrue("raw DG7 bytes", dg7.all { it == 0.toByte() })
     }
 
     @Test
-    fun plafondDeTaille_CommeLesAutresImages() {
+    fun sizeCap_LikeOtherImages() {
         assertEquals(FileSizeLimits.maxSize(PassportService.EF_DG2), FileSizeLimits.maxSize(PassportService.EF_DG7))
         assertEquals(FileSizeLimits.maxSize(PassportService.EF_DG12), FileSizeLimits.maxSize(PassportService.EF_DG7))
         assertEquals("DG7", FileSizeLimits.nameOf(PassportService.EF_DG7))

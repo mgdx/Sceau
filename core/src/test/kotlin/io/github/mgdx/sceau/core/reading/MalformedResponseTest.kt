@@ -14,12 +14,12 @@ import org.junit.Test
 import javax.crypto.spec.SecretKeySpec
 
 /**
- * Audit V36 : une réponse dont un objet de messagerie sécurisée (ou de PACE) annonce plus
- * d'octets qu'elle n'en contient est refusée par `TransportCardService` avant JMRTD, qui
- * allouerait sinon la longueur annoncée (`OutOfMemoryError`) avant de vérifier le MAC.
+ * Audit V36: a response in which a secure messaging (or PACE) object declares more bytes
+ * than it contains is rejected by `TransportCardService` before JMRTD, which would
+ * otherwise allocate the declared length (`OutOfMemoryError`) before checking the MAC.
  */
 class MalformedResponseTest {
-    /** Transport qui répond toujours [response]. */
+    /** Transport that always answers [response]. */
     private class FixedTransport(
         private val response: ByteArray,
     ) : CardTransport {
@@ -36,7 +36,7 @@ class MalformedResponseTest {
         return DESedeSecureMessagingWrapper(SecretKeySpec(ByteArray(16), "DESede"), SecretKeySpec(ByteArray(16), "DESede"), 0L)
     }
 
-    /** READ BINARY emballé par JMRTD, réponse [response] passée par le service de Sceau. */
+    /** READ BINARY wrapped by JMRTD, response [response] passed through Sceau's service. */
     private fun sendSecured(response: ByteArray) {
         val service = TransportCardService(FixedTransport(response)).apply { open() }
         SecureMessagingAPDUSender(service).transmit(wrapper(), CommandAPDU(0x00, 0xB0, 0x00, 0x00, 8))
@@ -45,47 +45,47 @@ class MalformedResponseTest {
     private fun assertRejected(response: ByteArray) {
         try {
             sendSecured(response)
-            fail("CardServiceException attendue")
+            fail("CardServiceException expected")
         } catch (e: CardServiceException) {
-            // Erreur de la puce ordinaire, convertie par le chemin habituel ; jamais une Error.
+            // Ordinary chip error, converted through the usual path; never an Error.
         }
     }
 
     @Test
-    fun do87Annoncant2Go_CardServiceExceptionEtAucuneError() {
+    fun do87Declaring2Gb_CardServiceExceptionAndNoError() {
         assertRejected(("87847FFFFFFF01AABBCC" + "99029000" + "8E080102030405060708" + "9000").hexToBytes())
     }
 
     @Test
-    fun do87CacheDansLaValeurDUnAutreTlv_Refuse() {
-        // TLV 02 de 5 octets puis FF : bien formé pour un lecteur BER (BerStructure), mais JMRTD
-        // lit octet par octet et y trouve un DO'87 de 2 Go.
+    fun do87HiddenInAnotherTlvValue_Rejected() {
+        // 5-byte TLV 02 then FF: well formed for a BER reader (BerStructure), but JMRTD
+        // reads byte by byte and finds a 2 GB DO'87 in it.
         val hidden = "0205" + "87847FFFFF" + "FF" + "01AABB" + "8E080102030405060708" + "9000"
         assertFalse(ResponseShape.isWellFormed(0x0C, 0xB0, hidden.hexToBytes()))
         assertRejected(hidden.hexToBytes())
     }
 
     @Test
-    fun do85TronqueOuSansBourrage_Refuse() {
+    fun do85TruncatedOrWithoutPadding_Rejected() {
         assertFalse(ResponseShape.isWellFormed(0x0C, 0xB0, "8510AABB9000".hexToBytes()))
         assertFalse(ResponseShape.isWellFormed(0x0C, 0xB0, "8700990290008E0801020304050607089000".hexToBytes()))
         assertFalse(ResponseShape.isWellFormed(0x0C, 0xB0, "87".hexToBytes() + "9000".hexToBytes()))
     }
 
     @Test
-    fun reponseSecuriseeBienFormee_Acceptee() {
+    fun wellFormedSecuredResponse_Accepted() {
         val response = "8709" + "01" + "1122334455667788" + "990290008E08" + "0102030405060708" + "9000"
         assertTrue(ResponseShape.isWellFormed(0x0C, 0xB0, response.hexToBytes()))
-        // Forme longue de la longueur (DO'87 de 224 octets d'un bloc de 223).
+        // Long length form (224-byte DO'87 from a 223-byte block).
         val long = "8781E1" + "01" + "00".repeat(0xE0) + "990290008E08" + "0102030405060708" + "9000"
         assertTrue(ResponseShape.isWellFormed(0x0C, 0xB0, long.hexToBytes()))
-        // SW seul (erreur sans DO) : rien à contrôler.
+        // SW only (error without DO): nothing to check.
         assertTrue(ResponseShape.isWellFormed(0x0C, 0xB0, "6982".hexToBytes()))
     }
 
     @Test
-    fun reponsesEnClair_NonInterpretees() {
-        // Défi de GET CHALLENGE qui commence par 87 : données aléatoires, acceptées telles quelles.
+    fun plainResponses_NotInterpreted() {
+        // GET CHALLENGE challenge starting with 87: random data, accepted as is.
         val challenge = "87FF7F0102030405" + "9000"
         val service = TransportCardService(FixedTransport(challenge.hexToBytes())).apply { open() }
         val response = service.transmit(CommandAPDU(0x00, 0x84, 0x00, 0x00, 8))
@@ -93,15 +93,15 @@ class MalformedResponseTest {
     }
 
     @Test
-    fun generalAuthenticateDePace_LongueursControlees() {
-        // Étape 4 de PACE : jeton (86) annonçant 2 Go dans la réponse 7C.
+    fun paceGeneralAuthenticate_LengthsChecked() {
+        // PACE step 4: token (86) declaring 2 GB in the 7C response.
         assertFalse(ResponseShape.isWellFormed(0x00, 0x86, "7C0786847FFFFFFF00 9000".hexToBytes()))
         assertTrue(ResponseShape.isWellFormed(0x00, 0x86, "7C0A86080102030405060708 9000".hexToBytes()))
         assertTrue(ResponseShape.isWellFormed(0x10, 0x86, "7C00 9000".hexToBytes()))
     }
 
     @Test
-    fun tailleBrute_Plafonnee() {
+    fun rawSize_Capped() {
         val tooLarge = ByteArray(ResponseShape.MAX_RESPONSE_DATA + 1) + "9000".hexToBytes()
         assertFalse(ResponseShape.isWellFormed(0x00, 0xB0, tooLarge))
         assertTrue(ResponseShape.isWellFormed(0x00, 0xB0, ByteArray(ResponseShape.MAX_RESPONSE_DATA) + "9000".hexToBytes()))
@@ -109,9 +109,9 @@ class MalformedResponseTest {
         val service = TransportCardService(FixedTransport(tooLarge)).apply { open() }
         try {
             service.transmit(CommandAPDU(0x00, 0xB0, 0x00, 0x00, 8))
-            fail("CardServiceException attendue")
+            fail("CardServiceException expected")
         } catch (e: CardServiceException) {
-            // Réponse refusée sans être rendue à JMRTD.
+            // Response rejected without being handed to JMRTD.
         }
     }
 }

@@ -1,36 +1,36 @@
 #!/usr/bin/env bash
-# Mise à jour du magasin de confiance embarqué (core/src/main/resources/trust/).
+# Update of the embedded trust store (core/src/main/resources/trust/).
 #
-# Outil du développeur, lancé à chaque release : l'application, elle, ne télécharge jamais rien.
-# Automatise la « Procédure de mise à jour » de docs/trust-store.md :
-#   - ANTS : archives CSCA (passeports) et CSCA e-ID (cartes d'identité), empreinte recalculée
-#     et comparée à celle publiée dans l'archive ;
-#   - BSI : German Master List, signature CMS vérifiée et signataire émis par un certificat
-#     épinglé dans TrustStoreLoader.EMBEDDED_MASTER_LIST_ANCHORS.
-# Par défaut, rapport seulement : aucun fichier n'est écrit. Avec --apply, les fichiers
-# nouveaux ou modifiés sont copiés dans trust/ et index.txt est complété ; les tableaux de
-# docs/trust-store.md restent à mettre à jour à la main avec les lignes affichées.
+# Developer tool, run at each release: the app itself never downloads anything.
+# Automates the “Update procedure” of docs/trust-store.md:
+#   - ANTS: CSCA (passports) and CSCA e-ID (identity cards) archives, fingerprint recomputed
+#     and compared with the one published in the archive;
+#   - BSI: German Master List, CMS signature verified and signer issued by a certificate
+#     pinned in TrustStoreLoader.EMBEDDED_MASTER_LIST_ANCHORS.
+# By default, report only: no file is written. With --apply, new or modified files are
+# copied into trust/ and index.txt is extended; the tables of docs/trust-store.md still
+# have to be updated by hand with the printed lines.
 #
-# Dépendances : bash, curl, openssl (3.x), sha256sum, sha1sum, unzip, coreutils.
+# Dependencies: bash, curl, openssl (3.x), sha256sum, sha1sum, unzip, coreutils.
 
 set -euo pipefail
 
-# --- Sources (voir docs/trust-store.md, « Provenance ») -------------------------------------
+# --- Sources (see docs/trust-store.md, “Provenance”) ----------------------------------------
 
-# Pages de l'ANTS. Le site filtre les robots (page « Connexion bloquée ») : les archives se
-# téléchargent à la main depuis ces pages, puis se passent au script avec --ants-dir.
+# ANTS pages. The site filters robots (“Connexion bloquée” page): the archives are downloaded
+# by hand from these pages, then passed to the script with --ants-dir.
 ANTS_CSCA_PAGE="https://ants.gouv.fr/csca"
 ANTS_EID_PAGE="https://ants.gouv.fr/home/csca-e-id"
-# Liens directs vers les archives de l'ANTS, à renseigner si l'ANTS en publie de stables et
-# accessibles sans navigateur. Vide : les archives viennent de --ants-dir.
+# Direct links to the ANTS archives, to fill in if the ANTS publishes stable ones that can be
+# reached without a browser. Empty: the archives come from --ants-dir.
 ANTS_ARCHIVE_URLS=()
 
-# German Master List du BSI (le paramètre v= de la page change à chaque publication ; sans
-# lui, le BSI sert la version courante).
+# BSI German Master List (the page's v= parameter changes with each publication; without
+# it, the BSI serves the current version).
 BSI_ML_PAGE="https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/ElekAusweise/CSCA/GermanMasterList.html"
 BSI_ML_URL="https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/ElekAusweise/CSCA/GermanMasterList.zip?__blob=publicationFile"
 
-# --- Chemins ---------------------------------------------------------------------------------
+# --- Paths -----------------------------------------------------------------------------------
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TRUST_DIR="$ROOT/core/src/main/resources/trust"
@@ -47,15 +47,15 @@ BSI_ZIP=""
 
 usage() {
     cat <<EOF
-Usage : scripts/update-trust-store.sh [--apply] [--ants-dir DOSSIER] [--bsi-zip FICHIER]
+Usage: scripts/update-trust-store.sh [--apply] [--ants-dir DIR] [--bsi-zip FILE]
 
-  --apply              écrit les fichiers nouveaux ou modifiés dans core/src/main/resources/trust/
-                       (sans cette option : rapport seulement, rien n'est écrit)
-  --ants-dir DOSSIER   dossier contenant les archives .zip de l'ANTS téléchargées à la main
-                       depuis $ANTS_CSCA_PAGE
-                       et $ANTS_EID_PAGE
-  --bsi-zip FICHIER    archive GermanMasterList.zip locale au lieu du téléchargement
-  -h, --help           affiche cette aide
+  --apply              writes new or modified files into core/src/main/resources/trust/
+                       (without this option: report only, nothing is written)
+  --ants-dir DIR       directory containing the ANTS .zip archives downloaded by hand
+                       from $ANTS_CSCA_PAGE
+                       and $ANTS_EID_PAGE
+  --bsi-zip FILE       local GermanMasterList.zip archive instead of downloading it
+  -h, --help           shows this help
 EOF
 }
 
@@ -77,7 +77,7 @@ while (($# > 0)); do
             exit 0
             ;;
         *)
-            echo "Option inconnue : $1" >&2
+            echo "Unknown option: $1" >&2
             usage >&2
             exit 2
             ;;
@@ -85,18 +85,18 @@ while (($# > 0)); do
     shift
 done
 
-# --- Outils ----------------------------------------------------------------------------------
+# --- Tools -----------------------------------------------------------------------------------
 
 die() {
-    echo "ÉCHEC : $*" >&2
-    echo "Aucun fichier n'a été écrit." >&2
+    echo "FAILED: $*" >&2
+    echo "No file was written." >&2
     exit 1
 }
 
 info() { echo "$*"; }
 
 for tool in curl openssl sha256sum sha1sum unzip; do
-    command -v "$tool" >/dev/null 2>&1 || die "outil manquant : $tool"
+    command -v "$tool" >/dev/null 2>&1 || die "missing tool: $tool"
 done
 
 WORK="$(mktemp -d)"
@@ -105,23 +105,23 @@ trap 'rm -rf "$WORK"' EXIT
 sha256_of() { sha256sum "$1" | cut -d' ' -f1; }
 sha1_of() { sha1sum "$1" | cut -d' ' -f1; }
 
-# Champs d'un certificat DER.
+# Fields of a DER certificate.
 x509_field() { openssl x509 -inform DER -in "$1" -noout "${@:2}"; }
 cert_subject() { x509_field "$1" -subject | sed 's/^subject=//'; }
 cert_issuer() { x509_field "$1" -issuer | sed 's/^issuer=//'; }
 cert_start() { x509_field "$1" -dateopt iso_8601 -startdate | sed 's/^notBefore=//; s/ .*//'; }
 cert_end() { x509_field "$1" -dateopt iso_8601 -enddate | sed 's/^notAfter=//; s/ .*//'; }
 
-# Fichiers à écrire en mode --apply : « source|nom dans trust/ ».
+# Files to write in --apply mode: “source|name in trust/”.
 PLANNED=()
-# Nouveaux noms à ajouter à index.txt.
+# New names to add to index.txt.
 NEW_INDEX=()
-# Lignes à reporter dans docs/trust-store.md.
+# Lines to copy into docs/trust-store.md.
 DOC_FILES_ROWS=()
 DOC_PROVENANCE_ROWS=()
 TODAY="$(date +%Y-%m-%d)"
 
-# Fichier embarqué dont la SHA-256 vaut $1, ou chaîne vide.
+# Embedded file whose SHA-256 is $1, or empty string.
 embedded_with_sha256() {
     local f
     for f in "$TRUST_DIR"/*; do
@@ -142,23 +142,23 @@ fetch_ants() {
     for url in "${ANTS_ARCHIVE_URLS[@]+"${ANTS_ARCHIVE_URLS[@]}"}"; do
         i=$((i + 1))
         local out="$WORK/ants-download-$i.zip"
-        curl -fsSL -A "Mozilla/5.0" -o "$out" "$url" || die "téléchargement impossible : $url"
+        curl -fsSL -A "Mozilla/5.0" -o "$out" "$url" || die "download failed: $url"
         unzip -tq "$out" >/dev/null 2>&1 ||
-            die "$url n'est pas une archive zip (page de blocage anti-robot ?) : téléchargez-la à la main et utilisez --ants-dir"
+            die "$url is not a zip archive (anti-robot blocking page?): download it by hand and use --ants-dir"
         ANTS_ZIPS+=("$out")
     done
     if [[ -n "$ANTS_DIR" ]]; then
-        [[ -d "$ANTS_DIR" ]] || die "dossier introuvable : $ANTS_DIR"
+        [[ -d "$ANTS_DIR" ]] || die "directory not found: $ANTS_DIR"
         local z
         for z in "$ANTS_DIR"/*.zip "$ANTS_DIR"/*.ZIP; do
             [[ -e "$z" ]] && ANTS_ZIPS+=("$z")
         done
-        ((${#ANTS_ZIPS[@]} > 0)) || die "aucune archive .zip dans $ANTS_DIR"
+        ((${#ANTS_ZIPS[@]} > 0)) || die "no .zip archive in $ANTS_DIR"
     fi
 }
 
-# Vérifie un certificat extrait d'une archive de l'ANTS et prépare son éventuelle copie.
-#   $1 : certificat DER, $2 : empreintes publiées normalisées, $3 : archive, $4 : fichier d'origine
+# Checks a certificate extracted from an ANTS archive and prepares its copy, if any.
+#   $1: DER certificate, $2: normalized published fingerprints, $3: archive, $4: original file
 check_ants_cert() {
     local der="$1" published="$2" archive="$3" member="$4"
     local sha1 sha256 algo digest
@@ -171,7 +171,7 @@ check_ants_cert() {
         algo="SHA-1"
         digest="$sha1"
     else
-        die "$archive : l'empreinte de $member (SHA-1 $sha1, SHA-256 $sha256) ne figure pas dans le fichier d'empreinte de l'archive"
+        die "$archive: the fingerprint of $member (SHA-1 $sha1, SHA-256 $sha256) is not in the archive's fingerprint file"
     fi
 
     local subject issuer start end kind role name
@@ -181,48 +181,48 @@ check_ants_cert() {
     end="$(cert_end "$der")"
     case "$subject" in
         *"CN=eID-FRANCE"*) kind="ants-csca-eid" role="e-ID, CNIe (CSCA)" ;;
-        *"CN=CSCA-FRANCE"*) kind="ants-csca" role="Passeport (CSCA)" ;;
-        *) die "$archive : sujet inattendu pour $member : $subject" ;;
+        *"CN=CSCA-FRANCE"*) kind="ants-csca" role="Passport (CSCA)" ;;
+        *) die "$archive: unexpected subject for $member: $subject" ;;
     esac
     name="$kind-${start:0:4}.der"
 
     info "  $member"
-    info "    sujet     : $subject"
-    info "    émetteur  : $issuer"
-    info "    validité  : $start → $end"
-    info "    empreinte publiée $algo vérifiée : $digest"
+    info "    subject   : $subject"
+    info "    issuer    : $issuer"
+    info "    validity  : $start → $end"
+    info "    published $algo fingerprint verified: $digest"
     info "    SHA-256   : $sha256"
 
     local same
     same="$(embedded_with_sha256 "$sha256")"
     if [[ -n "$same" ]]; then
-        info "    => identique au fichier embarqué $same"
+        info "    => identical to embedded file $same"
         return
     fi
     if [[ -e "$TRUST_DIR/$name" ]]; then
-        info "    => DIFFÉRENT du fichier embarqué $name (même nom, contenu différent) : à examiner avant --apply"
+        info "    => DIFFERENT from embedded file $name (same name, different content): review before --apply"
     else
-        info "    => NOUVEAU : $name"
+        info "    => NEW: $name"
         NEW_INDEX+=("$name")
     fi
     PLANNED+=("$der|$name")
     DOC_FILES_ROWS+=("| \`$name\` | $role | \`$subject\` | $start → $end | $algo \`$digest\` | \`$sha256\` |")
-    DOC_PROVENANCE_ROWS+=("| \`$name\` | \`$(basename "$archive")\` | \`$member\`, empreinte dans l'archive | page CSCA$([[ $kind == ants-csca-eid ]] && echo " e-ID") de l'ANTS | $TODAY |")
+    DOC_PROVENANCE_ROWS+=("| \`$name\` | \`$(basename "$archive")\` | \`$member\`, fingerprint in the archive | ANTS CSCA$([[ $kind == ants-csca-eid ]] && echo " e-ID") page | $TODAY |")
 }
 
 check_ants_archive() {
     local zip="$1" dir
     dir="$(mktemp -d "$WORK/ants.XXXXXX")"
-    unzip -qo "$zip" -d "$dir" || die "archive illisible : $zip"
+    unzip -qo "$zip" -d "$dir" || die "unreadable archive: $zip"
     info ""
-    info "Archive ANTS $(basename "$zip")"
+    info "ANTS archive $(basename "$zip")"
 
-    # Empreintes publiées : texte en minuscules, sans séparateurs d'octets.
+    # Published fingerprints: lowercase text, without byte separators.
     local published="" f
     while IFS= read -r -d '' f; do
         published+="$(tr -d ' :\t\r' <"$f" | tr 'A-F' 'a-f')"$'\n'
     done < <(find "$dir" -type f -iname '*finger*' -print0)
-    [[ -n "$published" ]] || die "$(basename "$zip") : aucun fichier d'empreinte (*fingerprint*) dans l'archive"
+    [[ -n "$published" ]] || die "$(basename "$zip"): no fingerprint file (*fingerprint*) in the archive"
 
     local seen="" count=0 der sha
     while IFS= read -r -d '' f; do
@@ -232,33 +232,33 @@ check_ants_archive() {
         elif openssl x509 -inform PEM -in "$f" -noout 2>/dev/null; then
             openssl x509 -inform PEM -in "$f" -outform DER -out "$der"
         else
-            die "$(basename "$zip") : ${f#"$dir"/} n'est pas un certificat X.509 lisible"
+            die "$(basename "$zip"): ${f#"$dir"/} is not a readable X.509 certificate"
         fi
         sha="$(sha256_of "$der")"
-        # Le même certificat peut être fourni en DER et en PEM : une seule vérification.
+        # The same certificate may be provided in DER and in PEM: checked only once.
         if grep -qF "$sha" <<<"$seen"; then
-            info "  ${f#"$dir"/} : même certificat que ci-dessus"
+            info "  ${f#"$dir"/}: same certificate as above"
             continue
         fi
         seen+="$sha"$'\n'
         count=$((count + 1))
         check_ants_cert "$der" "$published" "$zip" "${f#"$dir"/}"
     done < <(find "$dir" -type f \( -iname '*.crt' -o -iname '*.cer' -o -iname '*.der' -o -iname '*.pem' \) -print0 | sort -z)
-    ((count > 0)) || die "$(basename "$zip") : aucun certificat dans l'archive"
+    ((count > 0)) || die "$(basename "$zip"): no certificate in the archive"
 }
 
 # --- BSI -------------------------------------------------------------------------------------
 
-# Empreintes épinglées, lues dans le code Kotlin pour ne pas les dupliquer.
+# Pinned fingerprints, read from the Kotlin code so as not to duplicate them.
 read_anchors() {
-    [[ -f "$LOADER" ]] || die "fichier introuvable : $LOADER"
+    [[ -f "$LOADER" ]] || die "file not found: $LOADER"
     local block
     block="$(sed -n '/val EMBEDDED_MASTER_LIST_ANCHORS/,/^ *)/p' "$LOADER")"
-    [[ -n "$block" ]] || die "EMBEDDED_MASTER_LIST_ANCHORS introuvable dans TrustStoreLoader.kt : format changé, adapter le script"
+    [[ -n "$block" ]] || die "EMBEDDED_MASTER_LIST_ANCHORS not found in TrustStoreLoader.kt: format changed, adapt the script"
     grep -oE '"[0-9a-f]{64}"' <<<"$block" | tr -d '"'
 }
 
-# Algorithme de hachage de la signature d'un certificat, pour openssl dgst.
+# Hash algorithm of a certificate's signature, for openssl dgst.
 signature_digest() {
     local text alg
     text="$(x509_field "$1" -text)"
@@ -268,13 +268,13 @@ signature_digest() {
         ecdsa-with-SHA256 | sha256WithRSAEncryption) echo sha256 ;;
         ecdsa-with-SHA384 | sha384WithRSAEncryption) echo sha384 ;;
         ecdsa-with-SHA512 | sha512WithRSAEncryption) echo sha512 ;;
-        *) die "algorithme de signature du signataire non pris en charge par le script : $alg" ;;
+        *) die "signer signature algorithm not supported by the script: $alg" ;;
     esac
 }
 
-# Vérifie que le certificat $1 (DER) est signé par la clé du certificat $2 (DER).
-# openssl verify refuse les clés EC à paramètres explicites, présentes chez le BSI : la
-# signature est donc vérifiée directement sur le TBSCertificate.
+# Checks that certificate $1 (DER) is signed by the key of certificate $2 (DER).
+# openssl verify rejects EC keys with explicit parameters, which the BSI uses: the
+# signature is therefore verified directly on the TBSCertificate.
 signed_by() {
     local cert="$1" ca="$2" tmp line off hl len sig_off digest
     tmp="$(mktemp -d "$WORK/sig.XXXXXX")"
@@ -301,55 +301,55 @@ check_bsi() {
     mkdir -p "$dir"
     info ""
     if [[ -n "$BSI_ZIP" ]]; then
-        [[ -f "$BSI_ZIP" ]] || die "fichier introuvable : $BSI_ZIP"
+        [[ -f "$BSI_ZIP" ]] || die "file not found: $BSI_ZIP"
         zip="$BSI_ZIP"
-        info "German Master List du BSI (archive locale $BSI_ZIP)"
+        info "BSI German Master List (local archive $BSI_ZIP)"
     else
         zip="$WORK/GermanMasterList.zip"
-        info "German Master List du BSI : téléchargement de $BSI_ML_URL"
-        curl -fsSL -o "$zip" "$BSI_ML_URL" || die "téléchargement impossible : $BSI_ML_URL (page : $BSI_ML_PAGE)"
+        info "BSI German Master List: downloading $BSI_ML_URL"
+        curl -fsSL -o "$zip" "$BSI_ML_URL" || die "download failed: $BSI_ML_URL (page: $BSI_ML_PAGE)"
     fi
-    info "  SHA-256 de l'archive : $(sha256_of "$zip")"
-    unzip -qo "$zip" -d "$dir/zip" || die "archive illisible : $zip"
+    info "  SHA-256 of the archive: $(sha256_of "$zip")"
+    unzip -qo "$zip" -d "$dir/zip" || die "unreadable archive: $zip"
     local mls=()
     while IFS= read -r -d '' f; do mls+=("$f"); done < <(find "$dir/zip" -type f -iname '*.ml' -print0)
-    ((${#mls[@]} == 1)) || die "l'archive du BSI doit contenir exactement un fichier .ml (trouvés : ${#mls[@]})"
+    ((${#mls[@]} == 1)) || die "the BSI archive must contain exactly one .ml file (found: ${#mls[@]})"
     local ml="${mls[0]}" member
     member="$(basename "$ml")"
-    info "  fichier : $member, $(wc -c <"$ml") octets"
+    info "  file: $member, $(wc -c <"$ml") bytes"
 
-    # 1. Signature CMS, vérifiée avec le certificat signataire inclus dans le fichier.
+    # 1. CMS signature, verified with the signer certificate included in the file.
     openssl cms -verify -inform DER -in "$ml" -noverify \
         -signer "$dir/signer.pem" -certsout "$dir/cms-certs.pem" -out "$dir/content.der" 2>"$dir/cms.log" ||
-        die "signature CMS invalide pour $member : $(head -n 1 "$dir/cms.log")"
-    info "  signature CMS : valide"
+        die "invalid CMS signature for $member: $(head -n 1 "$dir/cms.log")"
+    info "  CMS signature: valid"
     openssl x509 -in "$dir/signer.pem" -outform DER -out "$dir/signer.der"
 
     local printed
     printed="$(openssl cms -cmsout -print -inform DER -in "$ml" -noout)"
     grep -q "eContentType: .*($ICAO_MASTER_LIST_OID)" <<<"$printed" ||
-        die "$member : le contenu signé n'est pas une Master List ICAO ($ICAO_MASTER_LIST_OID)"
+        die "$member: the signed content is not an ICAO Master List ($ICAO_MASTER_LIST_OID)"
     local signing_time
     signing_time="$(sed -n '/signingTime/,${/^ *\(UTCTIME\|GENERALIZEDTIME\):/{s///p;q;}}' <<<"$printed")"
-    [[ -n "$signing_time" ]] || die "$member : date de signature absente"
+    [[ -n "$signing_time" ]] || die "$member: signing time missing"
     local signed_epoch start_epoch end_epoch signed_day
     signed_epoch="$(date -u -d "$signing_time" +%s)"
     signed_day="$(date -u -d "$signing_time" +%Y-%m-%d)"
     start_epoch="$(date -u -d "$(x509_field "$dir/signer.der" -startdate | sed 's/^notBefore=//')" +%s)"
     end_epoch="$(date -u -d "$(x509_field "$dir/signer.der" -enddate | sed 's/^notAfter=//')" +%s)"
     ((signed_epoch >= start_epoch && signed_epoch <= end_epoch)) ||
-        die "$member : le signataire n'était pas valide à la date de signature ($signed_day)"
+        die "$member: the signer was not valid at the signing time ($signed_day)"
 
     local signer_subject signer_start signer_end
     signer_subject="$(cert_subject "$dir/signer.der")"
     signer_start="$(cert_start "$dir/signer.der")"
     signer_end="$(cert_end "$dir/signer.der")"
-    info "  signée le : $signed_day"
-    info "  signataire : $signer_subject"
-    info "    émetteur : $(cert_issuer "$dir/signer.der")"
-    info "    validité : $signer_start → $signer_end"
+    info "  signed on: $signed_day"
+    info "  signer: $signer_subject"
+    info "    issuer: $(cert_issuer "$dir/signer.der")"
+    info "    validity: $signer_start → $signer_end"
 
-    # 2. Certificats : bloc certificates du CMS et contenu CscaMasterList
+    # 2. Certificates: certificates block of the CMS and CscaMasterList content
     #    (SEQUENCE { version, SET OF Certificate }).
     mkdir -p "$dir/certs"
     awk -v d="$dir/certs" '/-----BEGIN CERTIFICATE-----/{n++} n{print > (d "/cms-" n ".pem")}' "$dir/cms-certs.pem"
@@ -368,52 +368,52 @@ check_bsi() {
         head -c $((off + hl + len)) "$dir/content.der" | tail -c $((hl + len)) >"$dir/certs/ml-$off.der"
         count=$((count + 1))
     done < <(openssl asn1parse -inform DER -in "$dir/content.der")
-    ((count > 0)) || die "$member : aucun certificat dans la Master List"
-    info "  certificats dans la liste : $count"
+    ((count > 0)) || die "$member: no certificate in the Master List"
+    info "  certificates in the list: $count"
 
-    # 3. Ancrage : le signataire doit être signé par un certificat épinglé.
+    # 3. Anchoring: the signer must be signed by a pinned certificate.
     local anchors
     anchors="$(read_anchors)"
-    [[ -n "$anchors" ]] || die "aucune empreinte lue dans EMBEDDED_MASTER_LIST_ANCHORS : format changé, adapter le script"
-    info "  certificats épinglés (TrustStoreLoader.kt) : $(wc -l <<<"$anchors")"
+    [[ -n "$anchors" ]] || die "no fingerprint read from EMBEDDED_MASTER_LIST_ANCHORS: format changed, adapt the script"
+    info "  pinned certificates (TrustStoreLoader.kt): $(wc -l <<<"$anchors")"
     local c sha anchored=""
     for c in "$dir"/certs/*.der; do
         sha="$(sha256_of "$c")"
         grep -qxF "$sha" <<<"$anchors" || continue
         if signed_by "$dir/signer.der" "$c"; then
             anchored="$sha"
-            info "  ancrage : signataire émis par $(cert_subject "$c") (SHA-256 épinglée $sha)"
+            info "  anchoring: signer issued by $(cert_subject "$c") (pinned SHA-256 $sha)"
             break
         fi
     done
-    [[ -n "$anchored" ]] || die "$member : signataire non émis par un certificat épinglé (UNTRUSTED_SIGNER)"
+    [[ -n "$anchored" ]] || die "$member: signer not issued by a pinned certificate (UNTRUSTED_SIGNER)"
 
-    # 4. Comparaison avec le fichier embarqué.
+    # 4. Comparison with the embedded file.
     local new_sha
     new_sha="$(sha256_of "$ml")"
     info "  SHA-256 : $new_sha"
     if [[ -f "$TRUST_DIR/$ML_NAME" && "$(sha256_of "$TRUST_DIR/$ML_NAME")" == "$new_sha" ]]; then
-        info "  => identique au fichier embarqué $ML_NAME"
+        info "  => identical to embedded file $ML_NAME"
         return
     fi
     if [[ -f "$TRUST_DIR/$ML_NAME" ]]; then
-        info "  => DIFFÉRENTE du fichier embarqué $ML_NAME : nouvelle publication du BSI"
+        info "  => DIFFERENT from embedded file $ML_NAME: new BSI publication"
     else
-        info "  => NOUVEAU : $ML_NAME"
+        info "  => NEW: $ML_NAME"
         NEW_INDEX+=("$ML_NAME")
     fi
     cp "$ml" "$dir/$ML_NAME"
     PLANNED+=("$dir/$ML_NAME|$ML_NAME")
-    DOC_FILES_ROWS+=("| \`$ML_NAME\` | Master List CSCA (BSI, Allemagne) | signataire \`$signer_subject\` | signée le $signed_day ; signataire valide $signer_start → $signer_end | aucune pour le fichier (voir « Master List embarquée ») | \`$new_sha\` |")
-    DOC_PROVENANCE_ROWS+=("| \`$ML_NAME\` | \`GermanMasterList.zip\` | \`$member\`, redistribué inchangé | <$BSI_ML_PAGE> | $TODAY |")
-    ML_SUMMARY="fichier \`$member\`, $(wc -c <"$ml") octets, signé le $signed_day, $count certificats ; SHA-256 de l'archive $(sha256_of "$zip")"
+    DOC_FILES_ROWS+=("| \`$ML_NAME\` | CSCA Master List (BSI, Germany) | signer \`$signer_subject\` | signed on $signed_day; signer valid $signer_start → $signer_end | none for the file (see “Embedded Master List”) | \`$new_sha\` |")
+    DOC_PROVENANCE_ROWS+=("| \`$ML_NAME\` | \`GermanMasterList.zip\` | \`$member\`, redistributed unchanged | <$BSI_ML_PAGE> | $TODAY |")
+    ML_SUMMARY="file \`$member\`, $(wc -c <"$ml") bytes, signed on $signed_day, $count certificates; SHA-256 of the archive $(sha256_of "$zip")"
 }
 
-# --- Déroulé ---------------------------------------------------------------------------------
+# --- Run -------------------------------------------------------------------------------------
 
 ML_SUMMARY=""
-info "Magasin de confiance embarqué : $TRUST_DIR"
-if ((APPLY)); then info "Mode : --apply (écriture si différence)"; else info "Mode : rapport (aucune écriture)"; fi
+info "Embedded trust store: $TRUST_DIR"
+if ((APPLY)); then info "Mode: --apply (write on difference)"; else info "Mode: report (no write)"; fi
 
 fetch_ants
 ANTS_CHECKED=0
@@ -425,21 +425,21 @@ check_bsi
 
 info ""
 if ((!ANTS_CHECKED)); then
-    info "ATTENTION : certificats ANTS non vérifiés. Le site de l'ANTS bloque les téléchargements"
-    info "automatiques : téléchargez les archives depuis $ANTS_CSCA_PAGE"
-    info "et $ANTS_EID_PAGE, puis relancez avec --ants-dir DOSSIER."
+    info "WARNING: ANTS certificates not checked. The ANTS site blocks automated downloads:"
+    info "download the archives from $ANTS_CSCA_PAGE"
+    info "and $ANTS_EID_PAGE, then run again with --ants-dir DIR."
 fi
 
 if ((${#PLANNED[@]} == 0)); then
     if ((ANTS_CHECKED)); then
-        info "Magasin à jour : aucune différence avec les sources vérifiées."
+        info "Store up to date: no difference with the checked sources."
     else
-        info "Master List à jour ; certificats ANTS non vérifiés (voir ci-dessus)."
+        info "Master List up to date; ANTS certificates not checked (see above)."
     fi
     exit 0
 fi
 
-info "Différences : ${#PLANNED[@]} fichier(s)."
+info "Differences: ${#PLANNED[@]} file(s)."
 for entry in "${PLANNED[@]}"; do info "  - ${entry#*|}"; done
 
 if ((APPLY)); then
@@ -447,7 +447,7 @@ if ((APPLY)); then
         cp "${entry%%|*}" "$TRUST_DIR/${entry#*|}"
     done
     if ((${#NEW_INDEX[@]} > 0)); then
-        # Nouveaux certificats ANTS insérés avant le premier fichier qui n'en est pas un.
+        # New ANTS certificates inserted before the first file that is not one.
         new_index="$WORK/index.txt"
         ants_new="$(printf '%s\n' "${NEW_INDEX[@]}" | grep '^ants-' | sort || true)"
         other_new="$(printf '%s\n' "${NEW_INDEX[@]}" | grep -v '^ants-' || true)"
@@ -458,23 +458,23 @@ if ((APPLY)); then
         ' "$INDEX" >"$new_index"
         [[ -n "$other_new" ]] && printf '%s\n' "$other_new" >>"$new_index"
         cp "$new_index" "$INDEX"
-        info "index.txt complété : ${NEW_INDEX[*]}"
+        info "index.txt extended: ${NEW_INDEX[*]}"
     fi
-    info "Fichiers écrits dans $TRUST_DIR."
+    info "Files written to $TRUST_DIR."
 else
-    info "Rapport seulement : relancez avec --apply pour écrire ces fichiers."
+    info "Report only: run again with --apply to write these files."
 fi
 
 info ""
-info "Lignes à reporter dans docs/trust-store.md, tableau « Fichiers embarqués » :"
+info "Lines to copy into docs/trust-store.md, “Embedded files” table:"
 printf '%s\n' "${DOC_FILES_ROWS[@]}"
 info ""
-info "Tableau « Provenance » :"
+info "“Provenance” table:"
 printf '%s\n' "${DOC_PROVENANCE_ROWS[@]}"
 if [[ -n "$ML_SUMMARY" ]]; then
     info ""
-    info "Section « Master List embarquée » : $ML_SUMMARY."
-    info "Recompter les émetteurs et mettre à jour la description du contenu."
+    info "“Embedded Master List” section: $ML_SUMMARY."
+    info "Recount the issuers and update the description of the contents."
 fi
 info ""
-info "Ensuite : ./gradlew :core:test (TrustStoreFingerprintTest, TrustStoreTest)."
+info "Then: ./gradlew :core:test (TrustStoreFingerprintTest, TrustStoreTest)."

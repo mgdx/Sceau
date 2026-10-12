@@ -2,9 +2,9 @@ Sceau odczytuje przez NFC chip dokumentów tożsamości zgodnych z normą ICAO 9
 
 <b>Obsługiwane dokumenty</b>
 <ul>
+<li>Paszporty biometryczne z dowolnego kraju na podstawie numeru dokumentu, daty urodzenia i daty ważności</li>
 <li>Francuski dowód osobisty (w formacie karty płatniczej, od 2021 r.) z 6-cyfrowym numerem CAN wydrukowanym na karcie</li>
 <li>Europejskie dowody osobiste z numerem CAN lub strefą MRZ</li>
-<li>Paszporty biometryczne z dowolnego kraju na podstawie numeru dokumentu, daty urodzenia i daty ważności</li>
 </ul>
 
 <b>Co pokazuje Sceau</b>

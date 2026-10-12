@@ -18,7 +18,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-/** Aperçu d'import d'une Master List : avertissement et confirmation distincte si le signataire n'est pas ancré (audit V34). */
+/** Master List import preview: warning and separate confirmation when the signer is not anchored (audit V34). */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [37], qualifiers = "fr-rFR")
 class ImportConfirmDialogTest {
@@ -46,7 +46,7 @@ class ImportConfirmDialogTest {
     private fun text(id: Int) = compose.activity.getString(id)
 
     @Test
-    fun `signataire non ancre - avertissement et confirmation distincte exigee`() {
+    fun `unanchored signer - warning and separate confirmation required`() {
         show(anchored = false)
 
         compose.onNodeWithText(text(R.string.trust_import_unanchored_warning)).assertExists()
@@ -62,7 +62,7 @@ class ImportConfirmDialogTest {
     }
 
     @Test
-    fun `signataire ancre - ni avertissement ni case a cocher`() {
+    fun `anchored signer - no warning and no checkbox`() {
         show(anchored = true)
 
         compose.onNodeWithText(text(R.string.trust_import_unanchored_warning)).assertDoesNotExist()

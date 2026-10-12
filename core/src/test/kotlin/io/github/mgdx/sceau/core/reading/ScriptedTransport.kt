@@ -4,11 +4,11 @@ import io.github.mgdx.sceau.core.CardTransport
 import java.util.Locale
 
 /**
- * Transport simulé : rejoue une liste d'échanges APDU dans l'ordre. Chaque échange attend une
- * commande commençant par un préfixe hexadécimal et produit une réponse (ou lève une
- * exception). Un échange [Exchange.repeatable] répond à toutes les commandes consécutives qui
- * correspondent à son préfixe. Toute commande inattendue fait échouer le test
- * ([AssertionError] : JMRTD n'attrape que des `Exception`, elle traverse donc tout).
+ * Simulated transport: replays a list of APDU exchanges in order. Each exchange expects a
+ * command starting with a hexadecimal prefix and produces a response (or throws an
+ * exception). A [Exchange.repeatable] exchange answers every consecutive command that
+ * matches its prefix. Any unexpected command fails the test
+ * ([AssertionError]: JMRTD only catches `Exception`, so it goes through everything).
  */
 class ScriptedTransport(
     vararg exchanges: Exchange,
@@ -23,7 +23,7 @@ class ScriptedTransport(
     private val script = exchanges.toList()
     private var index = 0
 
-    /** Commandes reçues, en hexadécimal majuscule. */
+    /** Commands received, in uppercase hexadecimal. */
     val sent = mutableListOf<String>()
     var closed = false
         private set
@@ -42,14 +42,14 @@ class ScriptedTransport(
             if (!exchange.repeatable) break
             index++
         }
-        throw AssertionError("Commande inattendue n°${sent.size} : $hex (attendu : ${script.getOrNull(index)?.prefix})")
+        throw AssertionError("Unexpected command #${sent.size}: $hex (expected: ${script.getOrNull(index)?.prefix})")
     }
 
     override fun close() {
         closed = true
     }
 
-    /** Vrai si tous les échanges non répétables ont été consommés. */
+    /** True if all non-repeatable exchanges have been consumed. */
     val exhausted: Boolean get() = script.drop(index).all { it.repeatable }
 
     companion object {
@@ -65,7 +65,7 @@ class ScriptedTransport(
             error: Exception,
         ) = Exchange(prefix) { throw error }
 
-        /** SELECT d'un EF (P1=02, P2=0C) répondu 9000, puis READ BINARY servis depuis [content]. */
+        /** SELECT of an EF (P1=02, P2=0C) answered with 9000, then READ BINARY served from [content]. */
         fun file(
             fid: String,
             content: ByteArray,
@@ -75,7 +75,7 @@ class ScriptedTransport(
                 Exchange("00B0", repeatable = true) { command -> readBinary(content, command) },
             )
 
-        /** SELECT d'un EF répondu par [sw] (fichier absent, accès refusé…). */
+        /** SELECT of an EF answered with [sw] (file missing, access denied, etc.). */
         fun missingFile(
             fid: String,
             sw: String = "6A82",

@@ -16,15 +16,15 @@ import java.io.InputStream
 import java.util.Locale
 import java.util.concurrent.atomic.AtomicReference
 
-/** Taille maximale d'une Master List importée : 20 Mo. */
+/** Maximum size of an imported Master List: 20 MB. */
 const val MAX_MASTER_LIST_BYTES: Int = 20 * 1024 * 1024
 
-/** Fichier refusé car plus gros que la limite. */
+/** File refused because it is larger than the limit. */
 class FileTooLargeException : Exception("TOO_LARGE")
 
 /**
- * Lit tout [input] en refusant au-delà de [limit] octets, sans jamais allouer plus que
- * `limit + 1` octets. Lève [FileTooLargeException] si la limite est dépassée.
+ * Reads all of [input], refusing beyond [limit] bytes, without ever allocating more than
+ * `limit + 1` bytes. Throws [FileTooLargeException] if the limit is exceeded.
  */
 fun readAtMost(
     input: InputStream,
@@ -46,21 +46,22 @@ fun readAtMost(
 private const val BUFFER_SIZE = 64 * 1024
 
 /**
- * Délai maximal de lecture d'un fichier importé (audit V38) : très au-delà du temps de lecture
- * d'une Master List de 20 Mo sur un appareil lent, même depuis un fournisseur de documents distant.
+ * Maximum read time for an imported file (audit V38): far beyond the time needed to read a
+ * 20 MB Master List on a slow device, even from a remote documents provider.
  */
-const val IMPORT_READ_TIMEOUT_MILLIS: Long = 30_000 // repris en clair par `trust_import_read_timeout`
+const val IMPORT_READ_TIMEOUT_MILLIS: Long = 30_000 // spelled out in `trust_import_read_timeout`
 
-/** Lecture abandonnée : le fournisseur n'a pas livré le fichier dans le délai. */
+/** Read abandoned: the provider did not deliver the file within the time limit. */
 class ImportReadTimeoutException : Exception("READ_TIMEOUT")
 
 /**
- * Ouvre puis lit, par [readAtMost], le flux rendu par [open] (null : fichier introuvable,
- * [IOException]), en abandonnant après [timeoutMillis] (audit V38). Un `DocumentsProvider` hostile
- * peut rendre un tube qui ne livre jamais d'octets, et l'annulation d'une coroutine n'interrompt
- * pas une lecture bloquante : la lecture tourne donc dans une tâche à part, que l'appelant
- * n'attend pas au-delà du délai, et le flux est fermé dès l'abandon (délai dépassé ou appelant
- * annulé), ce qui débloque `read` sur Android. Lève [ImportReadTimeoutException] après le délai.
+ * Opens, then reads with [readAtMost], the stream returned by [open] (null: file not found,
+ * [IOException]), giving up after [timeoutMillis] (audit V38). A hostile `DocumentsProvider` can
+ * return a pipe that never delivers any bytes, and cancelling a coroutine does not interrupt a
+ * blocking read: the read therefore runs in a separate task, which the caller does not wait for
+ * beyond the time limit, and the stream is closed as soon as the read is abandoned (time limit
+ * exceeded or caller cancelled), which unblocks `read` on Android. Throws
+ * [ImportReadTimeoutException] after the time limit.
  */
 suspend fun readImportedFile(
     open: () -> InputStream?,
@@ -69,12 +70,12 @@ suspend fun readImportedFile(
     dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ): ByteArray {
     val stream = AtomicReference<InputStream?>()
-    // Hors de la portée de l'appelant : son annulation ne doit pas attendre la fin d'une lecture bloquée.
+    // Outside the caller's scope: its cancellation must not wait for a blocked read to finish.
     val reading =
         CoroutineScope(dispatcher).async {
             val input = open() ?: throw IOException("OPEN")
             stream.set(input)
-            // Abandon décidé pendant l'ouverture : le flux n'a pas pu être fermé par l'appelant.
+            // Abandoned while opening: the caller could not close the stream.
             if (!isActive) stream.getAndSet(null)?.close()
             input.use { readAtMost(it, limit) }
         }
@@ -86,41 +87,41 @@ suspend fun readImportedFile(
             try {
                 stream.getAndSet(null)?.close()
             } catch (_: IOException) {
-                // Fermeture au mieux : le flux est abandonné de toute façon.
+                // Best-effort close: the stream is abandoned anyway.
             }
         }
     }
 }
 
-/** Empreinte hexadécimale regroupée par blocs de quatre caractères, en majuscules. */
+/** Hexadecimal fingerprint grouped in blocks of four characters, in uppercase. */
 fun formatFingerprint(hex: String): String = hex.uppercase(Locale.ROOT).chunked(4).joinToString(" ")
 
-/** Longueur maximale affichée d'un sujet X.500, en points de code. */
+/** Maximum displayed length of an X.500 subject, in code points. */
 const val SUBJECT_MAX_LENGTH = 256
 
-/** Nombre maximal de lignes affichées pour un sujet X.500. */
+/** Maximum number of lines displayed for an X.500 subject. */
 const val SUBJECT_MAX_LINES = 4
 
-/** Longueur maximale affichée d'un code pays non reconnu, en points de code. */
+/** Maximum displayed length of an unrecognized country code, in code points. */
 const val COUNTRY_CODE_MAX_LENGTH = 8
 
 /**
- * Sujet X.500 d'un certificat ou du signataire d'une Master List, rendu par
- * `X500Principal.getName()` qui n'échappe ni les sauts de ligne ni les caractères de contrôle
- * bidirectionnels : assaini par [displaySafe] avant tout affichage (audit V23).
+ * X.500 subject of a certificate or of a Master List signer, as returned by
+ * `X500Principal.getName()`, which escapes neither line breaks nor bidirectional control
+ * characters: sanitized by [displaySafe] before any display (audit V23).
  */
 fun displaySubject(subject: String): String = displaySafe(subject, SUBJECT_MAX_LENGTH)
 
-/** Code pays lu dans un certificat (attribut C), assaini quand il n'est pas reconnu (audit V23). */
+/** Country code read from a certificate (C attribute), sanitized when it is not recognized (audit V23). */
 fun displayCountryCode(code: String): String = displaySafe(code, COUNTRY_CODE_MAX_LENGTH)
 
-/** Code de `MasterListParser` pour une Master List de plus de [TrustStores.MAX_MASTER_LIST_CERTIFICATES] certificats. */
+/** `MasterListParser` code for a Master List with more than [TrustStores.MAX_MASTER_LIST_CERTIFICATES] certificates. */
 internal const val MASTER_LIST_TOO_MANY_CERTIFICATES = "TOO_MANY_CERTIFICATES"
 
 /**
- * Message d'une Master List refusée par `MasterListParser` (`InvalidMasterListException`). Une
- * liste trop grosse (D22, audit V22) peut être lisible et bien signée : elle reçoit un message
- * qui donne le plafond. Les autres codes gardent le message générique, code compris.
+ * Message for a Master List rejected by `MasterListParser` (`InvalidMasterListException`). A
+ * list that is too large (D22, audit V22) may be readable and properly signed: it gets a message
+ * that states the cap. Other codes keep the generic message, code included.
  */
 fun invalidMasterListMessage(
     resources: Resources,

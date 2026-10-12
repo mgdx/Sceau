@@ -6,20 +6,20 @@ import java.util.logging.Level
 import java.util.logging.Logger
 
 /**
- * Fournisseur cryptographique de la lecture.
+ * Cryptographic provider for the reading.
  *
- * Sur Android, le fournisseur système nommé "BC" est une copie tronquée de BouncyCastle
- * (pas de courbes brainpool, pas de CMAC AES…) : JMRTD a besoin du BouncyCastle complet,
- * en première position pour que les `getInstance` sans fournisseur explicite (ECDH de PACE
- * et de la Chip Authentication, notamment) le choisissent.
+ * On Android, the system provider named "BC" is a stripped-down copy of BouncyCastle
+ * (no brainpool curves, no AES CMAC…): JMRTD needs the full BouncyCastle,
+ * in first position so that `getInstance` calls without an explicit provider (ECDH for PACE
+ * and Chip Authentication, in particular) pick it.
  */
 internal object Crypto {
     private val lock = Any()
 
     /**
-     * Garantit qu'un [BouncyCastleProvider] complet est enregistré sous le nom "BC", en
-     * position 1. Idempotent et thread-safe : ne fait rien si c'est déjà le cas, sinon retire
-     * le "BC" existant (tronqué ou mal placé) et insère une instance complète en tête.
+     * Ensures that a full [BouncyCastleProvider] is registered under the name "BC", at
+     * position 1. Idempotent and thread-safe: does nothing if that is already the case, otherwise removes
+     * the existing "BC" (stripped-down or misplaced) and inserts a full instance at the head.
      */
     fun ensureInstalled() {
         synchronized(lock) {
@@ -32,10 +32,10 @@ internal object Crypto {
 }
 
 /**
- * JMRTD et SCUBA journalisent via `java.util.logging` (redirigé vers logcat sur Android),
- * parfois avec le contenu hexadécimal des APDU, donc des données personnelles. Ces journaux
- * sont coupés. Les références sont conservées : `java.util.logging` ne garde que des
- * références faibles vers ses loggers, qui perdraient sinon leur niveau.
+ * JMRTD and SCUBA log through `java.util.logging` (redirected to logcat on Android),
+ * sometimes with the hexadecimal content of APDUs, hence personal data. These logs
+ * are turned off. The references are kept: `java.util.logging` only holds
+ * weak references to its loggers, which would otherwise lose their level.
  */
 internal object LibraryLogging {
     private val loggers = listOf("org.jmrtd", "net.sf.scuba").map { Logger.getLogger(it) }

@@ -3,40 +3,41 @@ package io.github.mgdx.sceau.core.verify
 import java.util.Locale
 
 /**
- * Cohérence des pays d'un document (audit V3) : pays du CSCA (attribut C, ISO 3166-1 alpha-2),
- * pays du certificat DS, et État émetteur lu dans DG1 (code ICAO 9303-3 à trois lettres).
+ * Consistency of a document's countries (audit V3): CSCA country (C attribute, ISO 3166-1
+ * alpha-2), DS certificate country, and issuing state read from DG1 (three-letter ICAO 9303-3
+ * code).
  *
- * Règles retenues :
- * - le pays du CSCA et celui du DS doivent être présents et égaux ;
- * - l'État émetteur est converti en alpha-2 ([alpha2]) : codes ISO 3166-1 alpha-3, plus les
- *   codes propres à ICAO 9303-3 (`D` → DE ; `GBD`, `GBN`, `GBO`, `GBP`, `GBS` → GB ;
- *   `RKS` → KS, code employé par le CSCA du Kosovo) ; il doit alors égaler le pays du CSCA ;
- * - les codes d'organisations et de statuts ([ORGANIZATIONS] : `UNO`, `UNA`, `UNK`, `EUE`,
- *   `XXA`, `XXB`, `XXC`, `XXX`…) n'ont pas d'équivalent alpha-2 : pour eux, seuls le CSCA et
- *   le DS sont comparés (le CSCA des Nations unies porte C=UN, celui du laissez-passer
- *   européen C=EU) ;
- * - tout autre code, inconnu d'ICAO (y compris le pays fictif `UTO` des spécimens), est une
- *   incohérence : un document signé ne peut pas annoncer un État qui n'existe pas.
+ * Rules applied:
+ * - the CSCA country and the DS country must be present and equal;
+ * - the issuing state is converted to alpha-2 ([alpha2]): ISO 3166-1 alpha-3 codes, plus the
+ *   codes specific to ICAO 9303-3 (`D` → DE; `GBD`, `GBN`, `GBO`, `GBP`, `GBS` → GB;
+ *   `RKS` → KS, the code used by the Kosovo CSCA); it must then equal the CSCA country;
+ * - organization and status codes ([ORGANIZATIONS]: `UNO`, `UNA`, `UNK`, `EUE`,
+ *   `XXA`, `XXB`, `XXC`, `XXX`…) have no alpha-2 equivalent: for them, only the CSCA and
+ *   the DS are compared (the United Nations CSCA carries C=UN, the European laissez-passer
+ *   CSCA C=EU);
+ * - any other code, unknown to ICAO (including the fictitious `UTO` country of specimens), is
+ *   an inconsistency: a signed document cannot declare a state that does not exist.
  *
- * Les pays des certificats sont comparés en majuscules ; `XK` (code utilisateur ISO souvent
- * attribué au Kosovo) est rapproché de `KS`.
+ * Certificate countries are compared in uppercase; `XK` (ISO user-assigned code often
+ * given to Kosovo) is matched with `KS`.
  */
 internal object IcaoCountries {
-    /** Codes ICAO 9303-3 d'organisations internationales et de statuts, sans pays alpha-2. */
+    /** ICAO 9303-3 codes of international organizations and statuses, without an alpha-2 country. */
     val ORGANIZATIONS: Set<String> =
         setOf(
-            // Nations unies et institutions spécialisées.
+            // United Nations and specialized agencies.
             "UNO",
             "UNA",
             "UNK",
-            // Union européenne (laissez-passer).
+            // European Union (laissez-passer).
             "EUE",
-            // Apatrides, réfugiés, nationalité non précisée.
+            // Stateless persons, refugees, unspecified nationality.
             "XXA",
             "XXB",
             "XXC",
             "XXX",
-            // Autres organisations émettrices reconnues par ICAO.
+            // Other issuing organizations recognized by ICAO.
             "XBA",
             "XIM",
             "XCC",
@@ -50,7 +51,7 @@ internal object IcaoCountries {
             "XPO",
         )
 
-    /** Codes propres à ICAO 9303-3, en plus des codes ISO 3166-1 alpha-3. */
+    /** Codes specific to ICAO 9303-3, in addition to the ISO 3166-1 alpha-3 codes. */
     private val ICAO_SPECIFIC: Map<String, String> =
         mapOf(
             "D" to "DE",
@@ -62,7 +63,7 @@ internal object IcaoCountries {
             "RKS" to "KS",
         )
 
-    /** ISO 3166-1 alpha-3 → alpha-2 (249 codes, figés ici pour ne pas dépendre de la plateforme). */
+    /** ISO 3166-1 alpha-3 → alpha-2 (249 codes, frozen here so as not to depend on the platform). */
     private val ISO_ALPHA3: Map<String, String> =
         """
             ABW=AW AFG=AF AGO=AO AIA=AI ALA=AX ALB=AL AND=AD ARE=AE ARG=AR ARM=AM ASM=AS ATA=AQ
@@ -90,23 +91,23 @@ internal object IcaoCountries {
             .split(Regex("\\s+"))
             .associate { pair -> pair.substringBefore('=') to pair.substringAfter('=') }
 
-    /** Codes de certificat rapprochés : XK (code utilisateur ISO) et KS désignent le Kosovo. */
+    /** Matched certificate codes: XK (ISO user-assigned code) and KS both designate Kosovo. */
     private val CERTIFICATE_ALIASES: Map<String, String> = mapOf("XK" to "KS")
 
-    /** Pays alpha-2 qu'un code ICAO d'État peut désigner (contrôle du magasin embarqué). */
+    /** Alpha-2 countries that an ICAO state code can designate (check of the embedded store). */
     val knownCountries: Set<String> by lazy { (ISO_ALPHA3.values + ICAO_SPECIFIC.values).toSet() }
 
-    /** Code ICAO lu dans DG1 débarrassé des caractères de remplissage `<` et des espaces. */
+    /** ICAO code read from DG1, stripped of `<` filler characters and spaces. */
     fun normalize(icaoCode: String): String = icaoCode.replace("<", "").trim().uppercase(Locale.ROOT)
 
     fun isOrganization(icaoCode: String): Boolean = normalize(icaoCode) in ORGANIZATIONS
 
-    /** Pays alpha-2 d'un code ICAO d'État, ou null (organisation ou code inconnu). */
+    /** Alpha-2 country of an ICAO state code, or null (organization or unknown code). */
     fun alpha2(icaoCode: String): String? = normalize(icaoCode).let { ICAO_SPECIFIC[it] ?: ISO_ALPHA3[it] }
 
     /**
-     * Vrai si les pays sont cohérents. [issuingState] null : l'appelant ne l'a pas fourni, seuls
-     * le CSCA et le DS sont comparés.
+     * True if the countries are consistent. [issuingState] null: the caller did not provide it,
+     * only the CSCA and the DS are compared.
      */
     fun consistent(
         cscaCountry: String?,

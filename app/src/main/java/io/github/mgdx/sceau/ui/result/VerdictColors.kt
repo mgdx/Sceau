@@ -5,16 +5,16 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
 
-/** Couple fond / texte d'un verdict, en ARGB 32 bits. Indépendant du thème dynamique. */
+/** Background / text pair of a verdict, in 32-bit ARGB. Independent of the dynamic theme. */
 data class VerdictPalette(
     val container: Long,
     val content: Long,
 )
 
 /**
- * Couleurs des verdicts (SPEC §5.3), fixes pour garder leur sens quelle que soit la palette
- * dynamique du système. Le contraste texte / fond dépasse 4,5:1 en clair comme en sombre ;
- * le verdict est aussi porté par une icône et un libellé, jamais par la seule couleur.
+ * Verdict colors (SPEC §5.3), fixed so that they keep their meaning whatever the system's
+ * dynamic palette. The text / background contrast exceeds 4.5:1 in light as in dark mode;
+ * the verdict is also conveyed by an icon and a label, never by color alone.
  */
 object VerdictColors {
     fun palette(
@@ -39,7 +39,7 @@ object VerdictColors {
             }
         }
 
-    /** Rapport de contraste WCAG 2.x entre deux couleurs ARGB opaques. */
+    /** WCAG 2.x contrast ratio between two opaque ARGB colors. */
     fun contrastRatio(
         first: Long,
         second: Long,

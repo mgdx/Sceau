@@ -15,12 +15,12 @@ class IntroPreferencesTest {
     private val context: Context = ApplicationProvider.getApplicationContext()
 
     @Test
-    fun `l'introduction n'est pas vue au premier lancement`() {
+    fun `intro is not seen on first launch`() {
         assertFalse(IntroPreferences(context).isIntroSeen)
     }
 
     @Test
-    fun `l'introduction vue le reste pour une nouvelle instance`() {
+    fun `seen intro stays seen for a new instance`() {
         IntroPreferences(context).markIntroSeen()
         assertTrue(IntroPreferences(context).isIntroSeen)
     }

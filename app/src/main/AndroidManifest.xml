@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.NFC" />
 
-    <!-- Ajoutée par androidx.core pour ContextCompat.registerReceiver, que Sceau n'appelle plus (D7). -->
+    <!-- Added by androidx.core for ContextCompat.registerReceiver, which Sceau no longer calls (D7). -->
     <permission
         android:name="${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
         tools:node="remove" />
@@ -40,7 +40,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- Décodage des images de la puce (JPEG 2000 par OpenJPEG, JPEG) dans un processus isolé, sans permission (D23). -->
+        <!-- Decoding of the chip images (JPEG 2000 via OpenJPEG, JPEG) in an isolated process, without permissions (D23). -->
         <service
             android:name=".jp2.Jpeg2000Service"
             android:exported="false"
@@ -48,11 +48,11 @@
             android:process=":jp2" />
 
         <!--
-            Composants ajoutés par des dépendances AndroidX dont Sceau n'a pas l'usage (D46) :
-            récepteur exporté de profileinstaller (seul composant exporté hors MainActivity),
-            initialiseurs androidx.startup de profileinstaller et d'emoji2.
-            ProcessLifecycleInitializer (lifecycle) est conservé. MissingClass ignoré : ces classes
-            viennent de dépendances transitives absentes du classpath de compilation.
+            Components added by AndroidX dependencies that Sceau has no use for (D46):
+            the exported receiver of profileinstaller (the only exported component besides MainActivity),
+            the androidx.startup initializers of profileinstaller and emoji2.
+            ProcessLifecycleInitializer (lifecycle) is kept. MissingClass ignored: these classes
+            come from transitive dependencies absent from the compile classpath.
         -->
         <receiver
             android:name="androidx.profileinstaller.ProfileInstallReceiver"

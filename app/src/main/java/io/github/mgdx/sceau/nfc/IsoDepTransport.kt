@@ -8,14 +8,14 @@ import java.io.IOException
 import java.util.Locale
 
 /**
- * [CardTransport] au-dessus d'[IsoDep]. Se connecte à la première APDU si besoin.
- * Le délai par défaut est long : PACE sur la CNIe demande plusieurs secondes de calcul
- * côté puce.
+ * [CardTransport] on top of [IsoDep]. Connects on the first APDU if needed.
+ * The default timeout is long: PACE on the CNIe takes several seconds of computation
+ * on the chip side.
  *
- * Erreurs : un échec survenu après 90 % du délai est un [SceauException.Timeout] ; seule une
- * vraie perte du document (ou une fermeture demandée) donne [SceauException.ConnectionLost].
- * Toute autre erreur d'E/S devient une erreur technique. Chaque identifiant porte l'INS et la
- * longueur de l'APDU en cours, pour le diagnostic sans journal.
+ * Errors: a failure that occurs after 90% of the timeout is a [SceauException.Timeout]; only an
+ * actual loss of the document (or a requested close) gives [SceauException.ConnectionLost].
+ * Any other I/O error becomes a technical error. Each identifier carries the INS and the
+ * length of the current APDU, for diagnosis without logs.
  */
 class IsoDepTransport(
     private val isoDep: IsoDep,
@@ -25,13 +25,13 @@ class IsoDepTransport(
     private var timeout: Int = timeoutMillis
 
     /**
-     * Délai réellement appliqué par le service NFC, relu après chaque affectation : il peut
-     * borner la valeur demandée. Sert à classer un échec en délai dépassé ou en perte.
+     * Timeout actually applied by the NFC service, read back after each assignment: it may
+     * cap the requested value. Used to classify a failure as a timeout or as a loss.
      */
     @Volatile
     private var effectiveTimeout: Int = timeoutMillis
 
-    /** Positionné par [close] : seule une fermeture demandée donne une perte de connexion. */
+    /** Set by [close]: only a requested close gives a connection loss. */
     @Volatile
     private var closed = false
 
@@ -47,20 +47,20 @@ class IsoDepTransport(
         get() = timeout
         set(value) {
             timeout = value
-            // IsoDep remet le délai à sa valeur par défaut à la connexion : il est aussi
-            // réappliqué dans ensureConnected().
+            // IsoDep resets the timeout to its default value on connection: it is also
+            // reapplied in ensureConnected().
             if (isoDep.isConnected) applyTimeout() else effectiveTimeout = value
         }
 
     override fun transceive(apdu: ByteArray): ByteArray {
-        // Lecture annulée : ne jamais rouvrir la connexion.
+        // Read cancelled: never reopen the connection.
         if (closed) throw SceauException.ConnectionLost(detail = commandDetail(apdu))
         val start = System.nanoTime()
         return try {
             ensureConnected()
             isoDep.transceive(apdu)
         } catch (e: IOException) {
-            // TagLostException compris : après un délai dépassé, IsoDep signale souvent une perte.
+            // TagLostException included: after a timeout, IsoDep often reports a loss.
             throw classifyIoFailure(
                 message = e.message,
                 tagLost = e is TagLostException || e.cause is TagLostException,
@@ -68,16 +68,16 @@ class IsoDepTransport(
                 closed = closed,
                 apdu = apdu,
                 elapsedMillis = (System.nanoTime() - start) / NANOS_PER_MILLI,
-                // Délai effectif, lu après ensureConnected() qui l'a éventuellement réappliqué.
+                // Effective timeout, read after ensureConnected(), which may have reapplied it.
                 timeoutMillis = effectiveTimeout,
                 cause = e,
             )
         } catch (e: SecurityException) {
-            // « Tag is out of date » : le document a été retiré puis un autre présenté.
+            // "Tag is out of date": the document was removed, then another one was presented.
             throw SceauException.ConnectionLost(e, commandDetail(apdu))
         } catch (e: IllegalStateException) {
-            // Transport fermé pendant la lecture : perte de connexion seulement si la fermeture
-            // a été demandée (lecture annulée) ; sinon, c'est une anomalie à diagnostiquer.
+            // Transport closed during the read: connection loss only if the close was
+            // requested (read cancelled); otherwise, it is an anomaly to diagnose.
             throw if (closed) {
                 SceauException.ConnectionLost(e, commandDetail(apdu))
             } else {
@@ -87,15 +87,15 @@ class IsoDepTransport(
     }
 
     /**
-     * Coupe puis rétablit la liaison avec le même document (`IsoDep.close()` réinitialise la
-     * puce côté service NFC), délai réappliqué. Ne marque pas le transport comme fermé.
+     * Drops then re-establishes the link with the same document (`IsoDep.close()` resets the
+     * chip on the NFC service side), timeout reapplied. Does not mark the transport as closed.
      */
     override fun reconnect() {
         if (closed) throw SceauException.ConnectionLost(detail = RECONNECT_DETAIL)
         try {
             isoDep.close()
         } catch (e: IOException) {
-            // Déjà déconnecté : on se reconnecte quand même.
+            // Already disconnected: reconnect anyway.
         }
         try {
             isoDep.connect()
@@ -109,13 +109,13 @@ class IsoDepTransport(
         }
     }
 
-    /** Peut bloquer jusqu'à la fin d'une APDU en cours : jamais sur le thread principal. */
+    /** May block until a current APDU finishes: never on the main thread. */
     override fun close() {
         closed = true
         try {
             isoDep.close()
         } catch (e: IOException) {
-            // Déjà déconnecté : rien à faire.
+            // Already disconnected: nothing to do.
         }
     }
 
@@ -126,7 +126,7 @@ class IsoDepTransport(
         }
     }
 
-    /** Applique le délai demandé à la liaison connectée, puis relit celui que le système a retenu. */
+    /** Applies the requested timeout to the connected link, then reads back the one the system kept. */
     private fun applyTimeout() {
         val requested = timeout
         isoDep.timeout = requested
@@ -139,7 +139,7 @@ class IsoDepTransport(
         effectiveTimeout = effectiveTimeout(requested, readBack)
     }
 
-    /** `IsoDep.isConnected` interroge le service NFC : il ne doit pas masquer l'erreur d'origine. */
+    /** `IsoDep.isConnected` queries the NFC service: it must not mask the original error. */
     private fun isConnectedQuietly(): Boolean =
         try {
             isoDep.isConnected
@@ -150,7 +150,7 @@ class IsoDepTransport(
     companion object {
         const val DEFAULT_TIMEOUT_MILLIS = 10_000
 
-        /** En-tête (4) + Lc (1) + données (255) + Le (1) d'une APDU courte. */
+        /** Header (4) + Lc (1) + data (255) + Le (1) of a short APDU. */
         private const val SHORT_APDU_MAX_LENGTH = 261
 
         private const val IO_PREFIX = "IO-"
@@ -159,13 +159,13 @@ class IsoDepTransport(
         private const val RECONNECT_DETAIL = "RECONNECT"
         private const val NANOS_PER_MILLI = 1_000_000L
 
-        /** Part du délai (9/10) au-delà de laquelle un échec est un délai dépassé. */
+        /** Fraction of the timeout (9/10) beyond which a failure is a timeout. */
         private const val TIMEOUT_RATIO_NUMERATOR = 9
         private const val TIMEOUT_RATIO_DENOMINATOR = 10
 
         /**
-         * Messages connus des `IOException` d'`android.nfc` (liste fermée) et leur code court.
-         * Le message brut n'est jamais repris dans un identifiant d'erreur.
+         * Known messages of `android.nfc` `IOException`s (closed list) and their short code.
+         * The raw message is never included in an error identifier.
          */
         private val IO_MESSAGE_CODES =
             mapOf(
@@ -175,23 +175,23 @@ class IsoDepTransport(
                 "NFC service dead" to "SERVICE_DIED",
             )
 
-        /** Vrai si le message d'une [IOException] d'`IsoDep` évoque un délai dépassé. */
+        /** True if the message of an `IsoDep` [IOException] suggests a timeout. */
         internal fun isTimeoutMessage(message: String?): Boolean {
             if (message == null) return false
             val lower = message.lowercase(Locale.ROOT)
             return "timeout" in lower || "timed out" in lower || "time out" in lower
         }
 
-        /** Code court d'un message d'`IOException` : `OTHER` s'il est hors de la liste fermée. */
+        /** Short code of an `IOException` message: `OTHER` if it is outside the closed list. */
         internal fun ioMessageCode(message: String?): String =
             if (message == null) "NO_MESSAGE" else IO_MESSAGE_CODES[message.trim()] ?: "OTHER"
 
         /**
-         * Classe une `IOException` d'`IsoDep` : transport fermé → perte de connexion ; échec
-         * survenu après au moins 90 % du délai → [SceauException.Timeout], même si
-         * IsoDep signale ensuite une perte (il réinitialise la liaison après un délai dépassé) ;
-         * document retiré → perte de connexion ; message de délai → délai ; sinon erreur
-         * technique `IO-<code>-INS<xx>-L<n>`. Délai et perte portent le diagnostic `INS<xx>-L<n>`.
+         * Classifies an `IsoDep` `IOException`: transport closed → connection loss; failure
+         * that occurred after at least 90% of the timeout → [SceauException.Timeout], even if
+         * IsoDep then reports a loss (it resets the link after a timeout); document removed →
+         * connection loss; timeout message → timeout; otherwise technical error
+         * `IO-<code>-INS<xx>-L<n>`. Timeout and loss carry the `INS<xx>-L<n>` diagnostic.
          */
         internal fun classifyIoFailure(
             message: String?,
@@ -212,30 +212,30 @@ class IsoDepTransport(
             }
 
         /**
-         * Délai effectif d'après la relecture d'`IsoDep.getTimeout()` : [readBack] s'il est
-         * positif (le système a pu borner [requested], par exemple sous 60 s), sinon [requested]
-         * (`getTimeout()` renvoie 0 si le service NFC est injoignable).
+         * Effective timeout based on reading back `IsoDep.getTimeout()`: [readBack] if it is
+         * positive (the system may have capped [requested], for example below 60 s), otherwise
+         * [requested] (`getTimeout()` returns 0 if the NFC service is unreachable).
          */
         internal fun effectiveTimeout(
             requested: Int,
             readBack: Int,
         ): Int = if (readBack > 0) readBack else requested
 
-        /** Vrai si [elapsedMillis] atteint au moins 90 % de [timeoutMillis]. */
+        /** True if [elapsedMillis] reaches at least 90% of [timeoutMillis]. */
         internal fun isTimeoutElapsed(
             elapsedMillis: Long,
             timeoutMillis: Int,
         ): Boolean = timeoutMillis > 0 && elapsedMillis * TIMEOUT_RATIO_DENOMINATOR >= timeoutMillis.toLong() * TIMEOUT_RATIO_NUMERATOR
 
-        /** `<prefix>-INS<xx>-L<n>` (voir [commandDetail]). */
+        /** `<prefix>-INS<xx>-L<n>` (see [commandDetail]). */
         internal fun technicalDetail(
             prefix: String,
             apdu: ByteArray,
         ): String = "$prefix-${commandDetail(apdu)}"
 
         /**
-         * `INS<xx>-L<n>` : octet INS de la commande en hexadécimal et longueur de l'APDU arrondie
-         * à la dizaine. Ni l'un ni l'autre n'est une donnée personnelle.
+         * `INS<xx>-L<n>`: INS byte of the command in hexadecimal and APDU length rounded to the
+         * nearest ten. Neither is personal data.
          */
         internal fun commandDetail(apdu: ByteArray): String {
             val ins = if (apdu.size >= 2) String.format(Locale.ROOT, "%02X", apdu[1].toInt() and 0xFF) else "NA"

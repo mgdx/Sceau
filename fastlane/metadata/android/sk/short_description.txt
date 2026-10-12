@@ -1,1 +1,1 @@
-Číta a overuje čip občianskych preukazov a cestovných pasov, úplne offline
+Číta a overuje čip cestovných pasov a občianskych preukazov, úplne offline

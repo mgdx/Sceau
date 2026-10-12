@@ -1,31 +1,31 @@
-# Glossaire slovaque (sk)
+# Slovak glossary (sk)
 
-| Source FR | Cible | Note |
+| French source | Target | Note |
 |---|---|---|
 | puce | čip | |
-| document | doklad | Terme officiel (doklad totožnosti) |
+| document | doklad | Official term (doklad totožnosti) |
 | carte d’identité | občiansky preukaz | |
 | passeport | cestovný pas | |
 | titulaire | držiteľ | |
-| magasin de confiance | dôveryhodné certifikáty | Proche de l’usage Android ; titre court |
+| magasin de confiance | dôveryhodné certifikáty | Close to Android usage; short title |
 | magasin de confiance embarqué | vstavané dôveryhodné certifikáty | |
-| certificat | certifikát | Pluriel : 1 certifikát, 2–4 certifikáty, fraction certifikátu, 5+ certifikátov |
+| certificat | certifikát | Plural: 1 certifikát, 2–4 certifikáty, fraction certifikátu, 5+ certifikátov |
 | certificat de lien | prepojovací certifikát | |
 | certificat racine | koreňový certifikát | |
-| empreinte | odtlačok | Certificats et groupes de données |
+| empreinte | odtlačok | Certificates and data groups |
 | émetteur | vydavateľ | |
 | pays / État émetteur | vydávajúci štát | |
 | autorité de délivrance | vydávajúci orgán | |
 | signataire | podpisovateľ | |
-| lire | prečítať | Bouton ; « čítanie » pour le nom |
-| réessayer | skúsiť znova | Libellé Android |
+| lire | prečítať | Button; “čítanie” for the noun |
+| réessayer | skúsiť znova | Android label |
 | annuler | zrušiť | |
 | effacer | vymazať | |
 | importer | importovať | |
-| supprimer | odstrániť | Libellé Android |
-| Plus d’options | Ďalšie možnosti | Libellé Android |
+| supprimer | odstrániť | Android label |
+| Plus d’options | Ďalšie možnosti | Android label |
 | À propos | O aplikácii | |
-| Authentique | Pravý | Verdict (accord avec « doklad ») |
+| Authentique | Pravý | Verdict (agrees with “doklad”) |
 | Signature valide, puce non vérifiée | Platný podpis, čip neoverený | Verdict |
 | Émetteur inconnu | Neznámy vydavateľ | Verdict |
 | Échec (verdict) | Neúspech | |
@@ -35,6 +35,6 @@
 | nationalité | štátna príslušnosť | |
 | numéro du document | číslo dokladu | |
 | JJ / MM / AAAA | DD / MM / RRRR | |
-| RGPD | GDPR | Acronyme courant en slovaque |
-| Master List | Master List | Jamais traduit ; « zoznam Master List » quand la phrase exige une déclinaison |
-| CAN, MRZ, PACE, BAC, SOD, DS, CSCA, DGn | idem | Jamais traduits |
+| RGPD | GDPR | Common acronym in Slovak |
+| Master List | Master List | Never translated; “zoznam Master List” when the sentence requires inflection |
+| CAN, MRZ, PACE, BAC, SOD, DS, CSCA, DGn | idem | Never translated |

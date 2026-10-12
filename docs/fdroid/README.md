@@ -1,69 +1,69 @@
-# Recette F-Droid
+# F-Droid recipe
 
-`io.github.mgdx.sceau.yml` est le brouillon de la recette à proposer à [fdroiddata](https://gitlab.com/fdroid/fdroiddata) (fichier `metadata/io.github.mgdx.sceau.yml`). Sa forme suit celle de la recette acceptée de Roue Libre, l'autre application de l'auteur. Choix et justification : D25 (builds reproductibles) et D38 (APK universel seul pour F-Droid) dans [`../decisions.md`](../decisions.md).
+`io.github.mgdx.sceau.yml` is the draft of the recipe to be proposed to [fdroiddata](https://gitlab.com/fdroid/fdroiddata) (file `metadata/io.github.mgdx.sceau.yml`). Its form follows that of the accepted recipe of Roue Libre, the author's other application. Choices and rationale: D25 (reproducible builds) and D38 (universal APK only for F-Droid) in [`../decisions.md`](../decisions.md).
 
-## Principe
+## Principle
 
-F-Droid construit l'APK **universel** depuis le tag (`app-universal-release-unsigned.apk`), télécharge l'APK signé par l'auteur (champ `binary:`), recopie sa signature sur son propre APK et vérifie le résultat. Si le contenu est identique octet pour octet, F-Droid publie l'APK de l'auteur, avec sa signature : une installation venue de F-Droid et une autre venue des releases GitHub (même APK universel) peuvent alors se mettre à jour l'une l'autre. Détails : [`../reproducible-builds.md`](../reproducible-builds.md).
+F-Droid builds the **universal** APK from the tag (`app-universal-release-unsigned.apk`), downloads the author-signed APK (`binary:` field), copies its signature onto its own APK and verifies the result. If the contents are byte-for-byte identical, F-Droid publishes the author's APK, with its signature: an installation from F-Droid and another from the GitHub releases (same universal APK) can then update each other. Details: [`../reproducible-builds.md`](../reproducible-builds.md).
 
-L'asset attendu sur la release GitHub s'appelle **`sceau-<version>-universal.apk`** (par exemple `sceau-1.0.0-universal.apk`, URL `https://github.com/mgdx/Sceau/releases/download/v1.0.0/sceau-1.0.0-universal.apk`). Ce nom est fixé par [`../release.md`](../release.md) : le changer impose de changer la recette.
+The asset expected on the GitHub release is named **`sceau-<version>-universal.apk`** (for example `sceau-1.0.0-universal.apk`, URL `https://github.com/mgdx/Sceau/releases/download/v1.0.0/sceau-1.0.0-universal.apk`). This name is fixed by [`../release.md`](../release.md): changing it requires changing the recipe.
 
-## Manifeste
+## Manifest
 
-L'APK release ne demande que `android.permission.NFC` et n'exporte qu'un composant, `MainActivity` : la permission interne d'androidx.core (D7), le récepteur exporté `ProfileInstallReceiver` et les initialiseurs de profileinstaller et d'emoji2 (D46) sont retirés du manifeste fusionné. À contrôler sur l'APK universel avant soumission :
+The release APK requests only `android.permission.NFC` and exports a single component, `MainActivity`: the internal permission of androidx.core (D7), the exported receiver `ProfileInstallReceiver` and the profileinstaller and emoji2 initializers (D46) are removed from the merged manifest. To be checked on the universal APK before submission:
 
 ```bash
 aapt2 dump xmltree --file AndroidManifest.xml app-universal-release-unsigned.apk | grep -B2 exported
 ```
 
-## Environnement de build
+## Build environment
 
-Le serveur de build de F-Droid (Debian trixie) ne fournit ni les JDK ni le CMake du projet, et F-Droid refuse tout JDK binaire téléchargé pendant le build. La recette les installe elle-même (D49) :
+The F-Droid build server (Debian trixie) provides neither the JDKs nor the CMake used by the project, and F-Droid rejects any binary JDK downloaded during the build. The recipe installs them itself (D49):
 
-- **`sudo:`** : JDK 17 (toolchains `jvmToolchain(17)` des trois modules), pris dans bookworm puisque trixie ne l'a plus, et JDK 25 (démon Gradle, `gradle/gradle-daemon-jvm.properties`), puis `update-java-alternatives -a`. Gradle trouve seul les JDK installés dans `/usr/lib/jvm`.
-- **`prebuild:`** (lancé depuis `app/`, d'où les `../`) : retrait du plugin `foojay-resolver-convention` de `settings.gradle.kts` et `org.gradle.java.installations.auto-download=false` ajouté à `gradle.properties`, pour qu'un JDK manquant fasse échouer le build au lieu d'être téléchargé (les `toolchainUrl` du démon pointent aussi vers foojay) ; `sdkmanager 'cmake;4.1.2'` (`externalNativeBuild.cmake.version`). Le NDK r28c vient du champ `ndk:`.
+- **`sudo:`**: JDK 17 (`jvmToolchain(17)` toolchains of the three modules), taken from bookworm since trixie no longer has it, and JDK 25 (Gradle daemon, `gradle/gradle-daemon-jvm.properties`), then `update-java-alternatives -a`. Gradle finds the JDKs installed in `/usr/lib/jvm` on its own.
+- **`prebuild:`** (run from `app/`, hence the `../`): removal of the `foojay-resolver-convention` plugin from `settings.gradle.kts` and `org.gradle.java.installations.auto-download=false` added to `gradle.properties`, so that a missing JDK makes the build fail instead of being downloaded (the daemon's `toolchainUrl` entries also point to foojay); `sdkmanager 'cmake;4.1.2'` (`externalNativeBuild.cmake.version`). NDK r28c comes from the `ndk:` field.
 
-Ces modifications ne changent pas l'APK. Vérifié dans un clone : `./gradlew :app:assembleRelease --offline` après le prebuild donne un `app-universal-release-unsigned.apk` identique octet pour octet (`cmp`) à celui construit sans. Le build local et la CI gardent foojay.
+These modifications do not change the APK. Verified in a clone: `./gradlew :app:assembleRelease --offline` after the prebuild gives an `app-universal-release-unsigned.apk` byte-for-byte identical (`cmp`) to the one built without it. The local build and the CI keep foojay.
 
-## Remplir avant soumission
+## Fill in before submission
 
-1. **`commit:`** : hash complet du commit du tag, jamais le nom du tag (un tag peut être déplacé) :
+1. **`commit:`**: full hash of the tag commit, never the tag name (a tag can be moved):
 
    ```bash
    git rev-parse 'v1.0.0^{commit}'
    ```
 
-2. **`AllowedAPKSigningKeys:`** : empreinte SHA-256 du certificat de signature, en minuscules, sans `:` ni espace :
+2. **`AllowedAPKSigningKeys:`**: SHA-256 fingerprint of the signing certificate, lowercase, without `:` or spaces:
 
    ```bash
    apksigner verify --print-certs sceau-1.0.0-universal.apk | grep 'SHA-256'
    ```
 
-   Elle ne change jamais tant que le keystore est le même (`docs/release.md`, étape « Keystore »).
+   It never changes as long as the keystore stays the same (`docs/release.md`, “Keystore” step).
 
-3. **`versionName`, `versionCode`, `CurrentVersion`, `CurrentVersionCode`** : ceux de `app/build.gradle.kts` au tag.
+3. **`versionName`, `versionCode`, `CurrentVersion`, `CurrentVersionCode`**: those of `app/build.gradle.kts` at the tag.
 
-## Vérifier, puis soumettre
+## Verify, then submit
 
-Dans un clone de fdroiddata avec `fdroidserver` installé :
+In a clone of fdroiddata with `fdroidserver` installed:
 
 ```bash
 cp …/Sceau/docs/fdroid/io.github.mgdx.sceau.yml metadata/
-fdroid readmeta && fdroid rewritemeta io.github.mgdx.sceau   # syntaxe et ordre canonique des champs
+fdroid readmeta && fdroid rewritemeta io.github.mgdx.sceau   # syntax and canonical field order
 fdroid lint io.github.mgdx.sceau
-fdroid build -v -l io.github.mgdx.sceau                       # construit et compare à l'APK de l'auteur
+fdroid build -v -l io.github.mgdx.sceau                       # builds and compares with the author's APK
 ```
 
-Ce qu'il faut sur le poste pour que `fdroid build` aboutisse (constaté le 2026-10-12, D54) :
+What the workstation needs for `fdroid build` to succeed (observed on 2026-10-12, D54):
 
-- **fdroidserver de master** dans un virtualenv (`pip install git+https://gitlab.com/fdroid/fdroidserver.git apksigcopier platformdirs`) : c'est ce que tourne la CI de fdroiddata. Pour `rewritemeta`, un second virtualenv avec `fdroidserver` publié et `ruamel.yaml==0.18.6` (version de Debian trixie) : les versions récentes de ruamel replient les longues valeurs autrement que la CI (leçon de Roue Libre) ;
-- **`gradlew-fdroid`** (dépôt https://gitlab.com/fdroid/gradlew-fdroid, `gradlew.py`, qui vérifie l'empreinte de la distribution Gradle) derrière un script `gradle`, désigné par `gradle:` dans `config.yml` ;
-- dans `config.yml`, **`ndk_paths: {r28c: …/ndk/28.2.13676358}`** ;
-- un **`sdkmanager` lancé sous JDK 21** : celui des cmdline-tools plante sous JDK 25 (`NumberFormatException` dans `Properties.store`) ;
-- ces ajouts à `config.yml` restent locaux : le restaurer avant tout commit dans fdroiddata.
+- **fdroidserver from master** in a virtualenv (`pip install git+https://gitlab.com/fdroid/fdroidserver.git apksigcopier platformdirs`): this is what the fdroiddata CI runs. For `rewritemeta`, a second virtualenv with the released `fdroidserver` and `ruamel.yaml==0.18.6` (the Debian trixie version): recent ruamel versions wrap long values differently from the CI (lesson learned from Roue Libre);
+- **`gradlew-fdroid`** (repository https://gitlab.com/fdroid/gradlew-fdroid, `gradlew.py`, which verifies the fingerprint of the Gradle distribution) behind a `gradle` script, designated by `gradle:` in `config.yml`;
+- in `config.yml`, **`ndk_paths: {r28c: …/ndk/28.2.13676358}`**;
+- a **`sdkmanager` run under JDK 21**: the one from the cmdline-tools crashes under JDK 25 (`NumberFormatException` in `Properties.store`);
+- these additions to `config.yml` stay local: restore it before any commit in fdroiddata.
 
-Le scanner refuse un chemin `scandelete` ou `scanignore` qui ne sert à rien (« Chemin scandelete inutilisé ») : la recette n'en porte aucun. Le résultat attendu est « compared built binary to supplied reference binary successfully ».
+The scanner rejects a `scandelete` or `scanignore` path that serves no purpose (“Unused scandelete path”): the recipe has none. The expected result is “compared built binary to supplied reference binary successfully”.
 
-Puis ouvrir une merge request sur fdroiddata (branche `io.github.mgdx.sceau` du fork https://gitlab.com/mgdx/fdroiddata, titre « New app: Sceau », modèle « App inclusion »). Retours obtenus sur Roue Libre, déjà appliqués ici : hash de commit complet et jamais le tag, pas de `scanignore`, `subdir` renseigné.
+Then open a merge request on fdroiddata (branch `io.github.mgdx.sceau` of the fork https://gitlab.com/mgdx/fdroiddata, title “New app: Sceau”, “App inclusion” template). Feedback received on Roue Libre, already applied here: full commit hash and never the tag, no `scanignore`, `subdir` filled in.
 
-Pour une nouvelle version, F-Droid ajoute lui-même le bloc `Builds` (`AutoUpdateMode: Version`, tags `v1.0.0`, `v1.0.1`, `v1.1.0`…), à condition que l'asset `sceau-<version>-universal.apk` soit publié sous ce nom.
+For a new version, F-Droid adds the `Builds` block itself (`AutoUpdateMode: Version`, tags `v1.0.0`, `v1.0.1`, `v1.1.0`…), provided that the `sceau-<version>-universal.apk` asset is published under that name.

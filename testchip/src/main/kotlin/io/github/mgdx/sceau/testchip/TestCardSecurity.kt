@@ -12,9 +12,9 @@ import org.jmrtd.lds.SecurityInfo
 import java.math.BigInteger
 
 /**
- * Fabrique d'EF.CardSecurity (ICAO 9303-11 §4.4, PACE-CAM) : `SET OF SecurityInfo` signé en CMS
- * par le DS, sous le type de contenu id-SecurityObject (BSI TR-03110), sans tag d'enveloppe.
- * Les altérations de [SodOptions] (signature altérée, DS non embarqué…) s'appliquent.
+ * EF.CardSecurity factory (ICAO 9303-11 §4.4, PACE-CAM): `SET OF SecurityInfo` signed in CMS
+ * by the DS, under the id-SecurityObject content type (BSI TR-03110), without an envelope tag.
+ * The alterations of [SodOptions] (tampered signature, DS not embedded…) apply.
  */
 object TestCardSecurity {
     /** id-SecurityObject. */
@@ -31,9 +31,9 @@ object TestCardSecurity {
     }
 
     /**
-     * EF.CardSecurity de [document] pour PACE-CAM : le `PACEInfo` de [pace] et la clé de Chip
-     * Authentication du document (`ChipAuthenticationInfo`, `ChipAuthenticationPublicKeyInfo`),
-     * signés par son DS, ou par [signer] s'il est fourni.
+     * EF.CardSecurity of [document] for PACE-CAM: the `PACEInfo` of [pace] and the document's Chip
+     * Authentication key (`ChipAuthenticationInfo`, `ChipAuthenticationPublicKeyInfo`),
+     * signed by its DS, or by [signer] if provided.
      */
     fun of(
         document: TestDocument,
@@ -41,7 +41,7 @@ object TestCardSecurity {
         options: SodOptions = SodOptions(),
         signer: TestCredential = document.ds,
     ): ByteArray {
-        val caKeys = checkNotNull(document.caKeyPair) { "document sans clé CA" }
+        val caKeys = checkNotNull(document.caKeyPair) { "document without CA key" }
         val infos =
             listOf(
                 PACEInfo(pace.protocolOid, PACE_VERSION, BigInteger.valueOf(pace.parameterId.toLong())),

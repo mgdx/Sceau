@@ -22,25 +22,25 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withTimeoutOrNull
 
 /**
- * Décodage des images de la puce (portrait DG2, signature DG7, images DG12), en JPEG 2000 comme
- * en JPEG, confié au processus isolé de [Jpeg2000Service] (décision D23, audit V18) : ni
- * OpenJPEG ni le décodeur JPEG d'Android ne reçoivent d'octets de la puce dans le processus de
- * l'app. Le service n'accepte que le JPEG et le JPEG 2000, reconnus à leurs octets.
+ * Decoding of the chip's images (DG2 portrait, DG7 signature, DG12 images), in JPEG 2000 as well
+ * as JPEG, delegated to the isolated process of [Jpeg2000Service] (decision D23, audit V18):
+ * neither OpenJPEG nor Android's JPEG decoder receives bytes from the chip in the app's
+ * process. The service accepts only JPEG and JPEG 2000, recognized by their bytes.
  *
- * Renvoie un [Bitmap] ARGB_8888 mutable, ou null si le flux n'est pas décodable, si le
- * processus isolé meurt (bombe, bug natif), si le décodage dépasse
- * [Jpeg2000Protocol.TIMEOUT_MILLIS] ou si le service est indisponible : jamais d'exception
- * (hors annulation de la coroutine appelante). Les décodages sont sérialisés ; chacun lie le
- * service, donc démarre un processus isolé neuf, et le détache dès la fin.
+ * Returns a mutable ARGB_8888 [Bitmap], or null if the stream cannot be decoded, if the
+ * isolated process dies (bomb, native bug), if decoding exceeds
+ * [Jpeg2000Protocol.TIMEOUT_MILLIS] or if the service is unavailable: never an exception
+ * (except cancellation of the calling coroutine). Decodings are serialized; each one binds the
+ * service, thus starts a fresh isolated process, and unbinds it as soon as it is done.
  */
 object IsolatedJpeg2000Decoder {
-    /** Un seul décodage à la fois dans le processus de l'app. */
+    /** Only one decoding at a time in the app's process. */
     private val mutex = Mutex()
 
     /**
-     * Portée des transferts binder, bloquants : détachée de l'appelant pour qu'un délai dépassé
-     * ou une annulation n'attendent pas la fin d'une transaction (le détachement du service
-     * termine le processus isolé, même en plein décodage, ce qui la débloque).
+     * Scope of the blocking binder transfers: detached from the caller so that a timeout or a
+     * cancellation does not wait for a transaction to finish (unbinding the service terminates
+     * the isolated process, even in the middle of decoding, which unblocks it).
      */
     private val transferScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
@@ -75,14 +75,14 @@ object IsolatedJpeg2000Decoder {
         } finally {
             result?.wipe()
             work?.let { abandoned ->
-                // Délai dépassé ou annulation : des pixels reçus plus tard sont effacés aussitôt.
+                // Timeout or cancellation: pixels received later are wiped immediately.
                 abandoned.invokeOnCompletion { cause -> if (cause == null) abandoned.getCompletedOrNull()?.wipe() }
                 abandoned.cancel()
             }
             try {
                 context.unbindService(connection)
             } catch (_: IllegalArgumentException) {
-                // Liaison refusée : rien à détacher.
+                // Binding refused: nothing to unbind.
             }
         }
     }
@@ -102,8 +102,8 @@ object IsolatedJpeg2000Decoder {
     }
 
     /**
-     * Transfère le flux, fait décoder et rapatrie les pixels. Bloquant (transactions binder
-     * synchrones) ; null au moindre écart de protocole ou si le processus isolé meurt.
+     * Transfers the stream, has it decoded and brings back the pixels. Blocking (synchronous
+     * binder transactions); null on the slightest protocol deviation or if the isolated process dies.
      */
     private fun transfer(
         binder: IBinder,
@@ -148,8 +148,8 @@ object IsolatedJpeg2000Decoder {
     }
 
     /**
-     * Une transaction : [write] remplit la requête, [read] lit la réponse après un statut OK.
-     * Renvoie null sur statut d'erreur, réponse malformée ou processus mort.
+     * One transaction: [write] fills the request, [read] reads the reply after an OK status.
+     * Returns null on an error status, a malformed reply or a dead process.
      */
     private fun <T> call(
         binder: IBinder,
@@ -168,7 +168,7 @@ object IsolatedJpeg2000Decoder {
         } catch (_: RemoteException) {
             return null
         } catch (_: RuntimeException) {
-            // Réponse malformée (BadParcelableException, taille incohérente…).
+            // Malformed reply (BadParcelableException, inconsistent size…).
             return null
         } finally {
             data.recycle()
@@ -176,7 +176,7 @@ object IsolatedJpeg2000Decoder {
         }
     }
 
-    /** Liaison au service : [binder] reçoit le binder, ou null si le service est indisponible. */
+    /** Binding to the service: [binder] receives the binder, or null if the service is unavailable. */
     private class Connection : ServiceConnection {
         val binder = CompletableDeferred<IBinder?>()
 

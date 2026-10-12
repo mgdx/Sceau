@@ -1,8 +1,8 @@
-# Glossaire — turc (tr)
+# Glossary — Turkish (tr)
 
-Référence de vocabulaire pour `app/src/main/res/values-tr/`.
+Vocabulary reference for `app/src/main/res/values-tr/`.
 
-| Source FR | Cible | Note |
+| French source | Target | Note |
 |---|---|---|
 | puce | çip |  |
 | document | belge |  |
@@ -10,7 +10,7 @@ Référence de vocabulaire pour `app/src/main/res/values-tr/`.
 | magasin de confiance | güven deposu |  |
 | certificat | sertifika |  |
 | certificat de lien | bağlantı sertifikası |  |
-| empreinte (SHA-256) | parmak izi | terme d’Android/Chrome en turc |
+| empreinte (SHA-256) | parmak izi | Android/Chrome term in Turkish |
 | émetteur | düzenleyici |  |
 | pays émetteur / État émetteur | düzenleyen ülke / devlet |  |
 | signataire | imzalayan |  |
@@ -26,17 +26,17 @@ Référence de vocabulaire pour `app/src/main/res/values-tr/`.
 | supprimer | Sil |  |
 | Plus d’options | Diğer seçenekler |  |
 | À propos | Hakkında |  |
-| Authentique | Orijinal | « Orijinal » plus usuel que « Gerçek » |
+| Authentique | Orijinal | “Orijinal” more usual than “Gerçek” |
 | Signature valide, puce non vérifiée | İmza geçerli, çip doğrulanmadı |  |
 | Émetteur inconnu | Bilinmeyen düzenleyici |  |
 | Échec (verdict) | Başarısız |  |
 | carte d’identité | kimlik kartı |  |
 | passeport | pasaport |  |
 | numéro du document | belge numarası |  |
-| nom / prénoms | Soyadı / Adları | forme des passeports turcs (Soyadı, Adı) |
-| date d’expiration | son geçerlilik tarihi | libellé de la carte d’identité turque (Son geçerlilik) |
+| nom / prénoms | Soyadı / Adları | form used on Turkish passports (Soyadı, Adı) |
+| date d’expiration | son geçerlilik tarihi | label on the Turkish identity card (Son geçerlilik) |
 | nationalité | uyruğu |  |
 | date de délivrance | düzenlenme tarihi |  |
 | JJ / MM / AAAA | GG / AA / YYYY | Gün / Ay / Yıl |
 | RGPD | Genel Veri Koruma Tüzüğü (GDPR) |  |
-| Master List, CAN, MRZ, DS, CSCA, SOD, DGn | inchangés | suffixes après apostrophe typographique (Master List’ler, DG12’den) |
+| Master List, CAN, MRZ, DS, CSCA, SOD, DGn | unchanged | suffixes after a typographic apostrophe (Master List’ler, DG12’den) |

@@ -32,7 +32,7 @@ import java.security.PublicKey
 import java.security.spec.ECGenParameterSpec
 import java.util.Date
 
-/** Fabrique de Master Lists factices pour les tests (aucune donnée réelle). */
+/** Factory of fake Master Lists for tests (no real data). */
 internal object TestMasterLists {
     val provider = BouncyCastleProvider()
     val CSCA_MASTER_LIST = ASN1ObjectIdentifier("2.23.136.1.1.2")
@@ -49,7 +49,7 @@ internal object TestMasterLists {
                 initialize(ECGenParameterSpec("secp256r1"))
             }.generateKeyPair()
 
-    /** Encodage de la clé EC avec les paramètres de courbe explicites (et non un OID nommé). */
+    /** Encodes the EC key with explicit curve parameters (rather than a named OID). */
     fun explicitEcPublicKeyInfo(publicKey: PublicKey): SubjectPublicKeyInfo {
         val params = X962Parameters(ECNamedCurveTable.getByName("secp256r1"))
         val point = (publicKey as ECPublicKey).q.getEncoded(false)
@@ -107,7 +107,7 @@ internal object TestMasterLists {
         return generator.generate(CMSProcessableByteArray(contentType, content), true).encoded
     }
 
-    /** Une Master List complète : CSCA RSA, CSCA EC à paramètres explicites et numéro de série négatif. */
+    /** A complete Master List: RSA CSCA, EC CSCA with explicit parameters and a negative serial number. */
     class Fixture {
         val rsaCscaKey = rsaKeyPair()
         val rsaCsca = selfSigned("C=ZZ,O=Test,CN=CSCA RSA", rsaCscaKey)

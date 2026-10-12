@@ -30,10 +30,10 @@ import io.github.mgdx.sceau.R
 import io.github.mgdx.sceau.ui.common.SceauIcons
 
 /**
- * Écran « Ce que contient la puce » (D35) : ce que Sceau lit et affiche, ce qu'il lit pour la
- * seule vérification, ce qu'il ne lit jamais et ce qu'il ne fait pas. La liste des fichiers
- * reprend exactement ceux que demande `:core` (docs/protocol.md §2) : EF.CardAccess, EF.COM,
- * EF.SOD, DG14, DG1, DG2, DG15, DG11, DG12, DG7 (D37), et EF.CardSecurity après PACE-CAM seulement.
+ * "What the chip contains" screen (D35): what Sceau reads and displays, what it reads for
+ * verification only, what it never reads and what it does not do. The list of files matches
+ * exactly those requested by `:core` (docs/protocol.md §2): EF.CardAccess, EF.COM,
+ * EF.SOD, DG14, DG1, DG2, DG15, DG11, DG12, DG7 (D37), and EF.CardSecurity only after PACE-CAM.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -110,7 +110,7 @@ private fun Section(
     ) {
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
-                // Décorative : le titre de la section porte le sens.
+                // Decorative: the section title carries the meaning.
                 Icon(icon, contentDescription = null, tint = tint)
                 Text(
                     stringResource(title),

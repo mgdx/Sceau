@@ -1,6 +1,6 @@
 package io.github.mgdx.sceau.demo
 
-/** Mode démo absent de l'APK release : voir la version `debug` de cet objet. */
+/** Demo mode absent from the release APK: see the `debug` version of this object. */
 object DemoMode {
     val isAvailable: Boolean = false
 

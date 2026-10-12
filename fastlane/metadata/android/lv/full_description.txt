@@ -2,9 +2,9 @@ Sceau ar NFC nolasa ICAO 9303 personu apliecinošo dokumentu mikroshēmu un pār
 
 <b>Atbalstītie dokumenti</b>
 <ul>
+<li>Jebkuras valsts biometriskās pases, izmantojot dokumenta numuru, dzimšanas datumu un derīguma termiņu</li>
 <li>Francijas personas apliecība (bankas kartes formātā, kopš 2021. gada), izmantojot uz kartes uzdrukāto 6 ciparu CAN</li>
 <li>Eiropas valstu personas apliecības, izmantojot CAN vai MRZ</li>
-<li>Jebkuras valsts biometriskās pases, izmantojot dokumenta numuru, dzimšanas datumu un derīguma termiņu</li>
 </ul>
 
 <b>Ko parāda Sceau</b>

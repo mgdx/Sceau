@@ -5,7 +5,7 @@
 <h1 align="center">Sceau</h1>
 
 <p align="center">
-  Reads the chip of ID cards and passports, and checks they are genuine, fully offline.
+  Reads the chip of passports and ID cards, and checks they are genuine, fully offline.
 </p>
 
 <p align="center">
@@ -21,8 +21,8 @@
 ## Description
 
 **Sceau** is an Android application that reads, over NFC, the chip of identity
-documents that follow the ICAO 9303 standard (the French electronic identity
-card, European identity cards, biometric passports), shows the data and the
+documents that follow the ICAO 9303 standard (biometric passports, the French
+electronic identity card, European identity cards), shows the data and the
 photo it holds, and checks cryptographically that the document is genuine and
 that the chip is not a clone.
 
@@ -33,17 +33,17 @@ uses no Google service.
 ## Screenshots
 
 <p align="center">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1_accueil.png" width="19%" alt="Home screen: the Passport and Identity card tabs, the fields for the access key and the Read button.">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2_lecture.png" width="19%" alt="Reading screen: the document held against the phone and the steps ticking off one by one.">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3_resultat.png" width="19%" alt="Result screen: the verdict on a coloured background, the photo, the identity and the checklist.">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4_magasin.png" width="19%" alt="Trust store: the root certificates known to the application, grouped by country.">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1_home.png" width="19%" alt="Home screen: the Passport and Identity card tabs, the fields for the access key and the Read button.">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2_reading.png" width="19%" alt="Reading screen: the document held against the phone and the steps ticking off one by one.">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3_result.png" width="19%" alt="Result screen: the verdict on a coloured background, the photo, the identity and the checklist.">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4_trust_store.png" width="19%" alt="Trust store: the root certificates known to the application, grouped by country.">
   <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5_introduction.png" width="19%" alt="One page of the introduction shown at first launch.">
 </p>
 
 ## Features
 
-- 📇 **Reads the chip over NFC**, with the CAN (the 6 digits printed on an
-  identity card) or the MRZ (document number, date of birth, expiry date), by
+- 📇 **Reads the chip over NFC**, with the MRZ (document number, date of birth,
+  expiry date) or the CAN (the 6 digits printed on an identity card), by
   PACE or BAC depending on what the chip announces. A chip that makes you wait
   after failed attempts is waited for up to a minute.
 
@@ -89,9 +89,9 @@ read the MRZ with the camera and does no facial recognition.
 
 | Document | Access key | Note |
 |---|---|---|
+| Biometric passports from any country | MRZ | |
 | French national identity card (credit-card format, since 2021) | CAN | Verified through the ANTS e-ID CSCA certificate |
 | European identity cards (Regulation (EU) 2019/1157) | CAN if printed, MRZ otherwise | Some older cards have no ICAO application |
-| Biometric passports from any country | MRZ | |
 
 A document whose issuer is not in the trust store gets the verdict “Unknown
 issuer”: its data is shown, but nothing is guaranteed. You can then import a
@@ -122,7 +122,7 @@ Open Government Licence v3.0.
 
 Other limits are reported by third parties without having been checked on real
 documents. The details, with sources, are in
-[`docs/deviations.md`](docs/deviations.md) (in French).
+[`docs/deviations.md`](docs/deviations.md).
 
 ## Intended use
 
@@ -155,8 +155,8 @@ on some professions.
 - No telemetry, no crash reporting, no analytics or advertising library, no
   Google service.
 
-Details: [`docs/architecture.md`](docs/architecture.md), section “Cycle de vie
-des données sensibles”.
+Details: [`docs/architecture.md`](docs/architecture.md), section “Sensitive data
+lifecycle”.
 
 ## Installing
 
@@ -226,8 +226,8 @@ library under any pretext.
 
 ## Contributing
 
-Contributions are welcome. See **[CONTRIBUTING.md](CONTRIBUTING.md)** (in
-French), and open an issue before a large change.
+Contributions are welcome. See **[CONTRIBUTING.md](CONTRIBUTING.md)**, and open
+an issue before a large change.
 
 - 🌍 **Proofread a translation.** The 44 translations were made without review by
   native speakers. Each language has its glossary in
@@ -242,7 +242,7 @@ French), and open an issue before a large change.
 Read [`SPEC.md`](SPEC.md) first: it is the project's source of truth, and
 [`docs/decisions.md`](docs/decisions.md) argues every departure from it.
 
-To go further (in French): the [architecture](docs/architecture.md), the
+To go further: the [architecture](docs/architecture.md), the
 [ICAO protocol](docs/protocol.md), the [trust store](docs/trust-store.md), the
 [dependencies](docs/dependencies.md), the [test plan](docs/test-plan.md),
 [reproducible builds](docs/reproducible-builds.md) and how a

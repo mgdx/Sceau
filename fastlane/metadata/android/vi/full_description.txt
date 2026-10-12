@@ -2,9 +2,9 @@ Sceau đọc chip của giấy tờ tùy thân theo chuẩn ICAO 9303 qua NFC v�
 
 <b>Giấy tờ được hỗ trợ</b>
 <ul>
+<li>Hộ chiếu sinh trắc học của mọi quốc gia, bằng số giấy tờ, ngày sinh và ngày hết hạn</li>
 <li>Thẻ căn cước quốc gia của Pháp (khổ thẻ ngân hàng, từ năm 2021), bằng mã CAN 6 chữ số in trên thẻ</li>
 <li>Thẻ căn cước của các nước châu Âu, bằng CAN hoặc MRZ</li>
-<li>Hộ chiếu sinh trắc học của mọi quốc gia, bằng số giấy tờ, ngày sinh và ngày hết hạn</li>
 </ul>
 
 <b>Sceau hiển thị gì</b>

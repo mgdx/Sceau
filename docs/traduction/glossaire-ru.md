@@ -1,39 +1,39 @@
-# Glossaire russe (values-ru)
+# Russian glossary (values-ru)
 
-| Source FR | Cible | Note |
+| French source | Target | Note |
 |---|---|---|
 | puce | чип | |
 | document | документ | |
 | document d’identité | документ, удостоверяющий личность | |
-| carte d’identité | ID-карта | forme courte pour l’onglet, usuelle pour les cartes UE |
+| carte d’identité | ID-карта | short form for the tab, usual for EU cards |
 | passeport | паспорт | |
 | titulaire | владелец | |
-| magasin de confiance | доверенные сертификаты | « хранилище » alourdit les titres ; tournure des réglages Android |
+| magasin de confiance | доверенные сертификаты | “хранилище” makes titles heavier; Android settings wording |
 | certificat | сертификат | |
-| certificat de lien | связующий сертификат | link certificate ICAO |
-| empreinte (certificat) | отпечаток | « Отпечаток SHA-256 » |
-| empreinte (groupe de données) | хеш | hash des DG |
+| certificat de lien | связующий сертификат | ICAO link certificate |
+| empreinte (certificat) | отпечаток | “Отпечаток SHA-256” |
+| empreinte (groupe de données) | хеш | hash of the DGs |
 | groupe de données | группа данных | |
 | émetteur | издатель | |
-| pays émetteur / État émetteur | государство выдачи | vocabulaire des passeports |
+| pays émetteur / État émetteur | государство выдачи | passport vocabulary |
 | signataire | подписант | |
-| canal sécurisé | защищенный канал | e sans ё, usage des interfaces |
+| canal sécurisé | защищенный канал | e without ё, interface usage |
 | Authentique | Подлинный | verdict |
 | Signature valide, puce non vérifiée | Подпись действительна, чип не проверен | verdict |
 | Émetteur inconnu | Неизвестный издатель | verdict |
 | Échec (verdict) | Проверка не пройдена | verdict |
-| Réussie / Échec (contrôle) | Пройдена / Не пройдена | statut d’une vérification |
+| Réussie / Échec (contrôle) | Пройдена / Не пройдена | status of a check |
 | lire | считать / чтение | |
-| réessayer | Повторить | bouton Android |
-| annuler | Отмена | bouton Android |
+| réessayer | Повторить | Android button |
+| annuler | Отмена | Android button |
 | effacer | Очистить | |
 | importer | Импортировать | |
 | supprimer | Удалить | |
 | Plus d’options | Другие параметры | |
 | À propos | О приложении | |
-| date d’expiration | дата окончания срока действия | mention du passeport russe |
+| date d’expiration | дата окончания срока действия | wording on the Russian passport |
 | nationalité | гражданство | |
 | nom / prénoms | фамилия / имя | |
-| RGPD | GDPR (Общий регламент по защите данных) | pas d’acronyme russe établi |
-| Master List | Master List | invariable, traité au masculin (список) |
+| RGPD | GDPR (Общий регламент по защите данных) | no established Russian acronym |
+| Master List | Master List | invariable, treated as masculine (список) |
 | JJ / MM / AAAA | ДД / ММ / ГГГГ | |

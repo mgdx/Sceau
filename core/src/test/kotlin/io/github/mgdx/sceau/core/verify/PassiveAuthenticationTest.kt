@@ -26,7 +26,7 @@ import java.math.BigInteger
 import java.security.MessageDigest
 import java.time.LocalDate
 
-/** Passive Authentication (SPEC §6.1 étape 5, §9.1), pour chaque type de clé de la hiérarchie. */
+/** Passive Authentication (SPEC §6.1 step 5, §9.1), for each key type of the hierarchy. */
 @RunWith(Parameterized::class)
 class PassiveAuthenticationTest(
     private val keyType: TestKeyType,
@@ -61,7 +61,7 @@ class PassiveAuthenticationTest(
         listOf(sodSignature.status, certificateChain.status, dsValidity.status, dataGroupHashes.status)
 
     @Test
-    fun `chaine nominale - PA entierement OK`() {
+    fun `nominal chain - PA fully OK`() {
         val result = verify(pki.document())
 
         assertEquals(List(4) { CheckStatus.OK }, result.statuses())
@@ -87,7 +87,7 @@ class PassiveAuthenticationTest(
     }
 
     @Test
-    fun `algorithme de signature declare - PKCS1, PSS ou ECDSA selon le type`() {
+    fun `declared signature algorithm - PKCS1, PSS or ECDSA depending on the type`() {
         val algorithm = (verify(pki.document()).sodSignature.detail as CheckDetail.Signature).algorithm.uppercase()
         val expected =
             when (keyType) {
@@ -99,7 +99,7 @@ class PassiveAuthenticationTest(
     }
 
     @Test
-    fun `chaine via certificat de lien - DS signe par le nouveau CSCA absent du magasin`() {
+    fun `chain through a link certificate - DS signed by the new CSCA absent from the store`() {
         val ds = pki.issueDs(signedBy = CscaGeneration.NEW)
         val result = verify(pki.document { this.ds = ds }, store = pki.trustStore(pki.oldCsca, pki.link))
 
@@ -110,7 +110,7 @@ class PassiveAuthenticationTest(
     }
 
     @Test
-    fun `nouveau CSCA present dans le magasin - pas de lien traverse`() {
+    fun `new CSCA present in the store - no link traversed`() {
         val ds = pki.issueDs(signedBy = CscaGeneration.NEW)
         val result = verify(pki.document { this.ds = ds }, store = pki.trustStore(pki.oldCsca, pki.link, pki.newCsca))
 
@@ -120,7 +120,7 @@ class PassiveAuthenticationTest(
     }
 
     @Test
-    fun `lien absent - meme nom de CSCA mais autre cle - emetteur inconnu`() {
+    fun `missing link - same CSCA name but another key - unknown issuer`() {
         val ds = pki.issueDs(signedBy = CscaGeneration.NEW)
         val result = verify(pki.document { this.ds = ds }, store = pki.trustStore(pki.oldCsca))
 
@@ -129,7 +129,7 @@ class PassiveAuthenticationTest(
     }
 
     @Test
-    fun `signature du SOD alteree - echec`() {
+    fun `tampered SOD signature - failure`() {
         val result = verify(pki.document { sod = SodOptions(tamperSignature = true) })
 
         assertEquals(CheckStatus.FAILED, result.sodSignature.status)
@@ -138,7 +138,7 @@ class PassiveAuthenticationTest(
     }
 
     @Test
-    fun `DG2 modifie apres signature - echec sur l empreinte`() {
+    fun `DG2 modified after signing - hash failure`() {
         val result = verify(pki.document().withModifiedDataGroup(2))
 
         assertEquals(CheckStatus.FAILED, result.dataGroupHashes.status)
@@ -147,7 +147,7 @@ class PassiveAuthenticationTest(
     }
 
     @Test
-    fun `DG lu absent du SOD - non conforme, DG du SOD non lus ignores`() {
+    fun `read DG missing from the SOD - non-compliant, unread SOD DGs ignored`() {
         val document = pki.document { sod = SodOptions(extraHashes = mapOf(3 to ByteArray(32))) }
         val result = verify(document.withDataGroups(document.dataGroups + (11 to byteArrayOf(0x6B, 0x00))))
 
@@ -158,7 +158,7 @@ class PassiveAuthenticationTest(
     }
 
     @Test
-    fun `DG du SOD non fournis par la puce - echec, DG manquants signales`() {
+    fun `SOD DGs not supplied by the chip - failure, missing DGs reported`() {
         val document = pki.document()
         val result = verify(document.withDataGroups(document.dataGroups - setOf(2, 14, 15)))
 
@@ -171,7 +171,7 @@ class PassiveAuthenticationTest(
     }
 
     @Test
-    fun `DG3 et DG4 du SOD jamais lus - pas des DG manquants`() {
+    fun `DG3 and DG4 from the SOD never read - not missing DGs`() {
         val document = pki.document { sod = SodOptions(extraHashes = mapOf(3 to ByteArray(32), 4 to ByteArray(32))) }
         val result = verify(document)
 
@@ -180,7 +180,7 @@ class PassiveAuthenticationTest(
     }
 
     @Test
-    fun `Etat emetteur coherent avec le CSCA - chaine OK`() {
+    fun `issuing state consistent with the CSCA - chain OK`() {
         val document = pki.document { issuingState = "FRA" }
         val result = verify(document, issuingState = "FRA")
 
@@ -189,7 +189,7 @@ class PassiveAuthenticationTest(
     }
 
     @Test
-    fun `Etat emetteur d un autre pays que le CSCA - chaine en echec`() {
+    fun `issuing state from a country other than the CSCA - chain fails`() {
         val result = verify(pki.document { issuingState = "DEU" }, issuingState = "DEU")
 
         assertEquals(CheckStatus.FAILED, result.certificateChain.status)
@@ -200,7 +200,7 @@ class PassiveAuthenticationTest(
     }
 
     @Test
-    fun `Etat emetteur inconnu d ICAO - chaine en echec`() {
+    fun `issuing state unknown to ICAO - chain fails`() {
         val result = verify(pki.document(), issuingState = "UTO")
 
         assertEquals(CheckStatus.FAILED, result.certificateChain.status)
@@ -208,14 +208,14 @@ class PassiveAuthenticationTest(
     }
 
     @Test
-    fun `organisation internationale - seuls CSCA et DS compares`() {
+    fun `international organization - only CSCA and DS compared`() {
         val result = verify(pki.document { issuingState = "UNO" }, issuingState = "UNO")
 
         assertEquals(CheckStatus.OK, result.certificateChain.status)
     }
 
     @Test
-    fun `DS d un autre pays que son CSCA - chaine en echec`() {
+    fun `DS from a country other than its CSCA - chain fails`() {
         val ds = pki.issueDs(dsCountry = "DE")
         val result = verify(pki.document { this.ds = ds }, issuingState = null)
 
@@ -224,7 +224,7 @@ class PassiveAuthenticationTest(
     }
 
     @Test
-    fun `DS expire avant la date de delivrance DG12 - echec sur la validite`() {
+    fun `DS expired before the DG12 date of issue - validity failure`() {
         val ds = pki.issueDs(notBefore = LocalDate.of(2015, 1, 1), notAfter = LocalDate.of(2019, 1, 1))
         val result = verify(pki.document { this.ds = ds })
 
@@ -234,7 +234,7 @@ class PassiveAuthenticationTest(
     }
 
     @Test
-    fun `DS expire avant le signingTime du SOD - echec sur la validite`() {
+    fun `DS expired before the SOD signingTime - validity failure`() {
         val ds = pki.issueDs(notBefore = LocalDate.of(2015, 1, 1), notAfter = LocalDate.of(2019, 1, 1))
         val result = verify(pki.document { this.ds = ds }, dateOfIssue = null)
 
@@ -243,7 +243,7 @@ class PassiveAuthenticationTest(
     }
 
     @Test
-    fun `date estimee hors periode du DS - non disponible, jamais echec`() {
+    fun `estimated date outside the DS period - not available, never failure`() {
         val ds = pki.issueDs(notBefore = LocalDate.of(2024, 1, 1), notAfter = LocalDate.of(2035, 1, 1))
         val document =
             pki.document {
@@ -259,7 +259,7 @@ class PassiveAuthenticationTest(
     }
 
     @Test
-    fun `date estimee dans la periode du DS - OK`() {
+    fun `estimated date within the DS period - OK`() {
         val result = verify(pki.document { sod = SodOptions(signingTime = null) }, dateOfIssue = null)
 
         assertEquals(CheckStatus.OK, result.dsValidity.status)
@@ -267,19 +267,19 @@ class PassiveAuthenticationTest(
     }
 
     @Test
-    fun `aucune date - validite non disponible`() {
+    fun `no date - validity not available`() {
         val result = verify(pki.document { sod = SodOptions(signingTime = null) }, dateOfIssue = null, dateOfExpiry = null)
 
         assertEquals(CheckStatus.NOT_AVAILABLE, result.dsValidity.status)
     }
 
     @Test
-    fun `DS non rattache a un CSCA connu - emetteur inconnu`() {
+    fun `DS not linked to a known CSCA - unknown issuer`() {
         val rogue = TestPki(keyType, name = "Rogue", country = "XX")
         val result = verify(rogue.document(), store = pki.trustStore(pki.oldCsca, pki.newCsca, pki.link))
 
         assertEquals(CheckStatus.NOT_AVAILABLE, result.certificateChain.status)
-        // Audit V25 : sans chaîne, la signature du SOD n'est pas présentée comme vérifiée.
+        // Audit V25: without a chain, the SOD signature is not presented as verified.
         assertEquals(CheckStatus.NOT_AVAILABLE, result.sodSignature.status)
         val chain = result.chain!!
         assertNull(chain.cscaSubject)
@@ -290,7 +290,7 @@ class PassiveAuthenticationTest(
     }
 
     @Test
-    fun `signature du DS par le CSCA invalide - chaine en echec`() {
+    fun `invalid DS signature by the CSCA - chain fails`() {
         val ds = pki.withTamperedSignature(pki.issueDs())
         val result = verify(pki.document { this.ds = ds })
 
@@ -300,7 +300,7 @@ class PassiveAuthenticationTest(
     }
 
     @Test
-    fun `algorithme de signature du SOD inconnu - UnsupportedAlgorithm`() {
+    fun `unknown SOD signature algorithm - UnsupportedAlgorithm`() {
         val result = verify(pki.document { sod = SodOptions(signatureAlgorithmOid = TestSod.UNKNOWN_OID) })
 
         assertEquals(CheckStatus.UNSUPPORTED_ALGORITHM, result.sodSignature.status)
@@ -309,7 +309,7 @@ class PassiveAuthenticationTest(
     }
 
     @Test
-    fun `algorithme de hachage des DG inconnu - UnsupportedAlgorithm`() {
+    fun `unknown DG hash algorithm - UnsupportedAlgorithm`() {
         val result = verify(pki.document { sod = SodOptions(declaredDigestOid = TestSod.UNKNOWN_OID) })
 
         assertEquals(CheckStatus.UNSUPPORTED_ALGORITHM, result.dataGroupHashes.status)
@@ -317,7 +317,7 @@ class PassiveAuthenticationTest(
     }
 
     @Test
-    fun `empreintes SHA-512 et signingTime absent`() {
+    fun `SHA-512 hashes and missing signingTime`() {
         val result = verify(pki.document { sod = SodOptions(digestAlgorithm = "SHA-512", signingTime = null) })
 
         assertEquals(List(4) { CheckStatus.OK }, result.statuses())
@@ -325,7 +325,7 @@ class PassiveAuthenticationTest(
     }
 
     @Test
-    fun `DS absent du SOD mais present dans le magasin - OK`() {
+    fun `DS missing from the SOD but present in the store - OK`() {
         val result = verify(pki.document { sod = SodOptions(embedDs = false) }, store = pki.trustStore(pki.oldCsca, pki.ds))
 
         assertEquals(List(4) { CheckStatus.OK }, result.statuses())
@@ -333,7 +333,7 @@ class PassiveAuthenticationTest(
     }
 
     @Test
-    fun `DS absent du SOD et du magasin - DsCertificateMissing`() {
+    fun `DS missing from the SOD and the store - DsCertificateMissing`() {
         val result = verify(pki.document { sod = SodOptions(embedDs = false) })
 
         assertEquals(CheckStatus.NOT_AVAILABLE, result.certificateChain.status)
@@ -345,7 +345,7 @@ class PassiveAuthenticationTest(
     }
 
     @Test
-    fun `numero de serie de DS negatif - embarque ou retrouve dans le magasin`() {
+    fun `negative DS serial number - embedded or found in the store`() {
         val ds = pki.issueDs(serial = BigInteger.valueOf(-4_242_424_242L))
         val embedded = verify(pki.document { this.ds = ds })
         val fromStore =
@@ -369,7 +369,7 @@ class PassiveAuthenticationTest(
     }
 
     @Test
-    fun `SOD mal forme - aucune exception, lignes en echec`() {
+    fun `malformed SOD - no exception, rows fail`() {
         val document = pki.document()
         for (sod in listOf(
             ByteArray(0),
@@ -384,8 +384,8 @@ class PassiveAuthenticationTest(
     }
 
     @Test
-    fun `type de contenu du SOD autre que ldsSecurityObject - SOD rejete`() {
-        // Même LDSSecurityObject, correctement signé par le DS, mais déclaré en id-data.
+    fun `SOD content type other than ldsSecurityObject - SOD rejected`() {
+        // Same LDSSecurityObject, correctly signed by the DS, but declared as id-data.
         val result = verify(pki.document { sod = SodOptions(contentTypeOid = "1.2.840.113549.1.7.1") })
 
         assertEquals(List(4) { CheckStatus.FAILED }, result.statuses())
@@ -393,7 +393,7 @@ class PassiveAuthenticationTest(
     }
 
     @Test
-    fun `source du CSCA reportee dans la chaine`() {
+    fun `CSCA source carried into the chain`() {
         val store = TestTrustStore.of(listOf(pki.oldCsca.certificate), TrustSource.IMPORTED_MASTER_LIST)
         val result = verify(pki.document(), store = store)
 
@@ -401,8 +401,8 @@ class PassiveAuthenticationTest(
     }
 
     @Test
-    fun `cycle de liens dans le magasin - pas de boucle infinie`() {
-        // Lien et lien inverse, sans aucun CSCA auto-signé : la recherche doit s'arrêter.
+    fun `link cycle in the store - no infinite loop`() {
+        // Link and reverse link, with no self-signed CSCA: the search must stop.
         val ds = pki.issueDs(signedBy = CscaGeneration.NEW)
         val result = verify(pki.document { this.ds = ds }, store = pki.trustStore(pki.link, pki.reverseLink))
 
@@ -410,7 +410,7 @@ class PassiveAuthenticationTest(
     }
 
     @Test
-    fun `document sans DG14 ni DG15 - signature valide, puce non verifiee`() {
+    fun `document without DG14 or DG15 - valid signature, chip not verified`() {
         val document =
             pki.document {
                 chipAuthentication = false
@@ -423,7 +423,7 @@ class PassiveAuthenticationTest(
     }
 
     @Test
-    fun `chaine nominale avec AA puis CA - authentique`() {
+    fun `nominal chain with AA then CA - authentic`() {
         for (aa in AaKeyType.entries) {
             val document = pki.document { activeAuthentication = aa }
             val result = verify(document)

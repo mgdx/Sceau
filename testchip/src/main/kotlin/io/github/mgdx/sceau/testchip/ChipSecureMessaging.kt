@@ -3,44 +3,44 @@ package io.github.mgdx.sceau.testchip
 import io.github.mgdx.sceau.testchip.SimCrypto.Algorithm
 import java.io.ByteArrayOutputStream
 
-/** Commande APDU en clair, telle que la puce la traite (après déballage éventuel). */
+/** Plain APDU command, as the chip processes it (after unwrapping, if any). */
 internal class PlainCommand(
     val ins: Int,
     val p1: Int,
     val p2: Int,
     val data: ByteArray,
-    /** Longueur attendue Ne (0 : pas de Le). */
+    /** Expected length Ne (0: no Le). */
     val ne: Int,
     val secured: Boolean,
-    /** Chaînage de commandes (CLA b5), utilisé par les étapes de PACE. */
+    /** Command chaining (CLA b5), used by the PACE steps. */
     val chained: Boolean = false,
 )
 
-/** La commande sécurisée est invalide (MAC faux, objet manquant) : la puce clôt la session. */
+/** The secured command is invalid (wrong MAC, missing object): the chip closes the session. */
 internal class SecureMessagingError(
     message: String,
 ) : Exception(message)
 
-/** Protocole qui a ouvert une session de messagerie sécurisée de la puce simulée. */
+/** Protocol that opened a secure messaging session of the simulated chip. */
 enum class SessionKind {
     BAC,
     PACE,
 
-    /** Chip Authentication via DG14 (clés dérivées de la clé statique de DG14). */
+    /** Chip Authentication via DG14 (keys derived from the DG14 static key). */
     CHIP_AUTHENTICATION,
 }
 
 /**
- * Messagerie sécurisée côté puce (ICAO 9303-11 §9.8) : déballe les commandes
- * (DO'87, DO'97, DO'8E), vérifie leur MAC, et emballe les réponses (DO'87, DO'99, DO'8E).
- * Le compteur [ssc] est incrémenté avant chaque commande et avant chaque réponse.
+ * Chip-side secure messaging (ICAO 9303-11 §9.8): unwraps commands
+ * (DO'87, DO'97, DO'8E), checks their MAC, and wraps responses (DO'87, DO'99, DO'8E).
+ * The counter [ssc] is incremented before each command and before each response.
  */
 internal class ChipSecureMessaging(
     val algorithm: Algorithm,
     private val kEnc: ByteArray,
     private val kMac: ByteArray,
     ssc: Long,
-    /** Protocole qui a ouvert cette session. */
+    /** Protocol that opened this session. */
     val kind: SessionKind,
 ) {
     var ssc: Long = ssc
@@ -49,7 +49,7 @@ internal class ChipSecureMessaging(
     private val blockSize get() = algorithm.blockSize
 
     fun unwrap(apdu: ByteArray): PlainCommand {
-        if (apdu.size < HEADER + 1) throw SecureMessagingError("commande sécurisée sans données")
+        if (apdu.size < HEADER + 1) throw SecureMessagingError("secured command without data")
         val header = apdu.copyOf(HEADER)
         val lc = apdu[HEADER].toInt() and 0xFF
         if (lc == 0 || apdu.size < HEADER + 1 + lc) throw SecureMessagingError("Lc")
@@ -63,10 +63,10 @@ internal class ChipSecureMessaging(
                 TAG_DO87 -> do87 = tlv
                 TAG_DO97 -> do97 = tlv
                 TAG_DO8E -> do8e = tlv
-                else -> throw SecureMessagingError("objet inattendu")
+                else -> throw SecureMessagingError("unexpected object")
             }
         }
-        val cc = do8e?.value ?: throw SecureMessagingError("DO'8E absent")
+        val cc = do8e?.value ?: throw SecureMessagingError("DO'8E missing")
 
         ssc++
         val macInput =
@@ -77,13 +77,13 @@ internal class ChipSecureMessaging(
                 do97?.let { write(it.encoded) }
             }
         val expected = SimCrypto.mac(algorithm, kMac, SimCrypto.pad(macInput.toByteArray(), blockSize))
-        if (!expected.contentEquals(cc)) throw SecureMessagingError("MAC de commande invalide")
+        if (!expected.contentEquals(cc)) throw SecureMessagingError("invalid command MAC")
 
         val data =
             do87?.let {
-                if (it.value.isEmpty() || it.value[0] != PADDING_INDICATOR) throw SecureMessagingError("DO'87 sans indicateur")
+                if (it.value.isEmpty() || it.value[0] != PADDING_INDICATOR) throw SecureMessagingError("DO'87 without indicator")
                 val plain = SimCrypto.cbc(false, algorithm, kEnc, iv(), it.value.copyOfRange(1, it.value.size))
-                SimCrypto.unpad(plain) ?: throw SecureMessagingError("remplissage")
+                SimCrypto.unpad(plain) ?: throw SecureMessagingError("padding")
             } ?: ByteArray(0)
         val ne =
             do97?.value?.let { le ->
@@ -129,7 +129,7 @@ internal class ChipSecureMessaging(
         return bytes
     }
 
-    /** IV : zéro en 3DES, E(KSenc, SSC) en AES (ICAO 9303-11 §9.8.6.1). */
+    /** IV: zero for 3DES, E(KSenc, SSC) for AES (ICAO 9303-11 §9.8.6.1). */
     private fun iv(): ByteArray =
         when (algorithm) {
             Algorithm.DESEDE -> ByteArray(blockSize)
@@ -150,7 +150,7 @@ internal class ChipSecureMessaging(
     }
 }
 
-/** Objet BER-TLV à étiquette d'un octet (suffisant pour la messagerie sécurisée et les commandes EAC). */
+/** BER-TLV object with a one-byte tag (enough for secure messaging and EAC commands). */
 internal class Tlv(
     val tag: Int,
     val value: ByteArray,
@@ -163,15 +163,15 @@ internal class Tlv(
             var index = 0
             while (index < bytes.size) {
                 val tag = bytes[index++].toInt() and 0xFF
-                if (index >= bytes.size) throw SecureMessagingError("TLV tronqué")
+                if (index >= bytes.size) throw SecureMessagingError("truncated TLV")
                 var length = bytes[index++].toInt() and 0xFF
                 if (length and 0x80 != 0) {
                     val count = length and 0x7F
-                    if (count !in 1..2 || index + count > bytes.size) throw SecureMessagingError("longueur TLV")
+                    if (count !in 1..2 || index + count > bytes.size) throw SecureMessagingError("TLV length")
                     length = 0
                     repeat(count) { length = (length shl Byte.SIZE_BITS) or (bytes[index++].toInt() and 0xFF) }
                 }
-                if (index + length > bytes.size) throw SecureMessagingError("TLV tronqué")
+                if (index + length > bytes.size) throw SecureMessagingError("truncated TLV")
                 result += Tlv(tag, bytes.copyOfRange(index, index + length))
                 index += length
             }

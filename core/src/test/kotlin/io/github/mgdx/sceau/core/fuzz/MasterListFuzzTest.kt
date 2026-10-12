@@ -8,10 +8,10 @@ import io.github.mgdx.sceau.core.trust.TrustStores
 import org.junit.Test
 
 /**
- * Fuzzing du parseur de Master List. Contrat : [TrustStores.parseMasterList] renvoie une liste
- * ou lève [InvalidMasterListException], seule exception que `TrustStoreLoader.load` rattrape
- * pour un import ; toute autre ferait échouer le chargement du magasin entier. Une liste
- * acceptée doit pouvoir être fusionnée et affichée (pays, empreinte, auto-signature, index).
+ * Fuzzing of the Master List parser. Contract: [TrustStores.parseMasterList] returns a list or
+ * throws [InvalidMasterListException], the only exception that `TrustStoreLoader.load` catches
+ * for an import; any other would make loading the whole trust store fail. An accepted list
+ * must be mergeable and displayable (country, fingerprint, self-signature, index).
  */
 class MasterListFuzzTest {
     private val fixture = FuzzSeeds.testMasterList
@@ -23,7 +23,7 @@ class MasterListFuzzTest {
             null
         }
 
-    /** Fusion dans un magasin et accès à tout ce qu'affiche l'écran Magasin de confiance. */
+    /** Merge into a trust store and access everything the Trust store screen displays. */
     private fun exercise(list: MasterList) {
         val store = TrustStoreLoader.merge(emptyList(), emptyList(), null, listOf(list))
         for (anchor in store.anchors) {
@@ -41,23 +41,23 @@ class MasterListFuzzTest {
 
     private fun certificateSet(list: MasterList) = list.certificates.map { it.encoded.toList() }.toSet()
 
-    /** Master List de test mutée telle quelle : une liste acceptée a le contenu signé d'origine. */
+    /** Test Master List mutated as is: an accepted list has the original signed content. */
     @Test
     fun mutatedTestMasterList() {
         val original = certificateSet(TrustStores.parseMasterList(fixture.bytes))
         val iterations = FuzzConfig.iterations(TEST_ML_ITERATIONS)
         FuzzCampaign("ML-test", listOf(fixture.bytes), fixture.bytes.size + GROWTH, iterations).run { input ->
             val list = parseOrNull(input.bytes)
-            if (input.pristine) property(list != null) { "graine Master List refusée" }
+            if (input.pristine) property(list != null) { "Master List seed rejected" }
             list ?: return@run
-            property(certificateSet(list) == original) { "Master List mutée acceptée avec d'autres certificats" }
+            property(certificateSet(list) == original) { "mutated Master List accepted with other certificates" }
             exercise(list)
         }
     }
 
     /**
-     * Contenu `CscaMasterList` muté puis signé : un import n'est pas ancré, n'importe qui peut
-     * donc signer une liste hostile. Les certificats illisibles sont ignorés, pas fatals.
+     * `CscaMasterList` content mutated then signed: an import is not anchored, so anyone can sign
+     * a hostile list. Unreadable certificates are skipped, not fatal.
      */
     @Test
     fun resignedMasterListContent() {
@@ -65,16 +65,16 @@ class MasterListFuzzTest {
         FuzzCampaign("ML-content", listOf(content), content.size + GROWTH, FuzzConfig.iterations(RESIGNED_ITERATIONS)).run { input ->
             val bytes = fixture.sign(input.bytes)
             val list = parseOrNull(bytes)
-            if (input.pristine) property(list?.certificates?.size == 2) { "graine Master List resignée refusée" }
+            if (input.pristine) property(list?.certificates?.size == 2) { "re-signed Master List seed rejected" }
             list?.let(::exercise)
         }
     }
 
-    /** Master List embarquée (BSI) mutée : lente (880 Ko), peu d'itérations par défaut. */
+    /** Embedded (BSI) Master List mutated: slow (880 KB), few iterations by default. */
     @Test
     fun mutatedEmbeddedMasterList() {
         val bytes = FuzzSeeds.embeddedMasterList
-        // Relevé sur la graine intacte, que la campagne analyse en premier (une analyse coûte ~2 s).
+        // Taken from the intact seed, which the campaign parses first (one parse takes ~2 s).
         var original: Set<List<Byte>>? = null
         FuzzCampaign(
             "ML-embedded",
@@ -90,16 +90,16 @@ class MasterListFuzzTest {
                     null
                 }
             if (input.pristine) {
-                property(parsed != null) { "Master List embarquée refusée" }
+                property(parsed != null) { "embedded Master List rejected" }
                 original = certificateSet(checkNotNull(parsed).masterList)
             }
             parsed ?: return@run
             val reference = original ?: certificateSet(TrustStores.parseMasterList(bytes)).also { original = it }
-            property(certificateSet(parsed.masterList) == reference) { "Master List embarquée mutée acceptée avec d'autres certificats" }
+            property(certificateSet(parsed.masterList) == reference) { "mutated embedded Master List accepted with other certificates" }
             try {
                 MasterListParser.requireAnchoredSigner(parsed, TrustStoreLoader.EMBEDDED_MASTER_LIST_ANCHORS)
             } catch (e: InvalidMasterListException) {
-                property(!input.pristine) { "Master List embarquée non ancrée" }
+                property(!input.pristine) { "embedded Master List not anchored" }
             }
         }
     }
@@ -110,7 +110,7 @@ class MasterListFuzzTest {
         const val RESIGNED_ITERATIONS = 1_000
         const val EMBEDDED_ITERATIONS = 20
 
-        /** Une itération sur la liste embarquée coûte environ cent fois une itération ordinaire. */
+        /** One iteration on the embedded list costs about a hundred ordinary iterations. */
         const val EMBEDDED_SCALE = 100
         const val EMBEDDED_TIMEOUT_MILLIS = 20_000L
     }

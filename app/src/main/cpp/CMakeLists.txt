@@ -1,14 +1,14 @@
-# Sceau - bibliothèque native libsceau_jp2.so : décodage JPEG 2000 (portrait DG2, DG12).
-# OpenJPEG est compilé depuis les sources du sous-module openjpeg/ (aucun binaire précompilé,
-# exigence F-Droid) et lié statiquement. Voir docs/decisions.md (D3).
+# Sceau - native library libsceau_jp2.so: JPEG 2000 decoding (DG2 portrait, DG12).
+# OpenJPEG is compiled from the sources of the openjpeg/ submodule (no prebuilt binary,
+# an F-Droid requirement) and linked statically. See docs/decisions.md (D3).
 cmake_minimum_required(VERSION 3.22.1)
 project(sceau_jp2 C)
 
-# Symboles cachés par défaut, y compris ceux d'OpenJPEG : seule la fonction JNI est exportée.
+# Symbols hidden by default, including OpenJPEG's: only the JNI function is exported.
 set(CMAKE_C_VISIBILITY_PRESET hidden)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-# OpenJPEG : uniquement la bibliothèque openjp2, statique, sans codecs, outils ni tests.
+# OpenJPEG: only the openjp2 library, static, without codecs, tools or tests.
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 set(BUILD_STATIC_LIBS ON CACHE BOOL "" FORCE)
 set(BUILD_CODEC OFF CACHE BOOL "" FORCE)
@@ -19,14 +19,14 @@ set(BUILD_JAVA OFF CACHE BOOL "" FORCE)
 set(BUILD_VIEWER OFF CACHE BOOL "" FORCE)
 set(BUILD_LUTS_GENERATOR OFF CACHE BOOL "" FORCE)
 set(BUILD_UNIT_TESTS OFF CACHE BOOL "" FORCE)
-# Décodage mono-fil : les portraits sont petits, et on évite pthread et ses tampons partagés.
+# Single-threaded decoding: portraits are small, and this avoids pthread and its shared buffers.
 set(OPJ_USE_THREAD OFF CACHE BOOL "" FORCE)
 
-# Build reproductible (D25) : les chemins absolus du clone, du répertoire de build et du NDK,
-# présents dans les informations de débogage (__FILE__, DW_AT_comp_dir, en-têtes du sysroot),
-# sont remplacés par des noms fixes. Sans cela, le build-id calculé par l'éditeur de liens avant
-# le strip change avec l'emplacement du clone ou du SDK. Placé avant add_subdirectory pour
-# s'appliquer aussi à OpenJPEG.
+# Reproducible build (D25): the absolute paths of the clone, the build directory and the NDK,
+# present in the debug information (__FILE__, DW_AT_comp_dir, sysroot headers), are replaced
+# with fixed names. Without this, the build-id computed by the linker before stripping changes
+# with the location of the clone or the SDK. Placed before add_subdirectory so that it also
+# applies to OpenJPEG.
 set(SCEAU_NDK_DIR "${ANDROID_NDK}")
 if(NOT SCEAU_NDK_DIR)
     set(SCEAU_NDK_DIR "${CMAKE_ANDROID_NDK}")
@@ -40,26 +40,26 @@ endif()
 
 if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/openjpeg/CMakeLists.txt")
     message(FATAL_ERROR
-        "Sources d'OpenJPEG absentes : lancez « git submodule update --init » à la racine du dépôt.")
+        "OpenJPEG sources missing: run 'git submodule update --init' at the root of the repository.")
 endif()
 add_subdirectory(openjpeg EXCLUDE_FROM_ALL)
 
-# Allocateur plafonné : opj_malloc.c est retiré d'openjp2 et remplacé par jp2_alloc.c, lié dans
-# libsceau_jp2.so, qui impose le budget mémoire de chaque décodage (bombe de décompression).
+# Capped allocator: opj_malloc.c is removed from openjp2 and replaced by jp2_alloc.c, linked into
+# libsceau_jp2.so, which enforces the memory budget of each decoding (decompression bomb).
 get_target_property(SCEAU_OPJ_SOURCES openjp2 SOURCES)
 list(FILTER SCEAU_OPJ_SOURCES EXCLUDE REGEX "/opj_malloc\\.c$")
 set_property(TARGET openjp2 PROPERTY SOURCES ${SCEAU_OPJ_SOURCES})
 
-# OPJ_STATIC : l'API OpenJPEG est déclarée « hidden » au lieu d'être exportée par le .so.
+# OPJ_STATIC: the OpenJPEG API is declared "hidden" instead of being exported by the .so.
 target_compile_definitions(openjp2 PUBLIC OPJ_STATIC)
-# Code tiers : ses avertissements ne sont pas les nôtres et ne doivent pas polluer la build.
-# Ils restent actifs (-Wall -Wextra -Werror) pour le code de Sceau ci-dessous.
+# Third-party code: its warnings are not ours and must not clutter the build.
+# They remain enabled (-Wall -Wextra -Werror) for Sceau's code below.
 target_compile_options(openjp2 PRIVATE -w)
 
-# Durcissement, appliqué à OpenJPEG comme au code de Sceau.
+# Hardening, applied to OpenJPEG as well as to Sceau's code.
 set(SCEAU_HARDENING_FLAGS -fstack-protector-strong -ffunction-sections -fdata-sections)
 if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
-    # _FORTIFY_SOURCE n'a d'effet qu'avec l'optimisation (déjà défini à 2 par le NDK).
+    # _FORTIFY_SOURCE only takes effect with optimization (already defined to 2 by the NDK).
     list(APPEND SCEAU_HARDENING_FLAGS -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2)
 endif()
 target_compile_options(openjp2 PRIVATE ${SCEAU_HARDENING_FLAGS})
@@ -78,5 +78,5 @@ target_link_options(sceau_jp2 PRIVATE
     -Wl,-z,relro
     -Wl,-z,now
     -Wl,-z,noexecstack
-    # Pages de 16 Ko (Android 15+) : défaut du NDK r28, rendu explicite.
+    # 16 KB pages (Android 15+): the NDK r28 default, made explicit.
     -Wl,-z,max-page-size=16384)

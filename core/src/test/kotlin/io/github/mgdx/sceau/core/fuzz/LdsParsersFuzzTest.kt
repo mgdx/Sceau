@@ -22,14 +22,14 @@ import java.security.interfaces.RSAPublicKey
 import java.util.Random
 
 /**
- * Fuzzing des parseurs de fichiers de la puce (DG, EF.COM, EF.SOD, EF.CardAccess) et de
- * l'analyse des en-têtes de taille. Chaque propriété reprend le contrat de l'appelant réel :
- * ce qu'il rattrape est accepté, tout le reste est un échec.
+ * Fuzzing of the chip file parsers (DG, EF.COM, EF.SOD, EF.CardAccess) and of the size header
+ * analysis. Each property follows the real caller's contract: what it catches is accepted,
+ * everything else is a failure.
  */
 class LdsParsersFuzzTest {
     private val validDg1 = FuzzSeeds.dataGroup(1).first()
 
-    // --- DG1 : exception admise (DG1 est indispensable), mais jamais une Error ------------------
+    // --- DG1: exception allowed (DG1 is mandatory), but never an Error ------------------------
 
     @Test
     fun dg1() =
@@ -38,15 +38,15 @@ class LdsParsersFuzzTest {
                 try {
                     DataGroupParsers.parseDg1(input.bytes, FuzzSeeds.TODAY)
                 } catch (e: Exception) {
-                    // Contrat : les exceptions de JMRTD remontent telles quelles et ReadingSession
-                    // les convertit en code UNEXPECTED ; seule une Error (mémoire, pile) échappe.
+                    // Contract: JMRTD exceptions propagate as is and ReadingSession converts them
+                    // to the UNEXPECTED code; only an Error (memory, stack) gets through.
                     if (input.pristine) throw e
                     return@run
                 }
-            property(dg1.documentNumber.length <= input.bytes.size) { "numéro de document plus long que DG1" }
+            property(dg1.documentNumber.length <= input.bytes.size) { "document number longer than DG1" }
         }
 
-    // --- DG2, DG7, DG11, DG12 : jamais d'exception, DG illisible = absent -----------------------
+    // --- DG2, DG7, DG11, DG12: never an exception, unreadable DG = absent ---------------------
 
     @Test
     fun dg2() = optionalDataGroup(2, PassportService.EF_DG2, DG2_ITERATIONS)
@@ -65,8 +65,8 @@ class LdsParsersFuzzTest {
         fid: Short,
         iterations: Int,
     ) = campaign("DG$number", FuzzSeeds.dataGroup(number), fid, iterations).run { input ->
-        // Appel direct, sans le filet OutOfMemoryError de DataGroupParsers.orNull : une Error
-        // (allocation démesurée) doit être évitée à la racine, et fait échouer la campagne.
+        // Direct call, without the OutOfMemoryError safety net of DataGroupParsers.orNull: an Error
+        // (oversized allocation) must be avoided at the source, and fails the campaign.
         try {
             when (number) {
                 2 -> DataGroupParsers.parseDg2(input.bytes)
@@ -75,14 +75,14 @@ class LdsParsersFuzzTest {
                 else -> DataGroupParsers.parseDg12(input.bytes, FuzzSeeds.TODAY)
             }
         } catch (e: Exception) {
-            // DG illisible : absent, comme dans DataGroupParsers.document.
+            // Unreadable DG: absent, as in DataGroupParsers.document.
         }
         val document = DataGroupParsers.document(mapOf(1 to validDg1, number to input.bytes), FuzzSeeds.TODAY)
         val size = input.bytes.size
-        document.portrait?.let { property(it.bytes.size <= size) { "portrait plus grand que DG2" } }
-        document.signature?.let { property(it.bytes.size <= size) { "signature plus grande que DG7" } }
-        document.dg12?.frontImage?.let { property(it.bytes.size <= size) { "image recto plus grande que DG12" } }
-        document.dg12?.rearImage?.let { property(it.bytes.size <= size) { "image verso plus grande que DG12" } }
+        document.portrait?.let { property(it.bytes.size <= size) { "portrait larger than DG2" } }
+        document.signature?.let { property(it.bytes.size <= size) { "signature larger than DG7" } }
+        document.dg12?.frontImage?.let { property(it.bytes.size <= size) { "front image larger than DG12" } }
+        document.dg12?.rearImage?.let { property(it.bytes.size <= size) { "rear image larger than DG12" } }
         if (input.pristine && number != 2) {
             val parsed =
                 when (number) {
@@ -90,27 +90,27 @@ class LdsParsersFuzzTest {
                     11 -> document.dg11 != null
                     else -> document.dg12 != null
                 }
-            property(parsed) { "graine DG$number illisible" }
+            property(parsed) { "DG$number seed unreadable" }
         }
     }
 
-    // --- EF.COM et EF.SOD vus par DocumentReader : jamais d'exception ---------------------
+    // --- EF.COM and EF.SOD as seen by DocumentReader: never an exception -------------------
 
     @Test
     fun comDataGroups() =
         campaign("COM", FuzzSeeds.com, PassportService.EF_COM, DEFAULT_ITERATIONS).run { input ->
             val groups = DocumentReader.parseComDataGroups(input.bytes)
-            if (input.pristine) property(1 in groups) { "graine EF.COM illisible" }
+            if (input.pristine) property(1 in groups) { "EF.COM seed unreadable" }
         }
 
     @Test
     fun sodDataGroups() =
         campaign("SOD-groups", FuzzSeeds.documents.map { it.sod }, PassportService.EF_SOD, SOD_ITERATIONS).run { input ->
             val groups = DocumentReader.parseSodDataGroups(input.bytes)
-            if (input.pristine) property(1 in groups) { "graine EF.SOD illisible" }
+            if (input.pristine) property(1 in groups) { "EF.SOD seed unreadable" }
         }
 
-    // --- EF.CardAccess, comme SecureChannel.readPaceInfos puis tryPace ---------------------
+    // --- EF.CardAccess, like SecureChannel.readPaceInfos then tryPace ----------------------
 
     @Test
     fun cardAccess() =
@@ -123,19 +123,19 @@ class LdsParsersFuzzTest {
                     null
                 }
             val infos = file?.securityInfos.orEmpty().filterIsInstance<PACEInfo>()
-            if (input.pristine) property(infos.isNotEmpty()) { "graine EF.CardAccess sans PACEInfo" }
+            if (input.pristine) property(infos.isNotEmpty()) { "EF.CardAccess seed without PACEInfo" }
             for (info in infos) {
                 val parameterId = info.parameterId ?: continue
                 info.objectIdentifier
                 try {
                     PACEInfo.toParameterSpec(parameterId)
                 } catch (e: Exception) {
-                    // Paramètres propriétaires : ignorés par tryPace.
+                    // Proprietary parameters: ignored by tryPace.
                 }
             }
         }
 
-    // --- DG14 et DG15, comme ChipVerifier, puis la vérification AA avec une clé hostile -----
+    // --- DG14 and DG15, like ChipVerifier, then the AA check with a hostile key -------------
 
     @Test
     fun dg14() =
@@ -147,7 +147,7 @@ class LdsParsersFuzzTest {
                     if (input.pristine) throw e
                     return@run
                 }
-            // Accès que ChipVerifier.chipAuthentication fait hors de tout try.
+            // Accesses that ChipVerifier.chipAuthentication makes outside any try.
             val infos = dg14.securityInfos.orEmpty()
             val publicKeyInfo = infos.filterIsInstance<ChipAuthenticationPublicKeyInfo>().firstOrNull()
             if (publicKeyInfo != null) {
@@ -156,7 +156,7 @@ class LdsParsersFuzzTest {
                 val caInfo = caInfos.firstOrNull { keyId != null && it.keyId == keyId } ?: caInfos.firstOrNull()
                 caInfo?.objectIdentifier
             }
-            // ChipVerifier.aaSignatureAlgorithm : seul lookupMnemonicByOID est protégé, par GeneralSecurityException.
+            // ChipVerifier.aaSignatureAlgorithm: only lookupMnemonicByOID is guarded, by GeneralSecurityException.
             val oid = infos.filterIsInstance<ActiveAuthenticationInfo>().firstOrNull()?.signatureAlgorithmOID ?: return@run
             val mnemonic =
                 try {
@@ -185,14 +185,14 @@ class LdsParsersFuzzTest {
                 val (seed, keyPair) = originals[input.seedIndex]
                 val check = ActiveAuthentication.verifyResponse(key, seed.document.aaDigestAlgorithm, challenge, responses[input.seedIndex])
                 if (input.pristine) {
-                    property(check.status == CheckStatus.OK) { "graine DG15 : AA ${check.status}" }
+                    property(check.status == CheckStatus.OK) { "DG15 seed: AA ${check.status}" }
                 } else if (check.status == CheckStatus.OK) {
-                    property(sameKey(key, keyPair.public)) { "AA valide avec une autre clé que celle de DG15" }
+                    property(sameKey(key, keyPair.public)) { "AA valid with a key other than the DG15 key" }
                 }
             }
     }
 
-    /** Même clé mathématique (un encodage différent de la même clé reste la même clé). */
+    /** Same mathematical key (a different encoding of the same key is still the same key). */
     private fun sameKey(
         a: PublicKey,
         b: PublicKey,
@@ -214,7 +214,7 @@ class LdsParsersFuzzTest {
             }
         }
 
-    // --- Taille annoncée par l'en-tête d'un fichier -----------------------------------------
+    // --- Size announced by a file header -----------------------------------------------------
 
     @Test
     fun announcedSize() {
@@ -223,8 +223,8 @@ class LdsParsersFuzzTest {
                 .map { it.copyOf(minOf(it.size, HEADER_BYTES)) }
         campaign("FileSizeLimits", headers, HEADER_BYTES * 2, HEADER_ITERATIONS).run { input ->
             val size = FileSizeLimits.announcedSize(input.bytes)
-            if (input.pristine) property(size != null) { "en-tête de graine non analysé" }
-            size?.let { property(it > 0) { "taille annoncée négative ou nulle" } }
+            if (input.pristine) property(size != null) { "seed header not parsed" }
+            size?.let { property(it > 0) { "announced size negative or zero" } }
             val fid =
                 (input.bytes.firstOrNull()?.toInt() ?: 0) shl 8 or (
                     input.bytes
@@ -232,7 +232,7 @@ class LdsParsersFuzzTest {
                         ?.toInt()
                         ?.and(0xFF) ?: 0
                 )
-            property(FileSizeLimits.maxSize(fid.toShort()) > 0) { "plafond nul" }
+            property(FileSizeLimits.maxSize(fid.toShort()) > 0) { "zero cap" }
             FileSizeLimits.nameOf(fid.toShort())
         }
     }

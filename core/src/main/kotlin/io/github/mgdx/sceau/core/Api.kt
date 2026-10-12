@@ -6,27 +6,27 @@ import io.github.mgdx.sceau.core.trust.TrustStore
 import java.time.LocalDate
 
 /**
- * Canal APDU brut vers la puce. Implémenté dans `:app` au-dessus d'`IsoDep`,
- * et dans les tests par un transport simulé.
+ * Raw APDU channel to the chip. Implemented in `:app` on top of `IsoDep`,
+ * and in tests by a simulated transport.
  */
 interface CardTransport {
-    /** Taille maximale d'une APDU acceptée par le lien (IsoDep.maxTransceiveLength). */
+    /** Maximum size of an APDU accepted by the link (IsoDep.maxTransceiveLength). */
     val maxTransceiveLength: Int
 
-    /** Délai d'attente d'une réponse, en millisecondes. */
+    /** Response timeout, in milliseconds. */
     var timeoutMillis: Int
 
     /**
-     * Envoie une APDU de commande et renvoie la réponse complète (données + SW1 SW2).
-     * Lève [SceauException.ConnectionLost] si le document a été retiré.
+     * Sends a command APDU and returns the complete response (data + SW1 SW2).
+     * Throws [SceauException.ConnectionLost] if the document has been removed.
      */
     fun transceive(apdu: ByteArray): ByteArray
 
     /**
-     * Réinitialise la liaison avec le document resté sur le lecteur (coupure puis reprise de la
-     * session ISO 14443) : la puce repart de zéro, sans canal sécurisé ni application
-     * sélectionnée. Sert au repli de PACE sur BAC. Lève [SceauException.ConnectionLost] si le
-     * document n'est plus là ou si le transport a été fermé. Par défaut, ne fait rien.
+     * Resets the link with the document still on the reader (the ISO 14443 session is dropped
+     * and resumed): the chip starts from scratch, without a secure channel or a selected
+     * application. Used for the fallback from PACE to BAC. Throws [SceauException.ConnectionLost] if the
+     * document is no longer there or if the transport has been closed. Does nothing by default.
      */
     fun reconnect() {}
 
@@ -34,18 +34,18 @@ interface CardTransport {
 }
 
 /**
- * Clé d'accès à la puce. N'a pas de `toString` révélateur : aucune donnée
- * personnelle ne doit apparaître dans un log ou une exception.
+ * Chip access key. Has no revealing `toString`: no personal data
+ * must appear in a log or an exception.
  */
 sealed class AccessKey {
-    /** CAN : 6 chiffres imprimés sur le document. */
+    /** CAN: 6 digits printed on the document. */
     class Can(
         val value: String,
     ) : AccessKey() {
         override fun toString(): String = "AccessKey.Can(***)"
     }
 
-    /** Clé MRZ : numéro de document (sans les `<` de remplissage), date de naissance, date d'expiration. */
+    /** MRZ key: document number (without the `<` filler characters), date of birth, date of expiry. */
     class Mrz(
         val documentNumber: String,
         val dateOfBirth: LocalDate,
@@ -56,9 +56,9 @@ sealed class AccessKey {
 }
 
 /**
- * Étapes affichées sur l'écran de lecture, dans l'ordre. `progress(step)` est appelé
- * au **début** de chaque étape : toutes les étapes précédentes sont alors terminées.
- * Le retour de [readAndVerify] marque la fin de la dernière.
+ * Steps shown on the reading screen, in order. `progress(step)` is called
+ * at the **start** of each step: all previous steps are then complete.
+ * The return of [readAndVerify] marks the end of the last one.
  */
 enum class Step {
     CONNECT,
@@ -69,31 +69,31 @@ enum class Step {
 }
 
 /**
- * Erreurs qui interrompent la lecture. Les messages ne contiennent jamais de donnée
- * personnelle ; [code] est un identifiant technique stable, affichable à l'utilisateur.
+ * Errors that interrupt the reading. Messages never contain personal
+ * data; [code] is a stable technical identifier, displayable to the user.
  */
 sealed class SceauException(
     val code: String,
     cause: Throwable? = null,
 ) : Exception(code, cause) {
-    /** Pas d'application ICAO (AID A0 00 00 02 47 10 01) sur la puce. */
+    /** No ICAO application (AID A0 00 00 02 47 10 01) on the chip. */
     class NotIcaoDocument : SceauException("NOT_ICAO")
 
-    /** Échec de PACE ou BAC : CAN ou MRZ incorrects. */
+    /** PACE or BAC failure: incorrect CAN or MRZ. */
     class AccessDenied(
         cause: Throwable? = null,
     ) : SceauException("ACCESS_DENIED", cause)
 
-    /** Un CAN a été fourni mais EF.CardAccess n'annonce pas PACE. */
+    /** A CAN was supplied but EF.CardAccess does not announce PACE. */
     class CanWithoutPace : SceauException("CAN_WITHOUT_PACE")
 
     /**
-     * Décision D36 : canal sécurisé établi (PACE ou BAC réussi), mais la puce refuse l'accès
-     * (SW 6982, *security status not satisfied*) à l'application ICAO ou à un fichier
-     * indispensable (EF.SOD, DG1). Elle les réserve aux terminaux d'inspection étatiques
-     * (Terminal Authentication), comme les cartes d'identité allemandes délivrées avant le
-     * 2021-08-02 : un nouvel essai n'y changera rien. [detail] est un diagnostic sans donnée
-     * personnelle (étape puis élément refusé : `READ_DATA-SOD`) ; [code] vaut alors
+     * Decision D36: secure channel established (PACE or BAC succeeded), but the chip denies access
+     * (SW 6982, *security status not satisfied*) to the ICAO application or to an essential
+     * file (EF.SOD, DG1). It reserves them for government inspection terminals
+     * (Terminal Authentication), like German identity cards issued before
+     * 2021-08-02: retrying will not change anything. [detail] is a diagnostic without personal
+     * data (step then denied element: `READ_DATA-SOD`); [code] is then
      * `ACCESS_RESTRICTED-<detail>`.
      */
     class AccessRestricted(
@@ -101,9 +101,9 @@ sealed class SceauException(
     ) : SceauException("ACCESS_RESTRICTED-$detail")
 
     /**
-     * Le document a été retiré (TagLostException ou équivalent). [detail], facultatif, est un
-     * suffixe de diagnostic sans donnée personnelle (étape, INS et longueur de l'APDU) :
-     * [code] vaut alors `CONNECTION_LOST-<detail>`.
+     * The document has been removed (TagLostException or equivalent). [detail], optional, is a
+     * diagnostic suffix without personal data (step, INS and APDU length):
+     * [code] is then `CONNECTION_LOST-<detail>`.
      */
     class ConnectionLost(
         cause: Throwable? = null,
@@ -111,18 +111,18 @@ sealed class SceauException(
     ) : SceauException(withDetail("CONNECTION_LOST", detail), cause)
 
     /**
-     * Audit V29 : la puce ne livre plus le fichier en cours de lecture (réponses READ BINARY
-     * vides répétées, ou plus d'échanges que la taille maximale du fichier n'en justifie).
-     * [detail] est un diagnostic sans donnée personnelle (étape puis fichier : `READ_DATA-DG2`) ;
-     * [code] vaut alors `READ_STALLED-<detail>`.
+     * Audit V29: the chip no longer delivers the file being read (repeated empty READ BINARY
+     * responses, or more exchanges than the maximum file size justifies).
+     * [detail] is a diagnostic without personal data (step then file: `READ_DATA-DG2`);
+     * [code] is then `READ_STALLED-<detail>`.
      */
     class ReadStalled(
         val detail: String,
     ) : SceauException("READ_STALLED-$detail")
 
     /**
-     * Délai dépassé. [code] vaut `TIMEOUT-<detail>` si [detail] est donné (voir [ConnectionLost]) ;
-     * le délai global de lecture (audit V29) donne `TIMEOUT-<ÉTAPE>-GLOBAL`.
+     * Timeout exceeded. [code] is `TIMEOUT-<detail>` if [detail] is given (see [ConnectionLost]);
+     * the global reading deadline (audit V29) gives `TIMEOUT-<STEP>-GLOBAL`.
      */
     class Timeout(
         cause: Throwable? = null,
@@ -130,8 +130,8 @@ sealed class SceauException(
     ) : SceauException(withDetail("TIMEOUT", detail), cause)
 
     /**
-     * Erreur inattendue. [code] = "UNEXPECTED-" + [detail], court identifiant technique (étape,
-     * classe d'exception, SW, ou code d'E/S du transport avec INS et longueur de l'APDU).
+     * Unexpected error. [code] = "UNEXPECTED-" + [detail], short technical identifier (step,
+     * exception class, SW, or transport I/O code with INS and APDU length).
      */
     class Unexpected(
         val detail: String,
@@ -145,9 +145,9 @@ private fun withDetail(
 ): String = if (detail == null) code else "$code-$detail"
 
 /**
- * Point d'entrée unique de `:core` (SPEC §6). Bloquant côté E/S : s'exécute sur
- * `Dispatchers.IO`. Lève [SceauException] pour les erreurs qui interrompent la lecture ;
- * tout échec de vérification est au contraire consigné dans le rapport.
+ * Single entry point of `:core` (SPEC §6). Blocking on I/O: runs on
+ * `Dispatchers.IO`. Throws [SceauException] for errors that interrupt the reading;
+ * any verification failure is instead recorded in the report.
  */
 suspend fun readAndVerify(
     transport: CardTransport,

@@ -10,8 +10,8 @@ import io.github.mgdx.sceau.R
 import kotlin.math.roundToInt
 
 /**
- * Texte qui déborde : [id] (clé de chaîne, ou texte brut si aucune chaîne ne correspond) sert
- * de clé à la liste des anomalies connues (`langue|id`).
+ * Overflowing text: [id] (string key, or raw text if no string matches) is the key in the list
+ * of known anomalies (`language|id`).
  */
 internal data class Overflow(
     val language: String,
@@ -24,9 +24,9 @@ internal data class Overflow(
 }
 
 /**
- * Anomalies d'un nœud de texte, ou liste vide : texte qui dépasse sa boîte (en largeur ou en
- * hauteur), dernière ligne ellipsée, ou boîte qui sort d'un conteneur ou de l'écran (fenêtre
- * ou popup).
+ * Anomalies of a text node, or an empty list: text that exceeds its box (in width or height),
+ * ellipsized last line, or a box that sticks out of a container or of the screen (window or
+ * popup).
  */
 internal fun inspectTextNode(
     node: SemanticsNode,
@@ -43,32 +43,32 @@ internal fun inspectTextNode(
     val problems = mutableListOf<String>()
 
     fun dp(px: Float): Int = (px / density).roundToInt()
-    // Largeur : ligne la plus large contre la boîte du texte. `hasVisualOverflow` ne sert pas ici :
-    // le résultat fourni par la sémantique est remis en page sur toute la largeur disponible
-    // (`multiParagraph.width` = largeur maximale des contraintes), si bien que `didOverflowWidth`
-    // est vrai pour tout texte plus étroit que son conteneur. La hauteur, elle, est fiable.
+    // Width: widest line against the text box. `hasVisualOverflow` is of no use here: the result
+    // provided by the semantics is laid out again over the whole available width
+    // (`multiParagraph.width` = maximum constraint width), so `didOverflowWidth` is true for any
+    // text narrower than its container. Height, on the other hand, is reliable.
     val widest = (0 until layout.lineCount).maxOfOrNull { layout.getLineRight(it) - layout.getLineLeft(it) } ?: 0f
-    // Tolérance d'1 dp : `Layout.getLineLeft` et `getLineRight` arrondissent au pixel entier
-    // (plancher et plafond) la position d'une ligne centrée, ce qui l'élargit jusqu'à 2 px.
+    // 1 dp tolerance: `Layout.getLineLeft` and `getLineRight` round the position of a centered
+    // line to whole pixels (floor and ceiling), which widens it by up to 2 px.
     if (widest > layout.size.width + density || layout.didOverflowHeight) {
         problems +=
-            "dépasse sa boîte : texte ${dp(widest)}×${dp(layout.multiParagraph.height)} dp, " +
-            "boîte ${dp(layout.size.width.toFloat())}×${dp(layout.size.height.toFloat())} dp"
+            "exceeds its box: text ${dp(widest)}×${dp(layout.multiParagraph.height)} dp, " +
+            "box ${dp(layout.size.width.toFloat())}×${dp(layout.size.height.toFloat())} dp"
     }
     if (layout.lineCount > 0 && layout.isLineEllipsized(layout.lineCount - 1)) {
-        problems += "ellipsé (${layout.lineCount} ligne(s), boîte ${dp(layout.size.width.toFloat())} dp)"
+        problems += "ellipsized (${layout.lineCount} line(s), box ${dp(layout.size.width.toFloat())} dp)"
     }
-    brokenWord(layout)?.let { problems += "mot coupé en fin de ligne, faute de largeur ($it), boîte ${dp(layout.size.width.toFloat())} dp" }
+    brokenWord(layout)?.let { problems += "word broken at end of line, for lack of width ($it), box ${dp(layout.size.width.toFloat())} dp" }
     containerOverflow(node, density)?.let { problems += it }
     return problems.map { text to it }
 }
 
 /**
- * Mot coupé entre deux lignes (« …ber|prüfung… ») : sans césure, Android ne coupe un mot que
- * s'il ne tient pas seul sur une ligne, c'est-à-dire quand le texte est trop large pour son
- * conteneur (onglet, bouton) qui, lui, s'agrandit en hauteur sans rien rogner. Renvoie les
- * deux morceaux, ou null. Les écritures sans espaces entre les mots (chinois, japonais,
- * coréen, thaï…), qui passent à la ligne entre deux caractères, ne sont pas concernées.
+ * Word broken across two lines ("…ber|prüfung…"): without hyphenation, Android only breaks a
+ * word if it does not fit on a line by itself, that is when the text is too wide for its
+ * container (tab, button), which grows in height without clipping anything. Returns the two
+ * pieces, or null. Scripts without spaces between words (Chinese, Japanese, Korean, Thai…),
+ * which wrap between any two characters, are not affected.
  */
 private fun brokenWord(layout: TextLayoutResult): String? {
     val text = layout.layoutInput.text.text
@@ -79,10 +79,10 @@ private fun brokenWord(layout: TextLayoutResult): String? {
         val after = text.codePointAt(end)
         if (Character.isLetterOrDigit(before) && Character.isLetterOrDigit(after) && breaksOnSpaces(before) && breaksOnSpaces(after)) {
             val start = layout.getLineStart(line)
-            return "« ${text.substring(
+            return "\"${text.substring(
                 maxOf(start, end - WORD_CONTEXT),
                 end,
-            )}|${text.substring(end, minOf(text.length, end + WORD_CONTEXT))} »"
+            )}|${text.substring(end, minOf(text.length, end + WORD_CONTEXT))}\""
         }
     }
     return null
@@ -105,12 +105,12 @@ private val NO_SPACE_SCRIPTS =
 private fun breaksOnSpaces(codePoint: Int): Boolean = Character.UnicodeScript.of(codePoint) !in NO_SPACE_SCRIPTS
 
 /**
- * Boîte du texte qui sort de celle d'un ancêtre : texte coupé par un conteneur de taille fixe
- * (onglet, barre d'application) ou sorti de l'écran (la racine est le dernier ancêtre).
- * Positions non rognées (`positionInRoot` et `size`). Exceptions voulues par Material 3 :
- * - un conteneur qui défile verticalement (ou horizontalement) arrête le contrôle sur cet
- *   axe, lui compris : son contenu le dépasse par construction ;
- * - un champ de saisie n'est pas comparé à son étiquette, posée à cheval sur le contour.
+ * Text box sticking out of an ancestor's box: text clipped by a fixed-size container (tab,
+ * app bar) or pushed off the screen (the root is the last ancestor). Unclipped positions
+ * (`positionInRoot` and `size`). Exceptions intended by Material 3:
+ * - a vertically (or horizontally) scrolling container stops the check on that axis,
+ *   itself included: its content exceeds it by design;
+ * - a text field is not compared with its label, which straddles the outline.
  */
 private fun containerOverflow(
     node: SemanticsNode,
@@ -133,13 +133,13 @@ private fun containerOverflow(
         val aTop = ancestor.positionInRoot.y
         val aRight = aLeft + ancestor.size.width
         val aBottom = aTop + ancestor.size.height
-        val where = if (ancestor.parent == null) "l'écran" else "son conteneur"
+        val where = if (ancestor.parent == null) "the screen" else "its container"
         val isTextField = config.contains(SemanticsProperties.EditableText)
         if (!isTextField && checkHorizontal && (left < aLeft - density || right > aRight + density)) {
-            return "sort de $where : texte de ${dp(left)} à ${dp(right)} dp, conteneur de ${dp(aLeft)} à ${dp(aRight)} dp"
+            return "sticks out of $where: text ${dp(left)} to ${dp(right)} dp, container ${dp(aLeft)} to ${dp(aRight)} dp"
         }
         if (!isTextField && checkVertical && (top < aTop - density || bottom > aBottom + density)) {
-            return "sort de $where : texte de ${dp(top)} à ${dp(bottom)} dp en hauteur, conteneur de ${dp(aTop)} à ${dp(aBottom)} dp"
+            return "sticks out of $where: text ${dp(top)} to ${dp(bottom)} dp vertically, container ${dp(aTop)} to ${dp(aBottom)} dp"
         }
         ancestor = ancestor.parent
     }
@@ -147,9 +147,9 @@ private fun containerOverflow(
 }
 
 /**
- * Retrouve la clé d'une chaîne affichée dans [resources] (déjà dans la langue testée) :
- * égalité exacte, puis motif où chaque paramètre de format (`%1$s`, `%d`…) accepte n'importe
- * quel texte. Pluriels compris.
+ * Finds the key of a displayed string in [resources] (already in the tested language): exact
+ * match, then a pattern where each format argument (`%1$s`, `%d`…) accepts any text. Plurals
+ * included.
  */
 internal class StringKeyResolver(
     resources: Resources,
@@ -182,8 +182,8 @@ internal class StringKeyResolver(
     }
 
     /**
-     * Clé de [text], ou null si aucune chaîne de l'application ne correspond (donnée affichée).
-     * Si plusieurs chaînes ont ce texte, celle qui commence par [preferredPrefix] (écran affiché).
+     * Key of [text], or null if no app string matches (displayed data). If several strings have
+     * this text, the one starting with [preferredPrefix] (displayed screen).
      */
     fun keyOf(
         text: String,

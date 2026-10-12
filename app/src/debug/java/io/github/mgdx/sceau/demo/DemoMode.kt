@@ -3,16 +3,16 @@ package io.github.mgdx.sceau.demo
 import io.github.mgdx.sceau.testchip.SimulatedDocuments
 
 /**
- * Mode démo de l'APK de debug : CNIe simulée par le module `:testchip`, lue dans la vraie
- * interface sans carte. La version `release` de cet objet est vide et `:testchip` n'y est pas
- * embarqué (`debugImplementation`).
+ * Demo mode of the debug APK: CNIe simulated by the `:testchip` module, read in the real
+ * UI without a card. The `release` version of this object is empty and `:testchip` is not
+ * bundled in it (`debugImplementation`).
  */
 object DemoMode {
     val isAvailable: Boolean = true
 
     /**
-     * Nouvelle CNIe simulée (identité factice SPECIMEN, PKI de test générée à la volée).
-     * Coûteux (génération de clés, signature) : à appeler hors du thread principal.
+     * New simulated CNIe (SPECIMEN dummy identity, test PKI generated on the fly).
+     * Expensive (key generation, signing): to be called off the main thread.
      */
     fun newSimulatedCnie(): DemoCard? {
         val card = SimulatedDocuments.frenchIdCard()

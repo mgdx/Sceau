@@ -6,18 +6,18 @@ import io.github.mgdx.sceau.core.report.CheckId
 import io.github.mgdx.sceau.core.report.CheckStatus
 import io.github.mgdx.sceau.core.report.VerificationReport
 
-/** Présentation de l'identité sur l'écran Résultat. */
+/** Presentation of the identity on the "Result" screen. */
 internal object IdentityPresentation {
     enum class Mode {
-        /** Photo, identité, signature et données complémentaires. */
+        /** Photo, identity, signature and additional data. */
         FULL,
 
-        /** Carte eID-UB authentifiée, sans donnée d'identité dans sa puce ([isIdentitylessEidUb]). */
+        /** Authenticated eID-UB card, with no identity data in its chip ([isIdentitylessEidUb]). */
         IDENTITYLESS_EID_UB,
 
         /**
-         * Aucune donnée lue (lecture interrompue après une Chip Authentication ratée, audit V24) :
-         * ni photo, ni identité, ni donnée complémentaire, seulement une phrase qui le dit.
+         * No data read (reading interrupted after a failed Chip Authentication, audit V24):
+         * no photo, no identity, no additional data, only a sentence saying so.
          */
         NOT_READ,
     }
@@ -30,17 +30,16 @@ internal object IdentityPresentation {
         }
 
     /**
-     * Carte eID allemande pour citoyens de l'Union (eID-UB, BSI TR-03127, décision D36) dont DG1
-     * est authentifié : signature du SOD valide, chaîne de certificats du SOD valide jusqu'à un
-     * CSCA du magasin de confiance, empreinte de DG1 conforme, code de document « UB » et
-     * État « D ». Sa puce ne porte aucune donnée d'identité (MRZ de remplacement faite
-     * de « < », DG2 réduit au logo eID) : l'écran le dit, au lieu d'afficher des champs vides
-     * et le logo à la place de la photo du titulaire.
+     * German eID card for Union citizens (eID-UB, BSI TR-03127, decision D36) whose DG1 is
+     * authenticated: valid SOD signature, SOD certificate chain valid up to a CSCA of the trust
+     * store, matching DG1 hash, document code "UB" and state "D". Its chip carries no identity
+     * data (placeholder MRZ made of "<", DG2 reduced to the eID logo): the screen says so,
+     * instead of displaying empty fields and the logo in place of the holder's photo.
      *
-     * Un DG1 « UB » non authentifié reste affiché comme les autres : rien ne garantit alors ce
-     * qu'il prétend être. La chaîne est exigée en plus de la signature (audit V21) : un SOD
-     * signé par un DS que la puce fournit elle-même ne prouve rien, et une puce forgée pourrait
-     * sinon faire masquer photo et identité derrière un texte rassurant.
+     * An unauthenticated "UB" DG1 is still displayed like the others: nothing then guarantees
+     * what it claims to be. The chain is required in addition to the signature (audit V21): a SOD
+     * signed by a DS that the chip supplies itself proves nothing, and a forged chip could
+     * otherwise get the photo and identity hidden behind a reassuring text.
      */
     fun isIdentitylessEidUb(report: VerificationReport): Boolean {
         val checks = report.checks.associateBy { it.id }

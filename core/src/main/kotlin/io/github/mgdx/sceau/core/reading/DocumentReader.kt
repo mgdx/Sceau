@@ -6,61 +6,61 @@ import org.jmrtd.lds.LDSFileUtil
 import org.jmrtd.lds.SODFile
 import org.jmrtd.lds.icao.COMFile
 
-/** Objets lus avant la Chip Authentication : EF.SOD, DG annoncés et DG14. */
+/** Objects read before Chip Authentication: EF.SOD, announced DGs and DG14. */
 internal class SecurityObjects(
-    /** EF.SOD, tag 0x77 compris. */
+    /** EF.SOD, tag 0x77 included. */
     val sod: ByteArray,
-    /** DG annoncés dans EF.COM ou dans le SOD : décide seulement quoi demander. */
+    /** DGs announced in EF.COM or in the SOD: only decides what to request. */
     val announced: Set<Int>,
     /**
-     * DG dont le SOD porte une empreinte (vide si le SOD est illisible). Seule cette liste fait
-     * foi pour décider qu'un DG manque : EF.COM n'est pas signé.
+     * DGs for which the SOD carries a hash (empty if the SOD is unreadable). Only this list is
+     * authoritative to decide that a DG is missing: EF.COM is not signed.
      */
     val signedDataGroups: Set<Int>,
-    /** DG14 s'il est annoncé et fourni, null sinon. */
+    /** DG14 if announced and provided, null otherwise. */
     val dg14: ByteArray?,
 )
 
-/** Octets bruts lus dans l'applet ICAO. */
+/** Raw bytes read from the ICAO applet. */
 internal class LdsContent(
-    /** EF.SOD, tag 0x77 compris. */
+    /** EF.SOD, tag 0x77 included. */
     val sod: ByteArray,
-    /** Octets bruts de chaque DG lu, clé = numéro de DG, dans l'ordre de lecture. */
+    /** Raw bytes of each DG read, key = DG number, in reading order. */
     val dataGroups: Map<Int, ByteArray>,
     /**
-     * DG dont le SOD porte une empreinte (vide si le SOD est illisible). Seule cette liste fait
-     * foi pour décider qu'un DG manque : EF.COM n'est pas signé.
+     * DGs for which the SOD carries a hash (empty if the SOD is unreadable). Only this list is
+     * authoritative to decide that a DG is missing: EF.COM is not signed.
      */
     val signedDataGroups: Set<Int>,
 )
 
 /**
- * Étape READ_DATA (SPEC §6.1, étapes 3 et 4, ordre de la décision D20), en deux temps séparés
- * par la Chip Authentication :
- * 1. [readSecurityObjects] : EF.COM, EF.SOD, puis DG14 s'il est annoncé dans EF.COM ou dans le
- *    SOD ;
- * 2. [readDataGroups] : DG1, DG2, puis DG15, DG11, DG12 et DG7 s'ils sont annoncés, sous la
- *    messagerie sécurisée courante, c'est-à-dire celle de la Chip Authentication si elle a
- *    réussi.
+ * READ_DATA step (SPEC §6.1, steps 3 and 4, order of decision D20), in two phases separated
+ * by Chip Authentication:
+ * 1. [readSecurityObjects]: EF.COM, EF.SOD, then DG14 if announced in EF.COM or in the
+ *    SOD;
+ * 2. [readDataGroups]: DG1, DG2, then DG15, DG11, DG12 and DG7 if announced, under the
+ *    current secure messaging, that is, the Chip Authentication one if it
+ *    succeeded.
  *
- * EF.COM n'est pas authentifié : il ne sert qu'à décider quoi demander. Un DG que la puce ne
- * fournit pas n'interrompt pas la lecture, mais s'il figure dans le SOD, la vérification le
- * signale ([LdsContent.signedDataGroups]) : empreintes en échec, et CA ou AA en échec pour
- * DG14 ou DG15 (audit V1 : un clone ne doit pas pouvoir retenir un DG signé).
+ * EF.COM is not authenticated: it only serves to decide what to request. A DG that the chip does not
+ * provide does not interrupt the reading, but if it is listed in the SOD, the verification
+ * reports it ([LdsContent.signedDataGroups]): hashes failed, and CA or AA failed for
+ * DG14 or DG15 (audit V1: a clone must not be able to withhold a signed DG).
  *
- * EF.SOD et DG1 sont indispensables : la puce qui en refuse l'accès par le SW 6982 les réserve
- * aux terminaux étatiques ([io.github.mgdx.sceau.core.SceauException.AccessRestricted], D36).
- * EF.COM, DG2 et les DG facultatifs refusés sont traités comme absents.
+ * EF.SOD and DG1 are essential: a chip that denies access to them with SW 6982 reserves them
+ * for government terminals ([io.github.mgdx.sceau.core.SceauException.AccessRestricted], D36).
+ * EF.COM, DG2 and denied optional DGs are treated as absent.
  *
- * DG3 et DG4 (empreintes, iris) ne sont jamais demandés à la puce : seuls les numéros de
- * [SECURITY_DATA_GROUP] et [OPTIONAL_DATA_GROUPS] peuvent l'être, en plus de DG1 et DG2.
+ * DG3 and DG4 (fingerprints, iris) are never requested from the chip: only the numbers in
+ * [SECURITY_DATA_GROUP] and [OPTIONAL_DATA_GROUPS] can be, in addition to DG1 and DG2.
  */
 internal class DocumentReader(
     private val chip: Chip,
 ) {
-    /** Premier temps : EF.COM, EF.SOD, DG14. */
+    /** First phase: EF.COM, EF.SOD, DG14. */
     fun readSecurityObjects(): SecurityObjects {
-        // EF.COM est facultatif : s'il manque, on se fie au SOD.
+        // EF.COM is optional: if it is missing, the SOD is relied upon.
         val com = chip.readOptionalFile(PassportService.EF_COM)?.let(::parseComDataGroups).orEmpty()
         val sod = readRequired(PassportService.EF_SOD, "SOD")
         val signed = parseSodDataGroups(sod)
@@ -70,17 +70,17 @@ internal class DocumentReader(
     }
 
     /**
-     * Second temps : DG1, DG2, DG15, DG11, DG12, DG7. Chaque DG est rangé dans [into] dès sa lecture,
-     * pour que l'appelant puisse l'effacer si la suite échoue. [into] contient déjà DG14 s'il a
-     * été lu.
+     * Second phase: DG1, DG2, DG15, DG11, DG12, DG7. Each DG is stored in [into] as soon as it is read,
+     * so that the caller can wipe it if what follows fails. [into] already contains DG14 if it has
+     * been read.
      */
     fun readDataGroups(
         objects: SecurityObjects,
         into: MutableMap<Int, ByteArray>,
     ): LdsContent {
         into[1] = readRequired(Chip.fidOf(1), "DG1")
-        // DG2 est obligatoire selon ICAO 9303 : toujours demandé. Une puce qui ne le fournit pas
-        // n'interrompt pas la lecture ; s'il est dans le SOD, les empreintes seront en échec.
+        // DG2 is mandatory under ICAO 9303: always requested. A chip that does not provide it
+        // does not interrupt the reading; if it is in the SOD, the hashes will fail.
         chip.readOptionalFile(Chip.fidOf(2))?.let { into[2] = it }
         for (number in OPTIONAL_DATA_GROUPS) {
             if (number !in objects.announced) continue
@@ -97,8 +97,8 @@ internal class DocumentReader(
             chip.readFile(fid)
         } catch (e: Exception) {
             chip.rethrowTransportFailure()
-            // D36 : fichier indispensable réservé aux terminaux étatiques (Terminal
-            // Authentication), alors que le canal sécurisé est établi.
+            // D36: essential file reserved for government terminals (Terminal
+            // Authentication), even though the secure channel is established.
             if (e.statusWord() == SW_SECURITY_STATUS_NOT_SATISFIED) throw SceauException.AccessRestricted(tag)
             throw StepFailure(tag, e)
         }
@@ -107,19 +107,19 @@ internal class DocumentReader(
         /** SW 6982 : *security status not satisfied* (ISO 7816-4). */
         const val SW_SECURITY_STATUS_NOT_SATISFIED = 0x6982
 
-        /** DG14, lu avant la Chip Authentication qu'il annonce. */
+        /** DG14, read before the Chip Authentication it announces. */
         const val SECURITY_DATA_GROUP = 14
 
         /**
-         * DG lus après la Chip Authentication s'ils sont annoncés, dans cet ordre (DG7 : D37).
-         * Ne jamais y ajouter 3 ni 4.
+         * DGs read after Chip Authentication if announced, in this order (DG7: D37).
+         * Never add 3 or 4 here.
          */
         val OPTIONAL_DATA_GROUPS = listOf(15, 11, 12, 7)
 
         /**
-         * DG annoncés par EF.COM ; vide s'il est illisible. Les longueurs sont contrôlées avant
-         * JMRTD ([BerStructure]) : une liste de tags (5C) annonçant 2 Go dans un EF.COM de
-         * quelques octets lui ferait allouer ce tableau (fuzzing, `FuzzRegressionTest`).
+         * DGs announced by EF.COM; empty if it is unreadable. Lengths are checked before
+         * JMRTD ([BerStructure]): a tag list (5C) announcing 2 GB in an EF.COM of
+         * a few bytes would make it allocate that array (fuzzing, `FuzzRegressionTest`).
          */
         fun parseComDataGroups(bytes: ByteArray): Set<Int> =
             if (!BerStructure.lengthsFit(bytes)) {

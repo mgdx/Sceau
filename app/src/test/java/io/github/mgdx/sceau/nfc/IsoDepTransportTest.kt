@@ -9,7 +9,7 @@ import org.junit.Test
 import java.io.IOException
 
 class IsoDepTransportTest {
-    /** General Authenticate PACE de 60 octets : CLA 10, INS 86. */
+    /** 60-byte PACE General Authenticate: CLA 10, INS 86. */
     private val paceCommand =
         ByteArray(58).also {
             it[0] = 0x10
@@ -76,12 +76,12 @@ class IsoDepTransportTest {
         assertSame(cause, error.cause)
     }
 
-    /** GENERAL AUTHENTICATE PACE étape 1 : 10 86 00 00 02 7C 00 00. */
+    /** PACE GENERAL AUTHENTICATE step 1: 10 86 00 00 02 7C 00 00. */
     private val paceStep1 = byteArrayOf(0x10, 0x86.toByte(), 0x00, 0x00, 0x02, 0x7C, 0x00, 0x00)
 
     @Test
     fun `tag lost after most of the timeout is a Timeout with diagnostic`() {
-        // IsoDep réinitialise la liaison après un délai dépassé puis lève TagLostException.
+        // IsoDep resets the link after a timeout, then throws TagLostException.
         val error = classify("Tag was lost.", tagLost = true, connected = false, apdu = paceStep1, elapsedMillis = 10_004)
         assertTrue(error is SceauException.Timeout)
         assertEquals("TIMEOUT-INS86-L10", error.code)
@@ -110,7 +110,7 @@ class IsoDepTransportTest {
     @Test
     fun `effective timeout is the value read back from IsoDep, or the requested one if unavailable`() {
         assertEquals(60_000, IsoDepTransport.effectiveTimeout(60_000, 60_000))
-        // Délai borné par le système : c'est lui qui classe un échec en délai dépassé.
+        // Timeout capped by the system: that value decides whether a failure counts as a timeout.
         assertEquals(30_000, IsoDepTransport.effectiveTimeout(60_000, 30_000))
         assertEquals(60_000, IsoDepTransport.effectiveTimeout(60_000, 0))
         assertTrue(classify("Transceive failed", tagLost = true, elapsedMillis = 27_000, timeoutMillis = 30_000) is SceauException.Timeout)

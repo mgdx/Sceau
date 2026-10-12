@@ -6,13 +6,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
- * Délai global d'une lecture, hors authentification (audit V29).
+ * Global deadline of a reading, excluding authentication (audit V29).
  *
- * Le budget [budgetMillis] ne s'écoule que pendant que le délai est en cours ([resume]) ; il est
- * suspendu pendant PACE et BAC ([pause]), qui ont leur propre délai par réponse (60 s, D12). Les
- * E/S de la lecture sont bloquantes : à l'échéance, un minuteur lancé dans [scope] appelle
- * [onExpiry] (qui ferme le transport pour débloquer l'APDU en cours) et [expired] devient vrai ;
- * c'est à l'appelant de transformer la fin de la lecture en erreur.
+ * The [budgetMillis] budget only elapses while the deadline is running ([resume]); it is
+ * suspended during PACE and BAC ([pause]), which have their own per-response timeout (60 s, D12). The
+ * reading's I/O is blocking: when the deadline expires, a timer launched in [scope] calls
+ * [onExpiry] (which closes the transport to unblock the pending APDU) and [expired] becomes true;
+ * it is up to the caller to turn the end of the reading into an error.
  */
 internal class ReadDeadline(
     private val scope: CoroutineScope,
@@ -27,7 +27,7 @@ internal class ReadDeadline(
     var expired = false
         private set
 
-    /** Fait (re)partir le décompte du budget restant ; sans effet s'il est déjà en cours. */
+    /** (Re)starts the countdown of the remaining budget; no effect if it is already running. */
     fun resume() {
         if (timer != null || expired) return
         startedAt = System.nanoTime()
@@ -40,7 +40,7 @@ internal class ReadDeadline(
             }
     }
 
-    /** Suspend le décompte (authentification) ; le budget déjà consommé est retenu. */
+    /** Suspends the countdown (authentication); the budget already consumed is kept. */
     fun pause() {
         val running = timer ?: return
         running.cancel()
@@ -48,7 +48,7 @@ internal class ReadDeadline(
         remainingNanos -= System.nanoTime() - startedAt
     }
 
-    /** Arrête le minuteur en fin de lecture. */
+    /** Stops the timer at the end of the reading. */
     fun stop() {
         timer?.cancel()
         timer = null

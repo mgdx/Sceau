@@ -12,7 +12,7 @@
     <string name="trust_retry">Retry</string>
     <string name="trust_empty">The trust store contains no certificates.</string>
 
-    <!-- Liste -->
+    <!-- List -->
     <string name="trust_country_unknown">Country not specified</string>
     <plurals name="trust_country_count">
         <item quantity="one">%1$d certificate</item>
@@ -30,7 +30,7 @@
     <string name="trust_source_imported_unanchored">Imported list, unverified origin</string>
     <string name="trust_link_certificate">Link certificate</string>
 
-    <!-- Recherche -->
+    <!-- Search -->
     <string name="trust_search_hint">Search for a country</string>
     <string name="trust_search_clear">Clear search</string>
     <string name="trust_search_no_result">No country matches your search.</string>
@@ -68,7 +68,7 @@
     </plurals>
     <string name="trust_import_limit_size">Import rejected: imported Master Lists would exceed %1$d MB in total. Delete the imported certificates to add another one.</string>
 
-    <!-- Import d'un certificat seul (D33) -->
+    <!-- Import of a single certificate (D33) -->
     <string name="trust_import_certificate_confirm_title">Import this certificate?</string>
     <string name="trust_import_certificate_warning">Unlike a Master List, no State’s signature vouches for this file: you are the one who decides to trust it. An imported certificate can make any document from its country appear authentic. Before importing it, compare its fingerprint with the one published by the issuing State.</string>
     <string name="trust_import_certificate_type">Type</string>
@@ -86,7 +86,7 @@
         <item quantity="other">Import rejected: at most %1$d imported certificates. Delete one to add another.</item>
     </plurals>
 
-    <!-- Doublons à l'import (D33) -->
+    <!-- Duplicates on import (D33) -->
     <string name="trust_import_duplicate_certificate">This certificate has already been imported.</string>
     <string name="trust_import_duplicate_known_ants">This certificate is already in the trust store (source: ANTS). There is nothing to import.</string>
     <string name="trust_import_duplicate_known_national">This certificate is already in the trust store (source: national publication). There is nothing to import.</string>
@@ -99,7 +99,7 @@
         <item quantity="other">%1$d new certificates out of %2$d</item>
     </plurals>
 
-    <!-- Éléments importés (D33) -->
+    <!-- Imported items (D33) -->
     <string name="trust_imported_title">Imported items</string>
     <string name="trust_imported_master_list">Imported Master List</string>
     <string name="trust_imported_signed_on">Signed on %1$s</string>
@@ -110,7 +110,7 @@
     <string name="trust_imported_delete_done">Imported item deleted.</string>
     <string name="trust_imported_delete_error">Couldn’t delete this item.</string>
 
-    <!-- Suppression -->
+    <!-- Deletion -->
     <string name="trust_delete_imported">Delete imported certificates</string>
     <string name="trust_delete_confirm_title">Delete imported certificates?</string>
     <string name="trust_delete_confirm_text">Imported Master Lists and certificates will be deleted. The certificates built into the app are kept.</string>

@@ -1,44 +1,44 @@
-# Glossaire lituanien (lt)
+# Lithuanian glossary (lt)
 
-| Source FR | Cible | Note |
+| French source | Target | Note |
 |---|---|---|
-| puce | lustas | « dokumento lustas » |
+| puce | lustas | “dokumento lustas” |
 | document | dokumentas | |
 | document d’identité | asmens dokumentas | |
-| carte d’identité | asmens tapatybės kortelė | libellé officiel lituanien |
+| carte d’identité | asmens tapatybės kortelė | official Lithuanian label |
 | passeport | pasas | |
 | titulaire | turėtojas | |
 | magasin de confiance | patikimų sertifikatų saugykla | |
-| certificat | sertifikatas | pluriel : sertifikatai / sertifikato / sertifikatų |
-| certificat de lien | susiejimo sertifikatas | link certificate ICAO |
+| certificat | sertifikatas | plural: sertifikatai / sertifikato / sertifikatų |
+| certificat de lien | susiejimo sertifikatas | ICAO link certificate |
 | certificat racine | šakninis sertifikatas | |
-| empreinte (SHA-256) | kontrolinė suma | usage courant pour les empreintes de certificats |
+| empreinte (SHA-256) | kontrolinė suma | common usage for certificate fingerprints |
 | émetteur | išdavėjas | |
 | pays émetteur | dokumentą išdavusi šalis | |
-| État émetteur | išdavusi valstybė | champ de la page d’identité |
+| État émetteur | išdavusi valstybė | field of the identity page |
 | autorité de délivrance | išdavusi institucija | |
 | signataire | pasirašantysis | |
 | signature | parašas | |
 | chaîne de certification | sertifikavimo grandinė | |
 | groupe de données | duomenų grupė | |
 | canal sécurisé | saugus kanalas | |
-| Master List | Master List | jamais traduit ; traité comme masculin indéclinable (sąrašas) |
+| Master List | Master List | never translated; treated as indeclinable masculine (sąrašas) |
 | lire | nuskaityti | |
-| réessayer | bandyti dar kartą | libellé Android |
+| réessayer | bandyti dar kartą | Android label |
 | annuler | atšaukti | |
-| effacer | išvalyti | bouton du résultat |
+| effacer | išvalyti | result button |
 | importer | importuoti | |
 | supprimer | ištrinti | |
 | retour | atgal | |
-| plus d’options | daugiau parinkčių | libellé Android |
+| plus d’options | daugiau parinkčių | Android label |
 | réglages | nustatymai | |
 | Authentique | Autentiškas | verdict |
 | Signature valide, puce non vérifiée | Parašas galioja, lustas nepatikrintas | verdict |
 | Émetteur inconnu | Nežinomas išdavėjas | verdict |
-| Échec | Nepavyko | verdict et statut |
-| Réussie | Pavyko | statut |
-| date d’expiration | galioja iki | libellé du passeport lituanien |
+| Échec | Nepavyko | verdict and status |
+| Réussie | Pavyko | status |
+| date d’expiration | galioja iki | label on the Lithuanian passport |
 | nationalité | pilietybė | |
 | numéro personnel | asmens kodas | |
-| JJ / MM / AAAA | DD / MM / MMMM | gabarits des formulaires lituaniens |
+| JJ / MM / AAAA | DD / MM / MMMM | templates used on Lithuanian forms |
 | RGPD | BDAR | Bendrasis duomenų apsaugos reglamentas |

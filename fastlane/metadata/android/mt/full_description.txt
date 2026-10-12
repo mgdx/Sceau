@@ -2,9 +2,9 @@ Sceau jaqra bl-NFC iċ-ċippa tad-dokumenti tal-identità ICAO 9303 u jivverifik
 
 <b>Dokumenti appoġġjati</b>
 <ul>
+<li>Passaporti bijometriċi ta’ kull pajjiż, bin-numru tad-dokument, id-data tat-twelid u d-data ta’ skadenza</li>
 <li>Karta tal-identità nazzjonali Franċiża (daqs ta’ karta tal-kreditu, mill-2021), bil-CAN ta’ 6 ċifri stampat fuq il-karta</li>
 <li>Karti tal-identità Ewropej, bil-CAN jew bl-MRZ</li>
-<li>Passaporti bijometriċi ta’ kull pajjiż, bin-numru tad-dokument, id-data tat-twelid u d-data ta’ skadenza</li>
 </ul>
 
 <b>X’juri Sceau</b>

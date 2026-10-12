@@ -12,12 +12,12 @@ class DisplayFieldTest {
     private val formatDate: (LocalDate) -> String = { it.toString() }
 
     @Test
-    fun `sans DG11 ni DG12, aucun champ`() {
+    fun `without DG11 or DG12, no field`() {
         assertTrue(additionalFields(null, null, formatDate).isEmpty())
     }
 
     @Test
-    fun `seuls les champs renseignes sont affiches`() {
+    fun `only filled-in fields are shown`() {
         val dg11 =
             Dg11Data(
                 fullName = "  ",

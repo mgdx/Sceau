@@ -2,9 +2,9 @@ Sceau citește prin NFC cipul documentelor de identitate conforme cu standardul 
 
 <b>Documente acceptate</b>
 <ul>
+<li>Pașapoarte biometrice din orice țară, cu numărul documentului, data nașterii și data expirării</li>
 <li>Cartea de identitate națională franceză (format card bancar, din 2021), cu codul CAN de 6 cifre tipărit pe carte</li>
 <li>Cărți de identitate europene, cu codul CAN sau zona MRZ</li>
-<li>Pașapoarte biometrice din orice țară, cu numărul documentului, data nașterii și data expirării</li>
 </ul>
 
 <b>Ce afișează Sceau</b>

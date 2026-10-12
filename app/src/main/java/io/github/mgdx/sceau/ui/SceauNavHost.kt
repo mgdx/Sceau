@@ -20,7 +20,7 @@ import io.github.mgdx.sceau.ui.reading.ReadingScreen
 import io.github.mgdx.sceau.ui.result.ResultScreen
 import io.github.mgdx.sceau.ui.trust.TrustStoreScreen
 
-/** Routes de navigation de l'application. */
+/** Navigation routes of the app. */
 object Routes {
     const val HOME = "home"
     const val READING = "reading"
@@ -39,8 +39,8 @@ fun SceauNavHost(
 ) {
     val context = LocalContext.current
     val introPreferences = remember(context) { IntroPreferences(context) }
-    // Introduction au premier lancement seulement (D35). Après une rotation ou la mort du
-    // processus, la pile restaurée prime sur la destination de départ.
+    // Introduction on first launch only (D35). After a rotation or process death, the
+    // restored back stack takes precedence over the start destination.
     val startDestination = remember(introPreferences) { if (introPreferences.isIntroSeen) Routes.HOME else Routes.INTRO }
 
     NavHost(navController = navController, startDestination = startDestination) {
@@ -87,14 +87,14 @@ fun SceauNavHost(
         composable(Routes.INTRO) { entry ->
             IntroScreen(
                 onFinish = {
-                    // Garde contre un double appui : un second appel dépilerait l'écran suivant.
+                    // Guard against a double tap: a second call would pop the next screen.
                     if (entry.isResumed()) {
                         introPreferences.markIntroSeen()
                         if (navController.previousBackStackEntry != null) {
-                            // Rejouée depuis À propos : retour à À propos.
+                            // Replayed from "About": back to "About".
                             navController.popBackStack()
                         } else {
-                            // Premier lancement : l'accueil remplace l'introduction.
+                            // First launch: the home screen replaces the introduction.
                             navController.navigate(Routes.HOME) {
                                 popUpTo(Routes.INTRO) { inclusive = true }
                                 launchSingleTop = true

@@ -11,9 +11,9 @@ import java.io.InputStream
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
-/** Lecture d'un fichier importé bornée en durée (audit V38). */
+/** Reading an imported file is bounded in time (audit V38). */
 class ImportReadTimeoutTest {
-    /** Flux d'un fournisseur hostile : `read` ne rend jamais d'octet et ne se débloque qu'à la fermeture. */
+    /** Stream from a hostile provider: `read` never returns a byte and only unblocks on close. */
     private class StalledStream : InputStream() {
         val closed = CountDownLatch(1)
 
@@ -34,25 +34,25 @@ class ImportReadTimeoutTest {
     }
 
     @Test
-    fun `lecture qui n'aboutit pas abandonnee apres le delai, flux ferme`() {
+    fun `stalled read abandoned after the timeout, stream closed`() {
         val stream = StalledStream()
         val start = System.nanoTime()
         runBlocking {
             try {
                 readImportedFile({ stream }, MAX_MASTER_LIST_BYTES, timeoutMillis = 200)
-                fail("Lecture bloquée acceptée")
+                fail("Stalled read accepted")
             } catch (_: ImportReadTimeoutException) {
                 // Attendu.
             }
         }
         val elapsedMillis = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start)
-        assertTrue("Abandon trop tardif : $elapsedMillis ms", elapsedMillis < 5_000)
-        // Fermé à l'abandon : le fil bloqué dans `read` est libéré.
+        assertTrue("Abandoned too late: $elapsedMillis ms", elapsedMillis < 5_000)
+        // Closed on abandon: the thread blocked in `read` is released.
         assertTrue(stream.closed.await(5, TimeUnit.SECONDS))
     }
 
     @Test
-    fun `ouverture qui n'aboutit pas abandonnee apres le delai`() {
+    fun `stalled open abandoned after the timeout`() {
         val release = CountDownLatch(1)
         runBlocking {
             try {
@@ -60,7 +60,7 @@ class ImportReadTimeoutTest {
                     release.await()
                     null
                 }, MAX_MASTER_LIST_BYTES, timeoutMillis = 200)
-                fail("Ouverture bloquée acceptée")
+                fail("Stalled open accepted")
             } catch (_: ImportReadTimeoutException) {
                 // Attendu.
             }
@@ -69,19 +69,19 @@ class ImportReadTimeoutTest {
     }
 
     @Test
-    fun `lecture normale inchangee`() {
+    fun `normal read unchanged`() {
         val bytes = ByteArray(300_000) { it.toByte() }
         val read = runBlocking { readImportedFile({ ByteArrayInputStream(bytes) }, MAX_MASTER_LIST_BYTES) }
         assertArrayEquals(bytes, read)
     }
 
     @Test(expected = FileTooLargeException::class)
-    fun `limite de taille toujours appliquee`() {
+    fun `size limit still enforced`() {
         runBlocking { readImportedFile({ ByteArrayInputStream(ByteArray(1_001)) }, 1_000) }
     }
 
     @Test(expected = IOException::class)
-    fun `fichier introuvable`() {
+    fun `file not found`() {
         runBlocking { readImportedFile({ null }, MAX_MASTER_LIST_BYTES) }
     }
 }

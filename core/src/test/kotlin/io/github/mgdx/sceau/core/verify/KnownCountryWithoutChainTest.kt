@@ -13,15 +13,15 @@ import org.junit.Assert.assertNull
 import org.junit.Test
 
 /**
- * Audit V25 (décision D40, option retenue par l'auteur) : pour un État dont le magasin contient
- * des certificats, l'absence de chaîne est un échec, et non « Émetteur inconnu » ; la signature
- * du SOD n'est pas présentée comme vérifiée tant que la chaîne n'aboutit pas.
+ * Audit V25 (decision D40, option chosen by the author): for a state that has certificates in
+ * the store, a missing chain is a failure, not "Unknown issuer"; the SOD signature is not
+ * presented as verified until the chain is complete.
  */
 class KnownCountryWithoutChainTest {
-    /** Magasin : un CSCA français, celui de la PKI factice « française ». */
+    /** Store: one French CSCA, the one from the dummy "French" PKI. */
     private val france by lazy { TestPki(TestKeyType.EC, name = "France", country = "FR", seed = SEED) }
 
-    /** Faussaire : CSCA et DS fabriqués, au nom de la France, absents du magasin. */
+    /** Forger: forged CSCA and DS in the name of France, absent from the store. */
     private val forger by lazy { TestPki(TestKeyType.EC, name = "Faussaire", country = "FR", seed = SEED + 1) }
 
     private fun verify(
@@ -41,7 +41,7 @@ class KnownCountryWithoutChainTest {
     private fun verdict(result: PassiveAuthResult) = Verdicts.compute(VerifyTestSupport.checks(result))
 
     @Test
-    fun `document francais authentique - chaine OK`() {
+    fun `authentic French document - chain OK`() {
         val result = verify(france.document { issuingState = "FRA" }, "FRA")
 
         assertEquals(CheckStatus.OK, result.certificateChain.status)
@@ -49,7 +49,7 @@ class KnownCountryWithoutChainTest {
     }
 
     @Test
-    fun `faux FRA sans certificat DS - echec`() {
+    fun `fake FRA without a DS certificate - failure`() {
         val forged =
             forger.document {
                 issuingState = "FRA"
@@ -65,7 +65,7 @@ class KnownCountryWithoutChainTest {
     }
 
     @Test
-    fun `faux FRA avec un DS fabrique - echec et signature non verifiee`() {
+    fun `fake FRA with a forged DS - failure and unverified signature`() {
         val forged = forger.document { issuingState = "FRA" }
 
         val result = verify(forged, "FRA")
@@ -76,13 +76,13 @@ class KnownCountryWithoutChainTest {
         val chain = detail.chain
         assertNotNull(chain)
         assertNull(chain?.cscaSubject)
-        // La signature est cohérente avec le DS fabriqué, mais rien ne garantit ce DS.
+        // The signature matches the forged DS, but nothing vouches for that DS.
         assertEquals(CheckStatus.NOT_AVAILABLE, result.sodSignature.status)
         assertEquals(Verdict.FAILED, verdict(result))
     }
 
     @Test
-    fun `pays absent du magasin - emetteur inconnu inchange`() {
+    fun `country absent from the store - unknown issuer unchanged`() {
         val italy = TestPki(TestKeyType.EC, name = "Italie", country = "IT", seed = SEED + 2)
 
         val result = verify(italy.document { issuingState = "ITA" }, "ITA")
@@ -93,17 +93,17 @@ class KnownCountryWithoutChainTest {
     }
 
     @Test
-    fun `organisation internationale - emetteur inconnu inchange`() {
+    fun `international organization - unknown issuer unchanged`() {
         val result = verify(forger.document { issuingState = "UNO" }, "UNO")
 
         assertEquals(CheckStatus.NOT_AVAILABLE, result.certificateChain.status)
         assertEquals(Verdict.UNKNOWN_ISSUER, verdict(result))
     }
 
-    // --- Audit V35 : code d'État inconnu, DS d'un autre pays ------------------------------
+    // --- Audit V35: unknown state code, DS from another country ------------------------
 
     @Test
-    fun `code d Etat inconnu d ICAO sans chaine - echec`() {
+    fun `state code unknown to ICAO without a chain - failure`() {
         for (state in listOf("UTO", "ZZZ", "FR<")) {
             val result = verify(forger.document { issuingState = state }, state)
 
@@ -115,7 +115,7 @@ class KnownCountryWithoutChainTest {
     }
 
     @Test
-    fun `code d Etat inconnu sans certificat DS - echec`() {
+    fun `unknown state code without a DS certificate - failure`() {
         val forged =
             forger.document {
                 issuingState = "UTO"
@@ -130,7 +130,7 @@ class KnownCountryWithoutChainTest {
     }
 
     @Test
-    fun `pays reel absent du magasin - emetteur inconnu inchange`() {
+    fun `real country absent from the store - unknown issuer unchanged`() {
         val netherlands = TestPki(TestKeyType.EC, name = "Pays-Bas", country = "NL", seed = SEED + 3)
 
         val result = verify(netherlands.document { issuingState = "NLD" }, "NLD")
@@ -140,7 +140,7 @@ class KnownCountryWithoutChainTest {
     }
 
     @Test
-    fun `DS d un autre pays que DG1 sans chaine - echec`() {
+    fun `DS from a country other than DG1 without a chain - failure`() {
         val elsewhere = TestPki(TestKeyType.EC, name = "Ailleurs", country = "XX", seed = SEED + 4)
 
         val dutch = verify(elsewhere.document { issuingState = "NLD" }, "NLD")
@@ -150,7 +150,7 @@ class KnownCountryWithoutChainTest {
         assertEquals(CheckStatus.NOT_AVAILABLE, dutch.sodSignature.status)
         assertEquals(Verdict.FAILED, verdict(dutch))
 
-        // Pays présent dans le magasin : la règle V25 s'applique d'abord, l'issue est la même.
+        // Country present in the store: rule V25 applies first, the outcome is the same.
         val french = verify(elsewhere.document { issuingState = "FRA" }, "FRA")
         assertEquals(CheckStatus.FAILED, french.certificateChain.status)
         assertEquals(Verdict.FAILED, verdict(french))

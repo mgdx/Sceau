@@ -12,12 +12,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
 
-/** Disponibilité du NFC sur l'appareil. */
+/** NFC availability on the device. */
 enum class NfcAvailability {
-    /** L'appareil n'a pas de NFC. */
+    /** The device has no NFC. */
     ABSENT,
 
-    /** NFC présent mais désactivé dans les réglages. */
+    /** NFC present but turned off in the settings. */
     DISABLED,
 
     ENABLED,
@@ -29,10 +29,10 @@ fun Context.nfcAvailability(): NfcAvailability {
 }
 
 /**
- * État NFC courant, relu à intervalle régulier tant qu'il est collecté. Pas de récepteur de
- * `ACTION_ADAPTER_STATE_CHANGED` : la diffusion vient du processus NFC et non du système, si
- * bien qu'un récepteur non exporté ne reçoit pas toujours le retour à ON (constaté sur
- * appareil réel) ; la relecture évite d'exposer un récepteur exporté.
+ * Current NFC state, read again at regular intervals as long as it is collected. No receiver for
+ * `ACTION_ADAPTER_STATE_CHANGED`: the broadcast comes from the NFC process and not from the system,
+ * so a non-exported receiver does not always receive the return to ON (observed on a real
+ * device); polling avoids exposing an exported receiver.
  */
 fun Context.nfcAvailabilityFlow(): Flow<NfcAvailability> =
     flow {
@@ -42,7 +42,7 @@ fun Context.nfcAvailabilityFlow(): Flow<NfcAvailability> =
         }
     }.distinctUntilChanged()
 
-/** État NFC courant pour l'interface, relu tant que l'écran est visible. */
+/** Current NFC state for the UI, read again as long as the screen is visible. */
 @Composable
 fun rememberNfcAvailability(): State<NfcAvailability> {
     val context = LocalContext.current
@@ -50,5 +50,5 @@ fun rememberNfcAvailability(): State<NfcAvailability> {
     return availability.collectAsStateWithLifecycle(initialValue = remember(context) { context.nfcAvailability() })
 }
 
-/** Délai maximal entre un changement d'état du NFC et sa prise en compte. */
+/** Maximum delay between an NFC state change and its being taken into account. */
 private const val NFC_POLL_INTERVAL_MILLIS = 1_000L

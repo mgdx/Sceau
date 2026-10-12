@@ -1,8 +1,8 @@
 /*
- * Sceau - pont JNI du décodeur JPEG 2000 (io.github.mgdx.sceau.jp2.Jpeg2000Decoder).
+ * Sceau - JNI bridge of the JPEG 2000 decoder (io.github.mgdx.sceau.jp2.Jpeg2000Decoder).
  * SPDX-License-Identifier: GPL-3.0-only
  *
- * Ne lève jamais d'exception Java : tout échec renvoie null. Aucune trace (SPEC §8).
+ * Never throws a Java exception: any failure returns null. No logging (SPEC §8).
  */
 #include <jni.h>
 #include <stdlib.h>
@@ -11,9 +11,9 @@
 
 /*
  * private external fun nativeDecode(data: ByteArray, dimensions: IntArray): IntArray?
- * Renvoie les pixels ARGB, et écrit largeur et hauteur dans dimensions[0] et dimensions[1].
- * Les pixels sont convertis ligne par ligne directement dans le tableau Java renvoyé : aucun
- * tampon ARGB complet n'est alloué côté natif.
+ * Returns the ARGB pixels, and writes width and height into dimensions[0] and dimensions[1].
+ * The pixels are converted row by row directly into the returned Java array: no full ARGB
+ * buffer is allocated on the native side.
  */
 JNIEXPORT jintArray JNICALL
 Java_io_github_mgdx_sceau_jp2_Jpeg2000Decoder_nativeDecode(JNIEnv *env, jobject thiz, jbyteArray data,
@@ -38,8 +38,8 @@ Java_io_github_mgdx_sceau_jp2_Jpeg2000Decoder_nativeDecode(JNIEnv *env, jobject 
         return NULL;
     }
 
-    /* Copie privée du flux, effacée après usage (GetByteArrayElements pourrait en faire une
-     * que l'on ne maîtrise pas). */
+    /* Private copy of the stream, wiped after use (GetByteArrayElements could make one that
+     * we do not control). */
     input = (uint8_t *) malloc((size_t) length);
     if (input == NULL) {
         return NULL;
@@ -59,8 +59,8 @@ Java_io_github_mgdx_sceau_jp2_Jpeg2000Decoder_nativeDecode(JNIEnv *env, jobject 
         return NULL;
     }
 
-    /* width et height sont bornés par SCEAU_JP2_MAX_OUTPUT_DIMENSION : le produit tient dans
-     * un jsize. */
+    /* width and height are bounded by SCEAU_JP2_MAX_OUTPUT_DIMENSION: the product fits in
+     * a jsize. */
     row = (uint32_t *) malloc((size_t) width * sizeof(uint32_t));
     if (row != NULL) {
         result = (*env)->NewIntArray(env, (jsize) (width * height));
@@ -75,7 +75,7 @@ Java_io_github_mgdx_sceau_jp2_Jpeg2000Decoder_nativeDecode(JNIEnv *env, jobject 
         (*env)->SetIntArrayRegion(env, dimensions, 0, 2, size);
     }
     if ((*env)->ExceptionCheck(env)) {
-        /* OutOfMemoryError de NewIntArray : l'appelant reçoit simplement null. */
+        /* OutOfMemoryError from NewIntArray: the caller simply receives null. */
         (*env)->ExceptionClear(env);
         result = NULL;
     }

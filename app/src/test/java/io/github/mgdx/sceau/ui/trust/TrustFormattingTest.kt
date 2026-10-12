@@ -11,18 +11,18 @@ import java.util.Locale
 
 class TrustFormattingTest {
     @Test
-    fun `lecture sous la limite`() {
+    fun `read under the limit`() {
         val bytes = ByteArray(100_000) { it.toByte() }
         assertArrayEquals(bytes, readAtMost(ByteArrayInputStream(bytes), 100_000))
     }
 
     @Test(expected = FileTooLargeException::class)
-    fun `lecture au-dela de la limite refusee`() {
+    fun `read beyond the limit rejected`() {
         readAtMost(ByteArrayInputStream(ByteArray(100_001)), 100_000)
     }
 
     @Test
-    fun `empreinte regroupee par quatre`() {
+    fun `fingerprint grouped by four`() {
         assertEquals("AB12 CD34 EF", formatFingerprint("ab12cd34ef"))
     }
 
@@ -33,7 +33,7 @@ class TrustFormattingTest {
     ) = AnchorRow("CN=$sha", Instant.ofEpochSecond(start), Instant.ofEpochSecond(start + 1), sha, source, isLink = false)
 
     @Test
-    fun `groupes par pays tries par nom localise, doublons fusionnes`() {
+    fun `groups by country sorted by localized name, duplicates merged`() {
         val rows =
             listOf(
                 "FR" to row("a", TrustSource.EMBEDDED_MASTER_LIST, 10),
@@ -47,12 +47,12 @@ class TrustFormattingTest {
         assertEquals(listOf("DE", "FR", ""), groups.map { it.alpha2 })
         assertEquals("Allemagne", groups[0].displayName)
         assertNull(groups[2].displayName)
-        // Source d'abord (ANTS avant Master List), puis le plus récent en premier.
+        // Source first (ANTS before Master List), then most recent first.
         assertEquals(listOf("c", "b", "a"), groups[1].anchors.map { it.sha256 })
     }
 
     @Test
-    fun `recherche par nom sans casse ni accents, par code alpha-2 ou alpha-3`() {
+    fun `search by name ignoring case and accents, or by alpha-2 or alpha-3 code`() {
         val groups =
             groupRows(
                 listOf(

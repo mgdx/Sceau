@@ -2,9 +2,9 @@ Sceau membaca cip dokumen pengenalan ICAO 9303 melalui NFC dan menyemak sama ada
 
 <b>Dokumen yang disokong</b>
 <ul>
+<li>Pasport biometrik dari mana-mana negara, menggunakan nombor dokumen, tarikh lahir dan tarikh tamat tempoh</li>
 <li>Kad pengenalan kebangsaan Perancis (format kad kredit, sejak 2021), menggunakan CAN 6 digit yang dicetak pada kad</li>
 <li>Kad pengenalan Eropah, menggunakan CAN atau MRZ</li>
-<li>Pasport biometrik dari mana-mana negara, menggunakan nombor dokumen, tarikh lahir dan tarikh tamat tempoh</li>
 </ul>
 
 <b>Perkara yang dipaparkan oleh Sceau</b>

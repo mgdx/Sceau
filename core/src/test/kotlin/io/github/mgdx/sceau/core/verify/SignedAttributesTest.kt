@@ -22,14 +22,14 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 /**
- * Audit V40 : ICAO 9303-10 impose des attributs signés (messageDigest, contentType) dans le
- * SignerInfo du SOD ; un SOD signé directement sur son contenu, que BouncyCastle accepte, est mal
- * formé. Même règle pour EF.CardSecurity, vérifié comme le SOD.
+ * Audit V40: ICAO 9303-10 requires signed attributes (messageDigest, contentType) in the SOD
+ * SignerInfo; a SOD signed directly over its content, which BouncyCastle accepts, is malformed.
+ * Same rule for EF.CardSecurity, which is verified like the SOD.
  */
 class SignedAttributesTest {
     private val pki = TestPki(TestKeyType.EC, seed = 40_404L)
 
-    /** CMS SignedData de [content] signé par le DS, avec ([direct] faux) ou sans attributs signés. */
+    /** CMS SignedData of [content] signed by the DS, with ([direct] false) or without signed attributes. */
     private fun signed(
         contentType: ASN1ObjectIdentifier,
         content: ByteArray,
@@ -47,7 +47,7 @@ class SignedAttributesTest {
         return generator.generate(CMSProcessableByteArray(contentType, content), true).encoded
     }
 
-    /** SOD du document factice re-signé, avec ou sans attributs signés. */
+    /** SOD of the dummy document, re-signed with or without signed attributes. */
     private fun verifySod(direct: Boolean): PassiveAuthResult {
         val document = pki.document()
         val original = CMSSignedData(Tlv.value(document.sod, TestSod.SOD_TAG))
@@ -64,7 +64,7 @@ class SignedAttributesTest {
     }
 
     @Test
-    fun `SOD avec attributs signes - OK`() {
+    fun `SOD with signed attributes - OK`() {
         val result = verifySod(direct = false)
 
         assertEquals(CheckStatus.OK, result.sodSignature.status)
@@ -72,7 +72,7 @@ class SignedAttributesTest {
     }
 
     @Test
-    fun `SOD signe sans attributs - mal forme`() {
+    fun `SOD signed without attributes - malformed`() {
         val result = verifySod(direct = true)
 
         assertEquals(CheckStatus.FAILED, result.sodSignature.status)
@@ -80,7 +80,7 @@ class SignedAttributesTest {
     }
 
     @Test
-    fun `EF CardSecurity signe sans attributs - mal forme`() {
+    fun `EF CardSecurity signed without attributes - malformed`() {
         val content = DERSet(ASN1Integer(1)).encoded
         val cardSecurity = signed(ASN1ObjectIdentifier("0.4.0.127.0.7.3.2.1"), content, direct = true)
         val evidence = PaceCamEvidence(byteArrayOf(1), pki.generateEc(TestPki.CURVE).public, cardSecurity)

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Android 12+ : rien n'est sauvegardé dans le cloud ni transféré d'un appareil à l'autre. -->
+<!-- Android 12+: nothing is backed up to the cloud or transferred from one device to another. -->
 <data-extraction-rules>
     <cloud-backup>
         <exclude domain="root" path="." />

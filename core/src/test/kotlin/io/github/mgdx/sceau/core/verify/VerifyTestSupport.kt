@@ -6,7 +6,7 @@ import io.github.mgdx.sceau.core.report.CheckDetail
 import io.github.mgdx.sceau.core.report.CheckId
 import io.github.mgdx.sceau.core.report.CheckStatus
 
-/** Assemble les sept lignes de la liste de contrôle à partir d'une PA et des challenges. */
+/** Builds the seven checklist rows from a PA result and the challenges. */
 object VerifyTestSupport {
     val notAvailableAa = Check(CheckId.ACTIVE_AUTHENTICATION, CheckStatus.NOT_AVAILABLE)
 

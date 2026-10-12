@@ -16,7 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 
-/** Paragraphe courant des écrans pédagogiques. */
+/** Body paragraph of the learning screens. */
 @Composable
 internal fun LearnParagraph(
     text: String,
@@ -26,8 +26,8 @@ internal fun LearnParagraph(
 }
 
 /**
- * Élément de liste précédé d'une puce dessinée (pas de caractère « • » codé en dur). La puce
- * est centrée sur la première ligne, quelle que soit la taille de police choisie.
+ * List item preceded by a drawn bullet (no hard-coded "•" character). The bullet is
+ * centered on the first line, whatever the chosen font size.
  */
 @Composable
 internal fun LearnBullet(text: String) {
@@ -46,7 +46,7 @@ internal fun LearnBullet(text: String) {
     }
 }
 
-/** Libellé technique (DG1, EF.SOD…) suivi de son explication. */
+/** Technical label (DG1, EF.SOD...) followed by its explanation. */
 @Composable
 internal fun LearnFileRow(
     label: String,

@@ -7,10 +7,10 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-/** Table ICAO alpha-3 → alpha-2 et règle de cohérence des pays (audit V3). */
+/** ICAO alpha-3 → alpha-2 table and country consistency rule (audit V3). */
 class IcaoCountriesTest {
     @Test
-    fun `codes ISO et codes propres a ICAO`() {
+    fun `ISO codes and ICAO-specific codes`() {
         assertEquals("FR", IcaoCountries.alpha2("FRA"))
         assertEquals("DE", IcaoCountries.alpha2("DEU"))
         assertEquals("DE", IcaoCountries.alpha2("D"))
@@ -20,32 +20,32 @@ class IcaoCountriesTest {
         assertEquals("CH", IcaoCountries.alpha2(" che "))
         assertEquals("AW", IcaoCountries.alpha2("ABW"))
         assertEquals("ZW", IcaoCountries.alpha2("ZWE"))
-        assertEquals("249 codes ISO et les codes ICAO propres", 250, IcaoCountries.knownCountries.size)
+        assertEquals("249 ISO codes plus the ICAO-specific codes", 250, IcaoCountries.knownCountries.size)
         assertNull(IcaoCountries.alpha2("UTO"))
         assertNull(IcaoCountries.alpha2("UNO"))
     }
 
     @Test
-    fun `CSCA, DS et Etat emetteur coherents`() {
+    fun `consistent CSCA, DS and issuing state`() {
         assertTrue(IcaoCountries.consistent("FR", "FR", "FRA"))
         assertTrue(IcaoCountries.consistent("DE", "de", "D<<"))
         assertTrue(IcaoCountries.consistent("GB", "GB", "GBD"))
-        assertTrue("Kosovo : KS et XK", IcaoCountries.consistent("KS", "XK", "RKS"))
-        assertTrue("Etat emetteur non fourni", IcaoCountries.consistent("FR", "FR", null))
+        assertTrue("Kosovo: KS and XK", IcaoCountries.consistent("KS", "XK", "RKS"))
+        assertTrue("issuing state not provided", IcaoCountries.consistent("FR", "FR", null))
     }
 
     @Test
-    fun `incoherences`() {
-        assertFalse("CSCA d'un autre pays", IcaoCountries.consistent("DE", "DE", "FRA"))
-        assertFalse("DS d'un autre pays", IcaoCountries.consistent("FR", "DE", "FRA"))
-        assertFalse("DS sans pays", IcaoCountries.consistent("FR", null, "FRA"))
-        assertFalse("CSCA sans pays", IcaoCountries.consistent(null, "FR", "FRA"))
-        assertFalse("code inconnu", IcaoCountries.consistent("FR", "FR", "UTO"))
-        assertFalse("code vide", IcaoCountries.consistent("FR", "FR", "<<<"))
+    fun `inconsistencies`() {
+        assertFalse("CSCA from another country", IcaoCountries.consistent("DE", "DE", "FRA"))
+        assertFalse("DS from another country", IcaoCountries.consistent("FR", "DE", "FRA"))
+        assertFalse("DS without a country", IcaoCountries.consistent("FR", null, "FRA"))
+        assertFalse("CSCA without a country", IcaoCountries.consistent(null, "FR", "FRA"))
+        assertFalse("unknown code", IcaoCountries.consistent("FR", "FR", "UTO"))
+        assertFalse("empty code", IcaoCountries.consistent("FR", "FR", "<<<"))
     }
 
     @Test
-    fun `organisations - seuls le CSCA et le DS sont compares`() {
+    fun `organizations - only the CSCA and the DS are compared`() {
         for (code in listOf("UNO", "UNA", "UNK", "EUE", "XXA", "XXB", "XXC", "XXX")) {
             assertTrue(code, IcaoCountries.isOrganization(code))
         }
@@ -55,12 +55,12 @@ class IcaoCountriesTest {
     }
 
     @Test
-    fun `magasin embarque - chaque CSCA porte un pays qu'un document peut annoncer`() {
+    fun `embedded store - every CSCA carries a country a document can declare`() {
         val anchors = TrustStores.load().anchors
         assertTrue(anchors.isNotEmpty())
         val withoutCountry = anchors.filter { Crypto.country(it.certificate) == null }
-        assertEquals("CSCA sans attribut C", emptyList<String>(), withoutCountry.map { it.subject })
-        // EU et UN : CSCA d'organisations (documents EUE, UNO…), comparés au seul DS.
+        assertEquals("CSCA without a C attribute", emptyList<String>(), withoutCountry.map { it.subject })
+        // EU and UN: CSCAs of organizations (EUE, UNO… documents), compared with the DS only.
         val unreachable =
             anchors
                 .mapNotNull { Crypto.country(it.certificate) }

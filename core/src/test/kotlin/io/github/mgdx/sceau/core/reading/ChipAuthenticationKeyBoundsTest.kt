@@ -20,14 +20,14 @@ import java.math.BigInteger
 import java.security.SecureRandom
 
 /**
- * Audit V30 : une clé de Chip Authentication géante dans DG14 est refusée avant l'accord de clé
- * (`UNSUPPORTED_ALGORITHM`), sans calcul ni commande envoyée à la puce.
+ * Audit V30: a huge Chip Authentication key in DG14 is rejected before key agreement
+ * (`UNSUPPORTED_ALGORITHM`), with no computation and no command sent to the chip.
  */
 class ChipAuthenticationKeyBoundsTest {
     private val random = SecureRandom.getInstance("SHA1PRNG").apply { setSeed(30_305L) }
 
     @Test(timeout = 10_000)
-    fun dg14AvecUneCleDhDe9000Bits_AlgorithmeNonPrisEnCharge() {
+    fun dg14WithA9000BitDhKey_UnsupportedAlgorithm() {
         val p = BigInteger(9000, random).setBit(8999).setBit(0)
         val y = BigInteger(8000, random)
         val key =
@@ -47,7 +47,7 @@ class ChipAuthenticationKeyBoundsTest {
 
         assertEquals(CheckStatus.UNSUPPORTED_ALGORITHM, check.status)
         assertEquals(CheckDetail.UnsupportedAlgorithm("DH-9000"), check.detail)
-        assertEquals("aucune commande de CA envoyée", 1, transport.sent.size)
+        assertEquals("no CA command sent", 1, transport.sent.size)
     }
 
     private companion object {

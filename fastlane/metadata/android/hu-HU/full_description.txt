@@ -2,9 +2,9 @@ A Sceau NFC-n keresztül beolvassa az ICAO 9303 szabványú személyazonosító 
 
 <b>Támogatott okmányok</b>
 <ul>
+<li>Bármely ország biometrikus útlevelei, az okmányazonosító, a születési idő és az érvényesség vége alapján</li>
 <li>Francia személyi igazolvány (bankkártya méretű, 2021 óta), a kártyára nyomtatott 6 jegyű CAN segítségével</li>
 <li>Európai személyi igazolványok, a CAN vagy az MRZ segítségével</li>
-<li>Bármely ország biometrikus útlevelei, az okmányazonosító, a születési idő és az érvényesség vége alapján</li>
 </ul>
 
 <b>Mit jelenít meg a Sceau?</b>

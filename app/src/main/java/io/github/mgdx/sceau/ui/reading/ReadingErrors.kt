@@ -4,13 +4,13 @@ import androidx.annotation.StringRes
 import io.github.mgdx.sceau.R
 import io.github.mgdx.sceau.core.Step
 
-/** Correspondance entre les codes de `SceauException` et les messages de l'écran de lecture. */
+/** Mapping between `SceauException` codes and the reading screen messages. */
 internal object ReadingErrors {
     /**
-     * `TIMEOUT`, `CONNECTION_LOST` et `READ_STALLED` peuvent porter un suffixe de diagnostic
-     * (`TIMEOUT-SECURE_CHANNEL-INS86-L10`, `TIMEOUT-READ_DATA-GLOBAL`, `READ_STALLED-READ_DATA-DG2`) :
-     * seul le code de base choisit le message. `READ_STALLED` (audit V29 : la puce ne livre plus
-     * le fichier en cours) reprend le message du délai dépassé.
+     * `TIMEOUT`, `CONNECTION_LOST` and `READ_STALLED` may carry a diagnostic suffix
+     * (`TIMEOUT-SECURE_CHANNEL-INS86-L10`, `TIMEOUT-READ_DATA-GLOBAL`, `READ_STALLED-READ_DATA-DG2`):
+     * only the base code selects the message. `READ_STALLED` (audit V29: the chip no longer
+     * delivers the current file) reuses the timeout message.
      */
     @StringRes
     fun messageFor(code: String): Int =
@@ -26,8 +26,8 @@ internal object ReadingErrors {
         }
 
     /**
-     * Faux si un nouvel essai ne peut rien changer : puce réservée aux autorités habilitées
-     * (`ACCESS_RESTRICTED`, décision D36). L'écran n'offre alors pas « Réessayer ».
+     * False if a new attempt cannot change anything: chip reserved for authorized authorities
+     * (`ACCESS_RESTRICTED`, decision D36). The screen then does not offer "Try again".
      */
     fun canRetry(code: String): Boolean = code.substringBefore(DETAIL_SEPARATOR) != ACCESS_RESTRICTED
 

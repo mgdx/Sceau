@@ -30,7 +30,7 @@ import java.security.MessageDigest
 import java.time.LocalDate
 import java.time.ZoneOffset
 
-/** EF.SOD décodé : SignedData CMS, son unique signataire et le LDSSecurityObject signé. */
+/** Decoded EF.SOD: CMS SignedData, its single signer, and the signed LDSSecurityObject. */
 internal class ParsedSod(
     val signedData: CMSSignedData,
     val signer: SignerInformation,
@@ -40,12 +40,12 @@ internal class ParsedSod(
         private const val SOD_TAG = 0x77
         private const val SEQUENCE_TAG = 0x30
 
-        /** Lève une exception sans donnée personnelle si EF.SOD est mal formé. */
+        /** Throws an exception without personal data if EF.SOD is malformed. */
         fun parse(sod: ByteArray): ParsedSod {
             val contentInfo = if (sod.isNotEmpty() && sod[0].toInt() and 0xFF == SEQUENCE_TAG) sod else Tlv.value(sod, SOD_TAG)
             val signedData = CMSSignedData(contentInfo)
-            // Audit V10 : le contenu signé doit être déclaré comme LDSSecurityObject, et non comme
-            // un autre objet signé par le même DS qui se décoderait par hasard.
+            // Audit V10: the signed content must be declared as an LDSSecurityObject, not as
+            // another object signed by the same DS that would happen to decode.
             if (signedData.signedContentTypeOID != ICAOObjectIdentifiers.id_icao_ldsSecurityObject.id) {
                 throw IllegalArgumentException("SOD_CONTENT_TYPE")
             }
@@ -59,10 +59,10 @@ internal class ParsedSod(
         }
 
         /**
-         * Audit V40 : ICAO 9303-10 impose des attributs signés, dont `messageDigest` ; leur
-         * `contentType` doit être le type de contenu encapsulé [contentType]. BouncyCastle accepte
-         * sinon un `SignerInfo` sans attributs (signature directe du contenu), qu'aucun émetteur
-         * ne produit. Vaut pour EF.SOD et pour EF.CardSecurity.
+         * Audit V40: ICAO 9303-10 requires signed attributes, including `messageDigest`; their
+         * `contentType` must be the encapsulated content type [contentType]. Otherwise BouncyCastle
+         * accepts a `SignerInfo` without attributes (direct signature of the content), which no issuer
+         * produces. Applies to EF.SOD and to EF.CardSecurity.
          */
         fun hasRequiredSignedAttributes(
             signer: SignerInformation,
@@ -76,7 +76,7 @@ internal class ParsedSod(
     }
 }
 
-/** Décodage minimal d'un TLV BER à longueur définie (tag sur un octet). */
+/** Minimal decoding of a definite-length BER TLV (single-byte tag). */
 internal object Tlv {
     private const val MAX_LENGTH_BYTES = 4
 
@@ -104,15 +104,15 @@ internal object Tlv {
 }
 
 /**
- * Vérification d'EF.CardSecurity ([PassiveAuthenticator.verifyCardSecurity]).
+ * Verification of EF.CardSecurity ([PassiveAuthenticator.verifyCardSecurity]).
  *
- * [status] : `OK` (signature et chaîne valides), `NOT_AVAILABLE` (émetteur introuvable :
- * DS ni embarqué ni dans le magasin, ou chaîne sans CSCA connu), `FAILED` ou
- * `UNSUPPORTED_ALGORITHM` (alors [unsupported] porte l'algorithme). [reason] : cause stable,
- * sans donnée personnelle, null si `OK`. [content] : `SET OF SecurityInfo` signé, voir la
- * fonction de vérification pour les cas où il est rendu. [chain] : chaîne DS → CSCA
- * d'EF.CardSecurity, null si le DS est introuvable ou la signature fausse ; elle doit aboutir au
- * même CSCA que celle du SOD (audit V17, décision D40).
+ * [status]: `OK` (valid signature and chain), `NOT_AVAILABLE` (issuer not found: DS neither
+ * embedded nor in the store, or chain without a known CSCA), `FAILED` or
+ * `UNSUPPORTED_ALGORITHM` (then [unsupported] carries the algorithm). [reason]: stable cause,
+ * without personal data, null if `OK`. [content]: signed `SET OF SecurityInfo`, see the
+ * verification function for the cases where it is returned. [chain]: DS → CSCA chain of
+ * EF.CardSecurity, null if the DS is not found or the signature is wrong; it must lead to the
+ * same CSCA as the SOD chain (audit V17, decision D40).
  */
 internal class CardSecurityVerification(
     val status: CheckStatus,
@@ -132,10 +132,10 @@ internal class CardSecurityVerification(
 }
 
 /**
- * Implémentation de la Passive Authentication (SPEC §6.1 étape 5).
+ * Passive Authentication implementation (SPEC §6.1 step 5).
  *
- * [deviations] : anomalies connues des émetteurs (décision D34), le registre réel par défaut ;
- * les tests en injectent d'autres pour la PKI factice.
+ * [deviations]: known issuer anomalies (decision D34), the real registry by default; tests
+ * inject others for the fake PKI.
  */
 internal class PassiveAuthenticator(
     private val trustStore: TrustStore,
@@ -167,7 +167,7 @@ internal class PassiveAuthenticator(
         }
     }
 
-    /** Données lues (DG1, date de délivrance de DG12) transmises à la vérification. */
+    /** Read data (DG1, DG12 date of issue) passed to the verification. */
     private class DocumentFacts(
         val dateOfIssue: LocalDate?,
         val dateOfExpiry: LocalDate?,
@@ -182,8 +182,8 @@ internal class PassiveAuthenticator(
         facts: DocumentFacts,
     ): PassiveAuthResult {
         val rawHashes = guarded(CheckId.DG_HASHES) { checkHashes(parsed.securityObject, dataGroups) }
-        // Audit V25 : pays émetteur dont le magasin contient des certificats ; une chaîne absente
-        // y est un échec, et non un émetteur inconnu.
+        // Audit V25: issuing country for which the store holds certificates; a missing chain
+        // is then a failure, not an unknown issuer.
         val knownCountry = knownIssuingCountry(facts.issuingState)
         val ds =
             findDsCertificate(parsed.signedData, parsed.signer)
@@ -211,20 +211,20 @@ internal class PassiveAuthenticator(
 
                     knownCountry != null -> noChain(knownCountry, info)
 
-                    // Audit V35 : sans chaîne, code d'État inconnu ou DS d'un autre pays : échec.
+                    // Audit V35: without a chain, an unknown state code or a DS from another country fails.
                     else -> unknownStateCode(facts.issuingState) ?: dsCountryMismatch(ds, facts.issuingState) ?: check
                 }
             }
-        // Audit V25 : sans chaîne, le DS n'est garanti par personne ; une signature qu'il vérifie
-        // ne prouve rien et n'est pas présentée comme vérifiée.
+        // Audit V25: without a chain, nobody vouches for the DS; a signature it verifies
+        // proves nothing and is not presented as verified.
         val signature =
             if (chainMissing && verifiedSignature.status == CheckStatus.OK) {
                 verifiedSignature.copy(status = CheckStatus.NOT_AVAILABLE)
             } else {
                 verifiedSignature
             }
-        // Décision D34 : une anomalie connue n'est recherchée que sur un SOD dont la signature et
-        // la chaîne sont valides ; sinon, aucune tolérance.
+        // Decision D34: a known anomaly is only looked for on a SOD whose signature and chain
+        // are valid; otherwise, no tolerance.
         val tolerated =
             if (signature.status == CheckStatus.OK && chain.status == CheckStatus.OK) {
                 knownDeviations(parsed.signer, rawHashes, chainInfo, facts)
@@ -233,7 +233,7 @@ internal class PassiveAuthenticator(
             }
         val hashes = tolerate(rawHashes, tolerated)
         val discarded = tolerated.map { it.dataGroup }.toSet()
-        // Un DG12 écarté ne fournit pas la date de délivrance : repli sur signingTime ou l'estimation.
+        // A discarded DG12 does not provide the date of issue: fall back on signingTime or the estimate.
         val dateOfIssue = facts.dateOfIssue.takeUnless { DG12 in discarded }
         val validity =
             guarded(CheckId.DS_VALIDITY) {
@@ -249,11 +249,11 @@ internal class PassiveAuthenticator(
         )
     }
 
-    // --- Anomalies connues des émetteurs (décision D34) ---------------------------------
+    // --- Known issuer anomalies (decision D34) ------------------------------------------
 
     /**
-     * Anomalies connues qui couvrent les écarts d'empreinte de [hashes]. Exige que l'empreinte de
-     * DG1 soit vérifiée (les éléments de DG1 sont alors signés) et qu'aucun DG signé ne manque.
+     * Known anomalies that cover the hash mismatches of [hashes]. Requires the DG1 hash to be
+     * verified (the DG1 elements are then signed) and no signed DG to be missing.
      */
     private fun knownDeviations(
         signer: SignerInformation,
@@ -279,7 +279,7 @@ internal class PassiveAuthenticator(
             .filter { it.dataGroup in KnownDeviations.TOLERABLE_DATA_GROUPS }
     }
 
-    /** Retire les DG tolérés de la liste des écarts et recalcule le statut de la ligne. */
+    /** Removes the tolerated DGs from the list of mismatches and recomputes the line status. */
     private fun tolerate(
         hashes: Check,
         tolerated: List<KnownDeviation>,
@@ -295,16 +295,16 @@ internal class PassiveAuthenticator(
     // --- EF.CardSecurity (PACE-CAM) ------------------------------------------------------
 
     /**
-     * Vérifie EF.CardSecurity (ICAO 9303-11 §4.4, PACE-CAM ; décision D21) avec les mêmes règles
-     * que le SOD : certificat DS (embarqué ou cherché dans le magasin), signature CMS (algorithmes
-     * faibles refusés, audit V9), chaîne DS → CSCA (profil d'émetteur, keyUsage du DS, pays
-     * cohérents avec [issuingState], audit V3 et V8). Le contenu signé doit être déclaré
-     * id-SecurityObject (BSI TR-03110) et n'avoir qu'un signataire.
+     * Verifies EF.CardSecurity (ICAO 9303-11 §4.4, PACE-CAM; decision D21) with the same rules
+     * as the SOD: DS certificate (embedded or looked up in the store), CMS signature (weak
+     * algorithms rejected, audit V9), DS → CSCA chain (issuer profile, DS keyUsage, countries
+     * consistent with [issuingState], audits V3 and V8). The signed content must be declared as
+     * id-SecurityObject (BSI TR-03110) and have only one signer.
      *
-     * Le contenu n'est rendu que si la signature est vérifiée, ou si le DS est introuvable (la
-     * chaîne est alors `NOT_AVAILABLE` : ce contenu ne peut que faire échouer un contrôle, jamais
-     * le faire réussir). La validité calendaire du DS n'est pas contrôlée ici : elle l'est pour
-     * le DS du SOD (ligne DS_VALIDITY).
+     * The content is returned only if the signature is verified, or if the DS is not found (the
+     * chain is then `NOT_AVAILABLE`: this content can only make a check fail, never make it
+     * pass). The DS calendar validity is not checked here: it is checked for the SOD's DS
+     * (DS_VALIDITY line).
      */
     fun verifyCardSecurity(
         cardSecurity: ByteArray,
@@ -326,7 +326,7 @@ internal class PassiveAuthenticator(
         if (signedData.signedContentTypeOID != ID_SECURITY_OBJECT ||
             signer == null ||
             content == null ||
-            // Audit V40 : mêmes attributs signés exigés que pour le SOD.
+            // Audit V40: same signed attributes required as for the SOD.
             !ParsedSod.hasRequiredSignedAttributes(signer, ASN1ObjectIdentifier(ID_SECURITY_OBJECT))
         ) {
             return CardSecurityVerification(CheckStatus.FAILED, CardSecurityVerification.MALFORMED, null)
@@ -366,7 +366,7 @@ internal class PassiveAuthenticator(
         )
     }
 
-    // --- Certificat DS ----------------------------------------------------------------
+    // --- DS certificate --------------------------------------------------------------
 
     private fun findDsCertificate(
         signedData: CMSSignedData,
@@ -379,8 +379,8 @@ internal class PassiveAuthenticator(
                 .firstOrNull { sid.match(it) }
         if (embedded != null) return DsCertificate(embedded)
 
-        // DS non embarqué : on le cherche dans le magasin par émetteur et numéro de série,
-        // ou par identifiant de clé si le SignerIdentifier est de cette forme.
+        // DS not embedded: look it up in the store by issuer and serial number,
+        // or by key identifier if the SignerIdentifier has that form.
         val issuer = sid.issuer
         val serial = sid.serialNumber
         val anchor: TrustAnchor? =
@@ -395,26 +395,26 @@ internal class PassiveAuthenticator(
         return anchor?.let { DsCertificate(JcaX509CertificateHolder(it.certificate)) }
     }
 
-    // --- Signature du SOD --------------------------------------------------------------
+    // --- SOD signature ---------------------------------------------------------------
 
     private fun checkSignature(
         signer: SignerInformation,
         ds: DsCertificate,
     ): Check {
         val algorithm = signatureAlgorithmName(signer)
-        // Audit V9 : hachage cassé (MD5, RIPEMD-128…) refusé, dans l'empreinte comme dans la signature.
+        // Audit V9: broken hash (MD5, RIPEMD-128…) rejected, in the digest as in the signature.
         if (Crypto.isWeakAlgorithm(signer.digestAlgorithmID) ||
             Crypto.isWeakAlgorithm(signer.toASN1Structure().digestEncryptionAlgorithm)
         ) {
             return Check(CheckId.SOD_SIGNATURE, CheckStatus.UNSUPPORTED_ALGORITHM, CheckDetail.UnsupportedAlgorithm(algorithm))
         }
-        // Audits V9 et V30 : clé du DS hors bornes, lue encodée, refusée avant toute reconstruction.
+        // Audits V9 and V30: out-of-bounds DS key, read encoded, rejected before any reconstruction.
         Crypto.unsupportedKey(ds.holder.subjectPublicKeyInfo)?.let { key ->
             return Check(CheckId.SOD_SIGNATURE, CheckStatus.UNSUPPORTED_ALGORITHM, CheckDetail.UnsupportedAlgorithm(key))
         }
         return try {
-            // Vérifieur construit sur la clé seule : BouncyCastle refuserait sinon la signature d'un
-            // DS expiré au signingTime, ce qui relève de la ligne DS_VALIDITY et non de celle-ci.
+            // Verifier built on the key alone: otherwise BouncyCastle would reject the signature of
+            // a DS expired at signingTime, which belongs to the DS_VALIDITY line, not to this one.
             val publicKey = JcaX509CertificateConverter().setProvider(Crypto.provider).getCertificate(ds.holder).publicKey
             Crypto.unsupportedKey(publicKey)?.let { key ->
                 return Check(CheckId.SOD_SIGNATURE, CheckStatus.UNSUPPORTED_ALGORITHM, CheckDetail.UnsupportedAlgorithm(key))
@@ -439,7 +439,7 @@ internal class PassiveAuthenticator(
         return DefaultCMSSignatureAlgorithmNameGenerator().getSignatureName(signer.digestAlgorithmID, encryption)
     }
 
-    // --- Chaîne DS → CSCA --------------------------------------------------------------
+    // --- DS → CSCA chain --------------------------------------------------------------
 
     private fun checkChain(
         ds: DsCertificate,
@@ -448,11 +448,11 @@ internal class PassiveAuthenticator(
         when (val outcome = CertificateChains(trustStore).build(ds.holder)) {
             is ChainOutcome.Found -> {
                 val info = chainInfo(ds, outcome.root, outcome.links)
-                // Audit V3 : une chaîne valide vers le CSCA d'un autre pays ne prouve rien.
+                // Audit V3: a valid chain to another country's CSCA proves nothing.
                 val dsCountry = Crypto.country(ds.holder.subject)
                 when {
-                    // Audit V8 : un certificat dont le keyUsage exclut la signature numérique
-                    // n'est pas un DS, quelle que soit sa chaîne.
+                    // Audit V8: a certificate whose keyUsage excludes digital signature
+                    // is not a DS, whatever its chain.
                     !mayBeDocumentSigner(ds.holder) -> {
                         Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.FAILED, CheckDetail.Error(ERROR_DS_KEY_USAGE)) to info
                     }
@@ -494,9 +494,9 @@ internal class PassiveAuthenticator(
         }
 
     /**
-     * Pays alpha-2 de l'État émetteur [issuingState] si le magasin contient au moins un certificat
-     * de ce pays (CSCA ou lien), null sinon : État absent du magasin, organisation (`UNO`, `EUE`…),
-     * code inconnu ou non fourni (audit V25).
+     * Alpha-2 country of the issuing state [issuingState] if the store holds at least one
+     * certificate of that country (CSCA or link), null otherwise: state absent from the store,
+     * organization (`UNO`, `EUE`…), unknown or missing code (audit V25).
      */
     private fun knownIssuingCountry(issuingState: String?): String? {
         if (issuingState == null || IcaoCountries.isOrganization(issuingState)) return null
@@ -509,9 +509,9 @@ internal class PassiveAuthenticator(
     }
 
     /**
-     * Sans chaîne, État émetteur [issuingState] inconnu d'ICAO 9303-3 (ni pays, ni organisation :
-     * `UTO`, `ZZZ`, `FR<`…) : échec, car aucun document signé ne peut l'annoncer (audit V35). Null
-     * si le code est un pays, une organisation, ou s'il n'est pas fourni.
+     * Without a chain, an issuing state [issuingState] unknown to ICAO 9303-3 (neither a country
+     * nor an organization: `UTO`, `ZZZ`, `FR<`…) fails, since no signed document can declare it
+     * (audit V35). Null if the code is a country, an organization, or if it is not provided.
      */
     private fun unknownStateCode(issuingState: String?): Check? {
         if (issuingState == null || IcaoCountries.isOrganization(issuingState) || IcaoCountries.alpha2(issuingState) != null) return null
@@ -519,10 +519,10 @@ internal class PassiveAuthenticator(
     }
 
     /**
-     * Sans chaîne, pays du DS (attribut C, absent compris) différent de l'État émetteur de DG1 :
-     * échec avec [CheckDetail.CountryMismatch], comme avec une chaîne (audit V35). Null si les pays
-     * concordent, si l'État est une organisation (le DS porte alors un code comme `UN` ou `EU`), ou
-     * s'il n'est pas fourni.
+     * Without a chain, a DS country (C attribute, including when absent) different from the DG1
+     * issuing state fails with [CheckDetail.CountryMismatch], as with a chain (audit V35). Null if
+     * the countries match, if the state is an organization (the DS then carries a code such as
+     * `UN` or `EU`), or if it is not provided.
      */
     private fun dsCountryMismatch(
         ds: DsCertificate,
@@ -534,13 +534,13 @@ internal class PassiveAuthenticator(
         return Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.FAILED, CheckDetail.CountryMismatch(null, dsCountry, issuingState))
     }
 
-    /** Aucune chaîne alors que des certificats du pays [country] sont connus : échec (audit V25). */
+    /** No chain although certificates of country [country] are known: failure (audit V25). */
     private fun noChain(
         country: String,
         chain: ChainInfo?,
     ) = Check(CheckId.CERTIFICATE_CHAIN, CheckStatus.FAILED, CheckDetail.NoChainForKnownCountry(country, chain))
 
-    /** keyUsage du DS, s'il est présent, avec digitalSignature (ICAO 9303-12) ; absent : toléré. */
+    /** DS keyUsage, if present, with digitalSignature (ICAO 9303-12); absent: tolerated. */
     private fun mayBeDocumentSigner(holder: X509CertificateHolder): Boolean =
         runCatching {
             KeyUsage.fromExtensions(holder.extensions)?.hasUsages(KeyUsage.digitalSignature) ?: true
@@ -567,7 +567,7 @@ internal class PassiveAuthenticator(
             linkCertificates = links.map { it.certificate.subjectX500Principal.name },
         )
 
-    // --- Empreintes des DG -------------------------------------------------------------
+    // --- DG hashes -------------------------------------------------------------------
 
     private fun checkHashes(
         securityObject: LDSSecurityObject,
@@ -587,8 +587,8 @@ internal class PassiveAuthenticator(
 
         val expected = securityObject.datagroupHash.associate { it.dataGroupNumber to it.dataGroupHashValue.octets }
         val checked = dataGroups.keys.sorted()
-        // Le SOD, signé, fait foi : un DG qu'il annonce parmi ceux que Sceau lit doit avoir été
-        // fourni par la puce (audit V1 : un clone ne doit pas pouvoir retenir DG2, DG14 ou DG15).
+        // The signed SOD is authoritative: a DG it declares among those Sceau reads must have been
+        // provided by the chip (audit V1: a clone must not be able to withhold DG2, DG14 or DG15).
         val missing = expected.keys.filter { it in READ_DATA_GROUPS && it !in dataGroups }.sorted()
         val mismatched =
             checked.filter { number ->
@@ -606,7 +606,7 @@ internal class PassiveAuthenticator(
         return Check(CheckId.DG_HASHES, status, CheckDetail.DataGroupHashes(algorithm, checked, mismatched, missing))
     }
 
-    // --- Validité du DS à la date de délivrance ------------------------------------------
+    // --- DS validity at the date of issue ----------------------------------------------
 
     private fun checkValidity(
         signer: SignerInformation,
@@ -635,7 +635,7 @@ internal class PassiveAuthenticator(
             when {
                 covered -> CheckStatus.OK
 
-                // Une date estimée n'est jamais un motif d'échec : un passeport de mineur vaut 5 ans.
+                // An estimated date is never a reason to fail: a minor's passport is valid for 5 years.
                 source == IssuanceDateSource.ESTIMATED -> CheckStatus.NOT_AVAILABLE
 
                 else -> CheckStatus.FAILED
@@ -655,13 +655,13 @@ internal class PassiveAuthenticator(
         }.getOrNull()
 
     /**
-     * Durée de validité usuelle, pour estimer la délivrance. Passeports et cartes
-     * d'identité (CNIe depuis 2021) valent 10 ans pour un adulte, quel que soit le code.
+     * Usual validity period, used to estimate the date of issue. Passports and identity
+     * cards (CNIe since 2021) are valid for 10 years for an adult, whatever the code.
      */
     @Suppress("UNUSED_PARAMETER")
     private fun usualValidityYears(documentCode: String): Long = USUAL_VALIDITY_YEARS
 
-    // --- Erreurs ---------------------------------------------------------------------
+    // --- Errors ----------------------------------------------------------------------
 
     private inline fun guarded(
         id: CheckId,
@@ -693,10 +693,10 @@ internal class PassiveAuthenticator(
         const val DG1 = 1
         const val DG12 = 12
 
-        /** eContentType d'EF.CardSecurity : id-SecurityObject (BSI TR-03110 partie 3, ICAO 9303-11). */
+        /** eContentType of EF.CardSecurity: id-SecurityObject (BSI TR-03110 part 3, ICAO 9303-11). */
         const val ID_SECURITY_OBJECT = "0.4.0.127.0.7.3.2.1"
 
-        /** DG que Sceau demande à la puce (voir DocumentReader) : jamais DG3 ni DG4. */
+        /** DGs that Sceau requests from the chip (see DocumentReader): never DG3 or DG4. */
         val READ_DATA_GROUPS = setOf(1, 2, 7, 11, 12, 14, 15)
     }
 }

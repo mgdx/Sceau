@@ -1,12 +1,12 @@
 /*
- * Sceau - génère testchip/src/main/resources/specimen-signature.jpg, la signature manuscrite de
- * la CNIe simulée (DG7, décision D37).
+ * Sceau - generates testchip/src/main/resources/specimen-signature.jpg, the handwritten signature
+ * of the simulated CNIe (DG7, decision D37).
  *
- * L'image est entièrement synthétique : un paraphe fait de courbes de Bézier calculées par ce
- * programme, tracé en noir sur fond blanc. Aucune signature réelle n'intervient, aucune police
- * n'est utilisée (rendu identique d'une machine à l'autre, au codeur JPEG près).
+ * The image is entirely synthetic: a flourish made of Bézier curves computed by this program,
+ * drawn in black on a white background. No real signature is involved and no font is used
+ * (identical rendering from one machine to another, up to the JPEG encoder).
  *
- * Usage (depuis la racine du dépôt, JDK 17 ou ultérieur) :
+ * Usage (from the repository root, JDK 17 or later):
  *   java testchip/tools/GenerateSpecimenSignature.java
  */
 import java.awt.BasicStroke;
@@ -68,8 +68,8 @@ public class GenerateSpecimenSignature {
             writer.dispose();
         }
         if (out.length() > MAX_BYTES) {
-            throw new IllegalStateException("specimen-signature.jpg dépasse " + MAX_BYTES + " octets");
+            throw new IllegalStateException("specimen-signature.jpg exceeds " + MAX_BYTES + " bytes");
         }
-        System.out.println(out + " : " + out.length() + " octets");
+        System.out.println(out + ": " + out.length() + " bytes");
     }
 }

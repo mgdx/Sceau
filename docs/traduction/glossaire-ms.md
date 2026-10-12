@@ -1,8 +1,8 @@
-# Glossaire malais (ms, Bahasa Melayu de Malaisie)
+# Malay glossary (ms, Bahasa Melayu of Malaysia)
 
-Vocabulaire des réglages Android en malais (Malaisie) et des passeports malaisiens.
+Vocabulary of the Android settings in Malay (Malaysia) and of Malaysian passports.
 
-| Source FR | Cible | Note |
+| French source | Target | Note |
 |---|---|---|
 | puce | cip | |
 | document | dokumen | |
@@ -13,7 +13,7 @@ Vocabulaire des réglages Android en malais (Malaisie) et des passeports malaisi
 | magasin de confiance | stor sijil dipercayai | |
 | certificat | sijil | |
 | certificat de lien | sijil pautan | |
-| empreinte (d'un certificat) | cap jari | « Cap jari SHA-256 », usage des navigateurs |
+| empreinte (d'un certificat) | cap jari | “Cap jari SHA-256”, browser usage |
 | empreinte (d'un groupe de données) | cincangan | |
 | émetteur | pengeluar | |
 | pays émetteur / État émetteur | negara pengeluar | |
@@ -21,18 +21,18 @@ Vocabulaire des réglages Android en malais (Malaisie) et des passeports malaisi
 | signature | tandatangan | |
 | signataire | penandatangan | |
 | vérifier / vérification | mengesahkan / semakan | |
-| lire | Baca | bouton |
-| réessayer | Cuba lagi | libellé Android |
-| annuler | Batal | libellé Android |
-| effacer (le résultat) | Kosongkan | distinct de « Padam » |
-| supprimer | Padam | libellé Android |
+| lire | Baca | button |
+| réessayer | Cuba lagi | Android label |
+| annuler | Batal | Android label |
+| effacer (le résultat) | Kosongkan | distinct from “Padam” |
+| supprimer | Padam | Android label |
 | importer | Import | |
-| Plus d'options | Lagi pilihan | libellé Android |
+| Plus d'options | Lagi pilihan | Android label |
 | À propos | Perihal | |
 | Authentique | Tulen | verdict |
 | Signature valide, puce non vérifiée | Tandatangan sah, cip tidak disahkan | verdict |
 | Émetteur inconnu | Pengeluar tidak diketahui | verdict |
-| Échec | Gagal | verdict et statut |
+| Échec | Gagal | verdict and status |
 | nom | Nama keluarga | |
 | prénoms | Nama diberi | |
 | date de naissance | Tarikh lahir | |
@@ -40,7 +40,7 @@ Vocabulaire des réglages Android en malais (Malaisie) et des passeports malaisi
 | date de délivrance | Tarikh dikeluarkan | |
 | numéro du document | Nombor dokumen | |
 | nationalité | Warganegara | |
-| JJ / MM / AAAA | HH / BB / TTTT | hari, bulan, tahun, usage des formulaires malaisiens |
+| JJ / MM / AAAA | HH / BB / TTTT | hari, bulan, tahun, usage on Malaysian forms |
 | RGPD | GDPR | |
 | Mo | MB | |
-| CAN, MRZ, Master List, etc. | inchangés | termes ICAO jamais traduits |
+| CAN, MRZ, Master List, etc. | unchanged | ICAO terms, never translated |

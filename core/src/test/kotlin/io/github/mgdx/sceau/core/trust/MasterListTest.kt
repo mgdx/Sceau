@@ -39,7 +39,7 @@ class MasterListTest {
     ) {
         try {
             TrustStores.parseMasterList(bytes)
-            fail("Master List acceptée à tort")
+            fail("Master List wrongly accepted")
         } catch (e: InvalidMasterListException) {
             assertEquals(expectedCode, e.code)
         }
@@ -51,7 +51,7 @@ class MasterListTest {
 
         assertEquals(2, list.certificates.size)
         assertEquals(2, list.info.certificateCount)
-        // SET OF : l'ordre DER n'est pas celui d'insertion.
+        // SET OF: DER order is not insertion order.
         assertEquals(
             setOf(fixture.rsaCsca.encoded.toList(), fixture.ecCsca.encoded.toList()),
             list.certificates.map { it.encoded.toList() }.toSet(),
@@ -67,7 +67,7 @@ class MasterListTest {
 
         assertEquals(BigInteger.valueOf(-4242), ec.serialNumber)
         val spki = SubjectPublicKeyInfo.getInstance(ec.publicKey.encoded)
-        assertTrue("paramètres explicites attendus", spki.algorithm.parameters is ASN1Sequence)
+        assertTrue("explicit parameters expected", spki.algorithm.parameters is ASN1Sequence)
         val anchor = TrustAnchor(ec, TrustSource.IMPORTED_MASTER_LIST)
         assertEquals("YY", anchor.country)
         assertTrue(anchor.isSelfSigned)
@@ -76,8 +76,8 @@ class MasterListTest {
     @Test
     fun alteredContentIsRejected() {
         val tampered = fixture.bytes.copyOf()
-        // Un octet au début du contenu signé. BC découpe l'OCTET STRING encapsulé en segments
-        // de 1000 octets : on cherche donc le début du premier segment.
+        // One byte at the start of the signed content. BC splits the encapsulated OCTET STRING into
+        // 1000-byte segments, so we look for the start of the first segment.
         val offset = indexOf(tampered, fixture.content.copyOf(64)) + 60
         tampered[offset] = (tampered[offset].toInt() xor 0x01).toByte()
 
@@ -113,7 +113,7 @@ class MasterListTest {
 
     @Test
     fun unreadableCertificateIsSkipped() {
-        // Une SEQUENCE vide, illisible comme Certificate, à côté d'un CSCA valide.
+        // An empty SEQUENCE, unreadable as a Certificate, next to a valid CSCA.
         val certList = DERSet(arrayOf(DERSequence(), fixture.ecCsca.toASN1Structure()))
         val content = DERSequence(arrayOf(ASN1Integer(0), certList)).encoded
         val list = TrustStores.parseMasterList(TestMasterLists.signedMasterList(content, fixture.signer, fixture.signerKey))
@@ -122,7 +122,7 @@ class MasterListTest {
         assertEquals(1, list.info.certificateCount)
     }
 
-    /** Audit V22 : chaque SignerInfo parcourait tout le bloc `certificates` ; un seul est admis. */
+    /** Audit V22: each SignerInfo scanned the whole `certificates` block; only one is allowed. */
     @Test
     fun masterListWithTwoSignersIsRejected() {
         val secondKey = TestMasterLists.rsaKeyPair()
@@ -146,7 +146,7 @@ class MasterListTest {
         assertRejected("MULTIPLE_SIGNERS", bytes)
     }
 
-    /** Audit V22 : au-delà du plafond, la liste est refusée avant toute lecture de certificat. */
+    /** Audit V22: above the cap, the list is rejected before any certificate is read. */
     @Test
     fun masterListAboveCertificateCapIsRejected() {
         val content = contentWithFillers(TrustStores.MAX_MASTER_LIST_CERTIFICATES + 1)
@@ -154,7 +154,7 @@ class MasterListTest {
         assertRejected("TOO_MANY_CERTIFICATES", TestMasterLists.signedMasterList(content, fixture.signer, fixture.signerKey))
     }
 
-    /** Exactement le plafond : acceptée (les éléments de remplissage, illisibles, sont ignorés). */
+    /** Exactly at the cap: accepted (the unreadable filler elements are skipped). */
     @Test
     fun masterListAtCertificateCapIsAccepted() {
         val content = contentWithFillers(TrustStores.MAX_MASTER_LIST_CERTIFICATES)
@@ -163,7 +163,7 @@ class MasterListTest {
         assertArrayEquals(fixture.rsaCsca.encoded, list.certificates.single().encoded)
     }
 
-    /** Audit V22 : le bloc `certificates` du CMS est plafonné lui aussi. */
+    /** Audit V22: the CMS `certificates` block is capped too. */
     @Test
     fun cmsCertificatesAboveCapAreRejected() {
         val fillers = (0..TrustStores.MAX_MASTER_LIST_CERTIFICATES).map { ASN1Integer(it.toLong()) }
@@ -171,7 +171,7 @@ class MasterListTest {
         assertRejected("TOO_MANY_CERTIFICATES", rebuiltSignedData(certificates = DERSet(fillers.toTypedArray())))
     }
 
-    /** La Master List réelle du BSI (609 certificats) reste acceptée à l'import, sous le plafond. */
+    /** The real BSI Master List (609 certificates) is still accepted as an import, below the cap. */
     @Test
     fun bsiMasterListIsAcceptedAsImport() {
         val bytes = checkNotNull(TrustStores::class.java.getResourceAsStream("/trust/de-bsi-master-list.ml")).use { it.readBytes() }
@@ -181,18 +181,18 @@ class MasterListTest {
         assertTrue(list.info.certificateCount < TrustStores.MAX_MASTER_LIST_CERTIFICATES)
     }
 
-    /** Audit V22 : l'analyse est abandonnable, et l'abandon n'est pas déguisé en liste invalide. */
+    /** Audit V22: parsing can be cancelled, and cancellation is not disguised as an invalid list. */
     @Test
     fun cancellationFromCheckpointPropagates() {
         try {
             TrustStores.parseMasterList(fixture.bytes) { throw CancellationException("test") }
-            fail("analyse non interrompue")
+            fail("parsing not interrupted")
         } catch (_: CancellationException) {
-            // attendu
+            // expected
         }
     }
 
-    /** Contenu `CscaMasterList` de [size] éléments : le CSCA RSA et des entiers de remplissage. */
+    /** `CscaMasterList` content with [size] elements: the RSA CSCA and filler integers. */
     private fun contentWithFillers(size: Int): ByteArray {
         val elements = ASN1EncodableVector()
         elements.add(fixture.rsaCsca.toASN1Structure())
@@ -201,25 +201,25 @@ class MasterListTest {
     }
 
     /**
-     * Fuzzing (ML-test) : bloc `certificates` du CMS qui ne contient pas de certificat.
-     * BouncyCastle ne le décode qu'à la demande et levait IllegalArgumentException, que
-     * `TrustStoreLoader.load` ne rattrape pas.
+     * Fuzzing (ML-test): CMS `certificates` block that contains no certificate.
+     * BouncyCastle decodes it only on demand and threw IllegalArgumentException, which
+     * `TrustStoreLoader.load` does not catch.
      */
     @Test
     fun malformedCmsCertificateIsRejected() {
         assertRejected("NOT_CMS", rebuiltSignedData(certificates = DERSet(DERSequence(ASN1Integer(1)))))
     }
 
-    /** Fuzzing (ML-test) : `signerInfos` qui ne contient pas de SignerInfo (NoSuchElementException). */
+    /** Fuzzing (ML-test): `signerInfos` that contains no SignerInfo (NoSuchElementException). */
     @Test
     fun malformedSignerInfoIsRejected() {
         assertRejected("NOT_CMS", rebuiltSignedData(signerInfos = DERSet(DERSequence(ASN1Integer(1)))))
     }
 
     /**
-     * Fuzzing (ML-content) : certificat signé dont la clé publique est illisible. BouncyCastle ne
-     * la décode qu'à la demande : le certificat entrait dans le magasin, puis `isSelfSigned`
-     * levait IllegalStateException. Il est ignoré comme tout certificat illisible.
+     * Fuzzing (ML-content): signed certificate whose public key is unreadable. BouncyCastle decodes
+     * it only on demand: the certificate entered the store, then `isSelfSigned` threw
+     * IllegalStateException. It is skipped like any unreadable certificate.
      */
     @Test
     fun certificateWithUnreadablePublicKeyIsSkipped() {
@@ -228,8 +228,8 @@ class MasterListTest {
     }
 
     /**
-     * Fuzzing (ML-content, mode long) : clé d'algorithme inconnu de BouncyCastle, pour laquelle
-     * `publicKey` renvoie null ; `isSelfSigned` levait NullPointerException.
+     * Fuzzing (ML-content, long mode): key with an algorithm unknown to BouncyCastle, for which
+     * `publicKey` returns null; `isSelfSigned` threw NullPointerException.
      */
     @Test
     fun certificateWithUnknownKeyAlgorithmIsSkipped() {
@@ -250,13 +250,13 @@ class MasterListTest {
         val parsed = MasterListParser.parse(fixture.bytes)
         val rsaCscaSha = TrustCrypto.sha256Hex(fixture.rsaCsca.encoded)
 
-        // Signataire émis par le CSCA épinglé, présent dans la liste : accepté.
+        // Signer issued by the pinned CSCA, present in the list: accepted.
         MasterListParser.requireAnchoredSigner(parsed, setOf(rsaCscaSha))
 
-        // Épingle sur un autre certificat : rejeté.
+        // Pin on another certificate: rejected.
         try {
             MasterListParser.requireAnchoredSigner(parsed, setOf(TrustCrypto.sha256Hex(fixture.ecCsca.encoded)))
-            fail("signataire non ancré accepté")
+            fail("unanchored signer accepted")
         } catch (e: InvalidMasterListException) {
             assertEquals("UNTRUSTED_SIGNER", e.code)
         }
@@ -264,7 +264,7 @@ class MasterListTest {
 
     @Test
     fun signerFromUnpinnedCscaIsRejectedByAnchoring() {
-        // Liste valide dont le signataire est émis par un CSCA non épinglé.
+        // Valid list whose signer is issued by an unpinned CSCA.
         val rogueKey = TestMasterLists.rsaKeyPair()
         val rogueCsca = TestMasterLists.selfSigned("C=ZZ,O=Test,CN=CSCA RSA", rogueKey)
         val signerKey = TestMasterLists.rsaKeyPair()
@@ -281,13 +281,13 @@ class MasterListTest {
 
         try {
             MasterListParser.requireAnchoredSigner(parsed, setOf(TrustCrypto.sha256Hex(fixture.rsaCsca.encoded)))
-            fail("signataire non ancré accepté")
+            fail("unanchored signer accepted")
         } catch (e: InvalidMasterListException) {
             assertEquals("UNTRUSTED_SIGNER", e.code)
         }
         try {
             MasterListParser.requireAnchoredSigner(parsed, TrustStoreLoader.EMBEDDED_MASTER_LIST_ANCHORS)
-            fail("signataire non ancré accepté")
+            fail("unanchored signer accepted")
         } catch (e: InvalidMasterListException) {
             assertEquals("UNTRUSTED_SIGNER", e.code)
         }
@@ -306,8 +306,8 @@ class MasterListTest {
     }
 
     /**
-     * Master List de la fixture dont le SignedData est réassemblé élément par élément, avec
-     * [certificates] (bloc [0] IMPLICIT) ou [signerInfos] (dernier élément) remplacés.
+     * The fixture's Master List with its SignedData reassembled element by element, with
+     * [certificates] (block [0] IMPLICIT) or [signerInfos] (last element) replaced.
      */
     private fun rebuiltSignedData(
         certificates: ASN1Set? = null,
@@ -335,6 +335,6 @@ class MasterListTest {
             for (j in needle.indices) if (haystack[i + j] != needle[j]) continue@outer
             return i
         }
-        error("contenu introuvable")
+        error("content not found")
     }
 }

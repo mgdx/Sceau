@@ -34,20 +34,20 @@ import java.security.KeyPairGenerator
 import java.time.LocalDate
 
 /**
- * Repli de PACE sur BAC : réinitialisation de la liaison puis BAC avec une clé MRZ, jamais
- * après un refus explicite de la clé ni un délai dépassé, jamais avec un CAN. Délai de réponse
- * long pendant l'authentification (puce qui fait patienter après des essais ratés).
+ * Fallback from PACE to BAC: link reset then BAC with an MRZ key, never after an explicit
+ * refusal of the key or a timeout, never with a CAN. Long response timeout during
+ * authentication (a chip that stalls after failed attempts).
  */
 class PaceFallbackTest {
-    /** EF.CardAccess d'un passeport français : PACE ECDH-GM AES-128 sur brainpoolP256r1. */
+    /** EF.CardAccess of a French passport: PACE ECDH-GM AES-128 on brainpoolP256r1. */
     private val cardAccess =
         CardAccessFile(listOf<SecurityInfo>(PACEInfo(SecurityInfo.ID_PACE_ECDH_GM_AES_CBC_CMAC_128, 2, 13))).encoded
 
     private val can = AccessKey.Can("123456")
 
     /**
-     * Transport qui sert [before] jusqu'à [reconnect], puis [after] (la puce après
-     * réinitialisation). Note le délai en vigueur à chaque commande.
+     * Transport that serves [before] until [reconnect], then [after] (the chip after the
+     * reset). Records the timeout in effect for each command.
      */
     private class ReconnectingTransport(
         private val before: CardTransport,
@@ -62,12 +62,12 @@ class PaceFallbackTest {
         var closed = false
             private set
 
-        /** Commande (hexadécimal) et délai en vigueur, dans l'ordre. */
+        /** Command (hexadecimal) and timeout in effect, in order. */
         val sent = mutableListOf<Pair<String, Int>>()
 
         override fun transceive(apdu: ByteArray): ByteArray {
             sent += apdu.toHex() to timeoutMillis
-            val target = if (reconnects == 0) before else checkNotNull(after) { "commande après reconnexion" }
+            val target = if (reconnects == 0) before else checkNotNull(after) { "command after reconnection" }
             return target.transceive(apdu)
         }
 
@@ -85,7 +85,7 @@ class PaceFallbackTest {
         fun timeoutOf(prefix: String): Int = sent.first { it.first.startsWith(prefix) }.second
     }
 
-    /** Début de PACE sur le passeport : EF.CardAccess, MSE:Set AT (clé MRZ) accepté. */
+    /** Start of PACE on the passport: EF.CardAccess, MSE:Set AT (MRZ key) accepted. */
     private fun paceStart() = arrayOf(*file(FID_CARD_ACCESS, cardAccess), respond(MSE_SET_AT, "9000"))
 
     private suspend inline fun <reified E : SceauException> expect(
@@ -95,16 +95,16 @@ class PaceFallbackTest {
         try {
             readAndVerify(transport, key, TestFixtures.EMPTY_TRUST_STORE) {}
         } catch (e: SceauException) {
-            if (e !is E) throw AssertionError("${E::class.simpleName} attendue, reçu ${e.code}", e)
-            assertTrue("transport fermé", transport.closed)
+            if (e !is E) throw AssertionError("${E::class.simpleName} expected, got ${e.code}", e)
+            assertTrue("transport closed", transport.closed)
             return e
         }
-        fail("${E::class.simpleName} attendue")
+        fail("${E::class.simpleName} expected")
         throw IllegalStateException()
     }
 
     @Test
-    fun mrzSwInattenduAuPremierGeneralAuthenticate_ReconnexionPuisBac() =
+    fun mrzUnexpectedSwAtFirstGeneralAuthenticate_ReconnectThenBac() =
         runTest {
             val pki = TestPki(TestKeyType.RSA)
             val document = pki.document()
@@ -117,10 +117,10 @@ class PaceFallbackTest {
 
             assertEquals(1, transport.reconnects)
             assertTrue(passport.exhausted)
-            assertTrue("BAC mené après la reconnexion", chip.bacCompleted)
+            assertTrue("BAC performed after reconnection", chip.bacCompleted)
             assertEquals(CheckDetail.SecureChannel(ChannelProtocol.BAC), report.check(CheckId.SECURE_CHANNEL).detail)
             assertEquals(DOCUMENT_NUMBER, report.document.dg1.documentNumber)
-            // Délai long pendant l'authentification (PACE puis BAC), délai normal ailleurs.
+            // Long timeout during authentication (PACE then BAC), normal timeout elsewhere.
             val auth = SecureChannel.AUTHENTICATION_TIMEOUT_MILLIS
             assertEquals(60_000, auth)
             assertEquals(INITIAL_TIMEOUT, transport.timeoutOf("00A4"))
@@ -135,7 +135,7 @@ class PaceFallbackTest {
         }
 
     @Test
-    fun mrzDelaiAuPremierGeneralAuthenticate_TimeoutSansRepli() =
+    fun mrzTimeoutAtFirstGeneralAuthenticate_TimeoutWithoutFallback() =
         runTest {
             val timeout = SceauException.Timeout(detail = "INS86-L10")
             val passport = ScriptedTransport(*paceStart(), raise(GA_STEP_1, timeout))
@@ -144,7 +144,7 @@ class PaceFallbackTest {
 
             val error = expect<SceauException.Timeout>(transport, key)
 
-            // Puce en pénalité : ni reconnexion ni BAC, qui ne feraient qu'ajouter un essai.
+            // Chip in penalty: no reconnection and no BAC, which would only add another attempt.
             assertEquals("TIMEOUT-SECURE_CHANNEL-INS86-L10", error.code)
             assertSame(timeout, error.cause)
             assertEquals(0, transport.reconnects)
@@ -155,7 +155,7 @@ class PaceFallbackTest {
         }
 
     @Test
-    fun mrzPaceReussi_DelaiLongPendantPaceSeulement() =
+    fun mrzPaceSucceeded_LongTimeoutDuringPaceOnly() =
         runTest {
             val pki = TestPki(TestKeyType.RSA)
             val document = pki.document()
@@ -175,7 +175,7 @@ class PaceFallbackTest {
         }
 
     @Test
-    fun mrzRefuseeAAuthentificationMutuellePace_AccessDeniedSansRepli() =
+    fun mrzRefusedAtPaceMutualAuthentication_AccessDeniedWithoutFallback() =
         runTest {
             val curve = ECNamedCurveTable.getParameterSpec("brainpoolP256r1")
             val point = {
@@ -197,7 +197,7 @@ class PaceFallbackTest {
                     respond(GA_STEP_1, "7C12801000112233445566778899AABBCCDDEEFF9000"),
                     respond("10860000", "7C438241${mapping}9000"),
                     respond("10860000", "7C438441${ephemeral}9000"),
-                    // Jeton d'authentification (dernière commande, CLA sans chaînage) : clé refusée.
+                    // Authentication token (last command, CLA without chaining): key refused.
                     respond("00860000", "6300"),
                 )
             val transport = ReconnectingTransport(passport)
@@ -213,7 +213,7 @@ class PaceFallbackTest {
         }
 
     @Test
-    fun canDelaiAuPremierGeneralAuthenticate_TimeoutSansRepli() =
+    fun canTimeoutAtFirstGeneralAuthenticate_TimeoutWithoutFallback() =
         runTest {
             val timeout = SceauException.Timeout(detail = "INS86-L10")
             val passport = ScriptedTransport(*paceStart(), raise(GA_STEP_1, timeout))
@@ -230,7 +230,7 @@ class PaceFallbackTest {
         }
 
     @Test
-    fun mrzReconnexionImpossible_ConnectionLostAvecDiagnostic() =
+    fun mrzReconnectionImpossible_ConnectionLostWithDiagnostic() =
         runTest {
             val passport = ScriptedTransport(*paceStart(), raise(GA_STEP_1, SceauException.ConnectionLost(detail = "INS86-L10")))
             val transport =
@@ -249,10 +249,10 @@ class PaceFallbackTest {
         const val GET_CHALLENGE = "00840000"
         const val EXTERNAL_AUTHENTICATE = "00820000"
 
-        /** GENERAL AUTHENTICATE étape 1 : CLA 10 (chaînage), 7C 00, Le 00 courte. */
+        /** GENERAL AUTHENTICATE step 1: CLA 10 (chaining), 7C 00, short Le 00. */
         const val GA_STEP_1 = "10860000027C0000"
 
-        /** MRZ du DG1 factice de la fabrique de test (numéro L898902C3, né le 12/08/1974). */
+        /** MRZ of the test factory's fake DG1 (number L898902C3, born 12/08/1974). */
         const val DOCUMENT_NUMBER = "L898902C3"
         val DATE_OF_BIRTH: LocalDate = LocalDate.of(1974, 8, 12)
     }

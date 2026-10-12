@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
-# Sceau - génère testchip/src/main/resources/specimen-portrait.jp2, le portrait de la CNIe
-# simulée (DG2).
+# Sceau - generates testchip/src/main/resources/specimen-portrait.jp2, the portrait of the
+# simulated CNIe (DG2).
 #
-# L'image est entièrement synthétique : fond en dégradé et silhouette anonyme (tête et épaules
-# en aplats), dessinés pixel par pixel par ce script. Aucune photo de personne n'intervient.
-# L'encodage JPEG 2000 est fait par opj_compress, construit hors du dépôt depuis le sous-module
-# OpenJPEG (app/src/main/cpp/openjpeg), comme dans app/src/main/cpp/test/run-host-tests.sh.
+# The image is entirely synthetic: gradient background and anonymous silhouette (head and
+# shoulders in flat colors), drawn pixel by pixel by this script. No photo of a person is involved.
+# JPEG 2000 encoding is done by opj_compress, built outside the repository from the OpenJPEG
+# submodule (app/src/main/cpp/openjpeg), as in app/src/main/cpp/test/run-host-tests.sh.
 #
-# Usage : testchip/tools/generate-specimen-portrait.sh [DOSSIER_DE_BUILD]
-# Prérequis : cmake, un compilateur C, python3, sous-module initialisé
+# Usage: testchip/tools/generate-specimen-portrait.sh [BUILD_DIR]
+# Requirements: cmake, a C compiler, python3, initialized submodule
 # (git submodule update --init).
 set -euo pipefail
 
@@ -21,18 +21,18 @@ mkdir -p "$build"
 build="$(cd "$build" && pwd)"
 
 if [[ ! -f "$openjpeg/CMakeLists.txt" ]]; then
-    echo "Sous-module OpenJPEG absent : git submodule update --init" >&2
+    echo "OpenJPEG submodule missing: git submodule update --init" >&2
     exit 1
 fi
 
-echo "== Construction d'opj_compress dans $build"
+echo "== Building opj_compress in $build"
 cmake -S "$openjpeg" -B "$build/opj-tools" -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_SHARED_LIBS=OFF -DBUILD_CODEC=ON -DBUILD_TESTING=OFF -DBUILD_THIRDPARTY=OFF \
     -DCMAKE_C_FLAGS=-w -Wno-dev >/dev/null
 cmake --build "$build/opj-tools" --target opj_compress -j"$(nproc)" >/dev/null 2>&1
 opj_compress="$build/opj-tools/bin/opj_compress"
 
-echo "== Dessin de la silhouette synthétique (240 x 320, PPM)"
+echo "== Drawing the synthetic silhouette (240 x 320, PPM)"
 python3 - "$build/specimen.ppm" <<'PY'
 import sys
 
@@ -40,14 +40,14 @@ W, H = 240, 320
 pixels = bytearray()
 for y in range(H):
     for x in range(W):
-        # Fond : dégradé vertical bleu-gris clair, comme un fond de photo d'identité.
+        # Background: light blue-gray vertical gradient, like an ID photo background.
         t = y / (H - 1)
         r, g, b = int(214 - 30 * t), int(222 - 26 * t), int(232 - 18 * t)
-        # Épaules : demi-ellipse large en bas de l'image.
+        # Shoulders: wide half-ellipse at the bottom of the image.
         sx, sy = (x - W / 2) / 110.0, (y - H) / 95.0
-        # Cou : rectangle arrondi.
+        # Neck: rounded rectangle.
         neck = abs(x - W / 2) < 26 and 170 < y < 240
-        # Tête : ellipse.
+        # Head: ellipse.
         hx, hy = (x - W / 2) / 62.0, (y - 125) / 80.0
         if sx * sx + sy * sy <= 1.0:
             r, g, b = 70, 78, 96
@@ -60,11 +60,11 @@ with open(sys.argv[1], "wb") as f:
     f.write(pixels)
 PY
 
-echo "== Encodage JPEG 2000 (JP2, avec pertes, taux 25)"
+echo "== JPEG 2000 encoding (JP2, lossy, rate 25)"
 "$opj_compress" -i "$build/specimen.ppm" -o "$output" -r 25 -I >/dev/null
 size=$(wc -c <"$output")
-echo "== $output : $size octets"
+echo "== $output: $size bytes"
 if (( size > 20480 )); then
-    echo "Portrait trop gros (> 20 Ko)" >&2
+    echo "Portrait too large (> 20 KB)" >&2
     exit 1
 fi

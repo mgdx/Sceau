@@ -10,12 +10,12 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
- * Mode démo de l'APK de debug (seule variante dotée de tests unitaires) : la CNIe simulée est lue
- * de bout en bout par `readAndVerify`, sans Android.
+ * Demo mode of the debug APK (the only variant with unit tests): the simulated CNIe is read end to
+ * end by `readAndVerify`, without Android.
  */
 class DemoModeTest {
     @Test
-    fun `la CNIe simulee du debug est lue comme authentique avec son portrait JPEG 2000`() {
+    fun `the simulated debug CNIe reads as authentic with its JPEG 2000 portrait`() {
         assertTrue(DemoMode.isAvailable)
         val card = checkNotNull(DemoMode.newSimulatedCnie())
         assertTrue(card.key is AccessKey.Can)
@@ -30,7 +30,7 @@ class DemoModeTest {
     }
 
     @Test
-    fun `la CNIe simulee porte une signature manuscrite JPEG (DG7, D37)`() {
+    fun `the simulated CNIe carries a JPEG handwritten signature (DG7, D37)`() {
         val card = checkNotNull(DemoMode.newSimulatedCnie())
 
         val report = runBlocking { readAndVerify(card.transport, card.key, card.trustStore) { } }

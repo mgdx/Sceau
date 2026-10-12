@@ -23,13 +23,13 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
 /**
- * Audit V29 : une puce forgée qui répond `90 00` sans donnée (ou un octet à la fois) à chaque
- * READ BINARY ne fait plus boucler la lecture ; et toute lecture se termine dans le délai global.
+ * Audit V29: a forged chip that answers `90 00` with no data (or one byte at a time) to every
+ * READ BINARY no longer makes the read loop, and every read finishes within the global timeout.
  */
 class ReadStallTest {
     private val mrz = AccessKey.Mrz("12AB34567", LocalDate.of(1965, 2, 12), LocalDate.of(2030, 12, 31))
 
-    /** SELECT du fichier [fid] puis READ BINARY : en-tête de [header] à l'offset 0, [reply] ensuite. */
+    /** SELECT of file [fid] then READ BINARY: [header] header at offset 0, [reply] afterwards. */
     private fun stallingFile(
         fid: String,
         header: ByteArray,
@@ -45,31 +45,31 @@ class ReadStallTest {
     )
 
     @Test
-    fun reponsesVidesRepetees_ReadStalledEnMoinsDe10Apdu() =
+    fun repeatedEmptyResponses_ReadStalledInFewerThan10Apdus() =
         runTest {
-            // EF.CardAccess annonçant 1 000 octets, puis des réponses vides.
+            // EF.CardAccess declaring 1,000 bytes, then empty responses.
             val header = "318203E8".hexToBytes() + ByteArray(4)
             val transport = ScriptedTransport(*stallingFile(FID_CARD_ACCESS, header) { _, _ -> ByteArray(0) })
             try {
                 readAndVerify(transport, mrz, TestFixtures.EMPTY_TRUST_STORE) {}
-                fail("ReadStalled attendue")
+                fail("ReadStalled expected")
             } catch (e: SceauException.ReadStalled) {
                 assertEquals("READ_STALLED-CONNECT-CARD_ACCESS", e.code)
             }
-            assertTrue("transport fermé", transport.closed)
+            assertTrue("transport closed", transport.closed)
             assertTrue("${transport.sent.size} APDU", transport.sent.size < 10)
         }
 
     @Test
-    fun reponsesDUnOctet_ReadStalledAvantLePlafondDEchanges() {
-        // DG2 annonçant 200 000 octets (sous son plafond de 256 Ko), livrés un octet à la fois.
+    fun oneByteResponses_ReadStalledBeforeExchangeCap() {
+        // DG2 declaring 200,000 bytes (below its 256 KB cap), delivered one byte at a time.
         val header = "7583030D40".hexToBytes() + ByteArray(3)
         val fid = TestFixtures.fid(2)
         val transport = ScriptedTransport(*stallingFile(fid, header) { _, _ -> byteArrayOf(0x42) })
         val chip = Chip(transport)
         try {
             chip.readFile(Chip.fidOf(2))
-            fail("ReadStalled attendue")
+            fail("ReadStalled expected")
         } catch (e: SceauException.ReadStalled) {
             assertEquals("READ_STALLED-DG2", e.code)
         }
@@ -78,21 +78,21 @@ class ReadStallTest {
     }
 
     @Test
-    fun dgFacultatifQuiNAvancePlus_ErreurEtNonAbsent() {
+    fun optionalDgThatStopsProgressing_ErrorNotMissing() {
         val header = "6B820100".hexToBytes() + ByteArray(4)
         val transport = ScriptedTransport(*stallingFile(TestFixtures.fid(11), header) { _, _ -> ByteArray(0) })
         try {
             Chip(transport).readOptionalFile(Chip.fidOf(11))
-            fail("ReadStalled attendue")
+            fail("ReadStalled expected")
         } catch (e: SceauException.ReadStalled) {
             assertEquals("READ_STALLED-DG11", e.code)
         }
     }
 
     @Test
-    fun lectureNormaleParBlocsDe223_Inchangee() {
-        // DG2 de 30 Ko, lu par blocs de 223 octets comme sur un passeport réel (sous 32 Ko : le
-        // transport scripté ne sert que READ BINARY B0, sans offset codé en DO53).
+    fun normalReadIn223ByteBlocks_Unchanged() {
+        // 30 KB DG2, read in 223-byte blocks as on a real passport (below 32 KB: the scripted
+        // transport only serves READ BINARY B0, without an offset encoded in DO53).
         val value = ByteArray(30_000) { (it * 31).toByte() }
         val content = "7582".hexToBytes() + byteArrayOf((value.size shr 8).toByte(), value.size.toByte()) + value
         val transport = ScriptedTransport(*ScriptedTransport.file(TestFixtures.fid(2), content))
@@ -103,23 +103,23 @@ class ReadStallTest {
     }
 
     @Test
-    fun puceMuette_TimeoutGlobalEtTransportFerme() =
+    fun silentChip_GlobalTimeoutAndTransportClosed() =
         runTest {
             val transport = HangingTransport()
             val session = ReadingSession(transport, mrz, TestFixtures.EMPTY_TRUST_STORE, {}, globalTimeoutMillis = 200)
             val start = System.nanoTime()
             try {
                 session.run()
-                fail("Timeout attendue")
+                fail("Timeout expected")
             } catch (e: SceauException.Timeout) {
                 assertEquals("TIMEOUT-CONNECT-GLOBAL", e.code)
             }
-            assertTrue("transport fermé", transport.closed.count == 0L)
-            assertTrue("délai respecté", System.nanoTime() - start < TimeUnit.SECONDS.toNanos(5))
+            assertTrue("transport closed", transport.closed.count == 0L)
+            assertTrue("timeout respected", System.nanoTime() - start < TimeUnit.SECONDS.toNanos(5))
         }
 
     @Test
-    fun delaiGlobal_SuspenduPendantLAuthentification() {
+    fun globalTimeout_SuspendedDuringAuthentication() {
         val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
         try {
             val expired = CountDownLatch(1)
@@ -127,7 +127,7 @@ class ReadStallTest {
             deadline.resume()
             Thread.sleep(100)
             deadline.pause()
-            // Bien au-delà du budget, mais pendant l'authentification : pas d'échéance.
+            // Well beyond the budget, but during authentication: no deadline.
             assertFalse(expired.await(600, TimeUnit.MILLISECONDS))
             assertFalse(deadline.expired)
             deadline.resume()
@@ -138,7 +138,7 @@ class ReadStallTest {
         }
     }
 
-    /** Puce qui ne répond jamais : chaque APDU bloque jusqu'à la fermeture du transport. */
+    /** Chip that never answers: each APDU blocks until the transport is closed. */
     private class HangingTransport : CardTransport {
         val closed = CountDownLatch(1)
         override val maxTransceiveLength: Int = 261

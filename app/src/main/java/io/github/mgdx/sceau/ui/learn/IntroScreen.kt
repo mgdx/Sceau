@@ -47,7 +47,7 @@ import io.github.mgdx.sceau.R
 import io.github.mgdx.sceau.ui.common.SceauIcons
 import kotlinx.coroutines.launch
 
-/** Pages de l'introduction, dans l'ordre (D35). */
+/** Introduction pages, in order (D35). */
 internal enum class IntroPage {
     CHIP,
     KEY,
@@ -56,11 +56,11 @@ internal enum class IntroPage {
 }
 
 /**
- * Introduction du premier lancement (D35), rejouable depuis l'écran À propos.
+ * First-launch introduction (D35), replayable from the About screen.
  *
- * « Passer l'introduction » (toutes les pages sauf la dernière), « Commencer » (dernière page) et le
- * retour arrière du système appellent tous [onFinish], qui mémorise l'introduction comme vue et
- * quitte l'écran : vers l'accueil au premier lancement, vers À propos quand elle est rejouée.
+ * "Skip introduction" (every page but the last), "Get started" (last page) and the system
+ * back action all call [onFinish], which records the introduction as seen and leaves the
+ * screen: to the home screen on first launch, to About when it is replayed.
  */
 @Composable
 fun IntroScreen(
@@ -98,8 +98,8 @@ fun IntroScreen(
                         .align(Alignment.CenterHorizontally)
                         .padding(vertical = 8.dp),
             )
-            // FlowRow : à grande taille de police, les boutons passent à la ligne au lieu d'être
-            // tronqués ; l'espaceur pousse Précédent et Suivant à droite de leur ligne.
+            // FlowRow: at large font sizes, the buttons wrap to the next line instead of being
+            // truncated; the spacer pushes Previous and Next to the end of their line.
             FlowRow(
                 modifier =
                     Modifier
@@ -114,7 +114,7 @@ fun IntroScreen(
                 }
                 Spacer(Modifier.weight(1f))
                 if (pagerState.currentPage > 0) {
-                    // Navigation sans balayage (accès par contacteur, TalkBack).
+                    // Navigation without swiping (switch access, TalkBack).
                     OutlinedButton(
                         onClick = { scope.launch { pagerState.animateScrollToPage(pagerState.currentPage - 1) } },
                     ) { Text(stringResource(R.string.learn_intro_previous)) }
@@ -165,7 +165,7 @@ private fun IntroPageContent(
                 LearnBullet(stringResource(R.string.learn_intro_verify_signature))
                 LearnBullet(stringResource(R.string.learn_intro_verify_clone))
                 LearnParagraph(stringResource(R.string.learn_intro_verify_verdicts))
-                // Mêmes libellés et explications que la carte du verdict de l'écran de résultat.
+                // Same labels and explanations as the verdict card of the result screen.
                 Verdict(R.string.result_verdict_authentic, R.string.result_verdict_authentic_explanation)
                 Verdict(R.string.result_verdict_chip_unverified, R.string.result_verdict_chip_unverified_explanation)
                 Verdict(R.string.result_verdict_unknown_issuer, R.string.result_verdict_unknown_issuer_explanation)
@@ -197,7 +197,7 @@ private fun PageHeader(
                     .background(MaterialTheme.colorScheme.primaryContainer),
             contentAlignment = Alignment.Center,
         ) {
-            // Décorative : le titre qui suit dit tout.
+            // Decorative: the following title says it all.
             Icon(
                 icon,
                 contentDescription = null,
@@ -225,7 +225,7 @@ private fun Note(text: String) {
     Text(text, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
 }
 
-/** Points de pagination ; annoncé « Page 2 sur 4 » par les lecteurs d'écran. */
+/** Pagination dots; announced as "Page 2 of 4" by screen readers. */
 @Composable
 private fun PageIndicator(
     current: Int,
@@ -237,7 +237,7 @@ private fun PageIndicator(
         modifier =
             modifier.semantics(mergeDescendants = true) {
                 contentDescription = description
-                // TalkBack annonce chaque changement de page, balayage compris.
+                // TalkBack announces every page change, swiping included.
                 liveRegion = LiveRegionMode.Polite
             },
         horizontalArrangement = Arrangement.spacedBy(8.dp),

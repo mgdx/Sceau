@@ -3,7 +3,7 @@ package io.github.mgdx.sceau.core.fuzz
 import org.junit.Assert.assertArrayEquals
 import org.junit.Test
 
-/** Les graines signées sont reproductibles : sinon, graine et index ne rejoueraient pas un échec. */
+/** Signed seeds are reproducible: otherwise, seed and index would not replay a failure. */
 class FuzzSeedsTest {
     @Test
     fun signedSeedsAreDeterministic() {

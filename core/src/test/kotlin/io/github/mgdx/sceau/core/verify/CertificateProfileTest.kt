@@ -14,9 +14,9 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
- * Profil des certificats de la chaîne (audit V8) : un émetteur doit pouvoir signer des
- * certificats (basicConstraints cA=TRUE, keyUsage keyCertSign, quand ces extensions sont
- * présentes), et le DS doit pouvoir signer (keyUsage digitalSignature, s'il est présent).
+ * Profile of the chain certificates (audit V8): an issuer must be allowed to sign certificates
+ * (basicConstraints cA=TRUE, keyUsage keyCertSign, when these extensions are present), and the
+ * DS must be allowed to sign (keyUsage digitalSignature, if present).
  */
 class CertificateProfileTest {
     private val pki = TestPki(TestKeyType.RSA, seed = 80_808L)
@@ -37,19 +37,19 @@ class CertificateProfileTest {
     }
 
     @Test
-    fun `DS d une Master List importee utilise comme emetteur - ecarte`() {
-        // pki.ds : keyUsage digitalSignature seul, sans basicConstraints.
+    fun `DS from an imported Master List used as an issuer - discarded`() {
+        // pki.ds: keyUsage digitalSignature only, no basicConstraints.
         val forged = pki.issueCustom(pki.ds, "DS SIGNE PAR UN DS", basicConstraintsCa = null, keyUsage = KeyUsage.digitalSignature)
 
         val result = chainOf(forged, pki.oldCsca, pki.ds)
 
         assertEquals(CheckStatus.NOT_AVAILABLE, result.certificateChain.status)
-        // Audit V25 : sans chaîne, la signature du SOD n'est pas présentée comme vérifiée.
+        // Audit V25: without a chain, the SOD signature is not presented as verified.
         assertEquals(CheckStatus.NOT_AVAILABLE, result.sodSignature.status)
     }
 
     @Test
-    fun `intermediaire avec basicConstraints cA FALSE - ecarte`() {
+    fun `intermediate with basicConstraints cA FALSE - discarded`() {
         val intermediate = pki.issueCustom(pki.oldCsca, "PAS UNE CA", basicConstraintsCa = false, keyUsage = KeyUsage.keyCertSign)
         val ds = pki.issueCustom(intermediate, "DS", basicConstraintsCa = null, keyUsage = KeyUsage.digitalSignature)
 
@@ -57,7 +57,7 @@ class CertificateProfileTest {
     }
 
     @Test
-    fun `intermediaire CA conforme - chaine OK`() {
+    fun `compliant intermediate CA - chain OK`() {
         val intermediate = pki.issueCustom(pki.oldCsca, "CA", basicConstraintsCa = true, keyUsage = KeyUsage.keyCertSign)
         val ds = pki.issueCustom(intermediate, "DS", basicConstraintsCa = null, keyUsage = KeyUsage.digitalSignature)
 
@@ -65,8 +65,8 @@ class CertificateProfileTest {
     }
 
     @Test
-    fun `intermediaire sans basicConstraints ni keyUsage - tolere`() {
-        // Cas réel (lien belge sans basicConstraints, lien chinois sans keyUsage).
+    fun `intermediate without basicConstraints or keyUsage - tolerated`() {
+        // Real-world case (Belgian link without basicConstraints, Chinese link without keyUsage).
         val intermediate = pki.issueCustom(pki.oldCsca, "LIEN ANCIEN", basicConstraintsCa = null, keyUsage = null)
         val ds = pki.issueCustom(intermediate, "DS", basicConstraintsCa = null, keyUsage = KeyUsage.digitalSignature)
 
@@ -74,7 +74,7 @@ class CertificateProfileTest {
     }
 
     @Test
-    fun `DS sans digitalSignature dans son keyUsage - chaine en echec`() {
+    fun `DS without digitalSignature in its keyUsage - chain fails`() {
         val ds = pki.issueCustom(pki.oldCsca, "DS", basicConstraintsCa = null, keyUsage = KeyUsage.keyCertSign)
 
         val result = chainOf(ds, pki.oldCsca)
@@ -84,13 +84,13 @@ class CertificateProfileTest {
     }
 
     @Test
-    fun `magasin embarque - tous les CSCA auto-signes peuvent emettre`() {
+    fun `embedded store - all self-signed CSCAs can issue`() {
         val anchors = TrustStores.load().anchors
         val refused = anchors.filterNot { CertificateChains.canIssueCertificates(JcaX509CertificateHolder(it.certificate)) }
 
         assertEquals(emptyList<String>(), refused.filter { it.isSelfSigned }.map { it.subject })
-        // Sept certificats de lien portent cA=FALSE : chacun partage clé et SKI avec un CSCA
-        // auto-signé conforme du magasin, qui ancre directement les DS de cette clé.
+        // Seven link certificates carry cA=FALSE: each shares its key and SKI with a compliant
+        // self-signed CSCA in the store, which directly anchors the DSs of that key.
         for (link in refused) {
             val twin =
                 anchors.any {
@@ -103,7 +103,7 @@ class CertificateProfileTest {
     }
 
     @Test
-    fun `DS sans keyUsage - tolere`() {
+    fun `DS without keyUsage - tolerated`() {
         val ds = pki.issueCustom(pki.oldCsca, "DS", basicConstraintsCa = null, keyUsage = null)
 
         assertEquals(CheckStatus.OK, chainOf(ds, pki.oldCsca).certificateChain.status)

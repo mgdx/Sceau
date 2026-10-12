@@ -1,12 +1,12 @@
-# Glossaire — hébreu (iw)
+# Glossary — Hebrew (iw)
 
-Référence de vocabulaire pour `app/src/main/res/values-iw/`.
+Vocabulary reference for `app/src/main/res/values-iw/`.
 
-| Source FR | Cible | Note |
+| French source | Target | Note |
 |---|---|---|
 | puce | שבב |  |
 | document | מסמך |  |
-| titulaire | בעל המסמך | masculin générique (usage administratif) |
+| titulaire | בעל המסמך | generic masculine (administrative usage) |
 | magasin de confiance | מאגר האמון |  |
 | certificat | תעודה |  |
 | certificat de lien | תעודת קישור |  |
@@ -18,10 +18,10 @@ Référence de vocabulaire pour `app/src/main/res/values-iw/`.
 | groupe de données | קבוצת נתונים |  |
 | embarqué (magasin, Master List) | מובנה |  |
 | importé | מיובא(ת) |  |
-| lire / lecture | קריאה | nom verbal pour les boutons (usage Android) ; consignes à l’infinitif « יש ל… », neutre en genre |
-| réessayer | ניסיון חוזר | libellé Android hébreu |
+| lire / lecture | קריאה | verbal noun for buttons (Android usage); instructions in the infinitive “יש ל…”, gender-neutral |
+| réessayer | ניסיון חוזר | Hebrew Android label |
 | annuler | ביטול |  |
-| effacer (résultat) | מחיקה | même mot que supprimer (noms verbaux, usage Android) |
+| effacer (résultat) | מחיקה | same word as delete (verbal nouns, Android usage) |
 | importer | ייבוא |  |
 | supprimer | מחיקה |  |
 | Plus d’options | אפשרויות נוספות |  |
@@ -37,6 +37,6 @@ Référence de vocabulaire pour `app/src/main/res/values-iw/`.
 | date d’expiration | תאריך תפוגה |  |
 | nationalité | אזרחות |  |
 | date de délivrance | תאריך הנפקה |  |
-| JJ / MM / AAAA | יי / חח / שששש | gabarit des formulaires israéliens |
-| RGPD | התקנה הכללית להגנה על מידע (GDPR) | acronyme anglais courant en Israël |
-| Master List, CAN, MRZ, DS, CSCA, SOD, DGn | inchangés (latin) | article ה- avec trait d’union (ה-MRZ, ה-SOD) |
+| JJ / MM / AAAA | יי / חח / שששש | template used on Israeli forms |
+| RGPD | התקנה הכללית להגנה על מידע (GDPR) | English acronym common in Israel |
+| Master List, CAN, MRZ, DS, CSCA, SOD, DGn | unchanged (Latin script) | article ה- with a hyphen (ה-MRZ, ה-SOD) |

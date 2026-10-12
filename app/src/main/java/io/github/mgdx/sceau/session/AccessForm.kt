@@ -8,19 +8,19 @@ import java.time.format.DateTimeFormatterBuilder
 import java.time.format.FormatStyle
 import java.util.Locale
 
-/** Onglets de l'écran d'accueil (SPEC §5.1), dans l'ordre d'affichage : le passeport d'abord (D29). */
+/** Home screen tabs (SPEC §5.1), in display order: the passport first (D29). */
 enum class DocumentTab {
     PASSPORT,
     ID_CARD,
 }
 
-/** Clé d'accès saisie dans l'onglet Carte d'identité : le CAN par défaut, ou la MRZ (D31). */
+/** Access key entered in the "ID card" tab: the CAN by default, or the MRZ (D31). */
 enum class IdCardKey {
     CAN,
     MRZ,
 }
 
-/** Partie d'une date saisie au clavier, avec son nombre de chiffres. */
+/** Part of a date typed on the keyboard, with its number of digits. */
 enum class DatePart(
     val length: Int,
 ) {
@@ -29,7 +29,7 @@ enum class DatePart(
     YEAR(4),
 }
 
-/** Ordre de saisie des dates, suivant la locale : JJ/MM/AAAA en français, MM/DD/YYYY en en-US. */
+/** Date input order, following the locale: DD/MM/YYYY in French, MM/DD/YYYY in en-US. */
 enum class DateOrder(
     val parts: List<DatePart>,
 ) {
@@ -38,11 +38,11 @@ enum class DateOrder(
     YEAR_MONTH_DAY(listOf(DatePart.YEAR, DatePart.MONTH, DatePart.DAY)),
     ;
 
-    /** Positions, dans les chiffres saisis, où s'insère un séparateur (fin des deux premières parties). */
+    /** Positions, within the typed digits, where a separator is inserted (end of the first two parts). */
     val separatorPositions: List<Int> = listOf(parts[0].length, parts[0].length + parts[1].length)
 
     companion object {
-        /** Ordre du format de date court de [locale] ; jour/mois/année par défaut. */
+        /** Order of the short date format of [locale]; day/month/year by default. */
         fun forLocale(locale: Locale): DateOrder {
             val pattern =
                 try {
@@ -63,49 +63,49 @@ enum class DateOrder(
     }
 }
 
-/** Raison pour laquelle une date complète est refusée. */
+/** Reason why a complete date is rejected. */
 enum class DateError {
-    /** La date n'existe pas (31/02, mois 13…). */
+    /** The date does not exist (31/02, month 13…). */
     INVALID,
 
-    /** Date de naissance postérieure à aujourd'hui. */
+    /** Date of birth later than today. */
     FUTURE,
 
-    /** Date d'expiration antérieure à [AccessForm.MIN_EXPIRY_YEAR]. */
+    /** Expiry date earlier than [AccessForm.MIN_EXPIRY_YEAR]. */
     TOO_OLD,
 }
 
 /**
- * Saisie de l'écran d'accueil. Contient la clé d'accès en clair : vit uniquement dans le
- * [SessionViewModel], jamais dans un Bundle ni sur disque, et son `toString` ne révèle rien.
+ * Home screen input. Contains the access key in clear: lives only in the [SessionViewModel],
+ * never in a Bundle or on disk, and its `toString` reveals nothing.
  *
- * Les dates sont gardées telles que tapées ([DATE_DIGITS] chiffres au plus, sans séparateur) ;
- * leur interprétation dépend de l'ordre de saisie de la locale, fourni par l'écran.
+ * Dates are kept as typed ([DATE_DIGITS] digits at most, without separators); their
+ * interpretation depends on the locale's input order, provided by the screen.
  */
 class AccessForm(
     val tab: DocumentTab = DocumentTab.PASSPORT,
-    /** Clé choisie dans l'onglet Carte d'identité ; ignorée dans l'onglet Passeport. */
+    /** Key chosen in the "ID card" tab; ignored in the "Passport" tab. */
     val idCardKey: IdCardKey = IdCardKey.CAN,
-    /** CAN : uniquement des chiffres, au plus [CAN_LENGTH]. */
+    /** CAN: digits only, at most [CAN_LENGTH]. */
     val can: String = "",
-    /** Numéro de document normalisé : A-Z et 0-9, au plus [DOCUMENT_NUMBER_MAX_LENGTH], sans `<`. */
+    /** Normalized document number: A-Z and 0-9, at most [DOCUMENT_NUMBER_MAX_LENGTH], without `<`. */
     val documentNumber: String = "",
-    /** Chiffres de la date de naissance, au plus [DATE_DIGITS]. */
+    /** Digits of the date of birth, at most [DATE_DIGITS]. */
     val dateOfBirthDigits: String = "",
-    /** Chiffres de la date d'expiration, au plus [DATE_DIGITS]. */
+    /** Digits of the expiry date, at most [DATE_DIGITS]. */
     val dateOfExpiryDigits: String = "",
 ) {
-    /** Vrai si le formulaire de l'onglet courant permet de construire une clé d'accès. */
+    /** True if the current tab's form allows building an access key. */
     fun isComplete(
         order: DateOrder,
         today: LocalDate = LocalDate.now(),
     ): Boolean = toAccessKey(order, today) != null
 
-    /** Vrai si l'onglet courant affiche le champ CAN, faux s'il affiche les champs de la MRZ. */
+    /** True if the current tab shows the CAN field, false if it shows the MRZ fields. */
     val usesCan: Boolean
         get() = tab == DocumentTab.ID_CARD && idCardKey == IdCardKey.CAN
 
-    /** Clé d'accès de l'onglet courant, ou null si la saisie est incomplète ou invalide. */
+    /** Access key of the current tab, or null if the input is incomplete or invalid. */
     fun toAccessKey(
         order: DateOrder,
         today: LocalDate = LocalDate.now(),
@@ -135,18 +135,18 @@ class AccessForm(
         const val CAN_LENGTH = 6
         const val DOCUMENT_NUMBER_MAX_LENGTH = 9
 
-        /** Nombre de chiffres d'une date complète : jour (2), mois (2), année (4). */
+        /** Number of digits of a complete date: day (2), month (2), year (4). */
         const val DATE_DIGITS = 8
 
-        /** Aucun document ICAO lisible par NFC n'expire avant cette année. */
+        /** No NFC-readable ICAO document expires before this year. */
         const val MIN_EXPIRY_YEAR = 1990
 
-        /** Ne garde que les chiffres ASCII, tronqués à [CAN_LENGTH]. */
+        /** Keeps only ASCII digits, truncated to [CAN_LENGTH]. */
         fun filterCan(input: String): String = input.filter { it in '0'..'9' }.take(CAN_LENGTH)
 
         /**
-         * Majuscules forcées, seuls A-Z et 0-9 sont gardés (les `<` de remplissage de la MRZ
-         * sont ajoutés par JMRTD), tronqué à [DOCUMENT_NUMBER_MAX_LENGTH].
+         * Forced to uppercase, only A-Z and 0-9 are kept (the MRZ `<` filler characters are
+         * added by JMRTD), truncated to [DOCUMENT_NUMBER_MAX_LENGTH].
          */
         fun normalizeDocumentNumber(input: String): String =
             input
@@ -154,10 +154,10 @@ class AccessForm(
                 .filter { it in 'A'..'Z' || it in '0'..'9' }
                 .take(DOCUMENT_NUMBER_MAX_LENGTH)
 
-        /** Ne garde que les chiffres ASCII, tronqués à [DATE_DIGITS]. */
+        /** Keeps only ASCII digits, truncated to [DATE_DIGITS]. */
         fun filterDateDigits(input: String): String = input.filter { it in '0'..'9' }.take(DATE_DIGITS)
 
-        /** Date réelle lue dans [digits] selon [order], ou null si incomplète ou inexistante. */
+        /** Actual date read from [digits] according to [order], or null if incomplete or nonexistent. */
         fun parseDate(
             digits: String,
             order: DateOrder,
@@ -176,7 +176,7 @@ class AccessForm(
             }
         }
 
-        /** Erreur d'une date de naissance complète, ou null si elle est valide ou pas encore complète. */
+        /** Error of a complete date of birth, or null if it is valid or not yet complete. */
         fun dateOfBirthError(
             digits: String,
             order: DateOrder,
@@ -187,7 +187,7 @@ class AccessForm(
             return if (date > today) DateError.FUTURE else null
         }
 
-        /** Erreur d'une date d'expiration complète, ou null si elle est valide ou pas encore complète. */
+        /** Error of a complete expiry date, or null if it is valid or not yet complete. */
         fun dateOfExpiryError(
             digits: String,
             order: DateOrder,

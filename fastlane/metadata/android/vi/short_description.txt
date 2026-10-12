@@ -1,1 +1,1 @@
-Đọc và xác minh chip của thẻ căn cước và hộ chiếu, hoàn toàn ngoại tuyến
+Đọc và xác minh chip của hộ chiếu và thẻ căn cước, hoàn toàn ngoại tuyến

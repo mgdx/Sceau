@@ -24,14 +24,14 @@ import org.junit.Assert.fail
 import org.junit.Test
 
 /**
- * Cartes allemandes (docs/deviations.md §3.1, décision D36), avec la puce simulée :
+ * German cards (docs/deviations.md §3.1, decision D36), with the simulated chip:
  *
- * - DE-1 : carte d'identité délivrée avant le 2021-08-02, dont l'application ICAO et EF.SOD sont
- *   réservés aux terminaux étatiques. Après un canal établi, un 6982 à la sélection de
- *   l'application ou à la lecture d'EF.SOD ou de DG1 donne [SceauException.AccessRestricted] ;
- *   ailleurs (avant l'authentification, fichier facultatif), le comportement reste le même.
- * - DE-2 : carte eID-UB, dont DG1 ne porte aucune donnée d'identité (MRZ « UBD<<<… ») : la
- *   lecture et la vérification aboutissent sans exception.
+ * - DE-1: identity card issued before 2021-08-02, whose ICAO application and EF.SOD are
+ *   reserved for government terminals. Once a channel is established, a 6982 when selecting
+ *   the application or reading EF.SOD or DG1 yields [SceauException.AccessRestricted];
+ *   elsewhere (before authentication, optional file), the behavior is unchanged.
+ * - DE-2: eID-UB card, whose DG1 carries no identity data (MRZ "UBD<<<..."): reading and
+ *   verification complete without an exception.
  */
 class GermanCardsEndToEndTest {
     private val frenchCard: SimulatedIdentityDocument by lazy { SimulatedDocuments.frenchIdCard() }
@@ -49,7 +49,7 @@ class GermanCardsEndToEndTest {
         trustStore: TrustStore = frenchCard.trustStore,
     ): VerificationReport {
         val report = readAndVerify(chip, key, trustStore) {}
-        assertTrue("transport fermé", chip.closed)
+        assertTrue("transport closed", chip.closed)
         return report
     }
 
@@ -60,27 +60,27 @@ class GermanCardsEndToEndTest {
         try {
             readAndVerify(chip, key, frenchCard.trustStore) {}
         } catch (e: SceauException) {
-            assertTrue("transport fermé", chip.closed)
+            assertTrue("transport closed", chip.closed)
             return e
         }
-        fail("SceauException attendue")
+        fail("SceauException expected")
         throw IllegalStateException()
     }
 
-    // --- DE-1 : accès réservé aux terminaux étatiques -----------------------------------
+    // --- DE-1: access reserved for government terminals ---------------------------------
 
     @Test
-    fun `DE-1 - application ICAO refusee apres PACE - acces reserve`() =
+    fun `DE-1 - ICAO application refused after PACE - access restricted`() =
         runTest {
             val chip = restrictedChip(applet = true)
             val error = readFailing(chip, checkNotNull(frenchCard.canKey))
             assertTrue(error is SceauException.AccessRestricted)
             assertEquals("ACCESS_RESTRICTED-SECURE_CHANNEL-SELECT_APPLET", error.code)
-            assertNotNull("PACE a abouti", chip.paceCompletedWith)
+            assertNotNull("PACE completed", chip.paceCompletedWith)
         }
 
     @Test
-    fun `DE-1 - EF SOD refuse apres PACE - acces reserve`() =
+    fun `DE-1 - EF SOD refused after PACE - access restricted`() =
         runTest {
             val chip = restrictedChip(files = setOf(SimulatedChip.FID_SOD))
             val error = readFailing(chip, checkNotNull(frenchCard.canKey))
@@ -89,17 +89,17 @@ class GermanCardsEndToEndTest {
         }
 
     @Test
-    fun `DE-1 - DG1 refuse apres BAC - acces reserve`() =
+    fun `DE-1 - DG1 refused after BAC - access restricted`() =
         runTest {
             val chip = restrictedChip(files = setOf(FID_DG1), pace = null)
             val error = readFailing(chip, frenchCard.mrzKey)
             assertTrue(error is SceauException.AccessRestricted)
             assertEquals("ACCESS_RESTRICTED-READ_DATA-DG1", error.code)
-            assertTrue("BAC a abouti", chip.bacCompleted)
+            assertTrue("BAC completed", chip.bacCompleted)
         }
 
     @Test
-    fun `DE-1 - application refusee en clair avant BAC - code technique inchange`() =
+    fun `DE-1 - application refused in plain before BAC - technical code unchanged`() =
         runTest {
             val chip = restrictedChip(applet = true, pace = null)
             val error = readFailing(chip, frenchCard.mrzKey)
@@ -109,7 +109,7 @@ class GermanCardsEndToEndTest {
         }
 
     @Test
-    fun `DE-1 - CAN faux sur une puce a acces reserve - cle refusee`() =
+    fun `DE-1 - wrong CAN on a restricted chip - key refused`() =
         runTest {
             val error = readFailing(restrictedChip(applet = true), AccessKey.Can("000000"))
             assertTrue(error is SceauException.AccessDenied)
@@ -117,14 +117,14 @@ class GermanCardsEndToEndTest {
         }
 
     @Test
-    fun `EF COM refuse - facultatif, lecture complete`() =
+    fun `EF COM refused - optional, read completes`() =
         runTest {
             val report = read(restrictedChip(files = setOf(SimulatedChip.FID_COM)), checkNotNull(frenchCard.canKey))
             assertEquals(Verdict.AUTHENTIC, report.verdict)
         }
 
     @Test
-    fun `DG11 refuse - facultatif, absent du rapport sans erreur de lecture`() =
+    fun `DG11 refused - optional, missing from report without read error`() =
         runTest {
             val report = read(restrictedChip(files = setOf(FID_DG11)), checkNotNull(frenchCard.canKey))
             assertNull(report.document.dg11)
@@ -134,16 +134,16 @@ class GermanCardsEndToEndTest {
         }
 
     @Test
-    fun `DG15 refuse - facultatif, AA en echec sans erreur de lecture`() =
+    fun `DG15 refused - optional, AA fails without read error`() =
         runTest {
             val report = read(restrictedChip(files = setOf(FID_DG15)), checkNotNull(frenchCard.canKey))
             assertEquals(CheckStatus.FAILED, report.check(CheckId.ACTIVE_AUTHENTICATION).status)
         }
 
-    // --- DE-2 : carte eID-UB --------------------------------------------------------------
+    // --- DE-2: eID-UB card ----------------------------------------------------------------
 
     @Test
-    fun `DE-2 - DG1 de remplacement analyse sans exception`() {
+    fun `DE-2 - placeholder DG1 parsed without exception`() {
         val dg1 = DataGroupParsers.parseDg1(SimulatedDocuments.eidUbDg1())
         assertEquals("UB", dg1.documentCode)
         assertEquals("D<<", dg1.issuingState)
@@ -157,7 +157,7 @@ class GermanCardsEndToEndTest {
     }
 
     @Test
-    fun `DE-2 - eID-UB lue et verifiee - authentique, validite du DS non evaluable`() =
+    fun `DE-2 - eID-UB read and verified - authentic, DS validity not assessable`() =
         runTest {
             val chip = eidUb.chip()
             val report = read(chip, checkNotNull(eidUb.canKey), eidUb.trustStore)

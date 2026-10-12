@@ -7,8 +7,8 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
- * Règle de démarrage d'une lecture à la détection d'un document, vérifiée deux fois par
- * [SessionViewModel.onCardDetected] : sur le thread NFC, puis sur le thread principal (audit V16).
+ * Rule for starting a read when a document is detected, checked twice by
+ * [SessionViewModel.onCardDetected]: on the NFC thread, then on the main thread (audit V16).
  */
 class ReadStartRuleTest {
     private val key = AccessKey.Can("123456")
@@ -21,7 +21,7 @@ class ReadStartRuleTest {
 
     @Test
     fun `a card is ignored once cleared, without a key`() {
-        // clear() : clé oubliée et état Idle, séparément ou ensemble.
+        // clear(): key forgotten and Idle state, separately or together.
         assertFalse(SessionViewModel.canStartRead(ReadState.WaitingForCard, null))
         assertFalse(SessionViewModel.canStartRead(ReadState.Error("ACCESS_DENIED"), null))
         assertFalse(SessionViewModel.canStartRead(ReadState.Idle, key))

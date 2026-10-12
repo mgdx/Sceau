@@ -51,7 +51,7 @@ import io.github.mgdx.sceau.ui.result.toUtcDate
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
-/** Contenu embarqué du magasin, pour la section correspondante. */
+/** Embedded contents of the store, for the corresponding section. */
 private sealed interface EmbeddedUi {
     data object Loading : EmbeddedUi
 
@@ -59,12 +59,12 @@ private sealed interface EmbeddedUi {
 
     class Loaded(
         val masterList: MasterListInfo?,
-        /** Codes pays des certificats publiés par leur propre État (source NATIONAL), triés. */
+        /** Country codes of the certificates published by their own State (NATIONAL source), sorted. */
         val nationalCountries: List<String>,
     ) : EmbeddedUi
 }
 
-/** Écran « À propos » (SPEC §5.5). */
+/** "About" screen (SPEC §5.5). */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutScreen(
@@ -136,7 +136,7 @@ fun AboutScreen(
                 Text(stringResource(R.string.about_tagline), style = MaterialTheme.typography.bodyLarge)
             }
 
-            // Écrans pédagogiques (D35).
+            // Learning screens (D35).
             Section(stringResource(R.string.learn_about_section)) {
                 OutlinedButton(onClick = onOpenChipContents) { Text(stringResource(R.string.learn_chip_title)) }
                 OutlinedButton(onClick = onReplayIntro) { Text(stringResource(R.string.learn_about_replay_intro)) }
@@ -152,7 +152,7 @@ fun AboutScreen(
                 ) { Text(stringResource(R.string.about_open_repository)) }
             }
 
-            // Lien de don, ouvert dans le navigateur comme le dépôt : aucune permission réseau (D52).
+            // Donation link, opened in the browser like the repository: no network permission (D52).
             Section(stringResource(R.string.about_section_donate)) {
                 Paragraph(stringResource(R.string.about_donate))
                 OutlinedButton(
@@ -224,8 +224,8 @@ private fun EmbeddedTrustStore(embedded: EmbeddedUi) {
 }
 
 /**
- * Bibliothèques embarquées et leurs mentions de copyright et de licence (D50). Les mentions,
- * textes juridiques, restent en anglais dans `res/raw/third_party_notices.txt`, non traduit.
+ * Embedded libraries and their copyright and license notices (D50). The notices, being legal
+ * texts, stay in English in `res/raw/third_party_notices.txt`, which is not translated.
  */
 @Composable
 private fun ThirdPartyNotices() {
@@ -266,7 +266,7 @@ private fun Paragraph(text: String) {
     Text(text, style = MaterialTheme.typography.bodyMedium)
 }
 
-/** Nom de version lu dans le PackageManager (pas de BuildConfig), ou null s'il est introuvable. */
+/** Version name read from the PackageManager (no BuildConfig), or null if it cannot be found. */
 private fun versionName(context: Context): String? =
     try {
         val info =
@@ -281,7 +281,7 @@ private fun versionName(context: Context): String? =
         null
     }
 
-/** Ouvre [url] dans le navigateur ; faux si aucune application ne peut l'ouvrir. */
+/** Opens [url] in the browser; false if no app can open it. */
 private fun openUrl(
     context: Context,
     url: String,

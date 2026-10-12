@@ -9,24 +9,24 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
 class SceauApplication : Application() {
-    /** Instance unique du dépôt de magasin de confiance, partagée par tous les écrans. */
+    /** Single instance of the trust store repository, shared by all screens. */
     val trustStoreRepository: TrustStoreRepository by lazy { TrustStoreRepository(this) }
 
-    /** Portée applicative : vit aussi longtemps que le processus. */
+    /** Application scope: lives as long as the process. */
     private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     override fun onCreate() {
         super.onCreate()
-        // Processus isolé du décodeur JPEG 2000 (D23) : rien à y précharger.
+        // Isolated process of the JPEG 2000 decoder (D23): nothing to preload there.
         if (isIsolatedProcess()) return
-        // Préchargement du magasin de confiance (plusieurs secondes sur un téléphone ancien),
-        // pour que ni la première lecture ni l'écran Magasin de confiance n'attendent. Une
-        // erreur est ignorée : le prochain get() retentera le chargement et la signalera.
+        // Preloading of the trust store (several seconds on an old phone), so that neither the
+        // first read nor the "Trust store" screen has to wait. An error is ignored: the next
+        // get() will retry loading and report it.
         applicationScope.launch {
             try {
                 trustStoreRepository.get()
             } catch (_: Exception) {
-                // Ignorée volontairement, voir ci-dessus.
+                // Deliberately ignored, see above.
             }
         }
     }

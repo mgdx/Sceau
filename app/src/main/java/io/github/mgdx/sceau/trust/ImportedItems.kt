@@ -6,16 +6,16 @@ import io.github.mgdx.sceau.core.trust.TrustSource
 import java.security.cert.X509Certificate
 import java.time.Instant
 
-/** Ce que l'écran montre d'un certificat importé seul (D33). Aucune donnée personnelle. */
+/** What the screen shows of a standalone imported certificate (D33). No personal data. */
 class CertificateSummary(
     val subject: String,
-    /** Code pays ISO 3166-1 alpha-2 du sujet, vide s'il n'en indique pas. */
+    /** ISO 3166-1 alpha-2 country code of the subject, empty if it does not specify one. */
     val country: String,
     val notBefore: Instant,
     val notAfter: Instant,
-    /** Empreinte SHA-256 du DER, hexadécimal minuscule. */
+    /** SHA-256 fingerprint of the DER, lowercase hexadecimal. */
     val sha256: String,
-    /** Vrai pour un certificat de lien, faux pour un CSCA auto-signé. */
+    /** True for a link certificate, false for a self-signed CSCA. */
     val isLink: Boolean,
 ) {
     companion object {
@@ -33,35 +33,35 @@ class CertificateSummary(
     }
 }
 
-/** Élément importé, désigné par son nom de fichier [id] dans `filesDir/trust/`. */
+/** Imported item, identified by its file name [id] in `filesDir/trust/`. */
 sealed interface ImportedItem {
     val id: String
 
-    /** Master List importée ; [info] null si le fichier ne se vérifie plus (il est alors ignoré). */
+    /** Imported Master List; [info] is null if the file no longer verifies (it is then ignored). */
     class MasterListItem(
         override val id: String,
         val info: MasterListInfo?,
     ) : ImportedItem
 
-    /** Certificat importé seul ; [summary] null si le fichier ne se lit plus (il est alors ignoré). */
+    /** Standalone imported certificate; [summary] is null if the file can no longer be read (it is then ignored). */
     class CertificateItem(
         override val id: String,
         val summary: CertificateSummary?,
     ) : ImportedItem
 }
 
-/** Fichier vérifié, en attente de confirmation. Ses octets ne sont pas des données personnelles. */
+/** Verified file, awaiting confirmation. Its bytes are not personal data. */
 sealed interface ImportPreview {
     val bytes: ByteArray
 
     class MasterList(
         override val bytes: ByteArray,
         val info: MasterListInfo,
-        /** Certificats distincts de la liste absents du magasin actuel (D33). */
+        /** Distinct certificates of the list that are absent from the current store (D33). */
         val newCertificates: Int,
         /**
-         * Vrai si le signataire est émis par un CSCA déjà connu (embarqué ou certificat importé
-         * seul) ; faux, l'aperçu avertit et demande une confirmation distincte (audit V34, D44).
+         * True if the signer is issued by an already known CSCA (embedded or standalone imported
+         * certificate); if false, the preview warns and asks for a separate confirmation (audit V34, D44).
          */
         val anchored: Boolean,
     ) : ImportPreview
@@ -72,5 +72,5 @@ sealed interface ImportPreview {
     ) : ImportPreview
 }
 
-/** Fichier qui n'est ni un certificat lisible ni un CMS : message sans code. */
+/** File that is neither a readable certificate nor a CMS: message without a code. */
 class UnrecognizedFileException : Exception("UNRECOGNIZED")

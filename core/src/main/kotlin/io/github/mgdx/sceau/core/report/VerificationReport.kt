@@ -5,22 +5,22 @@ import io.github.mgdx.sceau.core.trust.TrustSource
 import java.time.Instant
 import java.time.LocalDate
 
-/** Verdict global (SPEC §5.3). */
+/** Overall verdict (SPEC §5.3). */
 enum class Verdict {
-    /** PA réussie et CA ou AA réussie. */
+    /** PA succeeded and CA or AA succeeded. */
     AUTHENTIC,
 
-    /** PA réussie, ni DG14 ni DG15 : la puce pourrait être un clone. */
+    /** PA succeeded, neither DG14 nor DG15: the chip could be a clone. */
     SIGNATURE_VALID_CHIP_UNVERIFIED,
 
-    /** La chaîne du SOD ne remonte à aucun CSCA du magasin. */
+    /** The SOD chain leads to no CSCA in the store. */
     UNKNOWN_ISSUER,
 
-    /** Signature invalide, empreinte non conforme, challenge raté, algorithme non pris en charge. */
+    /** Invalid signature, mismatching hash, failed challenge, unsupported algorithm. */
     FAILED,
 }
 
-/** Lignes de la liste de contrôle, dans l'ordre d'affichage (SPEC §5.3). */
+/** Rows of the checklist, in display order (SPEC §5.3). */
 enum class CheckId {
     SECURE_CHANNEL,
     SOD_SIGNATURE,
@@ -35,36 +35,36 @@ enum class CheckStatus {
     OK,
     FAILED,
 
-    /** Étape non disponible (DG14/DG15 absent, étape non atteinte) : distincte d'un échec. */
+    /** Step not available (DG14/DG15 absent, step not reached): distinct from a failure. */
     NOT_AVAILABLE,
 
-    /** Algorithme inconnu de BouncyCastle : `UnsupportedAlgorithm` (SPEC §6.2). */
+    /** Algorithm unknown to BouncyCastle: `UnsupportedAlgorithm` (SPEC §6.2). */
     UNSUPPORTED_ALGORITHM,
 }
 
 enum class ChannelProtocol { PACE, BAC }
 
-/** Méthode de Chip Authentication (ligne [CheckId.CHIP_AUTHENTICATION]). */
+/** Chip Authentication method (row [CheckId.CHIP_AUTHENTICATION]). */
 enum class ChipAuthenticationMethod {
-    /** Chip Authentication avec la clé statique de DG14 (ICAO 9303-11 §6.2). */
+    /** Chip Authentication with the static key from DG14 (ICAO 9303-11 §6.2). */
     DG14,
 
-    /** PACE avec Chip Authentication Mapping, clé de EF.CardSecurity (ICAO 9303-11 §4.4, décision D21). */
+    /** PACE with Chip Authentication Mapping, key from EF.CardSecurity (ICAO 9303-11 §4.4, decision D21). */
     PACE_CAM,
 }
 
 enum class IssuanceDateSource {
-    /** Date de délivrance lue dans DG12. */
+    /** Date of issue read from DG12. */
     DG12,
 
-    /** Attribut signingTime du SOD. */
+    /** signingTime attribute of the SOD. */
     SOD_SIGNING_TIME,
 
-    /** Expiration moins la durée de validité usuelle : affichée « estimée ». */
+    /** Expiry minus the usual validity period: displayed as "estimated". */
     ESTIMATED,
 }
 
-/** Détail structuré d'une vérification : l'app le met en forme avec ses propres chaînes. */
+/** Structured detail of a check: the app formats it with its own strings. */
 sealed class CheckDetail {
     data object None : CheckDetail()
 
@@ -72,7 +72,7 @@ sealed class CheckDetail {
         val protocol: ChannelProtocol,
     ) : CheckDetail()
 
-    /** [algorithm] : nom d'algorithme déclaré (ex. "SHA256withECDSA", ou OID si inconnu). */
+    /** [algorithm]: declared algorithm name (e.g. "SHA256withECDSA", or OID if unknown). */
     data class Signature(
         val algorithm: String,
     ) : CheckDetail()
@@ -81,13 +81,13 @@ sealed class CheckDetail {
         val chain: ChainInfo,
     ) : CheckDetail()
 
-    /** Chaîne introuvable : le DS n'est ni dans le SOD ni dans le magasin (`DsCertificateMissing`). */
+    /** Chain not found: the DS is neither in the SOD nor in the store (`DsCertificateMissing`). */
     data object DsCertificateMissing : CheckDetail()
 
     /**
-     * Aucune chaîne n'aboutit, alors que le magasin contient des certificats du pays émetteur de
-     * DG1 ([country], ISO 3166-1 alpha-2) : échec, et non « Émetteur inconnu » (audit V25, décision
-     * D40). [chain] : chaîne tentée depuis le DS, null si le DS est introuvable.
+     * No chain succeeds, although the store contains certificates of the issuing country of
+     * DG1 ([country], ISO 3166-1 alpha-2): failure, not "Unknown issuer" (audit V25, decision
+     * D40). [chain]: chain attempted from the DS, null if the DS cannot be found.
      */
     data class NoChainForKnownCountry(
         val country: String,
@@ -102,13 +102,13 @@ sealed class CheckDetail {
     ) : CheckDetail()
 
     /**
-     * Numéros des DG contrôlés, de ceux dont l'empreinte diffère du SOD, et de ceux que le SOD
-     * annonce parmi les DG que Sceau lit (1, 2, 7, 11, 12, 14, 15) mais que la puce n'a pas fournis
-     * ([missing] non vide = échec : une puce ne peut pas retenir un DG signé, SPEC §6.1).
+     * Numbers of the DGs checked, of those whose hash differs from the SOD, and of those the SOD
+     * announces among the DGs Sceau reads (1, 2, 7, 11, 12, 14, 15) but the chip did not provide
+     * ([missing] not empty = failure: a chip cannot withhold a signed DG, SPEC §6.1).
      *
-     * [deviations] : écarts d'empreinte tolérés parce qu'ils correspondent à une anomalie connue,
-     * publiée par l'émetteur (décision D34). Un DG toléré ne figure pas dans [mismatched] ; ses
-     * données sont écartées du rapport.
+     * [deviations]: hash mismatches tolerated because they match a known anomaly,
+     * published by the issuer (decision D34). A tolerated DG is not listed in [mismatched]; its
+     * data is removed from the report.
      */
     data class DataGroupHashes(
         val digestAlgorithm: String,
@@ -119,8 +119,8 @@ sealed class CheckDetail {
     ) : CheckDetail()
 
     /**
-     * Pays incohérents : le pays du CSCA (alpha-2) diffère de celui du certificat DS ou de l'État
-     * émetteur de DG1 (code ICAO alpha-3 brut, tel que lu). Valeurs null si l'attribut manque.
+     * Inconsistent countries: the CSCA country (alpha-2) differs from that of the DS certificate or of the
+     * issuing State in DG1 (raw ICAO alpha-3 code, as read). Null values if the attribute is missing.
      */
     data class CountryMismatch(
         val cscaCountry: String?,
@@ -132,21 +132,21 @@ sealed class CheckDetail {
         val algorithm: String,
     ) : CheckDetail()
 
-    /** Méthode de la Chip Authentication menée (ligne CHIP_AUTHENTICATION). */
+    /** Method of the Chip Authentication performed (CHIP_AUTHENTICATION row). */
     data class ChipAuthentication(
         val method: ChipAuthenticationMethod,
     ) : CheckDetail()
 
-    /** Erreur technique pendant l'étape, sans donnée personnelle. */
+    /** Technical error during the step, without personal data. */
     data class Error(
         val code: String,
     ) : CheckDetail()
 }
 
 /**
- * Anomalie connue, publiée par un émetteur (Deviation List, ICAO 9303-12), qui touche le groupe
- * de données [dataGroup] (11 ou 12 seulement) d'une série de documents authentiques (décision D34).
- * [id] est un identifiant stable, sans donnée personnelle (ex. `IT-CIE3-DG12`).
+ * Known anomaly, published by an issuer (Deviation List, ICAO 9303-12), affecting data
+ * group [dataGroup] (11 or 12 only) of a series of genuine documents (decision D34).
+ * [id] is a stable identifier, without personal data (e.g. `IT-CIE3-DG12`).
  */
 data class KnownDeviation(
     val id: String,
@@ -159,52 +159,52 @@ data class Check(
     val detail: CheckDetail = CheckDetail.None,
 )
 
-/** Métadonnées de la chaîne de certification DS → (liens) → CSCA. Aucune donnée personnelle. */
+/** Metadata of the DS → (links) → CSCA certification chain. No personal data. */
 data class ChainInfo(
     val dsSubject: String,
     val dsSerialNumber: String,
     val dsNotBefore: Instant,
     val dsNotAfter: Instant,
     val signatureAlgorithm: String,
-    /** Null si aucun CSCA du magasin ne correspond (verdict UNKNOWN_ISSUER). */
+    /** Null if no CSCA in the store matches (verdict UNKNOWN_ISSUER). */
     val cscaSubject: String?,
-    /** Code pays ISO 3166-1 alpha-2 du CSCA, en majuscules. */
+    /** ISO 3166-1 alpha-2 country code of the CSCA, in upper case. */
     val cscaCountry: String?,
     val cscaSha256: String?,
     val cscaSource: TrustSource?,
-    /** Sujets des certificats de lien traversés, du plus proche du DS au plus proche du CSCA. */
+    /** Subjects of the link certificates traversed, from the closest to the DS to the closest to the CSCA. */
     val linkCertificates: List<String>,
 )
 
 /**
- * Rapport immuable produit par `readAndVerify`. Contient les données personnelles lues
- * dans [document] : il n'est jamais persisté, et [wipe] doit être appelé à la sortie
- * de l'écran de résultat et à la mise en arrière-plan.
+ * Immutable report produced by `readAndVerify`. Contains the personal data read
+ * in [document]: it is never persisted, and [wipe] must be called when leaving
+ * the result screen and when going to the background.
  */
 class VerificationReport(
     val verdict: Verdict,
-    /** Exactement une entrée par [CheckId], dans l'ordre de l'énumération. */
+    /** Exactly one entry per [CheckId], in enumeration order. */
     val checks: List<Check>,
-    /** Chaîne du SOD. */
+    /** SOD chain. */
     val chain: ChainInfo?,
     val document: DocumentData,
     /**
-     * Chaîne d'EF.CardSecurity si PACE-CAM a été mené (décision D21), null sinon. Elle fonde la
-     * preuve « puce originale » : l'écran signale un CSCA importé sur l'une ou l'autre chaîne
+     * EF.CardSecurity chain if PACE-CAM was performed (decision D21), null otherwise. It underpins the
+     * "genuine chip" proof: the screen flags an imported CSCA on either chain
      * (audit V17).
      */
     val cardSecurityChain: ChainInfo? = null,
     /**
-     * Faux si aucune donnée d'identité n'a pu être lue : lecture interrompue au rétablissement du
-     * canal après une Chip Authentication ratée (audit V24, décision D40). [document] porte alors
-     * un DG1 vide, sans portrait, DG7, DG11 ni DG12, que l'écran ne doit pas présenter comme
-     * l'identité du titulaire.
+     * False if no identity data could be read: reading interrupted while re-establishing the
+     * channel after a failed Chip Authentication (audit V24, decision D40). [document] then carries
+     * an empty DG1, without portrait, DG7, DG11 or DG12, which the screen must not present as
+     * the holder's identity.
      */
     val identityRead: Boolean = true,
 ) {
     fun check(id: CheckId): Check = checks.first { it.id == id }
 
-    /** Remet à zéro tous les tableaux d'octets des données lues. */
+    /** Zeroes all byte arrays of the data read. */
     fun wipe() = document.wipe()
 
     override fun toString(): String = "VerificationReport(verdict=$verdict)"

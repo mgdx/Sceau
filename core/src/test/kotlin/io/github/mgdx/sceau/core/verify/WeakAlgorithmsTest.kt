@@ -20,8 +20,8 @@ import java.security.KeyPair
 import java.security.interfaces.RSAPrivateKey
 
 /**
- * Algorithmes obsolètes (audit V9) : MD5 et RIPEMD-128 refusés partout, clés RSA de moins de
- * 1024 bits refusées ; SHA-1 reste accepté (documents anciens encore valides).
+ * Obsolete algorithms (audit V9): MD5 and RIPEMD-128 rejected everywhere, RSA keys shorter than
+ * 1024 bits rejected; SHA-1 is still accepted (older documents that are still valid).
  */
 class WeakAlgorithmsTest {
     private val pki = TestPki(TestKeyType.RSA, seed = 90_909L)
@@ -41,14 +41,14 @@ class WeakAlgorithmsTest {
         listOf(sodSignature.status, certificateChain.status, dsValidity.status, dataGroupHashes.status)
 
     @Test
-    fun `SHA-1 toujours accepte - empreintes et signature`() {
+    fun `SHA-1 still accepted - hashes and signature`() {
         val result = verify(pki.document { sod = SodOptions(digestAlgorithm = "SHA-1", signatureAlgorithm = "SHA1withRSA") })
 
         assertEquals(List(4) { CheckStatus.OK }, result.statuses())
     }
 
     @Test
-    fun `empreintes des DG en MD5 ou RIPEMD-128 - non pris en charge`() {
+    fun `DG hashes in MD5 or RIPEMD-128 - unsupported`() {
         for (digest in listOf("MD5", "RIPEMD128")) {
             val result = verify(pki.document { sod = SodOptions(digestAlgorithm = digest) })
 
@@ -58,7 +58,7 @@ class WeakAlgorithmsTest {
     }
 
     @Test
-    fun `signature du SOD en MD5withRSA ou RIPEMD128withRSA - non prise en charge`() {
+    fun `SOD signature in MD5withRSA or RIPEMD128withRSA - unsupported`() {
         for (algorithm in listOf("MD5withRSA", "RIPEMD128withRSA")) {
             val result = verify(pki.document { sod = SodOptions(signatureAlgorithm = algorithm) })
 
@@ -68,7 +68,7 @@ class WeakAlgorithmsTest {
     }
 
     @Test
-    fun `DS a cle RSA de 768 bits - signature du SOD non prise en charge`() {
+    fun `DS with a 768-bit RSA key - SOD signature unsupported`() {
         val ds = pki.issueDs(dsKeyPair = pki.generateRsa(768))
         val result = verify(pki.document { this.ds = ds })
 
@@ -77,7 +77,7 @@ class WeakAlgorithmsTest {
     }
 
     @Test
-    fun `certificat DS signe en MD5withRSA - chaine non prise en charge`() {
+    fun `DS certificate signed with MD5withRSA - chain unsupported`() {
         val ds = pki.issueDs(signatureAlgorithm = "MD5withRSA")
         val result = verify(pki.document { this.ds = ds })
 
@@ -86,7 +86,7 @@ class WeakAlgorithmsTest {
     }
 
     @Test
-    fun `AA avec cle RSA de 512 bits - non prise en charge`() {
+    fun `AA with a 512-bit RSA key - unsupported`() {
         val keys = pki.generateRsa(512)
         val response = TestActiveAuthentication.respond(keys.private, challenge, "SHA-1", pki)
 
@@ -97,7 +97,7 @@ class WeakAlgorithmsTest {
     }
 
     @Test
-    fun `AA RSA 1024 bits en SHA-1 - toujours acceptee`() {
+    fun `AA RSA 1024 bits with SHA-1 - still accepted`() {
         val keys = pki.generateRsa(TestDocument.AA_RSA_BITS)
         val response = TestActiveAuthentication.respond(keys.private, challenge, "SHA-1", pki)
 
@@ -105,7 +105,7 @@ class WeakAlgorithmsTest {
     }
 
     @Test
-    fun `AA RSA avec trailer RIPEMD-128 - non prise en charge`() {
+    fun `AA RSA with a RIPEMD-128 trailer - unsupported`() {
         val keys = pki.generateRsa(TestDocument.AA_RSA_BITS)
         val response = ripemd128Response(keys)
 
@@ -115,7 +115,7 @@ class WeakAlgorithmsTest {
         assertTrue(check.detail is CheckDetail.UnsupportedAlgorithm)
     }
 
-    /** Réponse ISO/IEC 9796-2 schéma 1 avec RIPEMD-128 et trailer explicite, signée correctement. */
+    /** ISO/IEC 9796-2 scheme 1 response with RIPEMD-128 and an explicit trailer, correctly signed. */
     private fun ripemd128Response(keys: KeyPair): ByteArray {
         val key = keys.private as RSAPrivateKey
         val digest = RIPEMD128Digest()

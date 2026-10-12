@@ -17,8 +17,8 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
 /**
- * Audit F3 (D50) : « À propos » cite les bibliothèques embarquées et reproduit leurs mentions de
- * licence, dont la notice BSD-2-Clause d'OpenJPEG, en français comme en anglais.
+ * Audit F3 (D50): "About" lists the bundled libraries and reproduces their license notices,
+ * including the OpenJPEG BSD-2-Clause notice, in French as well as in English.
  */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [37], qualifiers = "w360dp-h640dp-xxhdpi")
@@ -27,14 +27,14 @@ class ThirdPartyNoticesTest {
     val compose = createAndroidComposeRule<ComponentActivity>()
 
     private fun showAbout() {
-        // Magasin qui ne se charge pas : la section des bibliothèques n'en dépend pas.
+        // Trust store that fails to load: the libraries section does not depend on it.
         val repository = TrustStoreRepository(compose.activity) { _, _ -> throw IllegalStateException("TEST_LOAD") }
         compose.setContent {
             SceauTheme { AboutScreen(repository, onBack = {}, onReplayIntro = {}, onOpenChipContents = {}) }
         }
     }
 
-    /** Ouvre la section [title] par son bouton [show], puis vérifie la notice d'OpenJPEG. */
+    /** Opens the [title] section with its [show] button, then checks the OpenJPEG notice. */
     private fun assertNoticesShown(
         title: String,
         intro: String,
@@ -45,7 +45,7 @@ class ThirdPartyNoticesTest {
         compose.onNodeWithText(title).performScrollTo().assertIsDisplayed()
         compose.onNodeWithText(intro, substring = true).performScrollTo().assertIsDisplayed()
         assertTrue(
-            "notice affichée avant l'appui",
+            "notice shown before the tap",
             compose.onAllNodes(hasText("Universite catholique de Louvain", substring = true)).fetchSemanticsNodes().isEmpty(),
         )
         compose.onNodeWithText(show).performScrollTo().performClick()
@@ -60,7 +60,7 @@ class ThirdPartyNoticesTest {
 
     @Test
     @Config(qualifiers = "fr")
-    fun `section des bibliotheques en francais avec la notice d OpenJPEG`() {
+    fun `libraries section in French with the OpenJPEG notice`() {
         assertNoticesShown(
             title = "Bibliothèques libres",
             intro = "JMRTD, SCUBA, Bouncy Castle, OpenJPEG, AndroidX, Kotlin",
@@ -71,7 +71,7 @@ class ThirdPartyNoticesTest {
 
     @Test
     @Config(qualifiers = "en")
-    fun `section des bibliotheques en anglais avec la notice d OpenJPEG`() {
+    fun `libraries section in English with the OpenJPEG notice`() {
         assertNoticesShown(
             title = "Open-source libraries",
             intro = "Sceau includes the following open-source libraries",
@@ -81,7 +81,7 @@ class ThirdPartyNoticesTest {
     }
 
     private companion object {
-        /** Extraits de `app/src/main/cpp/openjpeg/LICENSE` que la BSD-2-Clause impose de reproduire. */
+        /** Excerpts from `app/src/main/cpp/openjpeg/LICENSE` that the BSD-2-Clause license requires reproducing. */
         val OPENJPEG_NOTICE =
             listOf(
                 "Copyright (c) 2002-2014, Universite catholique de Louvain (UCL), Belgium",

@@ -2,9 +2,9 @@ Sceau putem NFC-a očitava čip identifikacijskih dokumenata prema standardu ICA
 
 <b>Podržani dokumenti</b>
 <ul>
+<li>Biometrijski pasoši svih zemalja, pomoću broja dokumenta, datuma rođenja i datuma isteka važenja</li>
 <li>Francuska lična karta (format bankovne kartice, od 2021.), pomoću šestocifrenog CAN-a odštampanog na kartici</li>
 <li>Evropske lične karte, pomoću CAN-a ili MRZ-a</li>
-<li>Biometrijski pasoši svih zemalja, pomoću broja dokumenta, datuma rođenja i datuma isteka važenja</li>
 </ul>
 
 <b>Šta Sceau prikazuje</b>

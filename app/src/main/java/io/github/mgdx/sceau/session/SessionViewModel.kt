@@ -27,25 +27,25 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-/** État de la lecture, partagé entre les écrans Lecture et Résultat. */
+/** Read state, shared between the Reading and Result screens. */
 sealed interface ReadState {
-    /** Aucune lecture en cours ni résultat en mémoire. */
+    /** No read in progress and no result in memory. */
     data object Idle : ReadState
 
-    /** En attente du document ; [key] est présente jusqu'à la fin de la lecture. */
+    /** Waiting for the document; [key] is present until the read ends. */
     data object WaitingForCard : ReadState
 
-    /** [current] : étape en cours ; les précédentes sont cochées. */
+    /** [current]: step in progress; the previous ones are checked. */
     data class Reading(
         val current: Step,
     ) : ReadState
 
-    /** Erreur interrompant la lecture ; [code] vient de SceauException.code. */
+    /** Error that interrupted the read; [code] comes from SceauException.code. */
     data class Error(
         val code: String,
     ) : ReadState
 
-    /** [isDemo] : rapport d'un document simulé du mode démo (APK de debug), jamais d'un vrai. */
+    /** [isDemo]: report of a simulated document from demo mode (debug APK), never of a real one. */
     class Done(
         val report: VerificationReport,
         val isDemo: Boolean = false,
@@ -53,11 +53,11 @@ sealed interface ReadState {
 }
 
 /**
- * ViewModel à portée d'activité. Contrat partagé entre les lots « lecture » (qui
- * l'implémente) et « résultat » (qui le consomme). Signatures figées.
+ * Activity-scoped ViewModel. Contract shared between the "reading" work package (which
+ * implements it) and the "result" work package (which consumes it). Signatures are frozen.
  *
- * La clé d'accès et la saisie du formulaire ne vivent qu'ici, en mémoire : jamais dans un
- * Bundle ni un `SavedStateHandle`, qui survivent sur disque à la mort du processus (SPEC §8).
+ * The access key and the form input live only here, in memory: never in a Bundle or a
+ * `SavedStateHandle`, which survive on disk when the process dies (SPEC §8).
  */
 class SessionViewModel(
     application: Application,
@@ -67,28 +67,28 @@ class SessionViewModel(
     private val _state = MutableStateFlow<ReadState>(ReadState.Idle)
     val state: StateFlow<ReadState> = _state
 
-    /** Saisie de l'écran d'accueil, effacée par [clear]. */
+    /** Home screen input, cleared by [clear]. */
     var form: AccessForm by mutableStateOf(AccessForm())
         private set
 
-    /** Clé de la lecture en cours ou à venir ; oubliée après un succès ou par [clear]. */
+    /** Key for the current or upcoming read; forgotten after a success or by [clear]. */
     @Volatile
     private var key: AccessKey? = null
 
-    /** Jeton de la lecture en cours : un rappel d'une lecture abandonnée ne touche plus l'état. */
+    /** Token of the current read: a callback from an abandoned read no longer touches the state. */
     @Volatile
     private var currentRead: Any? = null
 
     @Volatile
     private var transport: CardTransport? = null
 
-    /** Lu et écrit uniquement sur le thread principal ([launchRead], [abortRead]). */
+    /** Read and written only on the main thread ([launchRead], [abortRead]). */
     private var job: Job? = null
 
     /**
-     * Fermeture des transports : `IsoDep.close()` attend la fin de l'APDU en cours (jusqu'au délai
-     * de 10 s, 60 s pendant l'authentification), elle ne doit jamais s'exécuter sur le thread principal. Ce scope n'est jamais
-     * annulé, pour que la fermeture ait lieu même après l'annulation de la lecture ou `onCleared`.
+     * Closing transports: `IsoDep.close()` waits for the current APDU to finish (up to the timeout
+     * of 10 s, 60 s during authentication), so it must never run on the main thread. This scope is never
+     * cancelled, so that closing happens even after the read is cancelled or after `onCleared`.
      */
     private val closeScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
@@ -96,7 +96,7 @@ class SessionViewModel(
         form = form.copy(tab = tab)
     }
 
-    /** Choix entre CAN et MRZ dans l'onglet Carte d'identité ; la saisie de l'autre clé est gardée. */
+    /** Choice between CAN and MRZ in the "ID card" tab; the input for the other key is kept. */
     fun selectIdCardKey(key: IdCardKey) {
         form = form.copy(idCardKey = key)
     }
@@ -109,17 +109,17 @@ class SessionViewModel(
         form = form.copy(documentNumber = AccessForm.normalizeDocumentNumber(input))
     }
 
-    /** Saisie clavier de la date de naissance : seuls les chiffres sont gardés. */
+    /** Keyboard input of the date of birth: only digits are kept. */
     fun onDateOfBirthChange(input: String) {
         form = form.copy(dateOfBirthDigits = AccessForm.filterDateDigits(input))
     }
 
-    /** Saisie clavier de la date d'expiration : seuls les chiffres sont gardés. */
+    /** Keyboard input of the expiry date: only digits are kept. */
     fun onDateOfExpiryChange(input: String) {
         form = form.copy(dateOfExpiryDigits = AccessForm.filterDateDigits(input))
     }
 
-    /** Mémorise la clé pour la prochaine lecture et passe en WaitingForCard. */
+    /** Stores the key for the next read and switches to WaitingForCard. */
     fun prepare(key: AccessKey) {
         abortRead()
         (_state.value as? ReadState.Done)?.report?.wipe()
@@ -128,16 +128,16 @@ class SessionViewModel(
     }
 
     /**
-     * Appelé par l'activité quand un tag IsoDep est détecté en WaitingForCard ou Error.
-     * Peut être appelé depuis le thread du lecteur NFC.
+     * Called by the activity when an IsoDep tag is detected in WaitingForCard or Error.
+     * May be called from the NFC reader thread.
      *
-     * Le démarrage est posté sur le thread principal, où s'exécutent aussi [clear], [prepare]
-     * et [startDemo] : un effacement ne peut plus s'intercaler entre la vérification de l'état
-     * et l'enregistrement de la lecture (audit V16).
+     * The start is posted to the main thread, where [clear], [prepare] and [startDemo] also
+     * run: a clear can no longer slip in between the state check and the registration of the
+     * read (audit V16).
      */
     fun onCardDetected(transport: CardTransport) {
         if (!canStartRead(_state.value, key)) {
-            // Lecture déjà en cours, ou aucune clé : on ignore ce document.
+            // Read already in progress, or no key: this document is ignored.
             closeInBackground(transport)
             return
         }
@@ -145,22 +145,22 @@ class SessionViewModel(
             viewModelScope.launch(Dispatchers.Main.immediate) {
                 val key = key
                 if (key == null || !canStartRead(_state.value, key)) {
-                    // Effacée ou déjà démarrée entre-temps (autre détection du même document).
+                    // Cleared or already started in the meantime (another detection of the same document).
                     closeInBackground(transport)
                     return@launch
                 }
                 _state.value = ReadState.Reading(Step.CONNECT)
                 launchRead(transport, key, isDemo = false) { repository.get() }
             }
-        // Démarrage jamais exécuté (ViewModel détruit entre-temps) : le transport est fermé ici.
+        // Start never executed (ViewModel destroyed in the meantime): the transport is closed here.
         start.invokeOnCompletion { cause -> if (cause != null) closeInBackground(transport) }
     }
 
     /**
-     * Lit la CNIe simulée du mode démo (APK de debug uniquement) comme un document réel, avec sa
-     * clé et son magasin de test. Ce magasin ne sert qu'à cette lecture : il ne remplace jamais
-     * le magasin réel. La clé saisie est oubliée, pour qu'un vrai document présenté ensuite ne
-     * soit jamais lu avec la clé ou le magasin de la démo. Mêmes règles d'effacement.
+     * Reads the simulated CNIe of demo mode (debug APK only) like a real document, with its own
+     * key and test trust store. This store is used only for this read: it never replaces the real
+     * store. The entered key is forgotten, so that a real document presented afterwards is never
+     * read with the demo key or store. Same clearing rules.
      */
     fun startDemo(card: DemoCard) {
         abortRead()
@@ -170,7 +170,7 @@ class SessionViewModel(
         launchRead(card.transport, card.key, isDemo = true) { card.trustStore }
     }
 
-    /** Lance la lecture de [transport] ; l'état doit déjà être Reading. Thread principal uniquement. */
+    /** Starts reading [transport]; the state must already be Reading. Main thread only. */
     private fun launchRead(
         transport: CardTransport,
         key: AccessKey,
@@ -192,8 +192,8 @@ class SessionViewModel(
                                 }
                             }
                         }
-                    // Publié seulement si la lecture n'a été ni abandonnée ni effacée ; sinon le
-                    // rapport, qu'aucun écran n'effacerait, l'est ici.
+                    // Published only if the read was neither abandoned nor cleared; otherwise the
+                    // report, which no screen would wipe, is wiped here.
                     if (currentRead === token && _state.value is ReadState.Reading) {
                         currentRead = null
                         this@SessionViewModel.key = null
@@ -207,8 +207,8 @@ class SessionViewModel(
                 } catch (e: SceauException) {
                     finishWithError(token, e.code)
                 } catch (e: Throwable) {
-                    // Tout le reste, y compris les Error (NotImplementedError, OutOfMemoryError au
-                    // décodage d'une image) : une lecture ne doit jamais faire planter l'app.
+                    // Everything else, including Errors (NotImplementedError, OutOfMemoryError while
+                    // decoding an image): a read must never crash the app.
                     finishWithError(token, UNEXPECTED_PREFIX + (e.javaClass.simpleName.ifEmpty { "Throwable" }))
                 }
             }
@@ -219,14 +219,14 @@ class SessionViewModel(
         }
     }
 
-    /** Recommence après une erreur avec la même clé (bouton « Réessayer »). */
+    /** Starts over after an error with the same key ("Try again" button). */
     fun retry() {
         if (_state.value is ReadState.Error && key != null) {
             _state.value = ReadState.WaitingForCard
         }
     }
 
-    /** Efface tout : rapport (wipe), clé, état → Idle. Bouton « Effacer », retour, arrière-plan. */
+    /** Clears everything: report (wipe), key, state → Idle. "Clear" button, back, background. */
     fun clear() {
         abortRead()
         (_state.value as? ReadState.Done)?.report?.wipe()
@@ -236,13 +236,13 @@ class SessionViewModel(
         closeDisposables()
     }
 
-    /** Ressources d'affichage du rapport courant (bitmaps de l'écran Résultat), fermées par [clear]. */
+    /** Display resources of the current report (Result screen bitmaps), closed by [clear]. */
     private val disposables = mutableListOf<AutoCloseable>()
 
     /**
-     * Confie [resource] (tirée de [report]) à la session, pour que [clear] la ferme directement,
-     * sans attendre une recomposition (audit V13). Si [report] n'est plus le rapport affiché,
-     * [resource] est fermée aussitôt et la méthode renvoie false.
+     * Hands [resource] (derived from [report]) over to the session, so that [clear] closes it
+     * directly, without waiting for a recomposition (audit V13). If [report] is no longer the
+     * displayed report, [resource] is closed immediately and the method returns false.
      */
     fun registerDisposable(
         report: VerificationReport,
@@ -256,7 +256,7 @@ class SessionViewModel(
         return accepted
     }
 
-    /** Retire [resource] de la session sans la fermer (l'appelant s'en charge). */
+    /** Removes [resource] from the session without closing it (the caller takes care of that). */
     fun unregisterDisposable(resource: AutoCloseable) {
         synchronized(disposables) { disposables.remove(resource) }
     }
@@ -267,10 +267,10 @@ class SessionViewModel(
     }
 
     /**
-     * Mise en arrière-plan de l'application (hors changement de configuration). Une lecture en
-     * cours est interrompue et un rapport est effacé (SPEC §8) ; la saisie et la clé, qui ne
-     * vivent qu'en mémoire, sont gardées pour que l'utilisateur puisse passer par les réglages
-     * NFC sans tout ressaisir (SPEC §5.1).
+     * The app goes to the background (excluding configuration changes). A read in progress is
+     * interrupted and a report is wiped (SPEC §8); the input and the key, which live only in
+     * memory, are kept so that the user can go through the NFC settings without re-entering
+     * everything (SPEC §5.1).
      */
     fun onBackground() {
         if (shouldClearOnBackground(_state.value)) clear()
@@ -289,7 +289,7 @@ class SessionViewModel(
         _state.value = ReadState.Error(code)
     }
 
-    /** Abandonne la lecture en cours ; fermer le transport interrompt une APDU bloquée. */
+    /** Abandons the current read; closing the transport interrupts a blocked APDU. */
     private fun abortRead() {
         currentRead = null
         job?.cancel()
@@ -298,7 +298,7 @@ class SessionViewModel(
         transport = null
     }
 
-    /** Ferme [transport] hors du thread principal, sans attendre (voir [closeScope]). */
+    /** Closes [transport] off the main thread, without waiting (see [closeScope]). */
     private fun closeInBackground(transport: CardTransport) {
         closeScope.launch { transport.close() }
     }
@@ -306,10 +306,10 @@ class SessionViewModel(
     internal companion object {
         private const val UNEXPECTED_PREFIX = "UNEXPECTED-"
 
-        /** Vrai si la mise en arrière-plan doit tout effacer : lecture en cours ou données lues. */
+        /** True if going to the background must clear everything: read in progress or data read. */
         fun shouldClearOnBackground(state: ReadState): Boolean = state is ReadState.Reading || state is ReadState.Done
 
-        /** Vrai si un document détecté peut lancer une lecture : clé présente, en attente ou après une erreur. */
+        /** True if a detected document can start a read: key present, waiting or after an error. */
         fun canStartRead(
             state: ReadState,
             key: AccessKey?,

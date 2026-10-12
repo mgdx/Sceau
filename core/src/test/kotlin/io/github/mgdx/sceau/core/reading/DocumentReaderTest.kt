@@ -18,11 +18,11 @@ import org.junit.Assert.fail
 import org.junit.Test
 
 /**
- * Étape READ_DATA, en messagerie non sécurisée (applet sélectionnée en clair, sans BAC) :
- * les APDU émis sont donc directement observables.
+ * READ_DATA step, without secure messaging (applet selected in plain, no BAC), so the
+ * APDUs sent can be observed directly.
  */
 class DocumentReaderTest {
-    /** Les deux temps de la lecture, sans Chip Authentication entre eux. */
+    /** Both phases of reading, with no Chip Authentication between them. */
     private fun read(transport: ScriptedTransport): LdsContent {
         val chip = Chip(transport)
         chip.service.open()
@@ -37,7 +37,7 @@ class DocumentReaderTest {
     private fun ScriptedTransport.selectedFiles(): List<String> = sent.filter { it.startsWith("00A4020C02") }.map { it.substring(10, 14) }
 
     @Test
-    fun dgAnnoncesDansCom_Dg3EtDg4JamaisDemandes() {
+    fun dgsListedInCom_Dg3AndDg4NeverRequested() {
         val dg1 = TestFixtures.dg1()
         val sod = byteArrayOf(0x77, 0x03, 0x01, 0x02, 0x03)
         val transport =
@@ -45,11 +45,11 @@ class DocumentReaderTest {
                 respond(AID_SELECT, "9000"),
                 *file(FID_COM, TestFixtures.com(1, 2, 3, 4, 11, 14)),
                 *file(FID_SOD, sod),
-                // DG14 avant les autres DG : la Chip Authentication qu'il annonce les précède (D20).
+                // DG14 before the other DGs: the Chip Authentication it announces precedes them (D20).
                 *file(fid(14), TestFixtures.opaqueDataGroup(14)),
                 *file(fid(1), dg1),
                 *file(fid(2), TestFixtures.opaqueDataGroup(2)),
-                // DG11 annoncé mais protégé : absent, la lecture continue.
+                // DG11 listed but protected: missing, reading continues.
                 missingFile(fid(11), "6982"),
             )
 
@@ -64,7 +64,7 @@ class DocumentReaderTest {
     }
 
     @Test
-    fun comAbsent_DgAnnoncesDansLeSod() {
+    fun comMissing_DgsListedInSod() {
         val transport =
             ScriptedTransport(
                 respond(AID_SELECT, "9000"),
@@ -79,13 +79,13 @@ class DocumentReaderTest {
         val content = read(transport)
 
         assertEquals(listOf(1, 2, 15, 12), content.dataGroups.keys.toList())
-        assertEquals("seul le SOD fait foi", setOf(1, 2, 3, 4, 12, 15), content.signedDataGroups)
+        assertEquals("only the SOD is authoritative", setOf(1, 2, 3, 4, 12, 15), content.signedDataGroups)
         assertFalse(transport.selectedFiles().any { it == fid(3) || it == fid(4) })
         assertTrue(transport.exhausted)
     }
 
     @Test
-    fun documentRetirePendantDg2_ConnectionLostInchangee() {
+    fun documentRemovedDuringDg2_ConnectionLostUnchanged() {
         val lost = SceauException.ConnectionLost()
         val transport =
             ScriptedTransport(
@@ -98,14 +98,14 @@ class DocumentReaderTest {
             )
         try {
             read(transport)
-            fail("ConnectionLost attendue")
+            fail("ConnectionLost expected")
         } catch (e: SceauException.ConnectionLost) {
             assertSame(lost, e)
         }
     }
 
     @Test
-    fun sodAbsent_EchecAvecCodeTechnique() {
+    fun sodMissing_FailureWithTechnicalCode() {
         val transport =
             ScriptedTransport(
                 respond(AID_SELECT, "9000"),
@@ -114,7 +114,7 @@ class DocumentReaderTest {
             )
         try {
             read(transport)
-            fail("StepFailure attendue")
+            fail("StepFailure expected")
         } catch (e: StepFailure) {
             assertEquals("READ_DATA-SOD-CardServiceException-6A82", technicalCode("READ_DATA", e))
         }

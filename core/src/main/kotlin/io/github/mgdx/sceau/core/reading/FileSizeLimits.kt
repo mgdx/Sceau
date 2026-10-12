@@ -6,22 +6,22 @@ import org.jmrtd.PassportService
 import org.jmrtd.lds.LDSFileUtil
 
 /**
- * Plafonds de taille des fichiers lus sur la puce (audit V11).
+ * Size caps for the files read from the chip (audit V11).
  *
- * JMRTD alloue d'emblée un tableau de la longueur annoncée par l'en-tête TLV du fichier, puis le
- * remplit bloc par bloc : une puce forgée qui annonce 2 Go provoque une `OutOfMemoryError`, et
- * 50 Mo quelque 235 000 APDU. La longueur annoncée (en-tête compris) est donc comparée au plafond
- * du fichier dès la lecture de l'en-tête, avant toute allocation.
+ * JMRTD immediately allocates an array of the length announced by the file's TLV header, then
+ * fills it block by block: a forged chip that announces 2 GB causes an `OutOfMemoryError`, and
+ * 50 MB some 235,000 APDUs. The announced length (header included) is therefore compared with the file's
+ * cap as soon as the header is read, before any allocation.
  *
- * Plafonds, très au-dessus des documents réels (ICAO 9303-10) :
- * - EF.COM, DG1 : 1 Ko (EF.COM : quelques dizaines d'octets ; DG1 : MRZ de 90 caractères au plus) ;
- * - EF.SOD : 32 Ko (hachages des DG et certificat DS : 2 à 6 Ko en pratique) ;
- * - EF.CardAccess, DG11, DG14, DG15 : 16 Ko (SecurityInfos, clés publiques, texte : moins de 2 Ko) ;
- * - DG2, DG7, DG12 : 256 Ko (portrait JPEG 2000 d'une CNIe : 15 à 25 Ko ; signature manuscrite
- *   de DG7 : quelques Ko ; images recto et verso éventuelles dans DG12). DG7 reste au plafond
- *   des fichiers d'images : ICAO 9303-10 ne borne pas sa taille et il peut contenir plusieurs
- *   images (D37) ;
- * - tout autre fichier : 256 Ko.
+ * Caps, far above real documents (ICAO 9303-10):
+ * - EF.COM, DG1: 1 KB (EF.COM: a few dozen bytes; DG1: MRZ of 90 characters at most);
+ * - EF.SOD: 32 KB (DG hashes and DS certificate: 2 to 6 KB in practice);
+ * - EF.CardAccess, DG11, DG14, DG15: 16 KB (SecurityInfos, public keys, text: less than 2 KB);
+ * - DG2, DG7, DG12: 256 KB (JPEG 2000 portrait of a CNIe: 15 to 25 KB; handwritten signature
+ *   in DG7: a few KB; optional front and back images in DG12). DG7 stays at the image file
+ *   cap: ICAO 9303-10 does not bound its size and it may contain several
+ *   images (D37);
+ * - any other file: 256 KB.
  */
 internal object FileSizeLimits {
     private const val KIB = 1024L
@@ -35,22 +35,22 @@ internal object FileSizeLimits {
             else -> IMAGE_FILE_MAX
         }
 
-    /** Plafond des fichiers d'images (DG2, DG7, DG12) et de tout fichier non listé. */
+    /** Cap for image files (DG2, DG7, DG12) and for any unlisted file. */
     private const val IMAGE_FILE_MAX = 256 * KIB
 
     /**
-     * Audit V29 : nombre maximal de READ BINARY pour lire le fichier [fid] : son plafond lu par
-     * blocs de [Chip.BLOCK_SIZE] octets, plus une marge (lecture de l'en-tête, puce qui répond
-     * par blocs plus courts). Un fichier réel en demande bien moins : un DG2 de 40 Ko, 180.
+     * Audit V29: maximum number of READ BINARY commands to read file [fid]: its cap read in
+     * blocks of [Chip.BLOCK_SIZE] bytes, plus a margin (header read, chip that responds
+     * with shorter blocks). A real file needs far fewer: a 40 KB DG2, 180.
      */
     fun maxReadBinaryCommands(fid: Short): Long = maxSize(fid) / Chip.BLOCK_SIZE + READ_BINARY_MARGIN
 
-    /** Réponses READ BINARY vides consécutives au-delà desquelles la lecture est abandonnée (V29). */
+    /** Consecutive empty READ BINARY responses beyond which the reading is abandoned (V29). */
     const val MAX_CONSECUTIVE_EMPTY_RESPONSES = 3
 
     private const val READ_BINARY_MARGIN = 16L
 
-    /** Nom court du fichier pour les identifiants d'erreur (`SOD`, `DG1`…). */
+    /** Short file name for error identifiers (`SOD`, `DG1`…). */
     fun nameOf(fid: Short): String =
         when (fid) {
             PassportService.EF_COM -> "COM"
@@ -60,14 +60,14 @@ internal object FileSizeLimits {
         }
 
     /**
-     * Taille totale (tag, longueur et valeur) annoncée par l'en-tête TLV [header], ou null si
-     * l'en-tête est trop court ou de longueur indéfinie : JMRTD le traite alors lui-même. Une
-     * longueur codée sur plus de quatre octets vaut [Long.MAX_VALUE].
+     * Total size (tag, length and value) announced by the TLV [header], or null if
+     * the header is too short or of indefinite length: JMRTD then handles it itself. A
+     * length encoded on more than four bytes yields [Long.MAX_VALUE].
      */
     fun announcedSize(header: ByteArray): Long? {
         var index = 0
         if (header.isEmpty()) return null
-        // Tag : un octet, ou plusieurs si ses cinq bits de poids faible valent 1 (BER).
+        // Tag: one byte, or several if its five low-order bits are all 1 (BER).
         if (header[index++].toInt() and TAG_NUMBER_MASK == TAG_NUMBER_MASK) {
             while (index < header.size && header[index].toInt() and MORE_BIT != 0) index++
             index++
@@ -91,23 +91,23 @@ internal object FileSizeLimits {
     private const val MAX_LENGTH_BYTES = 4
 }
 
-/** Fichier dont l'en-tête annonce une taille supérieure à son plafond ; sans message. */
+/** File whose header announces a size above its cap; no message. */
 internal class FileTooLargeException : RuntimeException()
 
-/** Lecture d'un fichier qui n'avance plus (audit V29) ; sans message. */
+/** Reading of a file that no longer progresses (audit V29); no message. */
 internal class FileReadStalledException : RuntimeException()
 
 /**
- * Émetteur de SELECT et READ BINARY pour le `DefaultFileSystem` de JMRTD : contrôle la taille
- * annoncée par l'en-tête de chaque fichier (lecture à l'offset 0) et lève
- * [FileTooLargeException] au-delà du plafond, avant que JMRTD n'alloue le tampon du fichier.
+ * SELECT and READ BINARY sender for JMRTD's `DefaultFileSystem`: checks the size
+ * announced by the header of each file (read at offset 0) and throws
+ * [FileTooLargeException] above the cap, before JMRTD allocates the file buffer.
  *
- * Audit V29 : SCUBA (`CardFileInputStream`) relance un READ BINARY tant que la réponse est vide,
- * et JMRTD accepte une réponse vide ; une puce forgée qui répond `90 00` sans donnée ferait
- * donc boucler la lecture sans fin. Les échanges sont comptés par fichier (remis à zéro à chaque
- * SELECT) : au-delà de [FileSizeLimits.MAX_CONSECUTIVE_EMPTY_RESPONSES] réponses vides
- * consécutives, ou de [FileSizeLimits.maxReadBinaryCommands] READ BINARY, la lecture lève
- * [FileReadStalledException] sans envoyer d'autre commande.
+ * Audit V29: SCUBA (`CardFileInputStream`) retries a READ BINARY as long as the response is empty,
+ * and JMRTD accepts an empty response; a forged chip that answers `90 00` without data would
+ * therefore make the reading loop forever. Exchanges are counted per file (reset at each
+ * SELECT): beyond [FileSizeLimits.MAX_CONSECUTIVE_EMPTY_RESPONSES] consecutive empty
+ * responses, or [FileSizeLimits.maxReadBinaryCommands] READ BINARY commands, the reading throws
+ * [FileReadStalledException] without sending any further command.
  */
 internal class BoundedReadBinarySender(
     private val delegate: APDULevelReadBinaryCapable,

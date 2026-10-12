@@ -5,12 +5,12 @@ import io.github.mgdx.sceau.core.CardTransport
 import io.github.mgdx.sceau.core.trust.TrustStore
 
 /**
- * Document simulé du mode démo (APK de debug uniquement, voir `DemoMode` dans les jeux de
- * sources `debug` et `release`). Une carte sert à une seule lecture : [transport] a un état.
+ * Simulated document of demo mode (debug APK only, see `DemoMode` in the `debug` and `release`
+ * source sets). A card is used for a single read: [transport] is stateful.
  *
- * @property key clé d'accès imprimée sur le document simulé
- * @property trustStore magasin de test du document simulé ; il ne sert qu'à cette lecture et ne
- *   remplace jamais le magasin de confiance réel
+ * @property key access key printed on the simulated document
+ * @property trustStore test trust store of the simulated document; it is used only for this read
+ *   and never replaces the real trust store
  */
 class DemoCard(
     val transport: CardTransport,

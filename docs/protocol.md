@@ -1,14 +1,14 @@
-# Protocole de lecture et de vérification
+# Reading and verification protocol
 
-Ce document détaille la séquence ICAO 9303 suivie par `:core` (SPEC §6), les règles qui l'encadrent, la correspondance avec les étapes affichées et les erreurs, et le calcul du verdict. Il décrit le comportement du code de `core/src/main/kotlin/` (paquets `reading/` et `verify/`) ; les écarts à la SPEC sont justifiés dans `docs/decisions.md`.
+This document details the ICAO 9303 sequence followed by `:core` (SPEC §6), the rules that govern it, how it maps to the displayed steps and to errors, and how the verdict is computed. It describes the behavior of the code in `core/src/main/kotlin/` (packages `reading/` and `verify/`); departures from the SPEC are justified in `docs/decisions.md`.
 
-Références :
+References:
 
-- **ICAO Doc 9303, partie 10** : *Logical Data Structure (LDS) for Storage of Biometrics and Other Data in the Contactless Integrated Circuit* : structure des fichiers (EF.COM, EF.SOD, EF.CardAccess, groupes de données).
-- **ICAO Doc 9303, partie 11** : *Security Mechanisms for MRTDs* : BAC, PACE, Passive Authentication, Chip Authentication, Active Authentication, messagerie sécurisée.
-- **ICAO Doc 9303, partie 12** : *Public Key Infrastructure for MRTDs* : CSCA, DS, certificats de lien, Master Lists.
+- **ICAO Doc 9303, part 10**: *Logical Data Structure (LDS) for Storage of Biometrics and Other Data in the Contactless Integrated Circuit*: file structure (EF.COM, EF.SOD, EF.CardAccess, data groups).
+- **ICAO Doc 9303, part 11**: *Security Mechanisms for MRTDs*: BAC, PACE, Passive Authentication, Chip Authentication, Active Authentication, secure messaging.
+- **ICAO Doc 9303, part 12**: *Public Key Infrastructure for MRTDs*: CSCA, DS, link certificates, Master Lists.
 
-## 1. Point d'entrée
+## 1. Entry point
 
 ```kotlin
 suspend fun readAndVerify(
@@ -19,231 +19,231 @@ suspend fun readAndVerify(
 ): VerificationReport
 ```
 
-- `transport` : canal APDU brut (`transceive`, `maxTransceiveLength`, `timeoutMillis`, `reconnect`, `close`). `:app` l'implémente au-dessus d'`IsoDep` (`IsoDepTransport`) ; les tests utilisent un transport qui rejoue des échanges APDU enregistrés (`ScriptedTransport`) ou la puce simulée de `:testchip` (`SimulatedChip`).
-- `key` : `AccessKey.Can` (6 chiffres) ou `AccessKey.Mrz` (numéro de document sans les `<` de remplissage, date de naissance, date d'expiration).
-- `trustStore` : magasin de confiance fusionné (CSCA ANTS, Master List allemande du BSI embarquée, Master Lists importées).
-- `progress` : appelé **au début** de chaque étape (voir §4).
+- `transport`: raw APDU channel (`transceive`, `maxTransceiveLength`, `timeoutMillis`, `reconnect`, `close`). `:app` implements it on top of `IsoDep` (`IsoDepTransport`); the tests use a transport that replays recorded APDU exchanges (`ScriptedTransport`) or the simulated chip from `:testchip` (`SimulatedChip`).
+- `key`: `AccessKey.Can` (6 digits) or `AccessKey.Mrz` (document number without the `<` filler characters, date of birth, expiry date).
+- `trustStore`: merged trust store (ANTS CSCAs, built-in German Master List from the BSI, imported Master Lists).
+- `progress`: called **at the start** of each step (see §4).
 
-La fonction est bloquante côté E/S et s'exécute sur `Dispatchers.IO`. Elle lève une `SceauException` pour toute erreur qui **interrompt** la lecture ; tout échec de **vérification** est au contraire consigné dans le rapport, qui est toujours produit dès que les données ont été lues. Si la lecture échoue, les données déjà lues sont remises à zéro.
+The function blocks on I/O and runs on `Dispatchers.IO`. It throws a `SceauException` for any error that **interrupts** reading; any **verification** failure, on the contrary, is recorded in the report, which is always produced once the data has been read. If reading fails, the data already read is zeroed.
 
-Avant chaque lecture, les journaux `java.util.logging` de JMRTD et de SCUBA sont coupés (`LibraryLogging`) : ils écrivent des APDU en clair (décision D14).
+Before each reading, the `java.util.logging` loggers of JMRTD and SCUBA are turned off (`LibraryLogging`): they write APDUs in plain text (decision D14).
 
-## 2. Séquence (SPEC §6.1)
+## 2. Sequence (SPEC §6.1)
 
-L'ordre réel des échanges suit ICAO 9303 partie 11 : EF.CardAccess est un fichier du MF, lu **avant** toute sélection d'application, et PACE s'exécute au niveau du MF, avant la sélection de l'application eMRTD. La SPEC énumère les étapes dans l'ordre logique (reconnaître un document ICAO, puis ouvrir le canal) ; le résultat observable est le même (`NotIcaoDocument` si l'application ICAO est absente). Mise en œuvre : `SecureChannel` (`core/src/main/kotlin/…/reading/`).
+The actual order of exchanges follows ICAO 9303 part 11: EF.CardAccess is a file of the MF, read **before** any application selection, and PACE runs at the MF level, before the eMRTD application is selected. The SPEC lists the steps in logical order (recognize an ICAO document, then open the channel); the observable result is the same (`NotIcaoDocument` if the ICAO application is missing). Implementation: `SecureChannel` (`core/src/main/kotlin/…/reading/`).
 
-Séquence complète (décision D20) :
+Full sequence (decision D20):
 
-1. EF.CardAccess, puis PACE ou BAC (§2.1, §2.2) ; après tout PACE (GM, IM ou CAM), EF.CardSecurity au MF, jamais sous BAC (§2.2, §2.6.1) ;
-2. EF.COM, EF.SOD (§2.3), puis DG14 s'il est annoncé dans EF.COM ou dans le SOD ;
-3. Chip Authentication si DG14 annonce une clé (§2.6), sauf après PACE-CAM (la puce s'est déjà authentifiée) ;
-4. DG1, DG2, puis DG15, DG11, DG12 et DG7 s'ils sont annoncés (§2.4), sous la messagerie sécurisée de la Chip Authentication si elle a réussi ;
-5. Passive Authentication (§2.5), qui vérifie aussi l'empreinte de DG14 ;
-6. Active Authentication si DG15 est présent (§2.7) ;
-7. contrôle du déclassement : protocole mené comparé aux `PACEInfo` de DG14, signé (§2.2, audit V20).
+1. EF.CardAccess, then PACE or BAC (§2.1, §2.2); after any PACE (GM, IM or CAM), EF.CardSecurity at the MF, never under BAC (§2.2, §2.6.1);
+2. EF.COM, EF.SOD (§2.3), then DG14 if it is announced in EF.COM or in the SOD;
+3. Chip Authentication if DG14 announces a key (§2.6), except after PACE-CAM (the chip has already authenticated itself);
+4. DG1, DG2, then DG15, DG11, DG12 and DG7 if they are announced (§2.4), under the secure messaging of Chip Authentication if it succeeded;
+5. Passive Authentication (§2.5), which also verifies the hash of DG14;
+6. Active Authentication if DG15 is present (§2.7);
+7. downgrade check: protocol performed compared with the signed `PACEInfo`s of DG14 (§2.2, audit V20).
 
-La Chip Authentication précède la lecture des données, et non la Passive Authentication comme l'énumère SPEC §6.1 : ainsi DG1, DG2, DG7, DG11, DG12 et DG15 sont lus sous des clés de session que seule la puce qui détient la clé privée de DG14 peut dériver, ce qui les lie à cette puce (ICAO 9303-11 §6.2, procédure d'inspection).
+Chip Authentication comes before reading the data, and not before Passive Authentication as SPEC §6.1 lists it: this way DG1, DG2, DG7, DG11, DG12 and DG15 are read under session keys that only the chip holding the DG14 private key can derive, which binds them to that chip (ICAO 9303-11 §6.2, inspection procedure).
 
-### 2.1 EF.CardAccess, puis sélection de l'application ICAO
+### 2.1 EF.CardAccess, then selection of the ICAO application
 
-1. Lecture de **EF.CardAccess** (FID `01 1C`, fichier du MF, partie 10), en clair. S'il est présent et contient des `PACEInfo`, PACE est annoncé. Absent ou illisible : pas de PACE.
-2. **Sans PACE**, l'application ICAO est sélectionnée en clair aussitôt : commande `SELECT` par nom d'application, AID `A0 00 00 02 47 10 01` (application LDS1 eMRTD, partie 10).
-3. **Avec PACE**, la sélection a lieu après PACE, sous messagerie sécurisée (§2.2).
+1. Reading of **EF.CardAccess** (FID `01 1C`, file of the MF, part 10), in plain text. If it is present and contains `PACEInfo`s, PACE is announced. Missing or unreadable: no PACE.
+2. **Without PACE**, the ICAO application is selected in plain text right away: `SELECT` command by application name, AID `A0 00 00 02 47 10 01` (LDS1 eMRTD application, part 10).
+3. **With PACE**, the selection takes place after PACE, under secure messaging (§2.2).
 
-Réponse `6A82` (fichier introuvable) à la sélection : `SceauException.NotIcaoDocument` (code `NOT_ICAO`). Aucune autre tentative (SPEC §4). Tout autre échec de la sélection donne une erreur technique (`UNEXPECTED-<étape>-SELECT_APPLET-…`).
+Response `6A82` (file not found) to the selection: `SceauException.NotIcaoDocument` (code `NOT_ICAO`). No further attempt (SPEC §4). Any other selection failure gives a technical error (`UNEXPECTED-<step>-SELECT_APPLET-…`).
 
-### 2.2 Canal sécurisé : PACE ou BAC
+### 2.2 Secure channel: PACE or BAC
 
-- **PACE** (partie 11, *Password Authenticated Connection Establishment*) est exécuté avec la clé fournie : CAN pour `AccessKey.Can`, clé dérivée de la MRZ pour `AccessKey.Mrz`. Chaque `PACEInfo` annoncé est essayé dans l'ordre, ceux de PACE-CAM en premier (audit V20) ; le mapping et les paramètres de domaine sont ceux qu'annonce la puce, jamais codés en dur. Les paramètres de domaine propriétaires (`PACEDomainParameterInfo`) ne sont pas pris en charge : le `PACEInfo` correspondant est sauté. PACE réussi : sélection de l'application ICAO sous messagerie sécurisée. Si PACE a abouti avec le mapping **PACE-CAM**, EF.CardSecurity est lu au MF sous la nouvelle messagerie sécurisée, avant cette sélection (§2.6.1).
-- **BAC** (partie 11, *Basic Access Control*) est utilisé si PACE n'est pas annoncé, avec la clé MRZ (numéro de document, date de naissance, date d'expiration et leurs chiffres de contrôle).
-- **CAN sans PACE** : si la clé est un CAN et que la puce n'annonce pas PACE, la lecture s'arrête avec `SceauException.CanWithoutPace` (code `CAN_WITHOUT_PACE`) : BAC ne sait pas utiliser un CAN.
-- **Clé refusée** : un SW `63xx` pendant PACE (ICAO 9303-11, BSI TR-03110) ou l'échec de BAC donnent `SceauException.AccessDenied` (code `ACCESS_DENIED`), sans autre essai.
-- **Repli PACE → BAC** (clé MRZ seulement, décision D13) : si PACE échoue sans refus explicite de la clé ni délai dépassé, c'est-à-dire sur un SW inattendu, une erreur de JMRTD ou une perte de liaison, la liaison est réinitialisée (`CardTransport.reconnect()` : `IsoDep.close()` puis `connect()`), l'application ICAO est sélectionnée en clair, puis BAC est mené. Les documents qui annoncent PACE restent tenus d'accepter BAC pendant la transition ICAO. Avec un CAN, aucun repli : une erreur de transport ressort telle quelle, un échec de PACE donne `ACCESS_DENIED`. Une reconnexion impossible donne `CONNECTION_LOST-SECURE_CHANNEL-RECONNECT`.
-- **Délai d'authentification** (décision D12) : pendant PACE et BAC, le délai de réponse du transport est porté à 60 s (`SecureChannel.AUTHENTICATION_TIMEOUT_MILLIS`), puis rétabli à sa valeur précédente (10 s par défaut, `IsoDepTransport.DEFAULT_TIMEOUT_MILLIS`) pour la lecture. Après des essais ratés, une puce peut imposer un délai croissant avant de répondre à la première commande d'authentification (contre-mesure anti-force brute) : un passeport français réel, muet quand le délai était de 5 s (GENERAL AUTHENTICATE de PACE) puis de 10 s (EXTERNAL AUTHENTICATE de BAC) sur Fairphone 3 et Fairphone 5, a mis 23,3 s à répondre au premier GENERAL AUTHENTICATE de PACE après plusieurs tentatives ratées. Couper plus tôt ne laisse jamais la puce répondre, et chaque essai interrompu peut aggraver la pénalité. Un délai dépassé pendant PACE arrête donc la lecture (`TIMEOUT-SECURE_CHANNEL-INS86-…`), **sans** repli sur BAC. Côté app, `IsoDepTransport` relit `IsoDep.getTimeout()` après chaque affectation et classe les échecs d'après le délai effectivement retenu par le système ; l'écran de lecture affiche un message d'attente si l'étape « Ouverture du canal sécurisé » dure plus de 5 s (`SlowChipHint`).
-- Toutes les commandes suivantes passent par la messagerie sécurisée (*Secure Messaging*, partie 11) établie par PACE ou BAC ; le MAC des réponses est toujours vérifié.
-- **Déclassement** (audit V20, décision D40 ; audit V32, décision D43) : EF.CardAccess n'est pas signé, un clone peut y retirer PACE-CAM ou PACE. Après tout PACE abouti, quel que soit le mapping, EF.CardSecurity est lu au MF sous la messagerie de PACE, avant la sélection de l'applet (`SecureChannel.cardSecurity` ; absent : rien n'est comparé ; jamais lu sous BAC). À l'étape `VERIFY_CHIP`, si ni la CA via DG14 ni l'AA n'ont réussi, le canal mené est comparé aux éléments signés (`ProtocolDowngrade`) : les `PACEInfo` de DG14 si son empreinte est vérifiée, et, sans PACE-CAM, le contenu d'EF.CardSecurity vérifié comme le SOD (`PassiveAuthenticator.verifyCardSecurity` ; un contenu dont le DS ou le CSCA est introuvable est pris tel quel, puisqu'il ne peut que faire échouer la CA). Si la ligne CA est encore `NOT_AVAILABLE` : PACE-CAM annoncé par DG14 ou EF.CardSecurity mais canal sans CAM → `CHIP_AUTHENTICATION` `FAILED` (`VERIFY_CHIP-DOWNGRADE-CAM`) ; EF.CardSecurity présent mais invalide (signature, chaîne, pays, structure) → `FAILED` (`VERIFY_CHIP-DOWNGRADE-CARD_SECURITY`) ; EF.CardSecurity qui annonce une clé (`id-PK-*`) ou le protocole (`id-CA-*`) de Chip Authentication → `FAILED` (`VERIFY_CHIP-DOWNGRADE-CA`). PACE annoncé par DG14 mais canal BAC → `SECURE_CHANNEL` `FAILED` (`VERIFY_CHIP-DOWNGRADE-BAC`).
+- **PACE** (part 11, *Password Authenticated Connection Establishment*) is performed with the key supplied: the CAN for `AccessKey.Can`, a key derived from the MRZ for `AccessKey.Mrz`. Each announced `PACEInfo` is tried in order, PACE-CAM ones first (audit V20); the mapping and domain parameters are those announced by the chip, never hard-coded. Proprietary domain parameters (`PACEDomainParameterInfo`) are not supported: the corresponding `PACEInfo` is skipped. PACE succeeded: the ICAO application is selected under secure messaging. If PACE completed with the **PACE-CAM** mapping, EF.CardSecurity is read at the MF under the new secure messaging, before that selection (§2.6.1).
+- **BAC** (part 11, *Basic Access Control*) is used if PACE is not announced, with the MRZ key (document number, date of birth, expiry date and their check digits).
+- **CAN without PACE**: if the key is a CAN and the chip does not announce PACE, reading stops with `SceauException.CanWithoutPace` (code `CAN_WITHOUT_PACE`): BAC cannot use a CAN.
+- **Key rejected**: an SW `63xx` during PACE (ICAO 9303-11, BSI TR-03110) or a BAC failure gives `SceauException.AccessDenied` (code `ACCESS_DENIED`), with no further attempt.
+- **PACE → BAC fallback** (MRZ key only, decision D13): if PACE fails without an explicit key rejection or a timeout, that is on an unexpected SW, a JMRTD error or a lost link, the link is reset (`CardTransport.reconnect()`: `IsoDep.close()` then `connect()`), the ICAO application is selected in plain text, then BAC is performed. Documents that announce PACE are still required to accept BAC during the ICAO transition period. With a CAN, no fallback: a transport error is passed through as is, and a PACE failure gives `ACCESS_DENIED`. A failed reconnection gives `CONNECTION_LOST-SECURE_CHANNEL-RECONNECT`.
+- **Authentication timeout** (decision D12): during PACE and BAC, the transport response timeout is raised to 60 s (`SecureChannel.AUTHENTICATION_TIMEOUT_MILLIS`), then restored to its previous value (10 s by default, `IsoDepTransport.DEFAULT_TIMEOUT_MILLIS`) for reading. After failed attempts, a chip may impose an increasing delay before responding to the first authentication command (an anti-brute-force countermeasure): a real French passport, silent when the timeout was 5 s (PACE GENERAL AUTHENTICATE) and then 10 s (BAC EXTERNAL AUTHENTICATE) on a Fairphone 3 and a Fairphone 5, took 23.3 s to answer the first PACE GENERAL AUTHENTICATE after several failed attempts. Cutting off earlier never lets the chip answer, and each interrupted attempt may increase the penalty. A timeout during PACE therefore stops reading (`TIMEOUT-SECURE_CHANNEL-INS86-…`), **without** falling back to BAC. On the app side, `IsoDepTransport` reads `IsoDep.getTimeout()` back after each assignment and classifies failures according to the timeout actually applied by the system; the reading screen shows a waiting message if the “Opening secure channel” step lasts more than 5 s (`SlowChipHint`).
+- All subsequent commands go through the secure messaging (*Secure Messaging*, part 11) established by PACE or BAC; the MAC of responses is always verified.
+- **Downgrade** (audit V20, decision D40; audit V32, decision D43): EF.CardAccess is not signed, so a clone can remove PACE-CAM or PACE from it. After any successful PACE, whatever the mapping, EF.CardSecurity is read at the MF under PACE secure messaging, before the applet is selected (`SecureChannel.cardSecurity`; missing: nothing is compared; never read under BAC). At the `VERIFY_CHIP` step, if neither CA via DG14 nor AA succeeded, the channel performed is compared with the signed elements (`ProtocolDowngrade`): the `PACEInfo`s of DG14 if its hash is verified, and, without PACE-CAM, the content of EF.CardSecurity verified like the SOD (`PassiveAuthenticator.verifyCardSecurity`; content whose DS or CSCA cannot be found is taken as is, since it can only make CA fail). If the CA line is still `NOT_AVAILABLE`: PACE-CAM announced by DG14 or EF.CardSecurity but channel without CAM → `CHIP_AUTHENTICATION` `FAILED` (`VERIFY_CHIP-DOWNGRADE-CAM`); EF.CardSecurity present but invalid (signature, chain, country, structure) → `FAILED` (`VERIFY_CHIP-DOWNGRADE-CARD_SECURITY`); EF.CardSecurity announcing a Chip Authentication key (`id-PK-*`) or protocol (`id-CA-*`) → `FAILED` (`VERIFY_CHIP-DOWNGRADE-CA`). PACE announced by DG14 but BAC channel → `SECURE_CHANNEL` `FAILED` (`VERIFY_CHIP-DOWNGRADE-BAC`).
 
-#### Paramètres de transport
+#### Transport parameters
 
-- **APDU courtes uniquement** : la longueur maximale transmise à JMRTD est celle du transport (`IsoDep.getMaxTransceiveLength()`), plafonnée à 256 (`Chip`) ; aucune APDU étendue n'est émise (décision D14).
-- Lecture des fichiers par `SELECT` puis `READ BINARY`, par blocs de 223 octets ; l'adressage court (SFI) n'est pas utilisé.
-- **Lecture qui n'avance plus** (audit V29, décision D41) : SCUBA relance un `READ BINARY` tant que la réponse est vide, et JMRTD accepte une réponse `90 00` sans donnée. Les échanges sont donc comptés par fichier, remis à zéro à chaque `SELECT` (`BoundedReadBinarySender`) : au-delà de 3 réponses vides consécutives, ou de `plafond du fichier / 223 + 16` `READ BINARY` (20 pour DG1, 1 191 pour DG2), la lecture s'arrête sur `READ_STALLED-<ÉTAPE>-<fichier>` (ex. `READ_STALLED-READ_DATA-DG2`), y compris pour un fichier facultatif, qui n'est pas traité comme absent. Un DG2 réel de 40 Ko demande environ 180 `READ BINARY`.
-- **Réponses contrôlées avant JMRTD** (audit V36, décision D41) : `TransportCardService.transmit` refuse (`CardServiceException`, traitée comme toute erreur de la puce, jamais une `Error`) une réponse sans SW ou de plus de 64 Kio de données ; pour une commande protégée (CLA `x C`), une réponse dont un DO'85 ou DO'87 ne tient pas dans les données, parcourues octet par octet comme le fait JMRTD (qui alloue la longueur annoncée avant de vérifier le MAC) ; pour GENERAL AUTHENTICATE en clair (PACE), une réponse dont les longueurs BER ne tiennent pas (`BerStructure`). Les réponses en clair des autres commandes (SELECT, EF.CardAccess, GET CHALLENGE, BAC) ne sont pas interprétées.
-- **Délai global** (audit V29, décision D41) : hors authentification, une lecture dispose de 120 s au total (`ReadingSession.GLOBAL_TIMEOUT_MILLIS`), décomptées pendant les étapes `CONNECT`, `READ_DATA` (rétablissement du canal après une CA ratée compris), `VERIFY_SIGNATURE` et `VERIFY_CHIP`, et suspendues pendant `SECURE_CHANNEL`, dont PACE et BAC gardent leur délai propre de 60 s par réponse. À l'échéance, le transport est fermé (ce qui débloque l'APDU en cours) et la lecture se termine par `TIMEOUT-<ÉTAPE>-GLOBAL`, même si un rapport a pu être produit entre-temps (il est effacé). Une lecture réelle complète prend de quelques secondes à une vingtaine de secondes.
-- Côté app, `IsoDepTransport` lit en mode lecteur NFC (`NfcAdapter.enableReaderMode`, NFC-A et NFC-B, sans vérification NDEF), avec des tests de présence espacés de 2 s pour ne pas perturber une puce lente pendant PACE.
+- **Short APDUs only**: the maximum length passed to JMRTD is that of the transport (`IsoDep.getMaxTransceiveLength()`), capped at 256 (`Chip`); no extended APDU is sent (decision D14).
+- Files are read with `SELECT` then `READ BINARY`, in blocks of 223 bytes; short file identifiers (SFI) are not used.
+- **Reading that no longer progresses** (audit V29, decision D41): SCUBA retries a `READ BINARY` as long as the response is empty, and JMRTD accepts a `90 00` response without data. Exchanges are therefore counted per file, reset at each `SELECT` (`BoundedReadBinarySender`): beyond 3 consecutive empty responses, or `file ceiling / 223 + 16` `READ BINARY` commands (20 for DG1, 1,191 for DG2), reading stops with `READ_STALLED-<STEP>-<file>` (e.g. `READ_STALLED-READ_DATA-DG2`), including for an optional file, which is not treated as missing. A real 40 KB DG2 takes about 180 `READ BINARY` commands.
+- **Responses checked before JMRTD** (audit V36, decision D41): `TransportCardService.transmit` rejects (`CardServiceException`, handled like any chip error, never an `Error`) a response without an SW or with more than 64 KiB of data; for a protected command (CLA `x C`), a response in which a DO'85 or DO'87 does not fit within the data, walked byte by byte as JMRTD does (JMRTD allocates the announced length before verifying the MAC); for GENERAL AUTHENTICATE in plain text (PACE), a response whose BER lengths do not fit (`BerStructure`). Plain-text responses to other commands (SELECT, EF.CardAccess, GET CHALLENGE, BAC) are not interpreted.
+- **Global timeout** (audit V29, decision D41): outside authentication, a reading has 120 s in total (`ReadingSession.GLOBAL_TIMEOUT_MILLIS`), counted during the `CONNECT`, `READ_DATA` (including re-establishing the channel after a failed CA), `VERIFY_SIGNATURE` and `VERIFY_CHIP` steps, and suspended during `SECURE_CHANNEL`, where PACE and BAC keep their own 60 s timeout per response. When it expires, the transport is closed (which unblocks the current APDU) and reading ends with `TIMEOUT-<STEP>-GLOBAL`, even if a report was produced in the meantime (it is wiped). A full real reading takes from a few seconds to about twenty seconds.
+- On the app side, `IsoDepTransport` reads in NFC reader mode (`NfcAdapter.enableReaderMode`, NFC-A and NFC-B, without NDEF check), with presence checks spaced 2 s apart so as not to disturb a slow chip during PACE.
 
-### 2.3 EF.COM puis EF.SOD
+### 2.3 EF.COM then EF.SOD
 
-- **EF.COM** (FID `01 1E`, tag `60`) : version de la LDS et liste des groupes de données présents. Facultatif : s'il manque ou est illisible, la liste des DG vient du SOD. Ses longueurs TLV internes sont contrôlées contre la taille réelle du fichier avant JMRTD (`BerStructure`) : un EF.COM dont un élément déborde de son contenant est illisible, sans rien allouer (JMRTD alloue sinon la longueur annoncée, 2 Go compris).
-- **EF.SOD** (FID `01 1D`, tag `77`) : *Document Security Object*, structure CMS `SignedData` signée par le Document Signer (DS). Il contient l'algorithme d'empreinte, l'empreinte de chaque DG présent (`LDSSecurityObject`) et, en général, le certificat DS. Obligatoire : un échec de lecture donne `UNEXPECTED-READ_DATA-SOD-…`.
+- **EF.COM** (FID `01 1E`, tag `60`): LDS version and list of data groups present. Optional: if it is missing or unreadable, the list of data groups comes from the SOD. Its internal TLV lengths are checked against the actual file size before JMRTD (`BerStructure`): an EF.COM in which an element overflows its container is unreadable, and nothing is allocated (otherwise JMRTD allocates the announced length, up to 2 GB).
+- **EF.SOD** (FID `01 1D`, tag `77`): *Document Security Object*, a CMS `SignedData` structure signed by the Document Signer (DS). It contains the hash algorithm, the hash of each data group present (`LDSSecurityObject`) and, usually, the DS certificate. Mandatory: a reading failure gives `UNEXPECTED-READ_DATA-SOD-…`.
 
-### 2.4 Groupes de données
+### 2.4 Data groups
 
-| DG | FID | Tag | Contenu | Lecture |
+| DG | FID | Tag | Content | Reading |
 |---|---|---|---|---|
-| DG1 | `01 01` | `61` | MRZ | toujours (obligatoire) |
-| DG2 | `01 02` | `75` | Portrait (JPEG ou JPEG 2000, ISO/IEC 19794-5 ou 39794-5) | toujours demandé ; absent toléré |
-| DG3 | `01 03` | `63` | Empreintes digitales | **jamais** |
-| DG4 | `01 04` | `76` | Iris | **jamais** |
-| DG7 | `01 07` | `67` | Signature manuscrite du titulaire (image JPEG ou JPEG 2000, décision D37) | si annoncé |
-| DG11 | `01 0B` | `6B` | Données personnelles complémentaires | si annoncé |
-| DG12 | `01 0C` | `6C` | Données complémentaires du document (autorité, date de délivrance, images) | si annoncé |
-| DG14 | `01 0E` | `6E` | Informations de sécurité (Chip Authentication, algorithme AA) | si annoncé |
-| DG15 | `01 0F` | `6F` | Clé publique d'Active Authentication | si annoncé |
+| DG1 | `01 01` | `61` | MRZ | always (mandatory) |
+| DG2 | `01 02` | `75` | Portrait (JPEG or JPEG 2000, ISO/IEC 19794-5 or 39794-5) | always requested; missing tolerated |
+| DG3 | `01 03` | `63` | Fingerprints | **never** |
+| DG4 | `01 04` | `76` | Iris | **never** |
+| DG7 | `01 07` | `67` | Holder's handwritten signature (JPEG or JPEG 2000 image, decision D37) | if announced |
+| DG11 | `01 0B` | `6B` | Additional personal details | if announced |
+| DG12 | `01 0C` | `6C` | Additional document details (authority, date of issue, images) | if announced |
+| DG14 | `01 0E` | `6E` | Security information (Chip Authentication, AA algorithm) | if announced |
+| DG15 | `01 0F` | `6F` | Active Authentication public key | if announced |
 
-Ordre de lecture (décision D20) : DG14 d'abord, s'il est annoncé dans EF.COM **ou** dans le SOD, puis la Chip Authentication (§2.6), puis DG1, DG2, et DG15, DG11, DG12, DG7 s'ils sont annoncés. DG3 et DG4 sont protégés par Terminal Authentication (Extended Access Control), qui exige des certificats délivrés par les États : ils sont hors périmètre (SPEC §1) et ne sont jamais demandés (`DocumentReader` ne demande que DG14, `SECURITY_DATA_GROUP`, puis DG1, DG2 et `OPTIONAL_DATA_GROUPS` = 15, 11, 12, 7 ; les tests de bout en bout échouent si la puce simulée reçoit une demande de DG3 ou DG4). Les autres DG (DG5, DG6, DG8 à DG10, DG13, DG16) ne sont pas demandés non plus.
+Reading order (decision D20): DG14 first, if it is announced in EF.COM **or** in the SOD, then Chip Authentication (§2.6), then DG1, DG2, and DG15, DG11, DG12, DG7 if they are announced. DG3 and DG4 are protected by Terminal Authentication (Extended Access Control), which requires certificates issued by states: they are out of scope (SPEC §1) and are never requested (`DocumentReader` requests only DG14, `SECURITY_DATA_GROUP`, then DG1, DG2 and `OPTIONAL_DATA_GROUPS` = 15, 11, 12, 7; the end-to-end tests fail if the simulated chip receives a request for DG3 or DG4). The other data groups (DG5, DG6, DG8 to DG10, DG13, DG16) are not requested either.
 
-Un échec de lecture de DG1 donne `UNEXPECTED-READ_DATA-DG1-…`. Un DG facultatif (DG2 compris) absent ou illisible est simplement omis : une puce sans DG2 est lue sans photo (décision D14). Avant JMRTD, les longueurs TLV de DG7, DG11, DG12 et DG2 sont contrôlées contre la taille réelle du DG (`BerStructure`, qui lit les en-têtes comme SCUBA), ainsi que, dans DG2, la longueur de chaque bloc d'image ISO 19794-5 : un DG dont une longueur interne déborde est illisible, sans allocation démesurée (le rattrapage d'`OutOfMemoryError` de `DataGroupParsers` ne reste qu'un filet). DG1 n'est pas concerné (JMRTD refuse déjà une longueur de MRZ anormale). Une erreur de transport (document retiré, délai) interrompt toujours la lecture.
+A DG1 reading failure gives `UNEXPECTED-READ_DATA-DG1-…`. An optional data group (DG2 included) that is missing or unreadable is simply omitted: a chip without DG2 is read without a photo (decision D14). Before JMRTD, the TLV lengths of DG7, DG11, DG12 and DG2 are checked against the actual size of the data group (`BerStructure`, which reads headers the way SCUBA does), as is, in DG2, the length of each ISO 19794-5 image block: a data group in which an internal length overflows is unreadable, without any oversized allocation (catching `OutOfMemoryError` in `DataGroupParsers` remains only a safety net). DG1 is not concerned (JMRTD already rejects an abnormal MRZ length). A transport error (document removed, timeout) always interrupts reading.
 
-Les octets bruts de chaque DG lu sont conservés dans `DocumentData.rawDataGroups` pour le recalcul des empreintes, puis remis à zéro par `wipe()` (voir `docs/architecture.md`).
+The raw bytes of each data group read are kept in `DocumentData.rawDataGroups` to recompute the hashes, then zeroed by `wipe()` (see `docs/architecture.md`).
 
-### 2.5 Passive Authentication (partie 11 et partie 12)
+### 2.5 Passive Authentication (part 11 and part 12)
 
-Réalisée par `PassiveAuthentication.verify(sod, dataGroups, trustStore, dateOfIssue, dateOfExpiry, documentCode)`, sans accès à la puce. Elle produit quatre lignes de la liste de contrôle et les métadonnées de chaîne (`ChainInfo`).
+Performed by `PassiveAuthentication.verify(sod, dataGroups, trustStore, dateOfIssue, dateOfExpiry, documentCode)`, without access to the chip. It produces four lines of the checklist and the chain metadata (`ChainInfo`).
 
-1. **Certificat DS** : extrait du SOD (certificat qui correspond au `SignerIdentifier`). S'il en est absent, il est recherché dans le magasin : par (émetteur, numéro de série) parmi les ancres, ou par identifiant de clé (SKI) si le `SignerIdentifier` est de cette forme (décision D15). Introuvable : lignes `SOD_SIGNATURE` et `CERTIFICATE_CHAIN` à `NOT_AVAILABLE` avec le détail `CheckDetail.DsCertificateMissing`, `DS_VALIDITY` à `NOT_AVAILABLE`, d'où le verdict « Émetteur inconnu » (ce n'est pas une exception : le rapport est produit) ; mais si le magasin contient des certificats du pays émetteur de DG1, `CERTIFICATE_CHAIN` vaut `FAILED` (`NoChainForKnownCountry`, voir l'étape 2).
-2. **Chaîne de certification** (`CERTIFICATE_CHAIN`) : construction et validation de la chaîne DS → certificats de lien éventuels → CSCA auto-signé du magasin (`CertificateChains`). Les émetteurs candidats sont cherchés par Authority Key Identifier (`findBySubjectKeyId`), puis par nom (`findBySubject`) en écartant un candidat de même nom dont le SKI diffère de l'AKI ; 8 liens au plus. Seules les signatures comptent : la période de validité des CSCA et des liens n'est pas vérifiée, un document restant valide jusqu'à dix ans après l'expiration de son CSCA (décision D15). Les certificats de lien traversés sont listés dans `ChainInfo.linkCertificates`. Résultat : `OK` (chaîne complète), `FAILED` (un émetteur du magasin correspond mais la signature est fausse), `UNSUPPORTED_ALGORITHM`, ou `NOT_AVAILABLE` si aucun certificat du magasin ne correspond (décision D6) : c'est le cas « Émetteur inconnu ». **Pays connu** (audit V25, décision D40) : si le magasin contient au moins un certificat (CSCA ou lien) du pays émetteur de DG1, l'absence de chaîne (DS introuvable, ou DS sous un CSCA inconnu) donne `FAILED` avec le détail `CheckDetail.NoChainForKnownCountry(pays, chaîne tentée)`, donc « Échec » : pour un pays dont des CSCA sont connus, une chaîne absente désigne plus probablement une contrefaçon qu'un CSCA manquant. **Code d'État inconnu, DS d'un autre pays** (audit V35, décision D42) : toujours sans chaîne, un État émetteur de DG1 inconnu d'ICAO 9303-3 (ni pays ni organisation : `UTO`, `ZZZ`, `FR<`…) donne `FAILED` (`CheckDetail.Error("UNKNOWN_STATE_CODE")`), DS introuvable compris, et un DS dont le pays (attribut C, absent compris) diffère de DG1 donne `FAILED` (`CountryMismatch`, pays du CSCA nul). « Émetteur inconnu » reste donc réservé aux vrais pays absents du magasin et aux codes d'organisation (`UNO`, `EUE`…). **Ordre de recherche** (audit V31, décision D42) : les émetteurs candidats sont examinés source par source (ANTS, publications nationales, Master List embarquée, puis imports), et la recherche s'arrête au premier CSCA auto-signé qui vérifie le certificat : des leurres importés au SKI d'un CSCA embarqué ne consomment pas le budget de vérifications (audit V15) d'une chaîne que le magasin embarqué résout.
-3. **Signature du SOD** (`SOD_SIGNATURE`) : vérification de la signature CMS avec la clé publique du DS, selon l'algorithme déclaré dans le SOD. Le vérifieur est construit sur la clé seule, pour qu'un DS expiré à la date de signature relève de la ligne `DS_VALIDITY` et non de celle-ci. Sans chaîne (aucun CSCA trouvé, quel que soit le statut de `CERTIFICATE_CHAIN`), une signature que le DS vérifie ne prouve rien : la ligne vaut `NOT_AVAILABLE`, et non `OK` (audit V25). Le `SignerInfo` doit porter des attributs signés, dont `messageDigest` et un `contentType` égal à `id-icao-ldsSecurityObject` (ICAO 9303-10) : un SOD signé directement sur son contenu est mal formé, les quatre lignes valent `FAILED` (`SOD_MALFORMED` ; audit V40, décision D42).
+1. **DS certificate**: extracted from the SOD (the certificate that matches the `SignerIdentifier`). If it is missing there, it is looked up in the trust store: by (issuer, serial number) among the anchors, or by key identifier (SKI) if the `SignerIdentifier` has that form (decision D15). Not found: `SOD_SIGNATURE` and `CERTIFICATE_CHAIN` lines set to `NOT_AVAILABLE` with the detail `CheckDetail.DsCertificateMissing`, `DS_VALIDITY` set to `NOT_AVAILABLE`, hence the “Unknown issuer” verdict (this is not an exception: the report is produced); but if the trust store contains certificates of the issuing country of DG1, `CERTIFICATE_CHAIN` is `FAILED` (`NoChainForKnownCountry`, see step 2).
+2. **Certificate chain** (`CERTIFICATE_CHAIN`): building and validation of the chain DS → any link certificates → self-signed CSCA from the trust store (`CertificateChains`). Candidate issuers are looked up by Authority Key Identifier (`findBySubjectKeyId`), then by name (`findBySubject`), discarding a candidate with the same name whose SKI differs from the AKI; 8 links at most. Only signatures count: the validity period of CSCAs and links is not checked, since a document remains valid up to ten years after its CSCA expires (decision D15). The link certificates traversed are listed in `ChainInfo.linkCertificates`. Result: `OK` (complete chain), `FAILED` (an issuer in the trust store matches but the signature is wrong), `UNSUPPORTED_ALGORITHM`, or `NOT_AVAILABLE` if no certificate in the trust store matches (decision D6): this is the “Unknown issuer” case. **Known country** (audit V25, decision D40): if the trust store contains at least one certificate (CSCA or link) of the issuing country of DG1, the lack of a chain (DS not found, or DS under an unknown CSCA) gives `FAILED` with the detail `CheckDetail.NoChainForKnownCountry(country, attempted chain)`, hence “Failed”: for a country whose CSCAs are known, a missing chain more likely points to a forgery than to a missing CSCA. **Unknown state code, DS from another country** (audit V35, decision D42): still without a chain, an issuing state in DG1 unknown to ICAO 9303-3 (neither a country nor an organization: `UTO`, `ZZZ`, `FR<`…) gives `FAILED` (`CheckDetail.Error("UNKNOWN_STATE_CODE")`), DS not found included, and a DS whose country (attribute C, missing included) differs from DG1 gives `FAILED` (`CountryMismatch`, CSCA country null). “Unknown issuer” is therefore reserved for real countries missing from the trust store and for organization codes (`UNO`, `EUE`…). **Search order** (audit V31, decision D42): candidate issuers are examined source by source (ANTS, national publications, built-in Master List, then imports), and the search stops at the first self-signed CSCA that verifies the certificate: imported decoys carrying the SKI of a built-in CSCA do not consume the verification budget (audit V15) of a chain that the built-in store resolves.
+3. **SOD signature** (`SOD_SIGNATURE`): verification of the CMS signature with the DS public key, according to the algorithm declared in the SOD. The verifier is built on the key alone, so that a DS expired at signing time falls under the `DS_VALIDITY` line and not this one. Without a chain (no CSCA found, whatever the status of `CERTIFICATE_CHAIN`), a signature that the DS verifies proves nothing: the line is `NOT_AVAILABLE`, not `OK` (audit V25). The `SignerInfo` must carry signed attributes, including `messageDigest` and a `contentType` equal to `id-icao-ldsSecurityObject` (ICAO 9303-10): a SOD signed directly over its content is malformed, and all four lines are `FAILED` (`SOD_MALFORMED`; audit V40, decision D42).
 
-**Taille des clés** (audits V9 et V30, décision D42) : avant tout calcul, toute clé publique (DS, émetteurs de la chaîne, puis DG14, EF.CardSecurity, DG15 aux §2.6, 2.6.1 et 2.7) est refusée si elle sort des bornes de `Crypto.unsupportedKey` : RSA de moins de 1 024 ou de plus de 8 192 bits, ou d'exposant public de plus de 64 bits ; nombre premier DH de plus de 8 192 bits ; corps de base EC de plus de 1 024 bits. Les clés des certificats et d'EF.CardSecurity sont contrôlées sous leur forme encodée, avant que le fournisseur ne les reconstruise (la reconstruction valide la clé, à un coût qui croît avec sa taille). Résultat : `UNSUPPORTED_ALGORITHM` avec le détail `UnsupportedAlgorithm("RSA-16384")`, `"RSA-2048/e-65"`, `"DH-9000"`, `"EC-2048"`, donc « Échec ».
-4. **Empreintes des DG** (`DG_HASHES`) : recalcul de l'empreinte de chaque DG lu avec l'algorithme déclaré dans le SOD et comparaison. Un DG lu mais absent du SOD compte comme non conforme. Le détail `DataGroupHashes` liste les DG contrôlés et ceux dont l'empreinte diffère. Un DG que le SOD, signé, annonce parmi ceux que Sceau lit (1, 2, 7, 11, 12, 14, 15 : `PassiveAuthenticator.READ_DATA_GROUPS`) mais que la puce ne fournit pas est listé dans `missing` et met la ligne en échec (audit V1 : un clone ne doit pas pouvoir retenir un DG signé ; DG7 depuis la décision D37).
+**Key size** (audits V9 and V30, decision D42): before any computation, any public key (DS, issuers in the chain, then DG14, EF.CardSecurity, DG15 in §2.6, 2.6.1 and 2.7) is rejected if it falls outside the bounds of `Crypto.unsupportedKey`: RSA under 1,024 or over 8,192 bits, or with a public exponent over 64 bits; DH prime over 8,192 bits; EC base field over 1,024 bits. The keys of certificates and of EF.CardSecurity are checked in their encoded form, before the provider rebuilds them (rebuilding validates the key, at a cost that grows with its size). Result: `UNSUPPORTED_ALGORITHM` with the detail `UnsupportedAlgorithm("RSA-16384")`, `"RSA-2048/e-65"`, `"DH-9000"`, `"EC-2048"`, hence “Failed”.
+4. **Data group hashes** (`DG_HASHES`): the hash of each data group read is recomputed with the algorithm declared in the SOD and compared. A data group that was read but is missing from the SOD counts as non-matching. The `DataGroupHashes` detail lists the data groups checked and those whose hash differs. A data group that the signed SOD announces among those Sceau reads (1, 2, 7, 11, 12, 14, 15: `PassiveAuthenticator.READ_DATA_GROUPS`) but that the chip does not supply is listed in `missing` and makes the line fail (audit V1: a clone must not be able to withhold a signed data group; DG7 since decision D37).
 
-   **Anomalies connues des émetteurs** (décision D34, registre `KnownDeviations`) : un écart d'empreinte sur DG11 ou DG12, et seulement sur eux, est toléré s'il correspond à une anomalie publiée par l'émetteur (Deviation List). La recherche n'a lieu que si `SOD_SIGNATURE` et `CERTIFICATE_CHAIN` valent `OK`, que l'empreinte de DG1 est vérifiée et qu'aucun DG signé ne manque ; le critère porte sur des éléments signés (pays du CSCA, DG1, signingTime du SOD). Le DG toléré quitte `mismatched` pour `deviations` (`KnownDeviation`, ex. `IT-CIE3-DG12`), la ligne vaut `OK` s'il ne reste pas d'autre écart, et le DG est écarté (`PassiveAuthResult.discardedDataGroups`) : retiré de `DocumentData`, octets et images remis à zéro, date de délivrance de DG12 ignorée à l'étape 5. Seul cas à ce jour : CIE 3.0 italiennes à DG12 erroné (`docs/trust-sources.md` §2.4).
-5. **Validité du DS** (`DS_VALIDITY`) : la période de validité du DS doit couvrir la date de délivrance du document, prise dans cet ordre :
-   1. date de délivrance de DG12 (`IssuanceDateSource.DG12`) ;
-   2. à défaut, attribut `signingTime` du SOD (`SOD_SIGNING_TIME`) ;
-   3. à défaut, date d'expiration de DG1 moins la durée de validité usuelle, fixée à 10 ans pour tous les documents (`ESTIMATED`), affichée « estimée ».
+   **Known issuer deviations** (decision D34, `KnownDeviations` registry): a hash mismatch on DG11 or DG12, and only on them, is tolerated if it matches a deviation published by the issuer (Deviation List). The lookup only takes place if `SOD_SIGNATURE` and `CERTIFICATE_CHAIN` are `OK`, the hash of DG1 is verified and no signed data group is missing; the criterion relies on signed elements (CSCA country, DG1, SOD signingTime). The tolerated data group moves from `mismatched` to `deviations` (`KnownDeviation`, e.g. `IT-CIE3-DG12`), the line is `OK` if no other mismatch remains, and the data group is set aside (`PassiveAuthResult.discardedDataGroups`): removed from `DocumentData`, bytes and images zeroed, DG12 date of issue ignored in step 5. Only case to date: Italian CIE 3.0 cards with a wrong DG12 (`docs/trust-sources.md` §2.4).
+5. **DS validity** (`DS_VALIDITY`): the validity period of the DS must cover the date of issue of the document, taken in this order:
+   1. date of issue from DG12 (`IssuanceDateSource.DG12`);
+   2. failing that, the `signingTime` attribute of the SOD (`SOD_SIGNING_TIME`);
+   3. failing that, the expiry date from DG1 minus the usual validity period, set to 10 years for all documents (`ESTIMATED`), displayed as “estimated”.
 
-   Date dans la période du DS (bornes comprises, en UTC) : `OK`, quelle que soit sa source. Hors de la période : `FAILED` pour une date de DG12 ou du SOD ; `NOT_AVAILABLE` pour une date **estimée**, jamais `FAILED` (décisions D6 et D15), car la durée usuelle peut être fausse (passeport de mineur valable 5 ans au lieu de 10). Aucune date disponible : `NOT_AVAILABLE`.
+   Date within the DS period (bounds included, in UTC): `OK`, whatever its source. Outside the period: `FAILED` for a date from DG12 or the SOD; `NOT_AVAILABLE` for an **estimated** date, never `FAILED` (decisions D6 and D15), because the usual period may be wrong (a minor's passport valid for 5 years instead of 10). No date available: `NOT_AVAILABLE`.
 
-Les listes de révocation (CRL) ne sont pas consultées en v1 : elles nécessitent le réseau (SPEC §7.4).
+Certificate revocation lists (CRLs) are not consulted in v1: they require the network (SPEC §7.4).
 
-### 2.6 Chip Authentication (partie 11)
+### 2.6 Chip Authentication (part 11)
 
-- Exécutée si DG14 est présent et annonce Chip Authentication (`ChipAuthenticationInfo`, `ChipAuthenticationPublicKeyInfo`), **après la lecture de DG14 et avant celle des autres DG** (décision D20), pendant l'étape `READ_DATA`.
-- Accord de clé (DH ou ECDH) entre une clé éphémère du terminal et la clé statique de la puce publiée dans DG14 ; la messagerie sécurisée est alors renouvelée avec les clés dérivées, et toutes les commandes suivantes (lecture de DG1, DG2, DG15, DG11, DG12, DG7, puis AA) passent par ce nouveau canal.
-- Une puce clonée ne possède pas la clé privée : le canal renouvelé ne peut pas s'établir. L'échange seul ne prouve rien tant que la puce n'a pas répondu sous le nouveau canal : une confirmation explicite (SELECT de DG1 puis READ BINARY d'un octet, MAC des réponses vérifié) le vérifie avant toute lecture de données. Elle est gardée, bien que la lecture de DG1 qui suit passe elle aussi par le nouveau canal, pour que la ligne CA soit juste : un échec de la confirmation est un échec de la CA (et le signal qu'il faut rétablir le canal), non une erreur de lecture de DG1 qui interromprait toute la lecture.
-- Comme DG14 est couvert par le SOD, sa clé publique est elle-même authentifiée par la Passive Authentication : un DG14 falsifié met la ligne des empreintes en échec.
-- **CA en échec** : la ligne `CHIP_AUTHENTICATION` vaut `FAILED` (donc le verdict « Échec »), et la lecture continue pour afficher les données :
-  - si la puce refuse l'échange (SW d'erreur au MSE ou au GENERAL AUTHENTICATE), JMRTD garde l'ancienne messagerie ; la même confirmation vérifie que la puce y répond encore, et les DG sont lus sous l'ancien canal ;
-  - si la puce ne répond plus sous la messagerie courante (confirmation ratée après le changement de clés, ou puce qui a clos la session), la liaison est réinitialisée (`CardTransport.reconnect()`), un état JMRTD neuf est créé, puis le canal est rétabli avec la même clé, dans la même lecture (EF.CardAccess, PACE ou BAC, repli PACE → BAC compris : `SecureChannel.reestablish`), et les DG sont lus sous ce canal. La clé n'est pas conservée au-delà de la lecture. Une erreur à ce rétablissement, quelle qu'elle soit (reconnexion impossible, clé refusée, délai, document retiré, `6982` de l'accès réservé de D36), n'interrompt pas la lecture par une erreur : la CA ayant déjà échoué, un rapport est produit avec `CHIP_AUTHENTICATION` `FAILED`, donc le verdict « Échec », sans aucune donnée d'identité (DG1 vide, `VerificationReport.identityRead` faux : l'écran Résultat n'affiche ni identité ni photo) ; les autres lignes, non réalisées, valent `NOT_AVAILABLE` avec le code `READ_DATA-REESTABLISH-<code de l'erreur>` (ex. `READ_DATA-REESTABLISH-ACCESS_RESTRICTED-SELECT_APPLET`). Une puce hostile ne peut ainsi pas remplacer l'échec de la CA par le message de l'accès réservé (audit V24, décision D40).
-- Résultat : ligne `CHIP_AUTHENTICATION` (`OK` avec le détail `CheckDetail.ChipAuthentication(DG14)`, `FAILED`, `UNSUPPORTED_ALGORITHM`, ou `NOT_AVAILABLE` sans DG14 ou avec un DG14 qui n'annonce ni clé ni protocole de CA). La présence d'une clé est lue dans les octets bruts de DG14 (OID `id-PK-*`), et non dans ce qu'en a compris JMRTD : une clé annoncée mais inexploitable (structure que JMRTD écarte, courbe inconnue) donne `UNSUPPORTED_ALGORITHM` (audit V19, décision D40), de même qu'une clé hors des bornes de taille du §2.5, refusée avant l'accord de clé, sans commande envoyée (audit V30, décision D42). Un DG14 qui annonce le protocole CA (`ChipAuthenticationInfo`, OID `id-CA-*`) sans aucune clé `id-PK-*` donne aussi `UNSUPPORTED_ALGORITHM` (détail : l'OID `id-CA-*`), et non `NOT_AVAILABLE` : la CA est annoncée, l'application ne peut pas la mener (audit V33, décision D43). Les codes d'erreur de la CA commencent par `READ_DATA-CA` (`READ_DATA-CA-DG14Missing`, `READ_DATA-CA_CONFIRM-…`).
-- Si PACE a abouti avec le mapping CAM, la puce s'est déjà authentifiée pendant PACE : la CA via DG14 n'est pas menée (§2.6.1). DG14, s'il est annoncé, est lu quand même et son empreinte vérifiée.
+- Performed if DG14 is present and announces Chip Authentication (`ChipAuthenticationInfo`, `ChipAuthenticationPublicKeyInfo`), **after DG14 is read and before the other data groups are** (decision D20), during the `READ_DATA` step.
+- Key agreement (DH or ECDH) between an ephemeral terminal key and the static chip key published in DG14; secure messaging is then renewed with the derived keys, and all subsequent commands (reading of DG1, DG2, DG15, DG11, DG12, DG7, then AA) go through this new channel.
+- A cloned chip does not hold the private key: the renewed channel cannot be established. The exchange alone proves nothing until the chip has answered under the new channel: an explicit confirmation (SELECT of DG1 then READ BINARY of one byte, MAC of the responses verified) checks it before any data is read. It is kept, even though the DG1 reading that follows also goes through the new channel, so that the CA line is accurate: a confirmation failure is a CA failure (and the signal that the channel must be re-established), not a DG1 reading error that would interrupt the whole reading.
+- Since DG14 is covered by the SOD, its public key is itself authenticated by Passive Authentication: a forged DG14 makes the hash line fail.
+- **CA failed**: the `CHIP_AUTHENTICATION` line is `FAILED` (hence the “Failed” verdict), and reading continues so that the data can be displayed:
+  - if the chip rejects the exchange (error SW on MSE or GENERAL AUTHENTICATE), JMRTD keeps the previous secure messaging; the same confirmation checks that the chip still answers under it, and the data groups are read under the previous channel;
+  - if the chip no longer answers under the current secure messaging (confirmation failed after the key change, or chip that closed the session), the link is reset (`CardTransport.reconnect()`), a fresh JMRTD state is created, then the channel is re-established with the same key, within the same reading (EF.CardAccess, PACE or BAC, PACE → BAC fallback included: `SecureChannel.reestablish`), and the data groups are read under this channel. The key is not kept beyond the reading. Any error during this re-establishment, whatever it is (reconnection impossible, key rejected, timeout, document removed, `6982` from the restricted access of D36), does not interrupt reading with an error: since CA has already failed, a report is produced with `CHIP_AUTHENTICATION` `FAILED`, hence the “Failed” verdict, without any identity data (DG1 empty, `VerificationReport.identityRead` false: the Result screen shows neither identity nor photo); the other lines, not performed, are `NOT_AVAILABLE` with the code `READ_DATA-REESTABLISH-<error code>` (e.g. `READ_DATA-REESTABLISH-ACCESS_RESTRICTED-SELECT_APPLET`). A hostile chip thus cannot replace the CA failure with the restricted-access message (audit V24, decision D40).
+- Result: `CHIP_AUTHENTICATION` line (`OK` with the detail `CheckDetail.ChipAuthentication(DG14)`, `FAILED`, `UNSUPPORTED_ALGORITHM`, or `NOT_AVAILABLE` without DG14 or with a DG14 that announces neither a CA key nor a CA protocol). The presence of a key is read from the raw bytes of DG14 (OID `id-PK-*`), not from what JMRTD made of it: a key that is announced but unusable (structure that JMRTD discards, unknown curve) gives `UNSUPPORTED_ALGORITHM` (audit V19, decision D40), as does a key outside the size bounds of §2.5, rejected before the key agreement, with no command sent (audit V30, decision D42). A DG14 that announces the CA protocol (`ChipAuthenticationInfo`, OID `id-CA-*`) without any `id-PK-*` key also gives `UNSUPPORTED_ALGORITHM` (detail: the `id-CA-*` OID), not `NOT_AVAILABLE`: CA is announced, but the application cannot perform it (audit V33, decision D43). CA error codes start with `READ_DATA-CA` (`READ_DATA-CA-DG14Missing`, `READ_DATA-CA_CONFIRM-…`).
+- If PACE completed with the CAM mapping, the chip has already authenticated itself during PACE: CA via DG14 is not performed (§2.6.1). DG14, if announced, is still read and its hash verified.
 
-#### 2.6.1 PACE-CAM, *Chip Authentication Mapping* (partie 11 §4.4 ; décision D21)
+#### 2.6.1 PACE-CAM, *Chip Authentication Mapping* (part 11 §4.4; decision D21)
 
-Avec le mapping CAM (`id-PACE-ECDH-CAM-AES-CBC-CMAC-128/192/256`), la puce prouve pendant PACE qu'elle détient la clé privée statique de Chip Authentication : sa dernière réponse contient, en plus du jeton d'authentification, `A_IC = E(KSenc, CA_IC)` (tag `8A`), avec `CA_IC = SK_IC⁻¹ · SK_Map,IC`. Toutes les commandes suivantes passent par le canal de PACE : les données lues sont liées à la puce authentifiée, sans autre échange.
+With the CAM mapping (`id-PACE-ECDH-CAM-AES-CBC-CMAC-128/192/256`), the chip proves during PACE that it holds the static Chip Authentication private key: its last response contains, in addition to the authentication token, `A_IC = E(KSenc, CA_IC)` (tag `8A`), with `CA_IC = SK_IC⁻¹ · SK_Map,IC`. All subsequent commands go through the PACE channel: the data read is bound to the authenticated chip, without any other exchange.
 
-1. **Pendant l'étape `SECURE_CHANNEL`** : JMRTD mène PACE, vérifie le jeton de la puce et déchiffre `CA_IC` (IV = `E(KSenc, −1)`, `PACECAMResult`) ; Sceau garde `CA_IC` et la clé publique de mapping de la puce `PK_Map,IC`, puis lit **EF.CardSecurity** (FID `01 1D` au MF, sous la messagerie de PACE, avant la sélection de l'application ; cache distinct de celui d'EF.SOD, de même FID dans l'application). D'après le code de JMRTD 0.8.8 (cas non couvert par un test), une puce qui annonce CAM mais n'envoie pas `A_IC` fait échouer PACE dans JMRTD : repli sur BAC avec une clé MRZ (la CA via DG14 est alors menée), `ACCESS_DENIED` avec un CAN.
-2. **À l'étape `VERIFY_CHIP`**, hors ligne, une fois connu l'État émetteur de DG1 (`ChipAuthenticationMapping`) :
-   - EF.CardSecurity (CMS `SignedData`, contenu `id-SecurityObject` = `0.4.0.127.0.7.3.2.1`, un seul signataire) est vérifié avec **les mêmes règles que le SOD** (`PassiveAuthenticator.verifyCardSecurity`) : certificat DS embarqué ou cherché dans le magasin, algorithmes faibles refusés (audit V9), signature CMS, chaîne DS → CSCA avec profil d'émetteur et keyUsage du DS (V8), pays cohérents avec DG1 (V3). La validité calendaire du DS n'y est pas contrôlée : elle l'est pour le DS du SOD (§2.5) ;
-   - la clé `PK_IC` est prise dans les `ChipAuthenticationPublicKeyInfo` du contenu signé ; sa taille est contrôlée sous forme encodée, avant que JMRTD ne la reconstruise, et celle de `PK_Map,IC` avant tout calcul (bornes du §2.5, audit V30) ;
-   - contrôle `PK_Map,IC = KA(CA_IC, PK_IC, D_IC)` : `CA_IC · PK_IC` en ECDH, `PK_IC^CA_IC mod p` en DH, sur les paramètres de domaine de `PK_IC`, qui doivent être ceux de `PK_Map,IC`, avec `CA_IC` dans `[1, n − 1]`. L'algorithme vient des clés ; une clé ni EC ni DH, ou hors bornes, donne `UNSUPPORTED_ALGORITHM`.
-3. **Résultat**, ligne `CHIP_AUTHENTICATION` (pas de ligne propre) :
+1. **During the `SECURE_CHANNEL` step**: JMRTD performs PACE, verifies the chip's token and decrypts `CA_IC` (IV = `E(KSenc, −1)`, `PACECAMResult`); Sceau keeps `CA_IC` and the chip's mapping public key `PK_Map,IC`, then reads **EF.CardSecurity** (FID `01 1D` at the MF, under PACE secure messaging, before the application is selected; a cache separate from that of EF.SOD, which has the same FID within the application). According to the code of JMRTD 0.8.8 (a case not covered by a test), a chip that announces CAM but does not send `A_IC` makes PACE fail in JMRTD: fallback to BAC with an MRZ key (CA via DG14 is then performed), `ACCESS_DENIED` with a CAN.
+2. **At the `VERIFY_CHIP` step**, offline, once the issuing state of DG1 is known (`ChipAuthenticationMapping`):
+   - EF.CardSecurity (CMS `SignedData`, content `id-SecurityObject` = `0.4.0.127.0.7.3.2.1`, a single signer) is verified with **the same rules as the SOD** (`PassiveAuthenticator.verifyCardSecurity`): DS certificate embedded or looked up in the trust store, weak algorithms rejected (audit V9), CMS signature, DS → CSCA chain with issuer profile and DS keyUsage (V8), countries consistent with DG1 (V3). The calendar validity of the DS is not checked there: it is checked for the SOD's DS (§2.5);
+   - the `PK_IC` key is taken from the `ChipAuthenticationPublicKeyInfo`s of the signed content; its size is checked in encoded form, before JMRTD rebuilds it, and that of `PK_Map,IC` before any computation (bounds of §2.5, audit V30);
+   - check `PK_Map,IC = KA(CA_IC, PK_IC, D_IC)`: `CA_IC · PK_IC` in ECDH, `PK_IC^CA_IC mod p` in DH, over the domain parameters of `PK_IC`, which must be those of `PK_Map,IC`, with `CA_IC` in `[1, n − 1]`. The algorithm comes from the keys; a key that is neither EC nor DH, or out of bounds, gives `UNSUPPORTED_ALGORITHM`.
+3. **Result**, `CHIP_AUTHENTICATION` line (no line of its own):
 
-| Situation | Statut | Détail |
+| Situation | Status | Detail |
 |---|---|---|
-| tout est vérifié | `OK` | `ChipAuthentication(PACE_CAM)` |
-| EF.CardSecurity absent ou illisible | `FAILED` | `VERIFY_CHIP-CAM-CARD_SECURITY_MISSING` |
-| EF.CardSecurity mal formé (type de contenu, signataires, attributs signés absents : audit V40) | `FAILED` | `VERIFY_CHIP-CAM-CARD_SECURITY_MALFORMED` |
-| signature d'EF.CardSecurity fausse | `FAILED` | `VERIFY_CHIP-CAM-CARD_SECURITY_SIGNATURE` |
-| chaîne fausse, DS sans digitalSignature, budget dépassé | `FAILED` | `VERIFY_CHIP-CAM-CARD_SECURITY_CHAIN` |
-| pays incohérents | `FAILED` | `VERIFY_CHIP-CAM-CARD_SECURITY_COUNTRY` |
-| chaîne valide, mais vers un autre CSCA que celle du SOD (ni même certificat, ni même clé ; audit V17, décision D40) | `FAILED` | `VERIFY_CHIP-CAM-CARD_SECURITY_ANCHOR` |
-| aucun CSCA connu pour EF.CardSecurity, alors que la chaîne du SOD aboutit | `FAILED` | `VERIFY_CHIP-CAM-CARD_SECURITY_UNKNOWN_ISSUER` (ou `…_DS_MISSING`) |
-| aucun CSCA connu, ni pour EF.CardSecurity ni pour le SOD | `NOT_AVAILABLE` | `ChipAuthentication(PACE_CAM)` ; verdict « Émetteur inconnu » |
-| pas de `ChipAuthenticationPublicKeyInfo` | `FAILED` | `VERIFY_CHIP-CAM-NO_CHIP_KEY` |
-| `CA_IC` ou `PK_Map,IC` absent (déchiffrement raté) | `FAILED` | `VERIFY_CHIP-CAM-NO_CHIP_AUTHENTICATION_DATA`, `…-NO_MAPPING_KEY` |
-| contrôle KA faux | `FAILED` | `VERIFY_CHIP-CAM-KEY_MISMATCH` |
-| algorithme inconnu (signature, chaîne, type de clé), clé hors bornes (audit V30) | `UNSUPPORTED_ALGORITHM` | `UnsupportedAlgorithm` |
+| everything verified | `OK` | `ChipAuthentication(PACE_CAM)` |
+| EF.CardSecurity missing or unreadable | `FAILED` | `VERIFY_CHIP-CAM-CARD_SECURITY_MISSING` |
+| EF.CardSecurity malformed (content type, signers, signed attributes missing: audit V40) | `FAILED` | `VERIFY_CHIP-CAM-CARD_SECURITY_MALFORMED` |
+| EF.CardSecurity signature wrong | `FAILED` | `VERIFY_CHIP-CAM-CARD_SECURITY_SIGNATURE` |
+| chain wrong, DS without digitalSignature, budget exceeded | `FAILED` | `VERIFY_CHIP-CAM-CARD_SECURITY_CHAIN` |
+| inconsistent countries | `FAILED` | `VERIFY_CHIP-CAM-CARD_SECURITY_COUNTRY` |
+| valid chain, but to a different CSCA than the SOD's (neither the same certificate nor the same key; audit V17, decision D40) | `FAILED` | `VERIFY_CHIP-CAM-CARD_SECURITY_ANCHOR` |
+| no known CSCA for EF.CardSecurity, whereas the SOD chain succeeds | `FAILED` | `VERIFY_CHIP-CAM-CARD_SECURITY_UNKNOWN_ISSUER` (or `…_DS_MISSING`) |
+| no known CSCA, neither for EF.CardSecurity nor for the SOD | `NOT_AVAILABLE` | `ChipAuthentication(PACE_CAM)`; “Unknown issuer” verdict |
+| no `ChipAuthenticationPublicKeyInfo` | `FAILED` | `VERIFY_CHIP-CAM-NO_CHIP_KEY` |
+| `CA_IC` or `PK_Map,IC` missing (decryption failed) | `FAILED` | `VERIFY_CHIP-CAM-NO_CHIP_AUTHENTICATION_DATA`, `…-NO_MAPPING_KEY` |
+| KA check wrong | `FAILED` | `VERIFY_CHIP-CAM-KEY_MISMATCH` |
+| unknown algorithm (signature, chain, key type), key out of bounds (audit V30) | `UNSUPPORTED_ALGORITHM` | `UnsupportedAlgorithm` |
 
-Le verdict se calcule comme pour la CA via DG14 (§6). La CA via DG14 n'est pas menée, même si CAM échoue : la ligne est alors déjà en échec, et le verdict « Échec ».
+The verdict is computed as for CA via DG14 (§6). CA via DG14 is not performed, even if CAM fails: the line has then already failed, and the verdict is “Failed”.
 
-### 2.7 Active Authentication (partie 11)
+### 2.7 Active Authentication (part 11)
 
-- Exécutée si DG15 est présent.
-- Nonce de **8 octets tiré d'un `SecureRandom`**, envoyé par `INTERNAL AUTHENTICATE`.
-- La réponse est vérifiée par `ActiveAuthentication.verifyResponse(publicKey, digestAlgorithm, challenge, response)` avec la clé publique de DG15, refusée d'emblée (`UNSUPPORTED_ALGORITHM`) si sa taille sort des bornes du §2.5 (audits V9 et V30) :
-  - clé RSA : signature ISO/IEC 9796-2 schéma 1, fonction de hachage désignée par le trailer (implicite `BC` : SHA-1 ; explicite : SHA-1 à SHA-512, RIPEMD, Whirlpool) ;
-  - clé EC : ECDSA (réponse brute `r‖s`), avec l'algorithme de hachage annoncé dans DG14 (`ActiveAuthenticationInfo`). Si DG14 n'en annonce pas (cas hors norme rencontré en pratique), SHA-1, SHA-224, SHA-256, SHA-384 et SHA-512 sont essayés dans cet ordre (décision D15).
-- Une perte de liaison pendant CA ou AA interrompt la lecture ; toute autre erreur de la puce est consignée dans la ligne correspondante.
-- Résultat : ligne `ACTIVE_AUTHENTICATION` (`OK`, `FAILED`, `UNSUPPORTED_ALGORITHM`, ou `NOT_AVAILABLE` sans DG15).
+- Performed if DG15 is present.
+- **8-byte nonce drawn from a `SecureRandom`**, sent with `INTERNAL AUTHENTICATE`.
+- The response is verified by `ActiveAuthentication.verifyResponse(publicKey, digestAlgorithm, challenge, response)` with the DG15 public key, rejected outright (`UNSUPPORTED_ALGORITHM`) if its size falls outside the bounds of §2.5 (audits V9 and V30):
+  - RSA key: ISO/IEC 9796-2 scheme 1 signature, hash function designated by the trailer (implicit `BC`: SHA-1; explicit: SHA-1 to SHA-512, RIPEMD, Whirlpool);
+  - EC key: ECDSA (raw `r‖s` response), with the hash algorithm announced in DG14 (`ActiveAuthenticationInfo`). If DG14 does not announce one (a non-standard case encountered in practice), SHA-1, SHA-224, SHA-256, SHA-384 and SHA-512 are tried in that order (decision D15).
+- A lost link during CA or AA interrupts reading; any other chip error is recorded in the corresponding line.
+- Result: `ACTIVE_AUTHENTICATION` line (`OK`, `FAILED`, `UNSUPPORTED_ALGORITHM`, or `NOT_AVAILABLE` without DG15).
 
-### 2.8 Rapport
+### 2.8 Report
 
-`VerificationReport` immuable : verdict, exactement une `Check` par `CheckId` dans l'ordre de l'énumération, `ChainInfo` du SOD et, avec PACE-CAM, celui d'EF.CardSecurity (`cardSecurityChain`, sans donnée personnelle ; l'écran signale un CSCA importé sur l'une ou l'autre chaîne, audit V17), et `DocumentData` (données lues). Son `toString()` ne révèle que le verdict. Il n'est jamais persisté. SPEC §6.2 le permet sérialisable pour les tests ; aucun test n'en a eu besoin, et il n'implémente aucune sérialisation.
+Immutable `VerificationReport`: verdict, exactly one `Check` per `CheckId` in enumeration order, the SOD's `ChainInfo` and, with PACE-CAM, that of EF.CardSecurity (`cardSecurityChain`, without personal data; the screen flags an imported CSCA on either chain, audit V17), and `DocumentData` (data read). Its `toString()` reveals only the verdict. It is never persisted. SPEC §6.2 allows it to be serializable for tests; no test has needed it, and it implements no serialization.
 
-## 3. Règles (SPEC §6.2)
+## 3. Rules (SPEC §6.2)
 
-- **Aucun algorithme codé en dur.** Signature et courbe sont celles que déclarent les certificats et le SOD : RSA PKCS#1 v1.5, RSA-PSS, ECDSA sur toute courbe connue de BouncyCastle, et tout algorithme que BouncyCastle ajoutera. Un algorithme inconnu donne le statut `UNSUPPORTED_ALGORITHM` avec le détail `CheckDetail.UnsupportedAlgorithm(algorithm)` (nom ou OID), jamais un échec silencieux.
-- **Non disponible n'est pas échoué.** Une étape qui n'a pas lieu (DG14 ou DG15 absent, étape non atteinte) vaut `NOT_AVAILABLE`, distinct de `FAILED`.
-- **Aucune donnée personnelle** dans les exceptions, les logs ou les identifiants d'erreur. Les classes de `model/` ne sont pas des `data class` et leur `toString()` est masqué ; `AccessKey` affiche `***`.
-- **Aucune référence Android** dans le rapport ni dans `:core`.
+- **No hard-coded algorithm.** Signature and curve are those declared by the certificates and the SOD: RSA PKCS#1 v1.5, RSA-PSS, ECDSA on any curve known to BouncyCastle, and any algorithm BouncyCastle adds in the future. An unknown algorithm gives the status `UNSUPPORTED_ALGORITHM` with the detail `CheckDetail.UnsupportedAlgorithm(algorithm)` (name or OID), never a silent failure.
+- **Not available is not failed.** A step that does not take place (DG14 or DG15 missing, step not reached) is `NOT_AVAILABLE`, distinct from `FAILED`.
+- **No personal data** in exceptions, logs or error identifiers. The classes in `model/` are not `data class`es and their `toString()` is masked; `AccessKey` shows `***`.
+- **No Android reference** in the report or in `:core`.
 
-## 4. Étapes affichées : correspondance avec `Step`
+## 4. Displayed steps: mapping to `Step`
 
-`progress(step)` est appelé au début de chaque étape ; les étapes précédentes sont alors terminées, et le retour de `readAndVerify` marque la fin de la dernière.
+`progress(step)` is called at the start of each step; the previous steps are then complete, and the return of `readAndVerify` marks the end of the last one.
 
-| `Step` | Libellé (SPEC §5.2) | Opérations (§2 ci-dessus) |
+| `Step` | Label (SPEC §5.2) | Operations (§2 above) |
 |---|---|---|
-| `CONNECT` | Connexion à la puce | 2.1 lecture de EF.CardAccess ; sélection de l'application ICAO en clair si PACE n'est pas annoncé |
-| `SECURE_CHANNEL` | Ouverture du canal sécurisé (PACE ou BAC) | 2.2 PACE puis sélection de l'application sous messagerie sécurisée, ou BAC (repli compris) |
-| `READ_DATA` | Lecture des données | 2.3 EF.COM, EF.SOD ; DG14 ; 2.6 Chip Authentication ; 2.4 autres groupes de données |
-| `VERIFY_SIGNATURE` | Vérification de la signature | 2.5 Passive Authentication |
-| `VERIFY_CHIP` | Vérification de la puce | 2.6.1 vérification hors ligne de PACE-CAM ; 2.7 Active Authentication (la CA via DG14 est déjà faite, D20) |
+| `CONNECT` | Connecting to the chip | 2.1 reading of EF.CardAccess; selection of the ICAO application in plain text if PACE is not announced |
+| `SECURE_CHANNEL` | Opening secure channel (PACE or BAC) | 2.2 PACE then selection of the application under secure messaging, or BAC (fallback included) |
+| `READ_DATA` | Reading data | 2.3 EF.COM, EF.SOD; DG14; 2.6 Chip Authentication; 2.4 other data groups |
+| `VERIFY_SIGNATURE` | Verifying signature | 2.5 Passive Authentication |
+| `VERIFY_CHIP` | Verifying chip | 2.6.1 offline verification of PACE-CAM; 2.7 Active Authentication (CA via DG14 is already done, D20) |
 
-## 5. Erreurs : correspondance avec `SceauException`
+## 5. Errors: mapping to `SceauException`
 
-Seules ces erreurs interrompent la lecture ; l'écran de lecture affiche un message en français, le **code complet en petit, pour toutes les erreurs** (décision D11), et un bouton « Réessayer » (SPEC §5.2), sauf pour `ACCESS_RESTRICTED`, où un nouvel essai ne changerait rien (décision D36 : seul « Annuler » est proposé, `ReadingErrors.canRetry`). Le message est choisi sur le code de base, avant le premier `-` (`ReadingErrors.messageFor`).
+Only these errors interrupt reading; the reading screen shows a message in the interface language, the **full code in small print, for all errors** (decision D11), and a “Try again” button (SPEC §5.2), except for `ACCESS_RESTRICTED`, where a new attempt would change nothing (decision D36: only “Cancel” is offered, `ReadingErrors.canRetry`). The message is chosen from the base code, before the first `-` (`ReadingErrors.messageFor`).
 
-| Exception | `code` | Cause | Message de l'écran de lecture |
+| Exception | `code` | Cause | Reading screen message |
 |---|---|---|---|
-| `NotIcaoDocument` | `NOT_ICAO` | pas d'application ICAO (`6A82` à la sélection) | Document non conforme ICAO 9303 |
-| `AccessDenied` | `ACCESS_DENIED` | clé refusée par PACE (SW `63xx`) ou échec de BAC ; avec un CAN, tout échec de PACE autre qu'une erreur de transport | CAN ou MRZ incorrects, en rappelant qu'un essai raté peut allonger le délai de la puce |
-| `CanWithoutPace` | `CAN_WITHOUT_PACE` | CAN fourni, PACE non annoncé | Utiliser l'onglet Passeport et la MRZ |
-| `AccessRestricted` | `ACCESS_RESTRICTED-<ÉTAPE>-<élément>` | canal sécurisé établi (PACE ou BAC réussi), puis SW `6982` (*security status not satisfied*) à la sélection de l'application ICAO sous messagerie sécurisée (`SELECT_APPLET`) ou à la lecture d'EF.SOD (`SOD`) ou de DG1 (`DG1`) : puce réservée aux terminaux étatiques (Terminal Authentication), comme les cartes d'identité allemandes délivrées avant le 2021-08-02 (décision D36). Un `6982` avant l'authentification (sélection en clair avant BAC) garde le code `UNEXPECTED-…-6982` ; sur EF.COM, DG2, DG7, DG11, DG12, DG14 ou DG15, le fichier est traité comme absent. Au rétablissement du canal après une CA ratée, ce n'est plus une erreur : rapport « Échec » (§2.6, audit V24) | Puce réservée aux autorités habilitées, un nouvel essai n'y changera rien (cas des cartes allemandes d'avant août 2021), sans bouton « Réessayer » |
-| `ConnectionLost` | `CONNECTION_LOST[-<diag>]` | document retiré (`TagLostException`, liaison coupée, « Tag is out of date »), lecture annulée, reconnexion impossible | Document retiré trop tôt |
-| `Timeout` | `TIMEOUT[-<diag>]` | pas de réponse dans le délai (échec survenu après 90 % du délai effectif, ou message de délai d'`IsoDep`) ; délai global de 120 s hors authentification dépassé (`TIMEOUT-<ÉTAPE>-GLOBAL`, D41) | Délai dépassé |
-| `ReadStalled` | `READ_STALLED-<ÉTAPE>-<fichier>` | la puce ne livre plus le fichier en cours : 3 réponses `READ BINARY` vides consécutives, ou plus de `READ BINARY` que le plafond du fichier n'en justifie (§2.2, audit V29, D41) | Délai dépassé, avec « Réessayer » |
-| `Unexpected` | `UNEXPECTED-<diag>` | toute autre erreur | Erreur inattendue |
+| `NotIcaoDocument` | `NOT_ICAO` | no ICAO application (`6A82` on selection) | Document not compliant with ICAO 9303 |
+| `AccessDenied` | `ACCESS_DENIED` | key rejected by PACE (SW `63xx`) or BAC failure; with a CAN, any PACE failure other than a transport error | Incorrect CAN or MRZ, with a reminder that a failed attempt can lengthen the chip's delay |
+| `CanWithoutPace` | `CAN_WITHOUT_PACE` | CAN supplied, PACE not announced | Use the Passport tab and the MRZ |
+| `AccessRestricted` | `ACCESS_RESTRICTED-<STEP>-<element>` | secure channel established (PACE or BAC succeeded), then SW `6982` (*security status not satisfied*) on selecting the ICAO application under secure messaging (`SELECT_APPLET`) or on reading EF.SOD (`SOD`) or DG1 (`DG1`): chip reserved for government terminals (Terminal Authentication), like German identity cards issued before 2021-08-02 (decision D36). A `6982` before authentication (plain-text selection before BAC) keeps the code `UNEXPECTED-…-6982`; on EF.COM, DG2, DG7, DG11, DG12, DG14 or DG15, the file is treated as missing. When re-establishing the channel after a failed CA, it is no longer an error: “Failed” report (§2.6, audit V24) | Chip reserved for authorized officials, trying again won't change anything (case of German cards from before August 2021), without a “Try again” button |
+| `ConnectionLost` | `CONNECTION_LOST[-<diag>]` | document removed (`TagLostException`, link cut, “Tag is out of date”), reading cancelled, reconnection impossible | Document moved away too soon |
+| `Timeout` | `TIMEOUT[-<diag>]` | no response within the timeout (failure occurring after 90% of the effective timeout, or `IsoDep` timeout message); global timeout of 120 s outside authentication exceeded (`TIMEOUT-<STEP>-GLOBAL`, D41) | Timed out |
+| `ReadStalled` | `READ_STALLED-<STEP>-<file>` | the chip no longer delivers the current file: 3 consecutive empty `READ BINARY` responses, or more `READ BINARY` commands than the file ceiling justifies (§2.2, audit V29, D41) | Timed out, with “Try again” |
+| `Unexpected` | `UNEXPECTED-<diag>` | any other error | Unexpected error |
 
-Les codes sont stables et ne contiennent aucune donnée personnelle : ni donnée lue, ni clé, ni octet d'APDU, ni message d'exception brut. Le diagnostic `<diag>` se compose ainsi :
+The codes are stable and contain no personal data: no data read, no key, no APDU byte, no raw exception message. The `<diag>` diagnostic is built as follows:
 
-| Origine | Forme | Exemple |
+| Origin | Form | Example |
 |---|---|---|
-| Délai ou perte de liaison pendant une APDU (`IsoDepTransport`) | `<ÉTAPE>-INS<xx>-L<n>` : étape (`Step`), octet INS de la commande en hexadécimal, longueur de l'APDU arrondie à la dizaine | `TIMEOUT-SECURE_CHANNEL-INS86-L10`, `CONNECTION_LOST-READ_DATA-INSB0-L20` |
-| Reconnexion du repli PACE → BAC impossible | `<ÉTAPE>-RECONNECT` | `CONNECTION_LOST-SECURE_CHANNEL-RECONNECT` |
-| Erreur d'E/S NFC ni délai ni perte | `<ÉTAPE>-IO-<code>-INS<xx>-L<n>`, `<code>` pris dans une liste fermée de messages d'`android.nfc` : `TRANSCEIVE_FAILED`, `TOO_LONG`, `SERVICE_DIED`, sinon `OTHER` ou `NO_MESSAGE` | `UNEXPECTED-SECURE_CHANNEL-IO-TRANSCEIVE_FAILED-INS86-L10` |
-| Transport fermé sans demande | `<ÉTAPE>-STATE-INS<xx>-L<n>` | `UNEXPECTED-READ_DATA-STATE-INSB0-L20` |
-| Échec dans `:core` (`technicalCode`) | `<ÉTAPE>[-<étiquette>]-<classe>[-<SW>]` : étiquette `SELECT_APPLET`, `SOD` ou `DG1`, nom simple de la classe d'exception, mot d'état en hexadécimal | `UNEXPECTED-CONNECT-SELECT_APPLET-CardServiceException-6D00` |
-| Erreur hors `readAndVerify` dans l'app (`SessionViewModel`) | `<classe>` | `UNEXPECTED-OutOfMemoryError` |
-| Accès réservé (D36) | `<ÉTAPE>-<élément>` : élément refusé `SELECT_APPLET`, `SOD` ou `DG1` | `ACCESS_RESTRICTED-SECURE_CHANNEL-SELECT_APPLET`, `ACCESS_RESTRICTED-READ_DATA-SOD` |
-| Lecture qui n'avance plus (D41) | `<ÉTAPE>-<fichier>` : `CARD_ACCESS`, `COM`, `SOD`, `DG<n>` | `READ_STALLED-CONNECT-CARD_ACCESS`, `READ_STALLED-READ_DATA-DG2` |
-| Délai global dépassé (D41) | `<ÉTAPE>-GLOBAL` : étape en cours à l'échéance | `TIMEOUT-READ_DATA-GLOBAL` |
+| Timeout or lost link during an APDU (`IsoDepTransport`) | `<STEP>-INS<xx>-L<n>`: step (`Step`), INS byte of the command in hexadecimal, APDU length rounded to the nearest ten | `TIMEOUT-SECURE_CHANNEL-INS86-L10`, `CONNECTION_LOST-READ_DATA-INSB0-L20` |
+| PACE → BAC fallback reconnection impossible | `<STEP>-RECONNECT` | `CONNECTION_LOST-SECURE_CHANNEL-RECONNECT` |
+| NFC I/O error that is neither a timeout nor a lost link | `<STEP>-IO-<code>-INS<xx>-L<n>`, `<code>` taken from a closed list of `android.nfc` messages: `TRANSCEIVE_FAILED`, `TOO_LONG`, `SERVICE_DIED`, otherwise `OTHER` or `NO_MESSAGE` | `UNEXPECTED-SECURE_CHANNEL-IO-TRANSCEIVE_FAILED-INS86-L10` |
+| Transport closed without request | `<STEP>-STATE-INS<xx>-L<n>` | `UNEXPECTED-READ_DATA-STATE-INSB0-L20` |
+| Failure in `:core` (`technicalCode`) | `<STEP>[-<label>]-<class>[-<SW>]`: label `SELECT_APPLET`, `SOD` or `DG1`, simple name of the exception class, status word in hexadecimal | `UNEXPECTED-CONNECT-SELECT_APPLET-CardServiceException-6D00` |
+| Error outside `readAndVerify` in the app (`SessionViewModel`) | `<class>` | `UNEXPECTED-OutOfMemoryError` |
+| Restricted access (D36) | `<STEP>-<element>`: rejected element `SELECT_APPLET`, `SOD` or `DG1` | `ACCESS_RESTRICTED-SECURE_CHANNEL-SELECT_APPLET`, `ACCESS_RESTRICTED-READ_DATA-SOD` |
+| Reading that no longer progresses (D41) | `<STEP>-<file>`: `CARD_ACCESS`, `COM`, `SOD`, `DG<n>` | `READ_STALLED-CONNECT-CARD_ACCESS`, `READ_STALLED-READ_DATA-DG2` |
+| Global timeout exceeded (D41) | `<STEP>-GLOBAL`: step in progress when it expires | `TIMEOUT-READ_DATA-GLOBAL` |
 
-Un `CONNECTION_LOST` ou un `TIMEOUT` sans diagnostic reste possible (transport de test, fermeture avant toute APDU). Aucune exception de JMRTD n'est attachée comme cause à une `SceauException` : leurs messages contiennent des APDU en hexadécimal (décision D14).
+A `CONNECTION_LOST` or `TIMEOUT` without a diagnostic remains possible (test transport, closing before any APDU). No JMRTD exception is attached as a cause to a `SceauException`: their messages contain APDUs in hexadecimal (decision D14).
 
-Les situations suivantes **ne sont pas** des exceptions et figurent dans le rapport : certificat DS introuvable (`CheckDetail.DsCertificateMissing`), algorithme non pris en charge (`UNSUPPORTED_ALGORITHM`), signature ou empreinte invalide, challenge CA ou AA raté (`FAILED`), émetteur inconnu (`NOT_AVAILABLE`).
+The following situations **are not** exceptions and appear in the report: DS certificate not found (`CheckDetail.DsCertificateMissing`), unsupported algorithm (`UNSUPPORTED_ALGORITHM`), invalid signature or hash, failed CA or AA challenge (`FAILED`), unknown issuer (`NOT_AVAILABLE`).
 
 ## 6. Verdict
 
-Calculé par `Verdicts.compute(checks)` à partir des sept lignes de la liste de contrôle (SPEC §5.3, décision D6). Les règles s'appliquent **dans l'ordre**, la première qui s'applique l'emporte :
+Computed by `Verdicts.compute(checks)` from the seven lines of the checklist (SPEC §5.3, decision D6). The rules apply **in order**, and the first one that applies wins:
 
 | # | Condition | Verdict |
 |---|---|---|
-| 1 | au moins une ligne `FAILED` ou `UNSUPPORTED_ALGORITHM` | **Échec** (`FAILED`) |
-| 2 | sinon, `CERTIFICATE_CHAIN` vaut `NOT_AVAILABLE` (aucun certificat du pays émetteur dans le magasin, pays réel ou organisation) | **Émetteur inconnu** (`UNKNOWN_ISSUER`) |
-| 3 | sinon, PA réussie et (`CHIP_AUTHENTICATION` ou `ACTIVE_AUTHENTICATION` vaut `OK`) | **Authentique** (`AUTHENTIC`) |
-| 4 | sinon, PA réussie, `CHIP_AUTHENTICATION` et `ACTIVE_AUTHENTICATION` valent `NOT_AVAILABLE` | **Signature valide, puce non vérifiée** (`SIGNATURE_VALID_CHIP_UNVERIFIED`) |
-| 5 | tout autre cas | **Échec** (`FAILED`) |
+| 1 | at least one line `FAILED` or `UNSUPPORTED_ALGORITHM` | **Failed** (`FAILED`) |
+| 2 | otherwise, `CERTIFICATE_CHAIN` is `NOT_AVAILABLE` (no certificate of the issuing country in the trust store, real country or organization) | **Unknown issuer** (`UNKNOWN_ISSUER`) |
+| 3 | otherwise, PA passed and (`CHIP_AUTHENTICATION` or `ACTIVE_AUTHENTICATION` is `OK`) | **Authentic** (`AUTHENTIC`) |
+| 4 | otherwise, PA passed, `CHIP_AUTHENTICATION` and `ACTIVE_AUTHENTICATION` are `NOT_AVAILABLE` | **Valid signature, chip not verified** (`SIGNATURE_VALID_CHIP_UNVERIFIED`) |
+| 5 | any other case | **Failed** (`FAILED`) |
 
-« PA réussie » signifie : `SECURE_CHANNEL`, `SOD_SIGNATURE`, `CERTIFICATE_CHAIN` et `DG_HASHES` valent `OK`, et `DS_VALIDITY` vaut `OK` ou `NOT_AVAILABLE` (date de délivrance inconnue, ou estimée hors de la période du DS : décision D6). Une ligne manquante ou `SOD_SIGNATURE` à `NOT_AVAILABLE` hors du cas « Émetteur inconnu » tombe dans la règle 5.
+“PA passed” means: `SECURE_CHANNEL`, `SOD_SIGNATURE`, `CERTIFICATE_CHAIN` and `DG_HASHES` are `OK`, and `DS_VALIDITY` is `OK` or `NOT_AVAILABLE` (date of issue unknown, or estimated outside the DS period: decision D6). A missing line, or `SOD_SIGNATURE` at `NOT_AVAILABLE` outside the “Unknown issuer” case, falls under rule 5.
 
-Conséquences :
+Consequences:
 
-- un challenge raté l'emporte sur tout le reste : un CA réussi et un AA raté donnent « Échec » ;
-- un émetteur absent du magasin donne « Émetteur inconnu » même si les empreintes sont cohérentes : rien n'est garanti, les données sont affichées ; la signature du SOD y est « non disponible » ;
-- un document d'un pays dont le magasin contient des certificats, mais dont aucune chaîne n'aboutit, donne « Échec » (`CERTIFICATE_CHAIN` `FAILED`, `NoChainForKnownCountry` ; audit V25, décision D40), et non « Émetteur inconnu » ; de même, sans chaîne, un code d'État inconnu d'ICAO dans DG1 (`UNKNOWN_STATE_CODE`) ou un DS d'un autre pays que DG1 (`CountryMismatch`) donnent « Échec » (audit V35, décision D42) ;
-- les lignes `CHIP_AUTHENTICATION` et `SECURE_CHANNEL` peuvent aussi être mises en échec par un déclassement de protocole (§2.2), une clé ou un protocole de CA annoncés mais inexploitables (§2.6), une chaîne d'EF.CardSecurity qui n'aboutit pas au CSCA du SOD (§2.6.1) ou un canal impossible à rétablir après une CA ratée (§2.6) : audits V17, V19, V20, V24, V32, V33, décisions D40 et D43 ;
-- un document expiré n'affecte pas le verdict : l'écran de résultat affiche un bandeau « Document expiré » (SPEC §5.3).
-- un écart d'empreinte DG11 ou DG12 couvert par une anomalie connue de l'émetteur (§2.5, décision D34) n'est pas un échec : `DG_HASHES` vaut `OK` et le verdict se calcule normalement, « Authentique » compris ; les données du DG écarté ne sont pas affichées.
+- a failed challenge prevails over everything else: a successful CA and a failed AA give “Failed”;
+- an issuer missing from the trust store gives “Unknown issuer” even if the hashes are consistent: nothing is guaranteed, the data is displayed; the SOD signature is “not available” in that case;
+- a document from a country for which the trust store holds certificates, but for which no chain succeeds, gives “Failed” (`CERTIFICATE_CHAIN` `FAILED`, `NoChainForKnownCountry`; audit V25, decision D40), not “Unknown issuer”; likewise, without a chain, a state code in DG1 unknown to ICAO (`UNKNOWN_STATE_CODE`) or a DS from a country other than that of DG1 (`CountryMismatch`) gives “Failed” (audit V35, decision D42);
+- the `CHIP_AUTHENTICATION` and `SECURE_CHANNEL` lines can also be made to fail by a protocol downgrade (§2.2), a CA key or protocol that is announced but unusable (§2.6), an EF.CardSecurity chain that does not lead to the SOD's CSCA (§2.6.1) or a channel that cannot be re-established after a failed CA (§2.6): audits V17, V19, V20, V24, V32, V33, decisions D40 and D43;
+- an expired document does not affect the verdict: the result screen shows a “Document expired” banner (SPEC §5.3).
+- a DG11 or DG12 hash mismatch covered by a known issuer deviation (§2.5, decision D34) is not a failure: `DG_HASHES` is `OK` and the verdict is computed normally, “Authentic” included; the data of the data group set aside is not displayed.

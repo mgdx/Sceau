@@ -97,23 +97,22 @@ import java.util.Locale
 import java.util.concurrent.CountDownLatch
 
 /**
- * Textes qui débordent ou sont tronqués, dans chaque langue de `locales_config.xml` (D28).
- * `FLAG_SECURE` interdit toute capture d'écran sur appareil : ce test rend les vrais écrans sous
- * Robolectric, avec le vrai moteur de texte d'Android et ses polices (`GraphicsMode.NATIVE`),
- * sur un téléphone étroit (360 × 640 dp, police à 100 %), et relève chaque nœud de texte qui
- * dépasse sa boîte, est ellipsé ou sort de l'écran.
+ * Overflowing or truncated text, in every language of `locales_config.xml` (D28).
+ * `FLAG_SECURE` prevents any screenshot on a device: this test renders the real screens under
+ * Robolectric, with Android's real text engine and fonts (`GraphicsMode.NATIVE`), on a narrow
+ * phone (360 × 640 dp, 100% font size), and records every text node that exceeds its box, is
+ * ellipsized or sticks out of the screen.
  *
- * Toutes les anomalies sont collectées puis comparées à `l10n/known-overflows.txt` (lignes
- * `langue|clé`) : le test échoue si une anomalie n'y est pas, ou si une anomalie listée a
- * disparu (liste à tenir à jour).
+ * All anomalies are collected, then compared with `l10n/known-overflows.txt` (lines
+ * `language|key`): the test fails if an anomaly is missing from it, or if a listed anomaly has
+ * disappeared (the list must be kept up to date).
  *
- * La langue est changée par les `CompositionLocal` de configuration (contexte, ressources,
- * sens d'écriture) au-dessus des écrans : une seule activité, un seul magasin de confiance
- * chargé, ce qui garde la durée raisonnable pour 45 langues.
+ * The language is switched through the configuration `CompositionLocal`s (context, resources,
+ * layout direction) above the screens: a single activity and a single loaded trust store, which
+ * keeps the run time reasonable for 45 languages.
  *
- * Données exclues : aucune pour l'instant. Les valeurs de la puce (`FieldRow`, détails des
- * contrôles) ont un `maxLines` explicite avec ellipse volontaire ; les données du spécimen sont
- * courtes et ne l'atteignent pas.
+ * Excluded data: none for now. Chip values (`FieldRow`, check details) have an explicit
+ * `maxLines` with a deliberate ellipsis; the specimen data is short and does not reach it.
  */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
@@ -143,7 +142,7 @@ class TextOverflowTest {
     )
 
     @Test
-    fun `aucun texte ne deborde, dans aucune langue`() {
+    fun `no text overflows, in any language`() {
         val activity = compose.activity
         session = ViewModelProvider(activity)[SessionViewModel::class.java]
         repository = (activity.application as SceauApplication).trustStoreRepository
@@ -157,8 +156,8 @@ class TextOverflowTest {
                 scene?.let { current -> key(current.name) { current.content() } }
             }
         }
-        // Horloge manuelle : les indicateurs de progression infinis empêcheraient Compose d'être
-        // jamais « au repos ».
+        // Manual clock: infinite progress indicators would keep Compose from ever being
+        // "idle".
         compose.mainClock.autoAdvance = false
         settle()
 
@@ -174,23 +173,23 @@ class TextOverflowTest {
         compare(overflows)
     }
 
-    /** Témoin : le détecteur signale bien chaque sorte de débordement, sur des textes factices. */
+    /** Control: the detector does report every kind of overflow, on dummy texts. */
     @Test
-    fun `le detecteur signale chaque sorte de debordement`() {
-        val offScreen = "Hors de l'écran, ".repeat(OFF_SCREEN_REPEAT)
+    fun `the detector reports every kind of overflow`() {
+        val offScreen = "Off the screen, ".repeat(OFF_SCREEN_REPEAT)
         compose.setContent {
             SceauTheme {
                 Column {
-                    Text("Ellipse ellipse ellipse", maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.width(80.dp))
-                    Text("Hauteur hauteur hauteur", modifier = Modifier.width(80.dp).height(20.dp))
+                    Text("Ellipsis ellipsis ellipsis", maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.width(80.dp))
+                    Text("Height height height", modifier = Modifier.width(80.dp).height(20.dp))
                     Box(Modifier.width(80.dp).semantics { }) { Text("Reisepassdokumentenüberprüfung") }
                     Box(Modifier.height(20.dp).semantics { }) {
-                        Text("Rogné rogné rogné", modifier = Modifier.width(80.dp).wrapContentHeight(unbounded = true))
+                        Text("Clipped clipped clipped", modifier = Modifier.width(80.dp).wrapContentHeight(unbounded = true))
                     }
                     Box(Modifier.wrapContentWidth(Alignment.Start, unbounded = true).requiredWidth(1000.dp)) {
                         Text(offScreen, softWrap = false)
                     }
-                    Text("Texte qui tient")
+                    Text("Text that fits")
                 }
             }
         }
@@ -207,16 +206,16 @@ class TextOverflowTest {
         fun assertFound(
             text: String,
             problem: String,
-        ) = assertTrue("$text : $problem attendu, trouvé ${found[text]}", found[text].orEmpty().any { it.startsWith(problem) })
-        assertFound("Ellipse ellipse ellipse", "ellipsé")
-        assertFound("Hauteur hauteur hauteur", "dépasse sa boîte")
-        assertFound("Reisepassdokumentenüberprüfung", "mot coupé")
-        assertFound("Rogné rogné rogné", "sort de son conteneur")
-        assertFound(offScreen, "sort de l'écran")
-        assertEquals(null, found["Texte qui tient"])
+        ) = assertTrue("$text: expected $problem, found ${found[text]}", found[text].orEmpty().any { it.startsWith(problem) })
+        assertFound("Ellipsis ellipsis ellipsis", "ellipsized")
+        assertFound("Height height height", "exceeds its box")
+        assertFound("Reisepassdokumentenüberprüfung", "word broken")
+        assertFound("Clipped clipped clipped", "sticks out of its container")
+        assertFound(offScreen, "sticks out of the screen")
+        assertEquals(null, found["Text that fits"])
     }
 
-    // --- Scènes ------------------------------------------------------------------------------
+    // --- Scenes ------------------------------------------------------------------------------
 
     private fun homeScenes() {
         val homeContent: @Composable () -> Unit = { HomeScreen(session, onRead = {}, onOpenTrustStore = {}, onOpenAbout = {}) }
@@ -224,35 +223,35 @@ class TextOverflowTest {
         setNfc(present = true, enabled = false)
         session.clear()
         session.selectTab(DocumentTab.ID_CARD)
-        render("Accueil, carte d'identité, NFC désactivé", homeContent)
+        render("Home, ID card, NFC disabled", homeContent)
 
-        render("Accueil, menu", homeContent, afterShow = {
+        render("Home, menu", homeContent, afterShow = {
             compose
                 .onNode(hasContentDescriptionRes(R.string.home_menu_more))
                 .performSemanticsAction(SemanticsActions.OnClick)
             settle(frames = 30)
             assertTrue(
-                "menu non ouvert",
+                "menu not open",
                 compose.onAllNodes(hasTextRes(R.string.home_menu_about), useUnmergedTree = true).fetchSemanticsNodes().isNotEmpty(),
             )
         })
 
         setNfc(present = true, enabled = true)
         session.selectIdCardKey(IdCardKey.MRZ)
-        render("Accueil, carte d'identité, MRZ", homeContent)
+        render("Home, ID card, MRZ", homeContent)
         session.selectIdCardKey(IdCardKey.CAN)
 
         setNfc(present = false, enabled = false)
         session.selectTab(DocumentTab.PASSPORT)
         session.onDocumentNumberChange("AB1234567")
-        render("Accueil, passeport, dates future et trop ancienne, sans NFC", homeContent, perLanguage = { lang ->
+        render("Home, passport, future and too old dates, no NFC", homeContent, perLanguage = { lang ->
             val order = DateOrder.forLocale(lang.locale)
             session.onDateOfBirthChange(dateDigits(order, day = "01", month = "01", year = "2099"))
             session.onDateOfExpiryChange(dateDigits(order, day = "01", month = "01", year = "1980"))
         })
         session.onDateOfBirthChange("99999999")
         session.onDateOfExpiryChange("99999999")
-        render("Accueil, passeport, dates invalides, sans NFC", homeContent)
+        render("Home, passport, invalid dates, no NFC", homeContent)
         session.clear()
     }
 
@@ -261,16 +260,16 @@ class TextOverflowTest {
         val card = SimulatedDocuments.frenchIdCard()
         val can = checkNotNull(card.canKey)
 
-        // Puce qui fait patienter : la lecture de la CNIe simulée est retenue dès l'ouverture
-        // du canal sécurisé, et l'horloge avancée au-delà du délai du message.
+        // Slow chip: reading the simulated CNIe is held as soon as the secure channel opens,
+        // and the clock is advanced past the message delay.
         val slow = HoldingTransport(card.chip()) { (session.state.value as? ReadState.Reading)?.current == Step.SECURE_CHANNEL }
         session.startDemo(DemoCard(slow, can, card.trustStore))
-        awaitState("canal sécurisé") { (it as? ReadState.Reading)?.current == Step.SECURE_CHANNEL }
-        render("Lecture en cours, puce qui fait patienter", readingContent, afterShow = {
+        awaitState("secure channel") { (it as? ReadState.Reading)?.current == Step.SECURE_CHANNEL }
+        render("Reading in progress, slow chip", readingContent, afterShow = {
             compose.mainClock.advanceTimeBy(SLOW_CHIP_WAIT_MILLIS)
             settle()
             assertTrue(
-                "message « puce qui fait patienter » absent",
+                "\"slow chip\" message missing",
                 compose.onAllNodes(hasTextRes(R.string.reading_slow_chip)).fetchSemanticsNodes().isNotEmpty(),
             )
         })
@@ -284,18 +283,18 @@ class TextOverflowTest {
                 "CONNECTION_LOST" to DemoCard(FailingTransport { throw SceauException.ConnectionLost() }, can, card.trustStore),
                 "TIMEOUT" to DemoCard(FailingTransport { throw SceauException.Timeout() }, can, card.trustStore),
                 "UNEXPECTED" to DemoCard(FailingTransport { throw IllegalStateException() }, can, card.trustStore),
-                // D36 : EF.SOD réservé aux terminaux étatiques (cartes allemandes d'avant 2021-08). Code
-                // ACCESS_RESTRICTED-READ_DATA-SOD : la variante SELECT_APPLET, d'un seul tenant, est plus
-                // large que l'écran et se coupe en fin de ligne, comme les longs codes UNEXPECTED.
+                // D36: EF.SOD reserved for government terminals (German cards issued before 2021-08). Code
+                // ACCESS_RESTRICTED-READ_DATA-SOD: the SELECT_APPLET variant, a single unbroken word, is
+                // wider than the screen and breaks at the end of the line, like the long UNEXPECTED codes.
                 "ACCESS_RESTRICTED" to
                     DemoCard(SimulatedChip(card.document, card.pace, restrictedFiles = setOf(SimulatedChip.FID_SOD)), can, card.trustStore),
             )
         errors.forEach { (code, demoCard) ->
             session.startDemo(demoCard)
-            awaitState("erreur $code") { it is ReadState.Error }
+            awaitState("error $code") { it is ReadState.Error }
             val actual = (session.state.value as ReadState.Error).code
-            assertTrue("code $actual au lieu de $code", actual.startsWith(code))
-            render("Lecture, erreur $code", readingContent)
+            assertTrue("code $actual instead of $code", actual.startsWith(code))
+            render("Reading, error $code", readingContent)
             session.clear()
         }
     }
@@ -304,63 +303,63 @@ class TextOverflowTest {
         val resultContent: @Composable () -> Unit = { ResultScreen(session, onClear = {}) }
 
         session.startDemo(checkNotNull(DemoMode.newSimulatedCnie()))
-        awaitState("rapport de la démo") { it is ReadState.Done }
+        awaitState("demo report") { it is ReadState.Done }
         assertEquals(Verdict.AUTHENTIC, (session.state.value as ReadState.Done).report.verdict)
-        render("Résultat, authentique (démo)", resultContent, afterShow = {
+        render("Result, authentic (demo)", resultContent, afterShow = {
             showResultDetails()
-            // Rapport complet : identité affichée, sans la phrase des données non lues (audit V24).
+            // Complete report: identity shown, without the data-not-read sentence (audit V24).
             assertTrue(
-                "identité absente d'un rapport complet",
+                "identity missing from a complete report",
                 compose.onAllNodes(hasTextRes(R.string.result_field_surname)).fetchSemanticsNodes().isNotEmpty() &&
                     compose.onAllNodes(hasTextRes(R.string.result_data_not_read)).fetchSemanticsNodes().isEmpty(),
             )
         })
         session.clear()
 
-        // Même CNIe simulée lue avec un magasin sans aucun certificat français (audit V25 : un
-        // pays connu du magasin sans chaîne donne « Échec », et non « Émetteur inconnu »).
+        // Same simulated CNIe read with a store without any French certificate (audit V25: a
+        // country known to the store without a chain gives "Failed", not "Unknown issuer").
         val card = SimulatedDocuments.frenchIdCard()
         val foreignStore = SimulatedDocuments.germanTestPki().let { it.trustStore(it.oldCsca) }
         session.startDemo(DemoCard(card.chip(), checkNotNull(card.canKey), foreignStore))
-        awaitState("rapport émetteur inconnu") { it is ReadState.Done }
+        awaitState("unknown issuer report") { it is ReadState.Done }
         assertEquals(Verdict.UNKNOWN_ISSUER, (session.state.value as ReadState.Done).report.verdict)
-        render("Résultat, émetteur inconnu", resultContent, afterShow = ::showResultDetails)
+        render("Result, unknown issuer", resultContent, afterShow = ::showResultDetails)
         session.clear()
 
-        // Même CNIe lue avec le vrai magasin : la France y est connue, mais pas ce CSCA de test.
+        // Same CNIe read with the real store: France is known there, but not this test CSCA.
         val store = runBlocking { repository.get() }
         session.startDemo(DemoCard(SimulatedDocuments.frenchIdCard().chip(), checkNotNull(card.canKey), store))
-        awaitState("rapport pays connu sans chaîne") { it is ReadState.Done }
+        awaitState("known country without chain report") { it is ReadState.Done }
         assertEquals(Verdict.FAILED, (session.state.value as ReadState.Done).report.verdict)
-        render("Résultat, pays connu sans chaîne", resultContent, afterShow = ::showResultDetails)
+        render("Result, known country without chain", resultContent, afterShow = ::showResultDetails)
         session.clear()
 
-        // D36 : carte eID-UB, sans donnée d'identité ; ni photo, ni champ vide.
+        // D36: eID-UB card, without identity data; neither a photo nor an empty field.
         val eidUb = SimulatedDocuments.germanEidUb()
         session.startDemo(DemoCard(eidUb.chip(), checkNotNull(eidUb.canKey), eidUb.trustStore))
-        awaitState("rapport eID-UB") { it is ReadState.Done }
+        awaitState("eID-UB report") { it is ReadState.Done }
         assertEquals(Verdict.AUTHENTIC, (session.state.value as ReadState.Done).report.verdict)
-        render("Résultat, eID-UB sans donnée d'identité", resultContent, afterShow = {
+        render("Result, eID-UB without identity data", resultContent, afterShow = {
             settle()
             assertTrue(
-                "bandeau « aucune donnée d'identité » absent",
+                "\"no identity data\" banner missing",
                 compose.onAllNodes(hasTextRes(R.string.result_no_identity_data)).fetchSemanticsNodes().isNotEmpty(),
             )
             assertTrue(
-                "photo affichée pour une eID-UB",
+                "photo shown for an eID-UB",
                 compose.onAllNodes(hasTextRes(R.string.result_photo_unavailable)).fetchSemanticsNodes().isEmpty() &&
                     compose.onAllNodes(hasContentDescriptionRes(R.string.result_photo_description)).fetchSemanticsNodes().isEmpty(),
             )
             assertTrue(
-                "nom affiché pour une eID-UB",
+                "name shown for an eID-UB",
                 compose.onAllNodes(hasTextRes(R.string.result_field_surname)).fetchSemanticsNodes().isEmpty(),
             )
             expandChecks()
         })
         session.clear()
 
-        // Audit V24 : CA ratée, puis accès refusé au rétablissement du canal ; rapport « Échec »
-        // sans aucune donnée lue. Ni identité, ni emplacement de photo : une phrase le dit.
+        // Audit V24: failed CA, then access denied when the channel is reestablished; "Failed"
+        // report without any data read. No identity, no photo slot: a sentence says so.
         val clone =
             SimulatedChip(
                 card.document,
@@ -369,54 +368,54 @@ class TextOverflowTest {
                 restrictAppletAfterReconnect = true,
             )
         session.startDemo(DemoCard(clone, checkNotNull(card.canKey), card.trustStore))
-        awaitState("rapport sans donnée lue") { it is ReadState.Done }
+        awaitState("report without data read") { it is ReadState.Done }
         val notRead = (session.state.value as ReadState.Done).report
         assertEquals(Verdict.FAILED, notRead.verdict)
         assertFalse(notRead.identityRead)
-        render("Résultat, échec sans donnée lue", resultContent, afterShow = {
+        render("Result, failure without data read", resultContent, afterShow = {
             settle()
             assertTrue(
-                "phrase « données non lues » absente",
+                "\"data not read\" sentence missing",
                 compose.onAllNodes(hasTextRes(R.string.result_data_not_read)).fetchSemanticsNodes().isNotEmpty(),
             )
             assertTrue(
-                "photo ou emplacement de photo affiché sans donnée lue",
+                "photo or photo slot shown without data read",
                 compose.onAllNodes(hasTextRes(R.string.result_photo_unavailable)).fetchSemanticsNodes().isEmpty() &&
                     compose.onAllNodes(hasContentDescriptionRes(R.string.result_photo_description)).fetchSemanticsNodes().isEmpty(),
             )
             assertTrue(
-                "section Identité affichée sans donnée lue",
+                "Identity section shown without data read",
                 compose.onAllNodes(hasTextRes(R.string.result_section_identity)).fetchSemanticsNodes().isEmpty() &&
                     compose.onAllNodes(hasTextRes(R.string.result_field_surname)).fetchSemanticsNodes().isEmpty(),
             )
             assertTrue(
-                "bouton Effacer absent",
+                "Clear button missing",
                 compose.onAllNodes(hasTextRes(R.string.result_clear)).fetchSemanticsNodes().isNotEmpty(),
             )
-            // Contrôles laissés repliés : leurs détails sont des codes techniques
-            // (READ_DATA-REESTABLISH-…), sans texte traduit propre à cette scène.
+            // Checks left collapsed: their details are technical codes
+            // (READ_DATA-REESTABLISH-…), with no translated text specific to this scene.
         })
         session.clear()
     }
 
-    /** Attend la fin du décodage du portrait (indisponible sous Robolectric), puis déplie les contrôles. */
+    /** Waits for the portrait decoding to finish (unavailable under Robolectric), then expands the checks. */
     private fun showResultDetails() {
-        awaitUi("portrait décodé ou indisponible") {
+        awaitUi("portrait decoded or unavailable") {
             compose.onAllNodes(hasTextRes(R.string.result_photo_unavailable)).fetchSemanticsNodes().isNotEmpty() ||
                 compose.onAllNodes(hasContentDescriptionRes(R.string.result_photo_description)).fetchSemanticsNodes().isNotEmpty()
         }
         expandChecks()
     }
 
-    /** Déplie tous les contrôles de l'écran Résultat. */
+    /** Expands all the checks of the Result screen. */
     private fun expandChecks() {
         val expand =
-            SemanticsMatcher("déplier") {
+            SemanticsMatcher("expand") {
                 it.config.getOrNull(SemanticsActions.OnClick)?.label ==
                     string(R.string.result_check_expand)
             }
         val count = compose.onAllNodes(expand).fetchSemanticsNodes().size
-        assertTrue("aucun contrôle à déplier", count > 0)
+        assertTrue("no check to expand", count > 0)
         repeat(count) {
             compose.onAllNodes(expand)[0].performSemanticsAction(SemanticsActions.OnClick)
             settle()
@@ -426,9 +425,9 @@ class TextOverflowTest {
     private fun trustStoreScene() {
         val store = runBlocking { repository.get() }
         render(
-            "Magasin de confiance, France et Royaume-Uni dépliés",
+            "Trust store, France and United Kingdom expanded",
             {
-                // Hauteur démesurée : la LazyColumn compose alors tous ses éléments, sans défilement.
+                // Oversized height: the LazyColumn then composes all its items, without scrolling.
                 Box(Modifier.fillMaxWidth().wrapContentHeight(Alignment.Top, unbounded = true).requiredHeight(TALL_LIST_HEIGHT)) {
                     TrustStoreScreen(repository, onBack = {})
                 }
@@ -449,36 +448,36 @@ class TextOverflowTest {
                 val headers =
                     compose
                         .onAllNodes(
-                            SemanticsMatcher("en-tête de pays") {
+                            SemanticsMatcher("country header") {
                                 val label = it.config.getOrNull(SemanticsActions.OnClick)?.label
                                 label == string(R.string.trust_country_expand) || label == string(R.string.trust_country_collapse)
                             },
                         ).fetchSemanticsNodes()
                         .size
-                assertEquals("en-têtes de pays composés (${lang.tag})", groups, headers)
+                assertEquals("composed country headers (${lang.tag})", groups, headers)
             },
         )
     }
 
     private fun awaitTrustStoreLoaded() {
-        awaitUi("magasin chargé") { compose.onAllNodes(hasTextRes(R.string.trust_import)).fetchSemanticsNodes().isNotEmpty() }
+        awaitUi("store loaded") { compose.onAllNodes(hasTextRes(R.string.trust_import)).fetchSemanticsNodes().isNotEmpty() }
     }
 
     private fun aboutScene() {
-        render("À propos", { AboutScreen(repository, onBack = {}, onReplayIntro = {}, onOpenChipContents = {}) }, ready = {
-            awaitUi("magasin embarqué décrit") {
+        render("About", { AboutScreen(repository, onBack = {}, onReplayIntro = {}, onOpenChipContents = {}) }, ready = {
+            awaitUi("embedded store described") {
                 compose.onAllNodes(hasTextRes(R.string.about_trust_ants_and_bsi)).fetchSemanticsNodes().isNotEmpty()
             }
         })
     }
 
     /**
-     * Introduction, page par page (D35), puis l'écran « Ce que contient la puce », à 100 % puis à
-     * 200 % de taille de police (boutons de l'introduction qui doivent passer à la ligne).
+     * Introduction, page by page (D35), then the "What the chip contains" screen, at 100% then
+     * 200% font size (introduction buttons that must wrap).
      */
     private fun learnScenes() {
         learnScenes(fontScale = 1f, suffix = "")
-        learnScenes(fontScale = LARGE_FONT_SCALE, suffix = ", police 200 %")
+        learnScenes(fontScale = LARGE_FONT_SCALE, suffix = ", font 200%")
     }
 
     private fun learnScenes(
@@ -500,19 +499,19 @@ class TextOverflowTest {
                 val last = index == IntroPage.entries.lastIndex
                 val button = if (last) R.string.learn_intro_start else R.string.learn_intro_skip
                 assertTrue(
-                    "page ${index + 1} non affichée",
+                    "page ${index + 1} not shown",
                     compose.onAllNodes(hasTextRes(button), useUnmergedTree = true).fetchSemanticsNodes().isNotEmpty(),
                 )
             })
         }
-        render("Contenu de la puce$suffix", scaled { ChipContentsScreen(onBack = {}) })
+        render("Chip contents$suffix", scaled { ChipContentsScreen(onBack = {}) })
     }
 
-    // --- Rendu et relevé -----------------------------------------------------------------------
+    // --- Rendering and collection -------------------------------------------------------------
 
     /**
-     * Affiche [content] en français, exécute [afterShow] (menus, dépliage), puis, pour chaque
-     * langue, applique [perLanguage], attend [ready] et relève les textes qui débordent.
+     * Shows [content] in French, runs [afterShow] (menus, expanding), then, for each language,
+     * applies [perLanguage], waits for [ready] and records the overflowing texts.
      */
     private fun render(
         name: String,
@@ -547,22 +546,22 @@ class TextOverflowTest {
             compose
                 .onAllNodes(SemanticsMatcher.keyIsDefined(SemanticsActions.GetTextLayoutResult), useUnmergedTree = true)
                 .fetchSemanticsNodes()
-        assertTrue("aucun texte affiché : $screen (${lang.tag})", nodes.size >= MIN_TEXT_NODES)
+        assertTrue("no text shown: $screen (${lang.tag})", nodes.size >= MIN_TEXT_NODES)
         nodes.forEach { node ->
             inspectTextNode(node, density).forEach { (text, detail) ->
-                overflows += Overflow(lang.tag, screen, resolver.keyOf(text, screenPrefix(screen)) ?: "texte:$text", text, detail)
+                overflows += Overflow(lang.tag, screen, resolver.keyOf(text, screenPrefix(screen)) ?: "text:$text", text, detail)
             }
         }
     }
 
-    /** Préfixe des clés de chaînes de l'écran [screen] (D5 : chaînes réparties par écran). */
+    /** String key prefix of the [screen] screen (D5: strings split by screen). */
     private fun screenPrefix(screen: String): String =
         when {
-            screen.startsWith("Accueil") -> "home_"
-            screen.startsWith("Lecture") -> "reading_"
-            screen.startsWith("Résultat") -> "result_"
-            screen.startsWith("Magasin") -> "trust_"
-            screen.startsWith("Introduction") || screen.startsWith("Contenu") -> "learn_"
+            screen.startsWith("Home") -> "home_"
+            screen.startsWith("Reading") -> "reading_"
+            screen.startsWith("Result") -> "result_"
+            screen.startsWith("Trust store") -> "trust_"
+            screen.startsWith("Introduction") || screen.startsWith("Chip contents") -> "learn_"
             else -> "about_"
         }
 
@@ -581,26 +580,26 @@ class TextOverflowTest {
         val report =
             buildString {
                 if (unexpected.isNotEmpty()) {
-                    appendLine("${unexpected.size} débordement(s) absent(s) de $KNOWN_OVERFLOWS :")
+                    appendLine("${unexpected.size} overflow(s) missing from $KNOWN_OVERFLOWS:")
                     unexpected.sorted().forEach { key ->
                         val occurrences = byKey.getValue(key)
                         val first = occurrences.first()
                         appendLine("$key")
-                        appendLine("    « ${first.text} »")
+                        appendLine("    \"${first.text}\"")
                         occurrences.distinctBy { it.screen to it.detail }.forEach { appendLine("    [${it.screen}] ${it.detail}") }
                     }
                 }
                 if (gone.isNotEmpty()) {
-                    appendLine("${gone.size} anomalie(s) listée(s) qui ne se produisent plus (à retirer de $KNOWN_OVERFLOWS) :")
+                    appendLine("${gone.size} listed anomaly(ies) that no longer occur (remove from $KNOWN_OVERFLOWS):")
                     gone.sorted().forEach { appendLine(it) }
                 }
             }
         fail(report)
     }
 
-    // --- Langues -------------------------------------------------------------------------------
+    // --- Languages -----------------------------------------------------------------------------
 
-    /** Langues proposées par `locales_config.xml`, lu à chaque exécution. */
+    /** Languages offered by `locales_config.xml`, read on every run. */
     private fun declaredLanguages(context: Context): List<Language> {
         val tags = mutableListOf<String>()
         context.resources.getXml(R.xml.locales_config).use { parser ->
@@ -610,24 +609,24 @@ class TextOverflowTest {
                 }
             }
         }
-        assertTrue("locales_config.xml vide", tags.size > 1)
+        assertTrue("locales_config.xml is empty", tags.size > 1)
         return tags.map { Language(it, Locale.forLanguageTag(it)) }
     }
 
     /**
-     * Garde-fou : chaque langue doit résoudre ses propres chaînes (et non retomber sur le
-     * français), et l'arabe et l'hébreu doivent s'écrire de droite à gauche.
+     * Safeguard: each language must resolve its own strings (and not fall back to French), and
+     * Arabic and Hebrew must be laid out right to left.
      */
     private fun checkLanguagesAreLoaded(context: Context) {
         val samples = listOf(R.string.home_read, R.string.reading_title, R.string.result_title, R.string.trust_title, R.string.about_title)
         val frenchSamples = samples.map { resources(french).getString(it) }
         languages.filter { it.tag != "fr" }.forEach { lang ->
             val localized = samples.map { resources(lang).getString(it) }
-            assertTrue("chaînes françaises pour ${lang.tag}", localized != frenchSamples)
+            assertTrue("French strings for ${lang.tag}", localized != frenchSamples)
         }
         listOf("ar", "iw").forEach { tag ->
             val lang = languages.firstOrNull { it.tag == tag } ?: return@forEach
-            assertEquals("sens d'écriture de $tag", View.LAYOUT_DIRECTION_RTL, configuration(context, lang).layoutDirection)
+            assertEquals("layout direction of $tag", View.LAYOUT_DIRECTION_RTL, configuration(context, lang).layoutDirection)
         }
     }
 
@@ -647,19 +646,19 @@ class TextOverflowTest {
             node.config.getOrNull(SemanticsProperties.ContentDescription)?.contains(string(id)) == true
         }
 
-    // --- Synchronisation -------------------------------------------------------------------------
+    // --- Synchronization -------------------------------------------------------------------------
 
-    /** Quelques images, puis la file du thread principal vidée. */
+    /** A few frames, then the main thread queue drained. */
     private fun settle(frames: Int = 5) {
         repeat(frames) {
             compose.mainClock.advanceTimeByFrame()
-            // Horloge de Robolectric : Choreographer, donc mesure et placement de la vue Compose.
+            // Robolectric clock: Choreographer, hence measure and layout of the Compose view.
             shadowOf(Looper.getMainLooper()).idleFor(FRAME)
         }
         compose.waitForIdle()
     }
 
-    /** Attend (en temps réel : lecture et chargements tournent hors du thread principal). */
+    /** Waits (in real time: reading and loading run off the main thread). */
     private fun awaitUi(
         what: String,
         condition: () -> Boolean,
@@ -668,7 +667,7 @@ class TextOverflowTest {
         while (true) {
             settle(frames = 1)
             if (condition()) return
-            if (System.nanoTime() > deadline) fail("délai dépassé : $what")
+            if (System.nanoTime() > deadline) fail("timed out: $what")
             Thread.sleep(POLL_MILLIS)
         }
     }
@@ -729,10 +728,10 @@ class TextOverflowTest {
         const val MIN_TEXT_NODES = 3
         const val OFF_SCREEN_REPEAT = 6
 
-        /** Images laissées au défilement animé d'une page de l'introduction. */
+        /** Frames allowed for the animated scrolling of an introduction page. */
         const val PAGE_ANIMATION_FRAMES = 60
 
-        /** Taille de police des scènes « police 200 % » (réglage maximal d'Android 14). */
+        /** Font scale of the "font 200%" scenes (maximum setting of Android 14). */
         const val LARGE_FONT_SCALE = 2f
         val FRAME: Duration = Duration.ofMillis(16)
         val TALL_LIST_HEIGHT = 25_000.dp
@@ -750,7 +749,7 @@ class TextOverflowTest {
     }
 }
 
-/** Contexte de l'activité avec les ressources d'une autre langue. */
+/** Activity context with the resources of another language. */
 private class LocalizedContext(
     base: Context,
     configuration: Configuration,
@@ -760,7 +759,7 @@ private class LocalizedContext(
     override fun getResources(): Resources = localized
 }
 
-/** Transport qui répond (ou lève) par [respond] à chaque APDU. */
+/** Transport that answers (or throws) through [respond] for each APDU. */
 private class FailingTransport(
     private val respond: () -> ByteArray,
 ) : CardTransport {
@@ -777,7 +776,7 @@ private class FailingTransport(
     }
 }
 
-/** Relaie [delegate], mais bloque toute APDU tant que [hold] est vrai, jusqu'à la fermeture. */
+/** Relays to [delegate], but blocks every APDU while [hold] is true, until closed. */
 private class HoldingTransport(
     private val delegate: CardTransport,
     private val hold: () -> Boolean,

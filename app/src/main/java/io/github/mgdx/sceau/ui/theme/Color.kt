@@ -2,7 +2,7 @@ package io.github.mgdx.sceau.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Couleurs de marque, reprises du logo.
+// Brand colors, taken from the logo.
 val SceauNavy = Color(0xFF1B2A41)
 val SceauIvory = Color(0xFFF4F1EA)
 val SceauGreen = Color(0xFF1F7A4D)
@@ -36,7 +36,7 @@ val LightSurfaceContainer = Color(0xFFE9E5DC)
 val LightSurfaceContainerHigh = Color(0xFFE3DFD6)
 val LightSurfaceContainerHighest = Color(0xFFDDD9CF)
 
-// Palette sombre : fond marine très foncé, primaire marine éclaircie, vert adouci.
+// Dark palette: very dark navy background, lightened navy primary, softened green.
 val DarkPrimary = Color(0xFFB4C6E6)
 val DarkOnPrimary = SceauNavy
 val DarkPrimaryContainer = Color(0xFF34425A)

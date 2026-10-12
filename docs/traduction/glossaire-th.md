@@ -1,46 +1,46 @@
-# Glossaire thaï (th)
+# Thai glossary (th)
 
-Vocabulaire des réglages Android en thaï et des passeports thaïlandais. Pas de point final (usage thaï), phrases séparées par une espace.
+Vocabulary of the Android settings in Thai and of Thai passports. No final period (Thai usage), sentences separated by a space.
 
-| Source FR | Cible | Note |
+| French source | Target | Note |
 |---|---|---|
 | puce | ชิป | |
 | document | เอกสาร | |
 | document d'identité | เอกสารแสดงตน | |
-| carte d'identité | บัตรประจำตัว | générique (pas seulement la บัตรประชาชน thaïe) |
+| carte d'identité | บัตรประจำตัว | generic (not only the Thai บัตรประชาชน) |
 | passeport | หนังสือเดินทาง | |
 | titulaire | ผู้ถือ | |
-| magasin de confiance | คลังใบรับรอง | forme courte, titres d'écran |
+| magasin de confiance | คลังใบรับรอง | short form, screen titles |
 | certificat | ใบรับรอง | |
 | certificat de lien | ใบรับรองเชื่อมโยง | |
-| empreinte (d'un certificat) | ลายนิ้วมือ | « ลายนิ้วมือ SHA-256 », usage des navigateurs |
+| empreinte (d'un certificat) | ลายนิ้วมือ | “ลายนิ้วมือ SHA-256”, browser usage |
 | empreinte (d'un groupe de données) | ค่าแฮช | |
 | émetteur | ผู้ออก | |
 | pays émetteur / État émetteur | ประเทศผู้ออก / ประเทศที่ออก | |
 | autorité de délivrance | หน่วยงานที่ออก | |
-| signature | ลายมือชื่อ | terme de la loi thaïe sur les transactions électroniques |
+| signature | ลายมือชื่อ | term from the Thai electronic transactions law |
 | signataire | ผู้ลงนาม | |
 | vérifier / vérification | ตรวจสอบ / การตรวจสอบ | |
-| lire | อ่าน | bouton |
-| réessayer | ลองอีกครั้ง | libellé Android |
-| annuler | ยกเลิก | libellé Android |
-| effacer (le résultat) | ล้างข้อมูล | distinct de « ลบ » |
-| supprimer | ลบ | libellé Android |
+| lire | อ่าน | button |
+| réessayer | ลองอีกครั้ง | Android label |
+| annuler | ยกเลิก | Android label |
+| effacer (le résultat) | ล้างข้อมูล | distinct from “ลบ” |
+| supprimer | ลบ | Android label |
 | importer | นำเข้า | |
-| Plus d'options | ตัวเลือกเพิ่มเติม | libellé Android |
+| Plus d'options | ตัวเลือกเพิ่มเติม | Android label |
 | À propos | เกี่ยวกับ | |
 | Authentique | ของแท้ | verdict |
 | Signature valide, puce non vérifiée | ลายมือชื่อถูกต้อง ยังไม่ได้ตรวจสอบชิป | verdict |
 | Émetteur inconnu | ไม่ทราบผู้ออก | verdict |
-| Échec | ไม่ผ่าน | verdict et statut |
-| nom | ชื่อสกุล | passeport thaï |
-| prénoms | ชื่อตัว | passeport thaï |
+| Échec | ไม่ผ่าน | verdict and status |
+| nom | ชื่อสกุล | Thai passport |
+| prénoms | ชื่อตัว | Thai passport |
 | date de naissance | วันเกิด | |
 | date d'expiration | วันหมดอายุ | |
 | date de délivrance | วันที่ออก | |
 | numéro du document | เลขที่เอกสาร | |
 | nationalité | สัญชาติ | |
-| JJ / MM / AAAA | วว / ดด / ปปปป | gabarit des formulaires thaïs ; le format précise « ปี ค.ศ. » (année grégorienne, pas bouddhiste) |
+| JJ / MM / AAAA | วว / ดด / ปปปป | template used on Thai forms; the format specifies “ปี ค.ศ.” (Gregorian year, not Buddhist) |
 | RGPD | GDPR | |
 | Mo | MB | |
-| CAN, MRZ, Master List, etc. | inchangés | termes ICAO jamais traduits |
+| CAN, MRZ, Master List, etc. | unchanged | ICAO terms, never translated |

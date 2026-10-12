@@ -1,1 +1,1 @@
-Lee y verifica el chip de documentos de identidad y pasaportes, sin conexión
+Lee y verifica el chip de pasaportes y documentos de identidad, sin conexión

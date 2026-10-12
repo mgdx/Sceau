@@ -2,9 +2,9 @@ Sceau loeb NFC kaudu ICAO 9303 isikut tõendavate dokumentide kiipi ja kontrolli
 
 <b>Toetatud dokumendid</b>
 <ul>
+<li>Kõigi riikide biomeetrilised passid, dokumendi numbri, sünniaja ja kehtivuse lõppkuupäeva abil</li>
 <li>Prantsuse ID-kaart (pangakaardi formaadis, alates 2021. aastast), kaardile trükitud 6-kohalise CAN-iga</li>
 <li>Euroopa ID-kaardid, CAN-i või MRZ-i abil</li>
-<li>Kõigi riikide biomeetrilised passid, dokumendi numbri, sünniaja ja kehtivuse lõppkuupäeva abil</li>
 </ul>
 
 <b>Mida Sceau näitab</b>
