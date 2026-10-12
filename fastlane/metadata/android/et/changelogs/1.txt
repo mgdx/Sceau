@@ -1,0 +1,6 @@
+Esimene avalik versioon.
+• Biomeetriliste passide, Prantsuse ID-kaardi ja Euroopa ID-kaartide lugemine NFC kaudu (PACE või BAC)
+• Foto, isikuandmed, allkiri ja lisaandmed
+• Passive, Chip ja Active Authentication, otsus ja kontrollide loend
+• ANTS-i ja 3 riigi CSCA-d, BSI Master List, Master Listide ja sertifikaatide import
+• Võrguühenduseta, andmeid ei säilitata, 45 keelt

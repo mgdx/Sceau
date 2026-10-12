@@ -1,0 +1,54 @@
+Sceau přes NFC čte čip dokladů totožnosti podle ICAO 9303 a ověřuje, že jsou pravé. Funguje zcela offline: žádné oprávnění k síti, nic se neuchovává, nic se neodesílá.
+
+<b>Podporované doklady</b>
+<ul>
+<li>Francouzský občanský průkaz (formát platební karty, od roku 2021), pomocí šestimístného čísla CAN vytištěného na průkazu</li>
+<li>Evropské občanské průkazy, pomocí CAN nebo MRZ</li>
+<li>Biometrické cestovní pasy všech zemí, pomocí čísla dokladu, data narození a data konce platnosti</li>
+</ul>
+
+<b>Co Sceau zobrazí</b>
+<ul>
+<li>Fotografii uloženou v čipu</li>
+<li>Osobní údaje: příjmení, jména, pohlaví, datum narození, státní občanství, číslo dokladu, vydávající stát, platnost do</li>
+<li>Vlastnoruční podpis držitele, pokud ho vydávající stát do čipu uložil</li>
+<li>Doplňující údaje, pokud je čip obsahuje (místo narození, adresa, vydávající úřad a datum vydání…)</li>
+</ul>
+
+<b>Co Sceau ověřuje</b>
+<ul>
+<li>Podpis údajů vydávajícím státem až ke známému kořenovému certifikátu a neporušenost každé datové skupiny (Passive Authentication)</li>
+<li>Že čip není klon, pokud to doklad umožňuje (Chip Authentication, Active Authentication)</li>
+</ul>
+Výsledkem je verdikt (Pravý, Platný podpis, ale čip neověřen, Neznámý vydavatel, Neúspěch) s podrobným seznamem ověření.
+
+<b>Důvěryhodné certifikáty</b>
+Sceau obsahuje francouzské certifikáty CSCA zveřejněné úřadem ANTS, certifikáty zveřejněné Spojeným královstvím, Gruzií a Lucemburskem pro jejich vlastní doklady a německý seznam Master List zveřejněný úřadem BSI, který pokrývá mimo jiné Evropskou unii, EHP, Švýcarsko a Spojené království. Na obrazovce důvěryhodných certifikátů lze vyhledávat podle země. U dokladu, jehož vydavatel není zahrnut, je verdikt „Neznámý vydavatel“; můžete importovat seznam Master List zveřejněný jiným státem nebo po kontrole otisku jednotlivý certifikát CSCA či propojovací certifikát a každou importovanou položku samostatně smazat. Seznamy odvolaných certifikátů se nekontrolují. Sceau není přidružen k ANTS ani BSI a nemá jejich schválení.
+
+<b>Známá omezení</b>
+<ul>
+<li>Německé občanské průkazy vydané před 2. srpnem 2021: čip je vyhrazen úřadům; Sceau ho nedokáže přečíst a upozorní na to. U novějších průkazů nelze přečíst adresu a místo narození.</li>
+<li>Německá karta eID pro občany EU: čip neobsahuje žádné osobní údaje; ověřuje se pouze jeho pravost.</li>
+<li>Italské občanské průkazy CIE 3.0 z konce roku 2017 až začátku roku 2018: Itálie zveřejnila anomálii v jejich doplňujících údajích; Sceau tyto údaje vyřadí a ověří zbytek dokladu.</li>
+</ul>
+
+<b>Soukromí</b>
+<ul>
+<li>Jediné oprávnění: NFC</li>
+<li>Žádné údaje přečtené z čipu se neukládají; paměť se vymaže při opuštění výsledku nebo při přechodu aplikace na pozadí</li>
+<li>Snímky obrazovky jsou v celé aplikaci zablokované</li>
+<li>Žádné reklamy, žádné sledovací prvky, žádné služby Google</li>
+</ul>
+
+<b>Další</b>
+<ul>
+<li>Čtyřstránkový úvod při prvním spuštění a obrazovka „Co obsahuje čip“</li>
+<li>Rozhraní ve 45 jazycích</li>
+</ul>
+
+<b>Podmínky použití</b>
+Sceau je určen k ověření vlastního dokladu nebo dokladu, který předloží jeho držitel. Podle GDPR je fotografie biometrickým údajem, pokud slouží k automatizovanému porovnávání: Sceau takové porovnání neprovádí. Verdikt neříká, zda byl doklad nahlášen jako ztracený nebo odcizený.
+
+Sceau nečte otisky prstů ani duhovku a nenačítá MRZ fotoaparátem.
+
+Svobodný software pod licencí GPL, pouze verze 3.

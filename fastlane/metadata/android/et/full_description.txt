@@ -1,0 +1,54 @@
+Sceau loeb NFC kaudu ICAO 9303 isikut tõendavate dokumentide kiipi ja kontrollib, et need on ehtsad. Rakendus töötab täiesti võrguühenduseta: puudub võrguluba, midagi ei säilitata ega saadeta.
+
+<b>Toetatud dokumendid</b>
+<ul>
+<li>Prantsuse ID-kaart (pangakaardi formaadis, alates 2021. aastast), kaardile trükitud 6-kohalise CAN-iga</li>
+<li>Euroopa ID-kaardid, CAN-i või MRZ-i abil</li>
+<li>Kõigi riikide biomeetrilised passid, dokumendi numbri, sünniaja ja kehtivuse lõppkuupäeva abil</li>
+</ul>
+
+<b>Mida Sceau näitab</b>
+<ul>
+<li>Kiibile salvestatud fotot</li>
+<li>Isikuandmeid: perekonnanimi, eesnimed, sugu, sünniaeg, kodakondsus, dokumendi number, väljaandja riik, kehtiv kuni</li>
+<li>Dokumendi kasutaja allkirja, kui väljaandja riik on selle kiibile salvestanud</li>
+<li>Lisaandmeid, kui kiip neid sisaldab (sünnikoht, aadress, väljaandja asutus ja väljaandmise kuupäev…)</li>
+</ul>
+
+<b>Mida Sceau kontrollib</b>
+<ul>
+<li>Väljaandja riigi allkirja andmetel kuni tuntud juursertifikaadini ja iga andmerühma terviklust (Passive Authentication)</li>
+<li>Et kiip pole kloon, kui dokument seda võimaldab (Chip Authentication, Active Authentication)</li>
+</ul>
+Tulemus on otsus (Ehtne, Allkiri kehtiv, kuid kiip kontrollimata, Tundmatu väljaandja, Ebaõnnestus) koos üksikasjaliku kontrollide loendiga.
+
+<b>Usaldushoidla</b>
+Sceau sisaldab ANTS-i avaldatud Prantsuse CSCA-sertifikaate, Ühendkuningriigi, Gruusia ja Luksemburgi poolt oma dokumentide jaoks avaldatud sertifikaate ning BSI avaldatud Saksa Master Listi, mis hõlmab muu hulgas Euroopa Liitu, EMP-d, Šveitsi ja Ühendkuningriiki. Usaldushoidla ekraanil saab otsida riigi järgi. Kui dokumendi väljaandjat hoidlas pole, on otsus „Tundmatu väljaandja“; saate importida mõne teise riigi avaldatud Master Listi või pärast sõrmejälje kontrollimist üksiku CSCA- või lingisertifikaadi ning kustutada iga imporditud elemendi eraldi. Tühistusnimekirju ei kontrollita. Sceau ei ole ANTS-i ega BSI-ga seotud ega nende poolt heaks kiidetud.
+
+<b>Teadaolevad piirangud</b>
+<ul>
+<li>Enne 2. augustit 2021 välja antud Saksa ID-kaardid: kiip on reserveeritud ametiasutustele; Sceau ei saa seda lugeda ja annab sellest teada. Uuematel kaartidel ei saa aadressi ja sünnikohta lugeda.</li>
+<li>Liidu kodanikele mõeldud Saksa eID-kaart: kiip ei sisalda isikuandmeid; kontrollitakse ainult selle ehtsust.</li>
+<li>Itaalia ID-kaardid CIE 3.0 ajavahemikust 2017. aasta lõpust 2018. aasta alguseni: Itaalia on avaldanud nende lisaandmetes esineva kõrvalekalde; Sceau jätab need andmed kõrvale ja kontrollib ülejäänud dokumenti.</li>
+</ul>
+
+<b>Privaatsus</b>
+<ul>
+<li>Ainus luba: NFC</li>
+<li>Kiibilt loetud andmeid ei salvestata; mälu kustutatakse tulemusest lahkumisel või kui rakendus läheb taustale</li>
+<li>Ekraanipildid on kogu rakenduses blokeeritud</li>
+<li>Reklaamid, jälgijad ja Google'i teenused puuduvad</li>
+</ul>
+
+<b>Muu</b>
+<ul>
+<li>Neljaleheküljeline tutvustus esmakordsel käivitamisel ja ekraan „Mida kiip sisaldab“</li>
+<li>Kasutajaliides 45 keeles</li>
+</ul>
+
+<b>Kasutustingimused</b>
+Sceau on mõeldud oma dokumendi või dokumendi kasutaja enda esitatud dokumendi kontrollimiseks. Isikuandmete kaitse üldmääruse (IKÜM) tähenduses on foto biomeetriline andmeüksus, kui seda kasutatakse automaatseks võrdlemiseks: Sceau sellist võrdlust ei tee. Otsus ei näita, kas dokument on kadunuks või varastatuks teatatud.
+
+Sceau ei loe sõrmejälgi ega iiriseandmeid ega skanni MRZ-i kaameraga.
+
+Vaba tarkvara ainult GPL versiooni 3 litsentsi alusel.
