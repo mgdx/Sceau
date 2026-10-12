@@ -36,19 +36,27 @@ Le plan de test se fait sur l'APK release, pas sur le debug : R8 (D24) peut reti
 
 ```bash
 keytool -genkeypair -v \
-  -keystore ~/cles/sceau-release.jks -storetype PKCS12 \
+  -keystore ~/.android-keys/sceau-release.jks -storetype PKCS12 \
   -alias sceau -keyalg RSA -keysize 4096 -validity 11000 \
   -dname "CN=mgdx, O=Sceau"
 ```
 
 - RSA 4096, validité de 11 000 jours (30 ans et plus) : Google Play comme F-Droid recommandent une validité au-delà de 2033 ;
-- le fichier vit **hors du dépôt** (ici `~/cles/`), avec un mot de passe fort tenu dans un gestionnaire de mots de passe ;
+- le fichier vit **hors du dépôt** (ici `~/.android-keys/`, à côté des clés des autres applications, chacune sous son propre nom et son propre alias), avec un mot de passe fort tenu dans un gestionnaire de mots de passe ;
 - **sauvegardes** chiffrées sur au moins deux supports distincts. Une clé perdue impose une nouvelle application (autre signature) ; une clé volée permet de publier une fausse mise à jour.
 
 Empreinte du certificat, à reporter dans la recette F-Droid (`AllowedAPKSigningKeys`, en minuscules, sans `:`) :
 
 ```bash
-keytool -list -v -keystore ~/cles/sceau-release.jks -alias sceau | grep 'SHA256:'
+keytool -J-Duser.language=en -list -v -keystore ~/.android-keys/sceau-release.jks -alias sceau | grep 'SHA256:'
+```
+
+`-J-Duser.language=en` contourne un bug de keytool 25 en français (`MissingFormatArgumentException` à l'affichage du certificat).
+
+Clé créée le 2026-10-12, mot de passe et fichier tenus dans Bitwarden (« Sceau — keystore release Android »). Empreinte :
+
+```
+DE:E8:10:5B:0B:0F:27:B4:44:B3:30:3E:0B:34:02:28:35:18:8D:49:D9:52:FF:25:42:FB:BC:05:79:27:43:4B
 ```
 
 ## 4. Construire et signer
@@ -75,7 +83,7 @@ VERSION=0.9
 OUT=~/releases/sceau-$VERSION && mkdir -p "$OUT"
 for abi in arm64-v8a armeabi-v7a x86 x86_64 universal; do
   $BT/apksigner sign \
-    --ks ~/cles/sceau-release.jks --ks-key-alias sceau \
+    --ks ~/.android-keys/sceau-release.jks --ks-key-alias sceau \
     --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true \
     --alignment-preserved true \
     --out "$OUT/sceau-$VERSION-$abi.apk" \
