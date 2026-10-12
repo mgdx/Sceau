@@ -1,0 +1,6 @@
+Prima versiune publică.
+• Citire NFC a pașapoartelor biometrice, a cărții de identitate franceze și a cărților de identitate europene (PACE sau BAC)
+• Fotografie, identitate, semnătură și date suplimentare
+• Passive, Chip și Active Authentication, verdict și listă de verificare
+• CSCA de la ANTS și din 3 state, Master List a BSI, import de Master List și de certificate
+• Offline, nicio dată păstrată, 45 de limbi

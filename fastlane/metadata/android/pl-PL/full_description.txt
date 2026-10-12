@@ -1,0 +1,54 @@
+Sceau odczytuje przez NFC chip dokumentów tożsamości zgodnych z normą ICAO 9303 i sprawdza, czy są autentyczne. Działa całkowicie offline: nie ma uprawnienia do sieci, niczego nie przechowuje i niczego nie wysyła.
+
+<b>Obsługiwane dokumenty</b>
+<ul>
+<li>Francuski dowód osobisty (w formacie karty płatniczej, od 2021 r.) z 6-cyfrowym numerem CAN wydrukowanym na karcie</li>
+<li>Europejskie dowody osobiste z numerem CAN lub strefą MRZ</li>
+<li>Paszporty biometryczne z dowolnego kraju na podstawie numeru dokumentu, daty urodzenia i daty ważności</li>
+</ul>
+
+<b>Co pokazuje Sceau</b>
+<ul>
+<li>Zdjęcie zapisane w chipie</li>
+<li>Tożsamość: nazwisko, imiona, płeć, data urodzenia, obywatelstwo, numer dokumentu, państwo wydające, data ważności</li>
+<li>Własnoręczny podpis posiadacza, jeśli państwo wydające zapisało go w chipie</li>
+<li>Dane dodatkowe, jeśli chip je zawiera (miejsce urodzenia, adres, organ wydający i data wydania…)</li>
+</ul>
+
+<b>Co weryfikuje Sceau</b>
+<ul>
+<li>Podpis danych złożony przez państwo wydające, aż do znanego certyfikatu głównego, oraz integralność każdej grupy danych (Passive Authentication)</li>
+<li>To, że chip nie jest klonem, jeśli dokument na to pozwala (Chip Authentication, Active Authentication)</li>
+</ul>
+Wynikiem jest werdykt (Autentyczny, Podpis ważny, ale chip niezweryfikowany, Nieznany wystawca, Niepowodzenie) wraz ze szczegółową listą kontrolną.
+
+<b>Zaufane certyfikaty</b>
+Sceau zawiera francuskie certyfikaty CSCA opublikowane przez ANTS, certyfikaty opublikowane przez Wielką Brytanię, Gruzję i Luksemburg dla ich własnych dokumentów oraz niemiecką Master List opublikowaną przez BSI, która obejmuje m.in. Unię Europejską, EOG, Szwajcarię i Wielką Brytanię. Na ekranie zaufanych certyfikatów można wyszukać kraj. Dla dokumentu, którego wystawcy tam nie ma, werdykt brzmi „Nieznany wystawca”; można wtedy zaimportować Master List opublikowaną przez inne państwo albo pojedynczy certyfikat CSCA lub certyfikat łączący po sprawdzeniu jego odcisku, a każdy zaimportowany element usunąć osobno. Listy unieważnionych certyfikatów nie są sprawdzane. Sceau nie jest powiązany z ANTS ani BSI, ani przez nie zatwierdzony.
+
+<b>Znane ograniczenia</b>
+<ul>
+<li>Niemieckie dowody osobiste wydane przed 2 sierpnia 2021 r.: chip jest zastrzeżony dla organów, Sceau nie może go odczytać i informuje o tym. W nowszych dowodach nie da się odczytać adresu ani miejsca urodzenia.</li>
+<li>Niemiecka karta eID dla obywateli UE: chip nie zawiera żadnych danych tożsamości; weryfikowana jest tylko jego autentyczność.</li>
+<li>Włoskie dowody osobiste CIE 3.0 z okresu od końca 2017 r. do początku 2018 r.: Włochy opublikowały informację o anomalii w ich danych dodatkowych; Sceau pomija te dane i weryfikuje resztę dokumentu.</li>
+</ul>
+
+<b>Prywatność</b>
+<ul>
+<li>Jedyne uprawnienie: NFC</li>
+<li>Żadne dane odczytane z chipu nie są zapisywane; pamięć jest czyszczona po zamknięciu wyniku lub przeniesieniu aplikacji w tło</li>
+<li>Zrzuty ekranu są zablokowane w całej aplikacji</li>
+<li>Bez reklam, bez trackerów, bez usług Google</li>
+</ul>
+
+<b>Inne</b>
+<ul>
+<li>Czterostronicowe wprowadzenie przy pierwszym uruchomieniu oraz ekran „Co zawiera chip”</li>
+<li>Interfejs w 45 językach</li>
+</ul>
+
+<b>Przeznaczenie</b>
+Sceau służy do sprawdzania własnego dokumentu lub dokumentu okazanego przez jego posiadacza. W rozumieniu RODO zdjęcie jest daną biometryczną, gdy służy do automatycznego porównywania: Sceau takiego porównania nie wykonuje. Werdykt nie mówi, czy dokument został zgłoszony jako utracony lub skradziony.
+
+Sceau nie odczytuje odcisków palców ani obrazu tęczówki i nie skanuje strefy MRZ aparatem.
+
+Wolne oprogramowanie na licencji GPL wyłącznie w wersji 3.

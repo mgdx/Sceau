@@ -1,0 +1,54 @@
+Sceau lexon me NFC çipin e dokumenteve të identitetit sipas standardit ICAO 9303 dhe verifikon nëse janë autentikë. Funksionon plotësisht offline: pa leje rrjeti, asgjë nuk ruhet, asgjë nuk dërgohet.
+
+<b>Dokumentet e mbështetura</b>
+<ul>
+<li>Letërnjoftimi kombëtar francez (në formatin e kartës bankare, që nga viti 2021), me kodin CAN me 6 shifra të shtypur në kartë</li>
+<li>Letërnjoftimet evropiane, me kodin CAN ose zonën MRZ</li>
+<li>Pasaportat biometrike të çdo vendi, me numrin e dokumentit, datën e lindjes dhe datën e skadimit</li>
+</ul>
+
+<b>Çfarë shfaq Sceau</b>
+<ul>
+<li>Fotografinë e ruajtur në çip</li>
+<li>Identitetin: mbiemri, emri, gjinia, data e lindjes, shtetësia, numri i dokumentit, shteti lëshues, data e skadimit</li>
+<li>Nënshkrimin me dorë të mbajtësit, nëse shteti lëshues e ka ruajtur në çip</li>
+<li>Të dhënat shtesë kur çipi i përmban (vendi i lindjes, adresa, autoriteti lëshues dhe data e lëshimit…)</li>
+</ul>
+
+<b>Çfarë verifikon Sceau</b>
+<ul>
+<li>Nënshkrimin e të dhënave nga shteti lëshues, deri te një certifikatë rrënjë e njohur, dhe integritetin e çdo grupi të dhënash (Passive Authentication)</li>
+<li>Që çipi nuk është klon, kur dokumenti e lejon (Chip Authentication, Active Authentication)</li>
+</ul>
+Rezultati është një vlerësim (Autentik, Nënshkrim i vlefshëm, por çipi i paverifikuar, Lëshues i panjohur, Dështim) me një listë kontrolli të hollësishme.
+
+<b>Certifikatat e besuara</b>
+Sceau përfshin certifikatat CSCA franceze të publikuara nga ANTS, certifikata të publikuara nga Mbretëria e Bashkuar, Gjeorgjia dhe Luksemburgu për dokumentet e tyre, si dhe Master List gjermane të publikuar nga BSI, e cila mbulon ndër të tjera Bashkimin Evropian, ZEE-në, Zvicrën dhe Mbretërinë e Bashkuar. Në ekranin e certifikatave të besuara mund të kërkosh sipas vendit. Për një dokument, lëshuesi i të cilit nuk përfshihet, vlerësimi është „Lëshues i panjohur“; mund të importosh një Master List të publikuar nga një shtet tjetër, ose një certifikatë të vetme CSCA ose lidhëse pasi të kesh kontrolluar gjurmën e saj, dhe ta fshish veç e veç çdo element të importuar. Listat e revokimit nuk kontrollohen. Sceau nuk është i lidhur me ANTS-në ose BSI-në dhe nuk është i miratuar prej tyre.
+
+<b>Kufizime të njohura</b>
+<ul>
+<li>Letërnjoftimet gjermane të lëshuara para 2 gushtit 2021: çipi është i rezervuar për autoritetet; Sceau nuk mund ta lexojë dhe e njofton këtë. Te letërnjoftimet më të reja, adresa dhe vendi i lindjes nuk mund të lexohen.</li>
+<li>Karta eID gjermane për shtetasit e BE-së: çipi nuk përmban asnjë të dhënë identiteti; verifikohet vetëm autenticiteti i tij.</li>
+<li>Letërnjoftimet italiane CIE 3.0 nga fundi i 2017-s deri në fillim të 2018-s: Italia ka publikuar një anomali në të dhënat e tyre shtesë; Sceau i lë mënjanë këto të dhëna dhe verifikon pjesën tjetër të dokumentit.</li>
+</ul>
+
+<b>Privatësia</b>
+<ul>
+<li>E vetmja leje: NFC</li>
+<li>Asnjë e dhënë e lexuar nga çipi nuk ruhet; memoria fshihet kur del nga rezultati ose kur aplikacioni kalon në sfond</li>
+<li>Pamjet e ekranit janë të bllokuara në të gjithë aplikacionin</li>
+<li>Pa reklama, pa gjurmues, pa shërbime Google</li>
+</ul>
+
+<b>Të tjera</b>
+<ul>
+<li>Hyrje me katër faqe në nisjen e parë dhe ekrani „Çfarë përmban çipi“</li>
+<li>Ndërfaqe në 45 gjuhë</li>
+</ul>
+
+<b>Përdorimi i synuar</b>
+Sceau është menduar për të verifikuar dokumentin tënd ose një dokument të paraqitur nga vetë mbajtësi i tij. Sipas Rregullores së Përgjithshme për Mbrojtjen e të Dhënave (GDPR), fotografia është e dhënë biometrike kur përdoret për krahasim të automatizuar: Sceau nuk bën një krahasim të tillë. Vlerësimi nuk tregon nëse dokumenti është deklaruar i humbur apo i vjedhur.
+
+Sceau nuk lexon shenjat e gishtave ose të dhënat e irisit dhe nuk e skanon zonën MRZ me kamerë.
+
+Softuer i lirë me licencën GPL, vetëm versioni 3.

@@ -1,0 +1,1 @@
+Lê e verifica o chip de cartões de identidade e passaportes, totalmente offline
