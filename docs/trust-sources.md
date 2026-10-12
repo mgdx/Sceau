@@ -18,7 +18,7 @@ indique si Sceau peut l'embarquer dans un APK libre (GPLv3, F-Droid).
   « Historique »). Les sources nationales embarquées (GB, GE, LU, et GR jusqu'à son retrait le
   2026-10-11, D48) et les bascules annoncées (DK, NO, KW) ont été revues à cette date ; les fiches
   concernées le signalent. Les autres fiches et les chiffres de gain ne sont pas recalculés.
-- **Revérification du 2026-10-12** (contrôles avant release 0.9) : nouvelle Master List BSI,
+- **Revérification du 2026-10-12** (contrôles avant release 1.0.0) : nouvelle Master List BSI,
   signée le 2026-10-01 (609 certificats, 117 émetteurs ; détail dans `docs/trust-store.md`,
   « Historique »).
 - **Méthode** : téléchargement uniquement depuis des domaines gouvernementaux ou institutionnels.

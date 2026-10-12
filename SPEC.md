@@ -349,14 +349,14 @@ app/src/main/cpp/test/       harnais de test hôte sous sanitizers (hors APK)
 testchip/                    PKI factice, puce simulée, CNIe spécimen (tests et debug)
 ```
 
-Releases : dépôt public https://github.com/mgdx/Sceau ; APK par architecture et APK universel, signés par l'auteur, publiés sur les releases GitHub (`sceau-<version>-<abi>.apk`, `sceau-<version>-universal.apk`, `SHA256SUMS`), tag annoté `vX.Y` (`vX.Y.Z` pour un correctif), changelog Fastlane à jour. F-Droid reconstruit et publie le seul APK universel, signé par l'auteur grâce aux builds reproductibles (D25, D38). Procédure : `docs/release.md`. Préparation de la soumission à F-Droid avec le skill `android-fdroid`.
+Releases : dépôt public https://github.com/mgdx/Sceau ; APK par architecture et APK universel, signés par l'auteur, publiés sur les releases GitHub (`sceau-<version>-<abi>.apk`, `sceau-<version>-universal.apk`, `SHA256SUMS`), tag annoté `vX.Y.Z` (D53), changelog Fastlane à jour. F-Droid reconstruit et publie le seul APK universel, signé par l'auteur grâce aux builds reproductibles (D25, D38). Procédure : `docs/release.md`. Préparation de la soumission à F-Droid avec le skill `android-fdroid`.
 
 ## 11. Jalons
 
-État au 2026-10-06 : Socle, Lecture, Vérification et Finitions atteints ; Publication en cours, première release publique en version 0.9 (tag `v0.9`, D38).
+État au 2026-10-12 : Socle, Lecture, Vérification et Finitions atteints ; Publication en cours, première release publique en version 1.0.0 (tag `v1.0.0`, D53), soumission F-Droid à suivre.
 
 1. **Socle** (atteint) : modules, CI, ktlint, magasin de confiance chargé et testé, fabrique de test crypto.
 2. **Lecture** (atteint) : transport `IsoDep`, PACE et BAC, lecture des DG, affichage brut de DG1 et de la photo.
 3. **Vérification** (atteint) : PA, CA, AA, `VerificationReport`, écran de résultat complet avec verdict et liste de contrôle.
 4. **Finitions** (atteint) : données complémentaires DG11 et DG12, écran magasin de confiance et import, écran À propos, effacement mémoire vérifié, `FLAG_SECURE`, traductions en-US, corrections de l'audit de sécurité.
-5. **Publication** (en cours) : revue sécurité, plan de test sur appareil (APK release signé compris), métadonnées Fastlane, première release 0.9, soumission F-Droid.
+5. **Publication** (en cours) : revue sécurité, plan de test sur appareil (APK release signé compris), métadonnées Fastlane, première release 1.0.0, soumission F-Droid.

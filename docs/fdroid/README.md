@@ -6,7 +6,7 @@
 
 F-Droid construit l'APK **universel** depuis le tag (`app-universal-release-unsigned.apk`), télécharge l'APK signé par l'auteur (champ `binary:`), recopie sa signature sur son propre APK et vérifie le résultat. Si le contenu est identique octet pour octet, F-Droid publie l'APK de l'auteur, avec sa signature : une installation venue de F-Droid et une autre venue des releases GitHub (même APK universel) peuvent alors se mettre à jour l'une l'autre. Détails : [`../reproducible-builds.md`](../reproducible-builds.md).
 
-L'asset attendu sur la release GitHub s'appelle **`sceau-<version>-universal.apk`** (par exemple `sceau-0.9-universal.apk`, URL `https://github.com/mgdx/Sceau/releases/download/v0.9/sceau-0.9-universal.apk`). Ce nom est fixé par [`../release.md`](../release.md) : le changer impose de changer la recette.
+L'asset attendu sur la release GitHub s'appelle **`sceau-<version>-universal.apk`** (par exemple `sceau-1.0.0-universal.apk`, URL `https://github.com/mgdx/Sceau/releases/download/v1.0.0/sceau-1.0.0-universal.apk`). Ce nom est fixé par [`../release.md`](../release.md) : le changer impose de changer la recette.
 
 ## Manifeste
 
@@ -30,13 +30,13 @@ Ces modifications ne changent pas l'APK. Vérifié dans un clone : `./gradlew :a
 1. **`commit:`** : hash complet du commit du tag, jamais le nom du tag (un tag peut être déplacé) :
 
    ```bash
-   git rev-parse 'v0.9^{commit}'
+   git rev-parse 'v1.0.0^{commit}'
    ```
 
 2. **`AllowedAPKSigningKeys:`** : empreinte SHA-256 du certificat de signature, en minuscules, sans `:` ni espace :
 
    ```bash
-   apksigner verify --print-certs sceau-0.9-universal.apk | grep 'SHA-256'
+   apksigner verify --print-certs sceau-1.0.0-universal.apk | grep 'SHA-256'
    ```
 
    Elle ne change jamais tant que le keystore est le même (`docs/release.md`, étape « Keystore »).
@@ -56,4 +56,4 @@ fdroid build -v -l io.github.mgdx.sceau                       # construit et com
 
 Puis ouvrir une merge request sur fdroiddata (branche nommée d'après l'identifiant de l'application), en joignant le rapport du skill `android-fdroid`.
 
-Pour une nouvelle version, F-Droid ajoute lui-même le bloc `Builds` (`AutoUpdateMode: Version`, tags `v0.9`, `v1.0`, `v1.0.1`…), à condition que l'asset `sceau-<version>-universal.apk` soit publié sous ce nom.
+Pour une nouvelle version, F-Droid ajoute lui-même le bloc `Builds` (`AutoUpdateMode: Version`, tags `v1.0.0`, `v1.0.1`, `v1.1.0`…), à condition que l'asset `sceau-<version>-universal.apk` soit publié sous ce nom.

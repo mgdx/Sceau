@@ -1,5 +1,5 @@
 # Brouillon de recette fdroiddata pour Sceau (metadata/io.github.mgdx.sceau.yml).
-# Mode d'emploi : docs/fdroid/README.md. Décisions : D25 (builds reproductibles), D38.
+# Mode d'emploi : docs/fdroid/README.md. Décisions : D25 (builds reproductibles), D38, D53.
 #
 # Un seul APK, l'universel : pas de VercodeOperation, versionCode identique à celui de
 # app/build.gradle.kts. Les APK par architecture restent réservés aux releases GitHub.
@@ -26,9 +26,9 @@ RepoType: git
 Repo: https://github.com/mgdx/Sceau.git
 
 Builds:
-  - versionName: '0.9'
+  - versionName: '1.0.0'
     versionCode: 1
-    commit: # À REMPLIR : hash complet du commit pointé par le tag v0.9 (git rev-parse v0.9^{commit})
+    commit: # À REMPLIR : hash complet du commit pointé par le tag v1.0.0 (git rev-parse v1.0.0^{commit})
     subdir: app
     submodules: true
     sudo:
@@ -52,10 +52,10 @@ Builds:
 
 # SHA-256 du certificat de signature (clé créée le 2026-10-12, docs/release.md §3),
 # en minuscules sans « : ». À recontrôler sur l'APK signé :
-# apksigner verify --print-certs sceau-0.9-universal.apk, ligne « certificate SHA-256 digest ».
+# apksigner verify --print-certs sceau-1.0.0-universal.apk, ligne « certificate SHA-256 digest ».
 AllowedAPKSigningKeys: dee8105b0b0f27b444b3303e0b34022835188d49d952ff2542fbbc057927434b
 
 AutoUpdateMode: Version
 UpdateCheckMode: Tags ^v[0-9.]+$
-CurrentVersion: '0.9'
+CurrentVersion: '1.0.0'
 CurrentVersionCode: 1

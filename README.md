@@ -160,14 +160,16 @@ des données sensibles”.
 
 ## Installing
 
-Sceau is not published yet. The first release, `v0.9`, is in preparation: it
-will come first on the [releases page](https://github.com/mgdx/Sceau/releases)
-of this repository (one APK per architecture, with `arm64-v8a` for almost any
-recent phone, plus a universal one and a `SHA256SUMS` file), then on F-Droid.
-Builds are reproducible, so F-Droid will serve the very APK signed by the
-author ([how](docs/reproducible-builds.md)).
+Download the APK from the [releases page](https://github.com/mgdx/Sceau/releases)
+of this repository: one APK per architecture (`arm64-v8a` for almost any recent
+phone), a universal one, and a `SHA256SUMS` file. Sceau will then come to
+F-Droid. Builds are reproducible, so F-Droid will serve the very APK signed by
+the author ([how](docs/reproducible-builds.md)).
 
-Until then, you can build it from source (below).
+The signing certificate's SHA-256 fingerprint is
+`DE:E8:10:5B:0B:0F:27:B4:44:B3:30:3E:0B:34:02:28:35:18:8D:49:D9:52:FF:25:42:FB:BC:05:79:27:43:4B`.
+
+You can also build it from source (below).
 
 Requires Android 8.0 or later, with NFC. The application also installs without
 NFC and says so when opened.

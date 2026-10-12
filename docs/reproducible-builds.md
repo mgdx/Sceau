@@ -44,7 +44,7 @@ Les build-tools du SDK ne sont pas utilisés pour produire l'APK (aapt2 vient de
 
 ```bash
 scripts/check-reproducible.sh            # commit HEAD
-scripts/check-reproducible.sh v0.9       # une révision donnée
+scripts/check-reproducible.sh v1.0.0     # une révision donnée
 KEEP=1 scripts/check-reproducible.sh     # garde les deux arbres pour enquêter
 ```
 
