@@ -514,7 +514,7 @@ Format : date, contexte, décision, justification, écart à la SPEC concerné.
 - **Limite** : aucun document réel portant DG7 n'a encore été lu (TP-37) ; la CNIe française n'en porte pas. Traductions faites sans relecture par des locuteurs natifs (comme D27).
 - **Écart à la SPEC** : §6.1 étape 4 (liste des DG lus élargie à DG7) ; §5.3 (section « Signature du titulaire ») ; §8 (DG7 dans les tableaux remis à zéro) ; §9.1 (DG7 parmi les DG signés non fournis). SPEC mise à jour avec renvoi à D37.
 
-## D38. Première release publique 0.9 : licence, hébergement, APK publiés (licence révisée par D51)
+## D38. Première release publique 0.9 : licence, hébergement, APK publiés (licence révisée par D51, version révisée par D53)
 
 - **Date** : 2026-10-06 (décisions de l'auteur).
 - **Contexte** : le jalon Publication (SPEC §11) demande une première release et la soumission à F-Droid. Restaient à fixer le numéro de version (`versionName = "1.0"` depuis le Socle, sans release), la licence exacte (le README, la SPEC et `docs/dependencies.md` disaient « GPLv3 », l'écran À propos et les en-têtes C `GPL-3.0-or-later`), l'hébergement, les APK publiés sur chaque canal et le format des tags (SPEC §10 disait `vX.Y.Z`).
@@ -678,3 +678,11 @@ Format : date, contexte, décision, justification, écart à la SPEC concerné.
 - **Décision** : section « Soutenir Sceau » dans l'écran « À propos », juste après « Licence et code source » et dans le même style : une phrase (« Sceau est gratuit et sans publicité. Vous pouvez soutenir son développement par un don sur Liberapay. ») et un bouton « Faire un don ». Le bouton ouvre l'URL (`about_donate_url`, non traduisible) dans le navigateur par un Intent `ACTION_VIEW`, avec la même fonction `openUrl` et le même message « Aucune application ne peut ouvrir ce lien. » que le lien vers le dépôt. Ni WebView, ni widget, ni image chargée en ligne. Textes traduits dans les 45 langues ; « Liberapay » n'est pas traduit.
 - **Justification** : aucune permission réseau n'est ajoutée, l'application ne contacte toujours aucun serveur ; c'est le navigateur choisi par l'utilisateur qui ouvre la page, à sa demande. Un lien de don n'est pas une anti-feature F-Droid (ni `NonFreeNet`, ni `Ads`, ni `Tracking`) : la recette le déclare par le champ `Liberapay`, que F-Droid affiche dans sa fiche. Test : `DonationLinkTest` (fr et en, section affichée et Intent `ACTION_VIEW` vers l'URL de Liberapay à l'appui).
 - **Écart à la SPEC** : §5.5 mis à jour.
+
+## D53. Première release publique en 1.0.0, numérotation `X.Y.Z` (révise D38)
+
+- **Date** : 2026-10-12 (décision de l'auteur).
+- **Contexte** : D38 avait fixé la première release à 0.9 (tag `v0.9`) et réservé « 1.0 » à une version dont le plan de test aurait été mené sur plusieurs documents réels et appareils. Aucune release n'a encore été publiée.
+- **Décision** : la première release publique est la **1.0.0** : `versionName = "1.0.0"`, `versionCode = 1`, tag annoté `v1.0.0`, assets `sceau-1.0.0-<abi>.apk` et `sceau-1.0.0-universal.apk`. Les versions suivent désormais toujours le format `X.Y.Z` (tag `vX.Y.Z`), correctifs compris, comme le disait la SPEC §10 avant D38. Contrôles de la release (docs/release.md §2) : `check`, magasin de confiance (Master List BSI mise à jour, certificats ANTS vérifiés par l'auteur), OpenJPEG et reproductibilité faits ; l'auteur renonce pour cette version à une nouvelle revue de sécurité (la dernière, du 2026-10-07, n'a laissé aucune faille haute ni critique ouverte).
+- **Justification** : choix de l'auteur. La lecture réelle a été validée sur passeport français (Fairphone 3) ; l'APK release signé est vérifié sur cet appareil avant publication. La recette F-Droid (`UpdateCheckMode: Tags ^v[0-9.]+$`) et le nommage des assets acceptent ce format sans autre changement.
+- **Écart à la SPEC** : §10 et §11 mis à jour.

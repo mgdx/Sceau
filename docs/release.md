@@ -1,6 +1,6 @@
 # Publier une release
 
-Procédure pas à pas pour publier une version de Sceau sur les releases GitHub (https://github.com/mgdx/Sceau/releases) puis sur F-Droid. Décisions : D2 (splits ABI), D25 (builds reproductibles), D38 (première release 0.9, licence, hébergement, APK universel pour F-Droid). Exemple pris : la version **0.9**.
+Procédure pas à pas pour publier une version de Sceau sur les releases GitHub (https://github.com/mgdx/Sceau/releases) puis sur F-Droid. Décisions : D2 (splits ABI), D25 (builds reproductibles), D38 (licence, hébergement, APK universel pour F-Droid), D53 (première release 1.0.0, numérotation `X.Y.Z`). Exemple pris : la version **1.0.0**.
 
 Règles qui ne souffrent aucune exception :
 
@@ -10,9 +10,9 @@ Règles qui ne souffrent aucune exception :
 
 ## 1. Préparer la version
 
-1. `app/build.gradle.kts` : `versionName` (format `X.Y`, ou `X.Y.Z` pour un correctif) et `versionCode` (entier strictement croissant ; `1` pour 0.9). Un seul `versionCode` pour tous les APK : pas de code par ABI (D38).
+1. `app/build.gradle.kts` : `versionName` (format `X.Y.Z`) et `versionCode` (entier strictement croissant ; `1` pour 1.0.0). Un seul `versionCode` pour tous les APK : pas de code par ABI (D38).
 2. Changelog Fastlane : `fastlane/metadata/android/fr-FR/changelogs/<versionCode>.txt` et `en-US/…` (500 caractères au plus).
-3. `docs/` à jour (SPEC §11, `CLAUDE.md`, décisions), commit `chore(release): version 0.9` sur `main`.
+3. `docs/` à jour (SPEC §11, `CLAUDE.md`, décisions), commit `chore(release): version 1.0.0` sur `main`.
 
 ## 2. Contrôles avant release
 
@@ -79,7 +79,7 @@ $BT/zipalign -c -P 16 4 app/build/outputs/apk/release/app-universal-release-unsi
 Signature avec les schémas v1, v2 et v3 (v1 n'est pas exigé par minSdk 26 mais `apksigcopier`, l'outil de F-Droid, sait le recopier, et il ne coûte rien), en préservant l'alignement existant, avec le nommage des assets :
 
 ```bash
-VERSION=0.9
+VERSION=1.0.0
 OUT=~/releases/sceau-$VERSION && mkdir -p "$OUT"
 for abi in arm64-v8a armeabi-v7a x86 x86_64 universal; do
   $BT/apksigner sign \
@@ -122,19 +122,19 @@ Nommage des assets, à ne pas changer (la recette F-Droid en dépend pour l'univ
 
 ## 5. Tag et release GitHub
 
-Tag **annoté**, au format `vX.Y` (`vX.Y.Z` pour un correctif), sur le commit exact construit à l'étape 4 :
+Tag **annoté**, au format `vX.Y.Z`, sur le commit exact construit à l'étape 4 :
 
 ```bash
-git tag -a v0.9 -m "Sceau 0.9"
+git tag -a v1.0.0 -m "Sceau 1.0.0"
 git push origin main
 git push --tags
-gh release create v0.9 \
-  --title "Sceau 0.9" \
+gh release create v1.0.0 \
+  --title "Sceau 1.0.0" \
   --notes-file fastlane/metadata/android/fr-FR/changelogs/1.txt \
-  "$OUT"/sceau-0.9-*.apk "$OUT"/SHA256SUMS
+  "$OUT"/sceau-1.0.0-*.apk "$OUT"/SHA256SUMS
 ```
 
-Ne jamais déplacer un tag publié : F-Droid et Obtainium s'y fient. Une erreur se corrige par une nouvelle version (`v0.9.1`).
+Ne jamais déplacer un tag publié : F-Droid et Obtainium s'y fient. Une erreur se corrige par une nouvelle version (`v1.0.1`).
 
 Puis installer l'APK publié (téléchargé depuis la page de la release, pas le fichier local) sur un téléphone et refaire une lecture réelle : c'est l'APK que recevront les utilisateurs.
 
@@ -142,4 +142,4 @@ Puis installer l'APK publié (téléchargé depuis la page de la release, pas le
 
 Première soumission : remplir `docs/fdroid/io.github.mgdx.sceau.yml` (hash du commit du tag, empreinte du certificat) et suivre [`docs/fdroid/README.md`](fdroid/README.md) : `fdroid build` dans un clone de fdroiddata, puis merge request sur https://gitlab.com/fdroid/fdroiddata.
 
-Versions suivantes : rien à faire si le tag `vX.Y` et l'asset `sceau-X.Y-universal.apk` sont publiés et que le `versionCode` a augmenté : F-Droid détecte le tag (`UpdateCheckMode: Tags`), ajoute le bloc de build et compare son APK à celui de la release. Si la comparaison échoue, F-Droid ne publie rien : relancer `scripts/check-reproducible.sh vX.Y` et lire `docs/reproducible-builds.md`.
+Versions suivantes : rien à faire si le tag `vX.Y.Z` et l'asset `sceau-X.Y.Z-universal.apk` sont publiés et que le `versionCode` a augmenté : F-Droid détecte le tag (`UpdateCheckMode: Tags`), ajoute le bloc de build et compare son APK à celui de la release. Si la comparaison échoue, F-Droid ne publie rien : relancer `scripts/check-reproducible.sh vX.Y.Z` et lire `docs/reproducible-builds.md`.
