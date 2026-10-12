@@ -106,7 +106,7 @@ class InvalidCertificateException(
 object TrustStores {
     /**
      * Nombre maximal de certificats d'une Master List (audit V22, décision D22) : plus de trois
-     * fois la plus grosse Master List réelle connue (Suède, 646 certificats ; BSI embarquée : 608).
+     * fois la plus grosse Master List réelle connue (Suède, 646 certificats ; BSI embarquée : 609).
      * Au-delà, la liste est refusée par `TOO_MANY_CERTIFICATES`.
      */
     const val MAX_MASTER_LIST_CERTIFICATES = 2000

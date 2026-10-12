@@ -171,13 +171,13 @@ class MasterListTest {
         assertRejected("TOO_MANY_CERTIFICATES", rebuiltSignedData(certificates = DERSet(fillers.toTypedArray())))
     }
 
-    /** La Master List réelle du BSI (608 certificats) reste acceptée à l'import, sous le plafond. */
+    /** La Master List réelle du BSI (609 certificats) reste acceptée à l'import, sous le plafond. */
     @Test
     fun bsiMasterListIsAcceptedAsImport() {
         val bytes = checkNotNull(TrustStores::class.java.getResourceAsStream("/trust/de-bsi-master-list.ml")).use { it.readBytes() }
         val list = TrustStores.parseMasterList(bytes)
 
-        assertEquals(608, list.info.certificateCount)
+        assertEquals(609, list.info.certificateCount)
         assertTrue(list.info.certificateCount < TrustStores.MAX_MASTER_LIST_CERTIFICATES)
     }
 
