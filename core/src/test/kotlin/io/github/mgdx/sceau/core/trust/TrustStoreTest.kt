@@ -51,13 +51,14 @@ class TrustStoreTest {
         val info = store.embeddedMasterList
 
         assertNotNull(info)
-        assertEquals(Instant.parse("2026-08-19T08:28:54Z"), info!!.signingTime)
-        assertEquals(608, info.certificateCount)
+        assertEquals(Instant.parse("2026-10-01T09:50:52Z"), info!!.signingTime)
+        assertEquals(609, info.certificateCount)
         assertTrue(info.signerSubject.contains("CN=CSCA Master List Signer"))
         val embedded = store.anchors.filter { it.source == TrustSource.EMBEDDED_MASTER_LIST }
-        // 608 certificats, dont 3 déjà fournis par l'ANTS, qui garde la priorité.
-        assertEquals(605, embedded.size)
-        assertEquals(615, store.anchors.size)
+        // 609 certificats, dont 3 déjà fournis par l'ANTS et 2 par la publication nationale
+        // britannique (GB 2026 et son lien), qui gardent la priorité.
+        assertEquals(604, embedded.size)
+        assertEquals(614, store.anchors.size)
         // Titres de séjour grecs (CSCAeRP-HELLAS 003 et son lien) : fournis par la Master List
         // depuis le retrait des fichiers nationaux (D48).
         val embeddedSha256 = embedded.map { it.sha256 }.toSet()

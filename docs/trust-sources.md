@@ -18,6 +18,9 @@ indique si Sceau peut l'embarquer dans un APK libre (GPLv3, F-Droid).
   « Historique »). Les sources nationales embarquées (GB, GE, LU, et GR jusqu'à son retrait le
   2026-10-11, D48) et les bascules annoncées (DK, NO, KW) ont été revues à cette date ; les fiches
   concernées le signalent. Les autres fiches et les chiffres de gain ne sont pas recalculés.
+- **Revérification du 2026-10-12** (contrôles avant release 0.9) : nouvelle Master List BSI,
+  signée le 2026-10-01 (609 certificats, 117 émetteurs ; détail dans `docs/trust-store.md`,
+  « Historique »).
 - **Méthode** : téléchargement uniquement depuis des domaines gouvernementaux ou institutionnels.
   Des agrégateurs tiers ont servi seulement à trouver des URL. Aucun captcha, aucun pare-feu
   applicatif et aucune condition d'utilisation n'ont été contournés.
@@ -81,7 +84,7 @@ C'est pourquoi une Master List sans aucune mention est classée B, et non A2.
 
 | ML | Page officielle | Fichier | Signée le | Certificats / émetteurs | Nouveaux valides | Signataire → CSCA du pays (empreinte publiée par l'État) | Empreinte publiée du fichier | Statut |
 |---|---|---|---|---|---|---|---|---|
-| **DE** (BSI) | <https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/ElekAusweise/CSCA/GermanMasterList.html> | <https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/ElekAusweise/CSCA/GermanMasterList.zip?__blob=publicationFile&v=109> (ZIP → `.ml` CMS) ; au 2026-09-25, `v=108`, signée le 2026-05-28, 588 / 112 | 2026-08-19 (relevé le 2026-10-06) | 608 / 117 | 0 (déjà embarquée) | `CN=CSCA Master List Signer`, serialNumber=0039 → csca-germany, SHA-256 `2084aed7…ada8` (publiée, concordante) | aucune | A\* |
+| **DE** (BSI) | <https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/ElekAusweise/CSCA/GermanMasterList.html> | <https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/ElekAusweise/CSCA/GermanMasterList.zip?__blob=publicationFile&v=112> (ZIP → `.ml` CMS) ; au 2026-09-25, `v=108`, signée le 2026-05-28, 588 / 112 ; au 2026-10-06, `v=109`, signée le 2026-08-19, 608 / 117 | 2026-10-01 (relevé le 2026-10-12) | 609 / 117 | 0 (déjà embarquée) | `CN=CSCA Master List Signer`, serialNumber=0039 → csca-germany, SHA-256 `2084aed7…ada8` (publiée, concordante) | aucune | A\* |
 | **IT** (ministère de l'Intérieur) | <https://csca-ita.interno.gov.it/html/csca.html> | <https://csca-ita.interno.gov.it/certificatiCSCA/IT_MasterListCSCA.zip> (ZIP → `.ml`) | 2026-09-07 | 670 / 136 | **96** | `CN=MasterListSigner`, serialNumber=004 → CSCA05 « Italian Country Signer CA », SHA-1 `e8e99576…d263` (publiée, concordante) | aucune | B |
 | **SE** (Polismyndigheten) | <http://cert.polisen.se/CSCA/> | <http://cert.polisen.se/CSCA/SWE.ml> (**HTTP seulement**) | 2026-06-02 | 646 / 134 | 84 | `CN=Swedish Master List Signer` → « Swedish Country Signing CA v2 » (2024), SHA-1 `f7fd7b82…7fdb` (publiée, concordante) | SHA-1 `a2057b07…da55`, concordante | B |
 | **NL** (RvIG, NPKD) | <https://www.npkd.nl/masterlist.html> | <https://www.npkd.nl/files/ml/NL_MASTERLIST.mls> | 2026-07-23 | 411 / 129 (auto-signés seulement) | 39 | `CN=Masterlist Signer NL`, serialNumber=8 → CSCA NL serialNumber=7, SHA-256 `411356d2…1a24` (publiée, concordante) | SHA-1, SHA-256 et SHA-512 concordantes | B |
@@ -408,6 +411,9 @@ fichiers sont rangés dans `trust-catalog/<code pays>/`.
   26 septembre 2026.** Deux autres certificats nouveaux, de 2005, sont expirés.
 - Au 2026-10-06 : page inchangée (mêmes 14 certificats), GBR_2026 et son lien sont embarqués
   (D26) et toujours absents de la ML BSI du 2026-08-19, qui a retiré GBR_2010 (expiré).
+- Au 2026-10-12 : la ML BSI du 2026-10-01 contient GBR_2026 et son lien, octet pour octet les
+  fichiers embarqués, qui gardent la source `NATIONAL` (priorité). Leur retrait, comme pour les
+  certificats grecs (D48), reste à décider.
 - Conditions (pied de page) : « *All content is available under the Open Government Licence v3.0,
   except where otherwise stated © Crown copyright* ».
 - Statut : **A1**. Attribution à prévoir : « Contains public sector information licensed under the
