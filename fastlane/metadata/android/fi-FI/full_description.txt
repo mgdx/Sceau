@@ -1,0 +1,54 @@
+Sceau lukee ICAO 9303 -henkilöasiakirjojen sirun NFC:n kautta ja tarkistaa, että ne ovat aitoja. Se toimii täysin ilman verkkoyhteyttä: ei verkkokäyttöoikeutta, mitään ei säilytetä eikä mitään lähetetä.
+
+<b>Tuetut asiakirjat</b>
+<ul>
+<li>Ranskan henkilökortti (luottokortin kokoinen, vuodesta 2021) kortille painetun 6-numeroisen CAN-tunnuksen avulla</li>
+<li>Eurooppalaiset henkilökortit CAN-tunnuksen tai MRZ:n avulla</li>
+<li>Minkä tahansa maan biometriset passit asiakirjan numeron, syntymäajan ja voimassaolon päättymispäivän avulla</li>
+</ul>
+
+<b>Mitä Sceau näyttää</b>
+<ul>
+<li>Sirulle tallennettu kuva</li>
+<li>Henkilötiedot: sukunimi, etunimet, sukupuoli, syntymäaika, kansalaisuus, asiakirjan numero, myöntäjävaltio, voimassaolon päättymispäivä</li>
+<li>Haltijan allekirjoitus, jos myöntäjävaltio on tallentanut sen sirulle</li>
+<li>Lisätiedot, jos siru sisältää niitä (syntymäpaikka, osoite, myöntävä viranomainen, myöntämispäivä…)</li>
+</ul>
+
+<b>Mitä Sceau tarkistaa</b>
+<ul>
+<li>Myöntäjävaltion tietoihin tekemä allekirjoitus tunnettuun juurivarmenteeseen asti sekä jokaisen tietoryhmän eheys (Passive Authentication)</li>
+<li>Ettei siru ole klooni, jos asiakirja tukee tätä (Chip Authentication, Active Authentication)</li>
+</ul>
+Tuloksena on yksi tuloksista ”Aito”, ”Allekirjoitus kelvollinen, sirua ei varmennettu”, ”Tuntematon myöntäjä” tai ”Epäonnistui” sekä yksityiskohtainen tarkistuslista.
+
+<b>Luotetut varmenteet</b>
+Sceau sisältää ANTS:n julkaisemat ranskalaiset CSCA-varmenteet, Yhdistyneen kuningaskunnan, Georgian ja Luxemburgin omille asiakirjoilleen julkaisemat varmenteet sekä BSI:n julkaiseman saksalaisen Master Listin, joka kattaa muun muassa Euroopan unionin, ETA:n, Sveitsin ja Yhdistyneen kuningaskunnan. Luotettujen varmenteiden näkymässä voi hakea maan mukaan. Jos asiakirjan myöntäjä ei ole mukana, tulos on ”Tuntematon myöntäjä”; voit tuoda toisen valtion julkaiseman Master Listin tai yksittäisen CSCA- tai linkkivarmenteen tarkistettuasi sen sormenjäljen ja poistaa jokaisen tuodun kohteen erikseen. Sulkulistoja ei tarkisteta. Sceau ei ole sidoksissa ANTS:iin eikä BSI:hin, eivätkä ne ole hyväksyneet sitä.
+
+<b>Tunnetut rajoitukset</b>
+<ul>
+<li>Ennen 2.8.2021 myönnetyt saksalaiset henkilökortit: siru on varattu viranomaisille; Sceau ei voi lukea sitä ja ilmoittaa siitä. Uudemmista korteista ei voi lukea osoitetta eikä syntymäpaikkaa.</li>
+<li>Saksan EU-kansalaisille myöntämä eID-kortti: sirulla ei ole henkilötietoja; vain kortin aitous tarkistetaan.</li>
+<li>Italialaiset CIE 3.0 -henkilökortit vuoden 2017 lopulta vuoden 2018 alkuun: Italia on julkaissut niiden lisätiedoissa olevan poikkeaman; Sceau hylkää nämä tiedot ja tarkistaa asiakirjan muut osat.</li>
+</ul>
+
+<b>Yksityisyys</b>
+<ul>
+<li>Ainoa käyttöoikeus: NFC</li>
+<li>Sirulta luettuja tietoja ei tallenneta; muisti tyhjennetään, kun poistut tulosnäkymästä tai sovellus siirtyy taustalle</li>
+<li>Kuvakaappaukset on estetty koko sovelluksessa</li>
+<li>Ei mainoksia, ei seurantaa, ei Googlen palveluja</li>
+</ul>
+
+<b>Muuta</b>
+<ul>
+<li>Neljän sivun esittely ensimmäisellä käynnistyskerralla sekä näkymä ”Mitä siru sisältää”</li>
+<li>Käyttöliittymä 45 kielellä</li>
+</ul>
+
+<b>Käyttötarkoitus</b>
+Sceau on tarkoitettu oman asiakirjasi tai haltijansa esittämän asiakirjan tarkistamiseen. Tietosuoja-asetuksen (GDPR) mukaan kuva on biometrinen tieto, kun sitä käytetään automaattiseen vertailuun: Sceau ei tee tällaista vertailua. Tulos ei kerro, onko asiakirja ilmoitettu kadonneeksi tai varastetuksi.
+
+Sceau ei lue sormenjälkiä eikä iiristietoja, eikä se lue MRZ:ää kameralla.
+
+Vapaa ohjelmisto, jota jaetaan ainoastaan GNU GPL -lisenssin version 3 ehdoin.

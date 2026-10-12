@@ -1,0 +1,54 @@
+Sceau legge via NFC il chip dei documenti d’identità ICAO 9303 e verifica che siano autentici. Funziona interamente offline: nessuna autorizzazione di rete, niente viene conservato, niente viene inviato.
+
+<b>Documenti supportati</b>
+<ul>
+<li>Carta d’identità francese (formato carta di credito, dal 2021), con il CAN di 6 cifre stampato sulla carta</li>
+<li>Carte d’identità europee, con il CAN o la MRZ</li>
+<li>Passaporti biometrici di qualsiasi paese, con il numero del documento, la data di nascita e la data di scadenza</li>
+</ul>
+
+<b>Cosa mostra Sceau</b>
+<ul>
+<li>La foto memorizzata nel chip</li>
+<li>Identità: cognome, nome, sesso, data di nascita, cittadinanza, numero del documento, Stato emittente, data di scadenza</li>
+<li>La firma autografa del titolare, se lo Stato emittente l’ha memorizzata nel chip</li>
+<li>Dati aggiuntivi, quando il chip li contiene (luogo di nascita, indirizzo, autorità di rilascio e data di rilascio…)</li>
+</ul>
+
+<b>Cosa verifica Sceau</b>
+<ul>
+<li>La firma dello Stato emittente sui dati, fino a un certificato radice noto, e l’integrità di ogni gruppo di dati (Passive Authentication)</li>
+<li>Che il chip non sia un clone, quando il documento lo consente (Chip Authentication, Active Authentication)</li>
+</ul>
+Il risultato è un esito («Autentico», «Firma valida, chip non verificato», «Emittente sconosciuto», «Esito negativo») con un elenco dettagliato delle verifiche.
+
+<b>Archivio attendibile</b>
+Sceau include i certificati CSCA francesi pubblicati dall’ANTS, i certificati pubblicati da Regno Unito, Georgia e Lussemburgo per i propri documenti e la Master List tedesca pubblicata dal BSI, che copre tra l’altro l’Unione europea, lo SEE, la Svizzera e il Regno Unito. Nella schermata dell’archivio attendibile si può cercare per paese. Per un documento il cui emittente non è incluso, l’esito è «Emittente sconosciuto»; puoi importare una Master List pubblicata da un altro Stato, oppure un singolo certificato CSCA o di collegamento dopo averne controllato l’impronta, ed eliminare singolarmente ogni elemento importato. Gli elenchi di revoca non vengono consultati. Sceau non è affiliato all’ANTS né al BSI, né approvato da essi.
+
+<b>Limiti noti</b>
+<ul>
+<li>Carte d’identità tedesche rilasciate prima del 2 agosto 2021: il chip è riservato alle autorità; Sceau non può leggerlo e lo segnala. Sulle carte più recenti, l’indirizzo e il luogo di nascita non sono leggibili.</li>
+<li>Carta eID tedesca per i cittadini dell’Unione: il chip non contiene dati identificativi; se ne verifica solo l’autenticità.</li>
+<li>Carte d’identità CIE 3.0 italiane dalla fine del 2017 all’inizio del 2018: l’Italia ha pubblicato un’anomalia nei loro dati aggiuntivi; Sceau scarta quei dati e verifica il resto del documento.</li>
+</ul>
+
+<b>Privacy</b>
+<ul>
+<li>Unica autorizzazione: NFC</li>
+<li>Nessun dato letto dal chip viene salvato; la memoria viene cancellata quando si esce dal risultato o quando l’app passa in background</li>
+<li>Gli screenshot sono bloccati in tutta l’app</li>
+<li>Niente pubblicità, niente tracker, niente servizi Google</li>
+</ul>
+
+<b>Altro</b>
+<ul>
+<li>Introduzione di quattro pagine al primo avvio e una schermata «Cosa contiene il chip»</li>
+<li>Interfaccia in 45 lingue</li>
+</ul>
+
+<b>Uso previsto</b>
+Sceau serve a verificare il proprio documento, o un documento presentato dal suo titolare. Ai sensi del GDPR, la foto è un dato biometrico quando viene usata per un confronto automatizzato: Sceau non effettua confronti di questo tipo. L’esito non indica se il documento è stato denunciato come smarrito o rubato.
+
+Sceau non legge le impronte digitali né i dati dell’iride e non acquisisce la MRZ con la fotocamera.
+
+Software libero distribuito con licenza GNU GPL esclusivamente nella versione 3.

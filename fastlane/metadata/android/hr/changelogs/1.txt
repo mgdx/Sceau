@@ -1,0 +1,6 @@
+Prvo javno izdanje.
+• NFC očitavanje biometrijskih putovnica, francuske osobne iskaznice i europskih osobnih iskaznica (PACE ili BAC)
+• Fotografija, osobni podaci, potpis i dodatni podaci
+• Passive, Chip i Active Authentication, rezultat i popis provjera
+• CSCA agencije ANTS i 3 države, Master List ureda BSI, uvoz popisa Master List i certifikata
+• Izvanmrežno, bez pohrane podataka, 45 jezika

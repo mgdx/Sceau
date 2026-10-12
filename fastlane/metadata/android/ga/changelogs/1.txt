@@ -1,0 +1,6 @@
+An chéad leagan poiblí.
+• Léamh NFC ar phasanna bithmhéadracha, ar chárta aitheantais na Fraince agus ar chártaí aitheantais Eorpacha (PACE nó BAC)
+• Grianghraf, aitheantas, síniú agus sonraí breise
+• Passive, Chip agus Active Authentication, toradh agus liosta seiceála
+• CSCA ó ANTS agus ó 3 stát, Master List an BSI, iompórtáil Master Lists agus deimhnithe
+• As líne, ní choinnítear aon sonraí, 45 teanga

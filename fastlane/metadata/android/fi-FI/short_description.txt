@@ -1,0 +1,1 @@
+Lukee ja tarkistaa henkilökorttien ja passien sirun täysin ilman verkkoyhteyttä

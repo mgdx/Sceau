@@ -1,0 +1,6 @@
+Első nyilvános kiadás.
+• Biometrikus útlevelek, a francia személyi igazolvány és európai személyi igazolványok olvasása NFC-n (PACE vagy BAC)
+• Fénykép, személyazonossági adatok, aláírás és további adatok
+• Passive, Chip és Active Authentication, eredmény és ellenőrzőlista
+• Az ANTS és 3 állam CSCA-tanúsítványai, a BSI Master Listje, Master Listek és tanúsítványok importálása
+• Offline, nincs adattárolás, 45 nyelv
