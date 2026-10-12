@@ -1,0 +1,54 @@
+Sceau ar NFC nolasa ICAO 9303 personu apliecinošo dokumentu mikroshēmu un pārbauda, vai tie ir autentiski. Lietotne darbojas pilnībā bezsaistē: nav tīkla atļaujas, nekas netiek glabāts, nekas netiek nosūtīts.
+
+<b>Atbalstītie dokumenti</b>
+<ul>
+<li>Francijas personas apliecība (bankas kartes formātā, kopš 2021. gada), izmantojot uz kartes uzdrukāto 6 ciparu CAN</li>
+<li>Eiropas valstu personas apliecības, izmantojot CAN vai MRZ</li>
+<li>Jebkuras valsts biometriskās pases, izmantojot dokumenta numuru, dzimšanas datumu un derīguma termiņu</li>
+</ul>
+
+<b>Ko parāda Sceau</b>
+<ul>
+<li>Mikroshēmā saglabāto fotoattēlu</li>
+<li>Identitāti: uzvārdu, vārdus, dzimumu, dzimšanas datumu, pilsonību, dokumenta numuru, izdevējvalsti, derīguma termiņu</li>
+<li>Turētāja pašrocīgo parakstu, ja izdevējvalsts to ir ierakstījusi mikroshēmā</li>
+<li>Papildu datus, ja tie ir mikroshēmā (dzimšanas vietu, adresi, izdevējiestādi un izdošanas datumu…)</li>
+</ul>
+
+<b>Ko pārbauda Sceau</b>
+<ul>
+<li>Izdevējvalsts parakstu datiem līdz zināmam saknes sertifikātam un katras datu grupas integritāti (Passive Authentication)</li>
+<li>Vai mikroshēma nav klons, ja dokuments to atbalsta (Chip Authentication, Active Authentication)</li>
+</ul>
+Rezultāts ir viens no četriem vērtējumiem (“Autentisks”, “Paraksts derīgs, mikroshēma nav pārbaudīta”, “Nezināms izdevējs”, “Neizdevās”) ar detalizētu pārbaužu sarakstu.
+
+<b>Uzticamības krātuve</b>
+Lietotnē Sceau ir iebūvēti ANTS publicētie Francijas CSCA sertifikāti, Apvienotās Karalistes, Gruzijas un Luksemburgas publicētie sertifikāti to pašu dokumentiem, kā arī BSI publicētais Vācijas Master List, kas cita starpā aptver Eiropas Savienību, EEZ, Šveici un Apvienoto Karalisti. Krātuves ekrānā var meklēt valsti. Dokumentam, kura izdevējs nav iekļauts, vērtējums ir “Nezināms izdevējs”; varat importēt citas valsts publicētu Master List vai, pēc nospieduma pārbaudes, atsevišķu CSCA vai saites sertifikātu un katru importēto vienumu dzēst atsevišķi. Atsaukto sertifikātu saraksti netiek pārbaudīti. Sceau nav saistīta ar ANTS vai BSI, un tie to nav apstiprinājuši.
+
+<b>Zināmie ierobežojumi</b>
+<ul>
+<li>Vācijas personas apliecības, kas izdotas pirms 2021. gada 2. augusta: mikroshēma ir paredzēta tikai iestādēm; Sceau to nevar nolasīt un par to paziņo. Jaunākajās apliecībās adresi un dzimšanas vietu nolasīt nevar.</li>
+<li>Vācijas eID karte ES pilsoņiem: mikroshēmā nav identitātes datu; tiek pārbaudīts tikai tās autentiskums.</li>
+<li>Itālijas CIE 3.0 personas apliecības no 2017. gada beigām līdz 2018. gada sākumam: Itālija ir publicējusi anomāliju to papildu datos; Sceau šos datus atmet un pārbauda pārējo dokumentu.</li>
+</ul>
+
+<b>Privātums</b>
+<ul>
+<li>Vienīgā atļauja: NFC</li>
+<li>No mikroshēmas nolasītie dati netiek saglabāti; atmiņa tiek notīrīta, izejot no rezultāta vai lietotnei pārejot fonā</li>
+<li>Ekrānuzņēmumi visā lietotnē ir bloķēti</li>
+<li>Nav reklāmu, izsekotāju vai Google pakalpojumu</li>
+</ul>
+
+<b>Cits</b>
+<ul>
+<li>Četru lappušu ievads pirmajā palaišanas reizē un ekrāns “Kas ir mikroshēmā”</li>
+<li>Saskarne 45 valodās</li>
+</ul>
+
+<b>Paredzētais lietojums</b>
+Sceau ir paredzēta sava dokumenta vai tā turētāja paša uzrādīta dokumenta pārbaudei. Saskaņā ar VDAR fotoattēls ir biometriskie dati, ja to izmanto automatizētai salīdzināšanai: Sceau šādu salīdzināšanu neveic. Vērtējums nenorāda, vai dokuments ir pieteikts kā nozaudēts vai nozagts.
+
+Sceau nenolasa pirkstu nospiedumus un varavīksnenes datus un neskenē MRZ ar kameru.
+
+Brīvā programmatūra, ko izplata tikai saskaņā ar GNU GPL licences 3. versiju.

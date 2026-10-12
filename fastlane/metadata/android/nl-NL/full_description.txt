@@ -1,0 +1,54 @@
+Sceau leest via NFC de chip van identiteitsdocumenten volgens ICAO 9303 en controleert of ze echt zijn. De app werkt volledig offline: geen netwerktoestemming, er wordt niets bewaard en niets verzonden.
+
+<b>Ondersteunde documenten</b>
+<ul>
+<li>Franse identiteitskaart (bankpasformaat, sinds 2021), met de CAN van 6 cijfers op de kaart</li>
+<li>Europese identiteitskaarten, met de CAN of de MRZ</li>
+<li>Biometrische paspoorten uit alle landen, met het documentnummer, de geboortedatum en de vervaldatum</li>
+</ul>
+
+<b>Wat Sceau toont</b>
+<ul>
+<li>De foto die in de chip is opgeslagen</li>
+<li>Identiteit: naam, voornamen, geslacht, geboortedatum, nationaliteit, documentnummer, staat van afgifte, vervaldatum</li>
+<li>De handgeschreven handtekening van de houder, als de staat van afgifte die in de chip heeft opgeslagen</li>
+<li>Aanvullende gegevens als de chip die bevat (geboorteplaats, adres, instantie en datum van afgifte…)</li>
+</ul>
+
+<b>Wat Sceau controleert</b>
+<ul>
+<li>De handtekening van de staat van afgifte over de gegevens, tot aan een bekend rootcertificaat, en de integriteit van elke gegevensgroep (Passive Authentication)</li>
+<li>Dat de chip geen kloon is, als het document dat ondersteunt (Chip Authentication, Active Authentication)</li>
+</ul>
+Het resultaat is een van vier uitkomsten (‘Echt’, ‘Handtekening geldig, chip niet gecontroleerd’, ‘Onbekende uitgever’, ‘Mislukt’), met een gedetailleerde lijst van controles.
+
+<b>Vertrouwensopslag</b>
+Sceau bevat de Franse CSCA-certificaten die ANTS publiceert, certificaten die het Verenigd Koninkrijk, Georgië en Luxemburg voor hun eigen documenten publiceren, en de Duitse Master List van het BSI, die onder meer de Europese Unie, de EER, Zwitserland en het Verenigd Koninkrijk dekt. In het scherm van de vertrouwensopslag kun je op land zoeken. Voor een document waarvan de uitgever niet is opgenomen, is de uitkomst ‘Onbekende uitgever’; je kunt een Master List importeren die door een andere staat is gepubliceerd, of een los CSCA- of koppelingscertificaat nadat je de vingerafdruk ervan hebt gecontroleerd, en elk geïmporteerd item afzonderlijk verwijderen. Intrekkingslijsten worden niet gecontroleerd. Sceau is niet verbonden aan of goedgekeurd door ANTS of het BSI.
+
+<b>Bekende beperkingen</b>
+<ul>
+<li>Duitse identiteitskaarten uitgegeven vóór 2 augustus 2021: de chip is voorbehouden aan de autoriteiten; Sceau kan hem niet uitlezen en meldt dat. Bij nieuwere kaarten kunnen het adres en de geboorteplaats niet worden uitgelezen.</li>
+<li>Duitse eID-kaart voor EU-burgers: de chip bevat geen identiteitsgegevens; alleen de echtheid wordt gecontroleerd.</li>
+<li>Italiaanse CIE 3.0-identiteitskaarten van eind 2017 tot begin 2018: Italië heeft een afwijking in hun aanvullende gegevens gepubliceerd; Sceau laat die gegevens weg en controleert de rest van het document.</li>
+</ul>
+
+<b>Privacy</b>
+<ul>
+<li>Enige toestemming: NFC</li>
+<li>Er worden geen uit de chip gelezen gegevens opgeslagen; het geheugen wordt gewist wanneer je het resultaat verlaat of de app naar de achtergrond gaat</li>
+<li>Screenshots zijn in de hele app geblokkeerd</li>
+<li>Geen advertenties, geen trackers, geen Google-diensten</li>
+</ul>
+
+<b>Overig</b>
+<ul>
+<li>Introductie van vier pagina’s bij de eerste start, en een scherm ‘Wat de chip bevat’</li>
+<li>Interface in 45 talen</li>
+</ul>
+
+<b>Beoogd gebruik</b>
+Sceau is bedoeld om je eigen document te controleren, of een document dat de houder zelf laat zien. Volgens de AVG is de foto een biometrisch gegeven wanneer die wordt gebruikt voor automatische vergelijking: Sceau voert zo’n vergelijking niet uit. De uitkomst zegt niet of het document als verloren of gestolen is opgegeven.
+
+Sceau leest geen vingerafdrukken of irisgegevens en scant de MRZ niet met de camera.
+
+Vrije software, uitsluitend verspreid onder de GNU GPL versie 3.

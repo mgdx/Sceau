@@ -1,0 +1,54 @@
+Sceau jaqra bl-NFC iċ-ċippa tad-dokumenti tal-identità ICAO 9303 u jivverifika li huma awtentiċi. Jaħdem kompletament offline: l-ebda permess tan-netwerk, xejn ma jinżamm, xejn ma jintbagħat.
+
+<b>Dokumenti appoġġjati</b>
+<ul>
+<li>Karta tal-identità nazzjonali Franċiża (daqs ta’ karta tal-kreditu, mill-2021), bil-CAN ta’ 6 ċifri stampat fuq il-karta</li>
+<li>Karti tal-identità Ewropej, bil-CAN jew bl-MRZ</li>
+<li>Passaporti bijometriċi ta’ kull pajjiż, bin-numru tad-dokument, id-data tat-twelid u d-data ta’ skadenza</li>
+</ul>
+
+<b>X’juri Sceau</b>
+<ul>
+<li>Ir-ritratt maħżun fiċ-ċippa</li>
+<li>L-identità: kunjom, ismijiet, sess, data tat-twelid, nazzjonalità, numru tad-dokument, Stat emittenti, data ta’ skadenza</li>
+<li>Il-firma miktuba bl-idejn tad-detentur, jekk l-Istat emittenti daħħalha fiċ-ċippa</li>
+<li>Data addizzjonali meta ċ-ċippa jkollha (post tat-twelid, indirizz, awtorità emittenti u data tal-ħruġ…)</li>
+</ul>
+
+<b>X’jivverifika Sceau</b>
+<ul>
+<li>Il-firma tal-Istat emittenti fuq id-data, sa ċertifikat għerq magħruf, u l-integrità ta’ kull grupp tad-data (Passive Authentication)</li>
+<li>Li ċ-ċippa mhijiex klonu, meta d-dokument jippermetti dan (Chip Authentication, Active Authentication)</li>
+</ul>
+Ir-riżultat huwa wieħed minn erba’ verdetti (“Awtentiku”, “Firma valida, ċippa mhux ivverifikata”, “Emittent mhux magħruf”, “Falla”) b’lista ta’ verifiki dettaljata.
+
+<b>Ħażna ta’ fiduċja</b>
+Sceau fih iċ-ċertifikati CSCA Franċiżi ppubblikati mill-ANTS, ċertifikati ppubblikati mir-Renju Unit, il-Ġeorġja u l-Lussemburgu għad-dokumenti tagħhom stess, u l-Master List Ġermaniża ppubblikata mill-BSI, li tkopri fost l-oħrajn l-Unjoni Ewropea, iż-ŻEE, l-Iżvizzera u r-Renju Unit. Fl-iskrin tal-ħażna ta’ fiduċja tista’ tfittex pajjiż. Għal dokument li l-emittent tiegħu mhuwiex inkluż, il-verdett huwa “Emittent mhux magħruf”; tista’ timporta Master List ippubblikata minn Stat ieħor, jew ċertifikat CSCA jew ċertifikat ta’ rabta wieħed wara li tivverifika l-impronta tiegħu, u tħassar kull element importat wieħed wieħed. Il-listi ta’ revoka mhumiex ivverifikati. Sceau mhuwiex affiljat mal-ANTS jew mal-BSI, u lanqas approvat minnhom.
+
+<b>Limitazzjonijiet magħrufa</b>
+<ul>
+<li>Karti tal-identità Ġermaniżi maħruġa qabel it-2 ta’ Awwissu 2021: iċ-ċippa hija riżervata għall-awtoritajiet; Sceau ma jistax jaqraha u jgħid dan. Fil-karti l-ġodda, l-indirizz u l-post tat-twelid ma jistgħux jinqraw.</li>
+<li>Karta eID Ġermaniża għaċ-ċittadini tal-UE: iċ-ċippa ma fiha l-ebda data tal-identità; tiġi vverifikata biss l-awtentiċità tagħha.</li>
+<li>Karti tal-identità Taljani CIE 3.0 minn tmiem l-2017 sal-bidu tal-2018: l-Italja ppubblikat anomalija fid-data addizzjonali tagħhom; Sceau iwarrab dik id-data u jivverifika l-bqija tad-dokument.</li>
+</ul>
+
+<b>Privatezza</b>
+<ul>
+<li>L-uniku permess: NFC</li>
+<li>L-ebda data moqrija miċ-ċippa ma tiġi ssejvjata; il-memorja titħassar meta toħroġ mir-riżultat jew meta l-app tmur fl-isfond</li>
+<li>L-screenshots huma mblukkati fl-app kollha</li>
+<li>L-ebda reklami, l-ebda trackers, l-ebda servizzi ta’ Google</li>
+</ul>
+
+<b>Oħrajn</b>
+<ul>
+<li>Introduzzjoni ta’ erba’ paġni meta tiftaħ l-app għall-ewwel darba, u skrin “X’fiha ċ-ċippa”</li>
+<li>Interfaċċa f’45 lingwa</li>
+</ul>
+
+<b>Użu maħsub</b>
+Sceau huwa maħsub biex tivverifika d-dokument tiegħek, jew dokument ippreżentat mid-detentur tiegħu stess. Skont il-GDPR, ir-ritratt huwa data bijometrika meta jintuża għal tqabbil awtomatizzat: Sceau ma jagħmilx dan it-tqabbil. Il-verdett ma jgħidx jekk id-dokument ġiex irrappurtat mitluf jew misruq.
+
+Sceau ma jaqrax il-marki tas-swaba’ jew id-data tal-iris, u ma jiskennjax l-MRZ bil-kamera.
+
+Softwer liberu mqassam taħt il-liċenzja GNU GPL, verżjoni 3 biss.

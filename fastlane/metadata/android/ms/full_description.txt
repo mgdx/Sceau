@@ -1,0 +1,54 @@
+Sceau membaca cip dokumen pengenalan ICAO 9303 melalui NFC dan menyemak sama ada dokumen itu tulen. Ia berfungsi sepenuhnya di luar talian: tiada kebenaran rangkaian, tiada apa-apa disimpan, tiada apa-apa dihantar.
+
+<b>Dokumen yang disokong</b>
+<ul>
+<li>Kad pengenalan kebangsaan Perancis (format kad kredit, sejak 2021), menggunakan CAN 6 digit yang dicetak pada kad</li>
+<li>Kad pengenalan Eropah, menggunakan CAN atau MRZ</li>
+<li>Pasport biometrik dari mana-mana negara, menggunakan nombor dokumen, tarikh lahir dan tarikh tamat tempoh</li>
+</ul>
+
+<b>Perkara yang dipaparkan oleh Sceau</b>
+<ul>
+<li>Foto yang disimpan dalam cip</li>
+<li>Identiti: nama keluarga, nama diberi, jantina, tarikh lahir, warganegara, nombor dokumen, negara pengeluar, tarikh tamat tempoh</li>
+<li>Tandatangan tulisan tangan pemegang, jika negara pengeluar menyimpannya dalam cip</li>
+<li>Butiran tambahan jika terdapat dalam cip (tempat lahir, alamat, pihak berkuasa pengeluar dan tarikh dikeluarkan…)</li>
+</ul>
+
+<b>Perkara yang disemak oleh Sceau</b>
+<ul>
+<li>Tandatangan negara pengeluar ke atas data, hingga sijil akar yang diketahui, dan integriti setiap kumpulan data (Passive Authentication)</li>
+<li>Bahawa cip itu bukan klon, jika dokumen menyokongnya (Chip Authentication, Active Authentication)</li>
+</ul>
+Hasilnya ialah salah satu daripada empat keputusan (“Tulen”, “Tandatangan sah, cip tidak disahkan”, “Pengeluar tidak diketahui”, “Gagal”) beserta senarai semakan terperinci.
+
+<b>Stor sijil dipercayai</b>
+Sceau disertakan dengan sijil CSCA Perancis yang diterbitkan oleh ANTS, sijil yang diterbitkan oleh United Kingdom, Georgia dan Luxembourg untuk dokumen mereka sendiri, serta Master List Jerman yang diterbitkan oleh BSI, yang meliputi antara lain Kesatuan Eropah, EEA, Switzerland dan United Kingdom. Skrin stor sijil membolehkan anda mencari negara. Bagi dokumen yang pengeluarnya tidak disertakan, keputusannya ialah “Pengeluar tidak diketahui”; anda boleh mengimport Master List yang diterbitkan oleh negara lain, atau satu sijil CSCA atau sijil pautan selepas menyemak cap jarinya, dan memadamkan setiap item yang diimport satu demi satu. Senarai pembatalan tidak disemak. Sceau tidak bergabung dengan, atau disokong oleh, ANTS atau BSI.
+
+<b>Had yang diketahui</b>
+<ul>
+<li>Kad pengenalan Jerman yang dikeluarkan sebelum 2 Ogos 2021: cip dikhaskan untuk pihak berkuasa; Sceau tidak dapat membacanya dan memaklumkan perkara ini. Pada kad yang lebih baharu, alamat dan tempat lahir tidak dapat dibaca.</li>
+<li>Kad eID Jerman untuk warganegara EU: cip tidak mengandungi data identiti; hanya ketulenannya disahkan.</li>
+<li>Kad pengenalan CIE 3.0 Itali dari akhir 2017 hingga awal 2018: Itali telah menerbitkan anomali dalam butiran tambahannya; Sceau mengetepikan data tersebut dan mengesahkan bahagian lain dokumen.</li>
+</ul>
+
+<b>Privasi</b>
+<ul>
+<li>Satu-satunya kebenaran: NFC</li>
+<li>Tiada data yang dibaca daripada cip disimpan; memori dikosongkan apabila anda meninggalkan keputusan atau apabila apl beralih ke latar belakang</li>
+<li>Tangkapan skrin disekat di seluruh apl</li>
+<li>Tiada iklan, tiada penjejak, tiada perkhidmatan Google</li>
+</ul>
+
+<b>Lain-lain</b>
+<ul>
+<li>Pengenalan empat halaman semasa pelancaran pertama, dan skrin “Kandungan cip”</li>
+<li>Antara muka dalam 45 bahasa</li>
+</ul>
+
+<b>Tujuan penggunaan</b>
+Sceau bertujuan untuk menyemak dokumen anda sendiri, atau dokumen yang dikemukakan sendiri oleh pemegangnya. Di bawah GDPR, foto ialah data biometrik apabila digunakan untuk perbandingan automatik: Sceau tidak melakukan perbandingan sedemikian. Keputusan tidak menunjukkan sama ada dokumen telah dilaporkan hilang atau dicuri.
+
+Sceau tidak membaca cap jari atau data iris, dan tidak mengimbas MRZ dengan kamera.
+
+Perisian bebas yang diedarkan di bawah lesen GNU GPL versi 3 sahaja.

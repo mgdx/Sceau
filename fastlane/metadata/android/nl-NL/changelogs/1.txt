@@ -1,0 +1,6 @@
+Eerste openbare versie.
+• Uitlezen via NFC van biometrische paspoorten, de Franse identiteitskaart en Europese identiteitskaarten (PACE of BAC)
+• Foto, identiteit, handtekening en aanvullende gegevens
+• Passive, Chip en Active Authentication, uitkomst en lijst van controles
+• CSCA’s van ANTS en 3 staten, Master List van het BSI, import van Master Lists en certificaten
+• Offline, geen gegevens bewaard, 45 talen

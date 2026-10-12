@@ -1,0 +1,6 @@
+첫 공개 버전.
+• 전자여권, 프랑스 신분증, 유럽 신분증의 NFC 읽기(PACE 또는 BAC)
+• 사진, 신원 정보, 서명, 추가 정보
+• Passive, Chip, Active Authentication, 판정 및 검증 목록
+• ANTS 및 3개국의 CSCA, BSI Master List, Master List 및 인증서 가져오기
+• 오프라인, 데이터 보관 없음, 45개 언어

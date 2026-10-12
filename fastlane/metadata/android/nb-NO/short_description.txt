@@ -1,0 +1,1 @@
+Leser og verifiserer brikken i ID-kort og pass, helt uten nett

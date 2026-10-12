@@ -1,0 +1,6 @@
+Keluaran awam pertama.
+• Bacaan NFC pasport biometrik, kad pengenalan Perancis dan kad pengenalan Eropah (PACE atau BAC)
+• Foto, identiti, tandatangan dan butiran tambahan
+• Passive, Chip dan Active Authentication, keputusan dan senarai semakan
+• CSCA daripada ANTS dan 3 negara, Master List BSI, import Master List dan sijil
+• Luar talian, tiada data disimpan, 45 bahasa

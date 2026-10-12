@@ -1,0 +1,54 @@
+Sceau per NFC nuskaito ICAO 9303 standartą atitinkančių asmens dokumentų lustą ir patikrina, ar jie autentiški. Programa veikia visiškai neprisijungus prie interneto: jokio leidimo naudotis tinklu, niekas nesaugoma, niekas nesiunčiama.
+
+<b>Palaikomi dokumentai</b>
+<ul>
+<li>Prancūzijos asmens tapatybės kortelė (banko kortelės formato, nuo 2021 m.), naudojant ant kortelės išspausdintą 6 skaitmenų CAN</li>
+<li>Europos šalių asmens tapatybės kortelės, naudojant CAN arba MRZ</li>
+<li>Bet kurios šalies biometriniai pasai, naudojant dokumento numerį, gimimo datą ir galiojimo pabaigos datą</li>
+</ul>
+
+<b>Ką rodo Sceau</b>
+<ul>
+<li>Luste saugomą nuotrauką</li>
+<li>Asmens duomenis: pavardę, vardus, lytį, gimimo datą, pilietybę, dokumento numerį, išdavusią valstybę, galiojimo pabaigos datą</li>
+<li>Turėtojo parašą, jei išdavusi valstybė jį įrašė į lustą</li>
+<li>Papildomus duomenis, kai jie yra luste (gimimo vietą, adresą, išdavusią instituciją ir išdavimo datą…)</li>
+</ul>
+
+<b>Ką tikrina Sceau</b>
+<ul>
+<li>Išdavusios valstybės duomenų parašą iki žinomo šakninio sertifikato ir kiekvienos duomenų grupės vientisumą (Passive Authentication)</li>
+<li>Ar lustas nėra klonas, kai dokumentas tai leidžia (Chip Authentication, Active Authentication)</li>
+</ul>
+Rezultatas – vienas iš keturių įvertinimų („Autentiškas“, „Parašas galioja, lustas nepatikrintas“, „Nežinomas išdavėjas“, „Nepavyko“) su išsamiu patikrų sąrašu.
+
+<b>Patikimų sertifikatų saugykla</b>
+Į Sceau įtraukti ANTS paskelbti Prancūzijos CSCA sertifikatai, Jungtinės Karalystės, Sakartvelo ir Liuksemburgo savo dokumentams paskelbti sertifikatai ir BSI paskelbtas Vokietijos Master List, apimantis, be kita ko, Europos Sąjungą, EEE, Šveicariją ir Jungtinę Karalystę. Saugyklos ekrane galima ieškoti šalies. Jei dokumento išdavėjo saugykloje nėra, įvertinimas yra „Nežinomas išdavėjas“; galite importuoti kitos valstybės paskelbtą Master List arba, patikrinę kontrolinę sumą, atskirą CSCA ar susiejimo sertifikatą, o kiekvieną importuotą elementą ištrinti atskirai. Atšauktų sertifikatų sąrašai netikrinami. Sceau nėra susijusi su ANTS ar BSI ir jų nepatvirtinta.
+
+<b>Žinomi apribojimai</b>
+<ul>
+<li>Vokietijos asmens tapatybės kortelės, išduotos iki 2021 m. rugpjūčio 2 d.: lustas skirtas tik institucijoms; Sceau negali jo nuskaityti ir apie tai praneša. Naujesnėse kortelėse adreso ir gimimo vietos nuskaityti negalima.</li>
+<li>Vokietijos eID kortelė ES piliečiams: luste nėra asmens duomenų; tikrinamas tik jo autentiškumas.</li>
+<li>Italijos CIE 3.0 asmens tapatybės kortelės, išduotos nuo 2017 m. pabaigos iki 2018 m. pradžios: Italija paskelbė apie jų papildomų duomenų anomaliją; Sceau šiuos duomenis atmeta ir patikrina likusią dokumento dalį.</li>
+</ul>
+
+<b>Privatumas</b>
+<ul>
+<li>Vienintelis leidimas: NFC</li>
+<li>Jokie iš lusto nuskaityti duomenys neįrašomi; atmintis išvaloma išėjus iš rezultato arba programai perėjus į foninį režimą</li>
+<li>Ekrano kopijos užblokuotos visoje programoje</li>
+<li>Jokių reklamų, sekiklių ar „Google“ paslaugų</li>
+</ul>
+
+<b>Kita</b>
+<ul>
+<li>Keturių puslapių įvadas pirmą kartą paleidus programą ir ekranas „Kas yra luste“</li>
+<li>Sąsaja 45 kalbomis</li>
+</ul>
+
+<b>Paskirtis</b>
+Sceau skirta patikrinti savo dokumentą arba dokumentą, kurį pateikia pats jo turėtojas. Pagal BDAR nuotrauka yra biometriniai duomenys, kai ji naudojama automatiniam palyginimui: Sceau tokio palyginimo neatlieka. Įvertinimas nenurodo, ar dokumentas paskelbtas pamestu ar pavogtu.
+
+Sceau nenuskaito pirštų atspaudų ir rainelės duomenų ir neskenuoja MRZ kamera.
+
+Laisvoji programinė įranga, platinama tik pagal GNU GPL 3 versijos licenciją.

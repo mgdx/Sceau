@@ -1,0 +1,6 @@
+L-ewwel verżjoni pubblika.
+• Qari bl-NFC tal-passaporti bijometriċi, tal-karta tal-identità Franċiża u tal-karti tal-identità Ewropej (PACE jew BAC)
+• Ritratt, identità, firma u data addizzjonali
+• Passive, Chip u Active Authentication, verdett u lista ta’ verifiki
+• CSCA tal-ANTS u ta’ 3 Stati, Master List tal-BSI, importazzjoni ta’ Master Lists u ċertifikati
+• Offline, l-ebda data miżmuma, 45 lingwa

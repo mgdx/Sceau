@@ -1,0 +1,6 @@
+Pirmoji vieša versija.
+• Biometrinių pasų, Prancūzijos ir kitų Europos šalių asmens tapatybės kortelių nuskaitymas per NFC (PACE arba BAC)
+• Nuotrauka, asmens duomenys, parašas ir papildomi duomenys
+• Passive, Chip ir Active Authentication, įvertinimas ir patikrų sąrašas
+• ANTS ir 3 valstybių CSCA, BSI Master List, Master List ir sertifikatų importavimas
+• Veikia neprisijungus, duomenys nesaugomi, 45 kalbos

@@ -1,0 +1,1 @@
+Leest en controleert de chip van identiteitskaarten en paspoorten, offline

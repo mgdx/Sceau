@@ -1,0 +1,6 @@
+Pirmā publiskā versija.
+• Biometrisko pasu, Francijas personas apliecības un Eiropas valstu personas apliecību nolasīšana ar NFC (PACE vai BAC)
+• Fotoattēls, identitāte, paraksts un papildu dati
+• Passive, Chip un Active Authentication, vērtējums un pārbaužu saraksts
+• ANTS un 3 valstu CSCA, BSI Master List, Master List un sertifikātu imports
+• Bezsaistē, dati netiek glabāti, 45 valodas
