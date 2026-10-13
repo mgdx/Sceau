@@ -4,7 +4,7 @@
 
 ## Principle
 
-F-Droid builds the **universal** APK from the tag (`app-universal-release-unsigned.apk`), downloads the author-signed APK (`binary:` field), copies its signature onto its own APK and verifies the result. If the contents are byte-for-byte identical, F-Droid publishes the author's APK, with its signature: an installation from F-Droid and another from the GitHub releases (same universal APK) can then update each other. Details: [`../reproducible-builds.md`](../reproducible-builds.md).
+F-Droid builds the **universal** APK from the tag (`app-universal-release-unsigned.apk`), downloads the author-signed APK (`Binaries:` field), copies its signature onto its own APK and verifies the result. If the contents are byte-for-byte identical, F-Droid publishes the author's APK, with its signature: an installation from F-Droid and another from the GitHub releases (same universal APK) can then update each other. Details: [`../reproducible-builds.md`](../reproducible-builds.md).
 
 The asset expected on the GitHub release is named **`sceau-<version>-universal.apk`** (for example `sceau-1.0.0-universal.apk`, URL `https://github.com/mgdx/Sceau/releases/download/v1.0.0/sceau-1.0.0-universal.apk`). This name is fixed by [`../release.md`](../release.md): changing it requires changing the recipe.
 

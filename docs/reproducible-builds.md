@@ -57,7 +57,7 @@ The script only checks what is committed: uncommitted local changes are ignored.
 F-Droid publishes only one APK, the **universal** one (D38): a single recipe, a single `Builds` block per version, without `VercodeOperation`, with the same `versionCode` as `app/build.gradle.kts`. The per-architecture APKs remain published on GitHub releases only. Draft recipe and instructions: [`docs/fdroid/`](fdroid/).
 
 - `output:` designates `build/outputs/apk/release/app-universal-release-unsigned.apk` (path relative to `subdir: app`), produced by `assembleRelease` together with the four per-ABI APKs, which are ignored;
-- `binary:` points to the author-signed universal APK on the GitHub release, `https://github.com/mgdx/Sceau/releases/download/v%v/sceau-%v-universal.apk` (naming fixed by [`docs/release.md`](release.md));
+- `Binaries:` (top-level field, inherited by every version) points to the author-signed universal APK on the GitHub release, `https://github.com/mgdx/Sceau/releases/download/v%v/sceau-%v-universal.apk` (naming fixed by [`docs/release.md`](release.md));
 - `AllowedAPKSigningKeys:` gives the SHA-256 fingerprint of the author's signing certificate.
 
 F-Droid builds the universal APK from the tag commit, copies the signature of the author's APK onto its own APK, verifies the resulting signature, and publishes the author's APK only if it is valid, that is, if the contents are identical. The signing must therefore be done by `apksigner` (v2 and v3 schemes only, never v1: D54) on the unsigned APK exactly as Gradle produced it, without modifying its contents (procedure in `docs/release.md`). Before submitting, `scripts/check-reproducible.sh v<version>` must give identical APKs, the universal one included.

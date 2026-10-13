@@ -29,6 +29,7 @@ AutoName: Sceau
 
 RepoType: git
 Repo: https://github.com/mgdx/Sceau.git
+Binaries: https://github.com/mgdx/Sceau/releases/download/v%v/sceau-%v-universal.apk
 
 Builds:
   - versionName: 1.0.0
@@ -45,7 +46,6 @@ Builds:
     gradle:
       - yes
     output: build/outputs/apk/release/app-universal-release-unsigned.apk
-    binary: https://github.com/mgdx/Sceau/releases/download/v%v/sceau-%v-universal.apk
     prebuild:
       - sed -i -e '/foojay/d' ../settings.gradle.kts
       - echo -e '\norg.gradle.java.installations.auto-download=false' >> ../gradle.properties
