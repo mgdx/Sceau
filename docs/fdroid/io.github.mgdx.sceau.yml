@@ -1,15 +1,15 @@
 # Sceau's fdroiddata recipe (metadata/io.github.mgdx.sceau.yml), a copy of the one submitted by
-# merge request on 2026-10-12. Instructions: docs/fdroid/README.md. Decisions: D25 (reproducible
+# merge request on 2026-10-12, amended on 2026-10-13. Instructions: docs/fdroid/README.md. Decisions: D25 (reproducible
 # builds), D38, D53, D54.
 #
 # A single APK, the universal one: no VercodeOperation, versionCode identical to the one in
 # app/build.gradle.kts. The per-architecture APKs remain reserved for GitHub releases; since the
 # ABI splits produce five APKs, `output` designates the universal one.
 #
-# Build environment (D49): JDK 25 for the Gradle daemon and JDK 17 for the toolchains,
-# installed with apt (the build server runs Debian trixie, hence bookworm for 17);
-# foojay plugin removed and JDK download disabled, so that no binary JDK is
-# fetched during the build; CMake 4.1.2 and NDK r28c through the SDK. The OpenJPEG submodule is
+# Build environment (D49, revised by D56): the build server's default JDK 21 only, for the
+# Gradle daemon and the toolchains (daemon JDK pin removed, `jvmToolchain(17)` raised to 21);
+# foojay plugin removed, so that no binary JDK is fetched during the build; CMake 4.1.2 and
+# NDK r28c through the SDK. The OpenJPEG submodule is
 # compiled from source. Neither scanignore nor scandelete: the scanner finds nothing there (D54).
 #
 # This file is a fixed point of `fdroid rewritemeta` (ruamel.yaml 0.18.6): do not
@@ -37,18 +37,15 @@ Builds:
     commit: d715d23ffa82e597472c3675ce7ee0edf3dad642
     subdir: app
     submodules: true
-    sudo:
-      - echo "deb https://deb.debian.org/debian bookworm main" > /etc/apt/sources.list.d/bookworm.list
-      - apt-get update
-      - apt-get install -y -t bookworm openjdk-17-jdk-headless
-      - apt-get install -y openjdk-25-jdk-headless
-      - update-java-alternatives -a
     gradle:
       - yes
     output: build/outputs/apk/release/app-universal-release-unsigned.apk
+    rm:
+      - gradle/gradle-daemon-jvm.properties
     prebuild:
       - sed -i -e '/foojay/d' ../settings.gradle.kts
-      - echo -e '\norg.gradle.java.installations.auto-download=false' >> ../gradle.properties
+      - sed -i -e 's/jvmToolchain(17)/jvmToolchain(21)/' build.gradle.kts ../core/build.gradle.kts
+        ../testchip/build.gradle.kts
       - sdkmanager 'cmake;4.1.2'
     ndk: r28c
 

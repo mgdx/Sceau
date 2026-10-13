@@ -31,12 +31,12 @@ Upgrading any of these versions changes the APKs: the developer and F-Droid must
 | Gradle | 9.5.0 | `gradle/wrapper/gradle-wrapper.properties` |
 | AGP (internal R8, D8, aapt2, zipalign) | 9.3.3 | `gradle/libs.versions.toml` |
 | Kotlin plugins (compiler built into AGP 9 for `:app`) | `kotlin` | `gradle/libs.versions.toml` |
-| Compilation JDK (toolchain) | 17 | `kotlin { jvmToolchain(17) }` |
-| Gradle daemon JDK (runs R8) | 25 | `gradle/gradle-daemon-jvm.properties` |
 | NDK | 28.2.13676358 | `ndkVersion` in `app/build.gradle.kts` |
 | CMake | 4.1.2 | `externalNativeBuild.cmake.version` |
 | OpenJPEG | commit `8314119b` | submodule `app/src/main/cpp/openjpeg` |
 | Maven dependencies | exact versions | `gradle/libs.versions.toml` |
+
+The JDK versions do not need to match (D56): 1.0.0 built with daemon and toolchain JDKs 25/17, 21/17, 17/17 and 21/21 gives the same APK byte for byte. The project pins JDK 25 for the daemon and 17 for the toolchains for its own builds; F-Droid builds with JDK 21 alone.
 
 The SDK build-tools are not used to produce the APK (aapt2 comes from Maven with AGP): their version has no effect.
 

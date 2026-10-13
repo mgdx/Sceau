@@ -646,7 +646,7 @@ Format: date, context, decision, rationale, deviation from the SPEC concerned.
 - **Rationale**: no status B file is embedded (D26), and the removal costs no coverage. `TrustStoreTest` checks that both fingerprints are indeed present in the embedded Master List: if a future BSI list removed them, the test would fail and the question of the Greek source would arise again.
 - **Deviation from the SPEC**: §7.1 updated.
 
-## D49. Build environment declared in the F-Droid recipe (complements D25 and D38)
+## D49. Build environment declared in the F-Droid recipe (complements D25 and D38, revised by D56)
 
 - **Date**: 2026-10-12.
 - **Context**: the build requires JDK 25 for the Gradle daemon (`gradle/gradle-daemon-jvm.properties`, whose `toolchainUrl` entries point to api.foojay.io), JDK 17 for the toolchains (`jvmToolchain(17)`), which the `foojay-resolver-convention` plugin downloads if missing, and CMake 4.1.2. The fdroiddata recipe only mentioned these needs in a comment. The F-Droid build server (Debian trixie) has neither JDK 17 nor JDK 25 by default, and a JDK downloaded during the build is a binary not built from source, which F-Droid refuses.
@@ -702,3 +702,11 @@ Format: date, context, decision, rationale, deviation from the SPEC concerned.
 - **Decision**: English becomes the default language. The English strings move to `res/values/strings_<screen>.xml` (moved from `values-en/`), the French ones to a new `values-fr/` (moved from `values/`). `values-en/` disappears: its last file, `strings.xml`, only contained a comment. The `translatable="false"` strings (repository and donation URLs, library names, `MRZ`, identifiers DG1…EF.CardSecurity) and `app_name` remain in `values/` only. The seven French plurals gain a `many` category identical to `other`, as in es, it and pt (D27): the `MissingQuantity` lint check, which does not check the default folder, requires it for `values-fr/`. `res/xml/locales_config.xml` is unchanged: it already offers `fr` and `en`, English being served by `values/`. No code depends on the default language; tests that check a French text already set their locale (`@Config(qualifiers = "fr…")`), and the F-Droid screenshots are still produced in fr-FR and en-US (D39).
 - **Rationale**: Sceau targets an international audience (trust store covering 110 countries, F-Droid); English is the most widely understood fallback language, and the one F-Droid reviewers expect. French speakers see no difference: a phone set to French, whatever the region (`fr-FR`, `fr-BE`, `fr-CA`…), gets `values-fr/`.
 - **Deviation from the SPEC**: §2 (“Interface in French”) and error messages “in French” on the reading screen; SPEC updated.
+
+## D56. F-Droid recipe built with JDK 21 alone (revises D49)
+
+- **Date**: 2026-10-13.
+- **Context**: in the fdroiddata merge request, the reviewer asked why the recipe installs two JDKs (17 from bookworm, 25 from trixie) and noted that the JDK version generally does not affect reproducibility. D49 and `docs/reproducible-builds.md` assumed that the daemon JDK, which runs R8, and the toolchain JDK were part of the reproducible environment, without having tested it.
+- **Decision**: the recipe drops `sudo:` and the `auto-download=false` line. It removes `gradle/gradle-daemon-jvm.properties` with `rm:`, so the daemon runs on the server's default JDK 21, and replaces `jvmToolchain(17)` with `jvmToolchain(21)` in the three modules in `prebuild:`. The foojay plugin removal stays. The repository keeps JDK 25 for the daemon and 17 for the toolchains; the JDK rows leave the table of versions to pin.
+- **Rationale**: measured, not assumed. 1.0.0 built in clean clones with daemon/toolchain JDKs 25/17, 21/17, 17/17 and 21/21 (auto-download and auto-detection off, only the listed JDKs visible), then with the exact recipe steps under JDK 21: the five universal APKs are identical byte for byte, and `apksigcopier compare` matches each one against the signed release APK; a per-ABI APK is correctly reported as different. R8 and D8 output does not depend on the JVM that runs them. The recipe becomes shorter and installs nothing.
+- **Deviation from the SPEC**: none.

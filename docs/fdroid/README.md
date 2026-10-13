@@ -18,12 +18,12 @@ aapt2 dump xmltree --file AndroidManifest.xml app-universal-release-unsigned.apk
 
 ## Build environment
 
-The F-Droid build server (Debian trixie) provides neither the JDKs nor the CMake used by the project, and F-Droid rejects any binary JDK downloaded during the build. The recipe installs them itself (D49):
+The F-Droid build server (Debian trixie) provides JDK 21 only, neither JDK 17 (`jvmToolchain(17)`) nor JDK 25 (Gradle daemon, `gradle/gradle-daemon-jvm.properties`), nor the CMake used by the project, and F-Droid rejects any binary JDK downloaded during the build. The JDK version does not change the APK (D56), so the recipe builds with JDK 21 alone:
 
-- **`sudo:`**: JDK 17 (`jvmToolchain(17)` toolchains of the three modules), taken from bookworm since trixie no longer has it, and JDK 25 (Gradle daemon, `gradle/gradle-daemon-jvm.properties`), then `update-java-alternatives -a`. Gradle finds the JDKs installed in `/usr/lib/jvm` on its own.
-- **`prebuild:`** (run from `app/`, hence the `../`): removal of the `foojay-resolver-convention` plugin from `settings.gradle.kts` and `org.gradle.java.installations.auto-download=false` added to `gradle.properties`, so that a missing JDK makes the build fail instead of being downloaded (the daemon's `toolchainUrl` entries also point to foojay); `sdkmanager 'cmake;4.1.2'` (`externalNativeBuild.cmake.version`). NDK r28c comes from the `ndk:` field.
+- **`rm:`** `gradle/gradle-daemon-jvm.properties`: the daemon runs on the default `java`, JDK 21. The file's `toolchainUrl` entries point to foojay.
+- **`prebuild:`** (run from `app/`, hence the `../`): removal of the `foojay-resolver-convention` plugin from `settings.gradle.kts`; `jvmToolchain(17)` replaced by `jvmToolchain(21)` in the three modules; `sdkmanager 'cmake;4.1.2'` (`externalNativeBuild.cmake.version`). NDK r28c comes from the `ndk:` field.
 
-These modifications do not change the APK. Verified in a clone: `./gradlew :app:assembleRelease --offline` after the prebuild gives an `app-universal-release-unsigned.apk` byte-for-byte identical (`cmp`) to the one built without it. The local build and the CI keep foojay.
+These modifications do not change the APK. Verified on 2026-10-13 in a clean clone of 1.0.0 with JDK 21 as the only `java`: the universal APK is identical byte for byte to the one built with JDKs 17 and 25, and `apksigcopier compare` matches it against the signed release APK. The local build and the CI keep JDK 25, JDK 17 and foojay.
 
 ## Fill in before submission
 
