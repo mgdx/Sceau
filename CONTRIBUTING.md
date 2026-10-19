@@ -95,6 +95,10 @@ Usual scopes: `core`, `app`, `trust`, `reading`, `result`, `home`, `about`, `nfc
 
 The message body explains the why, and cites where relevant the SPEC section or the decision in `docs/decisions.md` concerned.
 
+## Reporting a vulnerability
+
+Security problems are not reported as issues or pull requests. Use GitHub's private form, https://github.com/mgdx/Sceau/security/advisories/new, as described in [`SECURITY.md`](SECURITY.md). A pull request that fixes a vulnerability must not be opened before the report has been acknowledged, so that the fix and the advisory can be published together.
+
 ## Proposing a contribution
 
 1. Create a branch from `main`.

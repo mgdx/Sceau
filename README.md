@@ -229,6 +229,9 @@ library under any pretext.
 Contributions are welcome. See **[CONTRIBUTING.md](CONTRIBUTING.md)**, and open
 an issue before a large change.
 
+- 🔒 **Report a vulnerability** privately, through
+  [GitHub's form](https://github.com/mgdx/Sceau/security/advisories/new), never
+  in a public issue: see [`SECURITY.md`](SECURITY.md).
 - 🌍 **Proofread a translation.** The 44 translations were made without review by
   native speakers. Each language has its glossary in
   [`docs/traduction/`](docs/traduction/).
