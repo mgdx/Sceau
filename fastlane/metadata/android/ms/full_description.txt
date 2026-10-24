@@ -36,7 +36,7 @@ Sceau disertakan dengan sijil CSCA Perancis yang diterbitkan oleh ANTS, sijil ya
 <ul>
 <li>Satu-satunya kebenaran: NFC</li>
 <li>Tiada data yang dibaca daripada cip disimpan; memori dikosongkan apabila anda meninggalkan keputusan atau apabila apl beralih ke latar belakang</li>
-<li>Tangkapan skrin disekat di seluruh apl</li>
+<li>Tangkapan skrin dan rakaman skrin disekat di seluruh apl: hasilnya hitam, memang disengajakan</li>
 <li>Tiada iklan, tiada penjejak, tiada perkhidmatan Google</li>
 </ul>
 

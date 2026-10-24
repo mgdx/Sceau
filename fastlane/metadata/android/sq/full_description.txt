@@ -36,7 +36,7 @@ Sceau përfshin certifikatat CSCA franceze të publikuara nga ANTS, certifikata 
 <ul>
 <li>E vetmja leje: NFC</li>
 <li>Asnjë e dhënë e lexuar nga çipi nuk ruhet; memoria fshihet kur del nga rezultati ose kur aplikacioni kalon në sfond</li>
-<li>Pamjet e ekranit janë të bllokuara në të gjithë aplikacionin</li>
+<li>Pamjet dhe regjistrimet e ekranit janë të bllokuara në të gjithë aplikacionin: dalin të zeza, qëllimisht</li>
 <li>Pa reklama, pa gjurmues, pa shërbime Google</li>
 </ul>
 

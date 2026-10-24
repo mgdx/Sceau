@@ -36,7 +36,7 @@ Sceau embarque les certificats CSCA français de l'ANTS, des certificats publié
 <ul>
 <li>Seule permission : NFC</li>
 <li>Aucune donnée lue n'est enregistrée ; la mémoire est effacée en quittant le résultat ou en passant en arrière-plan</li>
-<li>Captures d'écran bloquées dans toute l'application</li>
+<li>Captures et enregistrements d'écran bloqués dans toute l'application : ils apparaissent noirs, c'est voulu</li>
 <li>Aucune publicité, aucun traceur, aucun service Google</li>
 </ul>
 

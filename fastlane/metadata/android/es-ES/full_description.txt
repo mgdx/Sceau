@@ -36,7 +36,7 @@ Sceau incluye los certificados CSCA franceses publicados por la ANTS, los certif
 <ul>
 <li>Único permiso: NFC</li>
 <li>No se guarda ningún dato leído del chip; la memoria se borra al salir del resultado o cuando la aplicación pasa a segundo plano</li>
-<li>Capturas de pantalla bloqueadas en toda la aplicación</li>
+<li>Capturas y grabaciones de pantalla bloqueadas en toda la aplicación: salen en negro a propósito</li>
 <li>Sin publicidad, sin rastreadores, sin servicios de Google</li>
 </ul>
 

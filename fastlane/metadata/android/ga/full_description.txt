@@ -36,7 +36,7 @@ Tá i Sceau na deimhnithe CSCA Francacha a d’fhoilsigh ANTS, deimhnithe a d’
 <ul>
 <li>An t-aon chead: NFC</li>
 <li>Ní shábháiltear aon sonraí a léitear ón tsliseog; glantar an chuimhne nuair a fhágann tú an toradh nó nuair a théann an aip sa chúlra</li>
-<li>Tá gabhálacha scáileáin bactha ar fud na haipe</li>
+<li>Tá gabhálacha scáileáin agus taifeadtaí scáileáin bactha ar fud na haipe: bíonn siad dubh d’aon ghnó</li>
 <li>Gan fógraí, gan rianaitheoirí, gan seirbhísí Google</li>
 </ul>
 

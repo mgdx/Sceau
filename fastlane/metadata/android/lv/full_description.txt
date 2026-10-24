@@ -36,7 +36,7 @@ Lietotnē Sceau ir iebūvēti ANTS publicētie Francijas CSCA sertifikāti, Apvi
 <ul>
 <li>Vienīgā atļauja: NFC</li>
 <li>No mikroshēmas nolasītie dati netiek saglabāti; atmiņa tiek notīrīta, izejot no rezultāta vai lietotnei pārejot fonā</li>
-<li>Ekrānuzņēmumi visā lietotnē ir bloķēti</li>
+<li>Ekrānuzņēmumi un ekrāna ieraksti visā lietotnē ir bloķēti: tie ir melni, un tas ir apzināti</li>
 <li>Nav reklāmu, izsekotāju vai Google pakalpojumu</li>
 </ul>
 

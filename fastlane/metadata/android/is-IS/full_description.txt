@@ -36,7 +36,7 @@ Sceau inniheldur frönsku CSCA-vottorðin sem ANTS gefur út, vottorð sem Bretl
 <ul>
 <li>Eina heimildin: NFC</li>
 <li>Engin gögn sem lesin eru úr kubbnum eru vistuð; minnið er hreinsað þegar farið er af niðurstöðuskjánum eða forritið fer í bakgrunn</li>
-<li>Skjámyndir eru útilokaðar í öllu forritinu</li>
+<li>Skjámyndir og skjáupptökur eru útilokaðar í öllu forritinu: þær verða viljandi svartar</li>
 <li>Engar auglýsingar, engir rekjarar, engin Google-þjónusta</li>
 </ul>
 

@@ -3,7 +3,7 @@ Sceau liest per NFC den Chip von Ausweisdokumenten nach ICAO 9303 aus und prüft
 <b>Unterstützte Dokumente</b>
 <ul>
 <li>Biometrische Reisepässe aller Länder, mit Dokumentennummer, Geburtsdatum und Ablaufdatum</li>
-<li>Französischer Personalausweis (Scheckkartenformat, seit 2021), mit der 6-stelligen Zugangsnummer (CAN), die auf die Karte gedruckt ist</li>
+<li>Französischer Personalausweis (Scheckkartenformat, seit 2021), mit der aufgedruckten 6-stelligen Zugangsnummer (CAN)</li>
 <li>Europäische Personalausweise, mit der CAN oder der MRZ</li>
 </ul>
 
@@ -35,8 +35,8 @@ Sceau enthält die von der ANTS veröffentlichten französischen CSCA-Zertifikat
 <b>Datenschutz</b>
 <ul>
 <li>Einzige Berechtigung: NFC</li>
-<li>Keine aus dem Chip ausgelesenen Daten werden gespeichert; der Speicher wird gelöscht, sobald Sie das Ergebnis verlassen oder die App in den Hintergrund wechselt</li>
-<li>Screenshots sind in der gesamten App blockiert</li>
+<li>Aus dem Chip gelesene Daten werden nicht gespeichert; der Speicher wird gelöscht, sobald Sie das Ergebnis verlassen oder die App in den Hintergrund wechselt</li>
+<li>Screenshots und Bildschirmaufnahmen sind in der ganzen App blockiert: sie bleiben bewusst schwarz</li>
 <li>Keine Werbung, keine Tracker, keine Google-Dienste</li>
 </ul>
 
@@ -51,4 +51,4 @@ Sceau dient dazu, das eigene Dokument zu prüfen oder ein Dokument, das von sein
 
 Sceau liest weder Fingerabdrücke noch Irisbilder und erfasst die MRZ nicht mit der Kamera.
 
-Freie Software, ausschließlich unter der GPL Version 3.
+Freie Software, nur unter der GPL Version 3.

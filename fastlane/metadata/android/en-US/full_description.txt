@@ -36,7 +36,7 @@ Sceau ships the French CSCA certificates published by ANTS, certificates publish
 <ul>
 <li>Only permission: NFC</li>
 <li>No data read from the chip is saved; memory is wiped when leaving the result or when the app goes to the background</li>
-<li>Screenshots are blocked throughout the app</li>
+<li>Screenshots and screen recordings are blocked throughout the app: they come out black, by design</li>
 <li>No ads, no trackers, no Google services</li>
 </ul>
 

@@ -36,7 +36,7 @@ Sceau; ANTS’nin yayımladığı Fransız CSCA sertifikalarını, Birleşik Kra
 <ul>
 <li>Tek izin: NFC</li>
 <li>Çipten okunan hiçbir veri kaydedilmez; sonuç ekranından çıkıldığında veya uygulama arka plana geçtiğinde bellek temizlenir</li>
-<li>Uygulamanın tamamında ekran görüntüsü alınması engellenir</li>
+<li>Uygulamanın tamamında ekran görüntüsü alınması ve ekran kaydı yapılması engellenir: görüntüler bilerek siyah çıkar</li>
 <li>Reklam yok, izleyici yok, Google hizmetleri yok</li>
 </ul>
 

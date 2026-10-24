@@ -36,7 +36,7 @@ Sceau bevat de Franse CSCA-certificaten die ANTS publiceert, certificaten die he
 <ul>
 <li>Enige toestemming: NFC</li>
 <li>Er worden geen uit de chip gelezen gegevens opgeslagen; het geheugen wordt gewist wanneer je het resultaat verlaat of de app naar de achtergrond gaat</li>
-<li>Screenshots zijn in de hele app geblokkeerd</li>
+<li>Screenshots en schermopnamen zijn in de hele app geblokkeerd: ze worden zwart, met opzet</li>
 <li>Geen advertenties, geen trackers, geen Google-diensten</li>
 </ul>
 

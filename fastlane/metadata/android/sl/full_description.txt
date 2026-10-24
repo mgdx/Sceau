@@ -36,7 +36,7 @@ Sceau vsebuje francoska potrdila CSCA, ki jih objavlja agencija ANTS, potrdila, 
 <ul>
 <li>Edino dovoljenje: NFC</li>
 <li>Noben podatek, prebran iz čipa, se ne shrani; pomnilnik se počisti, ko zapustite rezultat ali ko se aplikacija premakne v ozadje</li>
-<li>Posnetki zaslona so onemogočeni v celotni aplikaciji</li>
+<li>Posnetki zaslona in snemanje zaslona so onemogočeni v celotni aplikaciji: rezultat je črn, kar je namerno</li>
 <li>Brez oglasov, brez sledilnikov, brez Googlovih storitev</li>
 </ul>
 

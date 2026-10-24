@@ -36,7 +36,7 @@ Sceau sisaldab ANTS-i avaldatud Prantsuse CSCA-sertifikaate, Ühendkuningriigi, 
 <ul>
 <li>Ainus luba: NFC</li>
 <li>Kiibilt loetud andmeid ei salvestata; mälu kustutatakse tulemusest lahkumisel või kui rakendus läheb taustale</li>
-<li>Ekraanipildid on kogu rakenduses blokeeritud</li>
+<li>Ekraanipildid ja ekraanisalvestused on kogu rakenduses blokeeritud: need jäävad meelega mustaks</li>
 <li>Reklaamid, jälgijad ja Google'i teenused puuduvad</li>
 </ul>
 

@@ -36,7 +36,7 @@ Rezultatas – vienas iš keturių įvertinimų („Autentiškas“, „Parašas
 <ul>
 <li>Vienintelis leidimas: NFC</li>
 <li>Jokie iš lusto nuskaityti duomenys neįrašomi; atmintis išvaloma išėjus iš rezultato arba programai perėjus į foninį režimą</li>
-<li>Ekrano kopijos užblokuotos visoje programoje</li>
+<li>Ekrano kopijos ir ekrano įrašai užblokuoti visoje programoje: jie tyčia būna juodi</li>
 <li>Jokių reklamų, sekiklių ar „Google“ paslaugų</li>
 </ul>
 

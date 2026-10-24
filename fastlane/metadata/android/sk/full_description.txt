@@ -36,7 +36,7 @@ Sceau obsahuje francúzske certifikáty CSCA zverejnené agentúrou ANTS, certif
 <ul>
 <li>Jediné povolenie: NFC</li>
 <li>Žiadne údaje prečítané z čipu sa neukladajú; pamäť sa vymaže pri opustení výsledku alebo pri presunutí aplikácie do pozadia</li>
-<li>Snímky obrazovky sú zablokované v celej aplikácii</li>
+<li>Snímky a záznamy obrazovky sú zablokované v celej aplikácii: zámerne sú čierne</li>
 <li>Žiadne reklamy, žiadne sledovače, žiadne služby Google</li>
 </ul>
 

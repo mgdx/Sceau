@@ -36,7 +36,7 @@ Sceau fih iċ-ċertifikati CSCA Franċiżi ppubblikati mill-ANTS, ċertifikati p
 <ul>
 <li>L-uniku permess: NFC</li>
 <li>L-ebda data moqrija miċ-ċippa ma tiġi ssejvjata; il-memorja titħassar meta toħroġ mir-riżultat jew meta l-app tmur fl-isfond</li>
-<li>L-screenshots huma mblukkati fl-app kollha</li>
+<li>L-screenshots u r-reġistrazzjonijiet tal-iskrin huma mblukkati fl-app kollha: joħorġu suwed, apposta</li>
 <li>L-ebda reklami, l-ebda trackers, l-ebda servizzi ta’ Google</li>
 </ul>
 

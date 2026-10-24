@@ -36,7 +36,7 @@ Sceau sisältää ANTS:n julkaisemat ranskalaiset CSCA-varmenteet, Yhdistyneen k
 <ul>
 <li>Ainoa käyttöoikeus: NFC</li>
 <li>Sirulta luettuja tietoja ei tallenneta; muisti tyhjennetään, kun poistut tulosnäkymästä tai sovellus siirtyy taustalle</li>
-<li>Kuvakaappaukset on estetty koko sovelluksessa</li>
+<li>Kuvakaappaukset ja näytön tallennukset on estetty koko sovelluksessa: ne näkyvät tarkoituksella mustina</li>
 <li>Ei mainoksia, ei seurantaa, ei Googlen palveluja</li>
 </ul>
 

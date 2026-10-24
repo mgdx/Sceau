@@ -36,7 +36,7 @@ Sceau har innebygd de franske CSCA-sertifikatene publisert av ANTS, sertifikater
 <ul>
 <li>Eneste tillatelse: NFC</li>
 <li>Ingen data som leses fra brikken, lagres; minnet tømmes når du forlater resultatet eller appen går i bakgrunnen</li>
-<li>Skjermbilder er blokkert i hele appen</li>
+<li>Skjermbilder og skjermopptak er blokkert i hele appen: de blir svarte, med vilje</li>
 <li>Ingen reklame, ingen sporere, ingen Google-tjenester</li>
 </ul>
 

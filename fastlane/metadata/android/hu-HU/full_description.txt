@@ -36,7 +36,7 @@ A Sceau tartalmazza az ANTS által közzétett francia CSCA-tanúsítványokat, 
 <ul>
 <li>Egyetlen engedély: NFC</li>
 <li>A chipről beolvasott adatokat nem menti; a memória törlődik az eredmény elhagyásakor, vagy amikor az alkalmazás a háttérbe kerül</li>
-<li>A képernyőképek az egész alkalmazásban le vannak tiltva</li>
+<li>A képernyőképek és képernyőfelvételek az egész alkalmazásban le vannak tiltva: szándékosan feketék</li>
 <li>Nincs reklám, nincs nyomkövető, nincsenek Google-szolgáltatások</li>
 </ul>
 

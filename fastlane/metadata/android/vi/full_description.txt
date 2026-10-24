@@ -36,7 +36,7 @@ Sceau tích hợp sẵn các chứng chỉ CSCA của Pháp do ANTS công bố, 
 <ul>
 <li>Quyền duy nhất: NFC</li>
 <li>Không lưu dữ liệu nào đọc từ chip; bộ nhớ được xóa khi rời khỏi kết quả hoặc khi ứng dụng chuyển sang chạy nền</li>
-<li>Chặn chụp ảnh màn hình trong toàn bộ ứng dụng</li>
+<li>Chặn chụp ảnh màn hình và quay màn hình trong toàn bộ ứng dụng: hình ảnh thu được sẽ có màu đen, đây là chủ ý</li>
 <li>Không quảng cáo, không trình theo dõi, không dịch vụ của Google</li>
 </ul>
 

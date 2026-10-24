@@ -36,7 +36,7 @@ Sceau innehåller de franska CSCA-certifikat som publiceras av ANTS, certifikat 
 <ul>
 <li>Enda behörighet: NFC</li>
 <li>Inga uppgifter som läses från chippet sparas; minnet rensas när du lämnar resultatet eller när appen hamnar i bakgrunden</li>
-<li>Skärmbilder blockeras i hela appen</li>
+<li>Skärmbilder och skärminspelningar blockeras i hela appen: de blir svarta, och det är avsiktligt</li>
 <li>Inga annonser, inga spårare, inga Google-tjänster</li>
 </ul>
 
