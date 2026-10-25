@@ -10,13 +10,16 @@
 
 <p align="center">
   <a href="LICENSE"><img alt="Licence: GPL-3.0-only" src="https://img.shields.io/badge/licence-GPL--3.0--only-1f7a4d?style=flat-square"></a>
-  <a href="https://f-droid.org/packages/io.github.mgdx.sceau/"><img alt="F-Droid version" src="https://img.shields.io/f-droid/v/io.github.mgdx.sceau?style=flat-square&color=1f7a4d&label=F-Droid"></a>
   <img alt="Android 8.0 and later" src="https://img.shields.io/badge/Android-8.0%2B-1f7a4d?style=flat-square">
   <img alt="NFC" src="https://img.shields.io/badge/NFC-ICAO%209303-1f7a4d?style=flat-square">
   <img alt="No tracker" src="https://img.shields.io/badge/trackers-none-1f7a4d?style=flat-square">
   <img alt="No network permission" src="https://img.shields.io/badge/network%20permission-none-1f7a4d?style=flat-square">
   <img alt="APK: 5.5 MB" src="https://img.shields.io/badge/APK-5.5%20MB-1f7a4d?style=flat-square">
   <a href="https://liberapay.com/mgdx"><img alt="Donate on Liberapay" src="https://img.shields.io/badge/donate-Liberapay-1f7a4d?style=flat-square&logo=liberapay&logoColor=white"></a>
+</p>
+
+<p align="center">
+  <a href="https://f-droid.org/packages/io.github.mgdx.sceau/"><img alt="Get it on F-Droid" src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" height="80"></a>
 </p>
 
 ## Description
@@ -160,10 +163,6 @@ Details: [`docs/architecture.md`](docs/architecture.md), section “Sensitive da
 lifecycle”.
 
 ## Installing
-
-<p>
-  <a href="https://f-droid.org/packages/io.github.mgdx.sceau/"><img alt="Get it on F-Droid" src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" height="80"></a>
-</p>
 
 Sceau is available on [F-Droid](https://f-droid.org/packages/io.github.mgdx.sceau/).
 Builds are reproducible, so F-Droid serves the very APK signed by the author
