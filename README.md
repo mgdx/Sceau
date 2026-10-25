@@ -19,7 +19,7 @@
 </p>
 
 <p align="center">
-  <a href="https://f-droid.org/packages/io.github.mgdx.sceau/"><img alt="Get it on F-Droid" src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" height="80"></a>
+  <a href="https://f-droid.org/packages/io.github.mgdx.sceau/"><img alt="Get it on F-Droid" src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" height="100"></a>
 </p>
 
 ## Description
@@ -179,6 +179,10 @@ You can also build it from source (below).
 
 Requires Android 8.0 or later, with NFC. The application also installs without
 NFC and says so when opened.
+
+<p align="center">
+  <a href="https://f-droid.org/packages/io.github.mgdx.sceau/"><img alt="Get it on F-Droid" src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" height="100"></a>
+</p>
 
 ## Building from source
 
