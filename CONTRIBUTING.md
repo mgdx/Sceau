@@ -101,7 +101,7 @@ Security problems are not reported as issues or pull requests. Use GitHub's priv
 
 ## Proposing a contribution
 
-1. Create a branch from `main`.
+1. Create a branch from `master`.
 2. Make your changes following the rules above, with the corresponding tests and documentation (`docs/`, and `fastlane/metadata/` if a visible feature changes).
 3. Check `./gradlew check`.
 4. Open a pull request describing the change, its justification and how it was verified (tests, and cases from [`docs/test-plan.md`](docs/test-plan.md) run on a device where relevant).

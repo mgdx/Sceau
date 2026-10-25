@@ -12,11 +12,11 @@ Rules that allow no exception:
 
 1. `app/build.gradle.kts`: `versionName` (`X.Y.Z` format) and `versionCode` (strictly increasing integer; `1` for 1.0.0). A single `versionCode` for all APKs: no per-ABI code (D38).
 2. Fastlane changelog: `fastlane/metadata/android/fr-FR/changelogs/<versionCode>.txt` and `en-US/…` (500 characters at most).
-3. `docs/` up to date (SPEC §11, `CLAUDE.md`, decisions), commit `chore(release): version 1.0.0` on `main`.
+3. `docs/` up to date (SPEC §11, `CLAUDE.md`, decisions), commit `chore(release): version 1.0.0` on `master`.
 
 ## 2. Pre-release checks
 
-On a clean clone of `main` (empty `git status`, submodule up to date: `git submodule update --init`):
+On a clean clone of `master` (empty `git status`, submodule up to date: `git submodule update --init`):
 
 | Check | Command or document | Expected |
 |---|---|---|
@@ -128,7 +128,7 @@ Asset naming, not to be changed (the F-Droid recipe depends on it for the univer
 
 ```bash
 git tag -a v1.0.0 -m "Sceau 1.0.0"
-git push origin main
+git push origin master
 git push --tags
 gh release create v1.0.0 \
   --title "Sceau 1.0.0" \

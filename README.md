@@ -10,6 +10,7 @@
 
 <p align="center">
   <a href="LICENSE"><img alt="Licence: GPL-3.0-only" src="https://img.shields.io/badge/licence-GPL--3.0--only-1f7a4d?style=flat-square"></a>
+  <a href="https://f-droid.org/packages/io.github.mgdx.sceau/"><img alt="F-Droid version" src="https://img.shields.io/f-droid/v/io.github.mgdx.sceau?style=flat-square&color=1f7a4d&label=F-Droid"></a>
   <img alt="Android 8.0 and later" src="https://img.shields.io/badge/Android-8.0%2B-1f7a4d?style=flat-square">
   <img alt="NFC" src="https://img.shields.io/badge/NFC-ICAO%209303-1f7a4d?style=flat-square">
   <img alt="No tracker" src="https://img.shields.io/badge/trackers-none-1f7a4d?style=flat-square">
@@ -160,11 +161,17 @@ lifecycle”.
 
 ## Installing
 
-Download the APK from the [releases page](https://github.com/mgdx/Sceau/releases)
+<p>
+  <a href="https://f-droid.org/packages/io.github.mgdx.sceau/"><img alt="Get it on F-Droid" src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" height="80"></a>
+</p>
+
+Sceau is available on [F-Droid](https://f-droid.org/packages/io.github.mgdx.sceau/).
+Builds are reproducible, so F-Droid serves the very APK signed by the author
+([how](docs/reproducible-builds.md)).
+
+You can also download the APK from the [releases page](https://github.com/mgdx/Sceau/releases)
 of this repository: one APK per architecture (`arm64-v8a` for almost any recent
-phone), a universal one, and a `SHA256SUMS` file. Sceau will then come to
-F-Droid. Builds are reproducible, so F-Droid will serve the very APK signed by
-the author ([how](docs/reproducible-builds.md)).
+phone), a universal one, and a `SHA256SUMS` file.
 
 The signing certificate's SHA-256 fingerprint is
 `DE:E8:10:5B:0B:0F:27:B4:44:B3:30:3E:0B:34:02:28:35:18:8D:49:D9:52:FF:25:42:FB:BC:05:79:27:43:4B`.
