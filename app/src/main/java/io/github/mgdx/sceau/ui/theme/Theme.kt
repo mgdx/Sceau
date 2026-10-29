@@ -81,17 +81,17 @@ private val LightColorScheme =
     )
 
 /**
- * Sceau's Material 3 theme: dark mode following the system and brand palette
- * (navy, ivory, logo green).
+ * Sceau's Material 3 theme: dark mode following the system and, on Android 12+, the
+ * system's dynamic colors (Material You, D57). Below Android 12, or with
+ * `dynamicColor = false`, brand palette (navy, ivory, logo green).
  *
- * Android 12+ dynamic colors are disabled by default: an identity verification app must
- * keep a stable, recognizable appearance, and a primary color taken from the wallpaper
- * (red, green...) would blur the reading of the verdicts.
+ * The verdicts never take their colors from this scheme: they keep their own palette
+ * ([io.github.mgdx.sceau.ui.result.VerdictColors]), whatever the wallpaper.
  */
 @Composable
 fun SceauTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = false,
+    dynamicColor: Boolean = true,
     content: @Composable () -> Unit,
 ) {
     val colorScheme =

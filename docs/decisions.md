@@ -211,7 +211,7 @@ Format: date, context, decision, rationale, deviation from the SPEC concerned.
 - **Rationale**: test `:core` against an independent implementation of the chip; allow demonstrations and interface testing without a real identity document, without any test key or certificate reaching the distributed APK.
 - **Deviation from the SPEC**: §2 (third module); §5 (menu entry outside the SPEC, debug APK only).
 
-## D18. Dynamic colors disabled
+## D18. Dynamic colors disabled (revised by D57)
 
 - **Date**: 2026-09-25.
 - **Context**: on Android 12+, Material 3 offers colors derived from the wallpaper (dynamic colors).
@@ -710,3 +710,11 @@ Format: date, context, decision, rationale, deviation from the SPEC concerned.
 - **Decision**: the recipe drops `sudo:` and the `auto-download=false` line. It removes `gradle/gradle-daemon-jvm.properties` with `rm:`, so the daemon runs on the server's default JDK 21, and replaces `jvmToolchain(17)` with `jvmToolchain(21)` in the three modules in `prebuild:`. The foojay plugin removal stays. The repository keeps JDK 25 for the daemon and 17 for the toolchains; the JDK rows leave the table of versions to pin.
 - **Rationale**: measured, not assumed. 1.0.0 built in clean clones with daemon/toolchain JDKs 25/17, 21/17, 17/17 and 21/21 (auto-download and auto-detection off, only the listed JDKs visible), then with the exact recipe steps under JDK 21: the five universal APKs are identical byte for byte, and `apksigcopier compare` matches each one against the signed release APK; a per-ABI APK is correctly reported as different. R8 and D8 output does not depend on the JVM that runs them. The recipe becomes shorter and installs nothing.
 - **Deviation from the SPEC**: none.
+
+## D57. Dynamic colors by default (revises D18)
+
+- **Date**: 2026-10-29 (author's decision).
+- **Context**: issue #1 asks Sceau to follow the system color scheme (Material You) instead of its own palette, whose ivory background reads as yellow next to other apps. D18 had ruled dynamic colors out for fear that a red or green primary color taken from the wallpaper would blur the reading of the verdicts. The verdict cards, however, never used the theme colors: they have their own palette (`VerdictColors`, contrast checked by `VerdictColorsTest`). Tried on the Fairphone 3 (Android 15) with a red then a green source color, in light and dark mode.
+- **Decision**: `SceauTheme` uses `dynamicLightColorScheme`/`dynamicDarkColorScheme` on Android 12+ (`dynamicColor = true` by default), and the logo palette below Android 12. No setting in the app. Verdict colors are unchanged and stay independent of the scheme. The F-Droid screenshots (`StoreScreenshots`) keep the logo palette (`dynamicColor = false`) so that they do not depend on the Robolectric wallpaper.
+- **Rationale**: the author's choice after trying it on a real device. The app blends in with the system, as the user asked, and the verdict, which carries the meaning, keeps its fixed colors whatever the wallpaper.
+- **Deviation from the SPEC**: §2 updated.

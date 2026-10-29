@@ -121,7 +121,7 @@ class StoreScreenshots {
         setNfcEnabled(activity)
 
         compose.setContent {
-            SceauTheme(darkTheme = false) {
+            SceauTheme(darkTheme = false, dynamicColor = false) {
                 scene?.let { current -> key(current.name) { current.content() } }
             }
         }
