@@ -1,0 +1,4 @@
+Fejlesztések.
+• A tulajdonos életkora a születési idő mellett
+• A beépített Master List aláírásának dátuma és kora a megbízható tanúsítványok között, egy év után figyelmeztetéssel
+• A rendszer dinamikus színei (Material You) Android 12 és újabb rendszereken

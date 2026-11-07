@@ -1,0 +1,4 @@
+Cải tiến.
+• Hiển thị tuổi của người mang giấy tờ bên cạnh ngày sinh
+• Ngày ký và tuổi của Master List tích hợp sẵn trong kho chứng chỉ tin cậy, kèm cảnh báo sau một năm
+• Màu động của hệ thống (Material You) trên Android 12 trở lên

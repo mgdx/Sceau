@@ -1,0 +1,4 @@
+İyileştirmeler.
+• Belge sahibinin yaşı doğum tarihinin yanında gösteriliyor
+• Güven deposunda yerleşik Master List’in imza tarihi ve yaşı, bir yıldan sonra uyarıyla
+• Android 12 ve üzeri sürümlerde sistemin dinamik renkleri (Material You)

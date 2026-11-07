@@ -1,0 +1,4 @@
+Ulepszenia.
+• Wiek posiadacza wyświetlany obok daty urodzenia
+• Data podpisu i wiek wbudowanej Master List w zaufanych certyfikatach, z ostrzeżeniem po roku
+• Dynamiczne kolory systemu (Material You) na Androidzie 12 i nowszych

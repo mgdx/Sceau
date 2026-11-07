@@ -1,0 +1,4 @@
+Parannuksia.
+• Haltijan ikä näytetään syntymäajan vieressä
+• Sovellukseen sisältyvän Master Listin allekirjoituspäivä ja ikä luotetuissa varmenteissa, varoitus vuoden jälkeen
+• Järjestelmän dynaamiset värit (Material You) Android 12:ssa ja uudemmissa

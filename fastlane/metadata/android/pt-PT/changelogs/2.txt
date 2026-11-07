@@ -1,0 +1,4 @@
+Melhorias.
+• Idade do titular apresentada junto à data de nascimento
+• Data de assinatura e idade da Master List integrada no repositório de confiança, com um aviso ao fim de um ano
+• Cores dinâmicas do sistema (Material You) no Android 12 e posteriores

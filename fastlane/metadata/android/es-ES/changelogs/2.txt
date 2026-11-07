@@ -1,0 +1,4 @@
+Mejoras.
+• Edad del titular junto a la fecha de nacimiento
+• Fecha de firma y antigüedad de la Master List integrada en el almacén de confianza, con un aviso pasado un año
+• Colores dinámicos del sistema (Material You) en Android 12 y posteriores

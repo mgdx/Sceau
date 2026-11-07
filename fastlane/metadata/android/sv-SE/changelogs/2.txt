@@ -1,0 +1,4 @@
+Förbättringar.
+• Innehavarens ålder visas bredvid födelsedatumet
+• Signeringsdatum och ålder för den inbyggda Master List i tillitsarkivet, med en varning efter ett år
+• Systemets dynamiska färger (Material You) på Android 12 och senare

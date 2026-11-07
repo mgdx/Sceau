@@ -1,0 +1,4 @@
+Täiustused.
+• Dokumendi kasutaja vanus kuvatakse sünniaja kõrval
+• Sisseehitatud Master Listi allkirjastamise kuupäev ja vanus usaldushoidlas, hoiatusega pärast ühte aastat
+• Süsteemi dünaamilised värvid (Material You) Android 12 ja uuemates

@@ -1,0 +1,4 @@
+Verbesserungen.
+• Alter der Inhaberin oder des Inhabers neben dem Geburtsdatum
+• Signaturdatum und Alter der integrierten Master List im Vertrauensspeicher, mit Warnung nach einem Jahr
+• Dynamische Systemfarben (Material You) ab Android 12

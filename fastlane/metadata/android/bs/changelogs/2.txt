@@ -1,0 +1,4 @@
+Poboljšanja.
+• Dob nosioca prikazana pored datuma rođenja
+• Datum potpisivanja i starost ugrađene Master List u pouzdanim certifikatima, s upozorenjem nakon godinu dana
+• Dinamičke boje sistema (Material You) na Androidu 12 i novijim

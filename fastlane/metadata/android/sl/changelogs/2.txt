@@ -1,0 +1,4 @@
+Izboljšave.
+• Starost imetnika prikazana ob datumu rojstva
+• Datum podpisa in starost vgrajenega seznama Master List med zaupanja vrednimi potrdili, z opozorilom po enem letu
+• Dinamične barve sistema (Material You) v Androidu 12 in novejših

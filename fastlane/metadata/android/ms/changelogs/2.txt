@@ -1,0 +1,4 @@
+Penambahbaikan.
+• Umur pemegang dipaparkan di sebelah tarikh lahir
+• Tarikh tandatangan dan usia Master List terbina dalam di stor sijil dipercayai, dengan amaran selepas setahun
+• Warna dinamik sistem (Material You) pada Android 12 dan yang lebih baharu

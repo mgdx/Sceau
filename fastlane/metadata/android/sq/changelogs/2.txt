@@ -1,0 +1,4 @@
+Përmirësime.
+• Mosha e mbajtësit shfaqet pranë datëlindjes
+• Data e nënshkrimit dhe mosha e Master List të integruar te certifikatat e besuara, me një paralajmërim pas një viti
+• Ngjyra dinamike të sistemit (Material You) në Android 12 e më të ri
