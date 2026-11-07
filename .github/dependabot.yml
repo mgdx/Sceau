@@ -1,0 +1,38 @@
+# Dependabot: version updates for the cryptographic and ICAO libraries only.
+#
+# The lint checks "GradleDependency" and "NewerVersionAvailable" are disabled in
+# app/build.gradle.kts because they query the network and would break the CI on
+# any upstream release. Version upgrades are decided by hand (docs/dependencies.md
+# §5), but a new release of BouncyCastle, JMRTD or SCUBA (JMRTD's companion
+# libraries, same author) matters for security and interoperability, so
+# Dependabot opens a pull request for those three families only. Each PR is
+# checked by the CI workflow (.github/workflows/ci.yml, triggered on pull_request)
+# and must pass the android-fdroid review before merging (docs/release.md).
+#
+# Every other dependency (AndroidX, Compose, AGP, Kotlin...) is excluded by the
+# "allow" list below. Security alerts are a separate repository setting
+# (Settings → Code security), independent of this file.
+version: 2
+updates:
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "build(deps)"
+    labels:
+      - "dependencies"
+    allow:
+      - dependency-name: "org.bouncycastle:*"
+      - dependency-name: "org.jmrtd:*"
+      - dependency-name: "net.sf.scuba:*"
+    groups:
+      bouncycastle:
+        patterns:
+          - "org.bouncycastle:*"
+      jmrtd:
+        patterns:
+          - "org.jmrtd:*"
+          - "net.sf.scuba:*"

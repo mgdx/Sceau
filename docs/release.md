@@ -27,6 +27,7 @@ On a clean clone of `master` (empty `git status`, submodule up to date: `git sub
 | Reproducibility | `scripts/check-reproducible.sh` | five byte-for-byte identical APKs (universal included) |
 | Test plan | `docs/test-plan.md`, **on the signed release APK** (step 4) installed on a real phone, cases TP-38 to TP-41 at minimum, plus the cases affected by the version | all OK, dated report |
 | F-Droid review | `android-fdroid` skill (first submission, then at every dependency change) | no blocker |
+| Dependabot PRs | https://github.com/mgdx/Sceau/pulls (label `dependencies`) | no open Dependabot PR for BouncyCastle or JMRTD/SCUBA left pending; otherwise, review and merge or close it before the release (`docs/dependencies.md` §5) |
 
 The test plan is run on the release APK, not on the debug one: R8 (D24) may remove a class that only a real read reaches.
 
