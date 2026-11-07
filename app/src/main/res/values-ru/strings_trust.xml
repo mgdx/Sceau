@@ -14,6 +14,18 @@
     <string name="trust_retry">Повторить</string>
     <string name="trust_empty">Нет доверенных сертификатов.</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">Встроенный Master List, подписан %1$s (%2$s).</string>
+    <string name="trust_master_list_age_recent">менее месяца назад</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="one">%1$d месяц назад</item>
+        <item quantity="few">%1$d месяца назад</item>
+        <item quantity="many">%1$d месяцев назад</item>
+        <item quantity="other">%1$d месяца назад</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">Встроенный Master List: дата подписи не указана.</string>
+    <string name="trust_master_list_stale_warning">Этому Master List больше года. Сертификаты, опубликованные с тех пор, могут отсутствовать, и недавние документы могут быть отмечены как выданные неизвестным издателем. Обновите Sceau или импортируйте более новый Master List.</string>
+
     <!-- Liste -->
     <string name="trust_country_unknown">Страна не указана</string>
     <plurals name="trust_country_count">

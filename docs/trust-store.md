@@ -133,6 +133,10 @@ hence the file name.
   serial numbers. The 3 French certificates already provided by ANTS keep the `ANTS` source.
 - Downloaded on 2026-10-12.
 
+The “Trust store” screen shows the signing date and age of this file, and warns from twelve
+months on that it may be outdated and that a newer list should be imported or Sceau updated
+(decision D58).
+
 #### History
 
 | Date | Version | Change |

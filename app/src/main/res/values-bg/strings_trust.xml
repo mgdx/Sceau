@@ -12,6 +12,16 @@
     <string name="trust_retry">Нов опит</string>
     <string name="trust_empty">Няма доверени сертификати.</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">Вграден Master List, подписан на %1$s (%2$s).</string>
+    <string name="trust_master_list_age_recent">преди по-малко от месец</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="one">преди %1$d месец</item>
+        <item quantity="other">преди %1$d месеца</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">Вграден Master List: датата на подписване не е посочена.</string>
+    <string name="trust_master_list_stale_warning">Този Master List е на повече от една година. Сертификати, публикувани оттогава, може да липсват и скорошни документи може да бъдат отчетени като издадени от неизвестен издател. Актуализирайте Sceau или импортирайте по-нов Master List.</string>
+
     <!-- Liste -->
     <string name="trust_country_unknown">Непосочена държава</string>
     <plurals name="trust_country_count">

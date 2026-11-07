@@ -12,6 +12,16 @@
     <string name="trust_retry">Επανάληψη</string>
     <string name="trust_empty">Δεν υπάρχουν αξιόπιστα πιστοποιητικά.</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">Ενσωματωμένη Master List, υπογεγραμμένη στις %1$s (%2$s).</string>
+    <string name="trust_master_list_age_recent">πριν από λιγότερο από έναν μήνα</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="one">πριν από %1$d μήνα</item>
+        <item quantity="other">πριν από %1$d μήνες</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">Ενσωματωμένη Master List: η ημερομηνία υπογραφής δεν αναφέρεται.</string>
+    <string name="trust_master_list_stale_warning">Αυτή η Master List είναι παλαιότερη του ενός έτους. Πιστοποιητικά που δημοσιεύθηκαν έκτοτε ενδέχεται να λείπουν και πρόσφατα έγγραφα μπορεί να αναφερθούν ως προερχόμενα από άγνωστο εκδότη. Ενημερώστε το Sceau ή εισαγάγετε μια νεότερη Master List.</string>
+
     <!-- Liste -->
     <string name="trust_country_unknown">Χώρα μη καθορισμένη</string>
     <plurals name="trust_country_count">

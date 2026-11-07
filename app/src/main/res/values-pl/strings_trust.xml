@@ -14,6 +14,18 @@
     <string name="trust_retry">Spróbuj ponownie</string>
     <string name="trust_empty">Brak zaufanych certyfikatów.</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">Wbudowana Master List podpisana %1$s (%2$s).</string>
+    <string name="trust_master_list_age_recent">mniej niż miesiąc temu</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="one">%1$d miesiąc temu</item>
+        <item quantity="few">%1$d miesiące temu</item>
+        <item quantity="many">%1$d miesięcy temu</item>
+        <item quantity="other">%1$d miesiąca temu</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">Wbudowana Master List: nie podano daty podpisania.</string>
+    <string name="trust_master_list_stale_warning">Ta Master List ma ponad rok. Może brakować certyfikatów opublikowanych od tego czasu, a nowsze dokumenty mogą zostać zgłoszone jako pochodzące od nieznanego wystawcy. Zaktualizuj Sceau lub zaimportuj nowszą Master List.</string>
+
     <!-- Liste -->
     <string name="trust_country_unknown">Nie podano państwa</string>
     <plurals name="trust_country_count">

@@ -12,6 +12,16 @@
     <string name="trust_retry">Tekrar dene</string>
     <string name="trust_empty">Güven deposunda sertifika yok.</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">Yerleşik Master List, %1$s tarihinde imzalandı (%2$s).</string>
+    <string name="trust_master_list_age_recent">bir aydan kısa süre önce</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="one">%1$d ay önce</item>
+        <item quantity="other">%1$d ay önce</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">Yerleşik Master List: imza tarihi belirtilmemiş.</string>
+    <string name="trust_master_list_stale_warning">Bu Master List bir yıldan eski. O zamandan beri yayımlanan sertifikalar eksik olabilir ve yeni belgeler bilinmeyen bir düzenleyiciden geliyor olarak bildirilebilir. Sceau’yu güncelleyin veya daha yeni bir Master List içe aktarın.</string>
+
     <!-- Liste -->
     <string name="trust_country_unknown">Ülke belirtilmemiş</string>
     <plurals name="trust_country_count">

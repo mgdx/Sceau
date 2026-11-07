@@ -15,6 +15,19 @@
     <string name="trust_retry">Bain triail eile as</string>
     <string name="trust_empty">Níl aon deimhniú sa stór iontaobhais.</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">Master List ionsuite sínithe ar %1$s (%2$s).</string>
+    <string name="trust_master_list_age_recent">níos lú ná mí ó shin</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="one">%1$d mhí ó shin</item>
+        <item quantity="two">%1$d mhí ó shin</item>
+        <item quantity="few">%1$d mhí ó shin</item>
+        <item quantity="many">%1$d mí ó shin</item>
+        <item quantity="other">%1$d mí ó shin</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">Master List ionsuite: dáta sínithe gan sonrú.</string>
+    <string name="trust_master_list_stale_warning">Tá an Master List seo níos sine ná bliain. D’fhéadfadh deimhnithe a foilsíodh ó shin a bheith in easnamh, agus d’fhéadfaí doiciméid le déanaí a thuairisciú mar dhoiciméid ó eisitheoir anaithnid. Nuashonraigh Sceau nó iompórtáil Master List níos nuaí.</string>
+
     <!-- Liste -->
     <string name="trust_country_unknown">Tír gan sonrú</string>
     <plurals name="trust_country_count">

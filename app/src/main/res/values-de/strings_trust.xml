@@ -12,6 +12,16 @@
     <string name="trust_retry">Wiederholen</string>
     <string name="trust_empty">Keine Zertifikate im Vertrauensspeicher.</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">Integrierte Master List, signiert am %1$s (%2$s).</string>
+    <string name="trust_master_list_age_recent">vor weniger als einem Monat</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="one">vor %1$d Monat</item>
+        <item quantity="other">vor %1$d Monaten</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">Integrierte Master List: Signaturdatum nicht angegeben.</string>
+    <string name="trust_master_list_stale_warning">Diese Master List ist über ein Jahr alt. Seitdem veröffentlichte Zertifikate können fehlen, und neuere Dokumente könnten als von einem unbekannten Aussteller stammend gemeldet werden. Aktualisieren Sie Sceau oder importieren Sie eine neuere Master List.</string>
+
     <!-- Liste -->
     <string name="trust_country_unknown">Land nicht angegeben</string>
     <plurals name="trust_country_count">

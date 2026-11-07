@@ -12,6 +12,16 @@
     <string name="trust_retry">Opnieuw proberen</string>
     <string name="trust_empty">Geen certificaten in de vertrouwensopslag.</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">Ingebouwde Master List ondertekend op %1$s (%2$s).</string>
+    <string name="trust_master_list_age_recent">minder dan een maand geleden</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="one">%1$d maand geleden</item>
+        <item quantity="other">%1$d maanden geleden</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">Ingebouwde Master List: ondertekeningsdatum niet vermeld.</string>
+    <string name="trust_master_list_stale_warning">Deze Master List is meer dan een jaar oud. Certificaten die sindsdien zijn gepubliceerd kunnen ontbreken, en recente documenten kunnen worden gemeld als afkomstig van een onbekende uitgever. Werk Sceau bij of importeer een nieuwere Master List.</string>
+
     <!-- Liste -->
     <string name="trust_country_unknown">Land niet vermeld</string>
     <plurals name="trust_country_count">

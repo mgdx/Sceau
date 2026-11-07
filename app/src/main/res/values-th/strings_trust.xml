@@ -11,6 +11,15 @@
     <string name="trust_retry">ลองอีกครั้ง</string>
     <string name="trust_empty">ไม่มีใบรับรองในคลังใบรับรอง</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">Master List ในตัวแอปลงนามเมื่อ %1$s (%2$s)</string>
+    <string name="trust_master_list_age_recent">ไม่ถึงหนึ่งเดือนที่แล้ว</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="other">%1$d เดือนที่แล้ว</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">Master List ในตัวแอป: ไม่ระบุวันที่ลงนาม</string>
+    <string name="trust_master_list_stale_warning">Master List นี้มีอายุเกินหนึ่งปีแล้ว ใบรับรองที่เผยแพร่หลังจากนั้นอาจขาดหายไป และเอกสารที่ออกเมื่อไม่นานมานี้อาจถูกรายงานว่ามาจากผู้ออกที่ไม่รู้จัก โปรดอัปเดต Sceau หรือนำเข้า Master List ที่ใหม่กว่า</string>
+
     <!-- Liste -->
     <string name="trust_country_unknown">ไม่ระบุประเทศ</string>
     <plurals name="trust_country_count">

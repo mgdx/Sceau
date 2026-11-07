@@ -14,6 +14,18 @@
     <string name="trust_retry">Poskusi znova</string>
     <string name="trust_empty">Ni zaupanja vrednih potrdil.</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">Vgrajeni seznam Master List, podpisan %1$s (%2$s).</string>
+    <string name="trust_master_list_age_recent">pred manj kot mesecem dni</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="one">pred %1$d mesecem</item>
+        <item quantity="two">pred %1$d mesecema</item>
+        <item quantity="few">pred %1$d meseci</item>
+        <item quantity="other">pred %1$d meseci</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">Vgrajeni seznam Master List: datum podpisa ni naveden.</string>
+    <string name="trust_master_list_stale_warning">Ta seznam Master List je starejši od enega leta. Potrdila, objavljena od takrat, morda manjkajo, novejši dokumenti pa so lahko prikazani, kot da jih je izdal neznan izdajatelj. Posodobite Sceau ali uvozite novejši seznam Master List.</string>
+
     <!-- Liste -->
     <string name="trust_country_unknown">Država ni navedena</string>
     <plurals name="trust_country_count">

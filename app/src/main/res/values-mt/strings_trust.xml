@@ -15,6 +15,19 @@
     <string name="trust_retry">Erġa’ pprova</string>
     <string name="trust_empty">M’hemm l-ebda ċertifikat fil-ħażna ta’ fiduċja.</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">Master List integrata ffirmata fil-%1$s (%2$s).</string>
+    <string name="trust_master_list_age_recent">inqas minn xahar ilu</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="one">%1$d xahar ilu</item>
+        <item quantity="two">%1$d xhur ilu</item>
+        <item quantity="few">%1$d xhur ilu</item>
+        <item quantity="many">%1$d-il xahar ilu</item>
+        <item quantity="other">%1$d xahar ilu</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">Master List integrata: data tal-firma mhux indikata.</string>
+    <string name="trust_master_list_stale_warning">Din il-Master List għandha aktar minn sena. Ċertifikati ppubblikati minn dak iż-żmien jistgħu jkunu neqsin, u dokumenti reċenti jistgħu jiġu rrappurtati bħala ġejjin minn emittent mhux magħruf. Aġġorna Sceau jew importa Master List aktar reċenti.</string>
+
     <!-- Liste -->
     <string name="trust_country_unknown">Pajjiż mhux indikat</string>
     <plurals name="trust_country_count">

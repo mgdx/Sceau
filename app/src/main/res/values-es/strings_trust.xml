@@ -13,6 +13,17 @@
     <string name="trust_retry">Reintentar</string>
     <string name="trust_empty">No hay certificados en el almacén de confianza.</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">Master List integrada firmada el %1$s (%2$s).</string>
+    <string name="trust_master_list_age_recent">hace menos de un mes</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="one">hace %1$d mes</item>
+        <item quantity="many">hace %1$d meses</item>
+        <item quantity="other">hace %1$d meses</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">Master List integrada: fecha de firma no indicada.</string>
+    <string name="trust_master_list_stale_warning">Esta Master List tiene más de un año. Pueden faltar certificados publicados desde entonces y los documentos recientes podrían señalarse como procedentes de un emisor desconocido. Actualice Sceau o importe una Master List más reciente.</string>
+
     <!-- Liste -->
     <string name="trust_country_unknown">País no indicado</string>
     <plurals name="trust_country_count">

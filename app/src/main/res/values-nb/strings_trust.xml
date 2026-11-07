@@ -12,6 +12,16 @@
     <string name="trust_retry">Prøv igjen</string>
     <string name="trust_empty">Ingen sertifikater i tillitslageret.</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">Innebygd Master List signert %1$s (%2$s).</string>
+    <string name="trust_master_list_age_recent">for mindre enn en måned siden</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="one">for %1$d måned siden</item>
+        <item quantity="other">for %1$d måneder siden</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">Innebygd Master List: signeringsdato ikke oppgitt.</string>
+    <string name="trust_master_list_stale_warning">Denne Master List er over ett år gammel. Sertifikater publisert siden da kan mangle, og nyere dokumenter kan bli rapportert som utstedt av en ukjent utsteder. Oppdater Sceau eller importer en nyere Master List.</string>
+
     <!-- Liste -->
     <string name="trust_country_unknown">Land ikke oppgitt</string>
     <plurals name="trust_country_count">

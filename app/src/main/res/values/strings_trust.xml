@@ -12,6 +12,16 @@
     <string name="trust_retry">Retry</string>
     <string name="trust_empty">The trust store contains no certificates.</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">Built-in Master List signed on %1$s (%2$s).</string>
+    <string name="trust_master_list_age_recent">less than a month ago</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="one">%1$d month ago</item>
+        <item quantity="other">%1$d months ago</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">Built-in Master List: signing date not specified.</string>
+    <string name="trust_master_list_stale_warning">This Master List is more than a year old. Certificates published since may be missing, and recent documents could be reported as coming from an unknown issuer. Update Sceau or import a newer Master List.</string>
+
     <!-- List -->
     <string name="trust_country_unknown">Country not specified</string>
     <plurals name="trust_country_count">
