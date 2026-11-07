@@ -1,0 +1,4 @@
+Patobulinimai.
+• Turėtojo amžius rodomas šalia gimimo datos
+• Į programėlę įtraukto Master List pasirašymo data ir amžius patikimų sertifikatų saugykloje, su įspėjimu po metų
+• Dinaminės sistemos spalvos (Material You) „Android“ 12 ir naujesnėse versijose

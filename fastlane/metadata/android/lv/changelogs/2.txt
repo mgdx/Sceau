@@ -1,0 +1,4 @@
+Uzlabojumi.
+• Turētāja vecums parādīts blakus dzimšanas datumam
+• Lietotnē iebūvētās Master List parakstīšanas datums un vecums uzticamības krātuvē, ar brīdinājumu pēc gada
+• Sistēmas dinamiskās krāsas (Material You) Android 12 un jaunākās versijās

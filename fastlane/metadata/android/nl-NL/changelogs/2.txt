@@ -1,0 +1,4 @@
+Verbeteringen.
+• Leeftijd van de houder naast de geboortedatum
+• Ondertekeningsdatum en ouderdom van de ingebouwde Master List in de vertrouwensopslag, met een waarschuwing na een jaar
+• Dynamische systeemkleuren (Material You) op Android 12 en hoger

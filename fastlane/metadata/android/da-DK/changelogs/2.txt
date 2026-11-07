@@ -1,0 +1,4 @@
+Forbedringer.
+• Indehaverens alder vises ved siden af fødselsdatoen
+• Signeringsdato og alder for den indbyggede Master List i tillidslageret, med en advarsel efter et år
+• Systemets dynamiske farver (Material You) på Android 12 og nyere

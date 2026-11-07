@@ -1,0 +1,4 @@
+Vylepšení.
+• Věk držitele zobrazen vedle data narození
+• Datum podpisu a stáří vestavěného seznamu Master List v důvěryhodných certifikátech, s upozorněním po roce
+• Dynamické barvy systému (Material You) na Androidu 12 a novějším

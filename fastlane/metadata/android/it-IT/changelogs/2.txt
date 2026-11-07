@@ -1,0 +1,4 @@
+Miglioramenti.
+• Età del titolare accanto alla data di nascita
+• Data di firma ed età della Master List integrata nell’archivio attendibile, con un avviso dopo un anno
+• Colori dinamici di sistema (Material You) su Android 12 e versioni successive

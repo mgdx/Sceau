@@ -1,0 +1,4 @@
+Îmbunătățiri.
+• Vârsta titularului afișată lângă data nașterii
+• Data semnării și vechimea Master List integrate în depozitul de încredere, cu un avertisment după un an
+• Culori dinamice ale sistemului (Material You) pe Android 12 și versiuni ulterioare
