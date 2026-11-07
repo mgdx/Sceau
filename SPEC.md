@@ -353,7 +353,7 @@ Releases: public repository https://github.com/mgdx/Sceau; per-architecture APKs
 
 ## 11. Milestones
 
-Status as of 2026-10-12: Foundation, Reading, Verification and Finishing reached; Publication in progress, first public release, version 1.0.0, published on 2026-10-12 (tag `v1.0.0`, D53), F-Droid submission to follow.
+Status as of 2026-11-07: Foundation, Reading, Verification, Finishing and Publication reached; first public release, version 1.0.0, published on 2026-10-12 (tag `v1.0.0`, D53), accepted on F-Droid on 2026-10-25; version 1.0.1 (tag `v1.0.1`, `versionCode` 2) published on 2026-11-07: holder's age, age of the built-in Master List (D58), dynamic colors (D57).
 
 1. **Foundation** (reached): modules, CI, ktlint, trust store loaded and tested, crypto test factory.
 2. **Reading** (reached): `IsoDep` transport, PACE and BAC, DG reading, raw display of DG1 and the photo.

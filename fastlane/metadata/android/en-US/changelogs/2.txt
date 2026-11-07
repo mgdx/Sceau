@@ -1,0 +1,4 @@
+Improvements.
+• Holder's age shown next to the date of birth
+• Signing date and age of the built-in Master List in the trust store, with a warning after one year
+• System dynamic colors (Material You) on Android 12 and later

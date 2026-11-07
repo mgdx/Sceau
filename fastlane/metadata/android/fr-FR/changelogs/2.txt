@@ -1,0 +1,4 @@
+Améliorations.
+• Âge du titulaire affiché à côté de la date de naissance
+• Date de signature et âge de la Master List intégrée dans le magasin de confiance, avec un avertissement au-delà d'un an
+• Couleurs dynamiques du système (Material You) sur Android 12 et plus
