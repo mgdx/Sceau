@@ -12,6 +12,16 @@
     <string name="trust_retry">फिर से कोशिश करें</string>
     <string name="trust_empty">ट्रस्ट स्टोर में कोई प्रमाणपत्र नहीं है।</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">ऐप में शामिल Master List पर %1$s को हस्ताक्षर किए गए (%2$s)।</string>
+    <string name="trust_master_list_age_recent">एक महीने से भी कम समय पहले</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="one">%1$d महीना पहले</item>
+        <item quantity="other">%1$d महीने पहले</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">ऐप में शामिल Master List: हस्ताक्षर की तिथि नहीं बताई गई।</string>
+    <string name="trust_master_list_stale_warning">यह Master List एक साल से ज़्यादा पुरानी है। तब से प्रकाशित प्रमाणपत्र इसमें नहीं हो सकते, और हाल के दस्तावेज़ अज्ञात जारीकर्ता से आए बताए जा सकते हैं। Sceau को अपडेट करें या नई Master List इंपोर्ट करें।</string>
+
     <!-- Liste -->
     <string name="trust_country_unknown">देश नहीं बताया गया</string>
     <plurals name="trust_country_count">

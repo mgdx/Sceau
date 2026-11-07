@@ -14,6 +14,18 @@
     <string name="trust_retry">Повторити</string>
     <string name="trust_empty">У сховищі немає жодного сертифіката.</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">Вбудований Master List, підписано %1$s (%2$s).</string>
+    <string name="trust_master_list_age_recent">менше ніж місяць тому</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="one">%1$d місяць тому</item>
+        <item quantity="few">%1$d місяці тому</item>
+        <item quantity="many">%1$d місяців тому</item>
+        <item quantity="other">%1$d місяця тому</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">Вбудований Master List: дату підпису не вказано.</string>
+    <string name="trust_master_list_stale_warning">Цьому Master List понад рік. Сертифікати, опубліковані відтоді, можуть бути відсутні, а нові документи можуть позначатися як видані невідомим видавцем. Оновіть Sceau або імпортуйте новіший Master List.</string>
+
     <!-- Liste -->
     <string name="trust_country_unknown">Країну не вказано</string>
     <plurals name="trust_country_count">

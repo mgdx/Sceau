@@ -16,6 +16,20 @@
     <string name="trust_retry">إعادة المحاولة</string>
     <string name="trust_empty">لا توجد أي شهادة في مخزن الثقة.</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">قائمة Master List المدمجة موقَّعة في %1$s (%2$s).</string>
+    <string name="trust_master_list_age_recent">منذ أقل من شهر</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="zero">منذ %1$d شهر</item>
+        <item quantity="one">منذ %1$d شهر</item>
+        <item quantity="two">منذ %1$d شهر</item>
+        <item quantity="few">منذ %1$d أشهر</item>
+        <item quantity="many">منذ %1$d شهر</item>
+        <item quantity="other">منذ %1$d شهر</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">قائمة Master List المدمجة: تاريخ التوقيع غير مذكور.</string>
+    <string name="trust_master_list_stale_warning">عمر قائمة Master List هذه يزيد عن سنة. قد تكون الشهادات المنشورة منذ ذلك الحين مفقودة، وقد تُصنَّف المستندات الحديثة على أنها صادرة عن جهة إصدار غير معروفة. حدِّث Sceau أو استورد قائمة Master List أحدث.</string>
+
     <!-- Liste -->
     <string name="trust_country_unknown">دولة غير محددة</string>
     <plurals name="trust_country_count">

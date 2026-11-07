@@ -14,6 +14,18 @@
     <string name="trust_retry">Bandyti dar kartą</string>
     <string name="trust_empty">Patikimų sertifikatų saugykloje nėra sertifikatų.</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">Į programėlę įtrauktas Master List, pasirašytas %1$s (%2$s).</string>
+    <string name="trust_master_list_age_recent">mažiau nei prieš mėnesį</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="one">prieš %1$d mėnesį</item>
+        <item quantity="few">prieš %1$d mėnesius</item>
+        <item quantity="many">prieš %1$d mėnesio</item>
+        <item quantity="other">prieš %1$d mėnesių</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">Į programėlę įtrauktas Master List: pasirašymo data nenurodyta.</string>
+    <string name="trust_master_list_stale_warning">Šis Master List yra senesnis nei metų. Nuo to laiko paskelbtų sertifikatų gali trūkti, o nauji dokumentai gali būti pažymėti kaip išduoti nežinomo išdavėjo. Atnaujinkite Sceau arba importuokite naujesnį Master List.</string>
+
     <!-- Liste -->
     <string name="trust_country_unknown">Šalis nenurodyta</string>
     <plurals name="trust_country_count">

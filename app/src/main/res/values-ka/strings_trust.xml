@@ -12,6 +12,16 @@
     <string name="trust_retry">ხელახლა ცდა</string>
     <string name="trust_empty">სანდო საცავში სერტიფიკატები არ არის.</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">ჩაშენებული Master List ხელმოწერილია %1$s (%2$s).</string>
+    <string name="trust_master_list_age_recent">ერთ თვეზე ნაკლები ხნის წინ</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="one">%1$d თვის წინ</item>
+        <item quantity="other">%1$d თვის წინ</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">ჩაშენებული Master List: ხელმოწერის თარიღი მითითებული არ არის.</string>
+    <string name="trust_master_list_stale_warning">ეს Master List ერთ წელზე ძველია. მას შემდეგ გამოქვეყნებული სერტიფიკატები შეიძლება აკლდეს და ახალი დოკუმენტები შეიძლება უცნობი გამცემის მიერ გაცემულად ჩაითვალოს. განაახლეთ Sceau ან იმპორტირეთ უფრო ახალი Master List.</string>
+
     <!-- Liste -->
     <string name="trust_country_unknown">ქვეყანა მითითებული არ არის</string>
     <plurals name="trust_country_count">

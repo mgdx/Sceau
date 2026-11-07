@@ -13,6 +13,17 @@
     <string name="trust_retry">ניסיון חוזר</string>
     <string name="trust_empty">אין תעודות במאגר האמון.</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">רשימת Master List המובנית נחתמה ב-%1$s (%2$s).</string>
+    <string name="trust_master_list_age_recent">לפני פחות מחודש</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="one">לפני %1$d חודש</item>
+        <item quantity="two">לפני %1$d חודשים</item>
+        <item quantity="other">לפני %1$d חודשים</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">רשימת Master List המובנית: תאריך החתימה לא צוין.</string>
+    <string name="trust_master_list_stale_warning">רשימת Master List זו בת יותר משנה. ייתכן שחסרות בה תעודות שפורסמו מאז, ומסמכים חדשים עלולים להיות מדווחים כמגיעים ממנפיק לא ידוע. יש לעדכן את Sceau או לייבא רשימת Master List חדשה יותר.</string>
+
     <!-- Liste -->
     <string name="trust_country_unknown">מדינה לא צוינה</string>
     <plurals name="trust_country_count">

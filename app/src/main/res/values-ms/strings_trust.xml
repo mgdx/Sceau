@@ -11,6 +11,15 @@
     <string name="trust_retry">Cuba lagi</string>
     <string name="trust_empty">Tiada sijil dalam stor sijil dipercayai.</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">Master List terbina dalam ditandatangani pada %1$s (%2$s).</string>
+    <string name="trust_master_list_age_recent">kurang daripada sebulan yang lalu</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="other">%1$d bulan yang lalu</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">Master List terbina dalam: tarikh tandatangan tidak dinyatakan.</string>
+    <string name="trust_master_list_stale_warning">Master List ini berusia lebih daripada setahun. Sijil yang diterbitkan sejak itu mungkin tiada, dan dokumen terkini mungkin dilaporkan sebagai datang daripada pengeluar yang tidak dikenali. Kemas kini Sceau atau import Master List yang lebih baharu.</string>
+
     <!-- Liste -->
     <string name="trust_country_unknown">Negara tidak dinyatakan</string>
     <plurals name="trust_country_count">

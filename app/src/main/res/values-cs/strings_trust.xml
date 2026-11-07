@@ -14,6 +14,18 @@
     <string name="trust_retry">Zkusit znovu</string>
     <string name="trust_empty">Žádné důvěryhodné certifikáty.</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">Vestavěný seznam Master List podepsán %1$s (%2$s).</string>
+    <string name="trust_master_list_age_recent">před méně než měsícem</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="one">před %1$d měsícem</item>
+        <item quantity="few">před %1$d měsíci</item>
+        <item quantity="many">před %1$d měsíce</item>
+        <item quantity="other">před %1$d měsíci</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">Vestavěný seznam Master List: datum podpisu neuvedeno.</string>
+    <string name="trust_master_list_stale_warning">Tento seznam Master List je starší než rok. Certifikáty zveřejněné od té doby mohou chybět a novější doklady mohou být vyhodnoceny jako vydané neznámým vydavatelem. Aktualizujte Sceau nebo importujte novější seznam Master List.</string>
+
     <!-- Liste -->
     <string name="trust_country_unknown">Stát neuveden</string>
     <plurals name="trust_country_count">

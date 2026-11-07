@@ -13,6 +13,17 @@
     <string name="trust_retry">Mēģināt vēlreiz</string>
     <string name="trust_empty">Uzticamības krātuvē nav neviena sertifikāta.</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">Lietotnē iebūvētā Master List parakstīta %1$s (%2$s).</string>
+    <string name="trust_master_list_age_recent">pirms mazāk nekā mēneša</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="zero">pirms %1$d mēnešiem</item>
+        <item quantity="one">pirms %1$d mēneša</item>
+        <item quantity="other">pirms %1$d mēnešiem</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">Lietotnē iebūvētā Master List: parakstīšanas datums nav norādīts.</string>
+    <string name="trust_master_list_stale_warning">Šī Master List ir vecāka par gadu. Kopš tā laika publicētie sertifikāti var trūkt, un jaunāki dokumenti var tikt norādīti kā nākuši no nezināma izdevēja. Atjauniniet Sceau vai importējiet jaunāku Master List.</string>
+
     <!-- Liste -->
     <string name="trust_country_unknown">Valsts nav norādīta</string>
     <plurals name="trust_country_count">

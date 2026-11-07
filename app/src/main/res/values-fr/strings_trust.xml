@@ -13,6 +13,17 @@
     <string name="trust_retry">Réessayer</string>
     <string name="trust_empty">Aucun certificat dans le magasin de confiance.</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">Master List embarquée signée le %1$s (%2$s).</string>
+    <string name="trust_master_list_age_recent">il y a moins d’un mois</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="one">il y a %1$d mois</item>
+        <item quantity="many">il y a %1$d mois</item>
+        <item quantity="other">il y a %1$d mois</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">Master List embarquée : date de signature non indiquée.</string>
+    <string name="trust_master_list_stale_warning">Cette Master List a plus d’un an. Des certificats publiés depuis peuvent manquer, et des documents récents pourraient être signalés comme venant d’un émetteur inconnu. Mettez Sceau à jour ou importez une Master List plus récente.</string>
+
     <!-- Liste -->
     <string name="trust_country_unknown">Pays non indiqué</string>
     <plurals name="trust_country_count">

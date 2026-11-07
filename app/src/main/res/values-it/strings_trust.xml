@@ -13,6 +13,17 @@
     <string name="trust_retry">Riprova</string>
     <string name="trust_empty">Nessun certificato nell’archivio attendibile.</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">Master List integrata firmata il %1$s (%2$s).</string>
+    <string name="trust_master_list_age_recent">meno di un mese fa</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="one">%1$d mese fa</item>
+        <item quantity="many">%1$d mesi fa</item>
+        <item quantity="other">%1$d mesi fa</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">Master List integrata: data di firma non indicata.</string>
+    <string name="trust_master_list_stale_warning">Questa Master List ha più di un anno. Potrebbero mancare i certificati pubblicati da allora e i documenti recenti potrebbero risultare emessi da un emittente sconosciuto. Aggiorna Sceau o importa una Master List più recente.</string>
+
     <!-- Liste -->
     <string name="trust_country_unknown">Paese non indicato</string>
     <plurals name="trust_country_count">

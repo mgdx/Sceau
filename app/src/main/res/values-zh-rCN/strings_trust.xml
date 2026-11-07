@@ -11,6 +11,15 @@
     <string name="trust_retry">重试</string>
     <string name="trust_empty">信任存储中没有证书。</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">内置 Master List 签名日期：%1$s（%2$s）</string>
+    <string name="trust_master_list_age_recent">不到一个月前</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="other">%1$d 个月前</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">内置 Master List：未注明签名日期</string>
+    <string name="trust_master_list_stale_warning">此 Master List 已超过一年。此后发布的证书可能缺失，近期签发的证件可能被报告为来自未知签发机构。请更新 Sceau 或导入更新的 Master List。</string>
+
     <!-- Liste -->
     <string name="trust_country_unknown">未注明国家/地区</string>
     <plurals name="trust_country_count">

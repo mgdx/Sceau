@@ -12,6 +12,16 @@
     <string name="trust_retry">Proovi uuesti</string>
     <string name="trust_empty">Usaldushoidlas pole ühtegi sertifikaati.</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">Sisseehitatud Master List, allkirjastatud %1$s (%2$s).</string>
+    <string name="trust_master_list_age_recent">vähem kui kuu aega tagasi</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="one">%1$d kuu tagasi</item>
+        <item quantity="other">%1$d kuud tagasi</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">Sisseehitatud Master List: allkirjastamise kuupäev pole märgitud.</string>
+    <string name="trust_master_list_stale_warning">See Master List on üle aasta vana. Pärast seda avaldatud sertifikaadid võivad puududa ja hiljutised dokumendid võidakse märkida tundmatu väljaandja omaks. Uuendage Sceau rakendust või importige uuem Master List.</string>
+
     <!-- Liste -->
     <string name="trust_country_unknown">Riik pole märgitud</string>
     <plurals name="trust_country_count">

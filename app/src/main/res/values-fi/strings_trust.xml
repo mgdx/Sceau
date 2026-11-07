@@ -12,6 +12,16 @@
     <string name="trust_retry">Yritä uudelleen</string>
     <string name="trust_empty">Luotettuja varmenteita ei ole.</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">Sovellukseen sisältyvä Master List allekirjoitettu %1$s (%2$s).</string>
+    <string name="trust_master_list_age_recent">alle kuukausi sitten</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="one">%1$d kuukausi sitten</item>
+        <item quantity="other">%1$d kuukautta sitten</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">Sovellukseen sisältyvä Master List: allekirjoituspäivää ei ilmoitettu.</string>
+    <string name="trust_master_list_stale_warning">Tämä Master List on yli vuoden vanha. Sen jälkeen julkaistuja varmenteita voi puuttua, ja uudet asiakirjat saatetaan ilmoittaa tuntemattoman myöntäjän myöntämiksi. Päivitä Sceau tai tuo uudempi Master List.</string>
+
     <!-- Liste -->
     <string name="trust_country_unknown">Maata ei ole ilmoitettu</string>
     <plurals name="trust_country_count">

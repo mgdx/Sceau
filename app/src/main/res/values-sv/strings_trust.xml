@@ -12,6 +12,16 @@
     <string name="trust_retry">Försök igen</string>
     <string name="trust_empty">Inga certifikat i tillitsarkivet.</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">Inbyggd Master List signerad %1$s (%2$s).</string>
+    <string name="trust_master_list_age_recent">för mindre än en månad sedan</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="one">för %1$d månad sedan</item>
+        <item quantity="other">för %1$d månader sedan</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">Inbyggd Master List: signeringsdatum anges inte.</string>
+    <string name="trust_master_list_stale_warning">Den här Master List är över ett år gammal. Certifikat som publicerats sedan dess kan saknas, och nyare dokument kan rapporteras som utfärdade av en okänd utfärdare. Uppdatera Sceau eller importera en nyare Master List.</string>
+
     <!-- Liste -->
     <string name="trust_country_unknown">Land saknas</string>
     <plurals name="trust_country_count">

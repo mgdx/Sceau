@@ -120,6 +120,8 @@ private sealed interface StoreUi {
     class Loaded(
         val groups: List<CountryGroup>,
         val total: Int,
+        /** Built-in Master List, if the store contains one (its age is shown, D58). */
+        val masterList: MasterListInfo?,
     ) : StoreUi
 }
 
@@ -170,6 +172,7 @@ fun TrustStoreScreen(
                     StoreUi.Loaded(
                         groups = groupByCountry(anchors, locale),
                         total = anchors.size,
+                        masterList = trustStore.embeddedMasterList,
                     )
                 }
             } catch (e: CancellationException) {
@@ -620,6 +623,7 @@ private fun StoreHeader(
             text = pluralStringResource(R.plurals.trust_summary, store.total, store.total, store.groups.size),
             style = MaterialTheme.typography.titleSmall,
         )
+        store.masterList?.let { MasterListAgeSection(it) }
         Button(onClick = onImport, enabled = !busy, modifier = Modifier.fillMaxWidth()) {
             Text(stringResource(R.string.trust_import))
         }
@@ -633,6 +637,43 @@ private fun StoreHeader(
                 CircularProgressIndicator(modifier = Modifier.padding(end = 12.dp))
                 Text(stringResource(R.string.trust_busy), style = MaterialTheme.typography.bodyMedium)
             }
+        }
+    }
+}
+
+/** Signing date and age of the built-in Master List, with a warning after a year (D58). */
+@Composable
+private fun MasterListAgeSection(masterList: MasterListInfo) {
+    val signingTime = masterList.signingTime
+    if (signingTime == null) {
+        Text(stringResource(R.string.trust_master_list_date_unknown), style = MaterialTheme.typography.bodyMedium)
+        return
+    }
+    val formatDate = rememberDateFormatter()
+    val today = remember { LocalDate.now() }
+    val months = MasterListAge.months(signingTime, today)
+    val age =
+        if (months == 0L) {
+            stringResource(R.string.trust_master_list_age_recent)
+        } else {
+            pluralStringResource(R.plurals.trust_master_list_months, months.toInt(), months.toInt())
+        }
+    Text(
+        text = stringResource(R.string.trust_master_list_age, formatDate(signingTime.toUtcDate()), age),
+        style = MaterialTheme.typography.bodyMedium,
+    )
+    if (MasterListAge.isStale(signingTime, today)) {
+        Surface(
+            color = MaterialTheme.colorScheme.errorContainer,
+            contentColor = MaterialTheme.colorScheme.onErrorContainer,
+            shape = MaterialTheme.shapes.small,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text(
+                text = stringResource(R.string.trust_master_list_stale_warning),
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(12.dp),
+            )
         }
     }
 }

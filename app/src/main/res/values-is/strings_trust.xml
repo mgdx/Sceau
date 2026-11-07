@@ -12,6 +12,16 @@
     <string name="trust_retry">Reyna aftur</string>
     <string name="trust_empty">Engin vottorð í traustgeymslunni.</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">Innbyggður Master List undirritaður %1$s (%2$s).</string>
+    <string name="trust_master_list_age_recent">fyrir innan við mánuði</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="one">fyrir %1$d mánuði</item>
+        <item quantity="other">fyrir %1$d mánuðum</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">Innbyggður Master List: undirritunardagur ótilgreindur.</string>
+    <string name="trust_master_list_stale_warning">Þessi Master List er eldri en eins árs. Vottorð sem gefin hafa verið út síðan gætu vantað og nýleg skilríki gætu verið sögð frá óþekktum útgefanda. Uppfærðu Sceau eða flyttu inn nýrri Master List.</string>
+
     <!-- Liste -->
     <string name="trust_country_unknown">Land ótilgreint</string>
     <plurals name="trust_country_count">

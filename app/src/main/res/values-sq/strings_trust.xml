@@ -12,6 +12,16 @@
     <string name="trust_retry">Provo përsëri</string>
     <string name="trust_empty">Nuk ka asnjë certifikatë të besuar.</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">Master List e integruar, nënshkruar më %1$s (%2$s).</string>
+    <string name="trust_master_list_age_recent">më pak se një muaj më parë</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="one">%1$d muaj më parë</item>
+        <item quantity="other">%1$d muaj më parë</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">Master List e integruar: data e nënshkrimit nuk është treguar.</string>
+    <string name="trust_master_list_stale_warning">Kjo Master List është më e vjetër se një vit. Certifikatat e publikuara që atëherë mund të mungojnë dhe dokumentet e fundit mund të raportohen si të lëshuara nga një lëshues i panjohur. Përditësoni Sceau ose importoni një Master List më të re.</string>
+
     <!-- Liste -->
     <string name="trust_country_unknown">Vendi nuk është treguar</string>
     <plurals name="trust_country_count">

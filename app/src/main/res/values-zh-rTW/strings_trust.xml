@@ -11,6 +11,15 @@
     <string name="trust_retry">重試</string>
     <string name="trust_empty">信任存放區中沒有任何憑證。</string>
 
+    <!-- Built-in Master List (D58) -->
+    <string name="trust_master_list_age">內建 Master List 簽署日期：%1$s（%2$s）</string>
+    <string name="trust_master_list_age_recent">不到一個月前</string>
+    <plurals name="trust_master_list_months">
+        <item quantity="other">%1$d 個月前</item>
+    </plurals>
+    <string name="trust_master_list_date_unknown">內建 Master List：未註明簽署日期</string>
+    <string name="trust_master_list_stale_warning">此 Master List 已超過一年。此後發布的憑證可能缺少，近期核發的證件可能被回報為來自未知核發機構。請更新 Sceau 或匯入較新的 Master List。</string>
+
     <!-- Liste -->
     <string name="trust_country_unknown">未註明國家/地區</string>
     <plurals name="trust_country_count">
