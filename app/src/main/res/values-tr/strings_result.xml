@@ -46,6 +46,10 @@
     <string name="result_document_other">Diğer seyahat belgesi</string>
     <string name="result_value_with_code">%1$s (%2$s)</string>
     <string name="result_unknown_value">Bilinmiyor</string>
+    <plurals name="result_age">
+        <item quantity="one">%1$d yaşında</item>
+        <item quantity="other">%1$d yaşında</item>
+    </plurals>
 
     <!-- Pays spéciaux ICAO -->
     <string name="result_country_united_nations">Birleşmiş Milletler</string>

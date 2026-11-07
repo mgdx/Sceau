@@ -46,6 +46,12 @@
     <string name="result_document_other">Druga potna listina</string>
     <string name="result_value_with_code">%1$s (%2$s)</string>
     <string name="result_unknown_value">Neznano</string>
+    <plurals name="result_age">
+        <item quantity="one">%1$d leto</item>
+        <item quantity="two">%1$d leti</item>
+        <item quantity="few">%1$d leta</item>
+        <item quantity="other">%1$d let</item>
+    </plurals>
 
     <!-- Pays spéciaux ICAO -->
     <string name="result_country_united_nations">Združeni narodi</string>

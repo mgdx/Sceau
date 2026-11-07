@@ -46,6 +46,13 @@
     <string name="result_document_other">Cáipéis taistil eile</string>
     <string name="result_value_with_code">%1$s (%2$s)</string>
     <string name="result_unknown_value">Anaithnid</string>
+    <plurals name="result_age">
+        <item quantity="one">%1$d bhliain</item>
+        <item quantity="two">%1$d bhliain</item>
+        <item quantity="few">%1$d bliana</item>
+        <item quantity="many">%1$d mbliana</item>
+        <item quantity="other">%1$d bliain</item>
+    </plurals>
 
     <!-- Pays spéciaux ICAO -->
     <string name="result_country_united_nations">Na Náisiúin Aontaithe</string>

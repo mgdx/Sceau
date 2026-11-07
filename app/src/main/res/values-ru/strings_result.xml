@@ -46,6 +46,12 @@
     <string name="result_document_other">Другой проездной документ</string>
     <string name="result_value_with_code">%1$s (%2$s)</string>
     <string name="result_unknown_value">Неизвестно</string>
+    <plurals name="result_age">
+        <item quantity="one">%1$d год</item>
+        <item quantity="few">%1$d года</item>
+        <item quantity="many">%1$d лет</item>
+        <item quantity="other">%1$d года</item>
+    </plurals>
 
     <!-- Pays spéciaux ICAO -->
     <string name="result_country_united_nations">Организация Объединенных Наций</string>

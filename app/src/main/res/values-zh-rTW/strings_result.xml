@@ -46,6 +46,9 @@
     <string name="result_document_other">其他旅行文件</string>
     <string name="result_value_with_code">%1$s（%2$s）</string>
     <string name="result_unknown_value">不明</string>
+    <plurals name="result_age">
+        <item quantity="other">%1$d 歲</item>
+    </plurals>
 
     <!-- Pays spéciaux ICAO -->
     <string name="result_country_united_nations">聯合國</string>

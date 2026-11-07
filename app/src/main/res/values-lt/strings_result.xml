@@ -46,6 +46,12 @@
     <string name="result_document_other">Kitas kelionės dokumentas</string>
     <string name="result_value_with_code">%1$s (%2$s)</string>
     <string name="result_unknown_value">Nežinoma</string>
+    <plurals name="result_age">
+        <item quantity="one">%1$d metai</item>
+        <item quantity="few">%1$d metai</item>
+        <item quantity="many">%1$d metų</item>
+        <item quantity="other">%1$d metų</item>
+    </plurals>
 
     <!-- Pays spéciaux ICAO -->
     <string name="result_country_united_nations">Jungtinės Tautos</string>

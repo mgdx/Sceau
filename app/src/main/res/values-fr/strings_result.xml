@@ -46,6 +46,11 @@
     <string name="result_document_other">Autre document de voyage</string>
     <string name="result_value_with_code">%1$s (%2$s)</string>
     <string name="result_unknown_value">Inconnu</string>
+    <plurals name="result_age">
+        <item quantity="one">%1$d an</item>
+        <item quantity="many">%1$d ans</item>
+        <item quantity="other">%1$d ans</item>
+    </plurals>
 
     <!-- Pays spéciaux ICAO -->
     <string name="result_country_united_nations">Nations unies</string>

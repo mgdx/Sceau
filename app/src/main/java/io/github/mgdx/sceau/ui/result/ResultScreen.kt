@@ -49,6 +49,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.isSensitiveData
@@ -524,7 +525,16 @@ private fun IdentitySection(
         val givenNames = dg1.secondaryIdentifiers.filter { it.isNotBlank() }.joinToString(" ")
         if (givenNames.isNotEmpty()) FieldRow(R.string.result_field_given_names, givenNames)
         FieldRow(R.string.result_field_sex, stringResource(sexLabel(dg1.sex)))
-        FieldRow(R.string.result_field_birth_date, dg1.dateOfBirth?.let(formatDate) ?: unknown)
+        val birth = dg1.dateOfBirth
+        val age = birth?.let { Age.years(it, LocalDate.now()) }
+        val ageLabel = age?.let { pluralStringResource(R.plurals.result_age, it, it) }
+        val birthValue =
+            when {
+                birth == null -> unknown
+                ageLabel == null -> formatDate(birth)
+                else -> stringResource(R.string.result_value_with_code, formatDate(birth), ageLabel)
+            }
+        FieldRow(R.string.result_field_birth_date, birthValue)
         FieldRow(R.string.result_field_nationality, countryWithCode(dg1.nationality))
         FieldRow(
             R.string.result_field_document_type,

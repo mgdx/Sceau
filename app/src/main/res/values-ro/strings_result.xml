@@ -46,6 +46,11 @@
     <string name="result_document_other">Alt document de călătorie</string>
     <string name="result_value_with_code">%1$s (%2$s)</string>
     <string name="result_unknown_value">Necunoscut</string>
+    <plurals name="result_age">
+        <item quantity="one">%1$d an</item>
+        <item quantity="few">%1$d ani</item>
+        <item quantity="other">%1$d de ani</item>
+    </plurals>
 
     <!-- Pays spéciaux ICAO -->
     <string name="result_country_united_nations">Organizația Națiunilor Unite</string>

@@ -46,6 +46,10 @@
     <string name="result_document_other">अन्य यात्रा दस्तावेज़</string>
     <string name="result_value_with_code">%1$s (%2$s)</string>
     <string name="result_unknown_value">अज्ञात</string>
+    <plurals name="result_age">
+        <item quantity="one">%1$d वर्ष</item>
+        <item quantity="other">%1$d वर्ष</item>
+    </plurals>
 
     <!-- Pays spéciaux ICAO -->
     <string name="result_country_united_nations">संयुक्त राष्ट्र</string>

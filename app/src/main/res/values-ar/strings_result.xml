@@ -46,6 +46,14 @@
     <string name="result_document_other">وثيقة سفر أخرى</string>
     <string name="result_value_with_code">%1$s (%2$s)</string>
     <string name="result_unknown_value">غير معروف</string>
+    <plurals name="result_age">
+        <item quantity="zero">%1$d سنة</item>
+        <item quantity="one">%1$d سنة</item>
+        <item quantity="two">%1$d سنة</item>
+        <item quantity="few">%1$d سنوات</item>
+        <item quantity="many">%1$d سنة</item>
+        <item quantity="other">%1$d سنة</item>
+    </plurals>
 
     <!-- Pays spéciaux ICAO -->
     <string name="result_country_united_nations">الأمم المتحدة</string>
