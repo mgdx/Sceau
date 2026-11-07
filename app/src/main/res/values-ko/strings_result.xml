@@ -46,6 +46,9 @@
     <string name="result_document_other">기타 여행 문서</string>
     <string name="result_value_with_code">%1$s(%2$s)</string>
     <string name="result_unknown_value">알 수 없음</string>
+    <plurals name="result_age">
+        <item quantity="other">%1$d세</item>
+    </plurals>
 
     <!-- Pays spéciaux ICAO -->
     <string name="result_country_united_nations">국제연합</string>

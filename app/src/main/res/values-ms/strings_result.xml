@@ -46,6 +46,9 @@
     <string name="result_document_other">Dokumen perjalanan lain</string>
     <string name="result_value_with_code">%1$s (%2$s)</string>
     <string name="result_unknown_value">Tidak diketahui</string>
+    <plurals name="result_age">
+        <item quantity="other">%1$d tahun</item>
+    </plurals>
 
     <!-- Pays spéciaux ICAO -->
     <string name="result_country_united_nations">Pertubuhan Bangsa-Bangsa Bersatu</string>

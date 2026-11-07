@@ -46,6 +46,11 @@
     <string name="result_document_other">מסמך נסיעה אחר</string>
     <string name="result_value_with_code">%1$s (%2$s)</string>
     <string name="result_unknown_value">לא ידוע</string>
+    <plurals name="result_age">
+        <item quantity="one">%1$d שנה</item>
+        <item quantity="two">%1$d שנים</item>
+        <item quantity="other">%1$d שנים</item>
+    </plurals>
 
     <!-- Pays spéciaux ICAO -->
     <string name="result_country_united_nations">האומות המאוחדות</string>

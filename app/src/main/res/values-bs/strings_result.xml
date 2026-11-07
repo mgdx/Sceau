@@ -46,6 +46,11 @@
     <string name="result_document_other">Druga putna isprava</string>
     <string name="result_value_with_code">%1$s (%2$s)</string>
     <string name="result_unknown_value">Nepoznato</string>
+    <plurals name="result_age">
+        <item quantity="one">%1$d godina</item>
+        <item quantity="few">%1$d godine</item>
+        <item quantity="other">%1$d godina</item>
+    </plurals>
 
     <!-- Pays spéciaux ICAO -->
     <string name="result_country_united_nations">Ujedinjene nacije</string>

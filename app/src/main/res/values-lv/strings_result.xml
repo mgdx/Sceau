@@ -46,6 +46,11 @@
     <string name="result_document_other">Cits ceļošanas dokuments</string>
     <string name="result_value_with_code">%1$s (%2$s)</string>
     <string name="result_unknown_value">Nezināms</string>
+    <plurals name="result_age">
+        <item quantity="zero">%1$d gadu</item>
+        <item quantity="one">%1$d gads</item>
+        <item quantity="other">%1$d gadi</item>
+    </plurals>
 
     <!-- Pays spéciaux ICAO -->
     <string name="result_country_united_nations">Apvienoto Nāciju Organizācija</string>
